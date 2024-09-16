@@ -8,7 +8,7 @@ import org.lwjgl.glfw.GLFW;
 @ReflectionsLevel(level = 0)
 public class VisibleSetting extends FrameSettingBase<Boolean> {
     public VisibleSetting(Frame frame) {
-        super(frame,"Visible",0,false,true);
+        super(frame, "Visible", 0, false, true);
     }
 
     @Override

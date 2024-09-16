@@ -29,36 +29,36 @@ public class DebugLog {
         frame.getLoggerManager().logEvent(this);
     }
 
-    public static void debug(Frame frame,String text){
-        new DebugLog(frame,DebugType.TEXT,text,DebugLevel.DEBUG);
+    public static void debug(Frame frame, String text) {
+        new DebugLog(frame, DebugType.TEXT, text, DebugLevel.DEBUG);
     }
 
-    public static void debug(Frame frame,Exception exception){
-        new DebugLog(frame,DebugType.EXCEPTION,exception,DebugLevel.DEBUG);
+    public static void debug(Frame frame, Exception exception) {
+        new DebugLog(frame, DebugType.EXCEPTION, exception, DebugLevel.DEBUG);
     }
 
-    public static void info(Frame frame,String text){
-        new DebugLog(frame,DebugType.TEXT,text,DebugLevel.INFO);
+    public static void info(Frame frame, String text) {
+        new DebugLog(frame, DebugType.TEXT, text, DebugLevel.INFO);
     }
 
-    public static void info(Frame frame,Exception exception){
-        new DebugLog(frame,DebugType.EXCEPTION,exception,DebugLevel.INFO);
+    public static void info(Frame frame, Exception exception) {
+        new DebugLog(frame, DebugType.EXCEPTION, exception, DebugLevel.INFO);
     }
 
-    public static void error(Frame frame,String text){
-        new DebugLog(frame,DebugType.TEXT,text,DebugLevel.ERROR);
+    public static void error(Frame frame, String text) {
+        new DebugLog(frame, DebugType.TEXT, text, DebugLevel.ERROR);
     }
 
-    public static void error(Frame frame,Exception exception){
-        new DebugLog(frame,DebugType.EXCEPTION,exception,DebugLevel.ERROR);
+    public static void error(Frame frame, Exception exception) {
+        new DebugLog(frame, DebugType.EXCEPTION, exception, DebugLevel.ERROR);
     }
 
-    public static void warning(Frame frame,String text){
-        new DebugLog(frame,DebugType.TEXT,text,DebugLevel.WARNING);
+    public static void warning(Frame frame, String text) {
+        new DebugLog(frame, DebugType.TEXT, text, DebugLevel.WARNING);
     }
 
-    public static void warning(Frame frame,Exception exception){
-        new DebugLog(frame,DebugType.EXCEPTION,exception,DebugLevel.WARNING);
+    public static void warning(Frame frame, Exception exception) {
+        new DebugLog(frame, DebugType.EXCEPTION, exception, DebugLevel.WARNING);
     }
 
     public Frame getFrame() {

@@ -14,7 +14,7 @@ public class TimeSourceUtil {
         return (long) (getGLFWTime() * 1000);
     }
 
-    public static long getGLFWTimeNano(){
+    public static long getGLFWTimeNano() {
         return getGLFWTimeMills() * 1_000_000;
     }
 
@@ -26,19 +26,19 @@ public class TimeSourceUtil {
         return System.currentTimeMillis();
     }
 
-    public static long getSystemTimeNano(){
+    public static long getSystemTimeNano() {
         return getSystemTimeMills() * 1_000_000;
     }
 
-    public static double getNanoTime(){
+    public static double getNanoTime() {
         return (double) getNanoTimeNano() / 1_000_000_000;
     }
 
-    public static long getNanoTimeMills(){
+    public static long getNanoTimeMills() {
         return getNanoTimeNano() / 1_000_000;
     }
 
-    public static long getNanoTimeNano(){
+    public static long getNanoTimeNano() {
         return System.nanoTime();
     }
 

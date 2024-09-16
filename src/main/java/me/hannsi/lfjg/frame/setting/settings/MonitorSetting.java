@@ -3,9 +3,9 @@ package me.hannsi.lfjg.frame.setting.settings;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
-import me.hannsi.lfjg.util.type.types.MonitorType;
 import me.hannsi.lfjg.util.GLFWUtil;
 import me.hannsi.lfjg.util.Vec2i;
+import me.hannsi.lfjg.util.type.types.MonitorType;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
@@ -16,7 +16,7 @@ import java.util.Objects;
 @ReflectionsLevel(level = 5)
 public class MonitorSetting extends FrameSettingBase<MonitorType> {
     public MonitorSetting(Frame frame) {
-        super(frame, "MonitorSetting", 5, MonitorType.Window,true);
+        super(frame, "MonitorSetting", 5, MonitorType.Window, true);
     }
 
     @Override
@@ -38,11 +38,11 @@ public class MonitorSetting extends FrameSettingBase<MonitorType> {
             }
         }
 
-        if(getValue() == MonitorType.FullScreen){
-            GLFW.glfwWindowHint(GLFW.GLFW_AUTO_ICONIFY,GLFW.GLFW_TRUE);
+        if (getValue() == MonitorType.FullScreen) {
+            GLFW.glfwWindowHint(GLFW.GLFW_AUTO_ICONIFY, GLFW.GLFW_TRUE);
         }
-        if(getValue() == MonitorType.Borderless){
-            GLFW.glfwWindowHint(GLFW.GLFW_AUTO_ICONIFY,GLFW.GLFW_FALSE);
+        if (getValue() == MonitorType.Borderless) {
+            GLFW.glfwWindowHint(GLFW.GLFW_AUTO_ICONIFY, GLFW.GLFW_FALSE);
         }
     }
 }

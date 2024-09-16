@@ -9,12 +9,12 @@ import org.lwjgl.glfw.GLFW;
 @ReflectionsLevel(level = 15)
 public class TransparentFramebufferSetting extends FrameSettingBase<Boolean> {
     public TransparentFramebufferSetting(Frame frame) {
-        super(frame, "TransparentFramebufferSetting",15,false,true);
+        super(frame, "TransparentFramebufferSetting", 15, false, true);
     }
 
     @Override
     public void updateSetting() {
-        GLFWUtil.windowHintBoolean(GLFW.GLFW_TRANSPARENT_FRAMEBUFFER,getValue());
+        GLFWUtil.windowHintBoolean(GLFW.GLFW_TRANSPARENT_FRAMEBUFFER, getValue());
 
         super.updateSetting();
     }

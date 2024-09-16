@@ -28,12 +28,12 @@ public class GLFWUtil {
         return videoMode;
     }
 
-    public static void windowHintBoolean(int hint,boolean value){
-        windowHintValue(hint,(value ? GLFW.GLFW_TRUE : GLFW.GLFW_FALSE));
+    public static void windowHintBoolean(int hint, boolean value) {
+        windowHintValue(hint, (value ? GLFW.GLFW_TRUE : GLFW.GLFW_FALSE));
     }
 
-    public static void windowHintValue(int hint, int value){
-        GLFW.glfwWindowHint(hint,value);
+    public static void windowHintValue(int hint, int value) {
+        GLFW.glfwWindowHint(hint, value);
     }
 
     public static void setWindowIcon(long windowID, ResourcesLocation resourcesLocation) {

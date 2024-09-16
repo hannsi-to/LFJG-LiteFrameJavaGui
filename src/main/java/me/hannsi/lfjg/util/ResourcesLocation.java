@@ -2,11 +2,8 @@ package me.hannsi.lfjg.util;
 
 import me.hannsi.lfjg.frame.Frame;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
-import java.util.Objects;
 
 public class ResourcesLocation {
     private String path;

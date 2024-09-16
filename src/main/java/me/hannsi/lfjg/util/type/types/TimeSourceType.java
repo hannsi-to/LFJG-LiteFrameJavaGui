@@ -3,7 +3,7 @@ package me.hannsi.lfjg.util.type.types;
 import me.hannsi.lfjg.util.type.system.IEnumTypeBase;
 
 public enum TimeSourceType implements IEnumTypeBase {
-    GLFWTime(0,"GLFWTime"),SystemTime(1,"SystemTime"),NanoTime(2,"NanoTime");
+    GLFWTime(0, "GLFWTime"), SystemTime(1, "SystemTime"), NanoTime(2, "NanoTime");
 
     final int id;
     final String name;

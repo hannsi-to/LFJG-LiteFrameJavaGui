@@ -13,6 +13,7 @@ public class AntiAliasingSetting extends FrameSettingBase<AntiAliasingType> {
 
     @Override
     public void updateSetting() {
+
         super.updateSetting();
     }
 }

@@ -16,7 +16,7 @@ public class LoggerManager {
 
     public void logEvent(DebugLog debugLog) {
         DebugLevel debugLevel = debugLog.getDebugLevel();
-        String title = debugLevel.getDisplay();
+        String level = debugLevel.getDisplay();
         String description = "";
         DebugType debugType = debugLog.getDebugType();
         Exception exception = debugLog.getException();

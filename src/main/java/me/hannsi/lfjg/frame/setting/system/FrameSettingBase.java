@@ -4,14 +4,14 @@ import me.hannsi.lfjg.frame.Frame;
 
 public class FrameSettingBase<T> {
     private final Frame frame;
+    private final T defaultValue;
     private String name;
     private int id;
-    private final T defaultValue;
     private T value;
-    private boolean windowHint;
-    
-    public FrameSettingBase(Frame frame,String name,int id,T defaultValue){
-        this(frame,name,id,defaultValue,false);
+    private final boolean windowHint;
+
+    public FrameSettingBase(Frame frame, String name, int id, T defaultValue) {
+        this(frame, name, id, defaultValue, false);
     }
 
     public FrameSettingBase(Frame frame, String name, int id, T defaultValue, boolean windowHint) {
@@ -23,7 +23,7 @@ public class FrameSettingBase<T> {
         this.windowHint = windowHint;
     }
 
-    public void updateSetting(){
+    public void updateSetting() {
     }
 
     public Frame getFrame() {

@@ -3,7 +3,7 @@ package me.hannsi.lfjg.util.type.types;
 import me.hannsi.lfjg.util.type.system.IEnumTypeBase;
 
 public enum MonitorType implements IEnumTypeBase {
-    Window(0, "Window"), FullScreen(1,"FullScreen"), Borderless(2,"Borderless");
+    Window(0, "Window"), FullScreen(1, "FullScreen"), Borderless(2, "Borderless");
 
     final int id;
     final String name;

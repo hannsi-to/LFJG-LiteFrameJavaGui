@@ -15,11 +15,7 @@ public class HeightSetting extends FrameSettingBase<Integer> {
     @Override
     public void updateSetting() {
         if (getFrame().getWindowID() != -1L) {
-            GLFW.glfwSetWindowSize(
-                    getFrame().getWindowID(),
-                    getFrame().getFrameSettingValue(WidthSetting.class),
-                    getValue()
-            );
+            GLFW.glfwSetWindowSize(getFrame().getWindowID(), getFrame().getFrameSettingValue(WidthSetting.class), getValue());
         }
 
         super.updateSetting();

@@ -10,7 +10,7 @@ import org.lwjgl.glfw.GLFW;
 @ReflectionsLevel(level = 8)
 public class IconSetting extends FrameSettingBase<ResourcesLocation> {
     public IconSetting(Frame frame) {
-        super(frame, "IconSetting",8,null);
+        super(frame, "IconSetting", 8, null);
     }
 
     @Override

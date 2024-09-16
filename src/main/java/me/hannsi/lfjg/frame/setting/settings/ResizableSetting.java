@@ -8,7 +8,7 @@ import org.lwjgl.glfw.GLFW;
 @ReflectionsLevel(level = 1)
 public class ResizableSetting extends FrameSettingBase<Boolean> {
     public ResizableSetting(Frame frame) {
-        super(frame, "ResizableSetting",1,true,true);
+        super(frame, "ResizableSetting", 1, true, true);
     }
 
     @Override

@@ -9,9 +9,7 @@ import me.hannsi.lfjg.util.ClassUtil;
 import me.hannsi.lfjg.util.PackagePath;
 import me.hannsi.lfjg.util.TimeCalculator;
 
-import java.lang.reflect.Constructor;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class FrameSettingManager extends Manager {
     private final List<FrameSettingBase<?>> frameSettings;

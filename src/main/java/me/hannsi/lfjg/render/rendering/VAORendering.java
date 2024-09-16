@@ -19,7 +19,7 @@ public class VAORendering {
     private int textureId = -1;
     private ResourcesLocation texturePath;
 
-    public VAORendering(VAO vertex, VAO color,VAO texture) {
+    public VAORendering(VAO vertex, VAO color, VAO texture) {
         this.vertex = vertex;
         this.color = color;
         this.texture = texture;
@@ -34,99 +34,99 @@ public class VAORendering {
         this.vertex = vertex;
     }
 
-    private void genVertexBufferObjects(){
+    private void genVertexBufferObjects() {
         vertex.getVbo().genVertexBufferObject();
-        if(color != null){
+        if (color != null) {
             color.getVbo().genVertexBufferObject();
         }
-        if(texture != null){
+        if (texture != null) {
             texture.getVbo().genVertexBufferObject();
         }
     }
 
-    private void enableTargets(){
+    private void enableTargets() {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        if(texture != null){
+        if (texture != null) {
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
             GL11.glEnable(GL11.GL_TEXTURE_2D);
         }
     }
 
-    private void setVAODatum(){
+    private void setVAODatum() {
         vertex.setVAOData();
-        if(color != null) {
+        if (color != null) {
             color.setVAOData();
         }
-        if(texture != null){
+        if (texture != null) {
             texture.setVAOData();
         }
     }
 
-    private void glPointers(){
+    private void glPointers() {
         vertex.bindBuffer();
-        GL11.glVertexPointer(vertex.getVbo().getSize(),GL11.GL_FLOAT,0,0);
-        if(color != null) {
+        GL11.glVertexPointer(vertex.getVbo().getSize(), GL11.GL_FLOAT, 0, 0);
+        if (color != null) {
             color.bindBuffer();
             GL11.glColorPointer(color.getVbo().getSize(), GL11.GL_FLOAT, 0, 0);
         }
-        if(texture != null){
+        if (texture != null) {
             texture.bindBuffer();
-            GL11.glTexCoordPointer(texture.getVbo().getSize(),GL11.GL_FLOAT,0,0);
+            GL11.glTexCoordPointer(texture.getVbo().getSize(), GL11.GL_FLOAT, 0, 0);
         }
     }
 
-    private void glEnableClientStateCaps(){
+    private void glEnableClientStateCaps() {
         GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
-        if(color != null) {
+        if (color != null) {
             GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
         }
-        if(texture != null){
+        if (texture != null) {
             GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
         }
     }
 
-    private void glDisableClientStateCaps(){
-        if(texture != null){
+    private void glDisableClientStateCaps() {
+        if (texture != null) {
             GL11.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
         }
-        if(color != null) {
+        if (color != null) {
             GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
         }
         GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
     }
 
-    private void deleteBuffers(){
+    private void deleteBuffers() {
         vertex.deleteBuffer();
-        if(color != null) {
+        if (color != null) {
             color.deleteBuffer();
         }
-        if(texture != null){
+        if (texture != null) {
             texture.deleteBuffer();
         }
     }
 
-    private void disableTargets(){
-        if(texture != null){
+    private void disableTargets() {
+        if (texture != null) {
             GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL11.glDeleteTextures(textureId);
         }
         GL11.glDisable(GL11.GL_BLEND);
     }
 
-    private void genTextureId(){
-        if(textureId == -1){
+    private void genTextureId() {
+        if (textureId == -1) {
             IntBuffer width = BufferUtils.createIntBuffer(1);
             IntBuffer height = BufferUtils.createIntBuffer(1);
             IntBuffer channels = BufferUtils.createIntBuffer(1);
-            ByteBuffer image = ImageLoader.loadImage(texturePath,width,height,channels);
+            ByteBuffer image = ImageLoader.loadImage(texturePath, width, height, channels);
             textureId = TextureLoader.createTexture(image, width.get(0), height.get(0));
             STBImage.stbi_image_free(image);
         }
     }
 
-    public void drawArrays(DrawType drawType){
-        if(texture != null){
+    public void drawArrays(DrawType drawType) {
+        if (texture != null) {
             genTextureId();
         }
 
@@ -142,7 +142,7 @@ public class VAORendering {
 
         glEnableClientStateCaps();
 
-        GL11.glDrawArrays(drawType.getId(),0,vertex.getVbo().getVertices());
+        GL11.glDrawArrays(drawType.getId(), 0, vertex.getVbo().getVertices());
 
         glDisableClientStateCaps();
 

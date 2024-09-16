@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.util;
 
-import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.frame.Frame;
 import org.reflections.Reflections;

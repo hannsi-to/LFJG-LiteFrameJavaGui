@@ -8,11 +8,11 @@ import org.lwjgl.glfw.GLFW;
 @ReflectionsLevel(level = 10)
 public class MultiSamplingValueSetting extends FrameSettingBase<Integer> {
     public MultiSamplingValueSetting(Frame frame) {
-        super(frame, "MultiSamplingValueSetting",10,64,true);
+        super(frame, "MultiSamplingValueSetting", 10, 64, true);
     }
 
     @Override
     public void updateSetting() {
-        GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES,getValue());
+        GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, getValue());
     }
 }

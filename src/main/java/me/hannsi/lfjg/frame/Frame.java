@@ -1,28 +1,20 @@
 package me.hannsi.lfjg.frame;
 
 import me.hannsi.lfjg.debug.DebugLog;
-import me.hannsi.lfjg.frame.manager.Manager;
 import me.hannsi.lfjg.frame.manager.managers.FrameSettingManager;
 import me.hannsi.lfjg.frame.manager.managers.LoggerManager;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
-import me.hannsi.lfjg.util.*;
+import me.hannsi.lfjg.util.GLFWUtil;
+import me.hannsi.lfjg.util.TimeCalculator;
+import me.hannsi.lfjg.util.TimeSourceUtil;
 import me.hannsi.lfjg.util.type.types.AntiAliasingType;
 import me.hannsi.lfjg.util.type.types.VSyncType;
-import me.hannsi.test.TestGuiFrame;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
-import org.lwjgl.stb.STBImage;
-import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
-
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 public class Frame {
     private final LFJGFrame lfjgFrame;
@@ -80,15 +72,15 @@ public class Frame {
         drawFrame();
     }
 
-    private void glfwWindowHints(){
-        GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED,GLFW.GLFW_FALSE);
-        GLFW.glfwWindowHint(GLFW.GLFW_CENTER_CURSOR,GLFW.GLFW_FALSE);
-        GLFW.glfwWindowHint(GLFW.GLFW_FOCUS_ON_SHOW,GLFW.GLFW_TRUE);
+    private void glfwWindowHints() {
+        GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED, GLFW.GLFW_FALSE);
+        GLFW.glfwWindowHint(GLFW.GLFW_CENTER_CURSOR, GLFW.GLFW_FALSE);
+        GLFW.glfwWindowHint(GLFW.GLFW_FOCUS_ON_SHOW, GLFW.GLFW_TRUE);
 
         updateFrameSetting(true);
     }
 
-    public void updateFrameSetting(boolean windowHint){
+    public void updateFrameSetting(boolean windowHint) {
         DebugLog.debug(this, "FrameSettings Updating...");
         long tookTime = TimeCalculator.calculate(() -> {
             frameSettingManager.updateFrameSettings(windowHint);
@@ -96,7 +88,7 @@ public class Frame {
         DebugLog.debug(this, "FrameSettings took " + tookTime + "ms to update!");
     }
 
-    private void glfwInvoke(){
+    private void glfwInvoke() {
         GLFW.glfwSetWindowFocusCallback(windowID, new GLFWWindowFocusCallbackI() {
             @Override
             public void invoke(long window, boolean focused) {
@@ -114,9 +106,9 @@ public class Frame {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {
                 if (action == GLFW.GLFW_PRESS) {
-                    lfjgFrame.keyPress(key, scancode, mods,window);
+                    lfjgFrame.keyPress(key, scancode, mods, window);
                 } else if (action == GLFW.GLFW_RELEASE) {
-                    lfjgFrame.keyReleased(key, scancode, mods,window);
+                    lfjgFrame.keyReleased(key, scancode, mods, window);
                 }
             }
         });
@@ -132,9 +124,9 @@ public class Frame {
             @Override
             public void invoke(long window, int button, int action, int mods) {
                 if (action == GLFW.GLFW_PRESS) {
-                    lfjgFrame.mouseButtonPress(button, mods,window);
+                    lfjgFrame.mouseButtonPress(button, mods, window);
                 } else if (action == GLFW.GLFW_RELEASE) {
-                    lfjgFrame.mouseButtonReleased(button, mods,window);
+                    lfjgFrame.mouseButtonReleased(button, mods, window);
                 }
             }
         });
@@ -145,7 +137,7 @@ public class Frame {
 
         long lastTime2 = TimeSourceUtil.getNanoTime(this);
         double deltaTime2 = 0;
-        double targetTime = 1_000_000_000.0 / (int)getFrameSettingValue(RefreshRateSetting.class);
+        double targetTime = 1_000_000_000.0 / (int) getFrameSettingValue(RefreshRateSetting.class);
         int frames2 = 0;
         long fpsLsatTime = TimeSourceUtil.getNanoTime(this);
 
@@ -158,7 +150,7 @@ public class Frame {
             deltaTime2 += currentTime2 - lastTime2;
             lastTime2 = currentTime2;
 
-            if(deltaTime2 >= targetTime){
+            if (deltaTime2 >= targetTime) {
                 GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
                 setAntiAliasing();
 
@@ -169,7 +161,7 @@ public class Frame {
 
                 frames2++;
 
-                if(currentTime2 - fpsLsatTime >= 1_000_000_000.0){
+                if (currentTime2 - fpsLsatTime >= 1_000_000_000.0) {
                     fps = frames2;
                     frames2 = 0;
                     fpsLsatTime = currentTime2;
@@ -179,7 +171,7 @@ public class Frame {
             }
 
             double sleepTime = (targetTime - deltaTime2) / 1_000_000_000.0;
-            if(sleepTime > 0){
+            if (sleepTime > 0) {
                 try {
                     Thread.sleep((long) sleepTime);
                 } catch (InterruptedException e) {
@@ -195,7 +187,7 @@ public class Frame {
         breakFrame();
     }
 
-    public void stopFrame(){
+    public void stopFrame() {
         GLFW.glfwSetWindowShouldClose(windowID, true);
     }
 

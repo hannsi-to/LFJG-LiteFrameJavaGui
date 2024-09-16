@@ -6,7 +6,7 @@ public class Manager {
     private final Frame frame;
     private final String name;
 
-    public Manager(Frame frame,String name) {
+    public Manager(Frame frame, String name) {
         this.frame = frame;
         this.name = name;
     }

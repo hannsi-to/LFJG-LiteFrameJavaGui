@@ -6,34 +6,34 @@ public class VAO {
     private final VBO vbo;
     private final int usage;
 
-    public VAO(VBO vbo,int usage) {
+    public VAO(VBO vbo, int usage) {
         this.vbo = vbo;
         this.usage = usage;
     }
 
     public VAO(VBO vbo) {
-        this(vbo,GL20.GL_STATIC_DRAW);
+        this(vbo, GL20.GL_STATIC_DRAW);
     }
 
-    public void setVAOData(){
+    public void setVAOData() {
         bindBuffer();
         bufferData();
         unBindBuffer();
     }
 
-    public void bufferData(){
-        GL20.glBufferData(GL20.GL_ARRAY_BUFFER,vbo.getFloatBuffer(),usage);
+    public void bufferData() {
+        GL20.glBufferData(GL20.GL_ARRAY_BUFFER, vbo.getFloatBuffer(), usage);
     }
 
-    public void bindBuffer(){
-        GL20.glBindBuffer(GL20.GL_ARRAY_BUFFER,vbo.getVertexBufferObjectHandle());
+    public void bindBuffer() {
+        GL20.glBindBuffer(GL20.GL_ARRAY_BUFFER, vbo.getVertexBufferObjectHandle());
     }
 
-    public void unBindBuffer(){
-        GL20.glBindBuffer(GL20.GL_ARRAY_BUFFER,0);
+    public void unBindBuffer() {
+        GL20.glBindBuffer(GL20.GL_ARRAY_BUFFER, 0);
     }
 
-    public void deleteBuffer(){
+    public void deleteBuffer() {
         GL20.glDeleteBuffers(vbo.getVertexBufferObjectHandle());
     }
 

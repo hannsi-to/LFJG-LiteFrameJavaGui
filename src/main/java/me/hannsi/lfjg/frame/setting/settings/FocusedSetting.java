@@ -9,7 +9,7 @@ import org.lwjgl.glfw.GLFW;
 @ReflectionsLevel(level = 13)
 public class FocusedSetting extends FrameSettingBase<Boolean> {
     public FocusedSetting(Frame frame) {
-        super(frame, "FocusedSetting",13,true,true);
+        super(frame, "FocusedSetting", 13, true, true);
     }
 
     @Override

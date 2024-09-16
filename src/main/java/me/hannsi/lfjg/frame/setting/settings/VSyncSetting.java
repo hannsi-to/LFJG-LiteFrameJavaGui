@@ -14,7 +14,7 @@ public class VSyncSetting extends FrameSettingBase<VSyncType> {
 
     @Override
     public void updateSetting() {
-        if(getFrame().getWindowID() != -1L){
+        if (getFrame().getWindowID() != -1L) {
             GLFW.glfwSwapInterval(getValue().getId());
         }
     }

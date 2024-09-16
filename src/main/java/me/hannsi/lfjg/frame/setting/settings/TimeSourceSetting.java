@@ -8,7 +8,7 @@ import me.hannsi.lfjg.util.type.types.TimeSourceType;
 @ReflectionsLevel(level = 11)
 public class TimeSourceSetting extends FrameSettingBase<TimeSourceType> {
     public TimeSourceSetting(Frame frame) {
-        super(frame,"TimeSource",11,TimeSourceType.SystemTime);
+        super(frame, "TimeSource", 11, TimeSourceType.SystemTime);
     }
 
     @Override

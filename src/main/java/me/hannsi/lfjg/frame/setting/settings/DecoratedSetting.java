@@ -9,7 +9,7 @@ import org.lwjgl.glfw.GLFW;
 @ReflectionsLevel(level = 12)
 public class DecoratedSetting extends FrameSettingBase<Boolean> {
     public DecoratedSetting(Frame frame) {
-        super(frame, "DecoratedSetting", 12, true,true);
+        super(frame, "DecoratedSetting", 12, true, true);
     }
 
     @Override

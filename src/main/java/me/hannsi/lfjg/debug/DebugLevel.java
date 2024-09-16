@@ -8,7 +8,7 @@ public enum DebugLevel {
 
     final int code;
     final String display;
-    Color jglColor;
+    final Color jglColor;
 
     DebugLevel(int code, String display, Color jglColor) {
         this.code = code;
@@ -28,7 +28,4 @@ public enum DebugLevel {
         return jglColor;
     }
 
-    public void setJglColor(Color jglColor) {
-        this.jglColor = jglColor;
-    }
 }

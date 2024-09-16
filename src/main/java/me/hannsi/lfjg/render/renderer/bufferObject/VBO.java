@@ -9,10 +9,10 @@ public class VBO {
     private FloatBuffer floatBuffer;
     private int vertexBufferObjectHandle;
     private int vertices;
-    private int size;
+    private final int size;
 
-    public VBO(int vertices,int size){
-        if(vertices == -1){
+    public VBO(int vertices, int size) {
+        if (vertices == -1) {
             vertices = 5;
         }
 
@@ -22,8 +22,8 @@ public class VBO {
         this.floatBuffer = BufferUtils.createFloatBuffer(vertices * size);
     }
 
-    public void put(float value){
-        if(!this.floatBuffer.hasRemaining()){
+    public void put(float value) {
+        if (!this.floatBuffer.hasRemaining()) {
             this.vertices++;
             FloatBuffer newBuffer = BufferUtils.createFloatBuffer(vertices * size);
 
@@ -35,13 +35,13 @@ public class VBO {
         this.floatBuffer.put(value);
     }
 
-    public void put(float... values){
-        for(float value : values){
+    public void put(float... values) {
+        for (float value : values) {
             put(value);
         }
     }
 
-    public void genVertexBufferObject(){
+    public void genVertexBufferObject() {
         this.floatBuffer.flip();
         this.vertexBufferObjectHandle = GL20.glGenBuffers();
     }

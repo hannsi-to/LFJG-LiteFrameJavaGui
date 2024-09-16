@@ -3,8 +3,7 @@ package me.hannsi.lfjg.util.type.types;
 import me.hannsi.lfjg.util.type.system.IEnumTypeBase;
 
 public enum AntiAliasingType implements IEnumTypeBase {
-    OFF(0,"Off"),
-    MSAA(1,"MultiSampleAntiAliasing");
+    OFF(0, "Off"), MSAA(1, "MultiSampleAntiAliasing");
 
     final int id;
     final String name;
