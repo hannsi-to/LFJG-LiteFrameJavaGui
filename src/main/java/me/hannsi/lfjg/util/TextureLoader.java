@@ -1,27 +1,31 @@
 package me.hannsi.lfjg.util;
 
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import java.nio.ByteBuffer;
 
 public class TextureLoader {
     public static int createTexture(ByteBuffer image, int width, int height) {
-        int textureId = GL11.glGenTextures();
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
+        int textureId = GL12.glGenTextures();
+        GL12.glBindTexture(GL12.GL_TEXTURE_2D, textureId);
 
-        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, image);
+        GL12.glPixelStorei(GL12.GL_UNPACK_ALIGNMENT, 1);
 
-        int error = GL11.glGetError();
-        if (error != GL11.GL_NO_ERROR) {
+        GL12.glTexImage2D(GL12.GL_TEXTURE_2D, 0, GL12.GL_RGBA, width, height, 0, GL12.GL_RGBA, GL12.GL_UNSIGNED_BYTE, image);
+
+        int error = GL12.glGetError();
+        if (error != GL12.GL_NO_ERROR) {
             throw new RuntimeException("OpenGL Error: " + error);
         }
 
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+        // テクスチャのパラメータ設定
+        GL12.glTexParameteri(GL12.GL_TEXTURE_2D, GL12.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+        GL12.glTexParameteri(GL12.GL_TEXTURE_2D, GL12.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+        GL12.glTexParameteri(GL12.GL_TEXTURE_2D, GL12.GL_TEXTURE_MIN_FILTER, GL12.GL_LINEAR);
+        GL12.glTexParameteri(GL12.GL_TEXTURE_2D, GL12.GL_TEXTURE_MAG_FILTER, GL12.GL_LINEAR);
 
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+        // テクスチャのバインドを解除
+        GL12.glBindTexture(GL12.GL_TEXTURE_2D, 0);
 
         return textureId;
     }

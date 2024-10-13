@@ -28,16 +28,16 @@ public class ClassUtil {
             Constructor<T> constructor = clazz.getDeclaredConstructor(parameterTypes.toArray(new Class<?>[0]));
             instance = constructor.newInstance(args);
         } catch (InstantiationException e) {
-            DebugLog.error(frame, "Could not instantiate class: " + clazz.getName() + "\n" + e);
+            DebugLog.error(ClassUtil.class, "Could not instantiate class: " + clazz.getName() + "\n" + e);
             throw new RuntimeException("Could not instantiate class: " + clazz.getName(), e);
         } catch (IllegalAccessException e) {
-            DebugLog.error(frame, "Illegal access to constructor: " + clazz.getName() + "\n" + e);
+            DebugLog.error(ClassUtil.class, "Illegal access to constructor: " + clazz.getName() + "\n" + e);
             throw new RuntimeException("Illegal access to constructor: " + clazz.getName(), e);
         } catch (InvocationTargetException e) {
-            DebugLog.error(frame, "Constructor threw an exception: " + clazz.getName() + "\n" + e);
+            DebugLog.error(ClassUtil.class, "Constructor threw an exception: " + clazz.getName() + "\n" + e);
             throw new RuntimeException("Constructor threw an exception: " + clazz.getName(), e);
         } catch (NoSuchMethodException e) {
-            DebugLog.error(frame, "No matching constructor found: " + clazz.getName() + "\n" + e);
+            DebugLog.error(ClassUtil.class, "No matching constructor found: " + clazz.getName() + "\n" + e);
             throw new RuntimeException("No matching constructor found: " + clazz.getName(), e);
         }
 

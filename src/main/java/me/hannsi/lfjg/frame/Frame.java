@@ -16,9 +16,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.system.MemoryUtil;
 
-public class Frame {
+public class Frame implements IFrame {
     private final LFJGFrame lfjgFrame;
-    private final LoggerManager loggerManager = new LoggerManager(this);
     private FrameSettingManager frameSettingManager;
     private long windowID = -1L;
     private int fps;
@@ -34,12 +33,11 @@ public class Frame {
     }
 
     private void registerManagers() {
-        DebugLog.debug(this, "Managers loading...");
+        DebugLog.debug(getClass(), "Managers loading...");
         long tookTime = TimeCalculator.calculate(() -> {
-            frameSettingManager = new FrameSettingManager(this);
-            DebugLog.debug(this, "Loaded FrameSettingManager");
+            this.frameSettingManager = new FrameSettingManager(this);
         });
-        DebugLog.debug(this, "Managers took " + tookTime + "ms to load!");
+        DebugLog.debug(getClass(), "Managers took " + tookTime + "ms to load!");
     }
 
     public void createFrame() {
@@ -81,11 +79,11 @@ public class Frame {
     }
 
     public void updateFrameSetting(boolean windowHint) {
-        DebugLog.debug(this, "FrameSettings Updating...");
+        DebugLog.debug(getClass(), "FrameSettings Updating...");
         long tookTime = TimeCalculator.calculate(() -> {
             frameSettingManager.updateFrameSettings(windowHint);
         });
-        DebugLog.debug(this, "FrameSettings took " + tookTime + "ms to update!");
+        DebugLog.debug(getClass(), "FrameSettings took " + tookTime + "ms to update!");
     }
 
     private void glfwInvoke() {

@@ -18,6 +18,8 @@ public class FrameSettingManager extends Manager {
         super(frame, "FrameSettingManager");
         this.frameSettings = new ArrayList<>();
         loadFrameSettings();
+
+        DebugLog.debug(getClass(), "Loaded FrameSettingManager");
     }
 
     public void updateFrameSettings(boolean windowHint) {
@@ -26,7 +28,7 @@ public class FrameSettingManager extends Manager {
 
             if (shouldUpdate) {
                 frameSettingBase.updateSetting();
-                DebugLog.debug(getFrame(), "Updated FrameSetting : " + frameSettingBase.getName() + " | Value : " + frameSettingBase.getValue());
+                DebugLog.debug(getClass(), "Updated FrameSetting: " + frameSettingBase.getName() + " | Value: " + frameSettingBase.getValue());
             }
         }
     }
@@ -55,7 +57,7 @@ public class FrameSettingManager extends Manager {
             return reflectionsLevel != null ? reflectionsLevel.level() : Integer.MAX_VALUE;
         }));
 
-        DebugLog.debug(getFrame(), "FrameSettings loading...");
+        DebugLog.debug(getClass(), "FrameSettings loading...");
         long tookTime = TimeCalculator.calculate(() -> {
             for (Class<? extends FrameSettingBase<?>> subType : sortedClasses) {
                 FrameSettingBase<?> frameSettingBase = ClassUtil.createInstance(getFrame(), subType, getFrame());
@@ -64,10 +66,10 @@ public class FrameSettingManager extends Manager {
                     register(frameSettingBase);
                 }
 
-                DebugLog.debug(getFrame(), "Loaded FrameSetting : " + Objects.requireNonNull(frameSettingBase).getName());
+                DebugLog.debug(getClass(), "Loaded FrameSetting: " + Objects.requireNonNull(frameSettingBase).getName());
             }
         });
-        DebugLog.debug(getFrame(), "FrameSettings took " + tookTime + "ms to load!");
+        DebugLog.debug(getClass(), "FrameSettings took " + tookTime + "ms to load!");
     }
 
     public void register(FrameSettingBase<?> frameSetting) {

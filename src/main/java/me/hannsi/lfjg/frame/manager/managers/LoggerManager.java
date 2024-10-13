@@ -3,18 +3,24 @@ package me.hannsi.lfjg.frame.manager.managers;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.debug.DebugType;
+import me.hannsi.lfjg.event.events.LoggingEvent;
+import me.hannsi.lfjg.event.system.EventHandler;
 import me.hannsi.lfjg.frame.Frame;
+import me.hannsi.lfjg.frame.IFrame;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class LoggerManager {
     private Logger logger;
 
-    public LoggerManager(Frame frame) {
-        this.logger = LogManager.getLogger(frame);
+    public LoggerManager() {
+        IFrame.eventManager.register(this);
+        this.logger = LogManager.getLogger(Frame.class);
     }
 
-    public void logEvent(DebugLog debugLog) {
+    @EventHandler
+    public void loggingEvent(LoggingEvent loggingEvent) {
+        DebugLog debugLog = loggingEvent.getDebugLog();
         DebugLevel debugLevel = debugLog.getDebugLevel();
         String level = debugLevel.getDisplay();
         String description = "";

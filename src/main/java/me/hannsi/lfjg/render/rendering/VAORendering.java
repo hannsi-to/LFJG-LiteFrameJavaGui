@@ -1,45 +1,34 @@
 package me.hannsi.lfjg.render.rendering;
 
+import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.renderer.bufferObject.VAO;
-import me.hannsi.lfjg.util.ImageLoader;
+import me.hannsi.lfjg.util.ImageData;
 import me.hannsi.lfjg.util.ResourcesLocation;
 import me.hannsi.lfjg.util.TextureLoader;
 import me.hannsi.lfjg.util.type.types.DrawType;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.stb.STBImage;
-
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 
 public class VAORendering {
-    private final VAO vertex;
-    private VAO color = null;
-    private VAO texture = null;
+    private final Frame frame;
+    private VAO vertex;
+    private VAO color;
+    private VAO texture;
     private int textureId = -1;
     private ResourcesLocation texturePath;
 
-    public VAORendering(VAO vertex, VAO color, VAO texture) {
-        this.vertex = vertex;
-        this.color = color;
-        this.texture = texture;
-    }
-
-    public VAORendering(VAO vertex, VAO color) {
-        this.vertex = vertex;
-        this.color = color;
-    }
-
-    public VAORendering(VAO vertex) {
-        this.vertex = vertex;
+    public VAORendering(Frame frame) {
+        this.frame = frame;
     }
 
     private void genVertexBufferObjects() {
-        vertex.getVbo().genVertexBufferObject();
-        if (color != null) {
+        if (vertex != null && vertex.getVbo().getVertexBufferObjectHandle() == -1) {
+            vertex.getVbo().genVertexBufferObject();
+        }
+
+        if (color != null && color.getVbo().getVertexBufferObjectHandle() == -1) {
             color.getVbo().genVertexBufferObject();
         }
-        if (texture != null) {
+        if (texture != null && texture.getVbo().getVertexBufferObjectHandle() == -1) {
             texture.getVbo().genVertexBufferObject();
         }
     }
@@ -96,13 +85,13 @@ public class VAORendering {
         GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
     }
 
-    private void deleteBuffers() {
-        vertex.deleteBuffer();
+    private void unBindBuffers() {
+        vertex.unBindBuffer();
         if (color != null) {
-            color.deleteBuffer();
+            color.unBindBuffer();
         }
         if (texture != null) {
-            texture.deleteBuffer();
+            texture.unBindBuffer();
         }
     }
 
@@ -116,12 +105,8 @@ public class VAORendering {
 
     private void genTextureId() {
         if (textureId == -1) {
-            IntBuffer width = BufferUtils.createIntBuffer(1);
-            IntBuffer height = BufferUtils.createIntBuffer(1);
-            IntBuffer channels = BufferUtils.createIntBuffer(1);
-            ByteBuffer image = ImageLoader.loadImage(texturePath, width, height, channels);
-            textureId = TextureLoader.createTexture(image, width.get(0), height.get(0));
-            STBImage.stbi_image_free(image);
+            ImageData image = new ImageData(frame, texturePath);
+            textureId = TextureLoader.createTexture(image.getByteBuffer(), image.getMat().cols(), image.getMat().rows());
         }
     }
 
@@ -133,23 +118,16 @@ public class VAORendering {
         genVertexBufferObjects();
 
         GL11.glPushMatrix();
-
         enableTargets();
-
         setVAODatum();
-
         glPointers();
-
         glEnableClientStateCaps();
 
         GL11.glDrawArrays(drawType.getId(), 0, vertex.getVbo().getVertices());
 
         glDisableClientStateCaps();
-
-        deleteBuffers();
-
+        unBindBuffers();
         disableTargets();
-
         GL11.glPopMatrix();
     }
 
@@ -157,12 +135,18 @@ public class VAORendering {
         return vertex;
     }
 
+    public void setVertex(VAO vertex) {
+        this.vertex = vertex;
+    }
+
     public VAO getColor() {
         return color;
     }
 
     public void setColor(VAO color) {
-        this.color = color;
+        if (this.color == null || this.color != color) {
+            this.color = color;
+        }
     }
 
     public VAO getTexture() {
@@ -170,7 +154,9 @@ public class VAORendering {
     }
 
     public void setTexture(VAO texture) {
-        this.texture = texture;
+        if (this.texture == null || this.texture != texture) {
+            this.texture = texture;
+        }
     }
 
     public int getTextureId() {
@@ -181,11 +167,17 @@ public class VAORendering {
         this.textureId = textureId;
     }
 
+    public Frame getFrame() {
+        return frame;
+    }
+
     public ResourcesLocation getTexturePath() {
         return texturePath;
     }
 
     public void setTexturePath(ResourcesLocation texturePath) {
-        this.texturePath = texturePath;
+        if (this.texturePath == null || this.texturePath != texturePath) {
+            this.texturePath = texturePath;
+        }
     }
 }

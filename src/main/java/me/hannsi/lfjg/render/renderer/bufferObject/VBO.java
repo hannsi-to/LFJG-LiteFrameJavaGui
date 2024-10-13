@@ -6,10 +6,10 @@ import org.lwjgl.opengl.GL20;
 import java.nio.FloatBuffer;
 
 public class VBO {
-    private FloatBuffer floatBuffer;
-    private int vertexBufferObjectHandle;
-    private int vertices;
     private final int size;
+    private FloatBuffer floatBuffer;
+    private int vertexBufferObjectHandle = -1;
+    private int vertices;
 
     public VBO(int vertices, int size) {
         if (vertices == -1) {
@@ -41,8 +41,12 @@ public class VBO {
         }
     }
 
-    public void genVertexBufferObject() {
+    public void flip() {
         this.floatBuffer.flip();
+    }
+
+    public void genVertexBufferObject() {
+        flip();
         this.vertexBufferObjectHandle = GL20.glGenBuffers();
     }
 

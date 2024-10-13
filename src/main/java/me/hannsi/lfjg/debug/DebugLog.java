@@ -1,72 +1,73 @@
 package me.hannsi.lfjg.debug;
 
-import me.hannsi.lfjg.frame.Frame;
+import me.hannsi.lfjg.event.events.LoggingEvent;
+import me.hannsi.lfjg.frame.IFrame;
 
 public class DebugLog {
-    private Frame frame;
+    private Class<?> clazz;
     private DebugType debugType;
     private Exception exception;
     private String debugText;
     private DebugLevel debugLevel;
 
-    public DebugLog(Frame frame, DebugType debugType, Exception exception, DebugLevel debugLevel) {
-        this.frame = frame;
+    public DebugLog(Class<?> clazz, DebugType debugType, Exception exception, DebugLevel debugLevel) {
+        this.clazz = clazz;
         this.debugType = debugType;
         this.exception = exception;
         this.debugText = null;
         this.debugLevel = debugLevel;
 
-        frame.getLoggerManager().logEvent(this);
+        IFrame.eventManager.call(new LoggingEvent(this));
     }
 
-    public DebugLog(Frame frame, DebugType debugType, String debugText, DebugLevel debugLevel) {
-        this.frame = frame;
+    public DebugLog(Class<?> clazz, DebugType debugType, String debugText, DebugLevel debugLevel) {
+        this.clazz = clazz;
         this.debugType = debugType;
         this.exception = null;
         this.debugText = debugText;
         this.debugLevel = debugLevel;
 
-        frame.getLoggerManager().logEvent(this);
+        IFrame.eventManager.call(new LoggingEvent(this));
     }
 
-    public static void debug(Frame frame, String text) {
-        new DebugLog(frame, DebugType.TEXT, text, DebugLevel.DEBUG);
+    public static void debug(Class<?> clazz, String text) {
+        new DebugLog(clazz, DebugType.TEXT, text, DebugLevel.DEBUG);
     }
 
-    public static void debug(Frame frame, Exception exception) {
-        new DebugLog(frame, DebugType.EXCEPTION, exception, DebugLevel.DEBUG);
+    public static void debug(Class<?> clazz, Exception exception) {
+        new DebugLog(clazz, DebugType.EXCEPTION, exception, DebugLevel.DEBUG);
     }
 
-    public static void info(Frame frame, String text) {
-        new DebugLog(frame, DebugType.TEXT, text, DebugLevel.INFO);
+    public static void info(Class<?> clazz, String text) {
+        new DebugLog(clazz, DebugType.TEXT, text, DebugLevel.INFO);
     }
 
-    public static void info(Frame frame, Exception exception) {
-        new DebugLog(frame, DebugType.EXCEPTION, exception, DebugLevel.INFO);
+    public static void info(Class<?> clazz, Exception exception) {
+        new DebugLog(clazz, DebugType.EXCEPTION, exception, DebugLevel.INFO);
     }
 
-    public static void error(Frame frame, String text) {
-        new DebugLog(frame, DebugType.TEXT, text, DebugLevel.ERROR);
+    public static void error(Class<?> clazz, String text) {
+        new DebugLog(clazz, DebugType.TEXT, text, DebugLevel.ERROR);
     }
 
-    public static void error(Frame frame, Exception exception) {
-        new DebugLog(frame, DebugType.EXCEPTION, exception, DebugLevel.ERROR);
+    public static void error(Class<?> clazz, Exception exception) {
+        new DebugLog(clazz, DebugType.EXCEPTION, exception, DebugLevel.ERROR);
     }
 
-    public static void warning(Frame frame, String text) {
-        new DebugLog(frame, DebugType.TEXT, text, DebugLevel.WARNING);
+    public static void warning(Class<?> clazz, String text) {
+        new DebugLog(clazz, DebugType.TEXT, text, DebugLevel.WARNING);
     }
 
-    public static void warning(Frame frame, Exception exception) {
-        new DebugLog(frame, DebugType.EXCEPTION, exception, DebugLevel.WARNING);
+    public static void warning(Class<?> clazz, Exception exception) {
+        new DebugLog(clazz, DebugType.EXCEPTION, exception, DebugLevel.WARNING);
     }
 
-    public Frame getFrame() {
-        return frame;
+    public Class<?> getClazz() {
+        return clazz;
     }
 
-    public void setFrame(Frame frame) {
-        this.frame = frame;
+    public void setClazz(Class<?> clazz) {
+        this.clazz = clazz;
     }
 
     public DebugType getDebugType() {
