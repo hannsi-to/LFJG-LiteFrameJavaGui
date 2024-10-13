@@ -15,6 +15,7 @@ public class VAORendering {
     private VAO texture;
     private int textureId = -1;
     private ResourcesLocation texturePath;
+    private ImageData imageData;
 
     public VAORendering(Frame frame) {
         this.frame = frame;
@@ -105,8 +106,8 @@ public class VAORendering {
 
     private void genTextureId() {
         if (textureId == -1) {
-            ImageData image = new ImageData(frame, texturePath);
-            textureId = TextureLoader.createTexture(image.getByteBuffer(), image.getMat().cols(), image.getMat().rows());
+            this.imageData = new ImageData(frame, texturePath);
+            textureId = TextureLoader.createTexture(imageData.getByteBuffer(), imageData.getMat().cols(), imageData.getMat().rows());
         }
     }
 
@@ -179,5 +180,13 @@ public class VAORendering {
         if (this.texturePath == null || this.texturePath != texturePath) {
             this.texturePath = texturePath;
         }
+    }
+
+    public ImageData getImageData() {
+        return imageData;
+    }
+
+    public void setImageData(ImageData imageData) {
+        this.imageData = imageData;
     }
 }

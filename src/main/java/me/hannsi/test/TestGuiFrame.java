@@ -2,6 +2,7 @@ package me.hannsi.test;
 
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.LFJGFrame;
+import me.hannsi.lfjg.frame.setting.settings.IconSetting;
 import me.hannsi.lfjg.frame.setting.settings.MonitorSetting;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.render.renderer.bufferObject.VAO;
@@ -46,7 +47,7 @@ public class TestGuiFrame implements LFJGFrame {
         VAORendering vaoRendering = new VAORendering(frame);
 
         vaoRendering.setVertex(vaoVertex);
-        vaoRendering.setColor(null);
+        vaoRendering.setColor(vaoColor);
         vaoRendering.setTexture(vaoTexture);
 
         GL11.glPushMatrix();
@@ -85,6 +86,6 @@ public class TestGuiFrame implements LFJGFrame {
         frame.setFrameSettingValue(MonitorSetting.class, MonitorType.Window);
         //frame.setFrameSettingValue(VSyncSetting.class, VSyncType.VSyncOn);
         //frame.setFrameSettingValue(TransparentFramebufferSetting.class, true);
-        //frame.setFrameSettingValue(IconSetting.class, new ResourcesLocation("salad_x32.png"));
+        frame.setFrameSettingValue(IconSetting.class, new ResourcesLocation("salad_x32.png"));
     }
 }
