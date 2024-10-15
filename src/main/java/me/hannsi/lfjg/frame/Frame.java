@@ -10,6 +10,7 @@ import me.hannsi.lfjg.util.TimeCalculator;
 import me.hannsi.lfjg.util.TimeSourceUtil;
 import me.hannsi.lfjg.util.type.types.AntiAliasingType;
 import me.hannsi.lfjg.util.type.types.VSyncType;
+import me.hannsi.lfjg.util.vertex.vector.Vector2i;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
@@ -26,10 +27,10 @@ public class Frame implements IFrame {
     private long startTime;
     private long finishTime;
 
-    public Frame(LFJGFrame lfjgFrame) {
+    public Frame(LFJGFrame lfjgFrame, String threadName) {
         this.lfjgFrame = lfjgFrame;
 
-        new Thread(this::createFrame).start();
+        new Thread(this::createFrame, threadName).start();
     }
 
     private void registerManagers() {
@@ -52,7 +53,8 @@ public class Frame implements IFrame {
         lfjgFrame.setFrameSetting();
         glfwWindowHints();
 
-        windowID = GLFW.glfwCreateWindow(getFrameSettingValue(WidthSetting.class), getFrameSettingValue(HeightSetting.class), getFrameSettingValue(TitleSetting.class).toString(), GLFWUtil.getMonitorTypeCode(getFrameSettingValue(MonitorSetting.class)), MemoryUtil.NULL);
+        Vector2i windowSizes = GLFWUtil.getWindowSizes(this, getFrameSettingValue(MonitorSetting.class));
+        windowID = GLFW.glfwCreateWindow(windowSizes.getX(), windowSizes.getY(), getFrameSettingValue(TitleSetting.class).toString(), GLFWUtil.getMonitorTypeCode(getFrameSettingValue(MonitorSetting.class)), MemoryUtil.NULL);
 
         if (windowID == MemoryUtil.NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
@@ -66,6 +68,7 @@ public class Frame implements IFrame {
 
         updateViewport();
         updateFrameSetting(false);
+
         glfwInvoke();
         drawFrame();
     }
@@ -153,6 +156,11 @@ public class Frame implements IFrame {
                 setAntiAliasing();
 
                 lfjgFrame.drawFrame();
+
+                int error = GL11.glGetError();
+                if (error != GL11.GL_NO_ERROR) {
+                    DebugLog.error(getClass(), "OpenGL Error: " + error);
+                }
 
                 GLFW.glfwSwapBuffers(windowID);
                 GLFW.glfwPollEvents();

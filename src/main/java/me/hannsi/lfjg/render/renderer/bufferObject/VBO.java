@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.renderer.bufferObject;
 
+import me.hannsi.lfjg.util.vertex.Color;
+import me.hannsi.lfjg.util.vertex.vector.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 
@@ -33,6 +35,18 @@ public class VBO {
         }
 
         this.floatBuffer.put(value);
+    }
+
+    public void put(Vector2f vector2f) {
+        put(vector2f.x);
+        put(vector2f.y);
+    }
+
+    public void put(Color color) {
+        put(color.getRed());
+        put(color.getGreen());
+        put(color.getBlue());
+        put(color.getAlpha());
     }
 
     public void put(float... values) {

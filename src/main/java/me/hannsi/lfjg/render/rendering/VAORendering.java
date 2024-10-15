@@ -2,19 +2,21 @@ package me.hannsi.lfjg.render.rendering;
 
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.renderer.bufferObject.VAO;
-import me.hannsi.lfjg.util.ImageData;
-import me.hannsi.lfjg.util.ResourcesLocation;
-import me.hannsi.lfjg.util.TextureLoader;
+import me.hannsi.lfjg.util.*;
 import me.hannsi.lfjg.util.type.types.DrawType;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 
 public class VAORendering {
     private final Frame frame;
     private VAO vertex;
     private VAO color;
     private VAO texture;
+
     private int textureId = -1;
+
     private ResourcesLocation texturePath;
+
     private ImageData imageData;
 
     public VAORendering(Frame frame) {
@@ -112,15 +114,16 @@ public class VAORendering {
     }
 
     public void drawArrays(DrawType drawType) {
+        genVertexBufferObjects();
+
+        setVAODatum();
+
         if (texture != null) {
             genTextureId();
         }
 
-        genVertexBufferObjects();
-
         GL11.glPushMatrix();
         enableTargets();
-        setVAODatum();
         glPointers();
         glEnableClientStateCaps();
 

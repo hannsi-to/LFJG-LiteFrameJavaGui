@@ -1,6 +1,10 @@
 package me.hannsi.lfjg.util;
 
+import me.hannsi.lfjg.frame.Frame;
+import me.hannsi.lfjg.frame.setting.settings.HeightSetting;
+import me.hannsi.lfjg.frame.setting.settings.WidthSetting;
 import me.hannsi.lfjg.util.type.types.MonitorType;
+import me.hannsi.lfjg.util.vertex.vector.Vector2i;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWImage;
@@ -80,7 +84,15 @@ public class GLFWUtil {
         return buffer;
     }
 
-    public static Vec2i getMonitorCenter(long windowId) {
+    public static Vector2i getWindowSize(long windowId) {
+        int[] width = new int[1];
+        int[] height = new int[1];
+        GLFW.glfwGetWindowSize(windowId, width, height);
+
+        return new Vector2i(width[0], height[0]);
+    }
+
+    public static Vector2i getMonitorCenter(long windowId) {
         int cx;
         int cy;
         try (MemoryStack stack = MemoryStack.stackPush()) {
@@ -93,7 +105,7 @@ public class GLFWUtil {
             cx = (Objects.requireNonNull(videoMode).width() - pWidth.get(0)) / 2;
             cy = (videoMode.height() - pHeight.get(0)) / 2;
 
-            return new Vec2i(cx, cy);
+            return new Vector2i(cx, cy);
         }
     }
 
@@ -105,11 +117,31 @@ public class GLFWUtil {
             case FullScreen -> monitor = GLFW.glfwGetPrimaryMonitor();
             case Borderless -> {
                 GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
-                monitor = GLFW.glfwGetPrimaryMonitor();
+                monitor = MemoryUtil.NULL;
             }
             default -> throw new IllegalStateException("Unexpected value: " + monitorType);
         }
 
         return monitor;
+    }
+
+    public static Vector2i getWindowSizes(Frame frame, MonitorType monitorType) {
+        Vector2i windowSizes;
+
+        switch (monitorType) {
+            case Window, FullScreen ->
+                    windowSizes = new Vector2i(frame.getFrameSettingValue(WidthSetting.class), frame.getFrameSettingValue(HeightSetting.class));
+            case Borderless -> {
+                GLFWVidMode vidMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+                if (vidMode == null) {
+                    throw new RuntimeException("Failed to get video mode for primary monitor");
+                }
+
+                windowSizes = new Vector2i(vidMode.width(), vidMode.height());
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + monitorType);
+        }
+
+        return windowSizes;
     }
 }
