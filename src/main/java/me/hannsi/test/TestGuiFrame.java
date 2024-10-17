@@ -3,7 +3,7 @@ package me.hannsi.test;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
-import me.hannsi.lfjg.render.renderer.vertex.Line;
+import me.hannsi.lfjg.render.renderer.vertex.Point;
 import me.hannsi.lfjg.util.ResourcesLocation;
 import me.hannsi.lfjg.util.type.types.MonitorType;
 import me.hannsi.lfjg.util.type.types.VSyncType;
@@ -27,8 +27,8 @@ public class TestGuiFrame implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-        Line line = new Line(frame);
-        line.lineWH(0, 0, 1920, 1080, 10f, new Color(255, 255, 0, 255), new Color(0, 255, 255, 255));
+        Point point = new Point(frame);
+        point.point(500, 500, 250, new Color(255, 255, 255, 255));
     }
 
     @Override

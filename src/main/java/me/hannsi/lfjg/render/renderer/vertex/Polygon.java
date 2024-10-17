@@ -13,6 +13,7 @@ public class Polygon {
     private Frame frame;
     private DrawType drawType;
     private float lineWidth = -1f;
+    private float pointSize = -1f;
     private VBO vboVertex;
     private VBO vboColor;
 
@@ -56,6 +57,11 @@ public class Polygon {
         return this;
     }
 
+    public Polygon pointSize(float pointSize) {
+        this.pointSize = pointSize;
+        return this;
+    }
+
     public void draw() {
         VAO vaoVertex = new VAO(vboVertex);
         VAO vaoColor = new VAO(vboColor);
@@ -68,6 +74,9 @@ public class Polygon {
         GL11.glPushMatrix();
         if (lineWidth != -1f) {
             GL11.glLineWidth(lineWidth);
+        }
+        if (pointSize != -1f) {
+            GL11.glPointSize(pointSize);
         }
 
         vaoRendering.drawArrays(drawType);
