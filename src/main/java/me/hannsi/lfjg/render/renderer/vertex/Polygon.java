@@ -11,6 +11,8 @@ import org.lwjgl.opengl.GL11;
 
 public class Polygon {
     private Frame frame;
+    private DrawType drawType;
+    private float lineWidth = -1f;
     private VBO vboVertex;
     private VBO vboColor;
 
@@ -39,7 +41,22 @@ public class Polygon {
     public void end() {
     }
 
-    public void draw(DrawType drawType) {
+    public Polygon rendering() {
+        return this;
+    }
+
+    public Polygon drawType(DrawType drawType) {
+        this.drawType = drawType;
+
+        return this;
+    }
+
+    public Polygon lineWidth(float lineWidth) {
+        this.lineWidth = lineWidth;
+        return this;
+    }
+
+    public void draw() {
         VAO vaoVertex = new VAO(vboVertex);
         VAO vaoColor = new VAO(vboColor);
 
@@ -49,7 +66,12 @@ public class Polygon {
         vaoRendering.setColor(vaoColor);
 
         GL11.glPushMatrix();
+        if (lineWidth != -1f) {
+            GL11.glLineWidth(lineWidth);
+        }
+
         vaoRendering.drawArrays(drawType);
+
         GL11.glPopMatrix();
     }
 

@@ -28,8 +28,7 @@ public class TestGuiFrame implements LFJGFrame {
     @Override
     public void drawFrame() {
         Rect rect = new Rect(frame);
-        rect.rectWH(0, 0, 1920, 1080, new Color(255, 255, 0, 255), new Color(255, 0, 255, 255), new Color(0, 254, 255, 255), new Color(255, 0, 0, 255));
-
+        rect.rectWHOutLine(0, 0, 1920, 1080, 1f, new Color(255, 255, 0, 255), new Color(255, 0, 255, 255), new Color(0, 254, 255, 255), new Color(255, 0, 0, 255));
     }
 
     @Override
