@@ -43,10 +43,10 @@ public class VBO {
     }
 
     public void put(Color color) {
-        put(color.getRed());
-        put(color.getGreen());
-        put(color.getBlue());
-        put(color.getAlpha());
+        put(color.getRedF());
+        put(color.getGreenF());
+        put(color.getBlueF());
+        put(color.getAlphaF());
     }
 
     public void put(float... values) {

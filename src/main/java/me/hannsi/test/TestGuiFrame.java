@@ -3,7 +3,8 @@ package me.hannsi.test;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
-import me.hannsi.lfjg.render.renderer.vertex.Point;
+import me.hannsi.lfjg.render.renderer.vertex.Circle;
+import me.hannsi.lfjg.util.ColorUtil;
 import me.hannsi.lfjg.util.ResourcesLocation;
 import me.hannsi.lfjg.util.type.types.MonitorType;
 import me.hannsi.lfjg.util.type.types.VSyncType;
@@ -22,13 +23,14 @@ public class TestGuiFrame implements LFJGFrame {
 
     @Override
     public void init() {
-
     }
 
     @Override
     public void drawFrame() {
-        Point point = new Point(frame);
-        point.point(500, 500, 250, new Color(255, 255, 255, 255));
+        Color color = ColorUtil.getRainbow(25, 255, 255);
+
+        Circle circle = new Circle(frame);
+        circle.circle(500, 500, 250, 250, 360, color);
     }
 
     @Override
@@ -58,7 +60,7 @@ public class TestGuiFrame implements LFJGFrame {
     @Override
     public void setFrameSetting() {
         frame.setFrameSettingValue(RefreshRateSetting.class, 60);
-        frame.setFrameSettingValue(MonitorSetting.class, MonitorType.Borderless);
+        frame.setFrameSettingValue(MonitorSetting.class, MonitorType.Window);
         frame.setFrameSettingValue(VSyncSetting.class, VSyncType.VSyncOn);
         frame.setFrameSettingValue(FloatingSetting.class, false);
         frame.setFrameSettingValue(IconSetting.class, new ResourcesLocation("salad_x32.png"));

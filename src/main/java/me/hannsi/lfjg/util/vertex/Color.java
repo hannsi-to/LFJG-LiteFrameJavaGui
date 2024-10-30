@@ -212,6 +212,22 @@ public class Color {
         return this.value.getRGB();
     }
 
+    public float getRedF() {
+        return this.value.getRed() / 255f;
+    }
+
+    public float getGreenF() {
+        return this.value.getGreen() / 255f;
+    }
+
+    public float getBlueF() {
+        return this.value.getBlue() / 255f;
+    }
+
+    public float getAlphaF() {
+        return this.value.getAlpha() / 255f;
+    }
+
     public Color setRed(Color color, float red) {
         return ColorUtil.fixColorRange((int) (red * 255.0f), color.getGreen(), color.getBlue(), color.getAlpha());
     }

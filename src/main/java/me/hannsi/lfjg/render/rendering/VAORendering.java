@@ -2,10 +2,11 @@ package me.hannsi.lfjg.render.rendering;
 
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.renderer.bufferObject.VAO;
-import me.hannsi.lfjg.util.*;
+import me.hannsi.lfjg.util.ImageData;
+import me.hannsi.lfjg.util.ResourcesLocation;
+import me.hannsi.lfjg.util.TextureLoader;
 import me.hannsi.lfjg.util.type.types.DrawType;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
 
 public class VAORendering {
     private final Frame frame;
@@ -90,9 +91,11 @@ public class VAORendering {
 
     private void unBindBuffers() {
         vertex.unBindBuffer();
+
         if (color != null) {
             color.unBindBuffer();
         }
+
         if (texture != null) {
             texture.unBindBuffer();
         }
@@ -148,9 +151,7 @@ public class VAORendering {
     }
 
     public void setColor(VAO color) {
-        if (this.color == null || this.color != color) {
-            this.color = color;
-        }
+        this.color = color;
     }
 
     public VAO getTexture() {
@@ -158,9 +159,7 @@ public class VAORendering {
     }
 
     public void setTexture(VAO texture) {
-        if (this.texture == null || this.texture != texture) {
-            this.texture = texture;
-        }
+        this.texture = texture;
     }
 
     public int getTextureId() {

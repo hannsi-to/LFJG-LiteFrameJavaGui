@@ -6,15 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ColorUtil {
-    public static Color getRainbow(int delay, int timing, float saturation, float brightness) {
-        double rainbowState = Math.ceil((double) (System.currentTimeMillis() + (long) delay) / 20.0 + timing);
-        return Color.getHSBColor((float) (rainbowState % 360.0 / 360.0), saturation / 255.0f, brightness / 255.0f);
+    public static Color getRainbow(int delay, float timing, float saturation, float brightness) {
+        float hue = System.currentTimeMillis() % (int) (delay * 1000.0f) / (delay * 1000.0f) + timing;
+        return Color.getHSBColor(hue, saturation / 255f, brightness / 255f);
     }
 
     public static Color getRainbow(int delay, float saturation, float brightness) {
-        double rainbowState = Math.ceil((System.currentTimeMillis() + delay) / 20.0);
-        rainbowState %= 360;
-        return Color.getHSBColor((float) (rainbowState / 360.0f), saturation / 255.0f, brightness / 255.0f);
+        return getRainbow(delay, 0, saturation, brightness);
     }
 
     public static int toARGB(final int r, final int g, final int b, final int a) {
