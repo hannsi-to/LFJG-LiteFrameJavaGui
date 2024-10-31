@@ -1,9 +1,9 @@
 package me.hannsi.lfjg.render.renderer.vertex;
 
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.util.type.types.DrawType;
-import me.hannsi.lfjg.util.vertex.Color;
-import me.hannsi.lfjg.util.vertex.vector.Vector2f;
+import me.hannsi.lfjg.utils.type.types.DrawType;
+import me.hannsi.lfjg.utils.color.Color;
+import me.hannsi.lfjg.utils.math.vertex.vector.Vector2f;
 
 public class Rect extends Polygon {
     public Rect(Frame frame) {

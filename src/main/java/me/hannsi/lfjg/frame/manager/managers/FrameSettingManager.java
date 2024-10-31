@@ -5,9 +5,9 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.manager.Manager;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
-import me.hannsi.lfjg.util.ClassUtil;
-import me.hannsi.lfjg.util.PackagePath;
-import me.hannsi.lfjg.util.TimeCalculator;
+import me.hannsi.lfjg.utils.reflection.ClassUtil;
+import me.hannsi.lfjg.utils.reflection.PackagePath;
+import me.hannsi.lfjg.utils.time.TimeCalculator;
 
 import java.util.*;
 

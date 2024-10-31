@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.renderer.bufferObject;
 
-import me.hannsi.lfjg.util.vertex.Color;
-import me.hannsi.lfjg.util.vertex.vector.Vector2f;
+import me.hannsi.lfjg.utils.color.Color;
+import me.hannsi.lfjg.utils.math.vertex.vector.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 

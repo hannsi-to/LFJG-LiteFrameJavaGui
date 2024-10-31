@@ -4,11 +4,10 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.render.renderer.vertex.RoundedRect;
-import me.hannsi.lfjg.util.ColorUtil;
-import me.hannsi.lfjg.util.ResourcesLocation;
-import me.hannsi.lfjg.util.type.types.MonitorType;
-import me.hannsi.lfjg.util.type.types.VSyncType;
-import me.hannsi.lfjg.util.vertex.Color;
+import me.hannsi.lfjg.utils.color.ColorUtil;
+import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.type.types.MonitorType;
+import me.hannsi.lfjg.utils.type.types.VSyncType;
 
 public class TestGuiFrame implements LFJGFrame {
     private Frame frame;

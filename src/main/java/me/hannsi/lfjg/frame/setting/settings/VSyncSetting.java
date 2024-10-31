@@ -3,7 +3,7 @@ package me.hannsi.lfjg.frame.setting.settings;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
-import me.hannsi.lfjg.util.type.types.VSyncType;
+import me.hannsi.lfjg.utils.type.types.VSyncType;
 import org.lwjgl.glfw.GLFW;
 
 @ReflectionsLevel(level = 7)
