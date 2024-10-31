@@ -28,9 +28,13 @@ public class TestGuiFrame implements LFJGFrame {
     @Override
     public void drawFrame() {
         Color color = ColorUtil.getRainbow(25, 255, 255);
+        Color color2 = ColorUtil.getRainbow(25, 0.25f, 255, 255);
+        Color color3 = ColorUtil.getRainbow(25, 0.5f, 255, 255);
+        Color color4 = ColorUtil.getRainbow(25, 0.75f, 255, 255);
+        Color color5 = ColorUtil.getRainbow(25, 1f, 255, 255);
 
         Circle circle = new Circle(frame);
-        circle.circle(500, 500, 250, 250, 360, color);
+        circle.circle(500, 500, 250, 250, 360, color, color2, color3, color4, color5);
     }
 
     @Override
