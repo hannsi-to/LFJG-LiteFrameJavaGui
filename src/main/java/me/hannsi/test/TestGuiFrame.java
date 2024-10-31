@@ -3,7 +3,7 @@ package me.hannsi.test;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
-import me.hannsi.lfjg.render.renderer.vertex.Circle;
+import me.hannsi.lfjg.render.renderer.vertex.RoundedRect;
 import me.hannsi.lfjg.util.ColorUtil;
 import me.hannsi.lfjg.util.ResourcesLocation;
 import me.hannsi.lfjg.util.type.types.MonitorType;
@@ -27,14 +27,8 @@ public class TestGuiFrame implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-        Color color = ColorUtil.getRainbow(25, 255, 255);
-        Color color2 = ColorUtil.getRainbow(25, 0.25f, 255, 255);
-        Color color3 = ColorUtil.getRainbow(25, 0.5f, 255, 255);
-        Color color4 = ColorUtil.getRainbow(25, 0.75f, 255, 255);
-        Color color5 = ColorUtil.getRainbow(25, 1f, 255, 255);
-
-        Circle circle = new Circle(frame);
-        circle.circleOutLine(500, 500, 250, 250, 360, 1f, color, color2, color3, color4, color5);
+        RoundedRect roundedRect = new RoundedRect(frame);
+        roundedRect.roundedRectOutLine(0f, 0f, 500f, 500f, 1f, true, true, true, true, 10f, 10f, 10f, 10f, 5, ColorUtil.getRainbow(1, 0, 255, 255), ColorUtil.getRainbow(1, 0.25f, 255, 255), ColorUtil.getRainbow(1, 0.5f, 255, 255), ColorUtil.getRainbow(1, 0.75f, 255, 255));
     }
 
     @Override
