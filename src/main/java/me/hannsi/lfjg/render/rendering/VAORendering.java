@@ -17,14 +17,12 @@ public class VAORendering {
     private VAO texture;
 
     private int textureId = -1;
-
     private ResourcesLocation texturePath;
-
     private ImageData imageData;
 
     public VAORendering(Frame frame) {
         this.frame = frame;
-        gl11Util = new GL11Util();
+        this.gl11Util = new GL11Util();
     }
 
     private void genVertexBufferObjects() {
