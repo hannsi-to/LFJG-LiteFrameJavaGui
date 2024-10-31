@@ -2,6 +2,7 @@ package me.hannsi.lfjg.render.rendering;
 
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.renderer.bufferObject.VAO;
+import me.hannsi.lfjg.util.GL11Util;
 import me.hannsi.lfjg.util.ImageData;
 import me.hannsi.lfjg.util.ResourcesLocation;
 import me.hannsi.lfjg.util.TextureLoader;
@@ -10,6 +11,7 @@ import org.lwjgl.opengl.GL11;
 
 public class VAORendering {
     private final Frame frame;
+    private final GL11Util gl11Util;
     private VAO vertex;
     private VAO color;
     private VAO texture;
@@ -22,6 +24,7 @@ public class VAORendering {
 
     public VAORendering(Frame frame) {
         this.frame = frame;
+        gl11Util = new GL11Util();
     }
 
     private void genVertexBufferObjects() {
@@ -37,12 +40,19 @@ public class VAORendering {
         }
     }
 
+    private void addTargets() {
+        gl11Util.addGL11Target(GL11.GL_BLEND);
+        if (texture != null) {
+            gl11Util.addGL11Target(GL11.GL_TEXTURE_2D);
+        }
+    }
+
     private void enableTargets() {
-        GL11.glEnable(GL11.GL_BLEND);
+        gl11Util.enableTargets();
+
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         if (texture != null) {
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
-            GL11.glEnable(GL11.GL_TEXTURE_2D);
         }
     }
 
@@ -103,10 +113,11 @@ public class VAORendering {
 
     private void disableTargets() {
         if (texture != null) {
-            GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL11.glDeleteTextures(textureId);
         }
-        GL11.glDisable(GL11.GL_BLEND);
+
+        gl11Util.disableTargets();
+        gl11Util.finish();
     }
 
     private void genTextureId() {
@@ -125,7 +136,7 @@ public class VAORendering {
             genTextureId();
         }
 
-        GL11.glPushMatrix();
+        addTargets();
         enableTargets();
         glPointers();
         glEnableClientStateCaps();
@@ -135,7 +146,6 @@ public class VAORendering {
         glDisableClientStateCaps();
         unBindBuffers();
         disableTargets();
-        GL11.glPopMatrix();
     }
 
     public VAO getVertex() {
