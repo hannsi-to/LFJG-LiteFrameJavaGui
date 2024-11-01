@@ -1,11 +1,11 @@
-package me.hannsi.lfjg.render.rendering;
+package me.hannsi.lfjg.render.openGL.rendering;
 
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.render.renderer.bufferObject.VAO;
+import me.hannsi.lfjg.render.openGL.renderer.bufferObject.VAO;
 import me.hannsi.lfjg.utils.graphics.GL11Util;
 import me.hannsi.lfjg.utils.image.ImageData;
-import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.image.TextureLoader;
+import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.lwjgl.opengl.GL11;
 

@@ -1,12 +1,12 @@
-package me.hannsi.lfjg.render.renderer.vertex;
+package me.hannsi.lfjg.render.openGL.renderer.vertex;
 
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.render.renderer.bufferObject.VAO;
-import me.hannsi.lfjg.render.renderer.bufferObject.VBO;
-import me.hannsi.lfjg.render.rendering.VAORendering;
-import me.hannsi.lfjg.utils.type.types.DrawType;
+import me.hannsi.lfjg.render.openGL.renderer.bufferObject.VAO;
+import me.hannsi.lfjg.render.openGL.renderer.bufferObject.VBO;
+import me.hannsi.lfjg.render.openGL.rendering.VAORendering;
 import me.hannsi.lfjg.utils.color.Color;
 import me.hannsi.lfjg.utils.math.vertex.vector.Vector2f;
+import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.lwjgl.opengl.GL11;
 
 public class Polygon {

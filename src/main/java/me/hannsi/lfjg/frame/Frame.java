@@ -5,13 +5,17 @@ import me.hannsi.lfjg.frame.manager.managers.FrameSettingManager;
 import me.hannsi.lfjg.frame.manager.managers.LoggerManager;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
+import me.hannsi.lfjg.render.nanoVG.NanoVGUtil;
 import me.hannsi.lfjg.utils.graphics.GLFWUtil;
+import me.hannsi.lfjg.utils.math.vertex.vector.Vector2i;
 import me.hannsi.lfjg.utils.time.TimeCalculator;
 import me.hannsi.lfjg.utils.time.TimeSourceUtil;
 import me.hannsi.lfjg.utils.type.types.AntiAliasingType;
+import me.hannsi.lfjg.utils.type.types.RenderingType;
 import me.hannsi.lfjg.utils.type.types.VSyncType;
-import me.hannsi.lfjg.utils.math.vertex.vector.Vector2i;
 import org.lwjgl.glfw.*;
+import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.nanovg.NanoVGGL3;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -26,6 +30,7 @@ public class Frame implements IFrame {
     private long lastTime;
     private long startTime;
     private long finishTime;
+    private long nvg;
 
     public Frame(LFJGFrame lfjgFrame, String threadName) {
         this.lfjgFrame = lfjgFrame;
@@ -66,11 +71,22 @@ public class Frame implements IFrame {
 
         GL.createCapabilities();
 
+        initializeRendering();
+
         updateViewport();
         updateFrameSetting(false);
 
         glfwInvoke();
         drawFrame();
+    }
+
+    private void initializeRendering() {
+        if (RenderingType.NanoVG == getFrameSettingValue(RenderingTypeSetting.class)) {
+            nvg = NanoVGGL3.nvgCreate(NanoVGGL3.NVG_ANTIALIAS);
+            if (nvg == MemoryUtil.NULL) {
+                throw new RuntimeException("Failed to create NanoVG context");
+            }
+        }
     }
 
     private void glfwWindowHints() {
@@ -155,7 +171,7 @@ public class Frame implements IFrame {
                 GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
                 setAntiAliasing();
 
-                lfjgFrame.drawFrame();
+                draw();
 
                 int error = GL11.glGetError();
                 if (error != GL11.GL_NO_ERROR) {
@@ -193,6 +209,30 @@ public class Frame implements IFrame {
         breakFrame();
     }
 
+    private void draw() {
+        switch ((RenderingType) getFrameSettingValue(RenderingTypeSetting.class)) {
+            case OpenGL -> {
+                lfjgFrame.drawFrameWithOpenGL();
+            }
+            case NanoVG -> {
+                NanoVGUtil.framePush(nvg, ((Number) getFrameSettingValue(WidthSetting.class)).floatValue(), ((Number) getFrameSettingValue(HeightSetting.class)).floatValue(), 1);
+
+                NanoVG.nvgTranslate(nvg, 0, ((Number) getFrameSettingValue(HeightSetting.class)).floatValue());
+                NanoVG.nvgScale(nvg, 1, -1);
+
+                lfjgFrame.drawFrameWithNanoVG(nvg);
+
+                NanoVGUtil.framePop(nvg);
+            }
+            case Vulkan -> {
+            }
+            case LibGDX -> {
+            }
+            default ->
+                    throw new IllegalStateException("Unexpected value: " + getFrameSettingValue(RenderingTypeSetting.class));
+        }
+    }
+
     public void stopFrame() {
         GLFW.glfwSetWindowShouldClose(windowID, true);
     }
@@ -210,6 +250,11 @@ public class Frame implements IFrame {
 
     private void breakFrame() {
         Callbacks.glfwFreeCallbacks(windowID);
+
+        if (RenderingType.NanoVG == getFrameSettingValue(RenderingTypeSetting.class)) {
+            NanoVGGL3.nvgDelete(nvg);
+        }
+
         GLFW.glfwDestroyWindow(windowID);
 
         GLFW.glfwTerminate();

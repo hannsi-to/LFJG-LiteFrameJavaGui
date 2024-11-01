@@ -1,7 +1,11 @@
 package me.hannsi.lfjg.frame;
 
 public interface LFJGFrame {
-    void drawFrame();
+    default void drawFrameWithOpenGL() {
+    }
+
+    default void drawFrameWithNanoVG(long nvg) {
+    }
 
     void init();
 
@@ -17,3 +21,4 @@ public interface LFJGFrame {
 
     void setFrameSetting();
 }
+

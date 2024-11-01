@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.renderer.bufferObject;
+package me.hannsi.lfjg.render.openGL.renderer.bufferObject;
 
 import me.hannsi.lfjg.utils.color.Color;
 import me.hannsi.lfjg.utils.math.vertex.vector.Vector2f;

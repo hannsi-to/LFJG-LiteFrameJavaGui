@@ -59,6 +59,7 @@ public class FrameSettingManager extends Manager {
 
         DebugLog.debug(getClass(), "FrameSettings loading...");
         long tookTime = TimeCalculator.calculate(() -> {
+            int count = 0;
             for (Class<? extends FrameSettingBase<?>> subType : sortedClasses) {
                 FrameSettingBase<?> frameSettingBase = ClassUtil.createInstance(getFrame(), subType, getFrame());
 
@@ -66,7 +67,9 @@ public class FrameSettingManager extends Manager {
                     register(frameSettingBase);
                 }
 
-                DebugLog.debug(getClass(), "Loaded FrameSetting: " + Objects.requireNonNull(frameSettingBase).getName());
+                DebugLog.debug(getClass(), "Loaded FrameSetting: " + Objects.requireNonNull(frameSettingBase).getName() + " | Count: " + count);
+
+                count++;
             }
         });
         DebugLog.debug(getClass(), "FrameSettings took " + tookTime + "ms to load!");
