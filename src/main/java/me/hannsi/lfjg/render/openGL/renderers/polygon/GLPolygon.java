@@ -1,15 +1,15 @@
-package me.hannsi.lfjg.render.openGL.renderer.vertex;
+package me.hannsi.lfjg.render.openGL.renderers.polygon;
 
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.render.openGL.renderer.bufferObject.VAO;
-import me.hannsi.lfjg.render.openGL.renderer.bufferObject.VBO;
-import me.hannsi.lfjg.render.openGL.rendering.VAORendering;
+import me.hannsi.lfjg.render.openGL.system.VAORendering;
+import me.hannsi.lfjg.render.openGL.system.bufferObject.VAO;
+import me.hannsi.lfjg.render.openGL.system.bufferObject.VBO;
 import me.hannsi.lfjg.utils.color.Color;
-import me.hannsi.lfjg.utils.math.vertex.vector.Vector2f;
 import me.hannsi.lfjg.utils.type.types.DrawType;
+import org.joml.Vector2f;
 import org.lwjgl.opengl.GL11;
 
-public class Polygon {
+public class GLPolygon {
     private Frame frame;
     private DrawType drawType;
     private float lineWidth = -1f;
@@ -17,23 +17,23 @@ public class Polygon {
     private VBO vboVertex;
     private VBO vboColor;
 
-    public Polygon(Frame frame) {
+    public GLPolygon(Frame frame) {
         this.frame = frame;
         this.vboVertex = new VBO(1, 2);
         this.vboColor = new VBO(1, 4);
     }
 
-    public Polygon put() {
+    public GLPolygon put() {
         return this;
     }
 
-    public Polygon vertex(Vector2f vector2f) {
+    public GLPolygon vertex(Vector2f vector2f) {
         this.vboVertex.put(vector2f);
 
         return this;
     }
 
-    public Polygon color(Color color) {
+    public GLPolygon color(Color color) {
         this.vboColor.put(color);
 
         return this;
@@ -42,22 +42,22 @@ public class Polygon {
     public void end() {
     }
 
-    public Polygon rendering() {
+    public GLPolygon rendering() {
         return this;
     }
 
-    public Polygon drawType(DrawType drawType) {
+    public GLPolygon drawType(DrawType drawType) {
         this.drawType = drawType;
 
         return this;
     }
 
-    public Polygon lineWidth(float lineWidth) {
+    public GLPolygon lineWidth(float lineWidth) {
         this.lineWidth = lineWidth;
         return this;
     }
 
-    public Polygon pointSize(float pointSize) {
+    public GLPolygon pointSize(float pointSize) {
         this.pointSize = pointSize;
         return this;
     }

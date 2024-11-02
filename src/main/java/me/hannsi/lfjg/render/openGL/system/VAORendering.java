@@ -1,7 +1,7 @@
-package me.hannsi.lfjg.render.openGL.rendering;
+package me.hannsi.lfjg.render.openGL.system;
 
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.render.openGL.renderer.bufferObject.VAO;
+import me.hannsi.lfjg.render.openGL.system.bufferObject.VAO;
 import me.hannsi.lfjg.utils.graphics.GL11Util;
 import me.hannsi.lfjg.utils.image.ImageData;
 import me.hannsi.lfjg.utils.image.TextureLoader;

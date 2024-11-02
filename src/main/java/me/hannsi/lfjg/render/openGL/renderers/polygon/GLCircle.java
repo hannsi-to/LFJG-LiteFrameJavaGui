@@ -1,12 +1,12 @@
-package me.hannsi.lfjg.render.openGL.renderer.vertex;
+package me.hannsi.lfjg.render.openGL.renderers.polygon;
 
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.utils.color.Color;
-import me.hannsi.lfjg.utils.math.vertex.vector.Vector2f;
 import me.hannsi.lfjg.utils.type.types.DrawType;
+import org.joml.Vector2f;
 
-public class Circle extends Polygon {
-    public Circle(Frame frame) {
+public class GLCircle extends GLPolygon {
+    public GLCircle(Frame frame) {
         super(frame);
     }
 

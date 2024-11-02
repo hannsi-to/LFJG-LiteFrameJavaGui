@@ -14,6 +14,7 @@ public class NanoVGRendererBase {
     public float cy;
     public float range;
     public float lineWidth;
+    public float pointSize;
     public GradientMode gradientMode;
     public GradientMode outLineGradientMode;
     public float feather;
@@ -45,6 +46,7 @@ public class NanoVGRendererBase {
         this.cx = cx;
         this.cy = cy;
         this.range = range;
+        this.pointSize = range;
         this.x = cx - range;
         this.y = cy - range;
         this.width = range * 2;
@@ -262,5 +264,37 @@ public class NanoVGRendererBase {
 
     public void setOutLineColor2(Color outLineColor2) {
         this.outLineColor2 = outLineColor2;
+    }
+
+    public boolean isBase() {
+        return base;
+    }
+
+    public void setBase(boolean base) {
+        this.base = base;
+    }
+
+    public boolean isOutLine() {
+        return outLine;
+    }
+
+    public void setOutLine(boolean outLine) {
+        this.outLine = outLine;
+    }
+
+    public float getRange() {
+        return range;
+    }
+
+    public void setRange(float range) {
+        this.range = range;
+    }
+
+    public float getPointSize() {
+        return pointSize;
+    }
+
+    public void setPointSize(float pointSize) {
+        this.pointSize = pointSize;
     }
 }

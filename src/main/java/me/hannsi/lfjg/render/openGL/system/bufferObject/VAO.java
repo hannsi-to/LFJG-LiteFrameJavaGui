@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.openGL.renderer.bufferObject;
+package me.hannsi.lfjg.render.openGL.system.bufferObject;
 
 import org.lwjgl.opengl.GL20;
 

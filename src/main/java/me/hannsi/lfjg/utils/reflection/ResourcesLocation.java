@@ -8,11 +8,9 @@ import java.util.Objects;
 
 public class ResourcesLocation {
     private String path;
-    private InputStream inputStream;
 
     public ResourcesLocation(String path) {
         this.path = path;
-        this.inputStream = Frame.class.getClassLoader().getResourceAsStream(path);
     }
 
     public String getPath() {
@@ -24,14 +22,10 @@ public class ResourcesLocation {
     }
 
     public InputStream getInputStream() {
-        return inputStream;
-    }
-
-    public void setInputStream(InputStream inputStream) {
-        this.inputStream = inputStream;
+        return Frame.class.getClassLoader().getResourceAsStream(path);
     }
 
     public byte[] getBytes() {
-        return ByteUtil.convertInputStreamToByteArray(Objects.requireNonNull(inputStream));
+        return ByteUtil.convertInputStreamToByteArray(Objects.requireNonNull(getInputStream()));
     }
 }

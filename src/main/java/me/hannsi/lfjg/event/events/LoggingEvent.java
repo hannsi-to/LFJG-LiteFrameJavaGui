@@ -4,7 +4,7 @@ import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.event.system.Event;
 
 public class LoggingEvent extends Event {
-    private DebugLog debugLog;
+    private final DebugLog debugLog;
 
     public LoggingEvent(DebugLog debugLog) {
         this.debugLog = debugLog;
@@ -12,9 +12,5 @@ public class LoggingEvent extends Event {
 
     public DebugLog getDebugLog() {
         return debugLog;
-    }
-
-    public void setDebugLog(DebugLog debugLog) {
-        this.debugLog = debugLog;
     }
 }

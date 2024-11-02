@@ -6,7 +6,7 @@ import me.hannsi.lfjg.frame.setting.settings.WidthSetting;
 import me.hannsi.lfjg.utils.image.ImageLoader;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.MonitorType;
-import me.hannsi.lfjg.utils.math.vertex.vector.Vector2i;
+import org.joml.Vector2i;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWImage;
@@ -132,7 +132,7 @@ public class GLFWUtil {
 
         switch (monitorType) {
             case Window, FullScreen ->
-                    windowSizes = new Vector2i(frame.getFrameSettingValue(WidthSetting.class), frame.getFrameSettingValue(HeightSetting.class));
+                    windowSizes = new Vector2i(((Number) frame.getFrameSettingValue(WidthSetting.class)).intValue(), ((Number) frame.getFrameSettingValue(HeightSetting.class)).intValue());
             case Borderless -> {
                 GLFWVidMode vidMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
                 if (vidMode == null) {

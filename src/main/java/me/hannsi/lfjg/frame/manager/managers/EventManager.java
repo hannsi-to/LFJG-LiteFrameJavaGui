@@ -30,7 +30,9 @@ public class EventManager {
             Class<?> clazz = handler.getClass();
             Arrays.stream(clazz.getDeclaredMethods()).filter(method -> method.isAnnotationPresent(EventHandler.class)).filter(method -> method.getParameters().length == 1 && method.getParameters()[0].getType().isAssignableFrom(source.getClass())).forEach(method -> {
                 try {
-                    if (!source.isCanceled()) method.invoke(handler, source);
+                    if (!source.isCanceled()) {
+                        method.invoke(handler, source);
+                    }
                 } catch (Throwable e) {
                     throw new RuntimeException(e);
                 }

@@ -1,13 +1,13 @@
-package me.hannsi.lfjg.render.openGL.renderer.vertex;
+package me.hannsi.lfjg.render.openGL.renderers.polygon;
 
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.utils.color.Color;
-import me.hannsi.lfjg.utils.math.vertex.vector.Vector2f;
 import me.hannsi.lfjg.utils.type.types.DrawType;
+import org.joml.Vector2f;
 
-public class Line extends Polygon {
+public class GLLine extends GLPolygon {
 
-    public Line(Frame frame) {
+    public GLLine(Frame frame) {
         super(frame);
     }
 

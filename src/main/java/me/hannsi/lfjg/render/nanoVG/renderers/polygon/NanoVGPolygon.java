@@ -3,7 +3,7 @@ package me.hannsi.lfjg.render.nanoVG.renderers.polygon;
 import me.hannsi.lfjg.render.nanoVG.NanoVGUtil;
 import me.hannsi.lfjg.utils.color.Color;
 import me.hannsi.lfjg.utils.math.MathUtil;
-import me.hannsi.lfjg.utils.math.vertex.vector.Vector2f;
+import org.joml.Vector2f;
 import org.lwjgl.nanovg.NanoVG;
 
 import java.util.Collections;
@@ -38,8 +38,8 @@ public class NanoVGPolygon {
 
         int count = 0;
         for (Vector2f p : pos) {
-            xs[count] = p.getX();
-            ys[count] = p.getY();
+            xs[count] = p.x();
+            ys[count] = p.y();
 
             count++;
         }
@@ -76,10 +76,10 @@ public class NanoVGPolygon {
         int count = 0;
         for (Vector2f vec2f : poses) {
             if (count == 0) {
-                NanoVG.nvgMoveTo(nvg, vec2f.getX(), vec2f.getY());
+                NanoVG.nvgMoveTo(nvg, vec2f.x(), vec2f.y());
             }
 
-            NanoVG.nvgLineTo(nvg, vec2f.getX(), vec2f.getY());
+            NanoVG.nvgLineTo(nvg, vec2f.x(), vec2f.y());
 
             count++;
         }
@@ -90,7 +90,7 @@ public class NanoVGPolygon {
 
         if (outLine) {
             Vector2f vec2f = poses.get(0);
-            NanoVG.nvgLineTo(nvg, vec2f.getX(), vec2f.getY());
+            NanoVG.nvgLineTo(nvg, vec2f.x(), vec2f.y());
 
             NanoVG.nvgStrokeWidth(nvg, lineWidth);
 

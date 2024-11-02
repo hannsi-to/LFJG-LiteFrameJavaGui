@@ -5,7 +5,12 @@ plugins {
 
 group = 'me.hannsi.lfjg'
 version = '1.0-SNAPSHOT'
-project.ext.lwjglVersion = "3.3.3"
+project.ext.lwjglVersion = "3.3.4"
+project.ext.jomlVersion = "1.10.7"
+project.ext.lwjgl3awtVersion = "0.1.8"
+project.ext.steamworks4jVersion = "1.9.0"
+project.ext.steamworks4jserverVersion = "1.9.0"
+project.ext.jomlprimitivesVersion = "1.10.0"
 project.ext.lwjglNatives = "natives-windows"
 
 repositories {
@@ -50,6 +55,7 @@ dependencies {
     implementation "org.lwjgl:lwjgl-lz4"
     implementation "org.lwjgl:lwjgl-meow"
     implementation "org.lwjgl:lwjgl-meshoptimizer"
+    implementation "org.lwjgl:lwjgl-msdfgen"
     implementation "org.lwjgl:lwjgl-nanovg"
     implementation "org.lwjgl:lwjgl-nfd"
     implementation "org.lwjgl:lwjgl-nuklear"
@@ -92,6 +98,7 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-lz4::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-meow::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-meshoptimizer::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-msdfgen::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-nanovg::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-nfd::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-nuklear::$lwjglNatives"
@@ -116,6 +123,11 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-xxhash::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-yoga::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-zstd::$lwjglNatives"
+    implementation "org.joml:joml:${jomlVersion}"
+    implementation "org.lwjglx:lwjgl3-awt:${lwjgl3awtVersion}"
+    implementation "com.code-disaster.steamworks4j:steamworks4j:${steamworks4jVersion}"
+    implementation "com.code-disaster.steamworks4j:steamworks4j-server:${steamworks4jserverVersion}"
+    implementation "org.joml:joml-primitives:${jomlprimitivesVersion}"
 }
 
 tasks.withType(JavaCompile).configureEach {

@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.utils.math;
 
-import me.hannsi.lfjg.utils.math.vertex.vector.Vector2f;
+
+import org.joml.Vector2f;
 
 public class MathUtil {
     public static float clampF(float x, float min, float max) {
@@ -44,8 +45,8 @@ public class MathUtil {
     }
 
     public static float distance(Vector2f vector2f1, Vector2f vector2f2) {
-        float[] width = sortValue(vector2f1.getX(), vector2f2.getX());
-        float[] height = sortValue(vector2f1.getY(), vector2f2.getY());
+        float[] width = sortValue(vector2f1.x(), vector2f2.x());
+        float[] height = sortValue(vector2f1.y(), vector2f2.y());
         return (float) MathUtil.distance(width[1], height[1], width[0], height[0]);
     }
 

@@ -1,14 +1,19 @@
 package me.hannsi.test;
 
+import me.hannsi.lfjg.event.events.*;
+import me.hannsi.lfjg.event.system.EventHandler;
 import me.hannsi.lfjg.frame.Frame;
+import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
-import me.hannsi.lfjg.render.nanoVG.renderers.polygon.NanoVGRect;
+import me.hannsi.lfjg.render.nanoVG.renderers.polygon.NanoVGPolygon;
 import me.hannsi.lfjg.utils.color.Color;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.type.types.AntiAliasingType;
 import me.hannsi.lfjg.utils.type.types.MonitorType;
 import me.hannsi.lfjg.utils.type.types.RenderingType;
 import me.hannsi.lfjg.utils.type.types.VSyncType;
+import org.joml.Vector2f;
 
 public class TestGuiFrame implements LFJGFrame {
     private Frame frame;
@@ -23,44 +28,39 @@ public class TestGuiFrame implements LFJGFrame {
 
     @Override
     public void init() {
-    }
-
-    //@Override
-    //public void drawFrameWithOpenGL() {
-    //    RoundedRect roundedRect = new RoundedRect(frame);
-    //    roundedRect.roundedRectOutLine(0f, 0f, 500f, 500f, 1f, true, true, true, true, 10f, 10f, 10f, 10f, 5, ColorUtil.getRainbow(1, 0, 255, 255), ColorUtil.getRainbow(1, 0.25f, 255, 255), ColorUtil.getRainbow(1, 0.5f, 255, 255), ColorUtil.getRainbow(1, 0.75f, 255, 255));
-    //}
-
-    @Override
-    public void drawFrameWithNanoVG(long nvg) {
-        NanoVGRect nanoVGRect = new NanoVGRect(nvg);
-        nanoVGRect.setSize(0, 0, 500, 500);
-        nanoVGRect.setBase(true, new Color(255, 255, 0, 255));
-        nanoVGRect.draw();
+        IFrame.eventManager.register(this);
     }
 
     @Override
-    public void keyPress(int key, int scancode, int mods, long window) {
-    }
+    public void drawFrame(long nvg) {
+        //VBO vboVertex = new VBO(4, 2);
+        //VBO vboColor = new VBO(4, 4);
+        //VBO vboTexture = new VBO(4, 2);
 
-    @Override
-    public void keyReleased(int key, int scancode, int mods, long window) {
+        //vboVertex.put(0, 0, 1920, 0, 1920, 1080, 0, 1080);
+        //vboColor.put(255, 255, 255, 255, 255, 255, 0, 255, 255, 0, 0, 255, 255, 0, 255, 255);
 
-    }
+        //vboTexture.put(0, 1, 1, 1, 1, 0, 0, 0);
 
-    @Override
-    public void cursorPos(double xpos, double ypos, long window) {
+        //VAO vaoVertex = new VAO(vboVertex);
+        //VAO vaoColor = new VAO(vboColor);
+        //VAO vaoTexture = new VAO(vboTexture);
 
-    }
+        //VAORendering vaoRendering = new VAORendering(frame);
 
-    @Override
-    public void mouseButtonPress(int button, int mods, long window) {
+        //vaoRendering.setVertex(vaoVertex);
+        //vaoRendering.setColor(null);
+        //vaoRendering.setTexture(vaoTexture);
 
-    }
+        //GL11.glPushMatrix();
+        //vaoRendering.setTexturePath(new ResourcesLocation("image.png"));
+        //vaoRendering.drawArrays(DrawType.QUADS);
+        //GL11.glPopMatrix();
 
-    @Override
-    public void mouseButtonReleased(int button, int mods, long window) {
-
+        NanoVGPolygon nanoVGPolygon = new NanoVGPolygon(nvg);
+        nanoVGPolygon.setSize(new Vector2f(300, 400), new Vector2f(400, 300), new Vector2f(500, 400), new Vector2f(500, 500), new Vector2f(400, 600), new Vector2f(300, 500));
+        nanoVGPolygon.setBase(true, new Color(255, 255, 255, 255));
+        nanoVGPolygon.draw();
     }
 
     @Override
@@ -71,5 +71,31 @@ public class TestGuiFrame implements LFJGFrame {
         frame.setFrameSettingValue(FloatingSetting.class, false);
         frame.setFrameSettingValue(IconSetting.class, new ResourcesLocation("salad_x32.png"));
         frame.setFrameSettingValue(RenderingTypeSetting.class, RenderingType.NanoVG);
+        frame.setFrameSettingValue(AntiAliasingSetting.class, AntiAliasingType.MSAA);
+    }
+
+    @EventHandler
+    public void keyPressEvent(KeyPressEvent event) {
+
+    }
+
+    @EventHandler
+    public void keyReleasedEvent(KeyReleasedEvent event) {
+
+    }
+
+    @EventHandler
+    public void cursorPosEvent(CursorPosEvent event) {
+
+    }
+
+    @EventHandler
+    public void mouseButtonPressEvent(MouseButtonPressEvent event) {
+
+    }
+
+    @EventHandler
+    public void mouseButtonReleasedEvent(MouseButtonReleasedEvent event) {
+
     }
 }

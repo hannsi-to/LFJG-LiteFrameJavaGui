@@ -1,14 +1,14 @@
-package me.hannsi.lfjg.render.openGL.renderer.vertex;
+package me.hannsi.lfjg.render.openGL.renderers.polygon;
 
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.utils.color.Color;
-import me.hannsi.lfjg.utils.math.vertex.vector.Vector2f;
 import me.hannsi.lfjg.utils.type.types.DrawType;
+import org.joml.Vector2f;
 
-public class RoundedRect extends Polygon {
+public class GLRoundedRect extends GLPolygon {
     public static final int defaultSegmentCount = 16;
 
-    public RoundedRect(Frame frame) {
+    public GLRoundedRect(Frame frame) {
         super(frame);
     }
 
