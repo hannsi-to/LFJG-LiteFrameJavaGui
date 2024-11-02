@@ -35,7 +35,7 @@ public class GLCircle extends GLPolygon {
                 float r = startColor.getRed() / 255.0f + factor * (endColor.getRed() / 255.0f - startColor.getRed() / 255.0f);
                 float g = startColor.getGreen() / 255.0f + factor * (endColor.getGreen() / 255.0f - startColor.getGreen() / 255.0f);
                 float b = startColor.getBlue() / 255.0f + factor * (endColor.getBlue() / 255.0f - startColor.getBlue() / 255.0f);
-                float a = startColor.getAlpha() / 255.0f + factor * (endColor.getAlpha() / 255.0f - startColor.getAlpha() / 255.0f); // アルファの補間
+                float a = startColor.getAlpha() / 255.0f + factor * (endColor.getAlpha() / 255.0f - startColor.getAlpha() / 255.0f);
 
                 color = new Color(r, g, b, a);
             } else {
