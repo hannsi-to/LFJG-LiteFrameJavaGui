@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.render.nanoVG.renderers.polygon;
 
-import me.hannsi.lfjg.render.nanoVG.NanoVGUtil;
+import me.hannsi.lfjg.render.nanoVG.system.NanoVGUtil;
 import me.hannsi.lfjg.render.nanoVG.system.polygon.NanoVGRendererBase;
 import org.lwjgl.nanovg.NanoVG;
 

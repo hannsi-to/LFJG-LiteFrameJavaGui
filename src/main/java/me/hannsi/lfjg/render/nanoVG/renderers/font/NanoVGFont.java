@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.render.nanoVG.renderers.font;
 
-import me.hannsi.lfjg.render.nanoVG.NanoVGUtil;
+import me.hannsi.lfjg.render.nanoVG.system.NanoVGUtil;
 import me.hannsi.lfjg.render.nanoVG.renderers.polygon.NanoVGLine;
 import me.hannsi.lfjg.render.nanoVG.system.font.AlignExtractor;
 import me.hannsi.lfjg.render.nanoVG.system.font.ChatFormatting;
