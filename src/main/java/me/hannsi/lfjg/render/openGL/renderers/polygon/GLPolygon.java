@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.render.openGL.renderers.polygon;
 
 import me.hannsi.lfjg.frame.Frame;
+import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.system.VAORendering;
 import me.hannsi.lfjg.render.openGL.system.bufferObject.VAO;
 import me.hannsi.lfjg.render.openGL.system.bufferObject.VBO;
@@ -9,6 +10,9 @@ import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL11;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GLPolygon {
     private Frame frame;
     private DrawType drawType;
@@ -16,11 +20,16 @@ public class GLPolygon {
     private float pointSize = -1f;
     private VBO vboVertex;
     private VBO vboColor;
+    private VAO vaoVertex;
+    private VAO vaoColor;
+    private VAORendering vaoRendering;
+    private List<EffectBase> effectBaseList;
 
     public GLPolygon(Frame frame) {
         this.frame = frame;
         this.vboVertex = new VBO(1, 2);
         this.vboColor = new VBO(1, 4);
+        this.effectBaseList = new ArrayList<>();
     }
 
     public GLPolygon put() {
@@ -62,11 +71,15 @@ public class GLPolygon {
         return this;
     }
 
-    public void draw() {
-        VAO vaoVertex = new VAO(vboVertex);
-        VAO vaoColor = new VAO(vboColor);
+    public void addEffect(EffectBase effectBase) {
+        this.effectBaseList.add(effectBase);
+    }
 
-        VAORendering vaoRendering = new VAORendering(frame);
+    public void draw() {
+        vaoVertex = new VAO(vboVertex);
+        vaoColor = new VAO(vboColor);
+
+        vaoRendering = new VAORendering(frame);
 
         vaoRendering.setVertex(vaoVertex);
         vaoRendering.setColor(vaoColor);
@@ -79,7 +92,15 @@ public class GLPolygon {
             GL11.glPointSize(pointSize);
         }
 
+        for (EffectBase effectBase : effectBaseList) {
+            effectBase.push(frame, this);
+        }
+
         vaoRendering.drawArrays(drawType);
+
+        for (EffectBase effectBase : effectBaseList) {
+            effectBase.pop(frame, this);
+        }
 
         GL11.glPopMatrix();
     }
@@ -106,5 +127,61 @@ public class GLPolygon {
 
     public void setVboColor(VBO vboColor) {
         this.vboColor = vboColor;
+    }
+
+    public DrawType getDrawType() {
+        return drawType;
+    }
+
+    public void setDrawType(DrawType drawType) {
+        this.drawType = drawType;
+    }
+
+    public float getLineWidth() {
+        return lineWidth;
+    }
+
+    public void setLineWidth(float lineWidth) {
+        this.lineWidth = lineWidth;
+    }
+
+    public float getPointSize() {
+        return pointSize;
+    }
+
+    public void setPointSize(float pointSize) {
+        this.pointSize = pointSize;
+    }
+
+    public List<EffectBase> getEffectBaseList() {
+        return effectBaseList;
+    }
+
+    public void setEffectBaseList(List<EffectBase> effectBaseList) {
+        this.effectBaseList = effectBaseList;
+    }
+
+    public VAO getVaoVertex() {
+        return vaoVertex;
+    }
+
+    public void setVaoVertex(VAO vaoVertex) {
+        this.vaoVertex = vaoVertex;
+    }
+
+    public VAO getVaoColor() {
+        return vaoColor;
+    }
+
+    public void setVaoColor(VAO vaoColor) {
+        this.vaoColor = vaoColor;
+    }
+
+    public VAORendering getVaoRendering() {
+        return vaoRendering;
+    }
+
+    public void setVaoRendering(VAORendering vaoRendering) {
+        this.vaoRendering = vaoRendering;
     }
 }

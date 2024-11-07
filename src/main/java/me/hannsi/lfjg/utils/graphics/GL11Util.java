@@ -2,35 +2,45 @@ package me.hannsi.lfjg.utils.graphics;
 
 import org.lwjgl.opengl.GL11;
 
-import java.util.BitSet;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GL11Util {
-    private final BitSet targets;
+    private final Map<Integer, Boolean> targets;
 
     public GL11Util() {
-        this.targets = new BitSet();
+        this.targets = new HashMap<>();
     }
 
     public void addGL11Target(int target) {
-        if (target >= targets.size()) {
-            targets.set(target);
-        } else {
-            targets.set(target);
-        }
+        targets.put(target, false);
+    }
+
+    public void addGL11Target(int target, boolean disable) {
+        targets.put(target, disable);
     }
 
     public void enableTargets() {
         GL11.glPushMatrix();
 
-        for (int i = targets.nextSetBit(0); i >= 0; i = targets.nextSetBit(i + 1)) {
-            gl11Enable(i);
+        for (Map.Entry<Integer, Boolean> entry : targets.entrySet()) {
+            if (entry.getValue()) {
+                gl11Disable(entry.getKey());
+            } else {
+                gl11Enable(entry.getKey());
+            }
         }
     }
 
     public void disableTargets() {
-        for (int i = targets.nextSetBit(0); i >= 0; i = targets.nextSetBit(i + 1)) {
-            gl11Disable(i);
+        for (Map.Entry<Integer, Boolean> entry : targets.entrySet()) {
+            if (entry.getValue()) {
+                gl11Enable(entry.getKey());
+            } else {
+                gl11Disable(entry.getKey());
+            }
         }
+
         GL11.glPopMatrix();
     }
 
