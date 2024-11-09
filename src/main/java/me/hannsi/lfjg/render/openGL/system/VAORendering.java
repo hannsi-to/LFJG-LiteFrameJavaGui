@@ -8,6 +8,7 @@ import me.hannsi.lfjg.utils.image.TextureLoader;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 
 public class VAORendering {
     private final Frame frame;
@@ -28,13 +29,16 @@ public class VAORendering {
     private void genVertexBufferObjects() {
         if (vertex != null && vertex.getVbo().getVertexBufferObjectHandle() == -1) {
             vertex.getVbo().genVertexBufferObject();
+            vertex.genVertexArrayBuffer();
         }
 
         if (color != null && color.getVbo().getVertexBufferObjectHandle() == -1) {
             color.getVbo().genVertexBufferObject();
+            color.genVertexArrayBuffer();
         }
         if (texture != null && texture.getVbo().getVertexBufferObjectHandle() == -1) {
             texture.getVbo().genVertexBufferObject();
+            texture.genVertexArrayBuffer();
         }
     }
 
@@ -125,9 +129,8 @@ public class VAORendering {
         }
     }
 
-    public void drawArrays(DrawType drawType) {
+    public void drawArrays(DrawType drawType, int shaderProgram) {
         genVertexBufferObjects();
-
         setVAODatum();
 
         if (texture != null) {
@@ -136,14 +139,35 @@ public class VAORendering {
 
         addTargets();
         enableTargets();
-        glPointers();
-        glEnableClientStateCaps();
+        setupAttributes(shaderProgram);
 
         GL11.glDrawArrays(drawType.getId(), 0, vertex.getVbo().getVertices());
 
-        glDisableClientStateCaps();
         unBindBuffers();
         disableTargets();
+    }
+
+    private void setupAttributes(int shaderProgram) {
+        if (vertex != null) {
+            int positionLocation = GL20.glGetAttribLocation(shaderProgram, "aPos");
+            GL20.glVertexAttribPointer(positionLocation, vertex.getVbo().getSize(), GL11.GL_FLOAT, false, 0, 0);
+            GL20.glEnableVertexAttribArray(positionLocation);
+        }
+
+        if (color != null) {
+            int colorLocation = GL20.glGetAttribLocation(shaderProgram, "aColor");
+            GL20.glVertexAttribPointer(colorLocation, color.getVbo().getSize(), GL11.GL_FLOAT, false, 0, 0);
+            GL20.glEnableVertexAttribArray(colorLocation);
+        }
+
+        if (texture != null) {
+            int textureLocation = GL20.glGetAttribLocation(shaderProgram, "aTexture");
+            GL20.glVertexAttribPointer(textureLocation, texture.getVbo().getSize(), GL11.GL_FLOAT, false, 0, 0);
+            GL20.glEnableVertexAttribArray(textureLocation);
+
+            int textureSamplerLocation = GL20.glGetUniformLocation(shaderProgram, "uTexture");
+            GL20.glUniform1i(textureSamplerLocation, 0);
+        }
     }
 
     public VAO getVertex() {

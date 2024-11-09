@@ -1,15 +1,25 @@
 package me.hannsi.lfjg.render.openGL.effect.effects;
 
+import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.frame.Frame;
+import me.hannsi.lfjg.render.openGL.effect.shader.ShaderUtil;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLPolygon;
 import me.hannsi.lfjg.render.openGL.system.bufferObject.VAO;
 import me.hannsi.lfjg.render.openGL.system.bufferObject.VBO;
 import me.hannsi.lfjg.utils.color.Color;
 import me.hannsi.lfjg.utils.color.ColorUtil;
+import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import org.joml.Vector2f;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL20;
 
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class ColorCorrection extends EffectBase {
     private float brightness;
@@ -17,6 +27,7 @@ public class ColorCorrection extends EffectBase {
     private float saturation;
     private float hue;
     private float gamma;
+    private ShaderUtil shaderUtil;
 
     public ColorCorrection(float brightness, float contrast, float saturation, float hue, float gamma) {
         super(3, "ColorCorrection", null);
@@ -35,39 +46,22 @@ public class ColorCorrection extends EffectBase {
 
     @Override
     public void push(Frame frame, GLPolygon basePolygon) {
-        List<Color> colors = new ArrayList<>();
+        basePolygon.setFragmentShader(new ResourcesLocation("shader/ColorCorrection.fsh"));
+        shaderUtil = new ShaderUtil(basePolygon.getFragmentShader());
 
-        basePolygon.getVboColor().flip();
+        shaderUtil.getGlslSandboxShader().useShader();
 
-        float[] colorData = new float[basePolygon.getVboColor().getFloatBuffer().remaining()];
-        basePolygon.getVboColor().getFloatBuffer().get(colorData);
+        shaderUtil.getGlslSandboxShader().setUniform1f("brightness",brightness);
+        shaderUtil.getGlslSandboxShader().setUniform1f("contrast",contrast);
+        shaderUtil.getGlslSandboxShader().setUniform1f("saturation",saturation);
+        shaderUtil.getGlslSandboxShader().setUniform1f("hue",hue);
+        shaderUtil.getGlslSandboxShader().setUniform1f("gamma",gamma);
 
-        for (int i = 0; i < colorData.length; i += 4) {
-            float r = colorData[i];
-            float g = colorData[i + 1];
-            float b = colorData[i + 2];
-            float a = colorData[i + 3];
+        shaderUtil.getGlslSandboxShader().finishShader();
 
-            Color color = new Color(r, g, b, a);
-            color = ColorUtil.applyBrightness(color, brightness);
-            color = ColorUtil.applyContrast(color, contrast);
-            color = ColorUtil.applySaturation(color, saturation);
-            color = ColorUtil.applyHue(color, hue);
-            color = ColorUtil.applyGammaCorrection(color, gamma);
+        basePolygon.setShaderUtil(shaderUtil);
 
-            colors.add(color);
-        }
-
-        VBO vboColor = new VBO(basePolygon.getVboColor().getVertices(), basePolygon.getVboColor().getSize());
-        for (Color color : colors) {
-            vboColor.put(color);
-        }
-
-        VAO vaoColor = new VAO(vboColor);
-
-        basePolygon.getVaoRendering().setColor(vaoColor);
-
-        super.push(frame, basePolygon);
+        super.push(frame,basePolygon);
     }
 
     public float getBrightness() {

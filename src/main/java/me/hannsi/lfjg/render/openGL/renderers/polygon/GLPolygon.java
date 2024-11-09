@@ -1,11 +1,13 @@
 package me.hannsi.lfjg.render.openGL.renderers.polygon;
 
 import me.hannsi.lfjg.frame.Frame;
+import me.hannsi.lfjg.render.openGL.effect.shader.ShaderUtil;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.system.VAORendering;
 import me.hannsi.lfjg.render.openGL.system.bufferObject.VAO;
 import me.hannsi.lfjg.render.openGL.system.bufferObject.VBO;
 import me.hannsi.lfjg.utils.color.Color;
+import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL11;
@@ -23,6 +25,8 @@ public class GLPolygon {
     private VAO vaoVertex;
     private VAO vaoColor;
     private VAORendering vaoRendering;
+    private ResourcesLocation fragmentShader;
+    private ShaderUtil shaderUtil;
     private List<EffectBase> effectBaseList;
 
     public GLPolygon(Frame frame) {
@@ -85,6 +89,7 @@ public class GLPolygon {
         vaoRendering.setColor(vaoColor);
 
         GL11.glPushMatrix();
+
         if (lineWidth != -1f) {
             GL11.glLineWidth(lineWidth);
         }
@@ -96,7 +101,10 @@ public class GLPolygon {
             effectBase.push(frame, this);
         }
 
-        vaoRendering.drawArrays(drawType);
+        shaderUtil = new ShaderUtil(new ResourcesLocation("shader/FragmentShader.fsh"));
+        shaderUtil.getGlslSandboxShader().useShader();
+        vaoRendering.drawArrays(drawType,shaderUtil.getGlslSandboxShader().getProgramId());
+        shaderUtil.getGlslSandboxShader().finishShader();
 
         for (EffectBase effectBase : effectBaseList) {
             effectBase.pop(frame, this);
@@ -183,5 +191,21 @@ public class GLPolygon {
 
     public void setVaoRendering(VAORendering vaoRendering) {
         this.vaoRendering = vaoRendering;
+    }
+
+    public ResourcesLocation getFragmentShader() {
+        return fragmentShader;
+    }
+
+    public void setFragmentShader(ResourcesLocation fragmentShader) {
+        this.fragmentShader = fragmentShader;
+    }
+
+    public ShaderUtil getShaderUtil() {
+        return shaderUtil;
+    }
+
+    public void setShaderUtil(ShaderUtil shaderUtil) {
+        this.shaderUtil = shaderUtil;
     }
 }

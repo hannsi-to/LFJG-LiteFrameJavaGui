@@ -46,8 +46,8 @@ public class TestGuiFrame implements LFJGFrame {
         glRect.addEffect(new Translate(0,0));
         glRect.addEffect(new Focus(0,0));
         glRect.addEffect(new Size(1,1));
-        glRect.addEffect(new ColorCorrection(0.0f,1f,1f,0.2f,1f));
-        glRect.rectWH(200,200,400,400,new Color(255,255,0,255));
+        //glRect.addEffect(new ColorCorrection(1f,1f,1f,0f,1f));
+        glRect.rectWH(200,200,400,400,new Color(255,0,255,255));
 
         GLRect glRect2 = new GLRect(frame);
         glRect2.rectWH(200,200,200,200,new Color(255,255,0,255));

@@ -1,6 +1,9 @@
 package me.hannsi.lfjg.render.openGL.effect.shader;
 
+import me.hannsi.lfjg.utils.graphics.DisplayUtil;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.toolkit.ToolkitUtil;
+import org.joml.Vector2f;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,14 +31,33 @@ public class GLSLSandboxShader {
         this.programId = program;
     }
 
+    public void setUniformVector2f(String name, Vector2f value) {
+        int uniformId = glGetUniformLocation(programId, name);
+
+        float[] size = new float[2];
+        size[0] = value.x;
+        size[1] = value.y;
+
+        glUniform2fv(uniformId, size);
+    }
+
     public void setUniform1f(String name, float value) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform1f(uniformId, value);
     }
 
+    public void setUniform1i(String name, int value) {
+        int uniformId = glGetUniformLocation(programId, name);
+
+        glUniform1i(uniformId, value);
+    }
+
     public void useShader() {
         glUseProgram(this.programId);
+
+        setUniform1i("screenWidth",1920);
+        setUniform1i("screenHeight",1080);
     }
 
     public void finishShader() {
