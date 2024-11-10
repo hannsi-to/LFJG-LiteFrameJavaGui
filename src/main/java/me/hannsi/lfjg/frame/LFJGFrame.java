@@ -5,6 +5,7 @@ public interface LFJGFrame {
 
     void drawFrame(long nvg);
 
+    void stopFrame();
+
     void setFrameSetting();
 }
-

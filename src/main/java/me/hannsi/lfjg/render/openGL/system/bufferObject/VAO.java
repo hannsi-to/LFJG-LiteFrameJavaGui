@@ -1,70 +1,127 @@
 package me.hannsi.lfjg.render.openGL.system.bufferObject;
 
-import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 public class VAO {
-    private final VBO vbo;
-    private final int usage;
-    private int vertexArrayObjectHandle = -1;
+    private final int vaoId;
+    private VBO vertexVBO;
+    private VBO colorVBO;
+    private VBO textureVBO;
 
-    public VAO(VBO vbo, int usage) {
-        this.vbo = vbo;
-        this.usage = usage;
+    public VAO() {
+        this.vaoId = genVertexArrays();
     }
 
-    public VAO(VBO vbo) {
-        this(vbo, GL20.GL_STATIC_DRAW);
+    public void deleteBuffers() {
+        this.vertexVBO.deleteBuffers();
+
+        if (this.colorVBO != null) {
+            this.colorVBO.deleteBuffers();
+        }
+
+        if (this.textureVBO != null) {
+            this.textureVBO.deleteBuffers();
+        }
     }
 
-    public void genVertexArrayBuffer(){
-        this.vertexArrayObjectHandle = GL30.glGenVertexArrays();
+    public void disableVertexAttribArray() {
+        this.vertexVBO.disableVertexAttribArray();
+
+        if (this.colorVBO != null) {
+            this.colorVBO.disableVertexAttribArray();
+        }
+
+        if (this.textureVBO != null) {
+            this.textureVBO.disableVertexAttribArray();
+        }
     }
 
-    public void setVAOData() {
-        bindBuffer();
-        bufferData();
-        unBindBuffer();
+    public void enableVertexAttribArrays() {
+        this.vertexVBO.enableVertexAttribArray();
+
+        if (this.colorVBO != null) {
+            this.colorVBO.enableVertexAttribArray();
+        }
+
+        if (this.textureVBO != null) {
+            this.textureVBO.enableVertexAttribArray();
+        }
     }
 
-    public void bufferData() {
-        GL20.glBufferData(GL20.GL_ARRAY_BUFFER, vbo.getFloatBuffer(), usage);
+    public void configureAttributes() {
+        this.vertexVBO.bindBuffer();
+        this.vertexVBO.bufferData();
+        this.vertexVBO.vertexAttribPointer();
+        this.vertexVBO.unBindBuffer();
+
+        if (this.colorVBO != null) {
+            this.colorVBO.bindBuffer();
+            this.colorVBO.bufferData();
+            this.colorVBO.vertexAttribPointer();
+            this.colorVBO.unBindBuffer();
+        }
+
+        if (this.textureVBO != null) {
+            this.textureVBO.bindBuffer();
+            this.textureVBO.bufferData();
+            this.textureVBO.vertexAttribPointer();
+            this.textureVBO.unBindBuffer();
+        }
     }
 
-    public void bindBuffer() {
-        GL20.glBindBuffer(GL20.GL_ARRAY_BUFFER, vbo.getVertexBufferObjectHandle());
+    public void clearAttributes() {
+        this.vertexVBO.unBindBuffer();
+
+        if (this.colorVBO != null) {
+            this.colorVBO.unBindBuffer();
+        }
+
+        if (this.textureVBO != null) {
+            this.textureVBO.unBindBuffer();
+        }
     }
 
-    public void unBindBuffer() {
-        GL20.glBindBuffer(GL20.GL_ARRAY_BUFFER, 0);
+    public void deleteVertexArrays() {
+        GL30.glDeleteVertexArrays(this.vaoId);
     }
 
-    public void bindVertexArray(){
-        GL30.glBindVertexArray(vertexArrayObjectHandle);
+    public void bindVertexArray() {
+        GL30.glBindVertexArray(this.vaoId);
     }
 
-    public void unBindVertexArray(){
+    public void unBindVertexArray() {
         GL30.glBindVertexArray(0);
     }
 
-
-    public void deleteBuffer() {
-        GL20.glDeleteBuffers(vbo.getVertexBufferObjectHandle());
+    public int genVertexArrays() {
+        return GL30.glGenVertexArrays();
     }
 
-    public VBO getVbo() {
-        return vbo;
+    public int getVaoId() {
+        return vaoId;
     }
 
-    public int getUsage() {
-        return usage;
+    public VBO getVertexVBO() {
+        return vertexVBO;
     }
 
-    public int getVertexArrayObjectHandle() {
-        return vertexArrayObjectHandle;
+    public void setVertexVBO(VBO vertexVBO) {
+        this.vertexVBO = vertexVBO;
     }
 
-    public void setVertexArrayObjectHandle(int vertexArrayObjectHandle) {
-        this.vertexArrayObjectHandle = vertexArrayObjectHandle;
+    public VBO getColorVBO() {
+        return colorVBO;
+    }
+
+    public void setColorVBO(VBO colorVBO) {
+        this.colorVBO = colorVBO;
+    }
+
+    public VBO getTextureVBO() {
+        return textureVBO;
+    }
+
+    public void setTextureVBO(VBO textureVBO) {
+        this.textureVBO = textureVBO;
     }
 }

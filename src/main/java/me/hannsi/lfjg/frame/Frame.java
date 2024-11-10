@@ -223,6 +223,8 @@ public class Frame implements IFrame {
 
         finishTime = TimeSourceUtil.getTimeMills(this);
 
+        lfjgFrame.stopFrame();
+
         breakFrame();
     }
 

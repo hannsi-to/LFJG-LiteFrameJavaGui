@@ -1,226 +1,84 @@
 package me.hannsi.lfjg.render.openGL.system;
 
+import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.frame.Frame;
+import me.hannsi.lfjg.render.openGL.effect.shader.ShaderProgram;
 import me.hannsi.lfjg.render.openGL.system.bufferObject.VAO;
-import me.hannsi.lfjg.utils.graphics.GL11Util;
-import me.hannsi.lfjg.utils.image.ImageData;
-import me.hannsi.lfjg.utils.image.TextureLoader;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import me.hannsi.lfjg.utils.type.types.DrawType;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
 
 public class VAORendering {
-    private final Frame frame;
-    private final GL11Util gl11Util;
-    private VAO vertex;
-    private VAO color;
-    private VAO texture;
-
-    private int textureId = -1;
-    private ResourcesLocation texturePath;
-    private ImageData imageData;
+    private Frame frame;
+    private ShaderProgram shaderProgram;
+    private VAO vao;
 
     public VAORendering(Frame frame) {
         this.frame = frame;
-        this.gl11Util = new GL11Util();
     }
 
-    private void genVertexBufferObjects() {
-        if (vertex != null && vertex.getVbo().getVertexBufferObjectHandle() == -1) {
-            vertex.getVbo().genVertexBufferObject();
-            vertex.genVertexArrayBuffer();
-        }
-
-        if (color != null && color.getVbo().getVertexBufferObjectHandle() == -1) {
-            color.getVbo().genVertexBufferObject();
-            color.genVertexArrayBuffer();
-        }
-        if (texture != null && texture.getVbo().getVertexBufferObjectHandle() == -1) {
-            texture.getVbo().genVertexBufferObject();
-            texture.genVertexArrayBuffer();
-        }
-    }
-
-    private void addTargets() {
-        gl11Util.addGL11Target(GL11.GL_BLEND);
-        if (texture != null) {
-            gl11Util.addGL11Target(GL11.GL_TEXTURE_2D);
+    public void shaderProgramInit() {
+        try {
+            shaderProgram = new ShaderProgram();
+            shaderProgram.createVertexShader(new ResourcesLocation("shader/vertexShader.vsh"));
+            shaderProgram.createFragmentShader(new ResourcesLocation("shader/FragmentShader.fsh"));
+            shaderProgram.link();
+            shaderProgram.bind();
+            shaderProgram.setUniform1i("screenWidth", 1920);
+            shaderProgram.setUniform1i("screenHeight", 1080);
+            shaderProgram.unbind();
+        } catch (Exception e) {
+            DebugLog.debug(getClass(), e);
         }
     }
 
-    private void enableTargets() {
-        gl11Util.enableTargets();
-
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        if (texture != null) {
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
-        }
+    public void init() {
+        shaderProgramInit();
     }
 
-    private void setVAODatum() {
-        vertex.setVAOData();
-        if (color != null) {
-            color.setVAOData();
-        }
-        if (texture != null) {
-            texture.setVAOData();
-        }
+    public void cleanUp() {
+        shaderProgram.cleanup();
+        vao.disableVertexAttribArray();
+        vao.clearAttributes();
+        vao.deleteBuffers();
+        vao.unBindVertexArray();
+        vao.deleteVertexArrays();
     }
 
-    private void glPointers() {
-        vertex.bindBuffer();
-        GL11.glVertexPointer(vertex.getVbo().getSize(), GL11.GL_FLOAT, 0, 0);
-        if (color != null) {
-            color.bindBuffer();
-            GL11.glColorPointer(color.getVbo().getSize(), GL11.GL_FLOAT, 0, 0);
-        }
-        if (texture != null) {
-            texture.bindBuffer();
-            GL11.glTexCoordPointer(texture.getVbo().getSize(), GL11.GL_FLOAT, 0, 0);
-        }
-    }
+    public void draw() {
+        shaderProgram.bind();
+        vao.bindVertexArray();
 
-    private void glEnableClientStateCaps() {
-        GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
-        if (color != null) {
-            GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
-        }
-        if (texture != null) {
-            GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-        }
-    }
+        vao.enableVertexAttribArrays();
 
-    private void glDisableClientStateCaps() {
-        if (texture != null) {
-            GL11.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-        }
-        if (color != null) {
-            GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
-        }
-        GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
-    }
+        GL30.glDrawArrays(GL30.GL_POLYGON, 0, 4);
 
-    private void unBindBuffers() {
-        vertex.unBindBuffer();
+        vao.disableVertexAttribArray();
 
-        if (color != null) {
-            color.unBindBuffer();
-        }
-
-        if (texture != null) {
-            texture.unBindBuffer();
-        }
-    }
-
-    private void disableTargets() {
-        if (texture != null) {
-            GL11.glDeleteTextures(textureId);
-        }
-
-        gl11Util.disableTargets();
-        gl11Util.finish();
-    }
-
-    private void genTextureId() {
-        if (textureId == -1) {
-            this.imageData = new ImageData(frame, texturePath);
-            textureId = TextureLoader.createTexture(imageData.getByteBuffer(), imageData.getMat().cols(), imageData.getMat().rows());
-        }
-    }
-
-    public void drawArrays(DrawType drawType, int shaderProgram) {
-        genVertexBufferObjects();
-        setVAODatum();
-
-        if (texture != null) {
-            genTextureId();
-        }
-
-        addTargets();
-        enableTargets();
-        setupAttributes(shaderProgram);
-
-        GL11.glDrawArrays(drawType.getId(), 0, vertex.getVbo().getVertices());
-
-        unBindBuffers();
-        disableTargets();
-    }
-
-    private void setupAttributes(int shaderProgram) {
-        if (vertex != null) {
-            int positionLocation = GL20.glGetAttribLocation(shaderProgram, "aPos");
-            GL20.glVertexAttribPointer(positionLocation, vertex.getVbo().getSize(), GL11.GL_FLOAT, false, 0, 0);
-            GL20.glEnableVertexAttribArray(positionLocation);
-        }
-
-        if (color != null) {
-            int colorLocation = GL20.glGetAttribLocation(shaderProgram, "aColor");
-            GL20.glVertexAttribPointer(colorLocation, color.getVbo().getSize(), GL11.GL_FLOAT, false, 0, 0);
-            GL20.glEnableVertexAttribArray(colorLocation);
-        }
-
-        if (texture != null) {
-            int textureLocation = GL20.glGetAttribLocation(shaderProgram, "aTexture");
-            GL20.glVertexAttribPointer(textureLocation, texture.getVbo().getSize(), GL11.GL_FLOAT, false, 0, 0);
-            GL20.glEnableVertexAttribArray(textureLocation);
-
-            int textureSamplerLocation = GL20.glGetUniformLocation(shaderProgram, "uTexture");
-            GL20.glUniform1i(textureSamplerLocation, 0);
-        }
-    }
-
-    public VAO getVertex() {
-        return vertex;
-    }
-
-    public void setVertex(VAO vertex) {
-        this.vertex = vertex;
-    }
-
-    public VAO getColor() {
-        return color;
-    }
-
-    public void setColor(VAO color) {
-        this.color = color;
-    }
-
-    public VAO getTexture() {
-        return texture;
-    }
-
-    public void setTexture(VAO texture) {
-        this.texture = texture;
-    }
-
-    public int getTextureId() {
-        return textureId;
-    }
-
-    public void setTextureId(int textureId) {
-        this.textureId = textureId;
+        vao.unBindVertexArray();
+        shaderProgram.unbind();
     }
 
     public Frame getFrame() {
         return frame;
     }
 
-    public ResourcesLocation getTexturePath() {
-        return texturePath;
+    public void setFrame(Frame frame) {
+        this.frame = frame;
     }
 
-    public void setTexturePath(ResourcesLocation texturePath) {
-        if (this.texturePath == null || this.texturePath != texturePath) {
-            this.texturePath = texturePath;
-        }
+    public ShaderProgram getShaderProgram() {
+        return shaderProgram;
     }
 
-    public ImageData getImageData() {
-        return imageData;
+    public void setShaderProgram(ShaderProgram shaderProgram) {
+        this.shaderProgram = shaderProgram;
     }
 
-    public void setImageData(ImageData imageData) {
-        this.imageData = imageData;
+    public VAO getVao() {
+        return vao;
+    }
+
+    public void setVao(VAO vao) {
+        this.vao = vao;
     }
 }

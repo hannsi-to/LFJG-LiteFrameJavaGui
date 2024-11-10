@@ -3,25 +3,36 @@ package me.hannsi.lfjg.render.openGL.system.bufferObject;
 import me.hannsi.lfjg.utils.color.Color;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
 
 import java.nio.FloatBuffer;
 
 public class VBO {
-    private final int size;
-    private FloatBuffer floatBuffer;
-    private int vertexBufferObjectHandle = -1;
+    private final int vboId;
+    private int location;
     private int vertices;
+    private int size;
+    private int usage;
+    private FloatBuffer floatBuffer;
 
-    public VBO(int vertices, int size) {
-        if (vertices == -1) {
-            vertices = 5;
-        }
+    public VBO(int location, int vertices, int size, int usage) {
+        this.vboId = genBuffers();
 
         this.vertices = vertices;
         this.size = size;
+        this.usage = usage;
+
+        this.location = location;
 
         this.floatBuffer = BufferUtils.createFloatBuffer(vertices * size);
+    }
+
+    public VBO(int location, int vertices, int size) {
+        this(location, vertices, size, GL30.GL_STATIC_DRAW);
+    }
+
+    public void flip() {
+        this.floatBuffer.flip();
     }
 
     public void put(float value) {
@@ -55,30 +66,79 @@ public class VBO {
         }
     }
 
-    public void flip() {
-        this.floatBuffer.flip();
+    public void enableVertexAttribArray() {
+        GL30.glEnableVertexAttribArray(this.location);
     }
 
-    public void genVertexBufferObject() {
-        flip();
-        this.vertexBufferObjectHandle = GL20.glGenBuffers();
+    public void disableVertexAttribArray() {
+        GL30.glDisableVertexAttribArray(this.location);
     }
 
-    public FloatBuffer getFloatBuffer() {
-        return floatBuffer;
+    public void vertexAttribPointer() {
+        GL30.glVertexAttribPointer(this.location, this.size, GL30.GL_FLOAT, false, 0, 0);
     }
 
-    public int getVertexBufferObjectHandle() {
-        return vertexBufferObjectHandle;
+    public void bufferData() {
+        GL30.glBufferData(GL30.GL_ARRAY_BUFFER, this.floatBuffer, usage);
+    }
+
+    private int genBuffers() {
+        return GL30.glGenBuffers();
+    }
+
+    public void bindBuffer() {
+        GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, this.vboId);
+    }
+
+    public void unBindBuffer() {
+        GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, 0);
+    }
+
+    public void deleteBuffers() {
+        GL30.glDeleteBuffers(this.vboId);
+    }
+
+    public int getVboId() {
+        return vboId;
     }
 
     public int getVertices() {
         return vertices;
     }
 
+    public void setVertices(int vertices) {
+        this.vertices = vertices;
+    }
+
     public int getSize() {
         return size;
     }
 
+    public void setSize(int size) {
+        this.size = size;
+    }
 
+    public int getUsage() {
+        return usage;
+    }
+
+    public void setUsage(int usage) {
+        this.usage = usage;
+    }
+
+    public FloatBuffer getFloatBuffer() {
+        return floatBuffer;
+    }
+
+    public void setFloatBuffer(FloatBuffer floatBuffer) {
+        this.floatBuffer = floatBuffer;
+    }
+
+    public int getLocation() {
+        return location;
+    }
+
+    public void setLocation(int location) {
+        this.location = location;
+    }
 }
