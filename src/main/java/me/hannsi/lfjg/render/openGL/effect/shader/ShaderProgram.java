@@ -2,6 +2,8 @@ package me.hannsi.lfjg.render.openGL.effect.shader;
 
 import me.hannsi.lfjg.utils.buffer.ByteUtil;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import org.joml.Matrix4f;
+import org.lwjgl.system.MemoryStack;
 
 import static org.lwjgl.opengl.GL20.*;
 
@@ -68,6 +70,14 @@ public class ShaderProgram {
             System.err.println("Warning validating Shader code: " + glGetProgramInfoLog(programId, 1024));
         }
 
+    }
+
+    public void setUniformMatrix4fv(String name, Matrix4f value) {
+        int uniformId = glGetUniformLocation(programId, name);
+
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            glUniformMatrix4fv(uniformId, false, value.get(stack.mallocFloat(16)));
+        }
     }
 
     public void setUniform1f(String name, float value) {

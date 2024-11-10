@@ -3,36 +3,43 @@ package me.hannsi.lfjg.render.openGL.system;
 import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.openGL.effect.shader.ShaderProgram;
+import me.hannsi.lfjg.render.openGL.renderers.polygon.GLPolygon;
 import me.hannsi.lfjg.render.openGL.system.bufferObject.VAO;
+import me.hannsi.lfjg.utils.graphics.DisplayUtil;
+import me.hannsi.lfjg.utils.graphics.GLUtil;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL30;
 
 public class VAORendering {
+    private final GLUtil glUtil;
     private Frame frame;
     private ShaderProgram shaderProgram;
     private VAO vao;
 
     public VAORendering(Frame frame) {
         this.frame = frame;
+        this.glUtil = new GLUtil();
     }
 
-    public void shaderProgramInit() {
+    public void shaderProgramInit(ResourcesLocation vertexShader, ResourcesLocation fragmentShader) {
         try {
             shaderProgram = new ShaderProgram();
-            shaderProgram.createVertexShader(new ResourcesLocation("shader/vertexShader.vsh"));
-            shaderProgram.createFragmentShader(new ResourcesLocation("shader/FragmentShader.fsh"));
+            shaderProgram.createVertexShader(vertexShader);
+            shaderProgram.createFragmentShader(fragmentShader);
             shaderProgram.link();
             shaderProgram.bind();
-            shaderProgram.setUniform1i("screenWidth", 1920);
-            shaderProgram.setUniform1i("screenHeight", 1080);
+            shaderProgram.setUniform1i("screenWidth", DisplayUtil.getDisplayWidthI());
+            shaderProgram.setUniform1i("screenHeight", DisplayUtil.getDisplayHeightI());
             shaderProgram.unbind();
+
         } catch (Exception e) {
-            DebugLog.debug(getClass(), e);
+            DebugLog.error(getClass(), e);
         }
     }
 
-    public void init() {
-        shaderProgramInit();
+    public void init(ResourcesLocation vertexShader, ResourcesLocation fragmentShader) {
+        shaderProgramInit(vertexShader, fragmentShader);
     }
 
     public void cleanUp() {
@@ -44,17 +51,26 @@ public class VAORendering {
         vao.deleteVertexArrays();
     }
 
-    public void draw() {
+    public void draw(GLPolygon glPolygon, Matrix4f modelMatrix) {
         shaderProgram.bind();
+        shaderProgram.setUniformMatrix4fv("uModelMatrix", modelMatrix);
+
         vao.bindVertexArray();
 
         vao.enableVertexAttribArrays();
 
+        glUtil.addGLTarget(GL30.GL_BLEND);
+        glUtil.enableTargets();
+        GL30.glBlendFunc(GL30.GL_SRC_ALPHA, GL30.GL_ONE_MINUS_SRC_ALPHA);
+
         GL30.glDrawArrays(GL30.GL_POLYGON, 0, 4);
+
+        glUtil.disableTargets();
 
         vao.disableVertexAttribArray();
 
         vao.unBindVertexArray();
+
         shaderProgram.unbind();
     }
 

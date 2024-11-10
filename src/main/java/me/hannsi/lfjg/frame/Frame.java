@@ -19,10 +19,10 @@ import org.joml.Vector2i;
 import org.lwjgl.glfw.*;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGL3;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryUtil;
+
+import static org.lwjgl.system.MemoryUtil.memUTF8;
 
 public class Frame implements IFrame {
     private final LFJGFrame lfjgFrame;
@@ -162,6 +162,58 @@ public class Frame implements IFrame {
                 }
             }
         });
+
+        if (GL.getCapabilities().OpenGL43) {
+            GL43.glEnable(GL43.GL_DEBUG_OUTPUT);
+            GL43.glDebugMessageCallback(new GLDebugMessageCallback() {
+                @Override
+                public void invoke(int source, int type, int id, int severity, int length, long message, long userParam) {
+                    String errorMessage = memUTF8(message);
+
+                    String sourceString = getSourceString(source);
+                    String typeString = getTypeString(type);
+                    String severityString = getSeverityString(severity);
+
+                    DebugLog.debug(getClass(), "OpenGL Debug Message: \n" + "Source: " + sourceString + "\n" + "Type: " + typeString + "\n" + "ID: " + id + "\n" + "Severity: " + severityString + "\n" + "Message: " + errorMessage);
+                }
+            }, 0);
+        } else {
+            DebugLog.debug(getClass(), "OpenGL 4.3 or higher is required for debug messages.");
+        }
+    }
+
+    private String getSourceString(int source) {
+        return switch (source) {
+            case GL43.GL_DEBUG_SOURCE_API -> "API";
+            case GL43.GL_DEBUG_SOURCE_WINDOW_SYSTEM -> "Window System";
+            case GL43.GL_DEBUG_SOURCE_SHADER_COMPILER -> "Shader Compiler";
+            case GL43.GL_DEBUG_SOURCE_THIRD_PARTY -> "Third Party";
+            case GL43.GL_DEBUG_SOURCE_APPLICATION -> "Application";
+            case GL43.GL_DEBUG_SOURCE_OTHER -> "Other";
+            default -> "Unknown";
+        };
+    }
+
+    private String getTypeString(int type) {
+        return switch (type) {
+            case GL43.GL_DEBUG_TYPE_ERROR -> "Error";
+            case GL43.GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR -> "Deprecated Behavior";
+            case GL43.GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR -> "Undefined Behavior";
+            case GL43.GL_DEBUG_TYPE_PORTABILITY -> "Portability";
+            case GL43.GL_DEBUG_TYPE_PERFORMANCE -> "Performance";
+            case GL43.GL_DEBUG_TYPE_OTHER -> "Other";
+            default -> "Unknown";
+        };
+    }
+
+    private String getSeverityString(int severity) {
+        return switch (severity) {
+            case GL43.GL_DEBUG_SEVERITY_NOTIFICATION -> "Notification";
+            case GL43.GL_DEBUG_SEVERITY_LOW -> "Low";
+            case GL43.GL_DEBUG_SEVERITY_MEDIUM -> "Medium";
+            case GL43.GL_DEBUG_SEVERITY_HIGH -> "High";
+            default -> "Unknown";
+        };
     }
 
     private void mainLoop() {

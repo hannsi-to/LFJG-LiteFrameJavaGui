@@ -3,7 +3,7 @@ package me.hannsi.lfjg.render.openGL.effect.effects;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLPolygon;
-import org.lwjgl.opengl.GL11;
+import me.hannsi.lfjg.utils.graphics.DisplayUtil;
 
 public class Translate extends EffectBase {
     private float x;
@@ -29,7 +29,11 @@ public class Translate extends EffectBase {
 
     @Override
     public void push(Frame frame, GLPolygon basePolygon) {
-        GL11.glTranslatef(x, y, z);
+        float ax = (2.0f * x) / DisplayUtil.getDisplayWidthF();
+        float ay = (2.0f * y) / DisplayUtil.getDisplayHeightF();
+        float az = z;
+
+        basePolygon.getModelMatrix().translate(ax, ay, az);
 
         super.push(frame, basePolygon);
     }

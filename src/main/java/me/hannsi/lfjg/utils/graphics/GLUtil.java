@@ -5,18 +5,18 @@ import org.lwjgl.opengl.GL11;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GL11Util {
+public class GLUtil {
     private final Map<Integer, Boolean> targets;
 
-    public GL11Util() {
+    public GLUtil() {
         this.targets = new HashMap<>();
     }
 
-    public void addGL11Target(int target) {
+    public void addGLTarget(int target) {
         targets.put(target, false);
     }
 
-    public void addGL11Target(int target, boolean disable) {
+    public void addGLTarget(int target, boolean disable) {
         targets.put(target, disable);
     }
 

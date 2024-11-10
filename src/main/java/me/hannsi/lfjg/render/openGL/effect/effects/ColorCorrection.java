@@ -3,7 +3,6 @@ package me.hannsi.lfjg.render.openGL.effect.effects;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLPolygon;
-import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 
 public class ColorCorrection extends EffectBase {
     private float brightness;
@@ -11,7 +10,6 @@ public class ColorCorrection extends EffectBase {
     private float saturation;
     private float hue;
     private float gamma;
-    //private ShaderUtil shaderUtil;
 
     public ColorCorrection(float brightness, float contrast, float saturation, float hue, float gamma) {
         super(3, "ColorCorrection", null);
@@ -24,26 +22,14 @@ public class ColorCorrection extends EffectBase {
     }
 
     @Override
-    public void pop(Frame frame, GLPolygon basePolygon) {
-        super.pop(frame, basePolygon);
-    }
-
-    @Override
     public void push(Frame frame, GLPolygon basePolygon) {
-        basePolygon.setFragmentShader(new ResourcesLocation("shader/ColorCorrection.fsh"));
-        //shaderUtil = new ShaderUtil(basePolygon.getFragmentShader());
-
-        //shaderUtil.getGlslSandboxShader().useShader();
-
-        //shaderUtil.getGlslSandboxShader().setUniform1f("brightness",brightness);
-        //shaderUtil.getGlslSandboxShader().setUniform1f("contrast",contrast);
-        //shaderUtil.getGlslSandboxShader().setUniform1f("saturation",saturation);
-        //shaderUtil.getGlslSandboxShader().setUniform1f("hue",hue);
-        //shaderUtil.getGlslSandboxShader().setUniform1f("gamma",gamma);
-
-        //shaderUtil.getGlslSandboxShader().finishShader();
-
-        //basePolygon.setShaderUtil(shaderUtil);
+        basePolygon.getVaoRendering().getShaderProgram().bind();
+        basePolygon.getVaoRendering().getShaderProgram().setUniform1f("brightness", brightness);
+        basePolygon.getVaoRendering().getShaderProgram().setUniform1f("contrast", contrast);
+        basePolygon.getVaoRendering().getShaderProgram().setUniform1f("saturation", saturation);
+        basePolygon.getVaoRendering().getShaderProgram().setUniform1f("hue", hue);
+        basePolygon.getVaoRendering().getShaderProgram().setUniform1f("gamma", gamma);
+        basePolygon.getVaoRendering().getShaderProgram().unbind();
 
         super.push(frame, basePolygon);
     }

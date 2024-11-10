@@ -29,7 +29,7 @@ public class LoggerManager {
         String debugText = debugLog.getDebugText();
 
         if (debugType == DebugType.EXCEPTION) {
-            description = exception.getClass().getName();
+            description = exception.getMessage();
         } else if (debugType == DebugType.TEXT) {
             description = debugText;
         }

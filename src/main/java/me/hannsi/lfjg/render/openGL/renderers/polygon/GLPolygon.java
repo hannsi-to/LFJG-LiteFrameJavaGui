@@ -8,6 +8,7 @@ import me.hannsi.lfjg.render.openGL.system.bufferObject.VBO;
 import me.hannsi.lfjg.utils.color.Color;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.DrawType;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL11;
 
@@ -23,6 +24,8 @@ public class GLPolygon {
     private VBO vboColor;
     private VAO vao;
     private VAORendering vaoRendering;
+    private Matrix4f modelMatrix;
+    private ResourcesLocation vertexShader;
     private ResourcesLocation fragmentShader;
     private List<EffectBase> effectBaseList;
 
@@ -32,6 +35,7 @@ public class GLPolygon {
         this.vboColor = new VBO(1, 1, 4);
         this.effectBaseList = new ArrayList<>();
         this.vaoRendering = new VAORendering(frame);
+        this.modelMatrix = new Matrix4f();
     }
 
     public GLPolygon put() {
@@ -94,7 +98,10 @@ public class GLPolygon {
     }
 
     public void init() {
-        vaoRendering.init();
+        vertexShader = new ResourcesLocation("shader/vertexShader.vsh");
+        fragmentShader = new ResourcesLocation("shader/FragmentShader.fsh");
+
+        vaoRendering.init(vertexShader, fragmentShader);
     }
 
     public void draw() {
@@ -113,11 +120,14 @@ public class GLPolygon {
             effectBase.push(frame, this);
         }
 
-        vaoRendering.draw();
+        vaoRendering.draw(this, modelMatrix);
 
         for (EffectBase effectBase : effectBaseList) {
             effectBase.pop(frame, this);
         }
+
+        effectBaseList = new ArrayList<>();
+        modelMatrix = new Matrix4f();
 
         GL11.glPopMatrix();
     }
@@ -200,5 +210,21 @@ public class GLPolygon {
 
     public void setVao(VAO vao) {
         this.vao = vao;
+    }
+
+    public Matrix4f getModelMatrix() {
+        return modelMatrix;
+    }
+
+    public void setModelMatrix(Matrix4f modelMatrix) {
+        this.modelMatrix = modelMatrix;
+    }
+
+    public ResourcesLocation getVertexShader() {
+        return vertexShader;
+    }
+
+    public void setVertexShader(ResourcesLocation vertexShader) {
+        this.vertexShader = vertexShader;
     }
 }
