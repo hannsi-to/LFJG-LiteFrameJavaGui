@@ -18,7 +18,7 @@ public class Size extends EffectBase {
     }
 
     public Size(float x, float y, float z, float cx, float cy, float cz) {
-        super(0, "Size", null);
+        super(0, "Size", (Class<GLPolygon>) null);
         this.x = x;
         this.y = y;
         this.z = z;

@@ -7,7 +7,9 @@ import me.hannsi.lfjg.render.openGL.system.bufferObject.VAO;
 import me.hannsi.lfjg.render.openGL.system.bufferObject.VBO;
 import me.hannsi.lfjg.utils.color.Color;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.type.types.BlendType;
 import me.hannsi.lfjg.utils.type.types.DrawType;
+import me.hannsi.lfjg.utils.type.types.ShaderRenderingType;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL11;
@@ -22,23 +24,36 @@ public class GLPolygon {
     private float pointSize = -1f;
     private VBO vboVertex;
     private VBO vboColor;
+    private VBO vboTexture;
     private VAO vao;
     private VAORendering vaoRendering;
     private Matrix4f modelMatrix;
     private ResourcesLocation vertexShader;
     private ResourcesLocation fragmentShader;
     private List<EffectBase> effectBaseList;
+    private int shaderTarget = -1;
+    private BlendType blendType;
 
     public GLPolygon(Frame frame) {
         this.frame = frame;
         this.vboVertex = new VBO(0, 1, 2);
-        this.vboColor = new VBO(1, 1, 4);
         this.effectBaseList = new ArrayList<>();
         this.vaoRendering = new VAORendering(frame);
         this.modelMatrix = new Matrix4f();
+        this.blendType = BlendType.MULTIPLY;
     }
 
     public GLPolygon put() {
+        return this;
+    }
+
+    public GLPolygon uv(Vector2f vector2f) {
+        if (this.vboTexture == null) {
+            this.vboTexture = new VBO(2, 1, 2);
+        }
+
+        this.vboTexture.put(vector2f);
+
         return this;
     }
 
@@ -49,7 +64,13 @@ public class GLPolygon {
     }
 
     public GLPolygon color(Color color) {
-        this.vboColor.put(color);
+        if (color != null) {
+            if (this.vboColor == null) {
+                this.vboColor = new VBO(1, 1, 4);
+            }
+
+            this.vboColor.put(color);
+        }
 
         return this;
     }
@@ -58,13 +79,34 @@ public class GLPolygon {
     }
 
     public GLPolygon rendering() {
+        for (EffectBase effectBase : effectBaseList) {
+            effectBase.rendering(frame, this);
+        }
+
         vboVertex.flip();
-        vboColor.flip();
+        if (vboColor != null) {
+            vboColor.flip();
+            shaderTarget = ShaderRenderingType.SHADER_COLOR.getId();
+        }
+        if (vboTexture != null) {
+            vboTexture.flip();
+
+            if (shaderTarget != -1) {
+                shaderTarget = shaderTarget | ShaderRenderingType.SHADER_TEXTURE.getId();
+            } else {
+                shaderTarget = ShaderRenderingType.SHADER_TEXTURE.getId();
+            }
+        }
 
         vao = new VAO();
 
         vao.setVertexVBO(vboVertex);
-        vao.setColorVBO(vboColor);
+        if (vboColor != null) {
+            vao.setColorVBO(vboColor);
+        }
+        if (vboTexture != null) {
+            vao.setTextureVBO(vboTexture);
+        }
 
         vao.bindVertexArray();
         vao.configureAttributes();
@@ -226,5 +268,29 @@ public class GLPolygon {
 
     public void setVertexShader(ResourcesLocation vertexShader) {
         this.vertexShader = vertexShader;
+    }
+
+    public VBO getVboTexture() {
+        return vboTexture;
+    }
+
+    public void setVboTexture(VBO vboTexture) {
+        this.vboTexture = vboTexture;
+    }
+
+    public int getShaderTarget() {
+        return shaderTarget;
+    }
+
+    public void setShaderTarget(int shaderTarget) {
+        this.shaderTarget = shaderTarget;
+    }
+
+    public BlendType getBlendType() {
+        return blendType;
+    }
+
+    public void setBlendType(BlendType blendType) {
+        this.blendType = blendType;
     }
 }

@@ -6,7 +6,7 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
-import me.hannsi.lfjg.render.openGL.effect.effects.ColorCorrection;
+import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.utils.color.Color;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
@@ -47,8 +47,10 @@ public class TestGuiFrame implements LFJGFrame {
         //glRect.rectWH(0, 0, 500, 500, new Color(255, 0, 255, 255));
 
         //glRect2.addEffect(new Translate(100,100f));
-        glRect2.addEffect(new ColorCorrection(0f, 1, 2, 0, 2.2f));
-        glRect2.rectWH(0, 0, 500, 500, new Color(255, 0, 255, 255));
+        //glRect2.addEffect(new ColorCorrection(50,50,50,50,50));
+        glRect2.addEffect(new Texture(new ResourcesLocation("image.png"), 0, 1, 1, 0));
+        //lRect2.setBlendType(BlendType.MULTIPLY);
+        glRect2.rectWH(0, 0, 500, 500, new Color(255, 0, 0, 255));
     }
 
     @Override

@@ -12,7 +12,7 @@ public class ColorCorrection extends EffectBase {
     private float gamma;
 
     public ColorCorrection(float brightness, float contrast, float saturation, float hue, float gamma) {
-        super(3, "ColorCorrection", null);
+        super(3, "ColorCorrection", (Class<GLPolygon>) null);
 
         this.brightness = brightness;
         this.contrast = contrast;

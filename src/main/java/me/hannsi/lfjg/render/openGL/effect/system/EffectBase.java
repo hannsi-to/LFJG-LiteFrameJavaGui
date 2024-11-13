@@ -3,17 +3,20 @@ package me.hannsi.lfjg.render.openGL.effect.system;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLPolygon;
 
-import java.awt.*;
-
 public class EffectBase {
     private int id;
     private String name;
-    private Polygon[] ingnorePolygon;
+    private Class<GLPolygon>[] ingnorePolygon;
 
-    public EffectBase(int id, String name, Polygon[] ingnorePolygon) {
+    @SafeVarargs
+    public EffectBase(int id, String name, Class<GLPolygon>... ingnorePolygon) {
         this.id = id;
         this.name = name;
         this.ingnorePolygon = ingnorePolygon;
+    }
+
+    public void rendering(Frame frame, GLPolygon basePolygon) {
+
     }
 
     public void pop(Frame frame, GLPolygon basePolygon) {
@@ -40,11 +43,11 @@ public class EffectBase {
         this.name = name;
     }
 
-    public Polygon[] getIngnorePolygon() {
+    public Class<GLPolygon>[] getIngnorePolygon() {
         return ingnorePolygon;
     }
 
-    public void setIngnorePolygon(Polygon[] ingnorePolygon) {
+    public void setIngnorePolygon(Class<GLPolygon>[] ingnorePolygon) {
         this.ingnorePolygon = ingnorePolygon;
     }
 }

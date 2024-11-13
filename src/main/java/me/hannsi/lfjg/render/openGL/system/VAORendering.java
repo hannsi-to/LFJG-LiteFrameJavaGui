@@ -53,7 +53,9 @@ public class VAORendering {
 
     public void draw(GLPolygon glPolygon, Matrix4f modelMatrix) {
         shaderProgram.bind();
+        shaderProgram.setUniform1i("target", glPolygon.getShaderTarget());
         shaderProgram.setUniformMatrix4fv("uModelMatrix", modelMatrix);
+        shaderProgram.setUniform1i("blendMode", glPolygon.getBlendType().getId());
 
         vao.bindVertexArray();
 
@@ -96,5 +98,9 @@ public class VAORendering {
 
     public void setVao(VAO vao) {
         this.vao = vao;
+    }
+
+    public GLUtil getGlUtil() {
+        return glUtil;
     }
 }

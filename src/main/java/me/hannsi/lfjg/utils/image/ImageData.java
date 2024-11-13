@@ -1,9 +1,8 @@
 package me.hannsi.lfjg.utils.image;
 
 import me.hannsi.lfjg.debug.DebugLog;
-import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.buffer.BufferUtil;
+import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.bytedeco.opencv.global.opencv_imgcodecs;
 import org.bytedeco.opencv.global.opencv_imgproc;
 import org.bytedeco.opencv.opencv_core.Mat;
@@ -13,13 +12,11 @@ import java.nio.ByteBuffer;
 import static org.bytedeco.opencv.global.opencv_imgproc.cvtColor;
 
 public class ImageData {
-    private Frame frame;
     private ResourcesLocation imagePath;
     private Mat mat;
     private ByteBuffer byteBuffer;
 
-    public ImageData(Frame frame, ResourcesLocation imagePath) {
-        this.frame = frame;
+    public ImageData(ResourcesLocation imagePath) {
         this.imagePath = imagePath;
 
         Mat bgrMat = opencv_imgcodecs.imdecode(new Mat(imagePath.getBytes()), opencv_imgcodecs.IMREAD_COLOR);
@@ -33,14 +30,6 @@ public class ImageData {
 
         cvtColor(bgrMat, mat, opencv_imgproc.COLOR_BGR2RGBA);
         this.byteBuffer = BufferUtil.matToByteBufferRGBA(mat);
-    }
-
-    public Frame getFrame() {
-        return frame;
-    }
-
-    public void setFrame(Frame frame) {
-        this.frame = frame;
     }
 
     public ResourcesLocation getImagePath() {

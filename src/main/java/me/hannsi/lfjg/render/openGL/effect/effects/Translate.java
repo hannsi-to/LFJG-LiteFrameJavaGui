@@ -11,7 +11,7 @@ public class Translate extends EffectBase {
     private float z;
 
     public Translate(float x, float y, float z) {
-        super(2, "Translate", null);
+        super(2, "Translate", (Class<GLPolygon>) null);
 
         this.x = x;
         this.y = y;
