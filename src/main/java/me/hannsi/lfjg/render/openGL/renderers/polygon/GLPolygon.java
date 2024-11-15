@@ -10,6 +10,7 @@ import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.BlendType;
 import me.hannsi.lfjg.utils.type.types.DrawType;
 import me.hannsi.lfjg.utils.type.types.ShaderRenderingType;
+import org.joml.Math;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL11;

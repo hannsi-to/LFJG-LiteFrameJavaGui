@@ -65,7 +65,7 @@ public class VAORendering {
         glUtil.enableTargets();
         GL30.glBlendFunc(GL30.GL_SRC_ALPHA, GL30.GL_ONE_MINUS_SRC_ALPHA);
 
-        GL30.glDrawArrays(GL30.GL_POLYGON, 0, 4);
+        GL30.glDrawArrays(glPolygon.getDrawType().getId(), 0, 4);
 
         glUtil.disableTargets();
 

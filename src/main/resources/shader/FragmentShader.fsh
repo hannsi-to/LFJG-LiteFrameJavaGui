@@ -107,7 +107,9 @@ void main() {
     }
 
     if (target == 1 || target == (1 | 2)){
-        color = vec4(applyColorCorrection(color.rgb), color.a);
+        if (brightness != 50.0 || contrast != 50.0 || saturation != 50.0 || hue != 50.0 || gamma != 50.0){
+            color = vec4(applyColorCorrection(color.rgb), color.a);
+        }
     }
 
     fragColor = color;

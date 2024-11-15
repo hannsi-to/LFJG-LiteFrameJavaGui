@@ -6,13 +6,17 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
-import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
+import me.hannsi.lfjg.render.openGL.effect.effects.*;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.utils.color.Color;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.AntiAliasingType;
+import me.hannsi.lfjg.utils.type.types.BlendType;
 import me.hannsi.lfjg.utils.type.types.MonitorType;
 import me.hannsi.lfjg.utils.type.types.VSyncType;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL46;
 
 public class TestGuiFrame implements LFJGFrame {
     private Frame frame;
@@ -47,10 +51,11 @@ public class TestGuiFrame implements LFJGFrame {
         //glRect.rectWH(0, 0, 500, 500, new Color(255, 0, 255, 255));
 
         //glRect2.addEffect(new Translate(100,100f));
-        //glRect2.addEffect(new ColorCorrection(50,50,50,50,50));
-        glRect2.addEffect(new Texture(new ResourcesLocation("image.png"), 0, 1, 1, 0));
-        //lRect2.setBlendType(BlendType.MULTIPLY);
-        glRect2.rectWH(0, 0, 500, 500, new Color(255, 0, 0, 255));
+        //glRect2.addEffect(new ColorCorrection(50,50,50,50,100));
+        //glRect2.addEffect(new Texture(new ResourcesLocation("image.png"), 0, 1, 1, 0));
+        //glRect2.setBlendType(BlendType.SCREEN);
+        glRect2.addEffect(new Rotate(0, 0, (float) Math.toRadians(10), 0, 0, 0));
+        glRect2.rectWH(0, 0, 500, 500, null);
     }
 
     @Override
