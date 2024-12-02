@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.openGL.renderers.polygon;
 
-import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.utils.color.Color;
 import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.joml.Vector2f;
@@ -8,8 +7,8 @@ import org.joml.Vector2f;
 public class GLRoundedRect extends GLPolygon {
     public static final int defaultSegmentCount = 16;
 
-    public GLRoundedRect(Frame frame) {
-        super(frame);
+    public GLRoundedRect(String name) {
+        super(name);
     }
 
     public void roundedRect(float x, float y, float x1, float y1, boolean leftTop, boolean rightTop, boolean rightBottom, boolean leftBottom, float leftTopRadius, float rightTopRadius, float rightBottomRadius, float leftBottomRadius, int segmentCount, Color topLeftColor, Color topRightColor, Color bottomRightColor, Color bottomLeftColor) {
@@ -47,7 +46,8 @@ public class GLRoundedRect extends GLPolygon {
             put().vertex(new Vector2f(x1, y)).color(bottomRightColor).end();
         }
 
-        rendering().drawType(DrawType.POLYGON).draw();
+        setDrawType(DrawType.POLYGON);
+        rendering();
     }
 
     public void roundedRect(float x, float y, float x1, float y1, float leftTopRadius, float rightTopRadius, float rightBottomRadius, float leftBottomRadius, int segmentCount, Color topLeftColor, Color topRightColor, Color bottomRightColor, Color bottomLeftColor) {
@@ -117,7 +117,8 @@ public class GLRoundedRect extends GLPolygon {
             put().vertex(new Vector2f(x1, y)).color(bottomRightColor).end();
         }
 
-        rendering().drawType(DrawType.LINE_LOOP).lineWidth(lineWidth).draw();
+        setDrawType(DrawType.LINE_LOOP).setLineWidth(lineWidth);
+        rendering();
     }
 
     public void roundedRectOutLine(float x, float y, float x1, float y1, float lineWidth, float leftTopRadius, float rightTopRadius, float rightBottomRadius, float leftBottomRadius, int segmentCount, Color topLeftColor, Color topRightColor, Color bottomRightColor, Color bottomLeftColor) {

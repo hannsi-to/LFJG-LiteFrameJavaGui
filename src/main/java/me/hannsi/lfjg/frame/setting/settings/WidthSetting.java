@@ -9,7 +9,7 @@ import org.lwjgl.glfw.GLFW;
 @ReflectionsLevel(level = 2)
 public class WidthSetting extends FrameSettingBase<Integer> {
     public WidthSetting(Frame frame) {
-        super(frame, "WidthSetting", 2, DisplayUtil.getScreenSize().width);
+        super(frame, "WidthSetting", 2, DisplayUtil.getDisplaySizeDimension().width);
     }
 
     @Override

@@ -1,13 +1,12 @@
 package me.hannsi.lfjg.render.openGL.renderers.polygon;
 
-import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.utils.color.Color;
 import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.joml.Vector2f;
 
 public class GLCircle extends GLPolygon {
-    public GLCircle(Frame frame) {
-        super(frame);
+    public GLCircle(String name) {
+        super(name);
     }
 
     public void circle(float xCenter, float yCenter, float xRadius, float yRadius, int segmentCount, Color... colors) {
@@ -46,7 +45,8 @@ public class GLCircle extends GLPolygon {
             put().vertex(new Vector2f(x, y)).color(color).end();
         }
 
-        rendering().drawType(DrawType.POLYGON).draw();
+        setDrawType(DrawType.POLYGON);
+        rendering();
     }
 
     public void circleOutLine(float xCenter, float yCenter, float xRadius, float yRadius, int segmentCount, float lineWidth, Color... colors) {
@@ -74,7 +74,7 @@ public class GLCircle extends GLPolygon {
                 float r = startColor.getRed() / 255.0f + factor * (endColor.getRed() / 255.0f - startColor.getRed() / 255.0f);
                 float g = startColor.getGreen() / 255.0f + factor * (endColor.getGreen() / 255.0f - startColor.getGreen() / 255.0f);
                 float b = startColor.getBlue() / 255.0f + factor * (endColor.getBlue() / 255.0f - startColor.getBlue() / 255.0f);
-                float a = startColor.getAlpha() / 255.0f + factor * (endColor.getAlpha() / 255.0f - startColor.getAlpha() / 255.0f); // アルファの補間
+                float a = startColor.getAlpha() / 255.0f + factor * (endColor.getAlpha() / 255.0f - startColor.getAlpha() / 255.0f);
 
                 color = new Color(r, g, b, a);
             } else {
@@ -85,6 +85,7 @@ public class GLCircle extends GLPolygon {
             put().vertex(new Vector2f(x, y)).color(color).end();
         }
 
-        rendering().drawType(DrawType.LINE_LOOP).lineWidth(lineWidth).draw();
+        setDrawType(DrawType.LINE_LOOP).setLineWidth(lineWidth);
+        rendering();
     }
 }

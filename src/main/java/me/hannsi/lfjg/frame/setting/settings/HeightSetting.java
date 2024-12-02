@@ -9,7 +9,7 @@ import org.lwjgl.glfw.GLFW;
 @ReflectionsLevel(level = 3)
 public class HeightSetting extends FrameSettingBase<Integer> {
     public HeightSetting(Frame frame) {
-        super(frame, "HeightSetting", 3, DisplayUtil.getScreenSize().height);
+        super(frame, "HeightSetting", 3, DisplayUtil.getDisplaySizeDimension().height);
     }
 
     @Override

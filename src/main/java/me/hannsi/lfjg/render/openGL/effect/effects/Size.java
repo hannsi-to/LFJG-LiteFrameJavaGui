@@ -1,8 +1,7 @@
 package me.hannsi.lfjg.render.openGL.effect.effects;
 
-import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
-import me.hannsi.lfjg.render.openGL.renderers.polygon.GLPolygon;
+import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.DisplayUtil;
 
 public class Size extends EffectBase {
@@ -18,7 +17,7 @@ public class Size extends EffectBase {
     }
 
     public Size(float x, float y, float z, float cx, float cy, float cz) {
-        super(0, "Size", (Class<GLPolygon>) null);
+        super(0, "Size", (Class<GLObject>) null);
         this.x = x;
         this.y = y;
         this.z = z;
@@ -36,12 +35,12 @@ public class Size extends EffectBase {
     }
 
     @Override
-    public void pop(Frame frame, GLPolygon basePolygon) {
-        super.pop(frame, basePolygon);
+    public void pop(GLObject baseGLObject) {
+        super.pop(baseGLObject);
     }
 
     @Override
-    public void push(Frame frame, GLPolygon basePolygon) {
+    public void push(GLObject baseGLObject) {
         float scaleX = x;
         float scaleY = y;
         float scaleZ = z;
@@ -49,9 +48,9 @@ public class Size extends EffectBase {
         float acy = (2.0f * cy) / DisplayUtil.getDisplayHeightF() - 1f;
         float acz = cz;
 
-        basePolygon.getModelMatrix().translate(acx, acy, acz).scale(scaleX, scaleY, scaleZ).translate(-acx, -acy, -acz);
+        //basePolygon.getModelMatrix().translate(acx, acy, acz).scale(scaleX, scaleY, scaleZ).translate(-acx, -acy, -acz);
 
-        super.push(frame, basePolygon);
+        super.push(baseGLObject);
     }
 
     public float getX() {

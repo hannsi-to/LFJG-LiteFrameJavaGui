@@ -1,8 +1,7 @@
 package me.hannsi.lfjg.render.openGL.effect.effects;
 
-import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
-import me.hannsi.lfjg.render.openGL.renderers.polygon.GLPolygon;
+import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.DisplayUtil;
 
 public class Rotate extends EffectBase {
@@ -22,7 +21,7 @@ public class Rotate extends EffectBase {
     }
 
     public Rotate(float x, float y, float z, float cx, float cy, float cz) {
-        super(4, "Rotate", (Class<GLPolygon>) null);
+        super(4, "Rotate", (Class<GLObject>) null);
 
         this.x = x;
         this.y = y;
@@ -33,19 +32,19 @@ public class Rotate extends EffectBase {
     }
 
     @Override
-    public void pop(Frame frame, GLPolygon basePolygon) {
-        super.pop(frame, basePolygon);
+    public void pop(GLObject baseGLObject) {
+        super.pop(baseGLObject);
     }
 
     @Override
-    public void push(Frame frame, GLPolygon basePolygon) {
+    public void push(GLObject baseGLObject) {
         float acx = (2.0f * cx) / DisplayUtil.getDisplayWidthF() - 1f;
         float acy = (2.0f * cy) / DisplayUtil.getDisplayHeightF() - 1f;
         float acz = cz;
 
-        basePolygon.getModelMatrix().translate(acx, acy, acz).rotateX(x).rotateY(y).rotateZ(z).translate(-acx, -acy, -acz);
+        //baseGLObject.getModelMatrix().translate(acx, acy, acz).rotateX(x).rotateY(y).rotateZ(z).translate(-acx, -acy, -acz);
 
-        super.push(frame, basePolygon);
+        super.push(baseGLObject);
     }
 
     public float getX() {

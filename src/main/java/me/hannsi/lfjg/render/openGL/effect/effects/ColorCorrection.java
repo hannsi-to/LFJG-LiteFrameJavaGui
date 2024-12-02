@@ -1,8 +1,7 @@
 package me.hannsi.lfjg.render.openGL.effect.effects;
 
-import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
-import me.hannsi.lfjg.render.openGL.renderers.polygon.GLPolygon;
+import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 
 public class ColorCorrection extends EffectBase {
     private float brightness;
@@ -12,7 +11,7 @@ public class ColorCorrection extends EffectBase {
     private float gamma;
 
     public ColorCorrection(float brightness, float contrast, float saturation, float hue, float gamma) {
-        super(3, "ColorCorrection", (Class<GLPolygon>) null);
+        super(3, "ColorCorrection", (Class<GLObject>) null);
 
         this.brightness = brightness;
         this.contrast = contrast;
@@ -22,16 +21,16 @@ public class ColorCorrection extends EffectBase {
     }
 
     @Override
-    public void push(Frame frame, GLPolygon basePolygon) {
-        basePolygon.getVaoRendering().getShaderProgram().bind();
-        basePolygon.getVaoRendering().getShaderProgram().setUniform1f("brightness", brightness);
-        basePolygon.getVaoRendering().getShaderProgram().setUniform1f("contrast", contrast);
-        basePolygon.getVaoRendering().getShaderProgram().setUniform1f("saturation", saturation);
-        basePolygon.getVaoRendering().getShaderProgram().setUniform1f("hue", hue);
-        basePolygon.getVaoRendering().getShaderProgram().setUniform1f("gamma", gamma);
-        basePolygon.getVaoRendering().getShaderProgram().unbind();
+    public void push(GLObject baseGLObject) {
+        //basePolygon.getShaderProgram().bind();
+        //basePolygon.getShaderProgram().setUniform1f("brightness", brightness);
+        //basePolygon.getShaderProgram().setUniform1f("contrast", contrast);
+        //basePolygon.getShaderProgram().setUniform1f("saturation", saturation);
+        //basePolygon.getShaderProgram().setUniform1f("hue", hue);
+        //basePolygon.getShaderProgram().setUniform1f("gamma", gamma);
+        //basePolygon.getShaderProgram().unbind();
 
-        super.push(frame, basePolygon);
+        super.push(baseGLObject);
     }
 
     public float getBrightness() {

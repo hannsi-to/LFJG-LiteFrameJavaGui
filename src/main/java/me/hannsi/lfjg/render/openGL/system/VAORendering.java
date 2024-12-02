@@ -1,106 +1,62 @@
 package me.hannsi.lfjg.render.openGL.system;
 
-import me.hannsi.lfjg.debug.DebugLog;
-import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.render.openGL.effect.shader.ShaderProgram;
-import me.hannsi.lfjg.render.openGL.renderers.polygon.GLPolygon;
-import me.hannsi.lfjg.render.openGL.system.bufferObject.VAO;
-import me.hannsi.lfjg.utils.graphics.DisplayUtil;
+import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.GLUtil;
-import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL30;
+
+import static org.lwjgl.opengl.GL11.glDrawArrays;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 public class VAORendering {
-    private final GLUtil glUtil;
-    private Frame frame;
-    private ShaderProgram shaderProgram;
-    private VAO vao;
+    private GLObject glObject;
+    private GLUtil glUtil;
 
-    public VAORendering(Frame frame) {
-        this.frame = frame;
+    public VAORendering() {
         this.glUtil = new GLUtil();
     }
 
-    public void shaderProgramInit(ResourcesLocation vertexShader, ResourcesLocation fragmentShader) {
-        try {
-            shaderProgram = new ShaderProgram();
-            shaderProgram.createVertexShader(vertexShader);
-            shaderProgram.createFragmentShader(fragmentShader);
-            shaderProgram.link();
-            shaderProgram.bind();
-            shaderProgram.setUniform1i("screenWidth", DisplayUtil.getDisplayWidthI());
-            shaderProgram.setUniform1i("screenHeight", DisplayUtil.getDisplayHeightI());
-            shaderProgram.unbind();
+    public void draw(GLObject glObject) {
+        this.glObject = glObject;
 
-        } catch (Exception e) {
-            DebugLog.error(getClass(), e);
-        }
-    }
-
-    public void init(ResourcesLocation vertexShader, ResourcesLocation fragmentShader) {
-        shaderProgramInit(vertexShader, fragmentShader);
-    }
-
-    public void cleanUp() {
-        shaderProgram.cleanup();
-        vao.disableVertexAttribArray();
-        vao.clearAttributes();
-        vao.deleteBuffers();
-        vao.unBindVertexArray();
-        vao.deleteVertexArrays();
-    }
-
-    public void draw(GLPolygon glPolygon, Matrix4f modelMatrix) {
-        shaderProgram.bind();
-        shaderProgram.setUniform1i("target", glPolygon.getShaderTarget());
-        shaderProgram.setUniformMatrix4fv("uModelMatrix", modelMatrix);
-        shaderProgram.setUniform1i("blendMode", glPolygon.getBlendType().getId());
-
-        vao.bindVertexArray();
-
-        vao.enableVertexAttribArrays();
-
-        glUtil.addGLTarget(GL30.GL_BLEND);
         glUtil.enableTargets();
-        GL30.glBlendFunc(GL30.GL_SRC_ALPHA, GL30.GL_ONE_MINUS_SRC_ALPHA);
 
-        GL30.glDrawArrays(glPolygon.getDrawType().getId(), 0, 4);
+        glBindVertexArray(glObject.getMesh().getVaoId());
+
+        int count;
+        switch (glObject.getMesh().getProjectionType()) {
+            case OrthographicProjection -> {
+                count = glObject.getMesh().getPositions().length / 2;
+            }
+            case PerspectiveProjection -> {
+                count = glObject.getMesh().getPositions().length / 3;
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + glObject.getMesh().getProjectionType());
+        }
+
+        glDrawArrays(glObject.getDrawType().getId(), 0, count);
+
+        glBindVertexArray(0);
 
         glUtil.disableTargets();
-
-        vao.disableVertexAttribArray();
-
-        vao.unBindVertexArray();
-
-        shaderProgram.unbind();
     }
 
-    public Frame getFrame() {
-        return frame;
+    public void cleanup() {
+        glObject.getMesh().cleanup();
+        glUtil = null;
     }
 
-    public void setFrame(Frame frame) {
-        this.frame = frame;
+    public GLObject getGlObject() {
+        return glObject;
     }
 
-    public ShaderProgram getShaderProgram() {
-        return shaderProgram;
-    }
-
-    public void setShaderProgram(ShaderProgram shaderProgram) {
-        this.shaderProgram = shaderProgram;
-    }
-
-    public VAO getVao() {
-        return vao;
-    }
-
-    public void setVao(VAO vao) {
-        this.vao = vao;
+    public void setGlObject(GLObject glObject) {
+        this.glObject = glObject;
     }
 
     public GLUtil getGlUtil() {
         return glUtil;
+    }
+
+    public void setGlUtil(GLUtil glUtil) {
+        this.glUtil = glUtil;
     }
 }

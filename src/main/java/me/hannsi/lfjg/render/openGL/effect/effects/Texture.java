@@ -1,12 +1,10 @@
 package me.hannsi.lfjg.render.openGL.effect.effects;
 
-import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
-import me.hannsi.lfjg.render.openGL.renderers.polygon.GLPolygon;
+import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.image.ImageData;
-import me.hannsi.lfjg.utils.image.TextureLoader;
+import me.hannsi.lfjg.utils.image.TextureCache;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import org.joml.Vector2f;
 import org.lwjgl.opengl.GL30;
 
 public class Texture extends EffectBase {
@@ -19,7 +17,7 @@ public class Texture extends EffectBase {
     private float y2;
 
     public Texture(ResourcesLocation texturePath, float x1, float y1, float x2, float y2) {
-        super(3, "Texture", (Class<GLPolygon>) null);
+        super(3, "Texture", (Class<GLObject>) null);
 
         this.texturePath = texturePath;
         this.x1 = x1;
@@ -29,43 +27,42 @@ public class Texture extends EffectBase {
     }
 
     @Override
-    public void rendering(Frame frame, GLPolygon basePolygon) {
-        basePolygon.put().uv(new Vector2f(x1, y1)).end();
-        basePolygon.put().uv(new Vector2f(x2, y1)).end();
-        basePolygon.put().uv(new Vector2f(x2, y2)).end();
-        basePolygon.put().uv(new Vector2f(x1, y2)).end();
+    public void rendering(GLObject baseGLObject) {
+        //basePolygon.put().uv(new Vector2f(x1, y1)).end();
+        //basePolygon.put().uv(new Vector2f(x2, y1)).end();
+        //basePolygon.put().uv(new Vector2f(x2, y2)).end();
+        //basePolygon.put().uv(new Vector2f(x1, y2)).end();
 
-        super.rendering(frame, basePolygon);
+        super.rendering(baseGLObject);
     }
 
     @Override
-    public void push(Frame frame, GLPolygon basePolygon) {
+    public void push(GLObject baseGLObject) {
         genTextureId();
 
-        basePolygon.getVaoRendering().getShaderProgram().bind();
-        basePolygon.getVaoRendering().getShaderProgram().setUniform1i("texture_sampler", 0);
-        basePolygon.getVaoRendering().getShaderProgram().unbind();
+        //baseGLObject.getVaoRendering().getShaderProgram().bind();
+        //baseGLObject.getVaoRendering().getShaderProgram().setUniform1i("texture_sampler", 0);
+        //baseGLObject.getVaoRendering().getShaderProgram().unbind();
 
         GL30.glActiveTexture(GL30.GL_TEXTURE0);
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, textureId);
 
-        basePolygon.getVaoRendering().getGlUtil().addGLTarget(GL30.GL_TEXTURE_2D);
-
-        super.push(frame, basePolygon);
+        super.push(baseGLObject);
     }
 
     @Override
-    public void pop(Frame frame, GLPolygon basePolygon) {
+    public void pop(GLObject baseGLObject) {
+        if (textureId != -1) {
+            GL30.glDeleteTextures(textureId);
+            textureId = -1;
+        }
 
-
-        super.pop(frame, basePolygon);
+        super.pop(baseGLObject);
     }
 
     private void genTextureId() {
-        if (textureId == -1) {
-            imageData = new ImageData(texturePath);
-            textureId = TextureLoader.createTexture(imageData.getByteBuffer(), imageData.getMat().cols(), imageData.getMat().rows());
-        }
+        TextureCache textureCache = new TextureCache();
+        textureId = textureCache.getTextureId(texturePath);
     }
 
     public int getTextureId() {

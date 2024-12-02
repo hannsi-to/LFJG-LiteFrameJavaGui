@@ -6,24 +6,18 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
-import me.hannsi.lfjg.render.openGL.effect.effects.*;
-import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
+import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRoundedRect;
+import me.hannsi.lfjg.render.openGL.system.Projection;
 import me.hannsi.lfjg.utils.color.Color;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.AntiAliasingType;
-import me.hannsi.lfjg.utils.type.types.BlendType;
 import me.hannsi.lfjg.utils.type.types.MonitorType;
+import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.utils.type.types.VSyncType;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL46;
 
 public class TestGuiFrame implements LFJGFrame {
+    GLRoundedRect gl;
     private Frame frame;
-
-    private GLRect glRect;
-    private GLRect glRect2;
-
 
     public static void main(String[] args) {
         new TestGuiFrame().setFrame();
@@ -37,31 +31,22 @@ public class TestGuiFrame implements LFJGFrame {
     public void init() {
         IFrame.eventManager.register(this);
 
-        glRect = new GLRect(frame);
-        glRect.init();
+        Projection projection = new Projection(ProjectionType.OrthographicProjection, frame.getWindowWidth(), frame.getWindowHeight());
 
-        glRect2 = new GLRect(frame);
-        glRect2.init();
+        gl = new GLRoundedRect("test");
+        gl.roundedRect(100, 100, 500, 500, 10, new Color(255, 0, 255, 255));
+        gl.setProjectionMatrix(projection.getProjMatrix());
+        gl.create();
     }
 
     @Override
     public void drawFrame(long nvg) {
-        //glRect.addEffect(new Translate(100,100f));
-        //glRect.addEffect(new Size(2f,2f,0,0));
-        //glRect.rectWH(0, 0, 500, 500, new Color(255, 0, 255, 255));
-
-        //glRect2.addEffect(new Translate(100,100f));
-        //glRect2.addEffect(new ColorCorrection(50,50,50,50,100));
-        //glRect2.addEffect(new Texture(new ResourcesLocation("image.png"), 0, 1, 1, 0));
-        //glRect2.setBlendType(BlendType.SCREEN);
-        glRect2.addEffect(new Rotate(0, 0, (float) Math.toRadians(10), 0, 0, 0));
-        glRect2.rectWH(0, 0, 500, 500, null);
+        gl.draw();
     }
 
     @Override
     public void stopFrame() {
-        glRect.cleanUp();
-        glRect2.cleanUp();
+        gl.cleanup();
     }
 
     @Override

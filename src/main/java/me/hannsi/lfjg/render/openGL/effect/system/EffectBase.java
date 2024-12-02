@@ -1,29 +1,28 @@
 package me.hannsi.lfjg.render.openGL.effect.system;
 
-import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.render.openGL.renderers.polygon.GLPolygon;
+import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 
 public class EffectBase {
     private int id;
     private String name;
-    private Class<GLPolygon>[] ingnorePolygon;
+    private Class<GLObject>[] ignoreGLObject;
 
     @SafeVarargs
-    public EffectBase(int id, String name, Class<GLPolygon>... ingnorePolygon) {
+    public EffectBase(int id, String name, Class<GLObject>... ignoreGLObject) {
         this.id = id;
         this.name = name;
-        this.ingnorePolygon = ingnorePolygon;
+        this.ignoreGLObject = ignoreGLObject;
     }
 
-    public void rendering(Frame frame, GLPolygon basePolygon) {
-
-    }
-
-    public void pop(Frame frame, GLPolygon basePolygon) {
+    public void rendering(GLObject baseGLObject) {
 
     }
 
-    public void push(Frame frame, GLPolygon basePolygon) {
+    public void pop(GLObject baseGLObject) {
+
+    }
+
+    public void push(GLObject baseGLObject) {
 
     }
 
@@ -43,11 +42,11 @@ public class EffectBase {
         this.name = name;
     }
 
-    public Class<GLPolygon>[] getIngnorePolygon() {
-        return ingnorePolygon;
+    public Class<GLObject>[] getIgnoreGLObject() {
+        return ignoreGLObject;
     }
 
-    public void setIngnorePolygon(Class<GLPolygon>[] ingnorePolygon) {
-        this.ingnorePolygon = ingnorePolygon;
+    public void setIgnoreGLObject(Class<GLObject>[] ignoreGLObject) {
+        this.ignoreGLObject = ignoreGLObject;
     }
 }

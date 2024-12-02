@@ -1,8 +1,7 @@
 package me.hannsi.lfjg.render.openGL.effect.effects;
 
-import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
-import me.hannsi.lfjg.render.openGL.renderers.polygon.GLPolygon;
+import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.DisplayUtil;
 
 public class Translate extends EffectBase {
@@ -11,7 +10,7 @@ public class Translate extends EffectBase {
     private float z;
 
     public Translate(float x, float y, float z) {
-        super(2, "Translate", (Class<GLPolygon>) null);
+        super(2, "Translate", (Class<GLObject>) null);
 
         this.x = x;
         this.y = y;
@@ -23,19 +22,19 @@ public class Translate extends EffectBase {
     }
 
     @Override
-    public void pop(Frame frame, GLPolygon basePolygon) {
-        super.pop(frame, basePolygon);
+    public void pop(GLObject baseGLObject) {
+        super.pop(baseGLObject);
     }
 
     @Override
-    public void push(Frame frame, GLPolygon basePolygon) {
+    public void push(GLObject baseGLObject) {
         float ax = (2.0f * x) / DisplayUtil.getDisplayWidthF();
         float ay = (2.0f * y) / DisplayUtil.getDisplayHeightF();
         float az = z;
 
-        basePolygon.getModelMatrix().translate(ax, ay, az);
+        //basePolygon.getModelMatrix().translate(ax, ay, az);
 
-        super.push(frame, basePolygon);
+        super.push(baseGLObject);
     }
 
     public float getX() {

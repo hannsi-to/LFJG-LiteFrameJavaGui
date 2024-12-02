@@ -1,13 +1,12 @@
 package me.hannsi.lfjg.render.openGL.renderers.polygon;
 
-import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.utils.color.Color;
 import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.joml.Vector2f;
 
 public class GLRect extends GLPolygon {
-    public GLRect(Frame frame) {
-        super(frame);
+    public GLRect(String name) {
+        super(name);
     }
 
     public void rect(float x1, float y1, float x2, float y2, Color color) {
@@ -16,7 +15,8 @@ public class GLRect extends GLPolygon {
         put().vertex(new Vector2f(x2, y2)).color(color).end();
         put().vertex(new Vector2f(x1, y2)).color(color).end();
 
-        rendering().drawType(DrawType.QUADS).draw();
+        setDrawType(DrawType.QUADS);
+        rendering();
     }
 
     public void rectWH(float x, float y, float width, float height, Color color) {
@@ -29,7 +29,8 @@ public class GLRect extends GLPolygon {
         put().vertex(new Vector2f(x2, y2)).color(color1).end();
         put().vertex(new Vector2f(x1, y2)).color(color1).end();
 
-        rendering().drawType(DrawType.QUADS).draw();
+        setDrawType(DrawType.QUADS);
+        rendering();
     }
 
     public void rectWH(float x, float y, float width, float height, Color color1, Color color2) {
@@ -42,7 +43,8 @@ public class GLRect extends GLPolygon {
         put().vertex(new Vector2f(x2, y2)).color(color3).end();
         put().vertex(new Vector2f(x1, y2)).color(color1).end();
 
-        rendering().drawType(DrawType.QUADS).draw();
+        setDrawType(DrawType.QUADS);
+        rendering();
     }
 
     public void rectWH(float x, float y, float width, float height, Color color1, Color color2, Color color3) {
@@ -55,7 +57,8 @@ public class GLRect extends GLPolygon {
         put().vertex(new Vector2f(x2, y2)).color(color3).end();
         put().vertex(new Vector2f(x1, y2)).color(color4).end();
 
-        rendering().drawType(DrawType.QUADS).draw();
+        setDrawType(DrawType.QUADS);
+        rendering();
     }
 
     public void rectWH(float x, float y, float width, float height, Color color1, Color color2, Color color3, Color color4) {
@@ -68,7 +71,8 @@ public class GLRect extends GLPolygon {
         put().vertex(new Vector2f(x2, y2)).color(color).end();
         put().vertex(new Vector2f(x1, y2)).color(color).end();
 
-        rendering().drawType(DrawType.LINE_LOOP).lineWidth(lineWidth).draw();
+        setDrawType(DrawType.LINE_LOOP).setLineWidth(lineWidth);
+        rendering();
     }
 
     public void rectWHOutLine(float x, float y, float width, float height, float lineWidth, Color color) {
@@ -81,7 +85,8 @@ public class GLRect extends GLPolygon {
         put().vertex(new Vector2f(x2, y2)).color(color1).end();
         put().vertex(new Vector2f(x1, y2)).color(color1).end();
 
-        rendering().drawType(DrawType.LINE_LOOP).lineWidth(lineWidth).draw();
+        setDrawType(DrawType.LINE_LOOP).setLineWidth(lineWidth);
+        rendering();
     }
 
     public void rectWHOutLine(float x, float y, float width, float height, float lineWidth, Color color1, Color color2) {
@@ -94,7 +99,8 @@ public class GLRect extends GLPolygon {
         put().vertex(new Vector2f(x2, y2)).color(color3).end();
         put().vertex(new Vector2f(x1, y2)).color(color1).end();
 
-        rendering().drawType(DrawType.LINE_LOOP).lineWidth(lineWidth).draw();
+        setDrawType(DrawType.LINE_LOOP).setLineWidth(lineWidth);
+        rendering();
     }
 
     public void rectWHOutLine(float x, float y, float width, float height, float lineWidth, Color color1, Color color2, Color color3) {
@@ -107,7 +113,8 @@ public class GLRect extends GLPolygon {
         put().vertex(new Vector2f(x2, y2)).color(color3).end();
         put().vertex(new Vector2f(x1, y2)).color(color4).end();
 
-        rendering().drawType(DrawType.LINE_LOOP).lineWidth(lineWidth).draw();
+        setDrawType(DrawType.LINE_LOOP).setLineWidth(lineWidth);
+        rendering();
     }
 
     public void rectWHOutLine(float x, float y, float width, float height, float lineWidth, Color color1, Color color2, Color color3, Color color4) {

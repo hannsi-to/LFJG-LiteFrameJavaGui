@@ -29,6 +29,8 @@ public class Frame implements IFrame {
     private FrameSettingManager frameSettingManager;
     private long windowID = -1L;
     private int fps;
+    private int windowWidth;
+    private int windowHeight;
     private long currentTime;
     private long lastTime;
     private long startTime;
@@ -62,7 +64,10 @@ public class Frame implements IFrame {
         glfwWindowHints();
 
         Vector2i windowSizes = GLFWUtil.getWindowSizes(this, getFrameSettingValue(MonitorSetting.class));
-        windowID = GLFW.glfwCreateWindow(windowSizes.x(), windowSizes.y(), getFrameSettingValue(TitleSetting.class).toString(), GLFWUtil.getMonitorTypeCode(getFrameSettingValue(MonitorSetting.class)), MemoryUtil.NULL);
+        windowWidth = windowSizes.x();
+        windowHeight = windowSizes.y();
+
+        windowID = GLFW.glfwCreateWindow(windowWidth, windowHeight, getFrameSettingValue(TitleSetting.class).toString(), GLFWUtil.getMonitorTypeCode(getFrameSettingValue(MonitorSetting.class)), MemoryUtil.NULL);
 
         if (windowID == MemoryUtil.NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
@@ -130,6 +135,10 @@ public class Frame implements IFrame {
         GLFW.glfwSetFramebufferSizeCallback(windowID, new GLFWFramebufferSizeCallback() {
             @Override
             public void invoke(long window, int width, int height) {
+                Vector2i windowSizes = GLFWUtil.getWindowSizes(Frame.this, getFrameSettingValue(MonitorSetting.class));
+                windowWidth = windowSizes.x();
+                windowHeight = windowSizes.y();
+
                 updateViewport();
             }
         });
@@ -358,14 +367,11 @@ public class Frame implements IFrame {
     }
 
     public void updateViewport() {
-        int width = getFrameSettingValue(WidthSetting.class);
-        int height = getFrameSettingValue(HeightSetting.class);
-
-        GL11.glViewport(0, 0, width, height);
+        GL11.glViewport(0, 0, windowWidth, windowHeight);
 
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();
-        GL11.glOrtho(0, width, 0, height, -1, 1);
+        GL11.glOrtho(0, windowWidth, 0, windowHeight, -1, 1);
 
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         GL11.glLoadIdentity();
@@ -431,5 +437,13 @@ public class Frame implements IFrame {
 
     public long getFinishTime() {
         return finishTime;
+    }
+
+    public int getWindowHeight() {
+        return windowHeight;
+    }
+
+    public int getWindowWidth() {
+        return windowWidth;
     }
 }
