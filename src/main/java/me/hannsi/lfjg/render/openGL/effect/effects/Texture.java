@@ -27,16 +27,6 @@ public class Texture extends EffectBase {
     }
 
     @Override
-    public void rendering(GLObject baseGLObject) {
-        //basePolygon.put().uv(new Vector2f(x1, y1)).end();
-        //basePolygon.put().uv(new Vector2f(x2, y1)).end();
-        //basePolygon.put().uv(new Vector2f(x2, y2)).end();
-        //basePolygon.put().uv(new Vector2f(x1, y2)).end();
-
-        super.rendering(baseGLObject);
-    }
-
-    @Override
     public void push(GLObject baseGLObject) {
         genTextureId();
 

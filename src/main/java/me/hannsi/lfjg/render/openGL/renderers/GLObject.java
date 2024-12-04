@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.openGL.renderers;
 
 import me.hannsi.lfjg.debug.DebugLog;
-import me.hannsi.lfjg.render.openGL.effect.shader.ShaderProgram;
+import me.hannsi.lfjg.render.openGL.shader.ShaderProgram;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.system.Mesh;
 import me.hannsi.lfjg.render.openGL.system.UniformDatum;

@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.openGL.effect.shader;
+package me.hannsi.lfjg.render.openGL.shader;
 
 import me.hannsi.lfjg.utils.buffer.ByteUtil;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;

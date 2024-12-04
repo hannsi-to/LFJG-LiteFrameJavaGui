@@ -14,10 +14,6 @@ public class EffectBase {
         this.ignoreGLObject = ignoreGLObject;
     }
 
-    public void rendering(GLObject baseGLObject) {
-
-    }
-
     public void pop(GLObject baseGLObject) {
 
     }

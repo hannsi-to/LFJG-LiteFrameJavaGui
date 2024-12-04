@@ -1,7 +1,5 @@
-package me.hannsi.lfjg.render.openGL.effect.shader;
+package me.hannsi.lfjg.render.openGL.shader;
 
-import me.hannsi.lfjg.debug.DebugLog;
-import me.hannsi.lfjg.utils.buffer.ByteUtil;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Matrix4f;
 import org.lwjgl.system.MemoryStack;
