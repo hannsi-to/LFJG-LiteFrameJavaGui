@@ -18,16 +18,19 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.jetbrains:annotations:24.0.0'
+    implementation('org.jetbrains:annotations:24.0.0')
     testImplementation platform('org.junit:junit-bom:5.9.1')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation('org.junit.jupiter:junit-jupiter')
 
-    implementation group: 'org.reflections', name: 'reflections', version: '0.10.2'
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.23.1'
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.23.1'
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-web', version: '2.23.1'
-    implementation group: 'org.apache.xmlgraphics', name: 'xmlgraphics-commons', version: '2.9'
-    implementation group: 'org.apache.xmlgraphics', name: 'batik-transcoder', version: '1.17'
+    implementation('org.reflections:reflections:0.10.2')
+    implementation('org.apache.logging.log4j:log4j-api:2.23.1')
+    implementation('org.apache.logging.log4j:log4j-core:2.23.1')
+    implementation('org.apache.logging.log4j:log4j-web:2.23.1')
+    implementation('org.apache.xmlgraphics:xmlgraphics-commons:2.9') {
+        exclude module: 'commons-io'
+    }
+    implementation('commons-io:commons-io:2.14.0')
+    implementation('org.apache.xmlgraphics:batik-transcoder:1.17')
 
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
 
