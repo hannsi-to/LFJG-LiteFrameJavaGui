@@ -6,6 +6,7 @@ layout (location=1) in vec4 color;
 out vec4 fragPosition;
 out vec4 outColor;
 
+uniform vec2 resolution;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;

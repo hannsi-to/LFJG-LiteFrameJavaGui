@@ -2,8 +2,6 @@ package me.hannsi.lfjg.render.openGL.effect.effects;
 
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
-import me.hannsi.lfjg.render.openGL.system.UniformDatum;
-import org.joml.Matrix4f;
 
 public class Size extends EffectBase {
     private float x;
@@ -53,18 +51,14 @@ public class Size extends EffectBase {
 
     @Override
     public void pop(GLObject baseGLObject) {
-        @SuppressWarnings("unchecked") UniformDatum<Matrix4f> matrixDatum = (UniformDatum<Matrix4f>) baseGLObject.getUniform("modelMatrix");
-        Matrix4f modelMatrix = matrixDatum.getValue();
-        matrixDatum.setValue(modelMatrix.translate(cx, cy, cz).scale(1 / x, 1 / y, 1 / z).translate(cx, -cy, -cz));
+        baseGLObject.setModelMatrix(baseGLObject.getModelMatrix().translate(cx, cy, cz).scale(1 / x, 1 / y, 1 / z).translate(cx, -cy, -cz));
 
         super.pop(baseGLObject);
     }
 
     @Override
     public void push(GLObject baseGLObject) {
-        @SuppressWarnings("unchecked") UniformDatum<Matrix4f> matrixDatum = (UniformDatum<Matrix4f>) baseGLObject.getUniform("modelMatrix");
-        Matrix4f modelMatrix = matrixDatum.getValue();
-        matrixDatum.setValue(modelMatrix.translate(cx, cy, cz).scale(x, y, z).translate(cx, -cy, -cz));
+        baseGLObject.setModelMatrix(baseGLObject.getModelMatrix().translate(cx, cy, cz).scale(x, y, z).translate(cx, -cy, -cz));
 
         super.push(baseGLObject);
     }

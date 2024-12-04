@@ -6,6 +6,9 @@ in vec4 outColor;
 out vec4 fragColor;
 
 uniform vec2 resolution;
+uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 modelMatrix;
 
 vec4 color;
 

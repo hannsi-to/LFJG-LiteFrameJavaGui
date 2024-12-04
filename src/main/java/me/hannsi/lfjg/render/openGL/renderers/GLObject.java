@@ -4,7 +4,6 @@ import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.shader.ShaderProgram;
 import me.hannsi.lfjg.render.openGL.system.Mesh;
-import me.hannsi.lfjg.render.openGL.system.UniformDatum;
 import me.hannsi.lfjg.render.openGL.system.VAORendering;
 import me.hannsi.lfjg.utils.graphics.GLUtil;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
@@ -23,7 +22,6 @@ public class GLObject {
     private VAORendering vaoRendering;
     private Mesh mesh;
 
-    private List<UniformDatum<?>> uniformData;
     private ShaderProgram shaderProgram;
     private ResourcesLocation vertexShader;
     private ResourcesLocation fragmentShader;
@@ -45,7 +43,6 @@ public class GLObject {
 
         this.vaoRendering = new VAORendering();
         this.shaderProgram = new ShaderProgram();
-        this.uniformData = new ArrayList<>();
         this.lineWidth = -1f;
         this.pointSize = -1f;
         this.vertexShader = null;
@@ -58,10 +55,6 @@ public class GLObject {
         this.blendType = null;
         this.drawType = null;
         this.mesh = null;
-    }
-
-    public <T> void addUniform(String name, T value) {
-        uniformData.add(new UniformDatum<>(name, value));
     }
 
     public void create() {
@@ -127,16 +120,6 @@ public class GLObject {
 
     public void addGLTarget(int target) {
         glUtil.addGLTarget(target);
-    }
-
-    public UniformDatum<?> getUniform(String name) {
-        for (UniformDatum<?> datum : uniformData) {
-            if (datum.getName().equals(name)) {
-                return datum;
-            }
-        }
-
-        return null;
     }
 
     public String getName() {
@@ -259,16 +242,6 @@ public class GLObject {
 
     public GLObject setPointSize(float pointSize) {
         this.pointSize = pointSize;
-
-        return this;
-    }
-
-    public List<UniformDatum<?>> getUniformData() {
-        return uniformData;
-    }
-
-    public GLObject setUniformData(List<UniformDatum<?>> uniformData) {
-        this.uniformData = uniformData;
 
         return this;
     }

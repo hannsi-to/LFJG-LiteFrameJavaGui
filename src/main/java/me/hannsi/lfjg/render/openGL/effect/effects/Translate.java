@@ -32,18 +32,14 @@ public class Translate extends EffectBase {
 
     @Override
     public void pop(GLObject baseGLObject) {
-        @SuppressWarnings("unchecked") UniformDatum<Matrix4f> matrixDatum = (UniformDatum<Matrix4f>) baseGLObject.getUniform("modelMatrix");
-        Matrix4f modelMatrix = matrixDatum.getValue();
-        matrixDatum.setValue(modelMatrix.translate(-x, -y, -z));
+        baseGLObject.setModelMatrix(baseGLObject.getModelMatrix().translate(-x, -y, -z));
 
         super.pop(baseGLObject);
     }
 
     @Override
     public void push(GLObject baseGLObject) {
-        @SuppressWarnings("unchecked") UniformDatum<Matrix4f> matrixDatum = (UniformDatum<Matrix4f>) baseGLObject.getUniform("modelMatrix");
-        Matrix4f modelMatrix = matrixDatum.getValue();
-        matrixDatum.setValue(modelMatrix.translate(x, y, z));
+        baseGLObject.setModelMatrix(baseGLObject.getModelMatrix().translate(x, y, z));
 
         super.push(baseGLObject);
     }
