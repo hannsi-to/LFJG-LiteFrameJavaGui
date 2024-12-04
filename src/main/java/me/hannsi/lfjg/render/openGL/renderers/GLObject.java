@@ -26,8 +26,9 @@ public class GLObject {
     private ResourcesLocation vertexShader;
     private ResourcesLocation fragmentShader;
 
-    private Matrix4f modelMatrix;
     private Matrix4f projectionMatrix;
+    private Matrix4f modelMatrix;
+    private Matrix4f viewMatrix;
 
     private List<EffectBase> effectBases;
     private BlendType blendType;
@@ -49,8 +50,9 @@ public class GLObject {
         this.pointSize = -1f;
         this.vertexShader = null;
         this.fragmentShader = null;
-        this.modelMatrix = null;
         this.projectionMatrix = null;
+        this.modelMatrix = null;
+        this.viewMatrix = null;
         this.effectBases = new ArrayList<>();
         this.blendType = null;
         this.drawType = null;
@@ -67,7 +69,12 @@ public class GLObject {
             shaderProgram.createFragmentShader(fragmentShader);
             shaderProgram.link();
 
+            modelMatrix = new Matrix4f();
+            viewMatrix = new Matrix4f();
+
             addUniform("projectionMatrix", projectionMatrix);
+            addUniform("modelMatrix", modelMatrix);
+            addUniform("viewMatrix", viewMatrix);
         } catch (Exception e) {
             DebugLog.debug(getClass(), e);
         }
@@ -111,12 +118,28 @@ public class GLObject {
             effectBase.pop(this);
         }
 
+        effectBases = new ArrayList<>();
+
         GL30.glPopMatrix();
     }
 
     public void cleanup() {
         vaoRendering.cleanup();
         shaderProgram.cleanup();
+    }
+
+    public void addEffectBase(EffectBase effectBase) {
+        effectBases.add(effectBase);
+    }
+
+    public UniformDatum<?> getUniform(String name) {
+        for (UniformDatum<?> datum : uniformData) {
+            if (datum.getName().equals(name)) {
+                return datum;
+            }
+        }
+
+        return null;
     }
 
     public String getName() {

@@ -2,7 +2,8 @@ package me.hannsi.lfjg.render.openGL.effect.effects;
 
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
-import me.hannsi.lfjg.utils.graphics.DisplayUtil;
+import me.hannsi.lfjg.render.openGL.system.UniformDatum;
+import org.joml.Matrix4f;
 
 public class Size extends EffectBase {
     private float x;
@@ -11,10 +12,6 @@ public class Size extends EffectBase {
     private float cx;
     private float cy;
     private float cz;
-
-    public Size(float x, float y, float z) {
-        this(x, y, z, 0, 0, 0);
-    }
 
     public Size(float x, float y, float z, float cx, float cy, float cz) {
         super(0, "Size", (Class<GLObject>) null);
@@ -26,29 +23,48 @@ public class Size extends EffectBase {
         this.cz = cz;
     }
 
+    public Size(double x, double y, double z, double cx, double cy, double cz) {
+        this((float) x, (float) y, (float) z, (float) cx, (float) cy, (float) cz);
+    }
+
     public Size(float x, float y) {
         this(x, y, 1.0f);
+    }
+
+    public Size(double x, double y) {
+        this((float) x, (float) y, 1.0f);
+    }
+
+    public Size(float x, float y, float z) {
+        this(x, y, z, 0, 0, 0);
+    }
+
+    public Size(double x, double y, double z) {
+        this(x, y, z, 0, 0, 0);
     }
 
     public Size(float x, float y, float cx, float cy) {
         this(x, y, 1.0f, cx, cy, 0);
     }
 
+    public Size(double x, double y, double cx, double cy) {
+        this(x, y, 1.0f, cx, cy, 0);
+    }
+
     @Override
     public void pop(GLObject baseGLObject) {
+        @SuppressWarnings("unchecked") UniformDatum<Matrix4f> matrixDatum = (UniformDatum<Matrix4f>) baseGLObject.getUniform("modelMatrix");
+        Matrix4f modelMatrix = matrixDatum.getValue();
+        matrixDatum.setValue(modelMatrix.translate(cx, cy, cz).scale(1 / x, 1 / y, 1 / z).translate(cx, -cy, -cz));
+
         super.pop(baseGLObject);
     }
 
     @Override
     public void push(GLObject baseGLObject) {
-        float scaleX = x;
-        float scaleY = y;
-        float scaleZ = z;
-        float acx = (2.0f * cx) / DisplayUtil.getDisplayWidthF() - 1f;
-        float acy = (2.0f * cy) / DisplayUtil.getDisplayHeightF() - 1f;
-        float acz = cz;
-
-        //basePolygon.getModelMatrix().translate(acx, acy, acz).scale(scaleX, scaleY, scaleZ).translate(-acx, -acy, -acz);
+        @SuppressWarnings("unchecked") UniformDatum<Matrix4f> matrixDatum = (UniformDatum<Matrix4f>) baseGLObject.getUniform("modelMatrix");
+        Matrix4f modelMatrix = matrixDatum.getValue();
+        matrixDatum.setValue(modelMatrix.translate(cx, cy, cz).scale(x, y, z).translate(cx, -cy, -cz));
 
         super.push(baseGLObject);
     }

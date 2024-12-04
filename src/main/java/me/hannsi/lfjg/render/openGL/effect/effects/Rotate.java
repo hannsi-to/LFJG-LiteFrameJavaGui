@@ -2,7 +2,8 @@ package me.hannsi.lfjg.render.openGL.effect.effects;
 
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
-import me.hannsi.lfjg.utils.graphics.DisplayUtil;
+import me.hannsi.lfjg.render.openGL.system.UniformDatum;
+import org.joml.Matrix4f;
 
 public class Rotate extends EffectBase {
     private float x;
@@ -16,8 +17,16 @@ public class Rotate extends EffectBase {
         this(x, y, z, 0, 0, 0);
     }
 
+    public Rotate(double x, double y, double z) {
+        this((float) x, (float) y, (float) z, 0, 0, 0);
+    }
+
     public Rotate(float x, float y, float z, float cx, float cy) {
         this(x, y, z, cx, cy, 0);
+    }
+
+    public Rotate(double x, double y, double z, double cx, double cy) {
+        this((float) x, (float) y, (float) z, (float) cx, (float) cy, 0);
     }
 
     public Rotate(float x, float y, float z, float cx, float cy, float cz) {
@@ -31,18 +40,24 @@ public class Rotate extends EffectBase {
         this.cz = cz;
     }
 
+    public Rotate(double x, double y, double z, double cx, double cy, double cz) {
+        this((float) x, (float) y, (float) z, (float) cx, (float) cy, (float) cz);
+    }
+
     @Override
     public void pop(GLObject baseGLObject) {
+        @SuppressWarnings("unchecked") UniformDatum<Matrix4f> matrixDatum = (UniformDatum<Matrix4f>) baseGLObject.getUniform("modelMatrix");
+        Matrix4f modelMatrix = matrixDatum.getValue();
+        matrixDatum.setValue(modelMatrix.translate(cx, cy, cz).rotateXYZ(-x, -y, -z).translate(cx, -cy, -cz));
+
         super.pop(baseGLObject);
     }
 
     @Override
     public void push(GLObject baseGLObject) {
-        float acx = (2.0f * cx) / DisplayUtil.getDisplayWidthF() - 1f;
-        float acy = (2.0f * cy) / DisplayUtil.getDisplayHeightF() - 1f;
-        float acz = cz;
-
-        //baseGLObject.getModelMatrix().translate(acx, acy, acz).rotateX(x).rotateY(y).rotateZ(z).translate(-acx, -acy, -acz);
+        @SuppressWarnings("unchecked") UniformDatum<Matrix4f> matrixDatum = (UniformDatum<Matrix4f>) baseGLObject.getUniform("modelMatrix");
+        Matrix4f modelMatrix = matrixDatum.getValue();
+        matrixDatum.setValue(modelMatrix.translate(cx, cy, cz).rotateXYZ(x, y, z).translate(cx, -cy, -cz));
 
         super.push(baseGLObject);
     }

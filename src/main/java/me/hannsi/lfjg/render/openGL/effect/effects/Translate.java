@@ -2,7 +2,8 @@ package me.hannsi.lfjg.render.openGL.effect.effects;
 
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
-import me.hannsi.lfjg.utils.graphics.DisplayUtil;
+import me.hannsi.lfjg.render.openGL.system.UniformDatum;
+import org.joml.Matrix4f;
 
 public class Translate extends EffectBase {
     private float x;
@@ -17,22 +18,32 @@ public class Translate extends EffectBase {
         this.z = z;
     }
 
+    public Translate(double x, double y, double z) {
+        this((float) x, (float) y, (float) z);
+    }
+
     public Translate(float x, float y) {
+        this(x, y, 0.0f);
+    }
+
+    public Translate(double x, double y) {
         this(x, y, 0.0f);
     }
 
     @Override
     public void pop(GLObject baseGLObject) {
+        @SuppressWarnings("unchecked") UniformDatum<Matrix4f> matrixDatum = (UniformDatum<Matrix4f>) baseGLObject.getUniform("modelMatrix");
+        Matrix4f modelMatrix = matrixDatum.getValue();
+        matrixDatum.setValue(modelMatrix.translate(-x, -y, -z));
+
         super.pop(baseGLObject);
     }
 
     @Override
     public void push(GLObject baseGLObject) {
-        float ax = (2.0f * x) / DisplayUtil.getDisplayWidthF();
-        float ay = (2.0f * y) / DisplayUtil.getDisplayHeightF();
-        float az = z;
-
-        //basePolygon.getModelMatrix().translate(ax, ay, az);
+        @SuppressWarnings("unchecked") UniformDatum<Matrix4f> matrixDatum = (UniformDatum<Matrix4f>) baseGLObject.getUniform("modelMatrix");
+        Matrix4f modelMatrix = matrixDatum.getValue();
+        matrixDatum.setValue(modelMatrix.translate(x, y, z));
 
         super.push(baseGLObject);
     }

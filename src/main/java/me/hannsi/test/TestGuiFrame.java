@@ -6,6 +6,7 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
+import me.hannsi.lfjg.render.openGL.effect.effects.Size;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRoundedRect;
 import me.hannsi.lfjg.render.openGL.system.Projection;
 import me.hannsi.lfjg.utils.color.Color;
@@ -34,13 +35,13 @@ public class TestGuiFrame implements LFJGFrame {
         Projection projection = new Projection(ProjectionType.OrthographicProjection, frame.getWindowWidth(), frame.getWindowHeight());
 
         gl = new GLRoundedRect("test");
-        gl.roundedRect(100, 100, 500, 500, 10, new Color(255, 0, 255, 255));
         gl.setProjectionMatrix(projection.getProjMatrix());
-        gl.create();
+        gl.roundedRect(0, 0, 500, 500, 10, new Color(255, 0, 255, 255));
     }
 
     @Override
     public void drawFrame(long nvg) {
+        gl.addEffectBase(new Size(2f, 1f));
         gl.draw();
     }
 
