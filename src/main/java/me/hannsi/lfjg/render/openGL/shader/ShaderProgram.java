@@ -1,7 +1,14 @@
 package me.hannsi.lfjg.render.openGL.shader;
 
+import me.hannsi.lfjg.debug.DebugLog;
+import me.hannsi.lfjg.debug.exceptions.CompilingShaderException;
+import me.hannsi.lfjg.debug.exceptions.CreatingShaderException;
+import me.hannsi.lfjg.debug.exceptions.CreatingShaderProgramException;
+import me.hannsi.lfjg.debug.exceptions.LinkingShaderException;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
+import org.joml.Vector4f;
 import org.lwjgl.system.MemoryStack;
 
 import static org.lwjgl.opengl.GL20.*;
@@ -14,38 +21,42 @@ public class ShaderProgram {
 
     private int fragmentShaderId;
 
-    public ShaderProgram() throws Exception {
+    public ShaderProgram() {
         programId = glCreateProgram();
         if (programId == 0) {
-            throw new Exception("Could not create Shader");
+            throw new CreatingShaderProgramException("Could not create Shader");
         }
     }
 
-    public void createVertexShader(ResourcesLocation resourcesLocation) throws Exception {
+    public void createVertexShader(ResourcesLocation resourcesLocation) {
         GLSLCode glslCode = new GLSLCode(resourcesLocation);
         String shaderCode = glslCode.createCode();
+
+        DebugLog.debug(getClass(), resourcesLocation.getPath() + "\n" + shaderCode + "\n");
 
         vertexShaderId = createShader(shaderCode, GL_VERTEX_SHADER);
     }
 
-    public void createFragmentShader(ResourcesLocation resourcesLocation) throws Exception {
+    public void createFragmentShader(ResourcesLocation resourcesLocation) {
         GLSLCode glslCode = new GLSLCode(resourcesLocation);
         String shaderCode = glslCode.createCode();
+
+        DebugLog.debug(getClass(), resourcesLocation.getPath() + "\n" + shaderCode + "\n");
 
         fragmentShaderId = createShader(shaderCode, GL_FRAGMENT_SHADER);
     }
 
-    protected int createShader(String shaderCode, int shaderType) throws Exception {
+    protected int createShader(String shaderCode, int shaderType) {
         int shaderId = glCreateShader(shaderType);
         if (shaderId == 0) {
-            throw new Exception("Error creating shader. Type: " + shaderType);
+            throw new CreatingShaderException("Error creating shader. Type: " + shaderType);
         }
 
         glShaderSource(shaderId, shaderCode);
         glCompileShader(shaderId);
 
         if (glGetShaderi(shaderId, GL_COMPILE_STATUS) == 0) {
-            throw new Exception("Error compiling Shader code: " + glGetShaderInfoLog(shaderId, 1024));
+            throw new CompilingShaderException("Error compiling Shader code: " + glGetShaderInfoLog(shaderId, 1024));
         }
 
         glAttachShader(programId, shaderId);
@@ -53,10 +64,10 @@ public class ShaderProgram {
         return shaderId;
     }
 
-    public void link() throws Exception {
+    public void link() {
         glLinkProgram(programId);
         if (glGetProgrami(programId, GL_LINK_STATUS) == 0) {
-            throw new Exception("Error linking Shader code: " + glGetProgramInfoLog(programId, 1024));
+            throw new LinkingShaderException("Error linking Shader code: " + glGetProgramInfoLog(programId, 1024));
         }
 
         if (vertexShaderId != 0) {
@@ -68,10 +79,17 @@ public class ShaderProgram {
 
         glValidateProgram(programId);
         if (glGetProgrami(programId, GL_VALIDATE_STATUS) == 0) {
-            System.err.println("Warning validating Shader code: " + glGetProgramInfoLog(programId, 1024));
+            DebugLog.warning(getClass(), "Warning validating Shader code: " + glGetProgramInfoLog(programId, 1024));
         }
 
     }
+
+    public void setUniformBoolean(String name, boolean value) {
+        int uniformId = glGetUniformLocation(programId, name);
+
+        glUniform1i(uniformId, value ? 1 : 0);
+    }
+
 
     public void setUniformMatrix4fv(String name, Matrix4f value) {
         int uniformId = glGetUniformLocation(programId, name);
@@ -87,14 +105,29 @@ public class ShaderProgram {
         glUniform1f(uniformId, value);
     }
 
+    public void setUniform2f(String name, Vector2f value) {
+        int uniformId = glGetUniformLocation(programId, name);
+
+        glUniform2f(uniformId, value.x, value.y);
+    }
+
     public void setUniform1i(String name, int value) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform1i(uniformId, value);
     }
 
+    public void setUniform4f(String name, Vector4f value) {
+        int uniformId = glGetUniformLocation(programId, name);
+
+        glUniform4f(uniformId, value.x, value.y, value.z, value.w);
+    }
+
     public void bind() {
         glUseProgram(programId);
+        if (glGetError() != GL_NO_ERROR) {
+            DebugLog.warning(getClass(), "Failed to set the program as active.");
+        }
     }
 
     public void unbind() {

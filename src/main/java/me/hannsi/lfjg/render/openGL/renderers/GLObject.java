@@ -1,15 +1,17 @@
 package me.hannsi.lfjg.render.openGL.renderers;
 
 import me.hannsi.lfjg.debug.DebugLog;
-import me.hannsi.lfjg.render.openGL.shader.ShaderProgram;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
+import me.hannsi.lfjg.render.openGL.shader.ShaderProgram;
 import me.hannsi.lfjg.render.openGL.system.Mesh;
 import me.hannsi.lfjg.render.openGL.system.UniformDatum;
 import me.hannsi.lfjg.render.openGL.system.VAORendering;
+import me.hannsi.lfjg.utils.graphics.GLUtil;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.BlendType;
 import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.lwjgl.opengl.GL30;
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ public class GLObject {
     private ResourcesLocation vertexShader;
     private ResourcesLocation fragmentShader;
 
+    private Vector2f resolution;
     private Matrix4f projectionMatrix;
     private Matrix4f modelMatrix;
     private Matrix4f viewMatrix;
@@ -33,6 +36,7 @@ public class GLObject {
     private List<EffectBase> effectBases;
     private BlendType blendType;
     private DrawType drawType;
+    private GLUtil glUtil;
     private float lineWidth;
     private float pointSize;
 
@@ -40,16 +44,13 @@ public class GLObject {
         this.name = name;
 
         this.vaoRendering = new VAORendering();
-        try {
-            this.shaderProgram = new ShaderProgram();
-        } catch (Exception e) {
-            DebugLog.debug(getClass(), e);
-        }
+        this.shaderProgram = new ShaderProgram();
         this.uniformData = new ArrayList<>();
         this.lineWidth = -1f;
         this.pointSize = -1f;
         this.vertexShader = null;
         this.fragmentShader = null;
+        this.resolution = null;
         this.projectionMatrix = null;
         this.modelMatrix = null;
         this.viewMatrix = null;
@@ -71,10 +72,6 @@ public class GLObject {
 
             modelMatrix = new Matrix4f();
             viewMatrix = new Matrix4f();
-
-            addUniform("projectionMatrix", projectionMatrix);
-            addUniform("modelMatrix", modelMatrix);
-            addUniform("viewMatrix", viewMatrix);
         } catch (Exception e) {
             DebugLog.debug(getClass(), e);
         }
@@ -96,22 +93,18 @@ public class GLObject {
             effectBase.push(this);
         }
 
-        for (UniformDatum<?> uniformDatum : uniformData) {
-            String name = uniformDatum.getName();
-            Object value = uniformDatum.getValue();
+        shaderProgram.setUniformMatrix4fv("projectionMatrix", projectionMatrix);
+        shaderProgram.setUniformMatrix4fv("modelMatrix", modelMatrix);
+        shaderProgram.setUniformMatrix4fv("viewMatrix", viewMatrix);
+        shaderProgram.setUniform2f("resolution", resolution);
 
-            if (value instanceof Float) {
-                shaderProgram.setUniform1f(name, (float) value);
-            }
-            if (value instanceof Integer) {
-                shaderProgram.setUniform1i(name, (int) value);
-            }
-            if (value instanceof Matrix4f) {
-                shaderProgram.setUniformMatrix4fv(name, (Matrix4f) value);
-            }
-        }
+        glUtil = new GLUtil();
+        glUtil.enableTargets();
 
         vaoRendering.draw(this);
+
+        glUtil.disableTargets();
+        glUtil.finish();
 
         for (EffectBase effectBase : effectBases) {
             effectBase.pop(this);
@@ -130,6 +123,10 @@ public class GLObject {
 
     public void addEffectBase(EffectBase effectBase) {
         effectBases.add(effectBase);
+    }
+
+    public void addGLTarget(int target) {
+        glUtil.addGLTarget(target);
     }
 
     public UniformDatum<?> getUniform(String name) {
@@ -274,5 +271,29 @@ public class GLObject {
         this.uniformData = uniformData;
 
         return this;
+    }
+
+    public Vector2f getResolution() {
+        return resolution;
+    }
+
+    public void setResolution(Vector2f resolution) {
+        this.resolution = resolution;
+    }
+
+    public Matrix4f getViewMatrix() {
+        return viewMatrix;
+    }
+
+    public void setViewMatrix(Matrix4f viewMatrix) {
+        this.viewMatrix = viewMatrix;
+    }
+
+    public GLUtil getGlUtil() {
+        return glUtil;
+    }
+
+    public void setGlUtil(GLUtil glUtil) {
+        this.glUtil = glUtil;
     }
 }

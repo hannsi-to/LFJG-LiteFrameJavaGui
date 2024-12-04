@@ -10,7 +10,7 @@ public class ColorCorrection extends EffectBase {
     private float hue;
 
     public ColorCorrection(float brightness, float contrast, float saturation, float hue) {
-        super(3, "ColorCorrection", (Class<GLObject>) null);
+        super(4, "ColorCorrection", (Class<GLObject>) null);
 
         this.brightness = brightness;
         this.contrast = contrast;

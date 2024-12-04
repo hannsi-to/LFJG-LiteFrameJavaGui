@@ -30,7 +30,7 @@ public class Rotate extends EffectBase {
     }
 
     public Rotate(float x, float y, float z, float cx, float cy, float cz) {
-        super(4, "Rotate", (Class<GLObject>) null);
+        super(1, "Rotate", (Class<GLObject>) null);
 
         this.x = x;
         this.y = y;
@@ -49,7 +49,7 @@ public class Rotate extends EffectBase {
         @SuppressWarnings("unchecked") UniformDatum<Matrix4f> matrixDatum = (UniformDatum<Matrix4f>) baseGLObject.getUniform("modelMatrix");
         Matrix4f modelMatrix = matrixDatum.getValue();
         matrixDatum.setValue(modelMatrix.translate(cx, cy, cz).rotateXYZ(-x, -y, -z).translate(cx, -cy, -cz));
-
+        //NullPointerException
         super.pop(baseGLObject);
     }
 

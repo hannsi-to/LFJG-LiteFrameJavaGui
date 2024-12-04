@@ -25,9 +25,9 @@ public class GLUtil {
 
         for (Map.Entry<Integer, Boolean> entry : targets.entrySet()) {
             if (entry.getValue()) {
-                gl11Disable(entry.getKey());
+                disable(entry.getKey());
             } else {
-                gl11Enable(entry.getKey());
+                enable(entry.getKey());
             }
         }
     }
@@ -35,20 +35,20 @@ public class GLUtil {
     public void disableTargets() {
         for (Map.Entry<Integer, Boolean> entry : targets.entrySet()) {
             if (entry.getValue()) {
-                gl11Enable(entry.getKey());
+                enable(entry.getKey());
             } else {
-                gl11Disable(entry.getKey());
+                disable(entry.getKey());
             }
         }
 
         GL11.glPopMatrix();
     }
 
-    private void gl11Enable(int target) {
+    private void enable(int target) {
         GL11.glEnable(target);
     }
 
-    private void gl11Disable(int target) {
+    private void disable(int target) {
         GL11.glDisable(target);
     }
 
