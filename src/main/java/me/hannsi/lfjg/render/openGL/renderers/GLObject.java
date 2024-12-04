@@ -83,6 +83,8 @@ public class GLObject {
     public void draw() {
         GL30.glPushMatrix();
 
+        shaderProgram.bind();
+
         if (lineWidth != -1f) {
             GL30.glLineWidth(lineWidth);
         }
@@ -93,8 +95,6 @@ public class GLObject {
         for (EffectBase effectBase : effectBases) {
             effectBase.push(this);
         }
-
-        shaderProgram.bind();
 
         for (UniformDatum<?> uniformDatum : uniformData) {
             String name = uniformDatum.getName();
@@ -112,13 +112,13 @@ public class GLObject {
         }
 
         vaoRendering.draw(this);
-        shaderProgram.unbind();
 
         for (EffectBase effectBase : effectBases) {
             effectBase.pop(this);
         }
 
         effectBases = new ArrayList<>();
+        shaderProgram.unbind();
 
         GL30.glPopMatrix();
     }

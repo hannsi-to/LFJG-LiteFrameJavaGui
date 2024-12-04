@@ -8,27 +8,22 @@ public class ColorCorrection extends EffectBase {
     private float contrast;
     private float saturation;
     private float hue;
-    private float gamma;
 
-    public ColorCorrection(float brightness, float contrast, float saturation, float hue, float gamma) {
+    public ColorCorrection(float brightness, float contrast, float saturation, float hue) {
         super(3, "ColorCorrection", (Class<GLObject>) null);
 
         this.brightness = brightness;
         this.contrast = contrast;
         this.saturation = saturation;
         this.hue = hue;
-        this.gamma = gamma;
     }
 
     @Override
     public void push(GLObject baseGLObject) {
-        //basePolygon.getShaderProgram().bind();
-        //basePolygon.getShaderProgram().setUniform1f("brightness", brightness);
-        //basePolygon.getShaderProgram().setUniform1f("contrast", contrast);
-        //basePolygon.getShaderProgram().setUniform1f("saturation", saturation);
-        //basePolygon.getShaderProgram().setUniform1f("hue", hue);
-        //basePolygon.getShaderProgram().setUniform1f("gamma", gamma);
-        //basePolygon.getShaderProgram().unbind();
+        baseGLObject.getShaderProgram().setUniform1f("brightness", brightness);
+        baseGLObject.getShaderProgram().setUniform1f("contrast", contrast);
+        baseGLObject.getShaderProgram().setUniform1f("saturation", saturation);
+        baseGLObject.getShaderProgram().setUniform1f("hue", hue);
 
         super.push(baseGLObject);
     }
@@ -63,13 +58,5 @@ public class ColorCorrection extends EffectBase {
 
     public void setHue(float hue) {
         this.hue = hue;
-    }
-
-    public float getGamma() {
-        return gamma;
-    }
-
-    public void setGamma(float gamma) {
-        this.gamma = gamma;
     }
 }

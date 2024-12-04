@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.render.openGL.effect.shader;
 
+import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.utils.buffer.ByteUtil;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Matrix4f;
@@ -23,13 +24,15 @@ public class ShaderProgram {
     }
 
     public void createVertexShader(ResourcesLocation resourcesLocation) throws Exception {
-        String shaderCode = ByteUtil.readInputStreamToString(resourcesLocation.getInputStream());
+        GLSLCode glslCode = new GLSLCode(resourcesLocation);
+        String shaderCode = glslCode.createCode();
 
         vertexShaderId = createShader(shaderCode, GL_VERTEX_SHADER);
     }
 
     public void createFragmentShader(ResourcesLocation resourcesLocation) throws Exception {
-        String shaderCode = ByteUtil.readInputStreamToString(resourcesLocation.getInputStream());
+        GLSLCode glslCode = new GLSLCode(resourcesLocation);
+        String shaderCode = glslCode.createCode();
 
         fragmentShaderId = createShader(shaderCode, GL_FRAGMENT_SHADER);
     }
