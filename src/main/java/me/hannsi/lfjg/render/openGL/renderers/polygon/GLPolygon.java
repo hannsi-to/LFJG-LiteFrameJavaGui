@@ -80,8 +80,8 @@ public class GLPolygon extends GLObject {
     public void rendering() {
         mesh = new Mesh(ProjectionType.OrthographicProjection, vertex, color, texture);
 
-        setVertexShader(new ResourcesLocation("shader/vertexShader.vsh"));
-        setFragmentShader(new ResourcesLocation("shader/FragmentShader.fsh"));
+        setVertexShader(new ResourcesLocation("shader/scene/vertexShader.vsh"));
+        setFragmentShader(new ResourcesLocation("shader/scene/FragmentShader.fsh"));
         setMesh(mesh);
 
         create();

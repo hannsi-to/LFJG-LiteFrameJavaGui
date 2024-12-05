@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.debug.exceptions;
+package me.hannsi.lfjg.debug.exceptions.shader;
 
 public class CompilingShaderException extends RuntimeException {
     public CompilingShaderException(String message) {

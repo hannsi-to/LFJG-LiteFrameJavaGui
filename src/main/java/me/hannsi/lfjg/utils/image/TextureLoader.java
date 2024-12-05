@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.utils.image;
 
 import me.hannsi.lfjg.debug.DebugLog;
+import me.hannsi.lfjg.debug.exceptions.texture.CreatingTextureException;
 import me.hannsi.lfjg.utils.buffer.BufferUtil;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.TextureLoaderType;
@@ -98,6 +99,9 @@ public class TextureLoader {
 
     private void generateTexture(int width, int height, ByteBuffer buf) {
         textureId = glGenTextures();
+        if (textureId == 0) {
+            throw new CreatingTextureException("Could not create texture");
+        }
 
         glBindTexture(GL_TEXTURE_2D, textureId);
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);

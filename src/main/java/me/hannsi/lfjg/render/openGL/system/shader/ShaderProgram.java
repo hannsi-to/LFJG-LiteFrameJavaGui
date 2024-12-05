@@ -1,10 +1,10 @@
-package me.hannsi.lfjg.render.openGL.shader;
+package me.hannsi.lfjg.render.openGL.system.shader;
 
 import me.hannsi.lfjg.debug.DebugLog;
-import me.hannsi.lfjg.debug.exceptions.CompilingShaderException;
-import me.hannsi.lfjg.debug.exceptions.CreatingShaderException;
-import me.hannsi.lfjg.debug.exceptions.CreatingShaderProgramException;
-import me.hannsi.lfjg.debug.exceptions.LinkingShaderException;
+import me.hannsi.lfjg.debug.exceptions.shader.CompilingShaderException;
+import me.hannsi.lfjg.debug.exceptions.shader.CreatingShaderException;
+import me.hannsi.lfjg.debug.exceptions.shader.CreatingShaderProgramException;
+import me.hannsi.lfjg.debug.exceptions.shader.LinkingShaderException;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
