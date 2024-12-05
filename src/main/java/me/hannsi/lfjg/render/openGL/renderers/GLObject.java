@@ -73,6 +73,8 @@ public class GLObject {
     public void draw() {
         GL30.glPushMatrix();
 
+        glUtil = new GLUtil();
+
         shaderProgram.bind();
 
         if (lineWidth != -1f) {
@@ -91,7 +93,13 @@ public class GLObject {
         shaderProgram.setUniformMatrix4fv("viewMatrix", viewMatrix);
         shaderProgram.setUniform2f("resolution", resolution);
 
-        glUtil = new GLUtil();
+        if (mesh.getTexture() != null) {
+            shaderProgram.setUniform1i("textureSampler", 0);
+        }
+
+        glUtil.addGLTarget(GL30.GL_BLEND);
+        glUtil.addGLTarget(GL30.GL_DEPTH_TEST, true);
+        GL30.glBlendFunc(GL30.GL_SRC_ALPHA, GL30.GL_ONE_MINUS_SRC_ALPHA);
         glUtil.enableTargets();
 
         vaoRendering.draw(this);

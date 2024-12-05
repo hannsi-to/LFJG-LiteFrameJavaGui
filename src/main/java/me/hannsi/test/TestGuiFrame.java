@@ -7,19 +7,23 @@ import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.render.openGL.effect.effects.ColorCorrection;
+import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
-import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRoundedRect;
 import me.hannsi.lfjg.render.openGL.system.Projection;
 import me.hannsi.lfjg.utils.color.Color;
+import me.hannsi.lfjg.utils.image.TextureCache;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.AntiAliasingType;
 import me.hannsi.lfjg.utils.type.types.MonitorType;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.utils.type.types.VSyncType;
+import org.joml.Vector2f;
 
 public class TestGuiFrame implements LFJGFrame {
-    GLRoundedRect gl;
+    //GLRoundedRect gl;
     GLRect gl2;
+    ResourcesLocation image;
+    TextureCache textureCache;
     private Frame frame;
 
     public static void main(String[] args) {
@@ -36,27 +40,36 @@ public class TestGuiFrame implements LFJGFrame {
 
         Projection projection = new Projection(ProjectionType.OrthographicProjection, frame.getWindowWidth(), frame.getWindowHeight());
 
-        gl = new GLRoundedRect("test");
-        gl.setProjectionMatrix(projection.getProjMatrix());
-        gl.roundedRect(0, 0, 500, 500, 10, new Color(255, 0, 255, 255));
-
-        gl2 = new GLRect("test2");
+        gl2 = new GLRect("test");
         gl2.setProjectionMatrix(projection.getProjMatrix());
-        gl2.rect(250, 250, 750, 750, new Color(255, 0, 255, 255));
+        gl2.setResolution(new Vector2f(frame.getWindowWidth(), frame.getWindowHeight()));
+        gl2.uv(0, 1, 1, 0);
+        gl2.rect(0, 0, 1920, 1080, new Color(0, 0, 0, 0));
+
+        textureCache = new TextureCache();
+        image = new ResourcesLocation("texture/test/test_image_1920x1080.jpg");
+        textureCache.createTexture(image);
+
+        //gl2 = new GLRect("test2");
+        //gl2.setProjectionMatrix(projection.getProjMatrix());
+        //gl2.rect(250, 250, 750, 750, new Color(255, 0, 255, 255));
     }
 
     @Override
     public void drawFrame(long nvg) {
-        gl.addEffectBase(new ColorCorrection(0.0f, 0.0f, 0.0f, 0.0f));
-        gl.draw();
+        gl2.addEffectBase(new ColorCorrection(0.0f, 0.0f, 0.0f, 0.0f));
+        //gl.addEffectBase(new Translate(200,200));
+        //gl.addEffectBase(new Clipping2D(100, 100, 400, 400, false));
+        gl2.addEffectBase(new Texture(textureCache, image));
+        //gl.draw();
         //gl2.addEffectBase(new ColorCorrection(0f,0f,0f,0f,0.5f));
         gl2.draw();
     }
 
     @Override
     public void stopFrame() {
-        gl.cleanup();
         gl2.cleanup();
+        //gl.cleanup();
     }
 
     @Override

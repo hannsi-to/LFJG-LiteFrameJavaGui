@@ -15,6 +15,7 @@ public class Mesh {
 
     private final float[] positions;
     private final float[] colors;
+    private final float[] texture;
     private final ProjectionType projectionType;
     private final int vaoId;
     private final List<Integer> vboIdList;
@@ -23,11 +24,20 @@ public class Mesh {
         this(DEFAULT_PROJECTION_TYPE, positions, colors);
     }
 
+    public Mesh(ProjectionType projectionType, float[] positions) {
+        this(projectionType, positions, null, null);
+    }
+
     public Mesh(ProjectionType projectionType, float[] positions, float[] colors) {
+        this(projectionType, positions, colors, null);
+    }
+
+    public Mesh(ProjectionType projectionType, float[] positions, float[] colors, float[] texture) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             this.projectionType = projectionType;
             this.positions = positions;
             this.colors = colors;
+            this.texture = texture;
 
             vboIdList = new ArrayList<>();
 
@@ -55,14 +65,27 @@ public class Mesh {
 
             glVertexAttribPointer(0, size, GL_FLOAT, false, 0, 0);
 
-            vboId = glGenBuffers();
-            vboIdList.add(vboId);
-            FloatBuffer colorsBuffer = stack.callocFloat(colors.length);
-            colorsBuffer.put(0, colors);
-            glBindBuffer(GL_ARRAY_BUFFER, vboId);
-            glBufferData(GL_ARRAY_BUFFER, colorsBuffer, GL_STATIC_DRAW);
-            glEnableVertexAttribArray(1);
-            glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, 0);
+            if (colors != null) {
+                vboId = glGenBuffers();
+                vboIdList.add(vboId);
+                FloatBuffer colorsBuffer = stack.callocFloat(colors.length);
+                colorsBuffer.put(0, colors);
+                glBindBuffer(GL_ARRAY_BUFFER, vboId);
+                glBufferData(GL_ARRAY_BUFFER, colorsBuffer, GL_STATIC_DRAW);
+                glEnableVertexAttribArray(1);
+                glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, 0);
+            }
+
+            if (texture != null) {
+                vboId = glGenBuffers();
+                vboIdList.add(vboId);
+                FloatBuffer colorsBuffer = stack.callocFloat(texture.length);
+                colorsBuffer.put(0, texture);
+                glBindBuffer(GL_ARRAY_BUFFER, vboId);
+                glBufferData(GL_ARRAY_BUFFER, colorsBuffer, GL_STATIC_DRAW);
+                glEnableVertexAttribArray(2);
+                glVertexAttribPointer(2, 2, GL_FLOAT, false, 0, 0);
+            }
 
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindVertexArray(0);
@@ -92,5 +115,9 @@ public class Mesh {
 
     public float[] getColors() {
         return colors;
+    }
+
+    public float[] getTexture() {
+        return texture;
     }
 }

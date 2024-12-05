@@ -10,13 +10,13 @@ void clippingRect2D() {
     vec2 clipMax = (clippingRect2DSize.zw / resolution) * 2.0 - 1.0;
 
     if (clippingRect2DInvert){
-        if (fragPosition.x >= clipMin.x && fragPosition.x <= clipMax.x &&
-        fragPosition.y >= clipMin.y && fragPosition.y <= clipMax.y) {
+        if (outPosition.x >= clipMin.x && outPosition.x <= clipMax.x &&
+        outPosition.y >= clipMin.y && outPosition.y <= clipMax.y) {
             discard;
         }
     } else {
-        if (fragPosition.x < clipMin.x || fragPosition.x > clipMax.x ||
-        fragPosition.y < clipMin.y || fragPosition.y > clipMax.y) {
+        if (outPosition.x < clipMin.x || outPosition.x > clipMax.x ||
+        outPosition.y < clipMin.y || outPosition.y > clipMax.y) {
             discard;
         }
     }

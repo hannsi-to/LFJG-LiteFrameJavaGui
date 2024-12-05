@@ -4,6 +4,7 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.utils.buffer.ByteUtil;
 
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 public class ResourcesLocation {

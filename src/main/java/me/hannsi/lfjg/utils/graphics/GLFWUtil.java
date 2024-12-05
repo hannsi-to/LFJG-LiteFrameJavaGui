@@ -3,7 +3,7 @@ package me.hannsi.lfjg.utils.graphics;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.HeightSetting;
 import me.hannsi.lfjg.frame.setting.settings.WidthSetting;
-import me.hannsi.lfjg.utils.image.ImageLoader;
+import me.hannsi.lfjg.utils.image.TextureLoader;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.MonitorType;
 import org.joml.Vector2i;
@@ -55,7 +55,7 @@ public class GLFWUtil {
         IntBuffer height = BufferUtils.createIntBuffer(1);
         IntBuffer channels = BufferUtils.createIntBuffer(1);
 
-        ByteBuffer image = ImageLoader.loadImage(resourcesLocation, width, height, channels);
+        ByteBuffer image = TextureLoader.loadImageInSTBImage(resourcesLocation, width, height, channels);
 
         int w = width.get(0);
         int h = height.get(0);

@@ -1,30 +1,45 @@
 package me.hannsi.lfjg.utils.image;
 
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.type.types.TextureLoaderType;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class TextureCache {
-    private static Map<ResourcesLocation, Integer> textureCache = new HashMap<>();
+    public static final ResourcesLocation DEFAULT_TEXTURE = new ResourcesLocation("texture/default.png");
 
-    public static Map<ResourcesLocation, Integer> getTextureCache() {
-        return textureCache;
+    private Map<ResourcesLocation, TextureLoader> textureMap;
+
+    public TextureCache() {
+        this.textureMap = new HashMap<>();
+        createTexture(DEFAULT_TEXTURE);
     }
 
-    public static void setTextureCache(Map<ResourcesLocation, Integer> textureCache) {
-        TextureCache.textureCache = textureCache;
+    public void cleanup() {
+        textureMap.values().forEach(TextureLoader::cleanup);
     }
 
-    public int getTextureId(ResourcesLocation texturePath) {
-        if (textureCache.containsKey(texturePath)) {
-            return textureCache.get(texturePath);
+    public void createTexture(ResourcesLocation texturePath) {
+        textureMap.put(texturePath, new TextureLoader(texturePath, TextureLoaderType.STBImage));
+    }
+
+    public TextureLoader getTexture(ResourcesLocation texturePath) {
+        TextureLoader texture = null;
+        if (texturePath != null) {
+            texture = textureMap.get(texturePath);
         }
+        if (texture == null) {
+            texture = textureMap.get(DEFAULT_TEXTURE);
+        }
+        return texture;
+    }
 
-        ImageData imageDat = new ImageData(texturePath);
-        int textureId = TextureLoader.createTexture(imageDat.getByteBuffer(), imageDat.getMat().cols(), imageDat.getMat().rows());
-        textureCache.put(texturePath, textureId);
+    public Map<ResourcesLocation, TextureLoader> getTextureMap() {
+        return textureMap;
+    }
 
-        return textureId;
+    public void setTextureMap(Map<ResourcesLocation, TextureLoader> textureMap) {
+        this.textureMap = textureMap;
     }
 }

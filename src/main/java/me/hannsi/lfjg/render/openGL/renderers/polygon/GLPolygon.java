@@ -52,6 +52,15 @@ public class GLPolygon extends GLObject {
         return this;
     }
 
+    public GLPolygon uv(float u1, float v1, float u2, float v2) {
+        put().uv(new Vector2f(u1, v1)).end();
+        put().uv(new Vector2f(u2, v1)).end();
+        put().uv(new Vector2f(u2, v2)).end();
+        put().uv(new Vector2f(u1, v2)).end();
+
+        return this;
+    }
+
     public GLPolygon uv(Vector2f vector2f) {
         if (texture == null) {
             texture = new float[0];
@@ -69,7 +78,7 @@ public class GLPolygon extends GLObject {
     }
 
     public void rendering() {
-        mesh = new Mesh(ProjectionType.OrthographicProjection, vertex, color);
+        mesh = new Mesh(ProjectionType.OrthographicProjection, vertex, color, texture);
 
         setVertexShader(new ResourcesLocation("shader/vertexShader.vsh"));
         setFragmentShader(new ResourcesLocation("shader/FragmentShader.fsh"));
