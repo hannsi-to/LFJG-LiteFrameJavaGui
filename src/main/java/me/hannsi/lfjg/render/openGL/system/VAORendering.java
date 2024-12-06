@@ -1,23 +1,20 @@
 package me.hannsi.lfjg.render.openGL.system;
 
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
-import me.hannsi.lfjg.utils.graphics.GLUtil;
+import org.lwjgl.opengl.GL30;
 
 import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 public class VAORendering {
     private GLObject glObject;
-    private GLUtil glUtil;
 
     public VAORendering() {
-        this.glUtil = new GLUtil();
+        this.glObject = null;
     }
 
     public void draw(GLObject glObject) {
         this.glObject = glObject;
-
-        glUtil.enableTargets();
 
         glBindVertexArray(glObject.getMesh().getVaoId());
 
@@ -35,13 +32,29 @@ public class VAORendering {
         glDrawArrays(glObject.getDrawType().getId(), 0, count);
 
         glBindVertexArray(0);
+    }
 
-        glUtil.disableTargets();
+    public void draw(Mesh mesh) {
+        glBindVertexArray(mesh.getVaoId());
+
+        int count;
+        switch (mesh.getProjectionType()) {
+            case OrthographicProjection -> {
+                count = mesh.getPositions().length / 2;
+            }
+            case PerspectiveProjection -> {
+                count = mesh.getPositions().length / 3;
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + mesh.getProjectionType());
+        }
+
+        glDrawArrays(GL30.GL_POLYGON, 0, count);
+
+        glBindVertexArray(0);
     }
 
     public void cleanup() {
         glObject.getMesh().cleanup();
-        glUtil = null;
     }
 
     public GLObject getGlObject() {
@@ -50,13 +63,5 @@ public class VAORendering {
 
     public void setGlObject(GLObject glObject) {
         this.glObject = glObject;
-    }
-
-    public GLUtil getGlUtil() {
-        return glUtil;
-    }
-
-    public void setGlUtil(GLUtil glUtil) {
-        this.glUtil = glUtil;
     }
 }

@@ -25,6 +25,8 @@ public class TestGuiFrame implements LFJGFrame {
     ResourcesLocation image;
     GLObjectCache glObjectCache;
     TextureCache textureCache;
+    Vector2f resolution;
+
     private Frame frame;
 
     public static void main(String[] args) {
@@ -40,14 +42,15 @@ public class TestGuiFrame implements LFJGFrame {
         IFrame.eventManager.register(this);
 
         Projection projection = new Projection(ProjectionType.OrthographicProjection, frame.getWindowWidth(), frame.getWindowHeight());
+        resolution = new Vector2f(frame.getWindowWidth(), frame.getWindowHeight());
 
         gl2 = new GLRect("test");
         gl2.setProjectionMatrix(projection.getProjMatrix());
-        gl2.setResolution(new Vector2f(frame.getWindowWidth(), frame.getWindowHeight()));
+        gl2.setResolution(resolution);
         gl2.uv(0, 1, 1, 0);
         gl2.rect(0, 0, 1920, 1080, new Color(0, 0, 0, 0));
 
-        glObjectCache = new GLObjectCache();
+        glObjectCache = new GLObjectCache(resolution);
         glObjectCache.createCache(gl2);
 
         textureCache = new TextureCache();

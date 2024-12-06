@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.openGL.renderers;
 
-import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.system.Mesh;
 import me.hannsi.lfjg.render.openGL.system.VAORendering;
@@ -41,8 +40,8 @@ public class GLObject {
     public GLObject(String name) {
         this.name = name;
 
-        this.vaoRendering = new VAORendering();
-        this.shaderProgram = new ShaderProgram();
+        this.vaoRendering = null;
+        this.shaderProgram = null;
         this.lineWidth = -1f;
         this.pointSize = -1f;
         this.vertexShader = null;
@@ -58,16 +57,14 @@ public class GLObject {
     }
 
     public void create() {
-        try {
-            shaderProgram.createVertexShader(vertexShader);
-            shaderProgram.createFragmentShader(fragmentShader);
-            shaderProgram.link();
+        this.vaoRendering = new VAORendering();
+        this.shaderProgram = new ShaderProgram();
+        shaderProgram.createVertexShader(vertexShader);
+        shaderProgram.createFragmentShader(fragmentShader);
+        shaderProgram.link();
 
-            modelMatrix = new Matrix4f();
-            viewMatrix = new Matrix4f();
-        } catch (Exception e) {
-            DebugLog.debug(getClass(), e);
-        }
+        modelMatrix = new Matrix4f();
+        viewMatrix = new Matrix4f();
     }
 
     public void draw() {

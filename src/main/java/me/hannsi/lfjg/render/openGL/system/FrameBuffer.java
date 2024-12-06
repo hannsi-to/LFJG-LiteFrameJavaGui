@@ -41,15 +41,29 @@ public class FrameBuffer {
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
     }
 
-    public void bind() {
+    public void bindFrameBuffer() {
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBufferId);
     }
 
-    public void unbind() {
+    public void unbindFrameBuffer() {
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
     }
 
-    public void draw() {
+    public void bindTexture() {
+        GL30.glActiveTexture(GL30.GL_TEXTURE1);
+        GL30.glBindTexture(GL30.GL_TEXTURE_2D, textureId);
+    }
 
+    public void unbindTexture() {
+        GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
+        GL30.glActiveTexture(GL30.GL_TEXTURE1);
+    }
+
+    public int getFrameBufferId() {
+        return frameBufferId;
+    }
+
+    public int getTextureId() {
+        return textureId;
     }
 }
