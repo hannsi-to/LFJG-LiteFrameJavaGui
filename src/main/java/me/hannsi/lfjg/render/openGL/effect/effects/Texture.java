@@ -23,7 +23,6 @@ public class Texture extends EffectBase {
     @Override
     public void pop(GLObject baseGLObject) {
         textureLoader.unbind();
-        GL30.glActiveTexture(GL30.GL_TEXTURE0);
 
         super.pop(baseGLObject);
     }

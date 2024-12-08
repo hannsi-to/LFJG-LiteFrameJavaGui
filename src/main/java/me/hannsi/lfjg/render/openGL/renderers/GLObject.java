@@ -1,6 +1,9 @@
 package me.hannsi.lfjg.render.openGL.renderers;
 
+import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
+import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
+import me.hannsi.lfjg.render.openGL.system.FrameBuffer;
 import me.hannsi.lfjg.render.openGL.system.Mesh;
 import me.hannsi.lfjg.render.openGL.system.VAORendering;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
@@ -10,16 +13,21 @@ import me.hannsi.lfjg.utils.type.types.BlendType;
 import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL30;
 
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class GLObject {
     private final String name;
 
     private VAORendering vaoRendering;
     private Mesh mesh;
+
+    private FrameBuffer frameBuffer;
 
     private ShaderProgram shaderProgram;
     private ResourcesLocation vertexShader;
@@ -30,7 +38,7 @@ public class GLObject {
     private Matrix4f modelMatrix;
     private Matrix4f viewMatrix;
 
-    private List<EffectBase> effectBases;
+    private EffectCache effectCache;
     private BlendType blendType;
     private DrawType drawType;
     private GLUtil glUtil;
@@ -50,15 +58,19 @@ public class GLObject {
         this.projectionMatrix = null;
         this.modelMatrix = null;
         this.viewMatrix = null;
-        this.effectBases = new ArrayList<>();
         this.blendType = null;
         this.drawType = null;
         this.mesh = null;
+        this.frameBuffer = null;
     }
 
     public void create() {
-        this.vaoRendering = new VAORendering();
-        this.shaderProgram = new ShaderProgram();
+        vaoRendering = new VAORendering();
+        frameBuffer = new FrameBuffer(resolution);
+        frameBuffer.createFrameBuffer();
+        frameBuffer.createShaderProgram();
+
+        shaderProgram = new ShaderProgram();
         shaderProgram.createVertexShader(vertexShader);
         shaderProgram.createFragmentShader(fragmentShader);
         shaderProgram.link();
@@ -68,6 +80,7 @@ public class GLObject {
     }
 
     public void draw() {
+        frameBuffer.bindFrameBuffer();
         GL30.glPushMatrix();
 
         glUtil = new GLUtil();
@@ -81,9 +94,7 @@ public class GLObject {
             GL30.glPointSize(pointSize);
         }
 
-        for (EffectBase effectBase : effectBases) {
-            effectBase.push(this);
-        }
+        effectCache.push(this);
 
         shaderProgram.setUniformMatrix4fv("projectionMatrix", projectionMatrix);
         shaderProgram.setUniformMatrix4fv("modelMatrix", modelMatrix);
@@ -104,23 +115,27 @@ public class GLObject {
         glUtil.disableTargets();
         glUtil.finish();
 
-        for (EffectBase effectBase : effectBases) {
-            effectBase.pop(this);
-        }
+        effectCache.pop(this);
 
-        effectBases = new ArrayList<>();
         shaderProgram.unbind();
 
         GL30.glPopMatrix();
+        frameBuffer.unbindFrameBuffer();
+
+        effectCache.frameBufferPush(this);
+        frameBuffer.drawFrameBuffer();
+        effectCache.frameBufferPop(this);
+    }
+
+    private static float calculateGaussianValue(float x, float sigma) {
+        double PI = 3.141592653;
+        double output = 1.0 / Math.sqrt(2.0 * PI * (sigma * sigma));
+        return (float) (output * Math.exp(-(x * x) / (2.0 * (sigma * sigma))));
     }
 
     public void cleanup() {
         vaoRendering.cleanup();
         shaderProgram.cleanup();
-    }
-
-    public void addEffectBase(EffectBase effectBase) {
-        effectBases.add(effectBase);
     }
 
     public void addGLTarget(int target) {
@@ -201,16 +216,6 @@ public class GLObject {
         return this;
     }
 
-    public List<EffectBase> getEffectBases() {
-        return effectBases;
-    }
-
-    public GLObject setEffectBases(List<EffectBase> effectBases) {
-        this.effectBases = effectBases;
-
-        return this;
-    }
-
     public BlendType getBlendType() {
         return blendType;
     }
@@ -273,5 +278,21 @@ public class GLObject {
 
     public void setGlUtil(GLUtil glUtil) {
         this.glUtil = glUtil;
+    }
+
+    public FrameBuffer getFrameBuffer() {
+        return frameBuffer;
+    }
+
+    public void setFrameBuffer(FrameBuffer frameBuffer) {
+        this.frameBuffer = frameBuffer;
+    }
+
+    public EffectCache getEffectCache() {
+        return effectCache;
+    }
+
+    public void setEffectCache(EffectCache effectCache) {
+        this.effectCache = effectCache;
     }
 }

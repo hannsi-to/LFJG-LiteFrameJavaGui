@@ -6,7 +6,9 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
+import me.hannsi.lfjg.render.openGL.effect.effects.GaussianBlur;
 import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
+import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.system.GLObjectCache;
 import me.hannsi.lfjg.render.openGL.system.Projection;
@@ -25,6 +27,7 @@ public class TestGuiFrame implements LFJGFrame {
     ResourcesLocation image;
     GLObjectCache glObjectCache;
     TextureCache textureCache;
+    EffectCache effectCache;
     Vector2f resolution;
 
     private Frame frame;
@@ -50,12 +53,18 @@ public class TestGuiFrame implements LFJGFrame {
         gl2.uv(0, 1, 1, 0);
         gl2.rect(0, 0, 1920, 1080, new Color(0, 0, 0, 0));
 
-        glObjectCache = new GLObjectCache(resolution);
-        glObjectCache.createCache(gl2);
-
         textureCache = new TextureCache();
         image = new ResourcesLocation("texture/test/test_image_1920x1080.jpg");
         textureCache.createTexture(image);
+
+        effectCache = new EffectCache();
+        effectCache.createCache(new Texture(textureCache, image));
+        effectCache.createCache(new GaussianBlur(resolution, 100,5));
+
+        gl2.setEffectCache(effectCache);
+
+        glObjectCache = new GLObjectCache(resolution);
+        glObjectCache.createCache(gl2);
 
         //gl2 = new GLRect("test2");
         //gl2.setProjectionMatrix(projection.getProjMatrix());
@@ -64,14 +73,6 @@ public class TestGuiFrame implements LFJGFrame {
 
     @Override
     public void drawFrame(long nvg) {
-        //gl2.addEffectBase(new ColorCorrection(0.0f, 0.0f, 0.0f, 0.0f));
-        //gl.addEffectBase(new Translate(200,200));
-        //gl.addEffectBase(new Clipping2D(100, 100, 400, 400, false));
-        //gl2.addEffectBase(new GaussianBlur(1.0f / 1920.0f, 1.0f / 1080.0f, 5, 3));
-        gl2.addEffectBase(new Texture(textureCache, image));
-        //gl.draw();
-        //gl2.addEffectBase(new ColorCorrection(0f,0f,0f,0f,0.5f));
-
         glObjectCache.draw();
     }
 

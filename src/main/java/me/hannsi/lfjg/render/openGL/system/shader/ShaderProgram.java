@@ -11,6 +11,8 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 import org.lwjgl.system.MemoryStack;
 
+import java.nio.FloatBuffer;
+
 import static org.lwjgl.opengl.GL20.*;
 
 public class ShaderProgram {
@@ -97,6 +99,12 @@ public class ShaderProgram {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             glUniformMatrix4fv(uniformId, false, value.get(stack.mallocFloat(16)));
         }
+    }
+
+    public void setUniform1fv(String name, FloatBuffer value) {
+        int uniformId = glGetUniformLocation(programId, name);
+
+        glUniform1fv(uniformId, value);
     }
 
     public void setUniform1f(String name, float value) {

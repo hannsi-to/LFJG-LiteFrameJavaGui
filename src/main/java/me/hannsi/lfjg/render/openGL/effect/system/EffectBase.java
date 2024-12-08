@@ -26,6 +26,14 @@ public class EffectBase {
 
     }
 
+    public void frameBufferPop(GLObject baseGLObject) {
+
+    }
+
+    public void frameBufferPush(GLObject baseGLObject) {
+
+    }
+
     public int getId() {
         return id;
     }

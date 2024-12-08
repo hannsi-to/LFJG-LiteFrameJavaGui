@@ -2,67 +2,80 @@ package me.hannsi.lfjg.render.openGL.effect.effects;
 
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
+import me.hannsi.lfjg.render.openGL.system.FrameBuffer;
+import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import org.joml.Vector2f;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL30;
+
+import java.nio.FloatBuffer;
 
 public class GaussianBlur extends EffectBase {
-    private float gaussianBlurOffsetX;
-    private float gaussianBlurOffsetY;
-    private int kernelSize;
-    private float sigma;
+    private FrameBuffer frameBuffer;
 
-    public GaussianBlur(float gaussianBlurOffsetX, float gaussianBlurOffsetY, int kernelSize, float sigma) {
+    private float radiusX;
+    private float radiusY;
+
+    public GaussianBlur(Vector2f resolution,float radiusX,float radiusY) {
         super(6, "GaussianBlur", (Class<GLObject>) null);
 
-        this.gaussianBlurOffsetX = gaussianBlurOffsetX;
-        this.gaussianBlurOffsetY = gaussianBlurOffsetY;
-        this.kernelSize = kernelSize;
-        this.sigma = sigma;
+        this.radiusX = radiusX;
+        this.radiusY = radiusY;
+
+        frameBuffer = new FrameBuffer(resolution);
+        //frameBuffer.setFragmentShaderFBO(new ResourcesLocation("shader/frameBuffer/filter/GaussianBlur.fsh"));
+        frameBuffer.createFrameBuffer();
+        frameBuffer.createShaderProgram();
     }
 
     @Override
-    public void pop(GLObject baseGLObject) {
-        super.pop(baseGLObject);
+    public void frameBufferPop(GLObject baseGLObject) {
+        frameBuffer.unbindFrameBuffer();
+
+        frameBuffer.drawFrameBuffer();
+
+        //frameBuffer.unbindFrameBuffer();
+
+        //frameBuffer.getShaderProgramFBO().bind();
+        //frameBuffer.getShaderProgramFBO().setUniform2f("direction",new Vector2f(1,0));
+        //frameBuffer.getShaderProgramFBO().setUniform1f("radius",radiusX);
+        //frameBuffer.getShaderProgramFBO().setUniform2f("texelSize", new Vector2f(1.0f / baseGLObject.getResolution().x(),1.0f / baseGLObject.getResolution().y()));
+
+        //final FloatBuffer weightBuffer = BufferUtils.createFloatBuffer(256);
+        //for(int i = 0; i < radiusX; i++){
+        //  weightBuffer.put(calculateGaussianValue(i, radiusX / 2));
+        //}
+        //weightBuffer.rewind();
+        //frameBuffer.getShaderProgramFBO().setUniform1fv("weights",weightBuffer);
+
+        //frameBuffer.drawFrameBuffer();
+
+        super.frameBufferPop(baseGLObject);
     }
 
     @Override
-    public void push(GLObject baseGLObject) {
-        baseGLObject.getShaderProgram().setUniformBoolean("gaussianBlur", true);
-        baseGLObject.getShaderProgram().setUniform1f("gaussianBlurOffsetX", gaussianBlurOffsetX);
-        baseGLObject.getShaderProgram().setUniform1f("gaussianBlurOffsetY", gaussianBlurOffsetY);
-        baseGLObject.getShaderProgram().setUniform1i("kernelSiz", kernelSize);
-        baseGLObject.getShaderProgram().setUniform1f("sigma", sigma);
+    public void frameBufferPush(GLObject baseGLObject) {
+        frameBuffer.bindFrameBuffer();
 
-        super.push(baseGLObject);
+        //baseGLObject.getFrameBuffer().bindReadFrameBuffer();
+        //frameBuffer.bindDrawFrameBuffer();
+
+        //GL30.glBlitFramebuffer(
+        //        0,0,1920,1080,
+        //        0,0,1920,1080,
+        //        GL30.GL_COLOR_BUFFER_BIT,
+        //        GL30.GL_NEAREST
+        //);
+
+        //frameBuffer.unBindDrawFrameBuffer();
+        //baseGLObject.getFrameBuffer().unBindReadFrameBuffer();
+
+        super.frameBufferPush(baseGLObject);
     }
 
-    public float getGaussianBlurOffsetX() {
-        return gaussianBlurOffsetX;
-    }
-
-    public void setGaussianBlurOffsetX(float gaussianBlurOffsetX) {
-        this.gaussianBlurOffsetX = gaussianBlurOffsetX;
-    }
-
-    public float getGaussianBlurOffsetY() {
-        return gaussianBlurOffsetY;
-    }
-
-    public void setGaussianBlurOffsetY(float gaussianBlurOffsetY) {
-        this.gaussianBlurOffsetY = gaussianBlurOffsetY;
-    }
-
-    public int getKernelSize() {
-        return kernelSize;
-    }
-
-    public void setKernelSize(int kernelSize) {
-        this.kernelSize = kernelSize;
-    }
-
-    public float getSigma() {
-        return sigma;
-    }
-
-    public void setSigma(float sigma) {
-        this.sigma = sigma;
+    private static float calculateGaussianValue(float x, float sigma) {
+        double PI = 3.141592653;
+        double output = 1.0 / Math.sqrt(2.0 * PI * (sigma * sigma));
+        return (float) (output * Math.exp(-(x * x) / (2.0 * (sigma * sigma))));
     }
 }

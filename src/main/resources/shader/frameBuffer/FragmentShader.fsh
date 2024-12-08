@@ -5,8 +5,13 @@ in vec2 outTexture;
 
 out vec4 fragColor;
 
+vec4 colorFilter;
+
 uniform sampler2D textureSampler;
+uniform vec2 resolution;
 
 void main() {
-    fragColor = texture(textureSampler, outTexture);
+    colorFilter = texture(textureSampler, outTexture);
+
+    fragColor = colorFilter;
 }
