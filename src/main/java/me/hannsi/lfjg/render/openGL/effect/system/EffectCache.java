@@ -38,8 +38,29 @@ public class EffectCache {
     }
 
     public void frameBuffer(GLObject glObject) {
-        for (Map.Entry<EffectBase, Long> effectBaseLongEntry : effectBases.entrySet()) {
-            
+        int lateIndex = 0;
+
+        for (Map.Entry<EffectBase, Long> effectBase : effectBases.entrySet()) {
+            if (glObject.getObjectId() != effectBase.getValue()) {
+                continue;
+            }
+
+            FrameBuffer frameBuffer = effectBase.getKey().getFrameBuffer();
+            FrameBuffer nextFrameBuffer = getNextFrameBuffer(effectBase);
+
+            if (nextFrameBuffer != null) {
+                nextFrameBuffer.bindFrameBuffer();
+            }
+
+            effectBase.getKey().frameBuffer(this, lateIndex, glObject);
+
+            frameBuffer.drawFrameBuffer();
+
+            if (nextFrameBuffer != null) {
+                nextFrameBuffer.unbindFrameBuffer();
+            }
+
+            lateIndex++;
         }
     }
 
