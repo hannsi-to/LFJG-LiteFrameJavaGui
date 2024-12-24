@@ -1,17 +1,44 @@
 package me.hannsi.lfjg.render.openGL.effect.system;
 
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
+import me.hannsi.lfjg.render.openGL.system.FrameBuffer;
+import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import org.joml.Vector2f;
 
 public class EffectBase {
+    private final FrameBuffer frameBuffer;
     private int id;
     private String name;
     private Class<GLObject>[] ignoreGLObject;
 
     @SafeVarargs
-    public EffectBase(int id, String name, Class<GLObject>... ignoreGLObject) {
+    public EffectBase(Vector2f resolution, ResourcesLocation vertexPath, ResourcesLocation fragmentPath, int id, String name, Class<GLObject>... ignoreGLObject) {
         this.id = id;
         this.name = name;
         this.ignoreGLObject = ignoreGLObject;
+
+        frameBuffer = new FrameBuffer(resolution);
+
+        if (vertexPath != null) {
+            frameBuffer.setVertexShaderFBO(vertexPath);
+        }
+
+        if (fragmentPath != null) {
+            frameBuffer.setFragmentShaderFBO(fragmentPath);
+        }
+
+        frameBuffer.createFrameBuffer();
+        frameBuffer.createShaderProgram();
+    }
+
+    @SafeVarargs
+    public EffectBase(Vector2f resolution, ResourcesLocation path, boolean isFragmentPath, int id, String name, Class<GLObject>... ignoreGLObject) {
+        this(resolution, isFragmentPath ? null : path, isFragmentPath ? path : null, id, name, ignoreGLObject);
+    }
+
+    @SafeVarargs
+    public EffectBase(Vector2f resolution, int id, String name, Class<GLObject>... ignoreGLObject) {
+        this(resolution, null, null, id, name, ignoreGLObject);
     }
 
     public void draw(GLObject baseGLObject) {
@@ -26,11 +53,7 @@ public class EffectBase {
 
     }
 
-    public void frameBufferPop(GLObject baseGLObject) {
-
-    }
-
-    public void frameBufferPush(GLObject baseGLObject) {
+    public void frameBuffer(EffectCache effectCache, int oldIndex, GLObject glObject) {
 
     }
 
@@ -56,5 +79,9 @@ public class EffectBase {
 
     public void setIgnoreGLObject(Class<GLObject>[] ignoreGLObject) {
         this.ignoreGLObject = ignoreGLObject;
+    }
+
+    public FrameBuffer getFrameBuffer() {
+        return frameBuffer;
     }
 }

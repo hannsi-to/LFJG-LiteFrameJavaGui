@@ -10,8 +10,10 @@ import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.stb.STBImageWrite;
 
 import java.nio.ByteBuffer;
+import java.nio.file.Paths;
 
 public class FrameBuffer {
     private final int frameBufferId;
@@ -30,6 +32,7 @@ public class FrameBuffer {
     private Matrix4f projectionMatrix;
     private Matrix4f modelMatrix;
     private Matrix4f viewMatrix;
+
 
     public FrameBuffer(Vector2f resolution) {
         this.resolution = resolution;
@@ -58,11 +61,11 @@ public class FrameBuffer {
         float[] positions = new float[]{
                 0,0,
                 resolution.x(),0,
-                resolution.x(),resolution.y(),
-                0,resolution.y()
+                resolution.x(), resolution.y(),
+                0, resolution.y()
         };
 
-        float[] uvs = new float[]{0, 1, 1, 1, 1, 0, 0, 0};
+        float[] uvs = new float[]{0, 0, 1, 0, 1, 1, 0, 1};
 
         mesh = new Mesh(ProjectionType.OrthographicProjection, positions, null, uvs);
     }
@@ -118,9 +121,18 @@ public class FrameBuffer {
         shaderProgramFBO.setUniformMatrix4fv("viewMatrix", viewMatrix);
         shaderProgramFBO.setUniform1i("textureSampler", textureUnit);
 
+        GL30.glDisable(GL30.GL_DEPTH_TEST);
+        GL30.glEnable(GL30.GL_BLEND);
+        GL30.glBlendFunc(GL30.GL_SRC_ALPHA, GL30.GL_ONE_MINUS_SRC_ALPHA);
+
         bindTexture(textureUnit);
+
         vaoRendering.draw(mesh);
+
         unbindTexture(textureUnit);
+
+        GL30.glDisable(GL30.GL_BLEND);
+        GL30.glEnable(GL30.GL_DEPTH_TEST);
 
         shaderProgramFBO.unbind();
         GL30.glPopMatrix();
@@ -138,7 +150,7 @@ public class FrameBuffer {
         GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, frameBufferId);
     }
 
-    public void unBindDrawFrameBuffer(){
+    public void unbindDrawFrameBuffer(){
         GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, 0);
     }
 
@@ -152,6 +164,8 @@ public class FrameBuffer {
 
     public void bindFrameBuffer() {
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBufferId);
+        GL30.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
     }
 
     public void unbindFrameBuffer() {
@@ -173,22 +187,6 @@ public class FrameBuffer {
 
     public int getTextureId() {
         return textureId;
-    }
-
-    public Matrix4f getViewMatrix() {
-        return viewMatrix;
-    }
-
-    public void setViewMatrix(Matrix4f viewMatrix) {
-        this.viewMatrix = viewMatrix;
-    }
-
-    public Matrix4f getModelMatrix() {
-        return modelMatrix;
-    }
-
-    public void setModelMatrix(Matrix4f modelMatrix) {
-        this.modelMatrix = modelMatrix;
     }
 
     public Matrix4f getProjectionMatrix() {

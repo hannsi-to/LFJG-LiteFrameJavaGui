@@ -2,6 +2,7 @@ package me.hannsi.lfjg.render.openGL.effect.effects;
 
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
+import org.joml.Vector2f;
 
 public class Size extends EffectBase {
     private float x;
@@ -11,8 +12,8 @@ public class Size extends EffectBase {
     private float cy;
     private float cz;
 
-    public Size(float x, float y, float z, float cx, float cy, float cz) {
-        super(0, "Size", (Class<GLObject>) null);
+    public Size(Vector2f resolution, float x, float y, float z, float cx, float cy, float cz) {
+        super(resolution,0, "Size", (Class<GLObject>) null);
         this.x = x;
         this.y = y;
         this.z = z;
@@ -21,32 +22,32 @@ public class Size extends EffectBase {
         this.cz = cz;
     }
 
-    public Size(double x, double y, double z, double cx, double cy, double cz) {
-        this((float) x, (float) y, (float) z, (float) cx, (float) cy, (float) cz);
+    public Size(Vector2f resolution, double x, double y, double z, double cx, double cy, double cz) {
+        this(resolution,(float) x, (float) y, (float) z, (float) cx, (float) cy, (float) cz);
     }
 
-    public Size(float x, float y) {
-        this(x, y, 1.0f);
+    public Size(Vector2f resolution, float x, float y) {
+        this(resolution,x, y, 1.0f);
     }
 
-    public Size(double x, double y) {
-        this((float) x, (float) y, 1.0f);
+    public Size(Vector2f resolution, double x, double y) {
+        this(resolution,(float) x, (float) y, 1.0f);
     }
 
-    public Size(float x, float y, float z) {
-        this(x, y, z, 0, 0, 0);
+    public Size(Vector2f resolution, float x, float y, float z) {
+        this(resolution,x, y, z, 0, 0, 0);
     }
 
-    public Size(double x, double y, double z) {
-        this(x, y, z, 0, 0, 0);
+    public Size(Vector2f resolution, double x, double y, double z) {
+        this(resolution,x, y, z, 0, 0, 0);
     }
 
-    public Size(float x, float y, float cx, float cy) {
-        this(x, y, 1.0f, cx, cy, 0);
+    public Size(Vector2f resolution, float x, float y, float cx, float cy) {
+        this(resolution,x, y, 1.0f, cx, cy, 0);
     }
 
-    public Size(double x, double y, double cx, double cy) {
-        this(x, y, 1.0f, cx, cy, 0);
+    public Size(Vector2f resolution, double x, double y, double cx, double cy) {
+        this(resolution,x, y, 1.0f, cx, cy, 0);
     }
 
     @Override

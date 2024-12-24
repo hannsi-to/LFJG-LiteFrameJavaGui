@@ -6,7 +6,9 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
-import me.hannsi.lfjg.render.openGL.effect.effects.GaussianBlur;
+import me.hannsi.lfjg.render.openGL.effect.effects.Clipping2DRect;
+import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
+import me.hannsi.lfjg.render.openGL.effect.effects.GaussianBlurHorizontal;
 import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
@@ -22,7 +24,7 @@ import me.hannsi.lfjg.utils.type.types.VSyncType;
 import org.joml.Vector2f;
 
 public class TestGuiFrame implements LFJGFrame {
-    //GLRoundedRect gl;
+    GLRect gl1;
     GLRect gl2;
     ResourcesLocation image;
     GLObjectCache glObjectCache;
@@ -47,28 +49,38 @@ public class TestGuiFrame implements LFJGFrame {
         Projection projection = new Projection(ProjectionType.OrthographicProjection, frame.getWindowWidth(), frame.getWindowHeight());
         resolution = new Vector2f(frame.getWindowWidth(), frame.getWindowHeight());
 
-        gl2 = new GLRect("test");
-        gl2.setProjectionMatrix(projection.getProjMatrix());
-        gl2.setResolution(resolution);
-        gl2.uv(0, 1, 1, 0);
-        gl2.rect(0, 0, 1920, 1080, new Color(0, 0, 0, 0));
+        gl1 = new GLRect("test1");
+        gl1.setProjectionMatrix(projection.getProjMatrix());
+        gl1.setResolution(resolution);
+        gl1.uv(0, 0, 1, 1);
+        gl1.rect(0, 0, 1920, 1080, new Color(0,0,0,0));
+
+//        gl2 = new GLRect("test2");
+//        gl2.setProjectionMatrix(projection.getProjMatrix());
+//        gl2.setResolution(resolution);
+//        gl2.uv(0, 0, 1, 1);
+//        gl2.rect(0, 0, 1920, 1080, new Color(0, 0, 0, 0));
 
         textureCache = new TextureCache();
-        image = new ResourcesLocation("texture/test/test_image_1920x1080.jpg");
+        image = new ResourcesLocation("texture/test/test_image_3840x2160.jpg");
         textureCache.createTexture(image);
 
         effectCache = new EffectCache();
-        effectCache.createCache(new Texture(textureCache, image));
-        effectCache.createCache(new GaussianBlur(resolution, 100,5));
+        effectCache.createCache(new DrawObject(resolution),gl1);
+        effectCache.createCache(new Texture(resolution,textureCache, image),gl1);
+        effectCache.createCache(new GaussianBlurHorizontal(resolution,10f), gl1);
 
-        gl2.setEffectCache(effectCache);
+        //effectCache.createCache(new ColorCorrection(resolution,0.0f,0,0,0),gl1);
+//        effectCache.createCache(new Texture(textureCache, image),gl2);
+//        effectCache.createCache(new Clipping2DRect(resolution,0,0,500,500),gl2);
+//        effectCache.createCache(new GaussianBlur(resolution, 10,10),gl2);
+
+        gl1.setEffectCache(effectCache);
+//        gl2.setEffectCache(effectCache);
 
         glObjectCache = new GLObjectCache(resolution);
-        glObjectCache.createCache(gl2);
-
-        //gl2 = new GLRect("test2");
-        //gl2.setProjectionMatrix(projection.getProjMatrix());
-        //gl2.rect(250, 250, 750, 750, new Color(255, 0, 255, 255));
+        glObjectCache.createCache(gl1);
+//        glObjectCache.createCache(gl2);
     }
 
     @Override

@@ -2,8 +2,10 @@ package me.hannsi.lfjg.render.openGL.effect.effects;
 
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
+import org.joml.Vector2f;
 
 public class Rotate extends EffectBase {
+    private Vector2f resolution;
     private float x;
     private float y;
     private float z;
@@ -11,25 +13,26 @@ public class Rotate extends EffectBase {
     private float cy;
     private float cz;
 
-    public Rotate(float x, float y, float z) {
-        this(x, y, z, 0, 0, 0);
+    public Rotate(Vector2f resolution,float x, float y, float z) {
+        this(resolution,x, y, z, 0, 0, 0);
     }
 
-    public Rotate(double x, double y, double z) {
-        this((float) x, (float) y, (float) z, 0, 0, 0);
+    public Rotate(Vector2f resolution,double x, double y, double z) {
+        this(resolution,(float) x, (float) y, (float) z, 0, 0, 0);
     }
 
-    public Rotate(float x, float y, float z, float cx, float cy) {
-        this(x, y, z, cx, cy, 0);
+    public Rotate(Vector2f resolution,float x, float y, float z, float cx, float cy) {
+        this(resolution,x, y, z, cx, cy, 0);
     }
 
-    public Rotate(double x, double y, double z, double cx, double cy) {
-        this((float) x, (float) y, (float) z, (float) cx, (float) cy, 0);
+    public Rotate(Vector2f resolution,double x, double y, double z, double cx, double cy) {
+        this(resolution,(float) x, (float) y, (float) z, (float) cx, (float) cy, 0);
     }
 
-    public Rotate(float x, float y, float z, float cx, float cy, float cz) {
-        super(1, "Rotate", (Class<GLObject>) null);
+    public Rotate(Vector2f resolution,float x, float y, float z, float cx, float cy, float cz) {
+        super(resolution,1, "Rotate", (Class<GLObject>) null);
 
+        this.resolution = resolution;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -38,8 +41,8 @@ public class Rotate extends EffectBase {
         this.cz = cz;
     }
 
-    public Rotate(double x, double y, double z, double cx, double cy, double cz) {
-        this((float) x, (float) y, (float) z, (float) cx, (float) cy, (float) cz);
+    public Rotate(Vector2f resolution,double x, double y, double z, double cx, double cy, double cz) {
+        this(resolution,(float) x, (float) y, (float) z, (float) cx, (float) cy, (float) cz);
     }
 
     @Override

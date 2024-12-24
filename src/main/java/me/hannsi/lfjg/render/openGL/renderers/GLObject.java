@@ -1,9 +1,8 @@
 package me.hannsi.lfjg.render.openGL.renderers;
 
-import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.system.FrameBuffer;
+import me.hannsi.lfjg.render.openGL.system.GLObjectCache;
 import me.hannsi.lfjg.render.openGL.system.Mesh;
 import me.hannsi.lfjg.render.openGL.system.VAORendering;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
@@ -13,16 +12,11 @@ import me.hannsi.lfjg.utils.type.types.BlendType;
 import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL30;
-
-import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class GLObject {
     private final String name;
+    private final long objectId;
 
     private VAORendering vaoRendering;
     private Mesh mesh;
@@ -62,10 +56,12 @@ public class GLObject {
         this.drawType = null;
         this.mesh = null;
         this.frameBuffer = null;
+        this.objectId = ++GLObjectCache.glLatestObjectId;
     }
 
     public void create() {
         vaoRendering = new VAORendering();
+
         frameBuffer = new FrameBuffer(resolution);
         frameBuffer.createFrameBuffer();
         frameBuffer.createShaderProgram();
@@ -122,9 +118,7 @@ public class GLObject {
         GL30.glPopMatrix();
         frameBuffer.unbindFrameBuffer();
 
-        effectCache.frameBufferPush(this);
-        frameBuffer.drawFrameBuffer();
-        effectCache.frameBufferPop(this);
+        effectCache.frameBuffer(this);
     }
 
     private static float calculateGaussianValue(float x, float sigma) {
@@ -136,6 +130,9 @@ public class GLObject {
     public void cleanup() {
         vaoRendering.cleanup();
         shaderProgram.cleanup();
+        effectCache.cleanup(objectId);
+
+        GLObjectCache.glLatestObjectId--;
     }
 
     public void addGLTarget(int target) {
@@ -294,5 +291,9 @@ public class GLObject {
 
     public void setEffectCache(EffectCache effectCache) {
         this.effectCache = effectCache;
+    }
+
+    public long getObjectId() {
+        return objectId;
     }
 }

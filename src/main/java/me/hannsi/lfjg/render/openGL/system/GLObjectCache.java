@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GLObjectCache {
+    public static long glLatestObjectId;
     private List<GLObject> glObjects;
     private final FrameBuffer frameBuffer;
 

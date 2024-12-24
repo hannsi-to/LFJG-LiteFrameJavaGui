@@ -13,18 +13,7 @@ uniform mat4 modelMatrix;
 
 uniform sampler2D textureSampler;
 
-vec4 blendColor;
-
-#include "shader/scene/effect/ColorCorrection.glsl"
-#include "shader/scene/effect/Clipping.glsl"
-
 void main()
 {
-    clippingRect2D();
-
-    blendColor = texture(textureSampler, outTexture) + outColor;
-
-    blendColor = vec4(applyColorCorrection(blendColor.rgb), blendColor.a);
-
-    fragColor = blendColor;
+    fragColor = texture(textureSampler, outTexture) + outColor;
 }

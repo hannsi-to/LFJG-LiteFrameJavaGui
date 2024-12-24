@@ -5,6 +5,7 @@ import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.image.TextureCache;
 import me.hannsi.lfjg.utils.image.TextureLoader;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import org.joml.Vector2f;
 import org.lwjgl.opengl.GL30;
 
 public class Texture extends EffectBase {
@@ -12,8 +13,8 @@ public class Texture extends EffectBase {
     private ResourcesLocation resourcesLocation;
     private TextureLoader textureLoader;
 
-    public Texture(TextureCache textureCache, ResourcesLocation resourcesLocation) {
-        super(3, "Texture", (Class<GLObject>) null);
+    public Texture(Vector2f resolution, TextureCache textureCache, ResourcesLocation resourcesLocation) {
+        super(resolution,3, "Texture", (Class<GLObject>) null);
 
         this.textureCache = textureCache;
         this.resourcesLocation = resourcesLocation;

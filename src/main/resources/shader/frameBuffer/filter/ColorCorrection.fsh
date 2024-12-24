@@ -1,3 +1,12 @@
+#version 330
+
+in vec4 outPosition;
+in vec2 outTexture;
+
+out vec4 fragColor;
+
+uniform sampler2D textureSampler;
+
 uniform float brightness = 0.0;
 uniform float contrast = 0.0;
 uniform float saturation = 0.0;
@@ -52,4 +61,9 @@ vec3 applyColorCorrection(vec3 color) {
     color = applyHue(color, hue);
 
     return color;
+}
+
+void main(){
+    vec4 textureColor = texture(textureSampler, outTexture);
+    fragColor = vec4(applyColorCorrection(textureColor.rgb),textureColor.a);
 }

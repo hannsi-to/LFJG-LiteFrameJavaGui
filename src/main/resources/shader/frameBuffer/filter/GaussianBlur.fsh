@@ -5,26 +5,30 @@ in vec2 outTexture;
 
 out vec4 fragColor;
 
-vec4 colorFilter;
-
 uniform sampler2D textureSampler;
+
 uniform vec2 direction;
 uniform float radius;
-uniform float weights[256];
+uniform float values[256];
 uniform vec2 texelSize;
 
 #define offset (texelSize * direction)
 
 void main() {
-    vec3 blr = texture(textureSampler, outTexture).rgb * weights[0];
+    vec4 blr;
 
-    for (int i = 1; i <= int(radius); i++) {
-        float f = float(i);
-        blr += texture(textureSampler, outTexture + f * offset).rgb * weights[i];
-        blr += texture(textureSampler, outTexture - f * offset).rgb * weights[i];
+    if (radius == 0.0) {
+        blr = texture(textureSampler, outTexture).rgba;
+    } else {
+        blr = texture(textureSampler, outTexture).rgba * values[0];
+        for (int i = 1; i <= int(radius); i++) {
+            float f = float(i);
+            blr += texture(textureSampler, outTexture + f * offset).rgba * values[i];
+            blr += texture(textureSampler, outTexture - f * offset).rgba * values[i];
+        }
     }
 
-    fragColor = texture(textureSampler, outTexture);
+    fragColor = vec4(blr);
 
     //int kernelX = 10;
     //int kernelY = 10;

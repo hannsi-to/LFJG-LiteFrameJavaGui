@@ -1,51 +1,75 @@
 package me.hannsi.lfjg.render.openGL.effect.system;
 
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
-import org.lwjgl.opengl.GL;
+import me.hannsi.lfjg.render.openGL.system.FrameBuffer;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EffectCache {
-    private List<EffectBase> effectBases;
+    private Map<EffectBase, Long> effectBases;
 
     public EffectCache() {
-        this.effectBases = new ArrayList<>();
+        this.effectBases = new HashMap<>();
     }
 
-    public void createCache(EffectBase effectBase){
-        this.effectBases.add(effectBase);
+    public void createCache(EffectBase effectBase, GLObject glObject) {
+        this.effectBases.put(effectBase, glObject.getObjectId());
     }
 
-    public void push(GLObject glObject){
-        for (EffectBase effectBase : effectBases) {
-            effectBase.push(glObject);
+    public void push(GLObject glObject) {
+        for (Map.Entry<EffectBase, Long> effectBase : effectBases.entrySet()) {
+            if (glObject.getObjectId() != effectBase.getValue()) {
+                continue;
+            }
+
+            effectBase.getKey().push(glObject);
         }
     }
 
-    public void pop(GLObject glObject){
-        for (EffectBase effectBase : effectBases) {
-            effectBase.pop(glObject);
+    public void pop(GLObject glObject) {
+        for (Map.Entry<EffectBase, Long> effectBase : effectBases.entrySet()) {
+            if (glObject.getObjectId() != effectBase.getValue()) {
+                continue;
+            }
+
+            effectBase.getKey().pop(glObject);
         }
     }
 
-    public void frameBufferPush(GLObject glObject){
-        for (EffectBase effectBase : effectBases) {
-            effectBase.frameBufferPush(glObject);
+    public void frameBuffer(GLObject glObject) {
+        for (Map.Entry<EffectBase, Long> effectBaseLongEntry : effectBases.entrySet()) {
+            
         }
     }
 
-    public void frameBufferPop(GLObject glObject){
-        for (EffectBase effectBase : effectBases) {
-            effectBase.frameBufferPop(glObject);
+    private FrameBuffer getNextFrameBuffer(Map.Entry<EffectBase, Long> effectBase) {
+        boolean setFrameBufferValue = false;
+        FrameBuffer nextFrameBuffer = null;
+
+        for (Map.Entry<EffectBase, Long> effectBase2 : effectBases.entrySet()) {
+            if (setFrameBufferValue) {
+                nextFrameBuffer = effectBase2.getKey().getFrameBuffer();
+            }
+
+            if (effectBase2 != effectBase) {
+                continue;
+            }
+
+            setFrameBufferValue = true;
         }
+
+        return nextFrameBuffer;
     }
 
-    public List<EffectBase> getEffectBases() {
+    public void cleanup(long objectId) {
+    }
+
+    public Map<EffectBase, Long> getEffectBases() {
         return effectBases;
     }
 
-    public void setEffectBases(List<EffectBase> effectBases) {
+    public void setEffectBases(Map<EffectBase, Long> effectBases) {
         this.effectBases = effectBases;
     }
 }

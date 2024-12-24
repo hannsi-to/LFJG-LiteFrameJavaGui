@@ -4,30 +4,31 @@ import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.render.openGL.system.UniformDatum;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 
 public class Translate extends EffectBase {
     private float x;
     private float y;
     private float z;
 
-    public Translate(float x, float y, float z) {
-        super(2, "Translate", (Class<GLObject>) null);
+    public Translate(Vector2f resolution, float x, float y, float z) {
+        super(resolution,2, "Translate", (Class<GLObject>) null);
 
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
-    public Translate(double x, double y, double z) {
-        this((float) x, (float) y, (float) z);
+    public Translate(Vector2f resolution, double x, double y, double z) {
+        this(resolution,(float) x, (float) y, (float) z);
     }
 
-    public Translate(float x, float y) {
-        this(x, y, 0.0f);
+    public Translate(Vector2f resolution, float x, float y) {
+        this(resolution,x, y, 0.0f);
     }
 
-    public Translate(double x, double y) {
-        this(x, y, 0.0f);
+    public Translate(Vector2f resolution, double x, double y) {
+        this(resolution,x, y, 0.0f);
     }
 
     @Override
