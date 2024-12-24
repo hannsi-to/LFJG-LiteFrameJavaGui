@@ -13,6 +13,8 @@ public class DrawObject extends EffectBase {
 
     @Override
     public void frameBuffer(EffectCache effectCache, int oldIndex, GLObject glObject) {
+        glObject.getFrameBuffer().drawFrameBuffer();
+
         super.frameBuffer(effectCache, oldIndex, glObject);
     }
 }

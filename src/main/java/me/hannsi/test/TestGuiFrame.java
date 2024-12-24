@@ -68,7 +68,7 @@ public class TestGuiFrame implements LFJGFrame {
         effectCache = new EffectCache();
         effectCache.createCache(new DrawObject(resolution),gl1);
         effectCache.createCache(new Texture(resolution,textureCache, image),gl1);
-        effectCache.createCache(new GaussianBlurHorizontal(resolution,10f), gl1);
+        //effectCache.createCache(new GaussianBlurHorizontal(resolution,10f), gl1);
 
         //effectCache.createCache(new ColorCorrection(resolution,0.0f,0,0,0),gl1);
 //        effectCache.createCache(new Texture(textureCache, image),gl2);
