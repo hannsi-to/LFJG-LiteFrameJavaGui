@@ -18,96 +18,88 @@ repositories {
 }
 
 dependencies {
-    // Annotations
     implementation "org.jetbrains:annotations:24.0.0"
 
-    // Testing
     testImplementation platform("org.junit:junit-bom:5.9.1")
     testImplementation "org.junit.jupiter:junit-jupiter"
 
-    // Reflections
     implementation "org.reflections:reflections:0.10.2"
 
-    // Logging
     implementation "org.apache.logging.log4j:log4j-api:2.23.1"
     implementation "org.apache.logging.log4j:log4j-core:2.23.1"
     implementation "org.apache.logging.log4j:log4j-web:2.23.1"
     implementation "org.slf4j:slf4j-api:1.7.36"
     implementation "ch.qos.logback:logback-classic:1.4.12"
 
-    // XML Graphics
     implementation("org.apache.xmlgraphics:xmlgraphics-commons:2.9") {
         exclude module: "commons-io"
     }
     implementation "commons-io:commons-io:2.14.0"
     implementation "org.apache.xmlgraphics:batik-transcoder:1.17"
 
-    // LWJGL
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
     def lwjglModules = [
-        "lwjgl",
-        "lwjgl-assimp",
-        "lwjgl-bgfx",
-        "lwjgl-cuda",
-        "lwjgl-egl",
-        "lwjgl-fmod",
-        "lwjgl-freetype",
-        "lwjgl-glfw",
-        "lwjgl-harfbuzz",
-        "lwjgl-hwloc",
-        "lwjgl-jawt",
-        "lwjgl-jemalloc",
-        "lwjgl-ktx",
-        "lwjgl-libdivide",
-        "lwjgl-llvm",
-        "lwjgl-lmdb",
-        "lwjgl-lz4",
-        "lwjgl-meow",
-        "lwjgl-meshoptimizer",
-        "lwjgl-msdfgen",
-        "lwjgl-nanovg",
-        "lwjgl-nfd",
-        "lwjgl-nuklear",
-        "lwjgl-odbc",
-        "lwjgl-openal",
-        "lwjgl-opencl",
-        "lwjgl-opengl",
-        "lwjgl-opengles",
-        "lwjgl-openvr",
-        "lwjgl-openxr",
-        "lwjgl-opus",
-        "lwjgl-ovr",
-        "lwjgl-par",
-        "lwjgl-remotery",
-        "lwjgl-rpmalloc",
-        "lwjgl-shaderc",
-        "lwjgl-spvc",
-        "lwjgl-sse",
-        "lwjgl-stb",
-        "lwjgl-tinyexr",
-        "lwjgl-tinyfd",
-        "lwjgl-tootle",
-        "lwjgl-vma",
-        "lwjgl-vulkan",
-        "lwjgl-xxhash",
-        "lwjgl-yoga",
-        "lwjgl-zstd"
+            "lwjgl",
+            "lwjgl-assimp",
+            "lwjgl-bgfx",
+            "lwjgl-cuda",
+            "lwjgl-egl",
+            "lwjgl-fmod",
+            "lwjgl-freetype",
+            "lwjgl-glfw",
+            "lwjgl-harfbuzz",
+            "lwjgl-hwloc",
+            "lwjgl-jawt",
+            "lwjgl-jemalloc",
+            "lwjgl-ktx",
+            "lwjgl-libdivide",
+            "lwjgl-llvm",
+            "lwjgl-lmdb",
+            "lwjgl-lz4",
+            "lwjgl-meow",
+            "lwjgl-meshoptimizer",
+            "lwjgl-msdfgen",
+            "lwjgl-nanovg",
+            "lwjgl-nfd",
+            "lwjgl-nuklear",
+            "lwjgl-odbc",
+            "lwjgl-openal",
+            "lwjgl-opencl",
+            "lwjgl-opengl",
+            "lwjgl-opengles",
+            "lwjgl-openvr",
+            "lwjgl-openxr",
+            "lwjgl-opus",
+            "lwjgl-ovr",
+            "lwjgl-par",
+            "lwjgl-remotery",
+            "lwjgl-rpmalloc",
+            "lwjgl-shaderc",
+            "lwjgl-spvc",
+            "lwjgl-sse",
+            "lwjgl-stb",
+            "lwjgl-tinyexr",
+            "lwjgl-tinyfd",
+            "lwjgl-tootle",
+            "lwjgl-vma",
+            "lwjgl-vulkan",
+            "lwjgl-xxhash",
+            "lwjgl-yoga",
+            "lwjgl-zstd"
     ]
     lwjglModules.each { module ->
         implementation "org.lwjgl:$module"
-        if (module != "lwjgl-cuda") {
-            runtimeOnly "org.lwjgl:$module::$lwjglNatives"
+        if (module != "lwjgl-cuda" && module != "lwjgl-egl" && module != "lwjgl-fmod" && module != "lwjgl-jawt" && module != "lwjgl-odbc" && module != "lwjgl-opencl" && module != "lwjgl-vulkan") {
+                runtimeOnly "org.lwjgl:$module::$lwjglNatives"
         }
     }
 
-    // JOML
     implementation "org.joml:joml:${jomlVersion}"
     implementation "org.lwjglx:lwjgl3-awt:${lwjgl3awtVersion}"
     implementation "com.code-disaster.steamworks4j:steamworks4j:${steamworks4jVersion}"
     implementation "com.code-disaster.steamworks4j:steamworks4j-server:${steamworks4jserverVersion}"
     implementation "org.joml:joml-primitives:${jomlprimitivesVersion}"
 
-    // JavaCV
     implementation "org.bytedeco:javacv-platform:1.5.10"
 }
 
