@@ -8,6 +8,7 @@ import me.hannsi.lfjg.debug.exceptions.shader.LinkingShaderException;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.system.MemoryStack;
 
@@ -117,6 +118,12 @@ public class ShaderProgram {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform2f(uniformId, value.x, value.y);
+    }
+
+    public void setUniform3f(String name, Vector3f value) {
+        int uniformId = glGetUniformLocation(programId, name);
+
+        glUniform3f(uniformId, value.x, value.y, value.z);
     }
 
     public void setUniform1i(String name, int value) {
