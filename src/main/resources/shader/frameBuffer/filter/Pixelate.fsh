@@ -7,7 +7,7 @@ out vec4 fragColor;
 
 uniform sampler2D textureSampler;
 
-uniform float mosaicSize;
+uniform float mosaicSize = 0;
 uniform vec2 resolution;
 
 vec4 pixelate(float size, vec2 uv){
@@ -23,5 +23,10 @@ vec4 pixelate(float size, vec2 uv){
 void main(){
     vec2 uv = outTexture;
 
-    fragColor = pixelate(mosaicSize, uv);
+    vec4 resultColor = pixelate(mosaicSize, uv);
+    if (mosaicSize == 0){
+        resultColor = texture(textureSampler, uv);
+    }
+
+    fragColor = resultColor;
 }

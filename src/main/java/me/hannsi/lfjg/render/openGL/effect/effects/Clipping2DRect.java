@@ -101,4 +101,8 @@ public class Clipping2DRect extends EffectBase {
     public void setInvert(boolean invert) {
         this.invert = invert;
     }
+
+    public Vector2f getResolution() {
+        return resolution;
+    }
 }

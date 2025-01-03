@@ -6,6 +6,7 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
+import me.hannsi.lfjg.render.openGL.effect.effects.Bloom;
 import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
 import me.hannsi.lfjg.render.openGL.effect.effects.Pixelate;
 import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
@@ -68,7 +69,8 @@ public class TestGuiFrame implements LFJGFrame {
 
         effectCache.createCache(new Texture(resolution, textureCache, image), gl1);
         effectCache.createCache(new DrawObject(resolution), gl1);
-        effectCache.createCache(new Pixelate(resolution, 1f), gl1);
+        effectCache.createCache(new Bloom(resolution, 3f,0f,2f),gl1);
+//        effectCache.createCache(new Pixelate(resolution, 0f), gl1);
 //        effectCache.createCache(new ColorCorrection(resolution, 0.5f, 0, 0, 0), gl1);
 //        effectCache.createCache(new Clipping2DRect(resolution, 0, 0, 500, 500), gl1);
 

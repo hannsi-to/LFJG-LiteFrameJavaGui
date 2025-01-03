@@ -60,4 +60,12 @@ public class GaussianBlurVertical extends EffectBase {
 
         super.setUniform(baseGLObject);
     }
+
+    public Vector2f getResolution() {
+        return resolution;
+    }
+
+    public float getRadiusY() {
+        return radiusY;
+    }
 }

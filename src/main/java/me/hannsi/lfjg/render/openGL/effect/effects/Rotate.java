@@ -106,4 +106,8 @@ public class Rotate extends EffectBase {
     public void setCz(float cz) {
         this.cz = cz;
     }
+
+    public Vector2f getResolution() {
+        return resolution;
+    }
 }

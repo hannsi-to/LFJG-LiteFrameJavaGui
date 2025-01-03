@@ -5,15 +5,19 @@ import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Vector2f;
 
-public class Pixelate extends EffectBase {
+public class Bloom extends EffectBase {
     private final Vector2f resolution;
-    private final float mosaicSize;
+    private final float intensity;
+    private final float spread;
+    private final float threshold;
 
-    public Pixelate(Vector2f resolution, float mosaicSize) {
-        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Pixelate.fsh"), true, 8, "Pixelate");
+    public Bloom(Vector2f resolution, float intensity, float spread, float threshold) {
+        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Bloom.fsh"), true, 9, "Bloom");
 
         this.resolution = resolution;
-        this.mosaicSize = mosaicSize;
+        this.intensity = intensity;
+        this.spread = spread;
+        this.threshold = threshold;
     }
 
     @Override
@@ -41,8 +45,9 @@ public class Pixelate extends EffectBase {
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().bind();
 
-        getFrameBuffer().getShaderProgramFBO().setUniform2f("resolution", resolution);
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("mosaicSize", mosaicSize);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("intensity", intensity);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("spread", spread);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("threshold", threshold);
 
         getFrameBuffer().getShaderProgramFBO().unbind();
 
@@ -53,7 +58,15 @@ public class Pixelate extends EffectBase {
         return resolution;
     }
 
-    public float getMosaicSize() {
-        return mosaicSize;
+    public float getIntensity() {
+        return intensity;
+    }
+
+    public float getSpread() {
+        return spread;
+    }
+
+    public float getThreshold() {
+        return threshold;
     }
 }

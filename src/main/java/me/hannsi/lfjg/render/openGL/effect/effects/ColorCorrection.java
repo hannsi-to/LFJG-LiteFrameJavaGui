@@ -86,4 +86,8 @@ public class ColorCorrection extends EffectBase {
     public void setHue(float hue) {
         this.hue = hue;
     }
+
+    public Vector2f getResolution() {
+        return resolution;
+    }
 }
