@@ -1,21 +1,19 @@
 package me.hannsi.lfjg.render.openGL.effect.effects;
 
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
-import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
-import me.hannsi.lfjg.render.openGL.system.FrameBuffer;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Vector2f;
 
 public class ColorCorrection extends EffectBase {
-    private Vector2f resolution;
+    private final Vector2f resolution;
     private float brightness;
     private float contrast;
     private float saturation;
     private float hue;
 
     public ColorCorrection(Vector2f resolution, float brightness, float contrast, float saturation, float hue) {
-        super(resolution,new ResourcesLocation("shader/frameBuffer/filter/ColorCorrection.fsh"),true,4, "ColorCorrection", (Class<GLObject>) null);
+        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/ColorCorrection.fsh"), true, 4, "ColorCorrection", (Class<GLObject>) null);
 
         this.resolution = resolution;
         this.brightness = brightness;
@@ -25,7 +23,28 @@ public class ColorCorrection extends EffectBase {
     }
 
     @Override
-    public void frameBuffer(EffectCache effectCache, int oldIndex, GLObject glObject) {
+    public void frameBufferPush(GLObject baseGLObject) {
+        getFrameBuffer().bindFrameBuffer();
+
+        super.frameBufferPush(baseGLObject);
+    }
+
+    @Override
+    public void frameBufferPop(GLObject baseGLObject) {
+        getFrameBuffer().unbindFrameBuffer();
+
+        super.frameBufferPop(baseGLObject);
+    }
+
+    @Override
+    public void frameBuffer(GLObject baseGLObject) {
+        getFrameBuffer().drawFrameBuffer();
+
+        super.frameBuffer(baseGLObject);
+    }
+
+    @Override
+    public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().bind();
         getFrameBuffer().getShaderProgramFBO().setUniform1f("brightness", brightness);
         getFrameBuffer().getShaderProgramFBO().setUniform1f("contrast", contrast);
@@ -33,7 +52,7 @@ public class ColorCorrection extends EffectBase {
         getFrameBuffer().getShaderProgramFBO().setUniform1f("hue", hue);
         getFrameBuffer().getShaderProgramFBO().unbind();
 
-        super.frameBuffer(effectCache, oldIndex, glObject);
+        super.setUniform(baseGLObject);
     }
 
     public float getBrightness() {

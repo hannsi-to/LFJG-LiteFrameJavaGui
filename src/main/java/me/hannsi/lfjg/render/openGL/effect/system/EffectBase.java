@@ -53,7 +53,19 @@ public class EffectBase {
 
     }
 
-    public void frameBuffer(EffectCache effectCache, int oldIndex, GLObject glObject) {
+    public void frameBufferPush(GLObject baseGLObject) {
+
+    }
+
+    public void frameBufferPop(GLObject baseGLObject) {
+
+    }
+
+    public void frameBuffer(GLObject baseGLObject) {
+
+    }
+
+    public void setUniform(GLObject baseGLObject) {
 
     }
 

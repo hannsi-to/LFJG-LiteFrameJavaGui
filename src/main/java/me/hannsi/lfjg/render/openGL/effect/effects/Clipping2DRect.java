@@ -1,15 +1,13 @@
 package me.hannsi.lfjg.render.openGL.effect.effects;
 
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
-import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
-import me.hannsi.lfjg.render.openGL.system.FrameBuffer;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 public class Clipping2DRect extends EffectBase {
-    private Vector2f resolution;
+    private final Vector2f resolution;
     private float x1;
     private float y1;
     private float x2;
@@ -17,7 +15,7 @@ public class Clipping2DRect extends EffectBase {
     private boolean invert;
 
     public Clipping2DRect(Vector2f resolution, float x1, float y1, float x2, float y2, boolean invert) {
-        super(resolution,new ResourcesLocation("shader/frameBuffer/filter/Clipping2D.fsh"),true,5, "Clipping2DRect", (Class<GLObject>) null);
+        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Clipping2D.fsh"), true, 5, "Clipping2DRect", (Class<GLObject>) null);
 
         this.resolution = resolution;
         this.x1 = x1;
@@ -27,20 +25,41 @@ public class Clipping2DRect extends EffectBase {
         this.invert = invert;
     }
 
-    public Clipping2DRect(Vector2f resolution,float x1, float y1, float x2, float y2) {
-        this(resolution,x1, y1, x2, y2, false);
+    public Clipping2DRect(Vector2f resolution, float x1, float y1, float x2, float y2) {
+        this(resolution, x1, y1, x2, y2, false);
     }
 
     @Override
-    public void frameBuffer(EffectCache effectCache, int oldIndex, GLObject glObject) {
+    public void frameBufferPush(GLObject baseGLObject) {
+        getFrameBuffer().bindFrameBuffer();
+
+        super.frameBufferPush(baseGLObject);
+    }
+
+    @Override
+    public void frameBufferPop(GLObject baseGLObject) {
+        getFrameBuffer().unbindFrameBuffer();
+
+        super.frameBufferPop(baseGLObject);
+    }
+
+    @Override
+    public void frameBuffer(GLObject baseGLObject) {
+        getFrameBuffer().drawFrameBuffer();
+
+        super.frameBuffer(baseGLObject);
+    }
+
+    @Override
+    public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().bind();
-        getFrameBuffer().getShaderProgramFBO().setUniform2f("resolution",resolution);
+        getFrameBuffer().getShaderProgramFBO().setUniform2f("resolution", resolution);
         getFrameBuffer().getShaderProgramFBO().setUniformBoolean("clippingRect2DBool", true);
         getFrameBuffer().getShaderProgramFBO().setUniformBoolean("clippingRect2DInvert", invert);
         getFrameBuffer().getShaderProgramFBO().setUniform4f("clippingRect2DSize", new Vector4f(x1, y1, x2, y2));
         getFrameBuffer().getShaderProgramFBO().unbind();
 
-        super.frameBuffer(effectCache, oldIndex, glObject);
+        super.setUniform(baseGLObject);
     }
 
     public float getX1() {
