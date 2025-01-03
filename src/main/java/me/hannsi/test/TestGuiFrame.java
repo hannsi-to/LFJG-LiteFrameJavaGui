@@ -6,7 +6,9 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
-import me.hannsi.lfjg.render.openGL.effect.effects.*;
+import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
+import me.hannsi.lfjg.render.openGL.effect.effects.Pixelate;
+import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.system.GLObjectCache;
@@ -66,19 +68,20 @@ public class TestGuiFrame implements LFJGFrame {
 
         effectCache.createCache(new Texture(resolution, textureCache, image), gl1);
         effectCache.createCache(new DrawObject(resolution), gl1);
-        effectCache.createCache(new ColorCorrection(resolution, 0.5f, 0, 0, 0), gl1);
-        effectCache.createCache(new Clipping2DRect(resolution, 0, 0, 500, 500), gl1);
+        effectCache.createCache(new Pixelate(resolution, 1f), gl1);
+//        effectCache.createCache(new ColorCorrection(resolution, 0.5f, 0, 0, 0), gl1);
+//        effectCache.createCache(new Clipping2DRect(resolution, 0, 0, 500, 500), gl1);
 
-        effectCache.createCache(new Texture(resolution, textureCache, image), gl2);
-        effectCache.createCache(new DrawObject(resolution), gl2);
-        effectCache.createCache(new GaussianBlurHorizontal(resolution, 10f), gl2);
-        effectCache.createCache(new GaussianBlurVertical(resolution, 10f), gl2);
+//        effectCache.createCache(new Texture(resolution, textureCache, image), gl2);
+//        effectCache.createCache(new DrawObject(resolution), gl2);
+//        effectCache.createCache(new GaussianBlurHorizontal(resolution, 10f), gl2);
+//        effectCache.createCache(new GaussianBlurVertical(resolution, 10f), gl2);
 
         gl1.setEffectCache(effectCache);
-        gl2.setEffectCache(effectCache);
+//        gl2.setEffectCache(effectCache);
 
         glObjectCache = new GLObjectCache(resolution);
-        glObjectCache.createCache(gl2);
+//        glObjectCache.createCache(gl2);
         glObjectCache.createCache(gl1);
     }
 
