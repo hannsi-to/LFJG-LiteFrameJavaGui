@@ -12,9 +12,7 @@ uniform bool useOriginalColor;
 uniform bool glowOnly;
 uniform float spread;
 
-float luminance(vec3 color) {
-    return 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
-}
+#include "shader/frameBuffer/util/MathUtil.glsl"
 
 vec4 applyBlur(vec2 uv, float intensity, float spread) {
     vec4 result = vec4(0.0);
