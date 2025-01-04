@@ -6,10 +6,10 @@ import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Vector2f;
 
 public class Bloom extends EffectBase {
-    private final Vector2f resolution;
-    private final float intensity;
-    private final float spread;
-    private final float threshold;
+    private Vector2f resolution;
+    private float intensity;
+    private float spread;
+    private float threshold;
 
     public Bloom(Vector2f resolution, float intensity, float spread, float threshold) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Bloom.fsh"), true, 9, "Bloom");
@@ -58,15 +58,31 @@ public class Bloom extends EffectBase {
         return resolution;
     }
 
+    public void setResolution(Vector2f resolution) {
+        this.resolution = resolution;
+    }
+
     public float getIntensity() {
         return intensity;
+    }
+
+    public void setIntensity(float intensity) {
+        this.intensity = intensity;
     }
 
     public float getSpread() {
         return spread;
     }
 
+    public void setSpread(float spread) {
+        this.spread = spread;
+    }
+
     public float getThreshold() {
         return threshold;
+    }
+
+    public void setThreshold(float threshold) {
+        this.threshold = threshold;
     }
 }

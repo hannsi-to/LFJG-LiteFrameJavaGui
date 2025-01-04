@@ -6,7 +6,7 @@ import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Vector2f;
 
 public class ColorCorrection extends EffectBase {
-    private final Vector2f resolution;
+    private Vector2f resolution;
     private float brightness;
     private float contrast;
     private float saturation;
@@ -89,5 +89,9 @@ public class ColorCorrection extends EffectBase {
 
     public Vector2f getResolution() {
         return resolution;
+    }
+
+    public void setResolution(Vector2f resolution) {
+        this.resolution = resolution;
     }
 }

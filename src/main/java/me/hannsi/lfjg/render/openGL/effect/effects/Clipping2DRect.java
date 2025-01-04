@@ -7,7 +7,7 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 public class Clipping2DRect extends EffectBase {
-    private final Vector2f resolution;
+    private Vector2f resolution;
     private float x1;
     private float y1;
     private float x2;
@@ -104,5 +104,9 @@ public class Clipping2DRect extends EffectBase {
 
     public Vector2f getResolution() {
         return resolution;
+    }
+
+    public void setResolution(Vector2f resolution) {
+        this.resolution = resolution;
     }
 }

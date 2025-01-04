@@ -6,8 +6,8 @@ import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Vector2f;
 
 public class Pixelate extends EffectBase {
-    private final Vector2f resolution;
-    private final float mosaicSize;
+    private Vector2f resolution;
+    private float mosaicSize;
 
     public Pixelate(Vector2f resolution, float mosaicSize) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Pixelate.fsh"), true, 8, "Pixelate");
@@ -53,7 +53,15 @@ public class Pixelate extends EffectBase {
         return resolution;
     }
 
+    public void setResolution(Vector2f resolution) {
+        this.resolution = resolution;
+    }
+
     public float getMosaicSize() {
         return mosaicSize;
+    }
+
+    public void setMosaicSize(float mosaicSize) {
+        this.mosaicSize = mosaicSize;
     }
 }

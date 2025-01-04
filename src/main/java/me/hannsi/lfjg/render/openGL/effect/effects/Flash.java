@@ -9,12 +9,12 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class Flash extends EffectBase {
-    private final Vector2f resolution;
-    private final float intensity;
-    private final float x;
-    private final float y;
-    private final FlashBlendMode flashBlendMode;
-    private final Color lightColor;
+    private Vector2f resolution;
+    private float intensity;
+    private float x;
+    private float y;
+    private FlashBlendMode flashBlendMode;
+    private Color lightColor;
 
     public Flash(Vector2f resolution, float intensity, float x, float y, FlashBlendMode flashBlendMode, Color lightColor) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Flash.fsh"), true, 10, "Flash");
@@ -67,24 +67,48 @@ public class Flash extends EffectBase {
         return resolution;
     }
 
+    public void setResolution(Vector2f resolution) {
+        this.resolution = resolution;
+    }
+
     public float getIntensity() {
         return intensity;
+    }
+
+    public void setIntensity(float intensity) {
+        this.intensity = intensity;
     }
 
     public float getX() {
         return x;
     }
 
+    public void setX(float x) {
+        this.x = x;
+    }
+
     public float getY() {
         return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
     }
 
     public FlashBlendMode getFlashBlendMode() {
         return flashBlendMode;
     }
 
+    public void setFlashBlendMode(FlashBlendMode flashBlendMode) {
+        this.flashBlendMode = flashBlendMode;
+    }
+
     public Color getLightColor() {
         return lightColor;
+    }
+
+    public void setLightColor(Color lightColor) {
+        this.lightColor = lightColor;
     }
 
     public enum FlashBlendMode implements IEnumTypeBase {
