@@ -26,16 +26,22 @@ public class FrameSettingManager extends Manager {
     }
 
     public void updateFrameSettings(boolean windowHint) {
+        StringBuilder sb = new StringBuilder().append("\n");
+
         for (FrameSettingBase<?> frameSettingBase : frameSettings) {
             boolean shouldUpdate = (windowHint && frameSettingBase.isWindowHint()) || (!windowHint && !frameSettingBase.isWindowHint());
 
             if (shouldUpdate) {
                 frameSettingBase.updateSetting();
-                StringBuilder sb = new StringBuilder().append("[Updated FrameSetting] ").append(frameSettingBase.getName()).append(": ").append(frameSettingBase.getValue());
-                DebugLog.debug(getClass(), sb.toString());
+                sb.append("[Updated FrameSetting] ")
+                        .append(frameSettingBase.getName())
+                        .append(": ").append(frameSettingBase.getValue())
+                        .append("\n");
 //                DebugLog.debug(getClass(), "Updated FrameSetting: " + frameSettingBase.getName() + " | Value: " + frameSettingBase.getValue());
             }
         }
+
+        DebugLog.debug(getClass(), sb.toString());
     }
 
     public FrameSettingBase<?> getFrameSetting(Class<? extends FrameSettingBase<?>> frameSettingBase) {
