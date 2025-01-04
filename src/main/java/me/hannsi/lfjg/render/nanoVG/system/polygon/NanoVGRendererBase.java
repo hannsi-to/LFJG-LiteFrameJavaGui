@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.render.nanoVG.system.polygon;
 
-import me.hannsi.lfjg.utils.color.Color;
+import me.hannsi.lfjg.utils.graphics.color.Color;
 
 public class NanoVGRendererBase {
     public long nvg;

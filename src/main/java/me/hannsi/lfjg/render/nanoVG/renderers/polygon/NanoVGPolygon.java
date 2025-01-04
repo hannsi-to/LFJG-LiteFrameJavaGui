@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.nanoVG.renderers.polygon;
 
 import me.hannsi.lfjg.render.nanoVG.system.NanoVGUtil;
-import me.hannsi.lfjg.utils.color.Color;
+import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.math.MathUtil;
 import org.joml.Vector2f;
 import org.lwjgl.nanovg.NanoVG;

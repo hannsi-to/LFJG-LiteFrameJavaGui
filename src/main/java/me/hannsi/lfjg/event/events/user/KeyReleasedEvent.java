@@ -1,14 +1,14 @@
-package me.hannsi.lfjg.event.events;
+package me.hannsi.lfjg.event.events.user;
 
 import me.hannsi.lfjg.event.system.Event;
 
-public class KeyPressEvent extends Event {
+public class KeyReleasedEvent extends Event {
     private final int key;
     private final int scancode;
     private final int mods;
     private final long window;
 
-    public KeyPressEvent(int key, int scancode, int mods, long window) {
+    public KeyReleasedEvent(int key, int scancode, int mods, long window) {
         this.key = key;
         this.scancode = scancode;
         this.mods = mods;

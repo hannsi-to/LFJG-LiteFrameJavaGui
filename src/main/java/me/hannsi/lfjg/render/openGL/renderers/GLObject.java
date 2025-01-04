@@ -1,10 +1,10 @@
 package me.hannsi.lfjg.render.openGL.renderers;
 
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
-import me.hannsi.lfjg.render.openGL.system.FrameBuffer;
-import me.hannsi.lfjg.render.openGL.system.GLObjectCache;
-import me.hannsi.lfjg.render.openGL.system.Mesh;
-import me.hannsi.lfjg.render.openGL.system.VAORendering;
+import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
+import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
+import me.hannsi.lfjg.render.openGL.system.rendering.Mesh;
+import me.hannsi.lfjg.render.openGL.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
 import me.hannsi.lfjg.utils.graphics.GLUtil;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;

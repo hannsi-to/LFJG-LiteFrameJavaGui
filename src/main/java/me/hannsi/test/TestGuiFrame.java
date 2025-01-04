@@ -1,6 +1,6 @@
 package me.hannsi.test;
 
-import me.hannsi.lfjg.event.events.*;
+import me.hannsi.lfjg.event.events.user.*;
 import me.hannsi.lfjg.event.system.EventHandler;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.IFrame;
@@ -11,10 +11,10 @@ import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
 import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
-import me.hannsi.lfjg.render.openGL.system.GLObjectCache;
-import me.hannsi.lfjg.render.openGL.system.Projection;
-import me.hannsi.lfjg.utils.color.Color;
-import me.hannsi.lfjg.utils.image.TextureCache;
+import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
+import me.hannsi.lfjg.utils.math.Projection;
+import me.hannsi.lfjg.utils.graphics.color.Color;
+import me.hannsi.lfjg.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.AntiAliasingType;
 import me.hannsi.lfjg.utils.type.types.MonitorType;
@@ -61,7 +61,7 @@ public class TestGuiFrame implements LFJGFrame {
 
         textureCache = new TextureCache();
         image = new ResourcesLocation("texture/test/test_image_3840x2160.jpg");
-        textureCache.createTexture(image);
+        textureCache.createCache(image);
 
         effectCache = new EffectCache();
 

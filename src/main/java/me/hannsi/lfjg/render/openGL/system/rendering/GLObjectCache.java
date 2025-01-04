@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.openGL.system;
+package me.hannsi.lfjg.render.openGL.system.rendering;
 
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import org.joml.Vector2f;

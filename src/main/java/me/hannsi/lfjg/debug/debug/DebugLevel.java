@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.debug;
+package me.hannsi.lfjg.debug.debug;
 
 
 import java.awt.*;

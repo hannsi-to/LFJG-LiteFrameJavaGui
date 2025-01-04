@@ -3,7 +3,7 @@ package me.hannsi.lfjg.utils.graphics;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.HeightSetting;
 import me.hannsi.lfjg.frame.setting.settings.WidthSetting;
-import me.hannsi.lfjg.utils.image.TextureLoader;
+import me.hannsi.lfjg.utils.graphics.image.TextureLoader;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.MonitorType;
 import org.joml.Vector2i;

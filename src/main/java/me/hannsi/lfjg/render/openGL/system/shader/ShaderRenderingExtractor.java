@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.openGL.system;
+package me.hannsi.lfjg.render.openGL.system.shader;
 
 import me.hannsi.lfjg.utils.type.types.ShaderRenderingType;
 

@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.event.events;
+package me.hannsi.lfjg.event.events.user;
 
 import me.hannsi.lfjg.event.system.Event;
 

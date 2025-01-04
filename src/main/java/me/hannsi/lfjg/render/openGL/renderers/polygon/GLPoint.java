@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.render.openGL.renderers.polygon;
 
-import me.hannsi.lfjg.utils.color.Color;
+import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.joml.Vector2f;
 

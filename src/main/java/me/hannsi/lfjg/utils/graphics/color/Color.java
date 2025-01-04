@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.utils.color;
+package me.hannsi.lfjg.utils.graphics.color;
 
 import java.awt.*;
 import java.awt.color.ColorSpace;

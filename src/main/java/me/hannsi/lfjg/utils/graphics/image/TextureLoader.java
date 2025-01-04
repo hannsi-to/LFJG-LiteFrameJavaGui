@@ -1,6 +1,6 @@
-package me.hannsi.lfjg.utils.image;
+package me.hannsi.lfjg.utils.graphics.image;
 
-import me.hannsi.lfjg.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.debug.exceptions.texture.CreatingTextureException;
 import me.hannsi.lfjg.utils.buffer.BufferUtil;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;

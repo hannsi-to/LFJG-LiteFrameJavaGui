@@ -1,6 +1,6 @@
-package me.hannsi.lfjg.debug;
+package me.hannsi.lfjg.debug.debug;
 
-import me.hannsi.lfjg.event.events.LoggingEvent;
+import me.hannsi.lfjg.event.events.system.LoggingEvent;
 import me.hannsi.lfjg.frame.IFrame;
 
 public class DebugLog {

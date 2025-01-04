@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.render.openGL.system.shader;
 
-import me.hannsi.lfjg.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.debug.exceptions.shader.CompilingShaderException;
 import me.hannsi.lfjg.debug.exceptions.shader.CreatingShaderException;
 import me.hannsi.lfjg.debug.exceptions.shader.CreatingShaderProgramException;
@@ -120,10 +120,22 @@ public class ShaderProgram {
         glUniform2f(uniformId, value.x, value.y);
     }
 
+    public void setUniform2f(String name, float value1,float value2) {
+        int uniformId = glGetUniformLocation(programId, name);
+
+        glUniform2f(uniformId, value1,value2);
+    }
+
     public void setUniform3f(String name, Vector3f value) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform3f(uniformId, value.x, value.y, value.z);
+    }
+
+    public void setUniform3f(String name, float value1,float value2,float value3) {
+        int uniformId = glGetUniformLocation(programId, name);
+
+        glUniform3f(uniformId, value1,value2,value3);
     }
 
     public void setUniform1i(String name, int value) {
@@ -136,6 +148,12 @@ public class ShaderProgram {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform4f(uniformId, value.x, value.y, value.z, value.w);
+    }
+
+    public void setUniform4f(String name, float value1,float value2,float value3,float value4) {
+        int uniformId = glGetUniformLocation(programId, name);
+
+        glUniform4f(uniformId, value1,value2,value3,value4);
     }
 
     public void bind() {

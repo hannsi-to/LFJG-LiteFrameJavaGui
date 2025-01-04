@@ -2,8 +2,6 @@ package me.hannsi.lfjg.render.openGL.effect.effects;
 
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
-import me.hannsi.lfjg.render.openGL.system.UniformDatum;
-import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
 public class Translate extends EffectBase {

@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.utils.color;
+package me.hannsi.lfjg.utils.graphics.color;
 
 import me.hannsi.lfjg.utils.math.MathUtil;
 import org.joml.Math;

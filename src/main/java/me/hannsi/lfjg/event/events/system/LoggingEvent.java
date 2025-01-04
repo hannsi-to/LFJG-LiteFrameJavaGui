@@ -1,6 +1,6 @@
-package me.hannsi.lfjg.event.events;
+package me.hannsi.lfjg.event.events.system;
 
-import me.hannsi.lfjg.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.event.system.Event;
 
 public class LoggingEvent extends Event {

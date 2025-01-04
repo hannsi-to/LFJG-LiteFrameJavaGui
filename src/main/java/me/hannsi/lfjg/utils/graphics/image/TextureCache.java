@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.utils.image;
+package me.hannsi.lfjg.utils.graphics.image;
 
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.TextureLoaderType;
@@ -13,14 +13,14 @@ public class TextureCache {
 
     public TextureCache() {
         this.textureMap = new HashMap<>();
-        createTexture(DEFAULT_TEXTURE);
+        createCache(DEFAULT_TEXTURE);
     }
 
     public void cleanup() {
         textureMap.values().forEach(TextureLoader::cleanup);
     }
 
-    public void createTexture(ResourcesLocation texturePath) {
+    public void createCache(ResourcesLocation texturePath) {
         textureMap.put(texturePath, new TextureLoader(texturePath, TextureLoaderType.STBImage));
     }
 

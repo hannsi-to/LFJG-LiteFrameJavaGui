@@ -1,11 +1,12 @@
-package me.hannsi.lfjg.render.openGL.system;
+package me.hannsi.lfjg.render.openGL.system.rendering;
 
-import me.hannsi.lfjg.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.debug.exceptions.frameBuffer.CompleteFrameBufferException;
 import me.hannsi.lfjg.debug.exceptions.frameBuffer.CreatingFrameBufferException;
 import me.hannsi.lfjg.debug.exceptions.render.CreatingRenderBufferException;
 import me.hannsi.lfjg.debug.exceptions.texture.CreatingTextureException;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
+import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
 import me.hannsi.lfjg.utils.graphics.GLUtil;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;

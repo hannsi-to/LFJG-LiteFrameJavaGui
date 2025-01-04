@@ -2,8 +2,8 @@ package me.hannsi.lfjg.render.openGL.effect.effects;
 
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
-import me.hannsi.lfjg.utils.image.TextureCache;
-import me.hannsi.lfjg.utils.image.TextureLoader;
+import me.hannsi.lfjg.utils.graphics.image.TextureCache;
+import me.hannsi.lfjg.utils.graphics.image.TextureLoader;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL30;

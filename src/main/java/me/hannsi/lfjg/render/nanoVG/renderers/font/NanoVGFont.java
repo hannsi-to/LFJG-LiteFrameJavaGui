@@ -5,7 +5,7 @@ import me.hannsi.lfjg.render.nanoVG.renderers.polygon.NanoVGLine;
 import me.hannsi.lfjg.render.nanoVG.system.font.AlignExtractor;
 import me.hannsi.lfjg.render.nanoVG.system.font.ChatFormatting;
 import me.hannsi.lfjg.render.nanoVG.system.font.Font;
-import me.hannsi.lfjg.utils.color.Color;
+import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.math.StringUtil;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NanoVG;

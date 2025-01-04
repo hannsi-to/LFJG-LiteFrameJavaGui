@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.render.nanoVG.system;
 
-import me.hannsi.lfjg.utils.color.Color;
+import me.hannsi.lfjg.utils.graphics.color.Color;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.nanovg.NanoVG;
