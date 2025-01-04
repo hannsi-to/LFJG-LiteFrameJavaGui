@@ -6,8 +6,8 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
-import me.hannsi.lfjg.render.openGL.effect.effects.ChromaKey;
 import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
+import me.hannsi.lfjg.render.openGL.effect.effects.LuminanceKey;
 import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
@@ -67,7 +67,8 @@ public class TestGuiFrame implements LFJGFrame {
 
         effectCache.createCache(new Texture(resolution, textureCache, image), gl1);
         effectCache.createCache(new DrawObject(resolution), gl1);
-        effectCache.createCache(new ChromaKey(resolution, new Color(251, 255, 26), 10f, 0.1f, 01f, new Color(255, 255, 26)), gl1);
+        effectCache.createCache(new LuminanceKey(resolution, 0.5f, 0.1f, LuminanceKey.LuminanceMode.Both), gl1);
+//        effectCache.createCache(new ChromaKey(resolution, new Color(251, 255, 26), 10f, 0.1f, 01f, new Color(255, 255, 26)), gl1);
 //        effectCache.createCache(new Glow(resolution, 01f, 0.1f, 0.02f, false), gl1);
 //        effectCache.createCache(new Flash(resolution, 0.5f, 0, 0, Flash.FlashBlendMode.ForwardSynthesis, new Color(0, 255, 0, 255)), gl1);
 //        effectCache.createCache(new Bloom(resolution, 3f,0f,2f),gl1);
