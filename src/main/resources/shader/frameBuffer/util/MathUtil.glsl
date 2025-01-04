@@ -16,3 +16,27 @@ vec3 hsb2rgb(vec3 c){
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
+
+vec3 rgb2hsv(vec3 color) {
+    float cMax = max(max(color.r, color.g), color.b);
+    float cMin = min(min(color.r, color.g), color.b);
+    float delta = cMax - cMin;
+
+    float hue = 0.0;
+    if (delta > 0.0) {
+        if (cMax == color.r) {
+            hue = mod((color.g - color.b) / delta, 6.0);
+        } else if (cMax == color.g) {
+            hue = (color.b - color.r) / delta + 2.0;
+        } else {
+            hue = (color.r - color.g) / delta + 4.0;
+        }
+        hue /= 6.0;
+        if (hue < 0.0) {
+            hue += 1.0;
+        }
+    }
+
+    float saturation = (cMax > 0.0) ? delta / cMax : 0.0;
+    return vec3(hue, saturation, cMax);
+}
