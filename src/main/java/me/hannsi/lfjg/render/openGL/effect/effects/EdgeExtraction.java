@@ -9,15 +9,16 @@ import org.joml.Vector4f;
 
 public class EdgeExtraction extends EffectBase {
     private Vector2f resolution;
-    private final float edgeStrength;
-    private final float threshold;
-    private final boolean enableLuminanceEdge;
-    private final boolean enableAlphaEdge;
-    private final Color edgeColor;
+    private float edgeStrength;
+    private float threshold;
+    private boolean enableLuminanceEdge;
+    private boolean enableAlphaEdge;
+    private Color edgeColor;
 
     public EdgeExtraction(Vector2f resolution, float edgeStrength, float threshold, boolean enableLuminanceEdge, boolean enableAlphaEdge, Color edgeColor) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/EdgeExtraction.fsh"), true, 14, "EdgeExtraction");
 
+        this.resolution = resolution;
         this.edgeStrength = edgeStrength;
         this.threshold = threshold;
         this.enableLuminanceEdge = enableLuminanceEdge;
@@ -73,19 +74,39 @@ public class EdgeExtraction extends EffectBase {
         return edgeStrength;
     }
 
+    public void setEdgeStrength(float edgeStrength) {
+        this.edgeStrength = edgeStrength;
+    }
+
     public float getThreshold() {
         return threshold;
+    }
+
+    public void setThreshold(float threshold) {
+        this.threshold = threshold;
     }
 
     public boolean isEnableLuminanceEdge() {
         return enableLuminanceEdge;
     }
 
+    public void setEnableLuminanceEdge(boolean enableLuminanceEdge) {
+        this.enableLuminanceEdge = enableLuminanceEdge;
+    }
+
     public boolean isEnableAlphaEdge() {
         return enableAlphaEdge;
     }
 
+    public void setEnableAlphaEdge(boolean enableAlphaEdge) {
+        this.enableAlphaEdge = enableAlphaEdge;
+    }
+
     public Color getEdgeColor() {
         return edgeColor;
+    }
+
+    public void setEdgeColor(Color edgeColor) {
+        this.edgeColor = edgeColor;
     }
 }
