@@ -9,7 +9,10 @@ import me.hannsi.lfjg.utils.reflection.ClassUtil;
 import me.hannsi.lfjg.utils.reflection.PackagePath;
 import me.hannsi.lfjg.utils.time.TimeCalculator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 public class FrameSettingManager extends Manager {
     private final List<FrameSettingBase<?>> frameSettings;
@@ -28,7 +31,9 @@ public class FrameSettingManager extends Manager {
 
             if (shouldUpdate) {
                 frameSettingBase.updateSetting();
-                DebugLog.debug(getClass(), "Updated FrameSetting: " + frameSettingBase.getName() + " | Value: " + frameSettingBase.getValue());
+                StringBuilder sb = new StringBuilder().append("[Updated FrameSetting] ").append(frameSettingBase.getName()).append(": ").append(frameSettingBase.getValue());
+                DebugLog.debug(getClass(), sb.toString());
+//                DebugLog.debug(getClass(), "Updated FrameSetting: " + frameSettingBase.getName() + " | Value: " + frameSettingBase.getValue());
             }
         }
     }
@@ -57,7 +62,7 @@ public class FrameSettingManager extends Manager {
             return reflectionsLevel != null ? reflectionsLevel.level() : Integer.MAX_VALUE;
         }));
 
-        DebugLog.debug(getClass(), "FrameSettings loading...");
+        StringBuilder sb = new StringBuilder().append("\n\nFrameSettings loading...\n");
         long tookTime = TimeCalculator.calculate(() -> {
             int count = 0;
             for (Class<? extends FrameSettingBase<?>> subType : sortedClasses) {
@@ -67,12 +72,25 @@ public class FrameSettingManager extends Manager {
                     register(frameSettingBase);
                 }
 
-                DebugLog.debug(getClass(), "Loaded FrameSetting: " + Objects.requireNonNull(frameSettingBase).getName() + " | Count: " + count);
+                //noinspection DataFlowIssue
+                sb.append("\n\t")
+                        .append(count)
+                        .append(".\t")
+                        .append("Loaded FrameSetting: ")
+                        .append(frameSettingBase.getName());
 
                 count++;
             }
+
         });
-        DebugLog.debug(getClass(), "FrameSettings took " + tookTime + "ms to load!");
+
+        sb.append("\n\n")
+                .append("FrameSettings took ")
+                .append(tookTime)
+                .append("ms to load!")
+                .append("\n");
+
+        DebugLog.debug(getClass(), sb.toString());
     }
 
     public void register(FrameSettingBase<?> frameSetting) {

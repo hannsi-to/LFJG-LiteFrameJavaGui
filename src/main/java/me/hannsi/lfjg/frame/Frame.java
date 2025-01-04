@@ -185,7 +185,17 @@ public class Frame implements IFrame {
                     String typeString = getTypeString(type);
                     String severityString = getSeverityString(severity);
 
-                    DebugLog.debug(getClass(), "OpenGL Debug Message: \n" + "Source: " + sourceString + "\n" + "Type: " + typeString + "\n" + "ID: " + id + "\n" + "Severity: " + severityString + "\n" + "Message: " + errorMessage);
+                    StringBuilder sb = new StringBuilder()
+                            .append("\n---------- OpenGL Debug Message ----------").append("\n\t")
+                            .append("Source: ").append(sourceString).append("\n\t")
+                            .append("Type: ").append(typeString).append("\n\t")
+                            .append("ID: ").append(id).append("\n\t")
+                            .append("Severity: ").append(severityString).append("\n\t")
+                            .append("Message: ").append(errorMessage).append("\n")
+                            .append("------------------------------------------\n");
+
+
+                    DebugLog.debug(getClass(), sb.toString());
                 }
             }, 0);
         } else {
