@@ -6,15 +6,14 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
-import me.hannsi.lfjg.render.openGL.effect.effects.DiagonalClipping;
 import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
 import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
-import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
+import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.AntiAliasingType;
 import me.hannsi.lfjg.utils.type.types.MonitorType;
@@ -24,7 +23,7 @@ import org.joml.Vector2f;
 
 public class TestGuiFrame implements LFJGFrame {
     GLRect gl1;
-    GLRect gl2;
+    //    GLRect gl2;
     ResourcesLocation image;
     GLObjectCache glObjectCache;
     TextureCache textureCache;
@@ -54,10 +53,10 @@ public class TestGuiFrame implements LFJGFrame {
         gl1.uv(0, 0, 1, 1);
         gl1.rect(0, 0, 1920, 1080, new Color(0, 0, 0, 0));
 
-        gl2 = new GLRect("test2");
-        gl2.setProjectionMatrix(projection.getProjMatrix());
-        gl2.setResolution(resolution);
-        gl2.rect(0, 0, 1920, 1080, new Color(0, 255, 0, 255));
+//        gl2 = new GLRect("test2");
+//        gl2.setProjectionMatrix(projection.getProjMatrix());
+//        gl2.setResolution(resolution);
+//        gl2.rect(0, 0, 1920, 1080, new Color(0, 255, 0, 255));
 
         textureCache = new TextureCache();
         image = new ResourcesLocation("texture/test/test_image_3840x2160.jpg");
@@ -67,7 +66,7 @@ public class TestGuiFrame implements LFJGFrame {
 
         effectCache.createCache(new Texture(resolution, textureCache, image), gl1);
         effectCache.createCache(new DrawObject(resolution), gl1);
-        effectCache.createCache(new DiagonalClipping(resolution, resolution.x / 2, resolution.y / 2, (float) Math.toRadians(0), 1.0f, true), gl1);
+//        effectCache.createCache(new DiagonalClipping(resolution, resolution.x / 2, resolution.y / 2, (float) Math.toRadians(0), 1.0f, true), gl1);
 //        effectCache.createCache(new EdgeExtraction(resolution, 0.5f, 0.1f, true, false, new Color(255, 255, 0, 255)), gl1);
 //        effectCache.createCache(new LuminanceKey(resolution, 0.5f, 0.1f, LuminanceKey.LuminanceMode.Both), gl1);
 //        effectCache.createCache(new ChromaKey(resolution, new Color(251, 255, 26), 10f, 0.1f, 01f, new Color(255, 255, 26)), gl1);
@@ -79,12 +78,12 @@ public class TestGuiFrame implements LFJGFrame {
 //        effectCache.createCache(new Clipping2DRect(resolution, 0, 0, 500, 500), gl1);
 
 //        effectCache.createCache(new Texture(resolution, textureCache, image), gl2);
-        effectCache.createCache(new DrawObject(resolution), gl2);
+//        effectCache.createCache(new DrawObject(resolution), gl2);
 //        effectCache.createCache(new GaussianBlurHorizontal(resolution, 10f), gl2);
 //        effectCache.createCache(new GaussianBlurVertical(resolution, 10f), gl2);
 
         gl1.setEffectCache(effectCache);
-        gl2.setEffectCache(effectCache);
+//        gl2.setEffectCache(effectCache);
 
         glObjectCache = new GLObjectCache(resolution);
 //        glObjectCache.createCache(gl2);
@@ -93,7 +92,7 @@ public class TestGuiFrame implements LFJGFrame {
 
     @Override
     public void drawFrame(long nvg) {
-        glObjectCache.draw();
+        //glObjectCache.draw();
     }
 
     @Override

@@ -35,16 +35,12 @@ public class ShaderProgram {
         GLSLCode glslCode = new GLSLCode(resourcesLocation);
         String shaderCode = glslCode.createCode();
 
-        DebugLog.debug(getClass(), resourcesLocation.getPath() + "\n" + shaderCode + "\n");
-
         vertexShaderId = createShader(shaderCode, GL_VERTEX_SHADER);
     }
 
     public void createFragmentShader(ResourcesLocation resourcesLocation) {
         GLSLCode glslCode = new GLSLCode(resourcesLocation);
         String shaderCode = glslCode.createCode();
-
-        DebugLog.debug(getClass(), resourcesLocation.getPath() + "\n" + shaderCode + "\n");
 
         fragmentShaderId = createShader(shaderCode, GL_FRAGMENT_SHADER);
     }
@@ -120,10 +116,10 @@ public class ShaderProgram {
         glUniform2f(uniformId, value.x, value.y);
     }
 
-    public void setUniform2f(String name, float value1,float value2) {
+    public void setUniform2f(String name, float value1, float value2) {
         int uniformId = glGetUniformLocation(programId, name);
 
-        glUniform2f(uniformId, value1,value2);
+        glUniform2f(uniformId, value1, value2);
     }
 
     public void setUniform3f(String name, Vector3f value) {
@@ -132,10 +128,10 @@ public class ShaderProgram {
         glUniform3f(uniformId, value.x, value.y, value.z);
     }
 
-    public void setUniform3f(String name, float value1,float value2,float value3) {
+    public void setUniform3f(String name, float value1, float value2, float value3) {
         int uniformId = glGetUniformLocation(programId, name);
 
-        glUniform3f(uniformId, value1,value2,value3);
+        glUniform3f(uniformId, value1, value2, value3);
     }
 
     public void setUniform1i(String name, int value) {
@@ -150,10 +146,10 @@ public class ShaderProgram {
         glUniform4f(uniformId, value.x, value.y, value.z, value.w);
     }
 
-    public void setUniform4f(String name, float value1,float value2,float value3,float value4) {
+    public void setUniform4f(String name, float value1, float value2, float value3, float value4) {
         int uniformId = glGetUniformLocation(programId, name);
 
-        glUniform4f(uniformId, value1,value2,value3,value4);
+        glUniform4f(uniformId, value1, value2, value3, value4);
     }
 
     public void bind() {

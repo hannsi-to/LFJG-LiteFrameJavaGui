@@ -185,17 +185,14 @@ public class Frame implements IFrame {
                     String typeString = getTypeString(type);
                     String severityString = getSeverityString(severity);
 
-                    StringBuilder sb = new StringBuilder()
-                            .append("\n---------- OpenGL Debug Message ----------").append("\n\t")
-                            .append("Source: ").append(sourceString).append("\n\t")
-                            .append("Type: ").append(typeString).append("\n\t")
-                            .append("ID: ").append(id).append("\n\t")
-                            .append("Severity: ").append(severityString).append("\n\t")
-                            .append("Message: ").append(errorMessage).append("\n")
-                            .append("------------------------------------------\n");
+                    for (CheckSeveritiesSetting checkSeverity : ((CheckSeveritiesSetting[]) getFrameSettingValue(CheckSeveritiesSetting.class))) {
+                        if (checkSeverity.getId() == severity) {
+                            String sb = "\n---------- OpenGL Debug Message ----------" + "\n\t" + "Source: " + sourceString + "\n\t" + "Type: " + typeString + "\n\t" + "ID: " + id + "\n\t" + "Severity: " + severityString + "\n\t" + "Message: " + errorMessage + "\n" + "------------------------------------------\n";
 
 
-                    DebugLog.debug(getClass(), sb.toString());
+                            DebugLog.debug(getClass(), sb);
+                        }
+                    }
                 }
             }, 0);
         } else {
@@ -258,16 +255,11 @@ public class Frame implements IFrame {
             lastTime2 = currentTime2;
 
             if (deltaTime2 >= targetTime) {
-                GL11.glClearColor(0.0f,0.0f,0.0f,0.0f);
+                GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
                 GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
                 setAntiAliasing();
 
                 draw();
-
-                int error = GL11.glGetError();
-                if (error != GL11.GL_NO_ERROR) {
-                    DebugLog.error(getClass(), "OpenGL Error: " + error);
-                }
 
                 GLFW.glfwSwapBuffers(windowID);
                 GLFW.glfwPollEvents();
