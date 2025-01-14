@@ -313,4 +313,40 @@ public class Color {
     public int getTransparency() {
         return this.value.getTransparency();
     }
+
+    public java.awt.Color ofAwtColor(){
+        return value;
+    }
+
+    public static Color of(int r, int g, int b) {
+        return new Color(r,g,b);
+    }
+
+    public static Color of(int r, int g, int b, int a) {
+        return new Color(r,g,b,a);
+    }
+
+    public static Color of(int rgb) {
+        return new Color(rgb);
+    }
+
+    public static Color of(int rgba, boolean hasalpha) {
+        return new Color(rgba,hasalpha);
+    }
+
+    public static Color of(float r, float g, float b) {
+        return new Color(r,g,b);
+    }
+
+    public static Color of(float r, float g, float b, float a) {
+        return new Color(r,g,b,a);
+    }
+
+    public static Color of(ColorSpace cspace, float[] components, float alpha) {
+        return new Color(cspace,components,alpha);
+    }
+
+    public static Color of(String nm) {
+        return new Color(nm);
+    }
 }
