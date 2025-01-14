@@ -16,6 +16,7 @@ import me.hannsi.lfjg.utils.time.TimeSourceUtil;
 import me.hannsi.lfjg.utils.toolkit.RuntimeUtil;
 import me.hannsi.lfjg.utils.type.types.AntiAliasingType;
 import me.hannsi.lfjg.utils.type.types.RenderingType;
+import me.hannsi.lfjg.utils.type.types.SeverityType;
 import me.hannsi.lfjg.utils.type.types.VSyncType;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.*;
@@ -185,7 +186,7 @@ public class Frame implements IFrame {
                     String typeString = getTypeString(type);
                     String severityString = getSeverityString(severity);
 
-                    for (CheckSeveritiesSetting checkSeverity : ((CheckSeveritiesSetting[]) getFrameSettingValue(CheckSeveritiesSetting.class))) {
+                    for (SeverityType checkSeverity : ((SeverityType[]) getFrameSettingValue(CheckSeveritiesSetting.class))) {
                         if (checkSeverity.getId() == severity) {
                             String sb = "\n---------- OpenGL Debug Message ----------" + "\n\t" + "Source: " + sourceString + "\n\t" + "Type: " + typeString + "\n\t" + "ID: " + id + "\n\t" + "Severity: " + severityString + "\n\t" + "Message: " + errorMessage + "\n" + "------------------------------------------\n";
 
