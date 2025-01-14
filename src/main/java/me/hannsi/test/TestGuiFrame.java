@@ -9,6 +9,8 @@ import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
 import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
+import me.hannsi.lfjg.render.openGL.renderers.Fonts.Batch;
+import me.hannsi.lfjg.render.openGL.renderers.Fonts.CFont;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.utils.graphics.color.Color;
@@ -21,9 +23,13 @@ import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.utils.type.types.VSyncType;
 import org.joml.Vector2f;
 
+import static org.lwjgl.opengl.GL11.*;
+
 public class TestGuiFrame implements LFJGFrame {
     GLRect gl1;
     //    GLRect gl2;
+    CFont font;
+    Batch batch;
     ResourcesLocation image;
     GLObjectCache glObjectCache;
     TextureCache textureCache;
@@ -88,11 +94,23 @@ public class TestGuiFrame implements LFJGFrame {
         glObjectCache = new GLObjectCache(resolution);
 //        glObjectCache.createCache(gl2);
         glObjectCache.createCache(gl1);
+
+        font = new CFont("C:/Windows/Fonts/Arial.ttf", 64);
+        batch = new Batch(projection);
+        batch.font = font;
+        batch.initBatch();
     }
 
     @Override
     public void drawFrame(long nvg) {
-        //glObjectCache.draw();
+        glObjectCache.draw();
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        batch.addText("Hello world!", 200, 200, 1f, new Color(255,0,255,100));
+
+        batch.flushBatch();
     }
 
     @Override
