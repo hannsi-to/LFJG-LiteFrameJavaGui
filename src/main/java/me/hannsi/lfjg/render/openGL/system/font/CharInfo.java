@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.openGL.renderers.font;
+package me.hannsi.lfjg.render.openGL.system.font;
 
 import org.joml.Vector2f;
 

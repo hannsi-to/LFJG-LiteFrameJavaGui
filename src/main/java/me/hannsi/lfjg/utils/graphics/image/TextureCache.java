@@ -19,6 +19,8 @@ public class TextureCache {
 
     public void cleanup() {
         textureMap.values().forEach(TextureLoader::cleanup);
+
+        textureMap.clear();
     }
 
     public void createCache(ResourcesLocation texturePath) {

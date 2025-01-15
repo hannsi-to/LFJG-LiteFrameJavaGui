@@ -1,6 +1,8 @@
 package me.hannsi.lfjg.render.openGL.renderers.font;
 
 import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.render.openGL.system.font.CFont;
+import me.hannsi.lfjg.render.openGL.system.font.CharInfo;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.math.Projection;

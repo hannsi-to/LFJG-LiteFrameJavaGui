@@ -10,8 +10,8 @@ import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
 import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.font.Batch;
-import me.hannsi.lfjg.render.openGL.renderers.font.CFont;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
+import me.hannsi.lfjg.render.openGL.system.font.FontCache;
 import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
@@ -28,12 +28,11 @@ import static org.lwjgl.opengl.GL11.*;
 public class TestGuiFrame implements LFJGFrame {
     GLRect gl1;
     //    GLRect gl2;
-    CFont font;
     Batch batch;
-    ResourcesLocation image;
     GLObjectCache glObjectCache;
     TextureCache textureCache;
     EffectCache effectCache;
+    FontCache fontCache;
     Vector2f resolution;
 
     private Frame frame;
@@ -65,8 +64,16 @@ public class TestGuiFrame implements LFJGFrame {
 //        gl2.rect(0, 0, 1920, 1080, new Color(0, 255, 0, 255));
 
         textureCache = new TextureCache();
-        image = new ResourcesLocation("texture/test/test_image_3840x2160.jpg");
+        ResourcesLocation image = new ResourcesLocation("texture/test/test_image_3840x2160.jpg");
         textureCache.createCache(image);
+
+        fontCache = new FontCache();
+        ResourcesLocation font = new ResourcesLocation("font/default.ttf");
+        fontCache.createCache(font, 64);
+
+        batch = new Batch(projection);
+        batch.font = fontCache.getFont(font, 64);
+        batch.initBatch();
 
         effectCache = new EffectCache();
 
@@ -94,11 +101,6 @@ public class TestGuiFrame implements LFJGFrame {
         glObjectCache = new GLObjectCache(resolution);
 //        glObjectCache.createCache(gl2);
         glObjectCache.createCache(gl1);
-
-        font = new CFont(new ResourcesLocation("font/NotoSansJP.ttf"), 64);
-        batch = new Batch(projection);
-        batch.font = font;
-        batch.initBatch();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.openGL.renderers.font;
+package me.hannsi.lfjg.render.openGL.system.font;
 
 import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
@@ -31,6 +31,10 @@ public class CFont {
 
     public CFont(ResourcesLocation filepath, int fontSize) {
         this((FileLocation) filepath, fontSize);
+    }
+
+    public void cleanup() {
+        characterMap.clear();
     }
 
     public CharInfo getCharacter(int codepoint) {
