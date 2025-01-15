@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.openGL.renderers.Fonts;
+package me.hannsi.lfjg.render.openGL.renderers.font;
 
 import me.hannsi.lfjg.debug.debug.DebugLog;
 import org.lwjgl.BufferUtils;
