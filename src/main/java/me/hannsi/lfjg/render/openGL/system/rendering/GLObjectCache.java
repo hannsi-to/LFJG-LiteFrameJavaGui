@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.render.openGL.system.rendering;
 
+import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import org.joml.Vector2f;
 
@@ -16,6 +17,8 @@ public class GLObjectCache {
 
     public void createCache(GLObject glObject) {
         glObjects.add(glObject);
+
+        DebugLog.debug(getClass(), "Create object cache: " + glObject.getName());
     }
 
     public void draw() {

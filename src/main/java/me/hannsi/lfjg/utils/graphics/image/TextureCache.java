@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.utils.graphics.image;
 
+import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.TextureLoaderType;
 
@@ -22,6 +23,8 @@ public class TextureCache {
 
     public void createCache(ResourcesLocation texturePath) {
         textureMap.put(texturePath, new TextureLoader(texturePath, TextureLoaderType.STBImage));
+
+        DebugLog.debug(getClass(), "Create texture cache: " + texturePath.getPath());
     }
 
     public TextureLoader getTexture(ResourcesLocation texturePath) {

@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.render.openGL.effect.system;
 
+import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 
 import java.util.*;
@@ -46,6 +47,8 @@ public class EffectCache {
         effectBase.getFrameBuffer().setUesStencil(true);
         effectBase.getFrameBuffer().setGlObject(glObject);
         this.effectBases.put(effectBase, glObject.getObjectId());
+
+        DebugLog.debug(getClass(), "Create effect cache: " + effectBase.getName() + " | Object name: " + glObject.getName());
     }
 
     public void push(GLObject glObject) {
