@@ -7,6 +7,7 @@ import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL15;
 
 import static org.lwjgl.opengl.GL15.*;
@@ -24,7 +25,7 @@ public class Batch {
     private final int[] indices = {0, 1, 3, 1, 2, 3};
     public float[] vertices;
     public int size = 0;
-    public Projection projection;
+    public Matrix4f projectionMatrix;
 
     public int vao;
     public int vbo;
@@ -32,7 +33,11 @@ public class Batch {
     public CFont font;
 
     public Batch(Projection projection) {
-        this.projection = projection;
+        this(projection.getProjMatrix());
+    }
+
+    public Batch(Matrix4f projectionMatrix) {
+        this.projectionMatrix = projectionMatrix;
         this.vertices = new float[BATCH_SIZE * VERTEX_SIZE];
     }
 
@@ -90,11 +95,15 @@ public class Batch {
         glBindTexture(GL_TEXTURE_BUFFER, font.textureId);
 
         shaderProgram.setUniform1i("uFontTexture", 0);
-        shaderProgram.setUniformMatrix4fv("uProjection", projection.getProjMatrix());
+        shaderProgram.setUniformMatrix4fv("uProjection", projectionMatrix);
 
         glBindVertexArray(vao);
 
         glDrawElements(GL_TRIANGLES, size * 6, GL_UNSIGNED_INT, 0);
+
+        glBindVertexArray(0);
+
+        glBindTexture(GL_TEXTURE_BUFFER, 0);
 
         shaderProgram.unbind();
 
@@ -176,5 +185,13 @@ public class Batch {
             addCharacter(xPos, (float) y, scale, charInfo, color);
             x += (int) (charInfo.getWidth() * scale);
         }
+    }
+
+    public float getFontWidth(String text) {
+        return font.getFontWidth(text);
+    }
+
+    public float getFontHeight() {
+        return font.getFontHeight();
     }
 }

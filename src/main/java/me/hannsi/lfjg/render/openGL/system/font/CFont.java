@@ -16,6 +16,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class CFont {
     public int textureId;
     private FileLocation filepath;
+    private Font font;
     private int fontSize;
     private int width;
     private int height;
@@ -37,6 +38,32 @@ public class CFont {
         characterMap.clear();
     }
 
+    public int getFontHeight() {
+        BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        Graphics graphics = image.getGraphics();
+        graphics.setFont(font);
+        FontMetrics metrics = graphics.getFontMetrics();
+
+        int fontHeight = metrics.getHeight();
+
+        graphics.dispose();
+
+        return fontHeight;
+    }
+
+    public int getFontWidth(String text) {
+        BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        Graphics graphics = image.getGraphics();
+        graphics.setFont(font);
+        FontMetrics metrics = graphics.getFontMetrics();
+
+        int fontWidth = metrics.stringWidth(text);
+
+        graphics.dispose();
+
+        return fontWidth;
+    }
+
     public CharInfo getCharacter(int codepoint) {
         return characterMap.getOrDefault(codepoint, new CharInfo(0, 0, 0, 0));
     }
@@ -54,7 +81,7 @@ public class CFont {
     }
 
     public void generateBitmap() {
-        Font font = registerFont(filepath);
+        font = registerFont(filepath);
         assert font != null;
         font = new Font(font.getName(), Font.PLAIN, fontSize);
 
@@ -131,6 +158,14 @@ public class CFont {
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
         buffer.clear();
+    }
+
+    public Font getFont() {
+        return font;
+    }
+
+    public void setFont(Font font) {
+        this.font = font;
     }
 
     public FileLocation getFilepath() {
