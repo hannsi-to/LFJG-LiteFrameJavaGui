@@ -2,6 +2,7 @@ package me.hannsi.lfjg.render.openGL.renderers.font;
 
 import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
+import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.lwjgl.BufferUtils;
 
 import java.awt.*;
@@ -26,6 +27,10 @@ public class CFont {
         this.fontSize = fontSize;
         this.characterMap = new HashMap<>();
         generateBitmap();
+    }
+
+    public CFont(ResourcesLocation filepath, int fontSize) {
+        this((FileLocation) filepath, fontSize);
     }
 
     public CharInfo getCharacter(int codepoint) {
