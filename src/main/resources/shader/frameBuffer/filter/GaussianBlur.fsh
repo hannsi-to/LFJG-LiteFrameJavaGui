@@ -29,19 +29,4 @@ void main() {
     }
 
     fragColor = vec4(blr);
-
-    //int kernelX = 10;
-    //int kernelY = 10;
-
-    //vec2 lr = vec2(1, 0)/resolution;
-    //vec2 tb = vec2(0, 1)/resolution;
-    //vec4 color = inputColor;
-
-    //for (float i = - kernelX; i < kernelX; i++){
-    //    for (float j = - kernelY; j < kernelY; j++) {
-    //        color += texture(textureSampler, outTexture + lr * i + tb * j);
-    //    }
-    //}
-
-    //vec4(color.rgb/color.w, 1);
 }
