@@ -1,11 +1,11 @@
 package me.hannsi.lfjg.render.openGL.renderers.font;
 
 import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.utils.reflection.FileLocation;
 import org.lwjgl.BufferUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,14 +14,14 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class CFont {
     public int textureId;
-    private String filepath;
+    private FileLocation filepath;
     private int fontSize;
     private int width;
     private int height;
     private int lineHeight;
     private Map<Integer, CharInfo> characterMap;
 
-    public CFont(String filepath, int fontSize) {
+    public CFont(FileLocation filepath, int fontSize) {
         this.filepath = filepath;
         this.fontSize = fontSize;
         this.characterMap = new HashMap<>();
@@ -32,10 +32,10 @@ public class CFont {
         return characterMap.getOrDefault(codepoint, new CharInfo(0, 0, 0, 0));
     }
 
-    private Font registerFont(String fontFile) {
+    private Font registerFont(FileLocation fontFile) {
         try {
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            Font font = Font.createFont(Font.TRUETYPE_FONT, new File(filepath));
+            Font font = Font.createFont(Font.TRUETYPE_FONT, fontFile.getInputStream());
             ge.registerFont(font);
             return font;
         } catch (Exception e) {
@@ -124,11 +124,11 @@ public class CFont {
         buffer.clear();
     }
 
-    public String getFilepath() {
+    public FileLocation getFilepath() {
         return filepath;
     }
 
-    public void setFilepath(String filepath) {
+    public void setFilepath(FileLocation filepath) {
         this.filepath = filepath;
     }
 

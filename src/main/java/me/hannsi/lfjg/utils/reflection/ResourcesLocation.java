@@ -1,32 +1,23 @@
 package me.hannsi.lfjg.utils.reflection;
 
-import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.utils.buffer.ByteUtil;
-
-import java.io.InputStream;
-import java.nio.ByteBuffer;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.Objects;
 
-public class ResourcesLocation {
-    private String path;
-
+public class ResourcesLocation extends FileLocation {
     public ResourcesLocation(String path) {
-        this.path = path;
+        super(getAbsolutePath(path).replace("\\", "/"));
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public InputStream getInputStream() {
-        return Frame.class.getClassLoader().getResourceAsStream(path);
-    }
-
-    public byte[] getBytes() {
-        return ByteUtil.convertInputStreamToByteArray(Objects.requireNonNull(getInputStream()));
+    public static String getAbsolutePath(String path) {
+        try {
+            URI resourceUri = Objects.requireNonNull(ResourcesLocation.class.getClassLoader().getResource(path)).toURI();
+            return Paths.get(resourceUri).toAbsolutePath().toString();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("Invalid URI syntax for resource: " + path, e);
+        } catch (NullPointerException e) {
+            throw new RuntimeException("Resource not found: " + path, e);
+        }
     }
 }

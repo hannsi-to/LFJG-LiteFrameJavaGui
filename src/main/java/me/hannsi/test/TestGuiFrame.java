@@ -16,6 +16,7 @@ import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.utils.math.Projection;
+import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.AntiAliasingType;
 import me.hannsi.lfjg.utils.type.types.MonitorType;
@@ -95,7 +96,7 @@ public class TestGuiFrame implements LFJGFrame {
 //        glObjectCache.createCache(gl2);
         glObjectCache.createCache(gl1);
 
-        font = new CFont("C:/Windows/Fonts/Arial.ttf", 64);
+        font = new CFont(new FileLocation("C:/Windows/Fonts/Arial.ttf"), 64);
         batch = new Batch(projection);
         batch.font = font;
         batch.initBatch();
@@ -108,7 +109,7 @@ public class TestGuiFrame implements LFJGFrame {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        batch.addText("Hello world!", 200, 200, 1f, new Color(255,0,255,100));
+        batch.addText("Hello world!", 200, 200, 1f, new Color(255, 0, 255, 100));
 
         batch.flushBatch();
     }
