@@ -9,7 +9,7 @@ public class FXAA extends EffectBase {
     private Vector2f resolution;
 
     public FXAA(Vector2f resolution) {
-        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/FXAA.fsh"), true, 17, "FXAA");
+        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/FXAA.fsh"), true, 17, "FastApproximateAntiAliasing");
 
         this.resolution = resolution;
     }

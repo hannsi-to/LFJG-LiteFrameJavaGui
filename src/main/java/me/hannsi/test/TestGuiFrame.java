@@ -127,7 +127,7 @@ public class TestGuiFrame implements LFJGFrame {
         frame.setFrameSettingValue(VSyncSetting.class, VSyncType.VSyncOn);
         frame.setFrameSettingValue(FloatingSetting.class, false);
         frame.setFrameSettingValue(IconSetting.class, new ResourcesLocation("salad_x32.png"));
-        frame.setFrameSettingValue(AntiAliasingSetting.class, AntiAliasingType.MSAA);
+        frame.setFrameSettingValue(AntiAliasingSetting.class, AntiAliasingType.OFF);
     }
 
     @EventHandler
