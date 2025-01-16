@@ -12,7 +12,6 @@ import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.font.GLFont;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
-import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRoundedRect;
 import me.hannsi.lfjg.render.openGL.system.font.FontCache;
 import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.utils.graphics.color.Color;
@@ -66,7 +65,7 @@ public class TestGuiFrame implements LFJGFrame {
         glFont.setProjectionMatrix(projection.getProjMatrix());
         glFont.setResolution(resolution);
         glFont.setFont(fontCache, font, 64);
-        glFont.font("Kazubonバカ", 200, 200, 2f, Color.of(255,255,255, 255));
+        glFont.font("Kazubonバカ", 200, 200, 2f, Color.of(255, 255, 255, 255));
 
 //        gl2 = new GLRect("test2");
 //        gl2.setProjectionMatrix(projection.getProjMatrix());
@@ -94,7 +93,7 @@ public class TestGuiFrame implements LFJGFrame {
 //        effectCache.createCache(new Clipping2DRect(resolution, 0, 0, 500, 500), gl1);
 
         effectCache.createCache(new DrawObject(resolution), glFont);
-        effectCache.createCache(new FXAA(resolution),glFont);
+        effectCache.createCache(new FXAA(resolution), glFont);
 
 //        effectCache.createCache(new Texture(resolution, textureCache, image), gl2);
 //        effectCache.createCache(new DrawObject(resolution), gl2);
