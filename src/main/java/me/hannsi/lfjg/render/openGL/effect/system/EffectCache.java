@@ -48,7 +48,15 @@ public class EffectCache {
         effectBase.getFrameBuffer().setGlObject(glObject);
         this.effectBases.put(effectBase, glObject.getObjectId());
 
-        DebugLog.debug(getClass(), "Create effect cache: " + effectBase.getName() + " | Object name: " + glObject.getName());
+        String logMessage = "\n---------- EffectCache Debug Message ----------" +
+                "\n\tSource: EffectCache" +
+                "\n\tType: Cache Creation" +
+                "\n\tID: " + glObject.getObjectId() +
+                "\n\tSeverity: Info" +
+                "\n\tMessage: Create effect cache: " + effectBase.getName() + " | Object name: " + glObject.getName() +
+                "\n------------------------------------------\n";
+
+        DebugLog.debug(getClass(), logMessage);
     }
 
     public void push(GLObject glObject) {

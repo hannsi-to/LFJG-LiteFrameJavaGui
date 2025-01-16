@@ -33,7 +33,15 @@ public class FontCache {
 
         fontMap.put(fontPath, fontData);
 
-        DebugLog.debug(getClass(), "Create font cache: " + fontPath.getPath() + " | Font size: " + fontSize);
+        String logMessage = "\n---------- FontCache Debug Message ----------" +
+                "\n\tSource: FontCache" +
+                "\n\tType: Cache Creation" +
+                "\n\tID: " + fontPath.hashCode() +
+                "\n\tSeverity: Info" +
+                "\n\tMessage: Create font cache: " + fontPath.getPath() + " | Font size: " + fontSize +
+                "\n------------------------------------------\n";
+
+        DebugLog.debug(getClass(), logMessage);
     }
 
     public void cleanup() {
