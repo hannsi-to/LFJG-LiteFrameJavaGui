@@ -12,18 +12,29 @@ public class Texture extends EffectBase {
     private TextureCache textureCache;
     private ResourcesLocation resourcesLocation;
     private TextureLoader textureLoader;
+    private int textureId;
 
     public Texture(Vector2f resolution, TextureCache textureCache, ResourcesLocation resourcesLocation) {
-        super(resolution,3, "Texture", (Class<GLObject>) null);
+        super(resolution, 3, "Texture", (Class<GLObject>) null);
 
         this.textureCache = textureCache;
         this.resourcesLocation = resourcesLocation;
         this.textureLoader = textureCache.getTexture(resourcesLocation);
     }
 
+    public Texture(Vector2f resolution, int textureId) {
+        super(resolution, 3, "Texture", (Class<GLObject>) null);
+
+        this.textureId = textureId;
+    }
+
     @Override
     public void pop(GLObject baseGLObject) {
-        textureLoader.unbind();
+        if (textureLoader != null) {
+            textureLoader.unbind();
+        } else {
+            GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
+        }
 
         super.pop(baseGLObject);
     }
@@ -32,7 +43,11 @@ public class Texture extends EffectBase {
     public void push(GLObject baseGLObject) {
         baseGLObject.getGlUtil().addGLTarget(GL30.GL_TEXTURE_2D);
         GL30.glActiveTexture(GL30.GL_TEXTURE0);
-        textureLoader.bind();
+        if (textureLoader != null) {
+            textureLoader.bind();
+        } else {
+            GL30.glBindTexture(GL30.GL_TEXTURE_2D, textureId);
+        }
 
         super.push(baseGLObject);
     }

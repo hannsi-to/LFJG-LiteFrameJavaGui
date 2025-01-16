@@ -171,7 +171,7 @@ public class Batch {
         size += 4;
     }
 
-    public void addText(String text, int x, int y, float scale, Color color) {
+    public void addText(String text, float x, float y, float scale, Color color) {
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
 
@@ -182,7 +182,7 @@ public class Batch {
             }
 
             float xPos = x;
-            addCharacter(xPos, (float) y, scale, charInfo, color);
+            addCharacter(xPos, y, scale, charInfo, color);
             x += (int) (charInfo.getWidth() * scale);
         }
     }

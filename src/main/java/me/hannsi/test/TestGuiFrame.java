@@ -7,8 +7,9 @@ import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
+import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
-import me.hannsi.lfjg.render.openGL.renderers.font.Batch;
+import me.hannsi.lfjg.render.openGL.renderers.font.GLFont;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.system.font.FontCache;
 import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
@@ -22,12 +23,10 @@ import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.utils.type.types.VSyncType;
 import org.joml.Vector2f;
 
-import static org.lwjgl.opengl.GL11.*;
-
 public class TestGuiFrame implements LFJGFrame {
     GLRect gl1;
+    GLFont glFont;
     //  GLRect gl2;
-    Batch batch;
     GLObjectCache glObjectCache;
     TextureCache textureCache;
     EffectCache effectCache;
@@ -55,15 +54,17 @@ public class TestGuiFrame implements LFJGFrame {
         ResourcesLocation font = new ResourcesLocation("font/default.ttf");
         fontCache.createCache(font, 64);
 
-        batch = new Batch(projection);
-        batch.font = fontCache.getFont(font, 64);
-        batch.initBatch();
-
         gl1 = new GLRect("test1");
         gl1.setProjectionMatrix(projection.getProjMatrix());
         gl1.setResolution(resolution);
-//        gl1.uv(0, 0, 1, 1);
-        gl1.rectWH(200, 200, batch.getFontWidth("Hello world!"), batch.getFontHeight(), new Color(255, 255, 255, 255));
+        gl1.uv(0, 0, 1, 1);
+        gl1.rectWH(0, 0, resolution.x(), resolution.y(), new Color(0, 0, 0, 0));
+
+        glFont = new GLFont("Font");
+        glFont.setProjectionMatrix(projection.getProjMatrix());
+        glFont.setResolution(resolution);
+        glFont.setFont(fontCache, font, 64);
+        glFont.font("Hello World!!", 200, 200, 1f, Color.of(0, 0, 0, 255));
 
 //        gl2 = new GLRect("test2");
 //        gl2.setProjectionMatrix(projection.getProjMatrix());
@@ -76,7 +77,7 @@ public class TestGuiFrame implements LFJGFrame {
 
         effectCache = new EffectCache();
 
-//        effectCache.createCache(new Texture(resolution, textureCache, image), gl1);
+        effectCache.createCache(new Texture(resolution, textureCache, image), gl1);
         effectCache.createCache(new DrawObject(resolution), gl1);
 //        effectCache.createCache(new BoxBlur(resolution, 10, 10), gl1);
 //        effectCache.createCache(new DiagonalClipping(resolution, resolution.x / 2, resolution.y / 2, (float) Math.toRadians(0), 1.0f, true), gl1);
@@ -90,29 +91,26 @@ public class TestGuiFrame implements LFJGFrame {
 //        effectCache.createCache(new ColorCorrection(resolution, 0.5f, 0, 0, 0), gl1);
 //        effectCache.createCache(new Clipping2DRect(resolution, 0, 0, 500, 500), gl1);
 
+        effectCache.createCache(new DrawObject(resolution), glFont);
+
 //        effectCache.createCache(new Texture(resolution, textureCache, image), gl2);
 //        effectCache.createCache(new DrawObject(resolution), gl2);
 //        effectCache.createCache(new GaussianBlurHorizontal(resolution, 10f), gl2);
 //        effectCache.createCache(new GaussianBlurVertical(resolution, 10f), gl2);
 
         gl1.setEffectCache(effectCache);
+        glFont.setEffectCache(effectCache);
 //        gl2.setEffectCache(effectCache);
 
         glObjectCache = new GLObjectCache(resolution);
 //        glObjectCache.createCache(gl2);
         glObjectCache.createCache(gl1);
+        glObjectCache.createCache(glFont);
     }
 
     @Override
     public void drawFrame(long nvg) {
         glObjectCache.draw();
-
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        batch.addText("Hello world!", 200, 200, 1f, new Color(255, 0, 255, 100));
-
-        batch.flushBatch();
     }
 
     @Override

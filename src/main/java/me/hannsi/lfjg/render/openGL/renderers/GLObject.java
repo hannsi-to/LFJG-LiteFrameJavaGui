@@ -73,13 +73,13 @@ public class GLObject {
 
         modelMatrix = new Matrix4f();
         viewMatrix = new Matrix4f();
+
+        glUtil = new GLUtil();
     }
 
     public void draw() {
         frameBuffer.bindFrameBuffer();
         GL30.glPushMatrix();
-
-        glUtil = new GLUtil();
 
         shaderProgram.bind();
 
