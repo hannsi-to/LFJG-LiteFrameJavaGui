@@ -26,7 +26,15 @@ public class TextureCache {
     public void createCache(ResourcesLocation texturePath) {
         textureMap.put(texturePath, new TextureLoader(texturePath, TextureLoaderType.STBImage));
 
-        DebugLog.debug(getClass(), "Create texture cache: " + texturePath.getPath());
+        String logMessage = "\n---------- TextureCache Debug Message ----------" +
+                "\n\tSource: TextureCache" +
+                "\n\tType: Cache Creation" +
+                "\n\tID: " + texturePath.hashCode() +
+                "\n\tSeverity: Info" +
+                "\n\tMessage: Create texture cache: " + texturePath.getPath() +
+                "\n------------------------------------------\n";
+
+        DebugLog.debug(getClass(), logMessage);
     }
 
     public TextureLoader getTexture(ResourcesLocation texturePath) {

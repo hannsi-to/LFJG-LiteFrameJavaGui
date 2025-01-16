@@ -18,7 +18,15 @@ public class GLObjectCache {
     public void createCache(GLObject glObject) {
         glObjects.add(glObject);
 
-        DebugLog.debug(getClass(), "Create object cache: " + glObject.getName());
+        String logMessage = "\n---------- GLObjectCache Debug Message ----------" +
+                "\n\tSource: GLObjectCache" +
+                "\n\tType: Cache Creation" +
+                "\n\tID: " + glObject.getObjectId() +
+                "\n\tSeverity: Info" +
+                "\n\tMessage: Create object cache: " + glObject.getName() +
+                "\n------------------------------------------\n";
+
+        DebugLog.debug(getClass(), logMessage);
     }
 
     public void draw() {
