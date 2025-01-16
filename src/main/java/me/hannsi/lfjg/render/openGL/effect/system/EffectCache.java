@@ -16,7 +16,7 @@ public class EffectCache {
         LinkedHashMap<K, V> resultLinkedHashMap = new LinkedHashMap<>();
 
         for (Map.Entry<K, V> entry : originalMap.entrySet()) {
-            if (entry.getValue() == value) {
+            if (entry.getValue().equals(value)) {
                 resultLinkedHashMap.put(entry.getKey(), entry.getValue());
             }
         }
@@ -48,20 +48,14 @@ public class EffectCache {
         effectBase.getFrameBuffer().setGlObject(glObject);
         this.effectBases.put(effectBase, glObject.getObjectId());
 
-        String logMessage = "\n---------- EffectCache Debug Message ----------" +
-                "\n\tSource: EffectCache" +
-                "\n\tType: Cache Creation" +
-                "\n\tID: " + glObject.getObjectId() +
-                "\n\tSeverity: Info" +
-                "\n\tMessage: Create effect cache: " + effectBase.getName() + " | Object name: " + glObject.getName() +
-                "\n------------------------------------------\n";
+        String logMessage = "\n---------- EffectCache Debug Message ----------" + "\n\tSource: EffectCache" + "\n\tType: Cache Creation" + "\n\tID: " + glObject.getObjectId() + "\n\tSeverity: Info" + "\n\tMessage: Create effect cache: " + effectBase.getName() + " | Object name: " + glObject.getName() + "\n------------------------------------------\n";
 
         DebugLog.debug(getClass(), logMessage);
     }
 
     public void push(GLObject glObject) {
         for (Map.Entry<EffectBase, Long> effectBase : effectBases.entrySet()) {
-            if (glObject.getObjectId() != effectBase.getValue()) {
+            if (!(effectBase.getValue().equals(glObject.getObjectId()))) {
                 continue;
             }
 
@@ -71,7 +65,7 @@ public class EffectCache {
 
     public void pop(GLObject glObject) {
         for (Map.Entry<EffectBase, Long> effectBase : effectBases.entrySet()) {
-            if (glObject.getObjectId() != effectBase.getValue()) {
+            if (!(effectBase.getValue().equals(glObject.getObjectId()))) {
                 continue;
             }
 
@@ -81,7 +75,7 @@ public class EffectCache {
 
     public void frameBufferPush(GLObject glObject) {
         for (Map.Entry<EffectBase, Long> effectBase : effectBases.entrySet()) {
-            if (glObject.getObjectId() != effectBase.getValue()) {
+            if (!(effectBase.getValue().equals(glObject.getObjectId()))) {
                 continue;
             }
 
@@ -93,7 +87,7 @@ public class EffectCache {
 
     public void frameBufferPop(GLObject glObject) {
         for (Map.Entry<EffectBase, Long> effectBase : effectBases.entrySet()) {
-            if (glObject.getObjectId() != effectBase.getValue()) {
+            if (!(effectBase.getValue().equals(glObject.getObjectId()))) {
                 continue;
             }
 
@@ -111,7 +105,7 @@ public class EffectCache {
         int maxSize = new ArrayList<>(onlyGlObjectEffectBases.entrySet()).size() - 1;
 
         for (Map.Entry<EffectBase, Long> effectBase : onlyGlObjectEffectBases.entrySet()) {
-            if (glObject.getObjectId() != effectBase.getValue()) {
+            if (!(effectBase.getValue().equals(glObject.getObjectId()))) {
                 continue;
             }
 

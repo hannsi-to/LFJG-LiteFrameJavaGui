@@ -2,7 +2,7 @@ package me.hannsi.lfjg.render.openGL.renderers;
 
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
-import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
+import me.hannsi.lfjg.render.openGL.system.rendering.Id;
 import me.hannsi.lfjg.render.openGL.system.rendering.Mesh;
 import me.hannsi.lfjg.render.openGL.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
@@ -56,7 +56,7 @@ public class GLObject {
         this.drawType = null;
         this.mesh = null;
         this.frameBuffer = null;
-        this.objectId = ++GLObjectCache.glLatestObjectId;
+        this.objectId = ++Id.glLatestObjectId;
     }
 
     public void create() {
@@ -125,8 +125,6 @@ public class GLObject {
         vaoRendering.cleanup();
         shaderProgram.cleanup();
         effectCache.cleanup(objectId);
-
-        GLObjectCache.glLatestObjectId--;
     }
 
     public void addGLTarget(int target) {
