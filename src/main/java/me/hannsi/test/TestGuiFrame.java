@@ -80,6 +80,7 @@ public class TestGuiFrame implements LFJGFrame {
 
         effectCache.createCache(new Texture(resolution, textureCache, image), gl1);
         effectCache.createCache(new DrawObject(resolution), gl1);
+        effectCache.createCache(new FXAA(resolution, true), glFont);
 //        effectCache.createCache(new BoxBlur(resolution, 10, 10), gl1);
 //        effectCache.createCache(new DiagonalClipping(resolution, resolution.x / 2, resolution.y / 2, (float) Math.toRadians(0), 1.0f, true), gl1);
 //        effectCache.createCache(new EdgeExtraction(resolution, 0.5f, 0.1f, true, false, new Color(255, 255, 0, 255)), gl1);
@@ -93,7 +94,7 @@ public class TestGuiFrame implements LFJGFrame {
 //        effectCache.createCache(new Clipping2DRect(resolution, 0, 0, 500, 500), gl1);
 
         effectCache.createCache(new DrawObject(resolution), glFont);
-        effectCache.createCache(new FXAA(resolution), glFont);
+//        effectCache.createCache(new FXAA(resolution,true), glFont);
 
 //        effectCache.createCache(new Texture(resolution, textureCache, image), gl2);
 //        effectCache.createCache(new DrawObject(resolution), gl2);
@@ -106,7 +107,7 @@ public class TestGuiFrame implements LFJGFrame {
 
         glObjectCache = new GLObjectCache(resolution);
 //        glObjectCache.createCache(gl2);
-//        glObjectCache.createCache(gl1);
+        glObjectCache.createCache(gl1);
         glObjectCache.createCache(glFont);
     }
 
