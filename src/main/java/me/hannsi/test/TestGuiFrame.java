@@ -6,8 +6,8 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
-import me.hannsi.lfjg.render.openGL.effect.effects.ChromaticAberration;
 import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
+import me.hannsi.lfjg.render.openGL.effect.effects.Monochrome;
 import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.font.GLFont;
@@ -80,7 +80,8 @@ public class TestGuiFrame implements LFJGFrame {
 
         effectCache.createCache(new Texture(resolution, textureCache, image), gl1);
         effectCache.createCache(new DrawObject(resolution), gl1);
-        effectCache.createCache(new ChromaticAberration(resolution, 0.002f, 90, 5f, ChromaticAberration.AberrationType.RedBlueB), gl1);
+        effectCache.createCache(new Monochrome(resolution, 1f, new Color(255, 0, 255), true), gl1);
+//        effectCache.createCache(new ChromaticAberration(resolution, 0.002f, 90, 5f, ChromaticAberration.AberrationType.RedBlueB), gl1);
 //        effectCache.createCache(new Inversion(resolution, false, false, false, true, false), gl1);
 //        effectCache.createCache(new LensBlur(resolution, 10.0f, 3.0f), gl1);
 //        effectCache.createCache(new DirectionalBlur(resolution, 10f, (float) Math.toRadians(45)), gl1);
