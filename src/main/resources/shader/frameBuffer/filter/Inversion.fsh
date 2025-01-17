@@ -15,7 +15,6 @@ uniform bool invertAlpha;
 #include "shader/frameBuffer/util/MathUtil.glsl"
 
 void main() {
-    // テクスチャ座標の反転
     vec2 texCoords = outTexture;
     if (flipVertical) {
         texCoords.y = 1.0 - texCoords.y;
@@ -24,22 +23,18 @@ void main() {
         texCoords.x = 1.0 - texCoords.x;
     }
 
-    // テクスチャから色を取得
     vec4 color = texture(textureSampler, texCoords);
 
-    // 輝度反転
     if (invertBrightness) {
-        color.rgb = vec3(1.0) - color.rgb;// RGB値を反転
+        color.rgb = vec3(1.0) - color.rgb;
     }
 
-    // 色相反転
     if (invertHue) {
         vec3 hsv = rgb2hsv(color.rgb);
-        hsv.x = mod(hsv.x + 0.5, 1.0);// 180度反転
+        hsv.x = mod(hsv.x + 0.5, 1.0);
         color.rgb = hsv2rgb(hsv);
     }
 
-    // 透明度反転
     if (invertAlpha) {
         color.a = color.a > 0.5 ? 0.0 : 1.0;
     }
