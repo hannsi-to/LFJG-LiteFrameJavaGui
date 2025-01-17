@@ -40,3 +40,32 @@ vec3 rgb2hsv(vec3 color) {
     float saturation = (cMax > 0.0) ? delta / cMax : 0.0;
     return vec3(hue, saturation, cMax);
 }
+
+vec3 hsv2rgb(vec3 c) {
+    float h = c.x * 6.0;
+    float s = c.y;
+    float v = c.z;
+
+    float i = floor(h);
+    float f = h - i;
+    float p = v * (1.0 - s);
+    float q = v * (1.0 - f * s);
+    float t = v * (1.0 - (1.0 - f) * s);
+
+    vec3 rgb;
+    if (i == 0.0) {
+        rgb = vec3(v, t, p);
+    } else if (i == 1.0) {
+        rgb = vec3(q, v, p);
+    } else if (i == 2.0) {
+        rgb = vec3(p, v, t);
+    } else if (i == 3.0) {
+        rgb = vec3(p, q, v);
+    } else if (i == 4.0) {
+        rgb = vec3(t, p, v);
+    } else {
+        rgb = vec3(v, p, q);
+    }
+
+    return rgb;
+}

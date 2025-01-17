@@ -7,7 +7,7 @@ import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
-import me.hannsi.lfjg.render.openGL.effect.effects.LensBlur;
+import me.hannsi.lfjg.render.openGL.effect.effects.Inversion;
 import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.font.GLFont;
@@ -27,7 +27,7 @@ import org.joml.Vector2f;
 public class TestGuiFrame implements LFJGFrame {
     GLRect gl1;
     GLFont glFont;
-    //  GLRect gl2;
+    //    GLRect gl2;
     GLObjectCache glObjectCache;
     TextureCache textureCache;
     EffectCache effectCache;
@@ -80,7 +80,8 @@ public class TestGuiFrame implements LFJGFrame {
 
         effectCache.createCache(new Texture(resolution, textureCache, image), gl1);
         effectCache.createCache(new DrawObject(resolution), gl1);
-        effectCache.createCache(new LensBlur(resolution, 10.0f, 3.0f), gl1);
+        effectCache.createCache(new Inversion(resolution, false, false, false, true, false), gl1);
+//        effectCache.createCache(new LensBlur(resolution, 10.0f, 3.0f), gl1);
 //        effectCache.createCache(new DirectionalBlur(resolution, 10f, (float) Math.toRadians(45)), gl1);
 //        effectCache.createCache(new RadialBlur(resolution, 1f, resolution.x / 2, resolution.y / 2), gl1);
 //        effectCache.createCache(new FXAA(resolution, true), glFont);
