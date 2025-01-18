@@ -53,7 +53,7 @@ vec4 blendDifference(vec4 base, vec4 blend) {
     return abs(base - blend);
 }
 
-vec4 blend(vec4 base, vec4 blend, int mode){
+vec4 blend(vec4 baseColor, vec4 blendColor, int mode){
     vec4 resultColor;
 
     if (blendMode == 0) {
