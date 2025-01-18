@@ -7,7 +7,7 @@ import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
-import me.hannsi.lfjg.render.openGL.effect.effects.Monochrome;
+import me.hannsi.lfjg.render.openGL.effect.effects.Gradation;
 import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.font.GLFont;
@@ -18,10 +18,7 @@ import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import me.hannsi.lfjg.utils.type.types.AntiAliasingType;
-import me.hannsi.lfjg.utils.type.types.MonitorType;
-import me.hannsi.lfjg.utils.type.types.ProjectionType;
-import me.hannsi.lfjg.utils.type.types.VSyncType;
+import me.hannsi.lfjg.utils.type.types.*;
 import org.joml.Vector2f;
 
 public class TestGuiFrame implements LFJGFrame {
@@ -80,7 +77,8 @@ public class TestGuiFrame implements LFJGFrame {
 
         effectCache.createCache(new Texture(resolution, textureCache, image), gl1);
         effectCache.createCache(new DrawObject(resolution), gl1);
-        effectCache.createCache(new Monochrome(resolution, 1f, new Color(255, 0, 255), true), gl1);
+        effectCache.createCache(new Gradation(resolution, resolution.x / 2, resolution.y / 2, (float) Math.toRadians(90), 0.1f, Gradation.ShapeMode.Rectangle, BlendType.Multiply, new Color(0, 0, 0, 255), new Color(255, 255, 255, 255), 1f), gl1);
+//        effectCache.createCache(new Monochrome(resolution, 1f, new Color(255, 0, 255), true), gl1);
 //        effectCache.createCache(new ChromaticAberration(resolution, 0.002f, 90, 5f, ChromaticAberration.AberrationType.RedBlueB), gl1);
 //        effectCache.createCache(new Inversion(resolution, false, false, false, true, false), gl1);
 //        effectCache.createCache(new LensBlur(resolution, 10.0f, 3.0f), gl1);
