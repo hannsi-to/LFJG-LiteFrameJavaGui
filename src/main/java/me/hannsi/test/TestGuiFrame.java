@@ -16,6 +16,7 @@ import me.hannsi.lfjg.render.openGL.system.font.FontCache;
 import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
+import me.hannsi.lfjg.utils.graphics.video.VideoFrameExtractor;
 import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.*;
@@ -43,6 +44,10 @@ public class TestGuiFrame implements LFJGFrame {
 
     @Override
     public void init() {
+        VideoFrameExtractor videoFrameExtractor = new VideoFrameExtractor(new ResourcesLocation("video/test.mp4"), new ResourcesLocation("video/test_extract"));
+        Thread thread = new Thread(videoFrameExtractor::init);
+        thread.start();
+
         IFrame.eventManager.register(this);
 
         Projection projection = new Projection(ProjectionType.OrthographicProjection, frame.getWindowWidth(), frame.getWindowHeight());

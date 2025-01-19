@@ -7,6 +7,13 @@ import java.util.List;
 import java.util.Random;
 
 public class StringUtil {
+    public static String getFirstNCharacters(String str, int n) {
+        if (str == null || n <= 0 || n > str.length()) {
+            return "";
+        }
+        return str.substring(0, n);
+    }
+
     public static String linkList(String[] list, String space) {
         String result = "";
 
@@ -101,6 +108,14 @@ public class StringUtil {
 
     public static String addLastChar(String str, char addStr) {
         return str + addStr;
+    }
+
+    public static String addInsertChar(String str, String addStr) {
+        return addStr + str;
+    }
+
+    public static String addInsertChar(String str, char addStr) {
+        return addStr + str;
     }
 
     public static String fillIfEmpty(String str, String fillText) {
