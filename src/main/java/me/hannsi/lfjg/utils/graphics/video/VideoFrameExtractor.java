@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.utils.graphics.video;
 
 import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.utils.graphics.audio.AudioFrameData;
 import me.hannsi.lfjg.utils.math.StringUtil;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.time.TimeCalculator;
@@ -10,6 +11,8 @@ import org.bytedeco.javacv.Java2DFrameConverter;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.nio.ShortBuffer;
+import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -19,12 +22,16 @@ public class VideoFrameExtractor {
     private FileLocation videLocation;
     private FileLocation outputLocation;
 
+    private final LinkedHashMap<VideoFrameData, AudioFrameData> videoCache;
+
     public VideoFrameExtractor(FileLocation videLocation, FileLocation outputLocation) {
         this.videLocation = videLocation;
         this.outputLocation = outputLocation;
+
+        videoCache = new LinkedHashMap<>();
     }
 
-    public void init() {
+    public void createVideoCache() {
         DebugLog.debug(getClass(), "Start extract video frame: " + videLocation.getPath());
         long tookTime = TimeCalculator.calculate(() -> {
 
@@ -40,6 +47,17 @@ public class VideoFrameExtractor {
 
                         while ((frame = grabber.grab()) != null) {
                             BufferedImage image = converter.convert(frame);
+                            ShortBuffer samplesBuffer = null;
+                            int sampleRate = -1;
+                            int channels = -1;
+
+                            if ((frame = grabber.grabSamples()) != null) {
+                                samplesBuffer = (ShortBuffer) frame.samples[0];
+                                sampleRate = grabber.getSampleRate();
+                                channels = grabber.getAudioChannels();
+                            }
+
+                            videoCache.put(new VideoFrameData(image), new AudioFrameData(samplesBuffer, sampleRate, channels));
 
                             frameNumber++;
 

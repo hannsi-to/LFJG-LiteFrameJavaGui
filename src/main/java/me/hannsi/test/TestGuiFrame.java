@@ -45,7 +45,7 @@ public class TestGuiFrame implements LFJGFrame {
     @Override
     public void init() {
         VideoFrameExtractor videoFrameExtractor = new VideoFrameExtractor(new ResourcesLocation("video/test.mp4"), new ResourcesLocation("video/test_extract"));
-        Thread thread = new Thread(videoFrameExtractor::init);
+        Thread thread = new Thread(videoFrameExtractor::createVideoCache);
         thread.start();
 
         IFrame.eventManager.register(this);
