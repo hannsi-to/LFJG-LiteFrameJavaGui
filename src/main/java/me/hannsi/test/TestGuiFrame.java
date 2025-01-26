@@ -1,5 +1,9 @@
 package me.hannsi.test;
 
+import me.hannsi.lfjg.audio.SoundBuffer;
+import me.hannsi.lfjg.audio.SoundCache;
+import me.hannsi.lfjg.audio.SoundListener;
+import me.hannsi.lfjg.audio.SoundSource;
 import me.hannsi.lfjg.event.events.user.*;
 import me.hannsi.lfjg.event.system.EventHandler;
 import me.hannsi.lfjg.frame.Frame;
@@ -13,6 +17,7 @@ import me.hannsi.lfjg.render.openGL.effect.effects.Translate;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.font.GLFont;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
+import me.hannsi.lfjg.render.openGL.system.Camera;
 import me.hannsi.lfjg.render.openGL.system.font.FontCache;
 import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.utils.graphics.color.Color;
@@ -24,6 +29,8 @@ import me.hannsi.lfjg.utils.math.animation.EasingUtil;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.*;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.lwjgl.openal.AL11;
 
 public class TestGuiFrame implements LFJGFrame {
     GLRect gl1;
@@ -35,6 +42,8 @@ public class TestGuiFrame implements LFJGFrame {
     EffectCache glFontEffectCache;
     FontCache fontCache;
     Vector2f resolution;
+
+    SoundCache soundCache;
 
     EasingUtil easingUtil;
 
@@ -59,18 +68,22 @@ public class TestGuiFrame implements LFJGFrame {
         Projection projection = new Projection(ProjectionType.OrthographicProjection, frame.getWindowWidth(), frame.getWindowHeight());
         resolution = new Vector2f(frame.getWindowWidth(), frame.getWindowHeight());
 
+        Camera camera = new Camera();
+
         fontCache = new FontCache();
         ResourcesLocation font = new ResourcesLocation("font/default.ttf");
         fontCache.createCache(font, 64);
 
         gl1 = new GLRect("test1");
         gl1.setProjectionMatrix(projection.getProjMatrix());
+        gl1.setViewMatrix(camera.getViewMatrix());
         gl1.setResolution(resolution);
         gl1.uv(0, 0, 1, 1);
         gl1.rectWH(0, 0, resolution.x(), resolution.y(), new Color(0, 0, 0, 0));
 
         glFont = new GLFont("Font");
         glFont.setProjectionMatrix(projection.getProjMatrix());
+        glFont.setViewMatrix(camera.getViewMatrix());
         glFont.setResolution(resolution);
         glFont.setFont(fontCache, font, 64);
         glFont.font("Kazubonバカ", 0, 200, 2f, Color.of(255, 255, 255, 255));
@@ -129,6 +142,17 @@ public class TestGuiFrame implements LFJGFrame {
 
         this.easingUtil = new EasingUtil(Easing.easeInSine);
         this.easingUtil.reset();
+
+        soundCache = new SoundCache();
+        soundCache.setAttenuationModel(AL11.AL_EXPONENT_DISTANCE);
+        soundCache.setListener(new SoundListener(new Vector3f(0, 0, 0)));
+
+        SoundBuffer buffer = new SoundBuffer(new ResourcesLocation("sound/test.ogg"));
+        soundCache.addSoundBuffer(buffer);
+        SoundSource playerSoundSource = new SoundSource(false, false);
+        playerSoundSource.setPosition(new Vector3f(0, 0, 0));
+        playerSoundSource.setBuffer(buffer.getBufferId());
+        soundCache.addSoundSource("test", playerSoundSource);
     }
 
     @Override
@@ -142,12 +166,18 @@ public class TestGuiFrame implements LFJGFrame {
         Translate translate = (Translate) glObjectCache.getGLObject(glFont.getObjectId()).getEffectBase(1);
         translate.setX(value * resolution.x());
 
+        soundCache.getSoundSource("test").setGain(1 * value);
+        soundCache.playSoundSource("test");
+
         glObjectCache.draw();
     }
 
     @Override
     public void stopFrame() {
         glObjectCache.cleanup();
+        textureCache.cleanup();
+        fontCache.cleanup();
+        soundCache.cleanup();
     }
 
     @Override

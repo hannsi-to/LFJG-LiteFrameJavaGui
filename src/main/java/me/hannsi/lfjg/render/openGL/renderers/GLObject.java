@@ -125,7 +125,7 @@ public class GLObject {
     public void cleanup() {
         vaoRendering.cleanup();
         shaderProgram.cleanup();
-        effectCache.cleanup(objectId);
+        effectCache.cleanup();
     }
 
     public EffectBase getEffectBase(int index) {

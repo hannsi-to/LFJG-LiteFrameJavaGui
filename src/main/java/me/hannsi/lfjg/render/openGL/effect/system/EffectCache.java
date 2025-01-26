@@ -105,7 +105,7 @@ public class EffectCache {
         return keys.get(index);
     }
 
-    public void cleanup(long objectId) {
+    public void cleanup() {
         effectBases.clear();
     }
 
