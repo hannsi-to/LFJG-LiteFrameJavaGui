@@ -34,6 +34,15 @@ public class GLObjectCache {
         }
     }
 
+    public GLObject getGLObject(long objectId) {
+        for (GLObject glObject : glObjects) {
+            if (glObject.getObjectId() == objectId) {
+                return glObject;
+            }
+        }
+        return null;
+    }
+
     public List<GLObject> getGlObjects() {
         return glObjects;
     }

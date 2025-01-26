@@ -2,26 +2,22 @@ package me.hannsi.lfjg.render.openGL.effect.system;
 
 import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
+import me.hannsi.lfjg.render.openGL.system.rendering.Id;
 
 import java.util.*;
 
 public class EffectCache {
+    public static long latestEffectCacheId;
     private LinkedHashMap<EffectBase, Long> effectBases;
 
     public EffectCache() {
         this.effectBases = new LinkedHashMap<>();
+        latestEffectCacheId = Id.initialEffectCacheId;
     }
 
     private static <K, V> LinkedHashMap<K, V> setHashMap(LinkedHashMap<K, V> originalMap, V value) {
-        LinkedHashMap<K, V> resultLinkedHashMap = new LinkedHashMap<>();
 
-        for (Map.Entry<K, V> entry : originalMap.entrySet()) {
-            if (entry.getValue().equals(value)) {
-                resultLinkedHashMap.put(entry.getKey(), entry.getValue());
-            }
-        }
-
-        return resultLinkedHashMap;
+        return new LinkedHashMap<>(originalMap);
     }
 
     private static <K, V> Map.Entry<K, V> getLinkedHashMapEntry(LinkedHashMap<K, V> originalMap, int index) {
@@ -46,7 +42,7 @@ public class EffectCache {
     public void createCache(EffectBase effectBase, GLObject glObject) {
         effectBase.getFrameBuffer().setUesStencil(true);
         effectBase.getFrameBuffer().setGlObject(glObject);
-        this.effectBases.put(effectBase, glObject.getObjectId());
+        this.effectBases.put(effectBase, latestEffectCacheId++);
 
         String logMessage = "\n---------- EffectCache Debug Message ----------" + "\n\tSource: EffectCache" + "\n\tType: Cache Creation" + "\n\tID: " + glObject.getObjectId() + "\n\tSeverity: Info" + "\n\tMessage: Create effect cache: " + effectBase.getName() + " | Object name: " + glObject.getName() + "\n------------------------------------------\n";
 
@@ -55,30 +51,18 @@ public class EffectCache {
 
     public void push(GLObject glObject) {
         for (Map.Entry<EffectBase, Long> effectBase : effectBases.entrySet()) {
-            if (!(effectBase.getValue().equals(glObject.getObjectId()))) {
-                continue;
-            }
-
             effectBase.getKey().push(glObject);
         }
     }
 
     public void pop(GLObject glObject) {
         for (Map.Entry<EffectBase, Long> effectBase : effectBases.entrySet()) {
-            if (!(effectBase.getValue().equals(glObject.getObjectId()))) {
-                continue;
-            }
-
             effectBase.getKey().pop(glObject);
         }
     }
 
     public void frameBufferPush(GLObject glObject) {
         for (Map.Entry<EffectBase, Long> effectBase : effectBases.entrySet()) {
-            if (!(effectBase.getValue().equals(glObject.getObjectId()))) {
-                continue;
-            }
-
             effectBase.getKey().frameBufferPush(glObject);
         }
 
@@ -87,10 +71,6 @@ public class EffectCache {
 
     public void frameBufferPop(GLObject glObject) {
         for (Map.Entry<EffectBase, Long> effectBase : effectBases.entrySet()) {
-            if (!(effectBase.getValue().equals(glObject.getObjectId()))) {
-                continue;
-            }
-
             effectBase.getKey().frameBufferPop(glObject);
         }
 
@@ -100,20 +80,14 @@ public class EffectCache {
     public void frameBuffer(GLObject glObject) {
         int index = 0;
 
-        LinkedHashMap<EffectBase, Long> onlyGlObjectEffectBases = setHashMap(effectBases, glObject.getObjectId());
+        int maxSize = new ArrayList<>(effectBases.entrySet()).size() - 1;
 
-        int maxSize = new ArrayList<>(onlyGlObjectEffectBases.entrySet()).size() - 1;
-
-        for (Map.Entry<EffectBase, Long> effectBase : onlyGlObjectEffectBases.entrySet()) {
-            if (!(effectBase.getValue().equals(glObject.getObjectId()))) {
-                continue;
-            }
-
+        for (Map.Entry<EffectBase, Long> effectBase : effectBases.entrySet()) {
             if (index == maxSize) {
                 effectBase.getKey().setUniform(glObject);
                 effectBase.getKey().frameBuffer(glObject);
             } else {
-                Map.Entry<EffectBase, Long> nextEffectBase = getLinkedHashMapEntry(onlyGlObjectEffectBases, index + 1);
+                Map.Entry<EffectBase, Long> nextEffectBase = getLinkedHashMapEntry(effectBases, index + 1);
 
                 nextEffectBase.getKey().frameBufferPush(glObject);
                 effectBase.getKey().setUniform(glObject);
@@ -123,6 +97,12 @@ public class EffectCache {
 
             index++;
         }
+    }
+
+    public EffectBase getEffectBase(int index) {
+        List<EffectBase> keys = new ArrayList<>(effectBases.keySet());
+
+        return keys.get(index);
     }
 
     public void cleanup(long objectId) {

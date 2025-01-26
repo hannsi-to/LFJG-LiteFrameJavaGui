@@ -28,7 +28,8 @@ public class TestGuiFrame implements LFJGFrame {
     //    GLRect gl2;
     GLObjectCache glObjectCache;
     TextureCache textureCache;
-    EffectCache effectCache;
+    EffectCache gl1EffectCache;
+    EffectCache glFontEffectCache;
     FontCache fontCache;
     Vector2f resolution;
 
@@ -78,11 +79,12 @@ public class TestGuiFrame implements LFJGFrame {
         ResourcesLocation image = new ResourcesLocation("texture/test/test_image_3840x2160.jpg");
         textureCache.createCache(image);
 
-        effectCache = new EffectCache();
+        gl1EffectCache = new EffectCache();
+        glFontEffectCache = new EffectCache();
 
-        effectCache.createCache(new Texture(resolution, textureCache, image), gl1);
-        effectCache.createCache(new DrawObject(resolution), gl1);
-        effectCache.createCache(new Gradation(resolution, resolution.x / 2, resolution.y / 2, (float) Math.toRadians(90), 0.1f, Gradation.ShapeMode.Rectangle, BlendType.Multiply, new Color(0, 0, 0, 255), new Color(255, 255, 255, 255), 1f), gl1);
+        gl1EffectCache.createCache(new Texture(resolution, textureCache, image), gl1);
+        gl1EffectCache.createCache(new DrawObject(resolution), gl1);
+        gl1EffectCache.createCache(new Gradation(resolution, resolution.x / 2, resolution.y / 2, (float) Math.toRadians(90), 0.1f, Gradation.ShapeMode.Rectangle, BlendType.Multiply, new Color(0, 0, 0, 255), new Color(255, 255, 255, 255), 1f), gl1);
 //        effectCache.createCache(new Monochrome(resolution, 1f, new Color(255, 0, 255), true), gl1);
 //        effectCache.createCache(new ChromaticAberration(resolution, 0.002f, 90, 5f, ChromaticAberration.AberrationType.RedBlueB), gl1);
 //        effectCache.createCache(new Inversion(resolution, false, false, false, true, false), gl1);
@@ -102,7 +104,7 @@ public class TestGuiFrame implements LFJGFrame {
 //        effectCache.createCache(new ColorCorrection(resolution, 0.5f, 0, 0, 0), gl1);
 //        effectCache.createCache(new Clipping2DRect(resolution, 0, 0, 500, 500), gl1);
 
-        effectCache.createCache(new DrawObject(resolution), glFont);
+        glFontEffectCache.createCache(new DrawObject(resolution), glFont);
 //        effectCache.createCache(new FXAA(resolution,true), glFont);
 
 //        effectCache.createCache(new Texture(resolution, textureCache, image), gl2);
@@ -110,8 +112,8 @@ public class TestGuiFrame implements LFJGFrame {
 //        effectCache.createCache(new GaussianBlurHorizontal(resolution, 10f), gl2);
 //        effectCache.createCache(new GaussianBlurVertical(resolution, 10f), gl2);
 
-        gl1.setEffectCache(effectCache);
-        glFont.setEffectCache(effectCache);
+        gl1.setEffectCache(gl1EffectCache);
+        glFont.setEffectCache(glFontEffectCache);
 //        gl2.setEffectCache(effectCache);
 
         glObjectCache = new GLObjectCache(resolution);
@@ -122,6 +124,9 @@ public class TestGuiFrame implements LFJGFrame {
 
     @Override
     public void drawFrame(long nvg) {
+        Gradation gradation = (Gradation) glObjectCache.getGLObject(gl1.getObjectId()).getEffectBase(2);
+        gradation.setWidth(gradation.getWidth() + 0.001f);
+
         glObjectCache.draw();
     }
 

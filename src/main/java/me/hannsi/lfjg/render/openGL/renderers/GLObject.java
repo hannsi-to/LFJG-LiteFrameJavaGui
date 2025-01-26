@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.render.openGL.renderers;
 
+import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.openGL.system.rendering.Id;
@@ -125,6 +126,14 @@ public class GLObject {
         vaoRendering.cleanup();
         shaderProgram.cleanup();
         effectCache.cleanup(objectId);
+    }
+
+    public EffectBase getEffectBase(int index) {
+        return effectCache.getEffectBase(index);
+    }
+
+    public void setEffectBase() {
+
     }
 
     public void addGLTarget(int target) {
