@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.render.openGL.effect.system;
 
 import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.render.openGL.system.rendering.Id;
 
@@ -44,9 +45,9 @@ public class EffectCache {
         effectBase.getFrameBuffer().setGlObject(glObject);
         this.effectBases.put(effectBase, latestEffectCacheId++);
 
-        String logMessage = "\n---------- EffectCache Debug Message ----------" + "\n\tSource: EffectCache" + "\n\tType: Cache Creation" + "\n\tID: " + glObject.getObjectId() + "\n\tSeverity: Info" + "\n\tMessage: Create effect cache: " + effectBase.getName() + " | Object name: " + glObject.getName() + "\n------------------------------------------\n";
+        LogGenerator logGenerator = new LogGenerator("EffectCache Debug Message", "Source: EffectCache", "Type: Cache Creation", "ID: " + effectBase.getId(), "Severity: Info", "Message: Create effect cache: " + effectBase.getName() + " | Object name: " + glObject.getName());
 
-        DebugLog.debug(getClass(), logMessage);
+        DebugLog.debug(getClass(), logGenerator.createLog());
     }
 
     public void push(GLObject glObject) {

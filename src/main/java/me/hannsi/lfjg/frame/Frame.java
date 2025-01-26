@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.frame;
 
 import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.event.events.render.DrawFrameWithNanoVGEvent;
 import me.hannsi.lfjg.event.events.render.DrawFrameWithOpenGLEvent;
 import me.hannsi.lfjg.event.events.user.*;
@@ -188,10 +189,9 @@ public class Frame implements IFrame {
 
                     for (SeverityType checkSeverity : ((SeverityType[]) getFrameSettingValue(CheckSeveritiesSetting.class))) {
                         if (checkSeverity.getId() == severity) {
-                            String sb = "\n---------- OpenGL Debug Message ----------" + "\n\t" + "Source: " + sourceString + "\n\t" + "Type: " + typeString + "\n\t" + "ID: " + id + "\n\t" + "Severity: " + severityString + "\n\t" + "Message: " + errorMessage + "\n" + "------------------------------------------\n";
+                            LogGenerator logGenerator = new LogGenerator("OpenGL Debug Message", "Source: " + sourceString, "Type: " + typeString, "ID: " + id, "Severity: " + severityString, "Message: " + errorMessage);
 
-
-                            DebugLog.debug(getClass(), sb);
+                            DebugLog.debug(getClass(), logGenerator.createLog());
                         }
                     }
                 }

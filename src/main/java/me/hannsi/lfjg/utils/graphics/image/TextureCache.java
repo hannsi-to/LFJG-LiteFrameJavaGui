@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.utils.graphics.image;
 
 import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.TextureLoaderType;
 
@@ -26,15 +27,9 @@ public class TextureCache {
     public void createCache(ResourcesLocation texturePath) {
         textureMap.put(texturePath, new TextureLoader(texturePath, TextureLoaderType.STBImage));
 
-        String logMessage = "\n---------- TextureCache Debug Message ----------" +
-                "\n\tSource: TextureCache" +
-                "\n\tType: Cache Creation" +
-                "\n\tID: " + texturePath.hashCode() +
-                "\n\tSeverity: Info" +
-                "\n\tMessage: Create texture cache: " + texturePath.getPath() +
-                "\n------------------------------------------\n";
+        LogGenerator logGenerator = new LogGenerator("TextureCache Debug Message", "Source: TextureCache", "Type: Cache Creation", "ID: " + texturePath.hashCode(), "Severity: Info", "Message: Create texture cache: " + texturePath.getPath());
 
-        DebugLog.debug(getClass(), logMessage);
+        DebugLog.debug(getClass(), logGenerator.createLog());
     }
 
     public TextureLoader getTexture(ResourcesLocation texturePath) {

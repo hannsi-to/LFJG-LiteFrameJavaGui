@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.render.openGL.system.font;
 
 import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 
@@ -33,15 +34,9 @@ public class FontCache {
 
         fontMap.put(fontPath, fontData);
 
-        String logMessage = "\n---------- FontCache Debug Message ----------" +
-                "\n\tSource: FontCache" +
-                "\n\tType: Cache Creation" +
-                "\n\tID: " + fontPath.hashCode() +
-                "\n\tSeverity: Info" +
-                "\n\tMessage: Create font cache: " + fontPath.getPath() + " | Font size: " + fontSize +
-                "\n------------------------------------------\n";
+        LogGenerator logGenerator = new LogGenerator("FontCache Debug Message", "Source: FontCache", "Type: Cache Creation", "ID: " + fontPath.hashCode(), "Severity: Info", "Message: Create font cache: " + fontPath.getPath() + " | Font size: " + fontSize);
 
-        DebugLog.debug(getClass(), logMessage);
+        DebugLog.debug(getClass(), logGenerator.createLog());
     }
 
     public void cleanup() {

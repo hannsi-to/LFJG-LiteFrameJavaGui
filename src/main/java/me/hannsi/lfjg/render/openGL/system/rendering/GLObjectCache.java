@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.render.openGL.system.rendering;
 
 import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import org.joml.Vector2f;
 
@@ -17,9 +18,9 @@ public class GLObjectCache {
     public void createCache(GLObject glObject) {
         glObjects.add(glObject);
 
-        String logMessage = "\n---------- GLObjectCache Debug Message ----------" + "\n\tSource: GLObjectCache" + "\n\tType: Cache Creation" + "\n\tID: " + glObject.getObjectId() + "\n\tSeverity: Info" + "\n\tMessage: Create object cache: " + glObject.getName() + "\n------------------------------------------\n";
+        LogGenerator logGenerator = new LogGenerator("GLObjectCache Debug Message", "Source: GLObjectCache", "Type: Cache Creation", "ID: " + glObject.getObjectId(), "Severity: Info", "Message: Create object cache: " + glObject.getName());
 
-        DebugLog.debug(getClass(), logMessage);
+        DebugLog.debug(getClass(), logGenerator.createLog());
     }
 
     public void draw() {

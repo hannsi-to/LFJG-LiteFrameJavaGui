@@ -148,11 +148,11 @@ public class TestGuiFrame implements LFJGFrame {
         soundCache.setListener(new SoundListener(new Vector3f(0, 0, 0)));
 
         SoundBuffer buffer = new SoundBuffer(new ResourcesLocation("sound/test.ogg"));
-        soundCache.addSoundBuffer(buffer);
         SoundSource playerSoundSource = new SoundSource(false, false);
         playerSoundSource.setPosition(new Vector3f(0, 0, 0));
         playerSoundSource.setBuffer(buffer.getBufferId());
-        soundCache.addSoundSource("test", playerSoundSource);
+
+        soundCache.createCache("test", buffer, playerSoundSource);
     }
 
     @Override

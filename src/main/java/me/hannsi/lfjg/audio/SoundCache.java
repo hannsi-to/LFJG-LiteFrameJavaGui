@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.audio;
 
+import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.render.openGL.system.Camera;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -48,6 +50,15 @@ public class SoundCache {
 
     public void addSoundSource(String name, SoundSource soundSource) {
         this.soundSourceMap.put(name, soundSource);
+    }
+
+    public void createCache(String name, SoundBuffer soundBuffer, SoundSource soundSource) {
+        addSoundBuffer(soundBuffer);
+        addSoundSource(name, soundSource);
+
+        LogGenerator logGenerator = new LogGenerator("SoundCache Debug Message", "Source: SoundCache", "Type: Cache Creation", "Name: " + name, "Severity: Info", "Message: Create sound cache");
+
+        DebugLog.debug(getClass(), logGenerator.createLog());
     }
 
     public void cleanup() {
