@@ -27,6 +27,7 @@ import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.math.animation.Easing;
 import me.hannsi.lfjg.utils.math.animation.EasingUtil;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.toolkit.ThreadCache;
 import me.hannsi.lfjg.utils.type.types.*;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -47,6 +48,8 @@ public class TestGuiFrame implements LFJGFrame {
 
     EasingUtil easingUtil;
 
+    ThreadCache threadCache;
+
     private Frame frame;
 
     public static void main(String[] args) {
@@ -61,7 +64,10 @@ public class TestGuiFrame implements LFJGFrame {
     public void init() {
         VideoFrameExtractor videoFrameExtractor = new VideoFrameExtractor(new ResourcesLocation("video/test.mp4"), new ResourcesLocation("video/test_extract"));
         Thread thread = new Thread(videoFrameExtractor::createVideoCache);
-        thread.start();
+
+        threadCache = new ThreadCache();
+        threadCache.createCache(thread);
+        threadCache.run(thread.threadId());
 
         IFrame.eventManager.register(this);
 
@@ -178,6 +184,7 @@ public class TestGuiFrame implements LFJGFrame {
         textureCache.cleanup();
         fontCache.cleanup();
         soundCache.cleanup();
+        threadCache.cleanup();
     }
 
     @Override
