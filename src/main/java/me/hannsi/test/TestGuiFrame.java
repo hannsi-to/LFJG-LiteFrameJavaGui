@@ -153,7 +153,7 @@ public class TestGuiFrame implements LFJGFrame {
         soundCache.setAttenuationModel(AL11.AL_EXPONENT_DISTANCE);
         soundCache.setListener(new SoundListener(new Vector3f(0, 0, 0)));
 
-        SoundBuffer buffer = new SoundBuffer(new ResourcesLocation("sound/test.ogg"));
+        SoundBuffer buffer = new SoundBuffer(SoundLoaderType.STBVorbis, new ResourcesLocation("sound/test.ogg"));
         SoundSource playerSoundSource = new SoundSource(false, false);
         playerSoundSource.setPosition(new Vector3f(0, 0, 0));
         playerSoundSource.setBuffer(buffer.getBufferId());

@@ -7,6 +7,7 @@ import me.hannsi.lfjg.event.events.system.LoggingEvent;
 import me.hannsi.lfjg.event.system.EventHandler;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.IFrame;
+import me.hannsi.lfjg.utils.math.ANSIColors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,16 +37,16 @@ public class LoggerManager {
 
         switch (debugLevel) {
             case DEBUG:
-                logger.debug(description);
+                logger.debug(ANSIColors.RESET + description + ANSIColors.RESET);
                 break;
             case INFO:
-                logger.info(description);
+                logger.info(ANSIColors.BLUE + description + ANSIColors.RESET);
                 break;
             case ERROR:
-                logger.error(description);
+                logger.error(ANSIColors.RED + description + ANSIColors.RESET);
                 break;
             case WARNING:
-                logger.warn(description);
+                logger.warn(ANSIColors.YELLOW + description + ANSIColors.RESET);
                 break;
         }
     }

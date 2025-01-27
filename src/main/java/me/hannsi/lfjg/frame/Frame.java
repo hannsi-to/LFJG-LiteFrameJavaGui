@@ -23,6 +23,8 @@ import org.joml.Vector2i;
 import org.lwjgl.glfw.*;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGL3;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.AL11;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryUtil;
 
@@ -45,6 +47,23 @@ public class Frame implements IFrame {
         this.lfjgFrame = lfjgFrame;
 
         new Thread(this::createFrame, threadName).start();
+    }
+
+    private static String getALErrorString(int error) {
+        switch (error) {
+            case AL11.AL_INVALID_NAME:
+                return "Invalid Name";
+            case AL11.AL_INVALID_ENUM:
+                return "Invalid Enum";
+            case AL11.AL_INVALID_VALUE:
+                return "Invalid Value";
+            case AL11.AL_INVALID_OPERATION:
+                return "Invalid Operation";
+            case AL11.AL_OUT_OF_MEMORY:
+                return "Out of Memory";
+            default:
+                return "Unknown Error";
+        }
     }
 
     private void registerManagers() {
@@ -191,7 +210,15 @@ public class Frame implements IFrame {
                         if (checkSeverity.getId() == severity) {
                             LogGenerator logGenerator = new LogGenerator("OpenGL Debug Message", "Source: " + sourceString, "Type: " + typeString, "ID: " + id, "Severity: " + severityString, "Message: " + errorMessage);
 
-                            DebugLog.debug(getClass(), logGenerator.createLog());
+                            if (type == GL43.GL_DEBUG_TYPE_ERROR || severity == GL43.GL_DEBUG_SEVERITY_HIGH) {
+                                DebugLog.error(getClass(), logGenerator.createLog());
+                            } else if (severity == GL43.GL_DEBUG_SEVERITY_MEDIUM) {
+                                DebugLog.warning(getClass(), logGenerator.createLog());
+                            } else if (severity == GL43.GL_DEBUG_SEVERITY_LOW) {
+                                DebugLog.info(getClass(), logGenerator.createLog());
+                            } else {
+                                DebugLog.debug(getClass(), logGenerator.createLog());
+                            }
                         }
                     }
                 }
@@ -261,6 +288,17 @@ public class Frame implements IFrame {
                 setAntiAliasing();
 
                 draw();
+
+                if (AL.getCapabilities().OpenAL11) {
+                    int error = AL11.alGetError();
+                    if (error != AL11.AL_NO_ERROR) {
+                        String errorMessage = getALErrorString(error);
+
+                        LogGenerator logGenerator = new LogGenerator(" OpenAL Debug Message", "Type: Error", "ID: " + error, "Severity: High", "Message: " + errorMessage);
+
+                        DebugLog.error(getClass(), logGenerator.createLog());
+                    }
+                }
 
                 GLFW.glfwSwapBuffers(windowID);
                 GLFW.glfwPollEvents();
