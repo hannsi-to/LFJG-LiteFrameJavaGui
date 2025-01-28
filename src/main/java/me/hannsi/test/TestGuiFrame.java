@@ -16,10 +16,18 @@ import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
 import me.hannsi.lfjg.render.openGL.effect.effects.Translate;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.font.GLFont;
+import me.hannsi.lfjg.render.openGL.renderers.model.Entity;
+import me.hannsi.lfjg.render.openGL.renderers.model.Model;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.system.Camera;
+import me.hannsi.lfjg.render.openGL.system.MouseInfo;
 import me.hannsi.lfjg.render.openGL.system.font.FontCache;
+import me.hannsi.lfjg.render.openGL.system.model.Material;
+import me.hannsi.lfjg.render.openGL.system.model.Render;
+import me.hannsi.lfjg.render.openGL.system.model.Scene;
+import me.hannsi.lfjg.render.openGL.system.model.TextureModel;
 import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
+import me.hannsi.lfjg.render.openGL.system.rendering.Mesh;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.utils.graphics.video.VideoFrameExtractor;
@@ -31,7 +39,11 @@ import me.hannsi.lfjg.utils.toolkit.ThreadCache;
 import me.hannsi.lfjg.utils.type.types.*;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.openal.AL11;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestGuiFrame implements LFJGFrame {
     GLRect gl1;
@@ -51,6 +63,13 @@ public class TestGuiFrame implements LFJGFrame {
     ThreadCache threadCache;
 
     VideoFrameExtractor videoFrameExtractor;
+
+    Scene scene;
+    Render render;
+    Entity cubeEntity;
+
+    MouseInfo mouseInfo;
+    float rotation;
 
     private Frame frame;
 
@@ -86,7 +105,103 @@ public class TestGuiFrame implements LFJGFrame {
         this.easingUtil = new EasingUtil(Easing.easeOutBounce);
         this.easingUtil.reset();
 
+        this.mouseInfo = new me.hannsi.lfjg.render.openGL.system.MouseInfo();
 
+        float[] positions = new float[]{
+                // V0
+                -0.5f, 0.5f, 0.5f,
+                // V1
+                -0.5f, -0.5f, 0.5f,
+                // V2
+                0.5f, -0.5f, 0.5f,
+                // V3
+                0.5f, 0.5f, 0.5f,
+                // V4
+                -0.5f, 0.5f, -0.5f,
+                // V5
+                0.5f, 0.5f, -0.5f,
+                // V6
+                -0.5f, -0.5f, -0.5f,
+                // V7
+                0.5f, -0.5f, -0.5f,
+
+                // For text coords in top face
+                // V8: V4 repeated
+                -0.5f, 0.5f, -0.5f,
+                // V9: V5 repeated
+                0.5f, 0.5f, -0.5f,
+                // V10: V0 repeated
+                -0.5f, 0.5f, 0.5f,
+                // V11: V3 repeated
+                0.5f, 0.5f, 0.5f,
+
+                // For text coords in right face
+                // V12: V3 repeated
+                0.5f, 0.5f, 0.5f,
+                // V13: V2 repeated
+                0.5f, -0.5f, 0.5f,
+
+                // For text coords in left face
+                // V14: V0 repeated
+                -0.5f, 0.5f, 0.5f,
+                // V15: V1 repeated
+                -0.5f, -0.5f, 0.5f,
+
+                // For text coords in bottom face
+                // V16: V6 repeated
+                -0.5f, -0.5f, -0.5f,
+                // V17: V7 repeated
+                0.5f, -0.5f, -0.5f,
+                // V18: V1 repeated
+                -0.5f, -0.5f, 0.5f,
+                // V19: V2 repeated
+                0.5f, -0.5f, 0.5f,};
+        float[] textCoords = new float[]{0.0f, 0.0f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f,
+
+                0.0f, 0.0f, 0.5f, 0.0f, 0.0f, 0.5f, 0.5f, 0.5f,
+
+                // For text coords in top face
+                0.0f, 0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.5f, 1.0f,
+
+                // For text coords in right face
+                0.0f, 0.0f, 0.0f, 0.5f,
+
+                // For text coords in left face
+                0.5f, 0.0f, 0.5f, 0.5f,
+
+                // For text coords in bottom face
+                0.5f, 0.0f, 1.0f, 0.0f, 0.5f, 0.5f, 1.0f, 0.5f,};
+        int[] indices = new int[]{
+                // Front face
+                0, 1, 3, 3, 1, 2,
+                // Top Face
+                8, 10, 11, 9, 8, 11,
+                // Right face
+                12, 13, 7, 5, 12, 7,
+                // Left face
+                14, 15, 6, 4, 14, 6,
+                // Bottom face
+                16, 18, 19, 17, 16, 19,
+                // Back face
+                4, 6, 7, 5, 4, 7,};
+
+        render = new Render();
+        scene = new Scene(resolution);
+
+        TextureModel texture = scene.getTextureModelCache().createTexture(new ResourcesLocation("model/cube/cube.png"));
+        Material material = new Material();
+        material.setTexturePath(texture.getTexturePath());
+        List<Material> materialList = new ArrayList<>();
+        materialList.add(material);
+
+        Mesh mesh = new Mesh(positions, textCoords, indices);
+        material.getMeshList().add(mesh);
+        Model cubeModel = new Model("cube-model", materialList);
+        scene.addModel(cubeModel);
+
+        cubeEntity = new Entity("cube-entity", cubeModel.getId());
+        cubeEntity.setPosition(0, 0, -2);
+        scene.addEntity(cubeEntity);
     }
 
     public void objectInit() {
@@ -177,7 +292,7 @@ public class TestGuiFrame implements LFJGFrame {
     }
 
     @Override
-    public void drawFrame(long nvg) {
+    public void drawFrame() {
         float value = easingUtil.get(1000);
         if (easingUtil.done(value)) {
             easingUtil.setReverse(!easingUtil.isReverse());
@@ -215,6 +330,47 @@ public class TestGuiFrame implements LFJGFrame {
 //        GL11.glTexCoord2i(0,1);
 //        GL11.glEnd();
 //        GL11.glBindTexture(GL11.GL_TEXTURE_2D,0);
+
+        rotation += 1.5;
+        if (rotation > 360) {
+            rotation = 0;
+        }
+        cubeEntity.setRotation(1, 1, 1, (float) Math.toRadians(rotation));
+        cubeEntity.updateModelMatrix();
+
+        render.render(resolution, scene);
+
+        Camera camera = scene.getCamera();
+
+        float move = 0.01f;
+        if (isKeyPressed(GLFW.GLFW_KEY_W)) {
+            camera.moveForward(move);
+        } else if (isKeyPressed(GLFW.GLFW_KEY_S)) {
+            camera.moveBackwards(move);
+        }
+        if (isKeyPressed(GLFW.GLFW_KEY_A)) {
+            camera.moveLeft(move);
+        } else if (isKeyPressed(GLFW.GLFW_KEY_D)) {
+            camera.moveRight(move);
+        }
+        if (isKeyPressed(GLFW.GLFW_KEY_SPACE)) {
+            camera.moveUp(move);
+        } else if (isKeyPressed(GLFW.GLFW_KEY_LEFT_SHIFT)) {
+            camera.moveDown(move);
+        }
+
+        float MOUSE_SENSITIVITY = 0.1f;
+
+        if (mouseInfo.isRightButtonPressed()) {
+            Vector2f displVec = mouseInfo.getDisplVec();
+            camera.addRotation((float) Math.toRadians(-displVec.x * MOUSE_SENSITIVITY), (float) Math.toRadians(-displVec.y * MOUSE_SENSITIVITY));
+        }
+
+        mouseInfo.input();
+    }
+
+    public boolean isKeyPressed(int keyCode) {
+        return GLFW.glfwGetKey(frame.getWindowID(), keyCode) == GLFW.GLFW_PRESS;
     }
 
     @Override
@@ -242,13 +398,23 @@ public class TestGuiFrame implements LFJGFrame {
     }
 
     @EventHandler
+    public void mouseButtonCallbackEvent(MouseButtonCallbackEvent event) {
+        mouseInfo.updateMouseButton(event.getButton(), event.getAction());
+    }
+
+    @EventHandler
+    public void cursorEnterEvent(CursorEnterEvent event) {
+        mouseInfo.updateInWindow(event.isEntered());
+    }
+
+    @EventHandler
     public void keyReleasedEvent(KeyReleasedEvent event) {
 
     }
 
     @EventHandler
     public void cursorPosEvent(CursorPosEvent event) {
-
+        mouseInfo.updateCursorPos((float) event.getXPos(), (float) event.getYPos());
     }
 
     @EventHandler

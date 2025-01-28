@@ -171,9 +171,17 @@ public class Frame implements IFrame {
             }
         });
 
+        GLFW.glfwSetCursorEnterCallback(windowID, new GLFWCursorEnterCallback() {
+            @Override
+            public void invoke(long window, boolean entered) {
+                eventManager.call(new CursorEnterEvent(window, entered));
+            }
+        });
+
         GLFW.glfwSetMouseButtonCallback(windowID, new GLFWMouseButtonCallback() {
             @Override
             public void invoke(long window, int button, int action, int mods) {
+                eventManager.call(new MouseButtonCallbackEvent(window, button, action, mods));
                 if (action == GLFW.GLFW_PRESS) {
                     eventManager.call(new MouseButtonPressEvent(button, mods, window));
                 } else if (action == GLFW.GLFW_RELEASE) {
@@ -346,12 +354,12 @@ public class Frame implements IFrame {
 
     @EventHandler
     public void drawFrameWidthOpenGLEvent(DrawFrameWithOpenGLEvent event) {
-        lfjgFrame.drawFrame(nvg);
+        lfjgFrame.drawFrame();
     }
 
     @EventHandler
     public void drawFrameWidthNanoVGEvent(DrawFrameWithNanoVGEvent event) {
-        lfjgFrame.drawFrame(nvg);
+//        lfjgFrame.drawFrame(nvg);
     }
 
     public void stopFrame() {
