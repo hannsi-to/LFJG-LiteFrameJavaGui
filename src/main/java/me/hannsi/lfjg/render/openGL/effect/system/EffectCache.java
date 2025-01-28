@@ -54,12 +54,16 @@ public class EffectCache {
         for (Map.Entry<EffectBase, Long> effectBase : effectBases.entrySet()) {
             effectBase.getKey().push(glObject);
         }
+
+        effectBases = reverseLinkedHashMap(effectBases);
     }
 
     public void pop(GLObject glObject) {
         for (Map.Entry<EffectBase, Long> effectBase : effectBases.entrySet()) {
             effectBase.getKey().pop(glObject);
         }
+
+        effectBases = reverseLinkedHashMap(effectBases);
     }
 
     public void frameBufferPush(GLObject glObject) {
@@ -85,14 +89,20 @@ public class EffectCache {
 
         for (Map.Entry<EffectBase, Long> effectBase : effectBases.entrySet()) {
             if (index == maxSize) {
+                effectBase.getKey().getFrameBuffer().getShaderProgramFBO().bind();
                 effectBase.getKey().setUniform(glObject);
+                effectBase.getKey().getFrameBuffer().getShaderProgramFBO().unbind();
                 effectBase.getKey().frameBuffer(glObject);
             } else {
                 Map.Entry<EffectBase, Long> nextEffectBase = getLinkedHashMapEntry(effectBases, index + 1);
 
                 nextEffectBase.getKey().frameBufferPush(glObject);
+
+                effectBase.getKey().getFrameBuffer().getShaderProgramFBO().bind();
                 effectBase.getKey().setUniform(glObject);
+                effectBase.getKey().getFrameBuffer().getShaderProgramFBO().unbind();
                 effectBase.getKey().frameBuffer(glObject);
+
                 nextEffectBase.getKey().frameBufferPop(glObject);
             }
 

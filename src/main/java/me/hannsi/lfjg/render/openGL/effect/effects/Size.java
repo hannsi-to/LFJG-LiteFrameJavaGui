@@ -13,7 +13,7 @@ public class Size extends EffectBase {
     private float cz;
 
     public Size(Vector2f resolution, float x, float y, float z, float cx, float cy, float cz) {
-        super(resolution,0, "Size", (Class<GLObject>) null);
+        super(resolution, 0, "Size", (Class<GLObject>) null);
         this.x = x;
         this.y = y;
         this.z = z;
@@ -23,31 +23,31 @@ public class Size extends EffectBase {
     }
 
     public Size(Vector2f resolution, double x, double y, double z, double cx, double cy, double cz) {
-        this(resolution,(float) x, (float) y, (float) z, (float) cx, (float) cy, (float) cz);
+        this(resolution, (float) x, (float) y, (float) z, (float) cx, (float) cy, (float) cz);
     }
 
     public Size(Vector2f resolution, float x, float y) {
-        this(resolution,x, y, 1.0f);
+        this(resolution, x, y, 1.0f);
     }
 
     public Size(Vector2f resolution, double x, double y) {
-        this(resolution,(float) x, (float) y, 1.0f);
+        this(resolution, (float) x, (float) y, 1.0f);
     }
 
     public Size(Vector2f resolution, float x, float y, float z) {
-        this(resolution,x, y, z, 0, 0, 0);
+        this(resolution, x, y, z, 0, 0, 0);
     }
 
     public Size(Vector2f resolution, double x, double y, double z) {
-        this(resolution,x, y, z, 0, 0, 0);
+        this(resolution, x, y, z, 0, 0, 0);
     }
 
     public Size(Vector2f resolution, float x, float y, float cx, float cy) {
-        this(resolution,x, y, 1.0f, cx, cy, 0);
+        this(resolution, x, y, 1.0f, cx, cy, 0);
     }
 
     public Size(Vector2f resolution, double x, double y, double cx, double cy) {
-        this(resolution,x, y, 1.0f, cx, cy, 0);
+        this(resolution, x, y, 1.0f, cx, cy, 0);
     }
 
     @Override
@@ -62,6 +62,33 @@ public class Size extends EffectBase {
         baseGLObject.setModelMatrix(baseGLObject.getModelMatrix().translate(cx, cy, cz).scale(x, y, z).translate(cx, -cy, -cz));
 
         super.push(baseGLObject);
+    }
+
+    @Override
+    public void frameBufferPush(GLObject baseGLObject) {
+        getFrameBuffer().bindFrameBuffer();
+
+        super.frameBufferPush(baseGLObject);
+    }
+
+    @Override
+    public void frameBufferPop(GLObject baseGLObject) {
+        getFrameBuffer().unbindFrameBuffer();
+
+        super.frameBufferPop(baseGLObject);
+    }
+
+    @Override
+    public void frameBuffer(GLObject baseGLObject) {
+        getFrameBuffer().drawFrameBuffer();
+
+        super.frameBuffer(baseGLObject);
+    }
+
+    @Override
+    public void setUniform(GLObject baseGLObject) {
+
+        super.setUniform(baseGLObject);
     }
 
     public float getX() {

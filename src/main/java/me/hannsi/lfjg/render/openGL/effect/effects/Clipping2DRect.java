@@ -52,12 +52,10 @@ public class Clipping2DRect extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().bind();
         getFrameBuffer().getShaderProgramFBO().setUniform2f("resolution", resolution);
         getFrameBuffer().getShaderProgramFBO().setUniformBoolean("clippingRect2DBool", true);
         getFrameBuffer().getShaderProgramFBO().setUniformBoolean("clippingRect2DInvert", invert);
         getFrameBuffer().getShaderProgramFBO().setUniform4f("clippingRect2DSize", new Vector4f(x1, y1, x2, y2));
-        getFrameBuffer().getShaderProgramFBO().unbind();
 
         super.setUniform(baseGLObject);
     }

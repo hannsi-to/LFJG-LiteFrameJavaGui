@@ -44,13 +44,9 @@ public class LuminanceKey extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().bind();
-
         getFrameBuffer().getShaderProgramFBO().setUniform1f("threshold", threshold);
         getFrameBuffer().getShaderProgramFBO().setUniform1f("blurAmount", blurAmount);
         getFrameBuffer().getShaderProgramFBO().setUniform1i("mode", luminanceMode.getId());
-
-        getFrameBuffer().getShaderProgramFBO().unbind();
 
         super.setUniform(baseGLObject);
     }

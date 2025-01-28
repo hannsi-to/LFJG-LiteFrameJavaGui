@@ -52,6 +52,33 @@ public class Texture extends EffectBase {
         super.push(baseGLObject);
     }
 
+    @Override
+    public void frameBufferPush(GLObject baseGLObject) {
+        getFrameBuffer().bindFrameBuffer();
+
+        super.frameBufferPush(baseGLObject);
+    }
+
+    @Override
+    public void frameBufferPop(GLObject baseGLObject) {
+        getFrameBuffer().unbindFrameBuffer();
+
+        super.frameBufferPop(baseGLObject);
+    }
+
+    @Override
+    public void frameBuffer(GLObject baseGLObject) {
+        getFrameBuffer().drawFrameBuffer();
+
+        super.frameBuffer(baseGLObject);
+    }
+
+    @Override
+    public void setUniform(GLObject baseGLObject) {
+
+        super.setUniform(baseGLObject);
+    }
+
     public TextureCache getTextureCache() {
         return textureCache;
     }

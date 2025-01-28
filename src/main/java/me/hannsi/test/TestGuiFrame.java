@@ -150,7 +150,7 @@ public class TestGuiFrame implements LFJGFrame {
 //        gl1EffectCache.createCache(new Clipping2DRect(resolution, 0, 0, 500, 500), gl1);
 
         glFontEffectCache.createCache(new DrawObject(resolution), glFont);
-        glFontEffectCache.createCache(new Translate(resolution, 0, 0), glFont);
+        glFontEffectCache.createCache(new Translate(resolution, 200, 0), glFont);
         glFontEffectCache.createCache(new Pixelate(resolution, 10f), glFont);
 
 //        effectCache.createCache(new Texture(resolution, textureCache, image), gl2);

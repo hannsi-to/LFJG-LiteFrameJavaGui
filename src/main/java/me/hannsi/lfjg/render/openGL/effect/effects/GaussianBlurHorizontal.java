@@ -43,8 +43,6 @@ public class GaussianBlurHorizontal extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().bind();
-
         getFrameBuffer().getShaderProgramFBO().setUniform2f("direction", new Vector2f(1, 0));
         getFrameBuffer().getShaderProgramFBO().setUniform1f("radius", radiusX);
         getFrameBuffer().getShaderProgramFBO().setUniform2f("texelSize", new Vector2f(1.0f / baseGLObject.getResolution().x(), 1.0f / baseGLObject.getResolution().y()));
@@ -55,8 +53,6 @@ public class GaussianBlurHorizontal extends EffectBase {
         }
         weightBuffer.rewind();
         getFrameBuffer().getShaderProgramFBO().setUniform1fv("values", weightBuffer);
-
-        getFrameBuffer().getShaderProgramFBO().unbind();
 
         super.setUniform(baseGLObject);
     }

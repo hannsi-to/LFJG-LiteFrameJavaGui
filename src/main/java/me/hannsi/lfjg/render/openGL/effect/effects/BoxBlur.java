@@ -41,13 +41,8 @@ public class BoxBlur extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().bind();
-
-//        getFrameBuffer().getShaderProgramFBO().setUniform2f("resolution", resolution);
         getFrameBuffer().getShaderProgramFBO().setUniform1i("kernelX", kernelX);
         getFrameBuffer().getShaderProgramFBO().setUniform1i("kernelY", kernelY);
-
-        getFrameBuffer().getShaderProgramFBO().unbind();
 
         super.setUniform(baseGLObject);
     }

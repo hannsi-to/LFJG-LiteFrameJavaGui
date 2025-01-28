@@ -64,7 +64,7 @@ public class FrameBuffer {
         }
 
         shaderProgramFBO = new ShaderProgram();
-        vertexShaderFBO = new ResourcesLocation("shader/frameBuffer/vertexShader.vsh");
+        vertexShaderFBO = new ResourcesLocation("shader/frameBuffer/VertexShader.vsh");
         fragmentShaderFBO = new ResourcesLocation("shader/frameBuffer/FragmentShader.fsh");
 
         vaoRendering = new VAORendering();

@@ -43,13 +43,9 @@ public class Bloom extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().bind();
-
         getFrameBuffer().getShaderProgramFBO().setUniform1f("intensity", intensity);
         getFrameBuffer().getShaderProgramFBO().setUniform1f("spread", spread);
         getFrameBuffer().getShaderProgramFBO().setUniform1f("threshold", threshold);
-
-        getFrameBuffer().getShaderProgramFBO().unbind();
 
         super.setUniform(baseGLObject);
     }

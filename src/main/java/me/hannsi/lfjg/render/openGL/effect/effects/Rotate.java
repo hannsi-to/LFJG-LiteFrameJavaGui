@@ -5,7 +5,7 @@ import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import org.joml.Vector2f;
 
 public class Rotate extends EffectBase {
-    private Vector2f resolution;
+    private final Vector2f resolution;
     private float x;
     private float y;
     private float z;
@@ -13,24 +13,24 @@ public class Rotate extends EffectBase {
     private float cy;
     private float cz;
 
-    public Rotate(Vector2f resolution,float x, float y, float z) {
-        this(resolution,x, y, z, 0, 0, 0);
+    public Rotate(Vector2f resolution, float x, float y, float z) {
+        this(resolution, x, y, z, 0, 0, 0);
     }
 
-    public Rotate(Vector2f resolution,double x, double y, double z) {
-        this(resolution,(float) x, (float) y, (float) z, 0, 0, 0);
+    public Rotate(Vector2f resolution, double x, double y, double z) {
+        this(resolution, (float) x, (float) y, (float) z, 0, 0, 0);
     }
 
-    public Rotate(Vector2f resolution,float x, float y, float z, float cx, float cy) {
-        this(resolution,x, y, z, cx, cy, 0);
+    public Rotate(Vector2f resolution, float x, float y, float z, float cx, float cy) {
+        this(resolution, x, y, z, cx, cy, 0);
     }
 
-    public Rotate(Vector2f resolution,double x, double y, double z, double cx, double cy) {
-        this(resolution,(float) x, (float) y, (float) z, (float) cx, (float) cy, 0);
+    public Rotate(Vector2f resolution, double x, double y, double z, double cx, double cy) {
+        this(resolution, (float) x, (float) y, (float) z, (float) cx, (float) cy, 0);
     }
 
-    public Rotate(Vector2f resolution,float x, float y, float z, float cx, float cy, float cz) {
-        super(resolution,1, "Rotate", (Class<GLObject>) null);
+    public Rotate(Vector2f resolution, float x, float y, float z, float cx, float cy, float cz) {
+        super(resolution, 1, "Rotate", (Class<GLObject>) null);
 
         this.resolution = resolution;
         this.x = x;
@@ -41,8 +41,8 @@ public class Rotate extends EffectBase {
         this.cz = cz;
     }
 
-    public Rotate(Vector2f resolution,double x, double y, double z, double cx, double cy, double cz) {
-        this(resolution,(float) x, (float) y, (float) z, (float) cx, (float) cy, (float) cz);
+    public Rotate(Vector2f resolution, double x, double y, double z, double cx, double cy, double cz) {
+        this(resolution, (float) x, (float) y, (float) z, (float) cx, (float) cy, (float) cz);
     }
 
     @Override
@@ -57,6 +57,33 @@ public class Rotate extends EffectBase {
         baseGLObject.setModelMatrix(baseGLObject.getModelMatrix().translate(cx, cy, cz).rotateXYZ(x, y, z).translate(cx, -cy, -cz));
 
         super.push(baseGLObject);
+    }
+
+    @Override
+    public void frameBufferPush(GLObject baseGLObject) {
+        getFrameBuffer().bindFrameBuffer();
+
+        super.frameBufferPush(baseGLObject);
+    }
+
+    @Override
+    public void frameBufferPop(GLObject baseGLObject) {
+        getFrameBuffer().unbindFrameBuffer();
+
+        super.frameBufferPop(baseGLObject);
+    }
+
+    @Override
+    public void frameBuffer(GLObject baseGLObject) {
+        getFrameBuffer().drawFrameBuffer();
+
+        super.frameBuffer(baseGLObject);
+    }
+
+    @Override
+    public void setUniform(GLObject baseGLObject) {
+
+        super.setUniform(baseGLObject);
     }
 
     public float getX() {

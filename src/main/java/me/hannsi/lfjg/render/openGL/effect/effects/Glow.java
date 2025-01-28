@@ -55,16 +55,12 @@ public class Glow extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().bind();
-
         getFrameBuffer().getShaderProgramFBO().setUniform1f("intensity", intensity);
         getFrameBuffer().getShaderProgramFBO().setUniform1f("threshold", threshold);
         getFrameBuffer().getShaderProgramFBO().setUniform1f("spread", spread);
         getFrameBuffer().getShaderProgramFBO().setUniform3f("glowColor", new Vector3f(glowColor.getRedF(), glowColor.getGreenF(), glowColor.getBlueF()));
         getFrameBuffer().getShaderProgramFBO().setUniformBoolean("useOriginalColor", useOriginalColor);
         getFrameBuffer().getShaderProgramFBO().setUniformBoolean("glowOnly", glowOnly);
-
-        getFrameBuffer().getShaderProgramFBO().unbind();
 
         super.setUniform(baseGLObject);
     }

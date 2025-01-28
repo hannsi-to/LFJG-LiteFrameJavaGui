@@ -10,7 +10,7 @@ public class Translate extends EffectBase {
     private float z;
 
     public Translate(Vector2f resolution, float x, float y, float z) {
-        super(resolution,2, "Translate", (Class<GLObject>) null);
+        super(resolution, 2, "Translate", (Class<GLObject>) null);
 
         this.x = x;
         this.y = y;
@@ -18,15 +18,15 @@ public class Translate extends EffectBase {
     }
 
     public Translate(Vector2f resolution, double x, double y, double z) {
-        this(resolution,(float) x, (float) y, (float) z);
+        this(resolution, (float) x, (float) y, (float) z);
     }
 
     public Translate(Vector2f resolution, float x, float y) {
-        this(resolution,x, y, 0.0f);
+        this(resolution, x, y, 0.0f);
     }
 
     public Translate(Vector2f resolution, double x, double y) {
-        this(resolution,x, y, 0.0f);
+        this(resolution, x, y, 0.0f);
     }
 
     @Override
@@ -41,6 +41,33 @@ public class Translate extends EffectBase {
         baseGLObject.setModelMatrix(baseGLObject.getModelMatrix().translate(x, y, z));
 
         super.push(baseGLObject);
+    }
+
+    @Override
+    public void frameBufferPush(GLObject baseGLObject) {
+        getFrameBuffer().bindFrameBuffer();
+
+        super.frameBufferPush(baseGLObject);
+    }
+
+    @Override
+    public void frameBufferPop(GLObject baseGLObject) {
+        getFrameBuffer().unbindFrameBuffer();
+
+        super.frameBufferPop(baseGLObject);
+    }
+
+    @Override
+    public void frameBuffer(GLObject baseGLObject) {
+        getFrameBuffer().drawFrameBuffer();
+
+        super.frameBuffer(baseGLObject);
+    }
+
+    @Override
+    public void setUniform(GLObject baseGLObject) {
+
+        super.setUniform(baseGLObject);
     }
 
     public float getX() {

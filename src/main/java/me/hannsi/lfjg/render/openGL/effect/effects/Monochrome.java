@@ -42,11 +42,10 @@ public class Monochrome extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().bind();
         getFrameBuffer().getShaderProgramFBO().setUniform1f("intensity", intensity);
         getFrameBuffer().getShaderProgramFBO().setUniform3f("color", new Vector3f(color.getRedF(), color.getGreenF(), color.getBlueF()));
         getFrameBuffer().getShaderProgramFBO().setUniformBoolean("preserveBrightness", preserveBrightness);
-        getFrameBuffer().getShaderProgramFBO().unbind();
+
         super.setUniform(baseGLObject);
     }
 
