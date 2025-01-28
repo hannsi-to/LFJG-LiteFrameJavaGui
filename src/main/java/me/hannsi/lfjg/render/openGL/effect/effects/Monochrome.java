@@ -22,6 +22,10 @@ public class Monochrome extends EffectBase {
         this.preserveBrightness = preserveBrightness;
     }
 
+    public Monochrome(Vector2f resolution, double intensity, Color color, boolean preserveBrightness) {
+        this(resolution, (float) intensity, color, preserveBrightness);
+    }
+
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();

@@ -26,6 +26,10 @@ public class ChromaKey extends EffectBase {
         this.colorAdjustment = colorAdjustment;
     }
 
+    public ChromaKey(Vector2f resolution, Color chromaKeyColor, double hueRange, double saturationRange, double boundarySmoothness, Color colorAdjustment) {
+        this(resolution, chromaKeyColor, (float) hueRange, (float) saturationRange, (float) boundarySmoothness, colorAdjustment);
+    }
+
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();

@@ -24,6 +24,10 @@ public class DiagonalClipping extends EffectBase {
         this.invertClip = invertClip;
     }
 
+    public DiagonalClipping(Vector2f resolution, double centerX, double centerY, double clipAngle, double blurWidth, boolean invertClip) {
+        this(resolution, (float) centerX, (float) centerY, (float) clipAngle, (float) blurWidth, invertClip);
+    }
+
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();

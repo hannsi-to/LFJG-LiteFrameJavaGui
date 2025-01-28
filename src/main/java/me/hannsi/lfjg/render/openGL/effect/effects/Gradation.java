@@ -36,6 +36,10 @@ public class Gradation extends EffectBase {
         this.intensity = intensity;
     }
 
+    public Gradation(Vector2f resolution, double centerX, double centerY, double angle, double width, ShapeMode shapeMode, BlendType blendType, Color startColor, Color endColor, double intensity) {
+        this(resolution, (float) centerX, (float) centerY, (float) angle, (float) width, shapeMode, blendType, startColor, endColor, (float) intensity);
+    }
+
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();

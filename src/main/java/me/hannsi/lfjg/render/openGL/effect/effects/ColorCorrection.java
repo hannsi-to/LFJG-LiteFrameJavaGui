@@ -22,6 +22,10 @@ public class ColorCorrection extends EffectBase {
         this.hue = hue;
     }
 
+    public ColorCorrection(Vector2f resolution, double brightness, double contrast, double saturation, double hue) {
+        this(resolution, (float) brightness, (float) contrast, (float) saturation, (float) hue);
+    }
+
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();

@@ -21,6 +21,10 @@ public class LuminanceKey extends EffectBase {
         this.luminanceMode = luminanceMode;
     }
 
+    public LuminanceKey(Vector2f resolution, double threshold, double blurAmount, LuminanceMode luminanceMode) {
+        this(resolution, (float) threshold, (float) blurAmount, luminanceMode);
+    }
+
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();

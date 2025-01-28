@@ -20,6 +20,10 @@ public class Bloom extends EffectBase {
         this.threshold = threshold;
     }
 
+    public Bloom(Vector2f resolution, double intensity, double spread, double threshold) {
+        this(resolution, (float) intensity, (float) spread, (float) threshold);
+    }
+
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();

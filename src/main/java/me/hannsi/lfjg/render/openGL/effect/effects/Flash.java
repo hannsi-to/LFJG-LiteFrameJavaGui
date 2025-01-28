@@ -27,6 +27,10 @@ public class Flash extends EffectBase {
         this.lightColor = lightColor;
     }
 
+    public Flash(Vector2f resolution, double intensity, double x, double y, FlashBlendMode flashBlendMode, Color lightColor) {
+        this(resolution, (float) intensity, (float) x, (float) y, flashBlendMode, lightColor);
+    }
+
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();

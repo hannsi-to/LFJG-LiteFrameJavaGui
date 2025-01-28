@@ -26,6 +26,10 @@ public class EdgeExtraction extends EffectBase {
         this.edgeColor = edgeColor;
     }
 
+    public EdgeExtraction(Vector2f resolution, double edgeStrength, double threshold, boolean enableLuminanceEdge, boolean enableAlphaEdge, Color edgeColor) {
+        this(resolution, (float) edgeStrength, (float) threshold, enableLuminanceEdge, enableAlphaEdge, edgeColor);
+    }
+
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();

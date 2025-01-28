@@ -20,6 +20,10 @@ public class GaussianBlurVertical extends EffectBase {
         this.radiusY = radiusY;
     }
 
+    public GaussianBlurVertical(Vector2f resolution, double radiusY) {
+        this(resolution, (float) radiusY);
+    }
+
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();

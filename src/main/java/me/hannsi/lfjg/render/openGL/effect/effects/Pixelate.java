@@ -16,6 +16,10 @@ public class Pixelate extends EffectBase {
         this.mosaicSize = mosaicSize;
     }
 
+    public Pixelate(Vector2f resolution, double mosaicSize) {
+        this(resolution, (float) mosaicSize);
+    }
+
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();

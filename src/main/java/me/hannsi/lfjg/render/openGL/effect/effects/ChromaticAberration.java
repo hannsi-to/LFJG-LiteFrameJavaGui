@@ -23,6 +23,10 @@ public class ChromaticAberration extends EffectBase {
         this.aberrationType = aberrationType;
     }
 
+    public ChromaticAberration(Vector2f resolution, double offsetAmount, double angle, double strength, AberrationType aberrationType) {
+        this(resolution, (float) offsetAmount, (float) angle, (float) strength, aberrationType);
+    }
+
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();

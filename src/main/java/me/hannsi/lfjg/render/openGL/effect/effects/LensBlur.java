@@ -18,6 +18,10 @@ public class LensBlur extends EffectBase {
         this.intensity = intensity;
     }
 
+    public LensBlur(Vector2f resolution, double range, double intensity) {
+        this(resolution, (float) range, (float) intensity);
+    }
+
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();

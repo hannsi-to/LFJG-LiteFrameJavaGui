@@ -32,6 +32,22 @@ public class Glow extends EffectBase {
         this(resolution, intensity, threshold, spread, true, new Color(0, 0, 0, 0), glowOnly);
     }
 
+    public Glow(Vector2f resolution, double intensity, double threshold, double spread, boolean useOriginalColor, Color glowColor, boolean glowOnly) {
+        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Glow.fsh"), true, 11, "Glow");
+
+        this.resolution = resolution;
+        this.intensity = (float) intensity;
+        this.spread = (float) spread;
+        this.threshold = (float) threshold;
+        this.useOriginalColor = useOriginalColor;
+        this.glowColor = glowColor;
+        this.glowOnly = glowOnly;
+    }
+
+    public Glow(Vector2f resolution, double intensity, double threshold, double spread, boolean glowOnly) {
+        this(resolution, intensity, threshold, spread, true, new Color(0, 0, 0, 0), glowOnly);
+    }
+
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();

@@ -20,6 +20,15 @@ public class RadialBlur extends EffectBase {
         this.centerY = centerY;
     }
 
+    public RadialBlur(Vector2f resolution, double range, double centerX, double centerY) {
+        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/RadialBlur.fsh"), true, 18, "RadialBlur");
+
+        this.resolution = resolution;
+        this.range = (float) range;
+        this.centerX = (float) centerX;
+        this.centerY = (float) centerY;
+    }
+
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();

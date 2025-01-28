@@ -18,6 +18,10 @@ public class DirectionalBlur extends EffectBase {
         this.angle = angle;
     }
 
+    public DirectionalBlur(Vector2f resolution, double radius, double angle) {
+        this(resolution, (float) radius, (float) angle);
+    }
+
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();

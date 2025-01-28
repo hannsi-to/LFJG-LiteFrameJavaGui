@@ -29,6 +29,21 @@ public class Clipping2DRect extends EffectBase {
         this(resolution, x1, y1, x2, y2, false);
     }
 
+    public Clipping2DRect(Vector2f resolution, double x1, double y1, double x2, double y2, boolean invert) {
+        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Clipping2D.fsh"), true, 5, "Clipping2DRect", (Class<GLObject>) null);
+
+        this.resolution = resolution;
+        this.x1 = (float) x1;
+        this.y1 = (float) y1;
+        this.x2 = (float) x2;
+        this.y2 = (float) y2;
+        this.invert = invert;
+    }
+
+    public Clipping2DRect(Vector2f resolution, double x1, double y1, double x2, double y2) {
+        this(resolution, x1, y1, x2, y2, false);
+    }
+
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();
