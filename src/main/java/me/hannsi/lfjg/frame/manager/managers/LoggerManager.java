@@ -37,15 +37,19 @@ public class LoggerManager {
 
         switch (debugLevel) {
             case DEBUG:
+                System.out.print(ANSIColors.RESET);
                 logger.debug(ANSIColors.RESET + description + ANSIColors.RESET);
                 break;
             case INFO:
+                System.out.print(ANSIColors.BLUE);
                 logger.info(ANSIColors.BLUE + description + ANSIColors.RESET);
                 break;
             case ERROR:
+                System.out.print(ANSIColors.RED);
                 logger.error(ANSIColors.RED + description + ANSIColors.RESET);
                 break;
             case WARNING:
+                System.out.print(ANSIColors.YELLOW);
                 logger.warn(ANSIColors.YELLOW + description + ANSIColors.RESET);
                 break;
         }

@@ -1,8 +1,7 @@
 package me.hannsi.lfjg.utils.graphics.video;
 
-import org.lwjgl.BufferUtils;
-
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -16,22 +15,27 @@ public class VideoFrameData {
         this.textureId = -1;
     }
 
-    public void createTexture(BufferedImage image) {
-        int[] pixels = new int[image.getHeight() * image.getWidth()];
-        image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
+    public static ByteBuffer convert(BufferedImage image) {
+        BufferedImage rgbaImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+        rgbaImage.getGraphics().drawImage(image, 0, 0, null);
 
-        ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * 4);
-        for (int y = 0; y < image.getHeight(); y++) {
-            for (int x = 0; x < image.getWidth(); x++) {
-                int pixel = pixels[y * image.getWidth() + x];
-                byte alphaComponent = (byte) ((pixel >> 24) & 0xFF);
-                buffer.put(alphaComponent);
-                buffer.put(alphaComponent);
-                buffer.put(alphaComponent);
-                buffer.put(alphaComponent);
-            }
+        DataBufferByte dataBuffer = (DataBufferByte) rgbaImage.getRaster().getDataBuffer();
+        byte[] pixels = dataBuffer.getData();
+
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(pixels.length);
+        byteBuffer.put(pixels);
+        byteBuffer.flip();
+
+        return byteBuffer;
+    }
+
+    public void createTexture() {
+        if (frameImage == null) {
+            this.textureId = 0;
+            return;
         }
-        buffer.flip();
+
+        ByteBuffer buffer = convert(frameImage);
 
         textureId = glGenTextures();
 
@@ -42,7 +46,7 @@ public class VideoFrameData {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA4, frameImage.getWidth(), frameImage.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 
         glBindTexture(GL_TEXTURE_2D, 0);
 

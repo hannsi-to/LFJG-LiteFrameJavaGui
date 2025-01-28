@@ -12,6 +12,7 @@ import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.render.nanoVG.system.NanoVGUtil;
 import me.hannsi.lfjg.utils.graphics.GLFWUtil;
+import me.hannsi.lfjg.utils.math.ANSIColors;
 import me.hannsi.lfjg.utils.time.TimeCalculator;
 import me.hannsi.lfjg.utils.time.TimeSourceUtil;
 import me.hannsi.lfjg.utils.toolkit.RuntimeUtil;
@@ -50,28 +51,22 @@ public class Frame implements IFrame {
     }
 
     private static String getALErrorString(int error) {
-        switch (error) {
-            case AL11.AL_INVALID_NAME:
-                return "Invalid Name";
-            case AL11.AL_INVALID_ENUM:
-                return "Invalid Enum";
-            case AL11.AL_INVALID_VALUE:
-                return "Invalid Value";
-            case AL11.AL_INVALID_OPERATION:
-                return "Invalid Operation";
-            case AL11.AL_OUT_OF_MEMORY:
-                return "Out of Memory";
-            default:
-                return "Unknown Error";
-        }
+        return switch (error) {
+            case AL11.AL_INVALID_NAME -> "Invalid Name";
+            case AL11.AL_INVALID_ENUM -> "Invalid Enum";
+            case AL11.AL_INVALID_VALUE -> "Invalid Value";
+            case AL11.AL_INVALID_OPERATION -> "Invalid Operation";
+            case AL11.AL_OUT_OF_MEMORY -> "Out of Memory";
+            default -> "Unknown Error";
+        };
     }
 
     private void registerManagers() {
-        DebugLog.debug(getClass(), "Managers loading...");
+        DebugLog.debug(getClass(), "Managers loading...\n");
         long tookTime = TimeCalculator.calculate(() -> {
             this.frameSettingManager = new FrameSettingManager(this);
         });
-        DebugLog.debug(getClass(), "Managers took " + tookTime + "ms to load!");
+        DebugLog.debug(getClass(), ANSIColors.GREEN + "Managers took " + tookTime + "ms to load!\n");
     }
 
     public void createFrame() {
@@ -103,7 +98,7 @@ public class Frame implements IFrame {
         initializeRendering();
 
         updateViewport();
-        updateFrameSetting(false);
+        frameSettingManager.updateFrameSettings(false);
 
         glfwInvoke();
         mainLoop();
@@ -137,15 +132,7 @@ public class Frame implements IFrame {
         GLFW.glfwWindowHint(GLFW.GLFW_CENTER_CURSOR, GLFW.GLFW_FALSE);
         GLFW.glfwWindowHint(GLFW.GLFW_FOCUS_ON_SHOW, GLFW.GLFW_TRUE);
 
-        updateFrameSetting(true);
-    }
-
-    public void updateFrameSetting(boolean windowHint) {
-        DebugLog.debug(getClass(), "FrameSettings Updating...");
-        long tookTime = TimeCalculator.calculate(() -> {
-            frameSettingManager.updateFrameSettings(windowHint);
-        });
-        DebugLog.debug(getClass(), "FrameSettings took " + tookTime + "ms to update!");
+        frameSettingManager.updateFrameSettings(true);
     }
 
     private void glfwInvoke() {

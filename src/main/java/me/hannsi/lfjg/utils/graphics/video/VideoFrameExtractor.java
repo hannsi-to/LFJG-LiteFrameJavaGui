@@ -2,6 +2,7 @@ package me.hannsi.lfjg.utils.graphics.video;
 
 import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.utils.graphics.audio.AudioFrameData;
+import me.hannsi.lfjg.utils.math.ANSIColors;
 import me.hannsi.lfjg.utils.math.StringUtil;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.time.TimeCalculator;
@@ -12,23 +13,22 @@ import org.bytedeco.javacv.Java2DFrameConverter;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.ShortBuffer;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class VideoFrameExtractor {
+    private final List<FrameData> videoCache;
     private int threadCount = 100;
-
     private FileLocation videLocation;
-    private FileLocation outputLocation;
+    private int frameCount;
 
-    private final LinkedHashMap<VideoFrameData, AudioFrameData> videoCache;
-
-    public VideoFrameExtractor(FileLocation videLocation, FileLocation outputLocation) {
+    public VideoFrameExtractor(FileLocation videLocation) {
         this.videLocation = videLocation;
-        this.outputLocation = outputLocation;
+        this.frameCount = 0;
 
-        videoCache = new LinkedHashMap<>();
+        videoCache = new ArrayList<>();
     }
 
     public void createVideoCache() {
@@ -57,7 +57,7 @@ public class VideoFrameExtractor {
                                 channels = grabber.getAudioChannels();
                             }
 
-                            videoCache.put(new VideoFrameData(image), new AudioFrameData(samplesBuffer, sampleRate, channels));
+                            videoCache.add(new FrameData(new VideoFrameData(image), new AudioFrameData(samplesBuffer, sampleRate, channels)));
 
                             frameNumber++;
 
@@ -72,12 +72,11 @@ public class VideoFrameExtractor {
                             }
                             bar = StringUtil.getFirstNCharacters(bar, 20);
 
-                            System.out.print("\rVideo convert: " + "[" + bar + "] " + nowStep + "% | Total Duration: " + totalDuration + "s | Processed: " + frameNumber);
+                            System.out.print(ANSIColors.MAGENTA + "\rVideo convert: " + "[" + bar + "] " + nowStep + "% | Total Duration: " + totalDuration + "s | Processed: " + frameNumber);
                         }
 
                         int nowStep = 100;
-                        System.out.print("\rVideo convert: " + "[■■■■■■■■■■■■■■■■■■■■] " + nowStep + "% | Total Duration: " + totalDuration + "s | Processed: " + frameNumber);
-                        System.out.print("\n");
+                        System.out.println(ANSIColors.MAGENTA + "\rVideo convert: " + "[■■■■■■■■■■■■■■■■■■■■] " + nowStep + "% | Total Duration: " + totalDuration + "s | Processed: " + frameNumber + ANSIColors.RESET);
 
                         grabber.stop();
                     } catch (FFmpegFrameGrabber.Exception e) {
@@ -93,6 +92,18 @@ public class VideoFrameExtractor {
         DebugLog.debug(getClass(), "End extract video frame: " + videLocation.getPath() + " | took: " + tookTime + "ms");
     }
 
+    public FrameData getFrameRender() {
+        if (videoCache.size() - 1 < frameCount) {
+            return null;
+        }
+
+        FrameData frameData = videoCache.get(frameCount);
+
+        frameCount++;
+
+        return frameData;
+    }
+
     public FileLocation getVideLocation() {
         return videLocation;
     }
@@ -101,19 +112,23 @@ public class VideoFrameExtractor {
         this.videLocation = videLocation;
     }
 
-    public FileLocation getOutputLocation() {
-        return outputLocation;
-    }
-
-    public void setOutputLocation(FileLocation outputLocation) {
-        this.outputLocation = outputLocation;
-    }
-
     public int getThreadCount() {
         return threadCount;
     }
 
     public void setThreadCount(int threadCount) {
         this.threadCount = threadCount;
+    }
+
+    public List<FrameData> getVideoCache() {
+        return videoCache;
+    }
+
+    public int getFrameCount() {
+        return frameCount;
+    }
+
+    public void setFrameCount(int frameCount) {
+        this.frameCount = frameCount;
     }
 }
