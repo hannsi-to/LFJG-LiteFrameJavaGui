@@ -4,6 +4,7 @@ import me.hannsi.lfjg.audio.SoundBuffer;
 import me.hannsi.lfjg.audio.SoundCache;
 import me.hannsi.lfjg.audio.SoundListener;
 import me.hannsi.lfjg.audio.SoundSource;
+import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.event.events.user.*;
 import me.hannsi.lfjg.event.system.EventHandler;
 import me.hannsi.lfjg.frame.Frame;
@@ -11,7 +12,6 @@ import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
-import me.hannsi.lfjg.render.openGL.effect.effects.Pixelate;
 import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
 import me.hannsi.lfjg.render.openGL.effect.effects.Translate;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
@@ -22,13 +22,15 @@ import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.system.Camera;
 import me.hannsi.lfjg.render.openGL.system.MouseInfo;
 import me.hannsi.lfjg.render.openGL.system.font.FontCache;
-import me.hannsi.lfjg.render.openGL.system.model.*;
+import me.hannsi.lfjg.render.openGL.system.model.ModelLoader;
+import me.hannsi.lfjg.render.openGL.system.model.Render;
+import me.hannsi.lfjg.render.openGL.system.model.Scene;
 import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
-import me.hannsi.lfjg.render.openGL.system.rendering.Mesh;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.utils.graphics.video.VideoFrameExtractor;
 import me.hannsi.lfjg.utils.math.Projection;
+import me.hannsi.lfjg.utils.math.TextFormat;
 import me.hannsi.lfjg.utils.math.animation.Easing;
 import me.hannsi.lfjg.utils.math.animation.EasingUtil;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
@@ -38,9 +40,6 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.openal.AL11;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TestGuiFrame implements LFJGFrame {
     GLRect gl1;
@@ -61,6 +60,7 @@ public class TestGuiFrame implements LFJGFrame {
 
     VideoFrameExtractor videoFrameExtractor;
 
+    Model cubeModel;
     Scene scene;
     Render render;
     Entity cubeEntity;
@@ -107,7 +107,7 @@ public class TestGuiFrame implements LFJGFrame {
         render = new Render();
         scene = new Scene(resolution);
 
-        Model cubeModel = ModelLoader.loadModel("cube-model", new ResourcesLocation("model/cube/cube.obj"), scene.getTextureModelCache());
+        cubeModel = ModelLoader.loadModel("cube-model", new ResourcesLocation("model/cube/cube.obj"), scene.getTextureModelCache());
         scene.addModel(cubeModel);
 
         cubeEntity = new Entity("cube-entity", cubeModel.getId());
@@ -137,7 +137,7 @@ public class TestGuiFrame implements LFJGFrame {
         glFont.setViewMatrix(camera.getViewMatrix());
         glFont.setResolution(resolution);
         glFont.setFont(fontCache, font, 64);
-        glFont.font("Kazubonバカ", 0, 200, 5f, Color.of(255, 255, 255, 255));
+        glFont.font(TextFormat.RED + "K" + TextFormat.NEWLINE + "a" + TextFormat.BOLD + "zu" + TextFormat.ITALIC + "bon" + TextFormat.RESET + "です!" + TextFormat.OBFUSCATED + "test sdaasd aaaa", 0, 200, 1f, Color.of(255, 255, 255, 255));
 
 //        gl2 = new GLRect("test2");
 //        gl2.setProjectionMatrix(projection.getProjMatrix());
@@ -177,7 +177,7 @@ public class TestGuiFrame implements LFJGFrame {
 
         glFontEffectCache.createCache(new DrawObject(resolution), glFont);
         glFontEffectCache.createCache(new Translate(resolution, 200, 0), glFont);
-        glFontEffectCache.createCache(new Pixelate(resolution, 10f), glFont);
+//        glFontEffectCache.createCache(new Pixelate(resolution, 10f), glFont);
 
 //        effectCache.createCache(new Texture(resolution, textureCache, image), gl2);
 //        effectCache.createCache(new DrawObject(resolution), gl2);
@@ -242,13 +242,13 @@ public class TestGuiFrame implements LFJGFrame {
 //        GL11.glEnd();
 //        GL11.glBindTexture(GL11.GL_TEXTURE_2D,0);
 
-        rotation += 1.5;
-        if (rotation > 360) {
-            rotation = 0;
-        }
-        cubeEntity.setRotation(1, 1, 1, (float) Math.toRadians(rotation));
-        cubeEntity.updateModelMatrix();
-
+//        rotation += 1.5;
+//        if (rotation > 360) {
+//            rotation = 0;
+//        }
+//        cubeEntity.setRotation(1, 1, 1, (float) Math.toRadians(rotation));
+//        cubeEntity.updateModelMatrix();
+//
         render.render(resolution, scene);
 
         Camera camera = scene.getCamera();
@@ -291,6 +291,11 @@ public class TestGuiFrame implements LFJGFrame {
         fontCache.cleanup();
         soundCache.cleanup();
         threadCache.cleanup();
+
+        scene.cleanup();
+        render.cleanup();
+
+        DebugLog.debug(getClass(), "Frame Stopped");
     }
 
     @Override

@@ -6,6 +6,8 @@ import me.hannsi.lfjg.render.openGL.system.font.CharInfo;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.math.Projection;
+import me.hannsi.lfjg.utils.math.StringUtil;
+import me.hannsi.lfjg.utils.math.TextFormat;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL15;
@@ -110,7 +112,7 @@ public class Batch {
         size = 0;
     }
 
-    public void addCharacter(float x, float y, float scale, CharInfo charInfo, Color color) {
+    public void addCharacter(float x, float y, float scale, float italic, CharInfo charInfo, Color color) {
         if (size >= BATCH_SIZE - 4) {
             flushBatch();
         }
@@ -120,6 +122,7 @@ public class Batch {
         float b = color.getBlueF();
         float a = color.getAlphaF();
 
+        x += italic * scale;
         float x1 = x + scale * charInfo.getWidth();
         float y1 = y + scale * charInfo.getHeight();
 
@@ -129,7 +132,7 @@ public class Batch {
         float uy1 = charInfo.textureCoordinates[1].y;
 
         int index = size * VERTEX_SIZE;
-        vertices[index] = x1;
+        vertices[index] = x1 - italic;
         vertices[index + 1] = y;
         vertices[index + 2] = r;
         vertices[index + 3] = g;
@@ -139,7 +142,7 @@ public class Batch {
         vertices[index + 7] = uy0;
 
         index += VERTEX_SIZE;
-        vertices[index] = x1;
+        vertices[index] = x1 + italic;
         vertices[index + 1] = y1;
         vertices[index + 2] = r;
         vertices[index + 3] = g;
@@ -149,7 +152,7 @@ public class Batch {
         vertices[index + 7] = uy1;
 
         index += VERTEX_SIZE;
-        vertices[index] = x;
+        vertices[index] = x + italic;
         vertices[index + 1] = y1;
         vertices[index + 2] = r;
         vertices[index + 3] = g;
@@ -159,7 +162,7 @@ public class Batch {
         vertices[index + 7] = uy1;
 
         index += VERTEX_SIZE;
-        vertices[index] = x;
+        vertices[index] = x - italic;
         vertices[index + 1] = y;
         vertices[index + 2] = r;
         vertices[index + 3] = g;
@@ -172,8 +175,28 @@ public class Batch {
     }
 
     public void addText(String text, float x, float y, float scale, Color color) {
+        boolean format = false;
+        String formatCode = "";
+
+        boolean newLine = false;
+        float italic = 0.0f;
+        boolean underLine = false;
+        float bold = 1f;
+        boolean obfuscated = false;
+
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
+
+            if (format) {
+                formatCode = TextFormat.PREFIX_CODE + String.valueOf(c);
+                format = false;
+                continue;
+            }
+
+            if (TextFormat.isPrefix(c)) {
+                format = true;
+                continue;
+            }
 
             CharInfo charInfo = font.getCharacter(c);
             if (charInfo.getWidth() == 0) {
@@ -181,9 +204,50 @@ public class Batch {
                 continue;
             }
 
+            Color newColor = TextFormat.getColor(formatCode, color);
+
+            shaderProgram.bind();
+            shaderProgram.setUniform1f("uItalicAmount", 0.0f);
+
+            if (formatCode.equals(TextFormat.NEWLINE) && !newLine) {
+                y -= charInfo.getHeight() * scale;
+                x = 0;
+                newLine = true;
+            }
+            if (formatCode.equals(TextFormat.ITALIC)) {
+                italic = 10f;
+            }
+            if (formatCode.equals(TextFormat.UNDERLINE)) {
+                underLine = true;
+            }
+            if (formatCode.equals(TextFormat.BOLD)) {
+                bold = 1.2f;
+            }
+            if (formatCode.equals(TextFormat.OBFUSCATED)) {
+                obfuscated = true;
+            }
+            if (formatCode.equals(TextFormat.RESET)) {
+                italic = 0.0f;
+                underLine = false;
+                bold = 1f;
+                obfuscated = false;
+            }
+
+            shaderProgram.unbind();
+
+            if (obfuscated) {
+                c = StringUtil.getRandomCharacter("0123456789abcdefghijklmnopqrstyvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+                charInfo = font.getCharacter(c);
+                if (charInfo.getWidth() == 0) {
+                    DebugLog.warning(getClass(), "Unknown character " + c);
+                    continue;
+                }
+            }
+
             float xPos = x;
-            addCharacter(xPos, y, scale, charInfo, color);
-            x += (int) (charInfo.getWidth() * scale);
+            addCharacter(xPos, y, scale * bold, italic, charInfo, newColor);
+
+            x += (int) (charInfo.getWidth() * scale * bold);
         }
     }
 

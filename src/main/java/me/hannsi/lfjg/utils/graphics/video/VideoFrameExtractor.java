@@ -2,7 +2,7 @@ package me.hannsi.lfjg.utils.graphics.video;
 
 import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.utils.graphics.audio.AudioFrameData;
-import me.hannsi.lfjg.utils.math.ANSIColors;
+import me.hannsi.lfjg.utils.math.ANSIFormat;
 import me.hannsi.lfjg.utils.math.StringUtil;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.time.TimeCalculator;
@@ -72,11 +72,11 @@ public class VideoFrameExtractor {
                             }
                             bar = StringUtil.getFirstNCharacters(bar, 20);
 
-                            System.out.print(ANSIColors.MAGENTA + "\rVideo convert: " + "[" + bar + "] " + nowStep + "% | Total Duration: " + totalDuration + "s | Processed: " + frameNumber);
+                            System.out.print(ANSIFormat.MAGENTA + "\rVideo convert: " + "[" + bar + "] " + nowStep + "% | Total Duration: " + totalDuration + "s | Processed: " + frameNumber + ANSIFormat.RESET);
                         }
 
                         int nowStep = 100;
-                        System.out.println(ANSIColors.MAGENTA + "\rVideo convert: " + "[■■■■■■■■■■■■■■■■■■■■] " + nowStep + "% | Total Duration: " + totalDuration + "s | Processed: " + frameNumber + ANSIColors.RESET);
+                        System.out.println(ANSIFormat.MAGENTA + "\rVideo convert: " + "[■■■■■■■■■■■■■■■■■■■■] " + nowStep + "% | Total Duration: " + totalDuration + "s | Processed: " + frameNumber + ANSIFormat.RESET);
 
                         grabber.stop();
                     } catch (FFmpegFrameGrabber.Exception e) {

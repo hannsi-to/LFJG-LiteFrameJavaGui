@@ -12,7 +12,7 @@ import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.render.nanoVG.system.NanoVGUtil;
 import me.hannsi.lfjg.utils.graphics.GLFWUtil;
-import me.hannsi.lfjg.utils.math.ANSIColors;
+import me.hannsi.lfjg.utils.math.ANSIFormat;
 import me.hannsi.lfjg.utils.time.TimeCalculator;
 import me.hannsi.lfjg.utils.time.TimeSourceUtil;
 import me.hannsi.lfjg.utils.toolkit.RuntimeUtil;
@@ -47,7 +47,14 @@ public class Frame implements IFrame {
     public Frame(LFJGFrame lfjgFrame, String threadName) {
         this.lfjgFrame = lfjgFrame;
 
-        new Thread(this::createFrame, threadName).start();
+        new Thread(() -> {
+            try {
+                Runtime.getRuntime().addShutdownHook(new Thread(lfjgFrame::stopFrame));
+                createFrame();
+            } finally {
+                lfjgFrame.stopFrame();
+            }
+        }, threadName).start();
     }
 
     private static String getALErrorString(int error) {
@@ -66,7 +73,7 @@ public class Frame implements IFrame {
         long tookTime = TimeCalculator.calculate(() -> {
             this.frameSettingManager = new FrameSettingManager(this);
         });
-        DebugLog.debug(getClass(), ANSIColors.GREEN + "Managers took " + tookTime + "ms to load!\n");
+        DebugLog.debug(getClass(), ANSIFormat.GREEN + "Managers took " + tookTime + "ms to load!\n");
     }
 
     public void createFrame() {

@@ -5,7 +5,7 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.manager.Manager;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
-import me.hannsi.lfjg.utils.math.ANSIColors;
+import me.hannsi.lfjg.utils.math.ANSIFormat;
 import me.hannsi.lfjg.utils.reflection.ClassUtil;
 import me.hannsi.lfjg.utils.reflection.PackagePath;
 import me.hannsi.lfjg.utils.time.TimeCalculator;
@@ -37,7 +37,7 @@ public class FrameSettingManager extends Manager {
             }
         });
 
-        sb.append("\n").append(ANSIColors.GREEN + "FrameSettings took ").append(tookTime).append("ms to update!\n");
+        sb.append("\n").append(ANSIFormat.GREEN + "FrameSettings took ").append(tookTime).append("ms to update!\n");
         DebugLog.debug(getClass(), sb.toString());
     }
 
@@ -83,7 +83,7 @@ public class FrameSettingManager extends Manager {
 
         });
 
-        sb.append("\n\n").append(ANSIColors.GREEN).append("FrameSettings took ").append(tookTime).append("ms to load!").append("\n");
+        sb.append("\n\n").append(ANSIFormat.GREEN).append("FrameSettings took ").append(tookTime).append("ms to load!").append("\n");
 
         DebugLog.debug(getClass(), sb.toString());
     }

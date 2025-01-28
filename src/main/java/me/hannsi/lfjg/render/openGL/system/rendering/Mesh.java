@@ -2,7 +2,7 @@ package me.hannsi.lfjg.render.openGL.system.rendering;
 
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -34,106 +34,112 @@ public class Mesh {
     }
 
     public Mesh(ProjectionType projectionType, float[] positions, float[] colors, float[] texture) {
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            this.projectionType = projectionType;
-            this.positions = positions;
-            this.colors = colors;
-            this.texture = texture;
+        this.projectionType = projectionType;
+        this.positions = positions;
+        this.colors = colors;
+        this.texture = texture;
 
-            vboIdList = new ArrayList<>();
+        vboIdList = new ArrayList<>();
 
-            vaoId = glGenVertexArrays();
-            glBindVertexArray(vaoId);
+        vaoId = glGenVertexArrays();
+        glBindVertexArray(vaoId);
 
-            int vboId = glGenBuffers();
-            vboIdList.add(vboId);
-            FloatBuffer positionsBuffer = stack.callocFloat(positions.length);
-            positionsBuffer.put(0, positions);
-            glBindBuffer(GL_ARRAY_BUFFER, vboId);
-            glBufferData(GL_ARRAY_BUFFER, positionsBuffer, GL_STATIC_DRAW);
-            glEnableVertexAttribArray(0);
+        int vboId = glGenBuffers();
+        vboIdList.add(vboId);
+        FloatBuffer positionsBuffer = MemoryUtil.memAllocFloat(positions.length);
+        positionsBuffer.put(0, positions);
+        glBindBuffer(GL_ARRAY_BUFFER, vboId);
+        glBufferData(GL_ARRAY_BUFFER, positionsBuffer, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
 
-            int size;
-            switch (projectionType) {
-                case OrthographicProjection -> {
-                    size = 2;
-                }
-                case PerspectiveProjection -> {
-                    size = 3;
-                }
-                default -> throw new IllegalStateException("Unexpected value: " + projectionType);
+        int size;
+        switch (projectionType) {
+            case OrthographicProjection -> {
+                size = 2;
             }
-
-            glVertexAttribPointer(0, size, GL_FLOAT, false, 0, 0);
-
-            if (colors != null) {
-                vboId = glGenBuffers();
-                vboIdList.add(vboId);
-                FloatBuffer colorsBuffer = stack.callocFloat(colors.length);
-                colorsBuffer.put(0, colors);
-                glBindBuffer(GL_ARRAY_BUFFER, vboId);
-                glBufferData(GL_ARRAY_BUFFER, colorsBuffer, GL_STATIC_DRAW);
-                glEnableVertexAttribArray(1);
-                glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, 0);
+            case PerspectiveProjection -> {
+                size = 3;
             }
-
-            if (texture != null) {
-                vboId = glGenBuffers();
-                vboIdList.add(vboId);
-                FloatBuffer colorsBuffer = stack.callocFloat(texture.length);
-                colorsBuffer.put(0, texture);
-                glBindBuffer(GL_ARRAY_BUFFER, vboId);
-                glBufferData(GL_ARRAY_BUFFER, colorsBuffer, GL_STATIC_DRAW);
-                glEnableVertexAttribArray(2);
-                glVertexAttribPointer(2, 2, GL_FLOAT, false, 0, 0);
-            }
-
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-            glBindVertexArray(0);
+            default -> throw new IllegalStateException("Unexpected value: " + projectionType);
         }
+
+        glVertexAttribPointer(0, size, GL_FLOAT, false, 0, 0);
+
+        if (colors != null) {
+            vboId = glGenBuffers();
+            vboIdList.add(vboId);
+            FloatBuffer colorsBuffer = MemoryUtil.memAllocFloat(colors.length);
+            colorsBuffer.put(0, colors);
+            glBindBuffer(GL_ARRAY_BUFFER, vboId);
+            glBufferData(GL_ARRAY_BUFFER, colorsBuffer, GL_STATIC_DRAW);
+            glEnableVertexAttribArray(1);
+            glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, 0);
+
+            MemoryUtil.memFree(colorsBuffer);
+        }
+
+        if (texture != null) {
+            vboId = glGenBuffers();
+            vboIdList.add(vboId);
+            FloatBuffer textCoordsBuffer = MemoryUtil.memAllocFloat(texture.length);
+            textCoordsBuffer.put(0, texture);
+            glBindBuffer(GL_ARRAY_BUFFER, vboId);
+            glBufferData(GL_ARRAY_BUFFER, textCoordsBuffer, GL_STATIC_DRAW);
+            glEnableVertexAttribArray(2);
+            glVertexAttribPointer(2, 2, GL_FLOAT, false, 0, 0);
+
+            MemoryUtil.memFree(textCoordsBuffer);
+        }
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+
+        MemoryUtil.memFree(positionsBuffer);
     }
 
     public Mesh(float[] positions, float[] textCoords, int[] indices) {
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            this.positions = positions;
-            this.texture = textCoords;
-            this.projectionType = ProjectionType.PerspectiveProjection;
-            this.colors = null;
+        this.positions = positions;
+        this.texture = textCoords;
+        this.projectionType = ProjectionType.PerspectiveProjection;
+        this.colors = null;
 
-            numVertices = indices.length;
-            vboIdList = new ArrayList<>();
+        numVertices = indices.length;
+        vboIdList = new ArrayList<>();
 
-            vaoId = glGenVertexArrays();
-            glBindVertexArray(vaoId);
+        vaoId = glGenVertexArrays();
+        glBindVertexArray(vaoId);
 
-            int vboId = glGenBuffers();
-            vboIdList.add(vboId);
-            FloatBuffer positionsBuffer = stack.callocFloat(positions.length);
-            positionsBuffer.put(0, positions);
-            glBindBuffer(GL_ARRAY_BUFFER, vboId);
-            glBufferData(GL_ARRAY_BUFFER, positionsBuffer, GL_STATIC_DRAW);
-            glEnableVertexAttribArray(0);
-            glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+        int vboId = glGenBuffers();
+        vboIdList.add(vboId);
+        FloatBuffer positionsBuffer = MemoryUtil.memAllocFloat(positions.length);
+        positionsBuffer.put(0, positions);
+        glBindBuffer(GL_ARRAY_BUFFER, vboId);
+        glBufferData(GL_ARRAY_BUFFER, positionsBuffer, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
 
-            vboId = glGenBuffers();
-            vboIdList.add(vboId);
-            FloatBuffer textCoordsBuffer = stack.callocFloat(textCoords.length);
-            textCoordsBuffer.put(0, textCoords);
-            glBindBuffer(GL_ARRAY_BUFFER, vboId);
-            glBufferData(GL_ARRAY_BUFFER, textCoordsBuffer, GL_STATIC_DRAW);
-            glEnableVertexAttribArray(1);
-            glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0);
+        vboId = glGenBuffers();
+        vboIdList.add(vboId);
+        FloatBuffer textCoordsBuffer = MemoryUtil.memAllocFloat(textCoords.length);
+        textCoordsBuffer.put(0, textCoords);
+        glBindBuffer(GL_ARRAY_BUFFER, vboId);
+        glBufferData(GL_ARRAY_BUFFER, textCoordsBuffer, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0);
 
-            vboId = glGenBuffers();
-            vboIdList.add(vboId);
-            IntBuffer indicesBuffer = stack.callocInt(indices.length);
-            indicesBuffer.put(0, indices);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboId);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
+        vboId = glGenBuffers();
+        vboIdList.add(vboId);
+        IntBuffer indicesBuffer = MemoryUtil.memAllocInt(indices.length);
+        indicesBuffer.put(0, indices);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboId);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
 
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-            glBindVertexArray(0);
-        }
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+
+        MemoryUtil.memFree(positionsBuffer);
+        MemoryUtil.memFree(textCoordsBuffer);
+        MemoryUtil.memFree(indicesBuffer);
     }
 
     public void cleanup() {
