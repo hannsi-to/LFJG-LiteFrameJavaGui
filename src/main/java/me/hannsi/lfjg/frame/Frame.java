@@ -4,7 +4,6 @@ import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.event.events.render.DrawFrameWithNanoVGEvent;
 import me.hannsi.lfjg.event.events.render.DrawFrameWithOpenGLEvent;
-import me.hannsi.lfjg.event.events.user.*;
 import me.hannsi.lfjg.event.system.EventHandler;
 import me.hannsi.lfjg.frame.manager.managers.FrameSettingManager;
 import me.hannsi.lfjg.frame.manager.managers.LoggerManager;
@@ -18,18 +17,19 @@ import me.hannsi.lfjg.utils.time.TimeSourceUtil;
 import me.hannsi.lfjg.utils.toolkit.RuntimeUtil;
 import me.hannsi.lfjg.utils.type.types.AntiAliasingType;
 import me.hannsi.lfjg.utils.type.types.RenderingType;
-import me.hannsi.lfjg.utils.type.types.SeverityType;
 import me.hannsi.lfjg.utils.type.types.VSyncType;
 import org.joml.Vector2i;
-import org.lwjgl.glfw.*;
+import org.lwjgl.glfw.Callbacks;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGL3;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL11;
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.system.MemoryUtil;
-
-import static org.lwjgl.system.MemoryUtil.memUTF8;
 
 public class Frame implements IFrame {
     private final LFJGFrame lfjgFrame;
@@ -107,7 +107,8 @@ public class Frame implements IFrame {
         updateViewport();
         frameSettingManager.updateFrameSettings(false);
 
-        glfwInvoke();
+        GLFWCallback glfwCallback = new GLFWCallback(this);
+        glfwCallback.glfwInvoke();
         mainLoop();
     }
 
@@ -140,128 +141,6 @@ public class Frame implements IFrame {
         GLFW.glfwWindowHint(GLFW.GLFW_FOCUS_ON_SHOW, GLFW.GLFW_TRUE);
 
         frameSettingManager.updateFrameSettings(true);
-    }
-
-    private void glfwInvoke() {
-        GLFW.glfwSetWindowFocusCallback(windowID, new GLFWWindowFocusCallbackI() {
-            @Override
-            public void invoke(long window, boolean focused) {
-
-            }
-        });
-        GLFW.glfwSetFramebufferSizeCallback(windowID, new GLFWFramebufferSizeCallback() {
-            @Override
-            public void invoke(long window, int width, int height) {
-                Vector2i windowSizes = GLFWUtil.getWindowSizes(Frame.this, getFrameSettingValue(MonitorSetting.class));
-                windowWidth = windowSizes.x();
-                windowHeight = windowSizes.y();
-
-                updateViewport();
-            }
-        });
-
-        GLFW.glfwSetKeyCallback(windowID, new GLFWKeyCallback() {
-            @Override
-            public void invoke(long window, int key, int scancode, int action, int mods) {
-                if (action == GLFW.GLFW_PRESS) {
-                    eventManager.call(new KeyPressEvent(key, scancode, mods, window));
-                } else if (action == GLFW.GLFW_RELEASE) {
-                    eventManager.call(new KeyReleasedEvent(key, scancode, mods, window));
-                }
-            }
-        });
-
-        GLFW.glfwSetCursorPosCallback(windowID, new GLFWCursorPosCallback() {
-            @Override
-            public void invoke(long window, double xpos, double ypos) {
-                eventManager.call(new CursorPosEvent(xpos, ypos, window));
-            }
-        });
-
-        GLFW.glfwSetCursorEnterCallback(windowID, new GLFWCursorEnterCallback() {
-            @Override
-            public void invoke(long window, boolean entered) {
-                eventManager.call(new CursorEnterEvent(window, entered));
-            }
-        });
-
-        GLFW.glfwSetMouseButtonCallback(windowID, new GLFWMouseButtonCallback() {
-            @Override
-            public void invoke(long window, int button, int action, int mods) {
-                eventManager.call(new MouseButtonCallbackEvent(window, button, action, mods));
-                if (action == GLFW.GLFW_PRESS) {
-                    eventManager.call(new MouseButtonPressEvent(button, mods, window));
-                } else if (action == GLFW.GLFW_RELEASE) {
-                    eventManager.call(new MouseButtonReleasedEvent(button, mods, window));
-                }
-            }
-        });
-
-        if (GL.getCapabilities().OpenGL43) {
-            GL43.glEnable(GL43.GL_DEBUG_OUTPUT);
-            GL43.glDebugMessageCallback(new GLDebugMessageCallback() {
-                @Override
-                public void invoke(int source, int type, int id, int severity, int length, long message, long userParam) {
-                    String errorMessage = memUTF8(message);
-
-                    String sourceString = getSourceString(source);
-                    String typeString = getTypeString(type);
-                    String severityString = getSeverityString(severity);
-
-                    for (SeverityType checkSeverity : ((SeverityType[]) getFrameSettingValue(CheckSeveritiesSetting.class))) {
-                        if (checkSeverity.getId() == severity) {
-                            LogGenerator logGenerator = new LogGenerator("OpenGL Debug Message", "Source: " + sourceString, "Type: " + typeString, "ID: " + id, "Severity: " + severityString, "Message: " + errorMessage);
-
-                            if (type == GL43.GL_DEBUG_TYPE_ERROR || severity == GL43.GL_DEBUG_SEVERITY_HIGH) {
-                                DebugLog.error(getClass(), logGenerator.createLog());
-                            } else if (severity == GL43.GL_DEBUG_SEVERITY_MEDIUM) {
-                                DebugLog.warning(getClass(), logGenerator.createLog());
-                            } else if (severity == GL43.GL_DEBUG_SEVERITY_LOW) {
-                                DebugLog.info(getClass(), logGenerator.createLog());
-                            } else {
-                                DebugLog.debug(getClass(), logGenerator.createLog());
-                            }
-                        }
-                    }
-                }
-            }, 0);
-        } else {
-            DebugLog.debug(getClass(), "OpenGL 4.3 or higher is required for debug messages.");
-        }
-    }
-
-    private String getSourceString(int source) {
-        return switch (source) {
-            case GL43.GL_DEBUG_SOURCE_API -> "API";
-            case GL43.GL_DEBUG_SOURCE_WINDOW_SYSTEM -> "Window System";
-            case GL43.GL_DEBUG_SOURCE_SHADER_COMPILER -> "Shader Compiler";
-            case GL43.GL_DEBUG_SOURCE_THIRD_PARTY -> "Third Party";
-            case GL43.GL_DEBUG_SOURCE_APPLICATION -> "Application";
-            case GL43.GL_DEBUG_SOURCE_OTHER -> "Other";
-            default -> "Unknown";
-        };
-    }
-
-    private String getTypeString(int type) {
-        return switch (type) {
-            case GL43.GL_DEBUG_TYPE_ERROR -> "Error";
-            case GL43.GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR -> "Deprecated Behavior";
-            case GL43.GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR -> "Undefined Behavior";
-            case GL43.GL_DEBUG_TYPE_PORTABILITY -> "Portability";
-            case GL43.GL_DEBUG_TYPE_PERFORMANCE -> "Performance";
-            case GL43.GL_DEBUG_TYPE_OTHER -> "Other";
-            default -> "Unknown";
-        };
-    }
-
-    private String getSeverityString(int severity) {
-        return switch (severity) {
-            case GL43.GL_DEBUG_SEVERITY_NOTIFICATION -> "Notification";
-            case GL43.GL_DEBUG_SEVERITY_LOW -> "Low";
-            case GL43.GL_DEBUG_SEVERITY_MEDIUM -> "Medium";
-            case GL43.GL_DEBUG_SEVERITY_HIGH -> "High";
-            default -> "Unknown";
-        };
     }
 
     private void mainLoop() {
@@ -443,6 +322,10 @@ public class Frame implements IFrame {
         return windowID;
     }
 
+    public void setWindowID(long windowID) {
+        this.windowID = windowID;
+    }
+
     @SuppressWarnings("unchecked")
     public <T> FrameSettingBase<T> getFrameSettingBase(Class<? extends FrameSettingBase<?>> frameSettingBase) {
         return ((FrameSettingBase<T>) frameSettingManager.getFrameSetting(frameSettingBase));
@@ -469,27 +352,71 @@ public class Frame implements IFrame {
         return fps;
     }
 
+    public void setFps(int fps) {
+        this.fps = fps;
+    }
+
     public long getCurrentTime() {
         return currentTime;
+    }
+
+    public void setCurrentTime(long currentTime) {
+        this.currentTime = currentTime;
     }
 
     public long getLastTime() {
         return lastTime;
     }
 
+    public void setLastTime(long lastTime) {
+        this.lastTime = lastTime;
+    }
+
     public long getStartTime() {
         return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
     }
 
     public long getFinishTime() {
         return finishTime;
     }
 
+    public void setFinishTime(long finishTime) {
+        this.finishTime = finishTime;
+    }
+
     public int getWindowHeight() {
         return windowHeight;
     }
 
+    public void setWindowHeight(int windowHeight) {
+        this.windowHeight = windowHeight;
+    }
+
     public int getWindowWidth() {
         return windowWidth;
+    }
+
+    public void setWindowWidth(int windowWidth) {
+        this.windowWidth = windowWidth;
+    }
+
+    public FrameSettingManager getFrameSettingManager() {
+        return frameSettingManager;
+    }
+
+    public void setFrameSettingManager(FrameSettingManager frameSettingManager) {
+        this.frameSettingManager = frameSettingManager;
+    }
+
+    public long getNvg() {
+        return nvg;
+    }
+
+    public void setNvg(long nvg) {
+        this.nvg = nvg;
     }
 }
