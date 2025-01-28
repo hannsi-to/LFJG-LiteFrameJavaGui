@@ -120,4 +120,116 @@ public class GLRect extends GLPolygon {
     public void rectWHOutLine(float x, float y, float width, float height, float lineWidth, Color color1, Color color2, Color color3, Color color4) {
         rectOutLine(x, y, x + width, y + height, lineWidth, color1, color2, color3, color4);
     }
+
+    public void rect(double x1, double y1, double x2, double y2, Color color) {
+        put().vertex(new Vector2f((float)x1, (float)y1)).color(color).end();
+        put().vertex(new Vector2f((float)x2, (float)y1)).color(color).end();
+        put().vertex(new Vector2f((float)x2, (float)y2)).color(color).end();
+        put().vertex(new Vector2f((float)x1, (float)y2)).color(color).end();
+
+        setDrawType(DrawType.QUADS);
+        rendering();
+    }
+
+    public void rectWH(double x, double y, double width, double height, Color color) {
+        rect(x, y, x + width, y + height, color);
+    }
+
+    public void rect(double x1, double y1, double x2, double y2, Color color1, Color color2) {
+        put().vertex(new Vector2f((float)x1, (float)y1)).color(color1).end();
+        put().vertex(new Vector2f((float)x2, (float)y1)).color(color2).end();
+        put().vertex(new Vector2f((float)x2, (float)y2)).color(color1).end();
+        put().vertex(new Vector2f((float)x1, (float)y2)).color(color1).end();
+
+        setDrawType(DrawType.QUADS);
+        rendering();
+    }
+
+    public void rectWH(double x, double y, double width, double height, Color color1, Color color2) {
+        rect(x, y, x + width, y + height, color1, color2);
+    }
+
+    public void rect(double x1, double y1, double x2, double y2, Color color1, Color color2, Color color3) {
+        put().vertex(new Vector2f((float)x1, (float)y1)).color(color1).end();
+        put().vertex(new Vector2f((float)x2, (float)y1)).color(color2).end();
+        put().vertex(new Vector2f((float)x2, (float)y2)).color(color3).end();
+        put().vertex(new Vector2f((float)x1, (float)y2)).color(color1).end();
+
+        setDrawType(DrawType.QUADS);
+        rendering();
+    }
+
+    public void rectWH(double x, double y, double width, double height, Color color1, Color color2, Color color3) {
+        rect(x, y, x + width, y + height, color1, color2, color3);
+    }
+
+    public void rect(double x1, double y1, double x2, double y2, Color color1, Color color2, Color color3, Color color4) {
+        put().vertex(new Vector2f((float)x1, (float)y1)).color(color1).end();
+        put().vertex(new Vector2f((float)x2, (float)y1)).color(color2).end();
+        put().vertex(new Vector2f((float)x2, (float)y2)).color(color3).end();
+        put().vertex(new Vector2f((float)x1, (float)y2)).color(color4).end();
+
+        setDrawType(DrawType.QUADS);
+        rendering();
+    }
+
+    public void rectWH(double x, double y, double width, double height, Color color1, Color color2, Color color3, Color color4) {
+        rect(x, y, x + width, y + height, color1, color2, color3, color4);
+    }
+
+    public void rectOutLine(double x1, double y1, double x2, double y2, double lineWidth, Color color) {
+        put().vertex(new Vector2f((float)x1, (float)y1)).color(color).end();
+        put().vertex(new Vector2f((float)x2, (float)y1)).color(color).end();
+        put().vertex(new Vector2f((float)x2, (float)y2)).color(color).end();
+        put().vertex(new Vector2f((float)x1, (float)y2)).color(color).end();
+
+        setDrawType(DrawType.LINE_LOOP).setLineWidth((float)lineWidth);
+        rendering();
+    }
+
+    public void rectWHOutLine(double x, double y, double width, double height, double lineWidth, Color color) {
+        rectOutLine(x, y, x + width, y + height, lineWidth, color);
+    }
+
+    public void rectOutLine(double x1, double y1, double x2, double y2, double lineWidth, Color color1, Color color2) {
+        put().vertex(new Vector2f((float)x1, (float)y1)).color(color1).end();
+        put().vertex(new Vector2f((float)x2, (float)y1)).color(color2).end();
+        put().vertex(new Vector2f((float)x2, (float)y2)).color(color1).end();
+        put().vertex(new Vector2f((float)x1, (float)y2)).color(color1).end();
+
+        setDrawType(DrawType.LINE_LOOP).setLineWidth((float)lineWidth);
+        rendering();
+    }
+
+    public void rectWHOutLine(double x, double y, double width, double height, double lineWidth, Color color1, Color color2) {
+        rectOutLine(x, y, x + width, y + height, lineWidth, color1, color2);
+    }
+
+    public void rectOutLine(double x1, double y1, double x2, double y2, double lineWidth, Color color1, Color color2, Color color3) {
+        put().vertex(new Vector2f((float)x1, (float)y1)).color(color1).end();
+        put().vertex(new Vector2f((float)x2, (float)y1)).color(color2).end();
+        put().vertex(new Vector2f((float)x2, (float)y2)).color(color3).end();
+        put().vertex(new Vector2f((float)x1, (float)y2)).color(color1).end();
+
+        setDrawType(DrawType.LINE_LOOP).setLineWidth((float)lineWidth);
+        rendering();
+    }
+
+    public void rectWHOutLine(double x, double y, double width, double height, double lineWidth, Color color1, Color color2, Color color3) {
+        rectOutLine(x, y, x + width, y + height, lineWidth, color1, color2, color3);
+    }
+
+    public void rectOutLine(double x1, double y1, double x2, double y2, double lineWidth, Color color1, Color color2, Color color3, Color color4) {
+        put().vertex(new Vector2f((float)x1, (float)y1)).color(color1).end();
+        put().vertex(new Vector2f((float)x2, (float)y1)).color(color2).end();
+        put().vertex(new Vector2f((float)x2, (float)y2)).color(color3).end();
+        put().vertex(new Vector2f((float)x1, (float)y2)).color(color4).end();
+
+        setDrawType(DrawType.LINE_LOOP).setLineWidth((float)lineWidth);
+        rendering();
+    }
+
+    public void rectWHOutLine(double x, double y, double width, double height, double lineWidth, Color color1, Color color2, Color color3, Color color4) {
+        rectOutLine(x, y, x + width, y + height, lineWidth, color1, color2, color3, color4);
+    }
 }

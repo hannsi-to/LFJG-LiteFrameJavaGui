@@ -16,7 +16,7 @@ public class GLPoint extends GLPolygon {
         rendering();
     }
 
-    public void pointWH(float x, float y, float pointSize, Color color) {
-        point(x, y, pointSize, color);
+    public void point(double x, double y, double pointSize, Color color) {
+        point((float) x, (float) y,(float)  pointSize, color);
     }
 }

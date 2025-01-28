@@ -51,6 +51,10 @@ public class GLFont extends GLRect {
         rectWH(0, 0, getResolution().x(), getResolution().y(), new Color(0, 0, 0, 0));
     }
 
+    public void font(String text, double x, double y, double scale, Color color) {
+        font(text, (float) x, (float) y, (float) scale, color);
+    }
+
     @Override
     public void draw() {
         frameBuffer.bindFrameBuffer();

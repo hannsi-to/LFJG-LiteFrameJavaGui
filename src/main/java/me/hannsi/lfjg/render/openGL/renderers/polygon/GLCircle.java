@@ -9,6 +9,18 @@ public class GLCircle extends GLPolygon {
         super(name);
     }
 
+    public void circle(double xCenter, double yCenter, double radius, int segmentCount, Color... colors) {
+        circle((float) xCenter, (float) yCenter, (float) radius, (float) radius, segmentCount, colors);
+    }
+
+    public void circle(float xCenter, float yCenter, float radius, int segmentCount, Color... colors) {
+        circle(xCenter, yCenter, radius, radius, segmentCount, colors);
+    }
+
+    public void circle(double xCenter,double yCenter,double xRadius,double yRadius,int segmentCount,Color... colors){
+        circle((float) xCenter,(float) yCenter,(float) xRadius,(float) yRadius,segmentCount,colors);
+    }
+
     public void circle(float xCenter, float yCenter, float xRadius, float yRadius, int segmentCount, Color... colors) {
         int colorCount = colors.length;
 
@@ -47,6 +59,18 @@ public class GLCircle extends GLPolygon {
 
         setDrawType(DrawType.POLYGON);
         rendering();
+    }
+
+    public void circleOutLine(double xCenter, double yCenter, double radius, int segmentCount, double lineWidth, Color... colors) {
+        circleOutLine((float) xCenter, (float) yCenter, (float) radius, (float) radius, segmentCount, (float) lineWidth, colors);
+    }
+
+    public void circleOutLine(float xCenter, float yCenter, float radius, int segmentCount, float lineWidth, Color... colors) {
+        circleOutLine(xCenter, yCenter, radius, radius, segmentCount, lineWidth, colors);
+    }
+
+    public void circleOutLine(double xCenter, double yCenter, double xRadius, double yRadius, int segmentCount, double lineWidth, Color... colors) {
+        circleOutLine((float) xCenter, (float) yCenter, (float) xRadius, (float) yRadius, segmentCount, (float) lineWidth, colors);
     }
 
     public void circleOutLine(float xCenter, float yCenter, float xRadius, float yRadius, int segmentCount, float lineWidth, Color... colors) {
