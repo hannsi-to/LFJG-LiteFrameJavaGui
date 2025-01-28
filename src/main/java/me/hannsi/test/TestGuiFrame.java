@@ -22,10 +22,7 @@ import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.system.Camera;
 import me.hannsi.lfjg.render.openGL.system.MouseInfo;
 import me.hannsi.lfjg.render.openGL.system.font.FontCache;
-import me.hannsi.lfjg.render.openGL.system.model.Material;
-import me.hannsi.lfjg.render.openGL.system.model.Render;
-import me.hannsi.lfjg.render.openGL.system.model.Scene;
-import me.hannsi.lfjg.render.openGL.system.model.TextureModel;
+import me.hannsi.lfjg.render.openGL.system.model.*;
 import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.render.openGL.system.rendering.Mesh;
 import me.hannsi.lfjg.utils.graphics.color.Color;
@@ -107,96 +104,10 @@ public class TestGuiFrame implements LFJGFrame {
 
         this.mouseInfo = new me.hannsi.lfjg.render.openGL.system.MouseInfo();
 
-        float[] positions = new float[]{
-                // V0
-                -0.5f, 0.5f, 0.5f,
-                // V1
-                -0.5f, -0.5f, 0.5f,
-                // V2
-                0.5f, -0.5f, 0.5f,
-                // V3
-                0.5f, 0.5f, 0.5f,
-                // V4
-                -0.5f, 0.5f, -0.5f,
-                // V5
-                0.5f, 0.5f, -0.5f,
-                // V6
-                -0.5f, -0.5f, -0.5f,
-                // V7
-                0.5f, -0.5f, -0.5f,
-
-                // For text coords in top face
-                // V8: V4 repeated
-                -0.5f, 0.5f, -0.5f,
-                // V9: V5 repeated
-                0.5f, 0.5f, -0.5f,
-                // V10: V0 repeated
-                -0.5f, 0.5f, 0.5f,
-                // V11: V3 repeated
-                0.5f, 0.5f, 0.5f,
-
-                // For text coords in right face
-                // V12: V3 repeated
-                0.5f, 0.5f, 0.5f,
-                // V13: V2 repeated
-                0.5f, -0.5f, 0.5f,
-
-                // For text coords in left face
-                // V14: V0 repeated
-                -0.5f, 0.5f, 0.5f,
-                // V15: V1 repeated
-                -0.5f, -0.5f, 0.5f,
-
-                // For text coords in bottom face
-                // V16: V6 repeated
-                -0.5f, -0.5f, -0.5f,
-                // V17: V7 repeated
-                0.5f, -0.5f, -0.5f,
-                // V18: V1 repeated
-                -0.5f, -0.5f, 0.5f,
-                // V19: V2 repeated
-                0.5f, -0.5f, 0.5f,};
-        float[] textCoords = new float[]{0.0f, 0.0f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f,
-
-                0.0f, 0.0f, 0.5f, 0.0f, 0.0f, 0.5f, 0.5f, 0.5f,
-
-                // For text coords in top face
-                0.0f, 0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.5f, 1.0f,
-
-                // For text coords in right face
-                0.0f, 0.0f, 0.0f, 0.5f,
-
-                // For text coords in left face
-                0.5f, 0.0f, 0.5f, 0.5f,
-
-                // For text coords in bottom face
-                0.5f, 0.0f, 1.0f, 0.0f, 0.5f, 0.5f, 1.0f, 0.5f,};
-        int[] indices = new int[]{
-                // Front face
-                0, 1, 3, 3, 1, 2,
-                // Top Face
-                8, 10, 11, 9, 8, 11,
-                // Right face
-                12, 13, 7, 5, 12, 7,
-                // Left face
-                14, 15, 6, 4, 14, 6,
-                // Bottom face
-                16, 18, 19, 17, 16, 19,
-                // Back face
-                4, 6, 7, 5, 4, 7,};
-
         render = new Render();
         scene = new Scene(resolution);
 
-        TextureModel texture = scene.getTextureModelCache().createTexture(new ResourcesLocation("model/cube/cube.png"));
-        Material material = new Material();
-        material.setTexturePath(texture.getTexturePath());
-        List<Material> materialList = new ArrayList<>();
-        materialList.add(material);
-
-        Mesh mesh = new Mesh(positions, textCoords, indices);
-        material.getMeshList().add(mesh);
-        Model cubeModel = new Model("cube-model", materialList);
+        Model cubeModel = ModelLoader.loadModel("cube-model", new ResourcesLocation("model/cube/cube.obj"), scene.getTextureModelCache());
         scene.addModel(cubeModel);
 
         cubeEntity = new Entity("cube-entity", cubeModel.getId());
