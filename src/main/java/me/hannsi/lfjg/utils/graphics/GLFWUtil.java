@@ -3,11 +3,9 @@ package me.hannsi.lfjg.utils.graphics;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.HeightSetting;
 import me.hannsi.lfjg.frame.setting.settings.WidthSetting;
-import me.hannsi.lfjg.utils.graphics.image.TextureLoader;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.MonitorType;
 import org.joml.Vector2i;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -51,39 +49,24 @@ public class GLFWUtil {
     }
 
     public static GLFWImage.Buffer loadIconImageBuffer(ResourcesLocation resourcesLocation) {
-        IntBuffer width = BufferUtils.createIntBuffer(1);
-        IntBuffer height = BufferUtils.createIntBuffer(1);
-        IntBuffer channels = BufferUtils.createIntBuffer(1);
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            IntBuffer width = stack.mallocInt(1);
+            IntBuffer height = stack.mallocInt(1);
+            IntBuffer channels = stack.mallocInt(1);
 
-        ByteBuffer image = TextureLoader.loadImageInSTBImage(resourcesLocation, width, height, channels);
+            ByteBuffer image = STBImage.stbi_load(resourcesLocation.getPath(), width, height, channels, 4);
+            if (image == null) {
+                throw new RuntimeException("Failed to load icon image: " + resourcesLocation.getPath());
+            }
 
-        int w = width.get(0);
-        int h = height.get(0);
-        int stride = w * 4;
+            GLFWImage.Buffer iconBuffer = GLFWImage.malloc(1);
+            GLFWImage icon = iconBuffer.get(0);
+            icon.set(width.get(0), height.get(0), image);
 
-        ByteBuffer flippedImage = BufferUtils.createByteBuffer(image.capacity());
-        for (int y = 0; y < h; y++) {
-            int srcPos = (h - 1 - y) * stride;
-            int destPos = y * stride;
-            byte[] row = new byte[stride];
-            image.position(srcPos);
-            image.get(row);
-            flippedImage.position(destPos);
-            flippedImage.put(row);
+            STBImage.stbi_image_free(image);
+
+            return iconBuffer;
         }
-        flippedImage.position(0);
-
-        GLFWImage glfwImage = GLFWImage.malloc();
-        glfwImage.width(w);
-        glfwImage.height(h);
-        glfwImage.pixels(flippedImage);
-
-        GLFWImage.Buffer buffer = GLFWImage.malloc(1);
-        buffer.put(0, glfwImage);
-
-        STBImage.stbi_image_free(image);
-
-        return buffer;
     }
 
     public static Vector2i getWindowSize(long windowId) {

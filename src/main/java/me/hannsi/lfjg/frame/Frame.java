@@ -1,7 +1,6 @@
 package me.hannsi.lfjg.frame;
 
 import me.hannsi.lfjg.debug.debug.DebugLog;
-import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.event.events.render.DrawFrameWithNanoVGEvent;
 import me.hannsi.lfjg.event.events.render.DrawFrameWithOpenGLEvent;
 import me.hannsi.lfjg.event.system.EventHandler;
@@ -24,7 +23,6 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGL3;
-import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL11;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
@@ -170,16 +168,16 @@ public class Frame implements IFrame {
 
                 draw();
 
-                if (AL.getCapabilities().OpenAL11) {
-                    int error = AL11.alGetError();
-                    if (error != AL11.AL_NO_ERROR) {
-                        String errorMessage = getALErrorString(error);
-
-                        LogGenerator logGenerator = new LogGenerator(" OpenAL Debug Message", "Type: Error", "ID: " + error, "Severity: High", "Message: " + errorMessage);
-
-                        DebugLog.error(getClass(), logGenerator.createLog());
-                    }
-                }
+//                if (AL.getCapabilities().OpenAL11) {
+//                    int error = AL11.alGetError();
+//                    if (error != AL11.AL_NO_ERROR) {
+//                        String errorMessage = getALErrorString(error);
+//
+//                        LogGenerator logGenerator = new LogGenerator(" OpenAL Debug Message", "Type: Error", "ID: " + error, "Severity: High", "Message: " + errorMessage);
+//
+//                        DebugLog.error(getClass(), logGenerator.createLog());
+//                    }
+//                }
 
                 GLFW.glfwSwapBuffers(windowID);
                 GLFW.glfwPollEvents();

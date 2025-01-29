@@ -1,7 +1,6 @@
 package me.hannsi.lfjg.render.openGL.system.model;
 
 import me.hannsi.lfjg.utils.reflection.FileLocation;
-import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.ByteBuffer;
@@ -11,8 +10,8 @@ import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.stb.STBImage.*;
 
 public class TextureModel {
-    private int textureId;
     private final FileLocation texturePath;
+    private int textureId;
 
     public TextureModel(int width, int height, ByteBuffer buf) {
         this.texturePath = null;
@@ -42,6 +41,10 @@ public class TextureModel {
 
     public void bind() {
         glBindTexture(GL_TEXTURE_2D, textureId);
+    }
+
+    public void unbind() {
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     public void cleanup() {

@@ -39,6 +39,7 @@ public class SceneRender {
             List<Entity> entities = model.getEntitiesList();
 
             for (Material material : model.getMaterialList()) {
+                shaderProgram.setUniform4f("material.diffuse", material.getDiffuseColor());
                 TextureModel texture = textureCache.getTexture(material.getTexturePath());
                 glActiveTexture(GL_TEXTURE0);
                 texture.bind();
@@ -50,6 +51,8 @@ public class SceneRender {
                         glDrawElements(GL_TRIANGLES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
                     }
                 }
+
+                texture.unbind();
             }
         }
 
