@@ -47,16 +47,16 @@ public class GaussianBlurVertical extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform2f("direction", new Vector2f(0, 1));
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("radius", radiusY);
-        getFrameBuffer().getShaderProgramFBO().setUniform2f("texelSize", new Vector2f(1.0f / baseGLObject.getResolution().x(), 1.0f / baseGLObject.getResolution().y()));
+        getFrameBuffer().getShaderProgramFBO().setUniform("direction", new Vector2f(0, 1));
+        getFrameBuffer().getShaderProgramFBO().setUniform("radius", radiusY);
+        getFrameBuffer().getShaderProgramFBO().setUniform("texelSize", new Vector2f(1.0f / baseGLObject.getResolution().x(), 1.0f / baseGLObject.getResolution().y()));
 
         final FloatBuffer weightBuffer = BufferUtils.createFloatBuffer(256);
         for (int i = 0; i < radiusY; i++) {
             weightBuffer.put(MathUtil.calculateGaussianValue(i, radiusY / 2));
         }
         weightBuffer.rewind();
-        getFrameBuffer().getShaderProgramFBO().setUniform1fv("values", weightBuffer);
+        getFrameBuffer().getShaderProgramFBO().setUniform("values", weightBuffer);
 
         super.setUniform(baseGLObject);
     }

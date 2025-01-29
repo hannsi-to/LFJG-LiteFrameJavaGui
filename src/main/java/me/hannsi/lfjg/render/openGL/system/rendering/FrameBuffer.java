@@ -125,9 +125,9 @@ public class FrameBuffer {
         GL30.glPushMatrix();
         shaderProgramFBO.bind();
 
-        shaderProgramFBO.setUniformMatrix4fv("projectionMatrix", projectionMatrix);
-        shaderProgramFBO.setUniformMatrix4fv("modelMatrix", modelMatrix);
-        shaderProgramFBO.setUniformMatrix4fv("viewMatrix", viewMatrix);
+        shaderProgramFBO.setUniform("projectionMatrix", projectionMatrix);
+        shaderProgramFBO.setUniform("modelMatrix", modelMatrix);
+        shaderProgramFBO.setUniform("viewMatrix", viewMatrix);
         shaderProgramFBO.setUniform1i("textureSampler", textureUnit);
 
         GLUtil glUtil = new GLUtil();

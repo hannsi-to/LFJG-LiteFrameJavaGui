@@ -60,14 +60,14 @@ public class Gradation extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform2f("center", new Vector2f(centerX / resolution.x, centerY / resolution.y));
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("angle", angle);
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("width", width);
+        getFrameBuffer().getShaderProgramFBO().setUniform("center", new Vector2f(centerX / resolution.x, centerY / resolution.y));
+        getFrameBuffer().getShaderProgramFBO().setUniform("angle", angle);
+        getFrameBuffer().getShaderProgramFBO().setUniform("width", width);
         getFrameBuffer().getShaderProgramFBO().setUniform1i("gradientShape", shapeMode.getId());
         getFrameBuffer().getShaderProgramFBO().setUniform1i("blendMode", blendType.getId());
-        getFrameBuffer().getShaderProgramFBO().setUniform4f("startColor", new Vector4f(startColor.getRedF(), startColor.getGreenF(), startColor.getBlueF(), startColor.getAlphaF()));
-        getFrameBuffer().getShaderProgramFBO().setUniform4f("endColor", new Vector4f(endColor.getRedF(), endColor.getGreenF(), endColor.getBlueF(), endColor.getAlphaF()));
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("intensity", intensity);
+        getFrameBuffer().getShaderProgramFBO().setUniform("startColor", new Vector4f(startColor.getRedF(), startColor.getGreenF(), startColor.getBlueF(), startColor.getAlphaF()));
+        getFrameBuffer().getShaderProgramFBO().setUniform("endColor", new Vector4f(endColor.getRedF(), endColor.getGreenF(), endColor.getBlueF(), endColor.getAlphaF()));
+        getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
 
         super.setUniform(baseGLObject);
     }

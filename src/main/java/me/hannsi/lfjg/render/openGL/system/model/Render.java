@@ -1,18 +1,19 @@
 package me.hannsi.lfjg.render.openGL.system.model;
 
+import me.hannsi.lfjg.utils.graphics.GLUtil;
 import org.joml.Vector2f;
-import org.lwjgl.opengl.GL;
 
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.*;
 
 public class Render {
     private SceneRender sceneRender;
+    private GLUtil glUtil;
 
     public Render() {
-        GL.createCapabilities();
-        glEnable(GL_DEPTH_TEST);
         sceneRender = new SceneRender();
+        glUtil = new GLUtil();
+        glUtil.addGLTarget(GL_DEPTH_TEST);
+        glUtil.addGLTarget(GL_CULL_FACE);
     }
 
     public void cleanup() {
@@ -20,7 +21,12 @@ public class Render {
     }
 
     public void render(Vector2f resolution, Scene scene) {
+        glUtil.enableTargets();
+
+        glCullFace(GL_BACK);
         sceneRender.render(scene);
+
+        glUtil.disableTargets();
     }
 
     public SceneRender getSceneRender() {
@@ -29,5 +35,13 @@ public class Render {
 
     public void setSceneRender(SceneRender sceneRender) {
         this.sceneRender = sceneRender;
+    }
+
+    public GLUtil getGlUtil() {
+        return glUtil;
+    }
+
+    public void setGlUtil(GLUtil glUtil) {
+        this.glUtil = glUtil;
     }
 }

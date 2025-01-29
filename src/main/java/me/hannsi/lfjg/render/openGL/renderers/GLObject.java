@@ -93,10 +93,10 @@ public class GLObject {
 
         effectCache.push(this);
 
-        shaderProgram.setUniformMatrix4fv("projectionMatrix", projectionMatrix);
-        shaderProgram.setUniformMatrix4fv("modelMatrix", modelMatrix);
-        shaderProgram.setUniformMatrix4fv("viewMatrix", viewMatrix);
-        shaderProgram.setUniform2f("resolution", resolution);
+        shaderProgram.setUniform("projectionMatrix", projectionMatrix);
+        shaderProgram.setUniform("modelMatrix", modelMatrix);
+        shaderProgram.setUniform("viewMatrix", viewMatrix);
+        shaderProgram.setUniform("resolution", resolution);
 
         if (mesh.getTexture() != null) {
             shaderProgram.setUniform1i("textureSampler", 0);

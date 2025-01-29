@@ -97,7 +97,7 @@ public class Batch {
         glBindTexture(GL_TEXTURE_BUFFER, font.textureId);
 
         shaderProgram.setUniform1i("uFontTexture", 0);
-        shaderProgram.setUniformMatrix4fv("uProjection", projectionMatrix);
+        shaderProgram.setUniform("uProjection", projectionMatrix);
 
         glBindVertexArray(vao);
 
@@ -207,7 +207,7 @@ public class Batch {
             Color newColor = TextFormat.getColor(formatCode, color);
 
             shaderProgram.bind();
-            shaderProgram.setUniform1f("uItalicAmount", 0.0f);
+            shaderProgram.setUniform("uItalicAmount", 0.0f);
 
             if (formatCode.equals(TextFormat.NEWLINE) && !newLine) {
                 y -= charInfo.getHeight() * scale;

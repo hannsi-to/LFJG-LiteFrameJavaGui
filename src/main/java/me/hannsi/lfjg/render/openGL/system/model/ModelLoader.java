@@ -3,7 +3,6 @@ package me.hannsi.lfjg.render.openGL.system.model;
 import me.hannsi.lfjg.render.openGL.renderers.model.Model;
 import me.hannsi.lfjg.render.openGL.system.rendering.Mesh;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
-import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Vector4f;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.*;
@@ -21,12 +20,12 @@ public class ModelLoader {
     private ModelLoader() {
     }
 
-    public static Model loadModel(String modelId, ResourcesLocation modelPath, TextureModelCache textureModelCache) {
-        return loadModel(modelId, modelPath, textureModelCache, aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_FixInfacingNormals | aiProcess_CalcTangentSpace | aiProcess_LimitBoneWeights | aiProcess_PreTransformVertices);
+    public static Model loadModel(String modelId, FileLocation modelPath, TextureModelCache textureCache) {
+        return loadModel(modelId, modelPath, textureCache, aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_FixInfacingNormals | aiProcess_CalcTangentSpace | aiProcess_LimitBoneWeights | aiProcess_PreTransformVertices);
 
     }
 
-    public static Model loadModel(String modelId, ResourcesLocation modelPath, TextureModelCache textureModelCache, int flags) {
+    public static Model loadModel(String modelId, FileLocation modelPath, TextureModelCache textureCache, int flags) {
         File file = new File(modelPath.getPath());
         if (!file.exists()) {
             throw new RuntimeException("Model path does not exist [" + modelPath + "]");
@@ -43,7 +42,7 @@ public class ModelLoader {
         List<Material> materialList = new ArrayList<>();
         for (int i = 0; i < numMaterials; i++) {
             AIMaterial aiMaterial = AIMaterial.create(Objects.requireNonNull(aiScene.mMaterials()).get(i));
-            materialList.add(processMaterial(aiMaterial, modelDir, textureModelCache));
+            materialList.add(processMaterial(aiMaterial, modelDir, textureCache));
         }
 
         int numMeshes = aiScene.mNumMeshes();
@@ -90,10 +89,30 @@ public class ModelLoader {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             AIColor4D color = AIColor4D.create();
 
-            int result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE, aiTextureType_NONE, 0, color);
+            int result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_AMBIENT, aiTextureType_NONE, 0, color);
+            if (result == aiReturn_SUCCESS) {
+                material.setAmbientColor(new Vector4f(color.r(), color.g(), color.b(), color.a()));
+            }
+
+            result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE, aiTextureType_NONE, 0, color);
             if (result == aiReturn_SUCCESS) {
                 material.setDiffuseColor(new Vector4f(color.r(), color.g(), color.b(), color.a()));
             }
+
+            result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_SPECULAR, aiTextureType_NONE, 0, color);
+            if (result == aiReturn_SUCCESS) {
+                material.setSpecularColor(new Vector4f(color.r(), color.g(), color.b(), color.a()));
+            }
+
+            float reflectance = 0.0f;
+            float[] shininessFactor = new float[]{0.0f};
+            int[] pMax = new int[]{1};
+            result = aiGetMaterialFloatArray(aiMaterial, AI_MATKEY_SHININESS_STRENGTH, aiTextureType_NONE, 0, shininessFactor, pMax);
+            if (result != aiReturn_SUCCESS) {
+                reflectance = shininessFactor[0];
+            }
+
+            material.setReflectance(reflectance);
 
             AIString aiTexturePath = AIString.calloc(stack);
             aiGetMaterialTexture(aiMaterial, aiTextureType_DIFFUSE, 0, aiTexturePath, (IntBuffer) null, null, null, null, null, null);
@@ -110,6 +129,7 @@ public class ModelLoader {
 
     private static Mesh processMesh(AIMesh aiMesh) {
         float[] vertices = processVertices(aiMesh);
+        float[] normals = processNormals(aiMesh);
         float[] textCoords = processTextCoords(aiMesh);
         int[] indices = processIndices(aiMesh);
 
@@ -118,7 +138,21 @@ public class ModelLoader {
             textCoords = new float[numElements];
         }
 
-        return new Mesh(vertices, textCoords, indices);
+        return new Mesh(vertices, normals, textCoords, indices);
+    }
+
+    private static float[] processNormals(AIMesh aiMesh) {
+        AIVector3D.Buffer buffer = aiMesh.mNormals();
+        assert buffer != null;
+        float[] data = new float[buffer.remaining() * 3];
+        int pos = 0;
+        while (buffer.remaining() > 0) {
+            AIVector3D normal = buffer.get();
+            data[pos++] = normal.x();
+            data[pos++] = normal.y();
+            data[pos++] = normal.z();
+        }
+        return data;
     }
 
     private static float[] processTextCoords(AIMesh aiMesh) {

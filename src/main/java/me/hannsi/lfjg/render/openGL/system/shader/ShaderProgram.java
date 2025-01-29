@@ -83,14 +83,14 @@ public class ShaderProgram {
 
     }
 
-    public void setUniformBoolean(String name, boolean value) {
+    public void setUniform(String name, boolean value) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform1i(uniformId, value ? 1 : 0);
     }
 
 
-    public void setUniformMatrix4fv(String name, Matrix4f value) {
+    public void setUniform(String name, Matrix4f value) {
         int uniformId = glGetUniformLocation(programId, name);
 
         try (MemoryStack stack = MemoryStack.stackPush()) {
@@ -98,37 +98,37 @@ public class ShaderProgram {
         }
     }
 
-    public void setUniform1fv(String name, FloatBuffer value) {
+    public void setUniform(String name, FloatBuffer value) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform1fv(uniformId, value);
     }
 
-    public void setUniform1f(String name, float value) {
+    public void setUniform(String name, float value) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform1f(uniformId, value);
     }
 
-    public void setUniform2f(String name, Vector2f value) {
+    public void setUniform(String name, Vector2f value) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform2f(uniformId, value.x, value.y);
     }
 
-    public void setUniform2f(String name, float value1, float value2) {
+    public void setUniform(String name, float value1, float value2) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform2f(uniformId, value1, value2);
     }
 
-    public void setUniform3f(String name, Vector3f value) {
+    public void setUniform(String name, Vector3f value) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform3f(uniformId, value.x, value.y, value.z);
     }
 
-    public void setUniform3f(String name, float value1, float value2, float value3) {
+    public void setUniform(String name, float value1, float value2, float value3) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform3f(uniformId, value1, value2, value3);
@@ -140,13 +140,13 @@ public class ShaderProgram {
         glUniform1i(uniformId, value);
     }
 
-    public void setUniform4f(String name, Vector4f value) {
+    public void setUniform(String name, Vector4f value) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform4f(uniformId, value.x, value.y, value.z, value.w);
     }
 
-    public void setUniform4f(String name, float value1, float value2, float value3, float value4) {
+    public void setUniform(String name, float value1, float value2, float value3, float value4) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform4f(uniformId, value1, value2, value3, value4);

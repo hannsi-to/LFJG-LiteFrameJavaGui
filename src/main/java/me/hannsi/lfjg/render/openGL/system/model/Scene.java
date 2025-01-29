@@ -3,6 +3,7 @@ package me.hannsi.lfjg.render.openGL.system.model;
 import me.hannsi.lfjg.render.openGL.renderers.model.Entity;
 import me.hannsi.lfjg.render.openGL.renderers.model.Model;
 import me.hannsi.lfjg.render.openGL.system.Camera;
+import me.hannsi.lfjg.render.openGL.system.model.lights.SceneLights;
 import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.joml.Vector2f;
@@ -14,6 +15,7 @@ public class Scene {
     private Camera camera;
     private Map<String, Model> modelMap;
     private Projection projection;
+    private SceneLights sceneLights;
     private TextureModelCache textureModelCache;
 
     public Scene(Vector2f resolution) {
@@ -75,5 +77,13 @@ public class Scene {
 
     public void setCamera(Camera camera) {
         this.camera = camera;
+    }
+
+    public SceneLights getSceneLights() {
+        return sceneLights;
+    }
+
+    public void setSceneLights(SceneLights sceneLights) {
+        this.sceneLights = sceneLights;
     }
 }

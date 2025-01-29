@@ -49,9 +49,9 @@ public class RadialBlur extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("range", range);
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("centerX", centerX / resolution.x);
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("centerY", centerY / resolution.y);
+        getFrameBuffer().getShaderProgramFBO().setUniform("range", range);
+        getFrameBuffer().getShaderProgramFBO().setUniform("centerX", centerX / resolution.x);
+        getFrameBuffer().getShaderProgramFBO().setUniform("centerY", centerY / resolution.y);
 
         super.setUniform(baseGLObject);
     }

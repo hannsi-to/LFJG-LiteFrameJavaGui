@@ -8,7 +8,6 @@ import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
-import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
 import me.hannsi.lfjg.render.openGL.effect.effects.Translate;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.font.GLFont;
@@ -21,6 +20,9 @@ import me.hannsi.lfjg.render.openGL.system.font.FontCache;
 import me.hannsi.lfjg.render.openGL.system.model.ModelLoader;
 import me.hannsi.lfjg.render.openGL.system.model.Render;
 import me.hannsi.lfjg.render.openGL.system.model.Scene;
+import me.hannsi.lfjg.render.openGL.system.model.lights.PointLight;
+import me.hannsi.lfjg.render.openGL.system.model.lights.SceneLights;
+import me.hannsi.lfjg.render.openGL.system.model.lights.SpotLight;
 import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
@@ -32,6 +34,7 @@ import me.hannsi.lfjg.utils.type.types.MonitorType;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.utils.type.types.VSyncType;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 public class TestGuiFrame implements LFJGFrame {
@@ -40,7 +43,7 @@ public class TestGuiFrame implements LFJGFrame {
     //    GLRect gl2;
     GLObjectCache glObjectCache;
     TextureCache textureCache;
-    EffectCache gl1EffectCache;
+    //    EffectCache gl1EffectCache;
     EffectCache glFontEffectCache;
     FontCache fontCache;
 
@@ -54,13 +57,12 @@ public class TestGuiFrame implements LFJGFrame {
 
 //    VideoFrameExtractor videoFrameExtractor;
 
-    Model cubeModel;
-    Scene scene;
-    Render render;
-    Entity cubeEntity;
-
     MouseInfo mouseInfo;
     float rotation;
+
+    Scene scene;
+    Entity cubeEntity;
+    Render render;
 
     private Frame frame;
 
@@ -98,15 +100,24 @@ public class TestGuiFrame implements LFJGFrame {
 
         this.mouseInfo = new me.hannsi.lfjg.render.openGL.system.MouseInfo();
 
-        render = new Render();
         scene = new Scene(resolution);
+        render = new Render();
 
-        cubeModel = ModelLoader.loadModel("cube-model", new ResourcesLocation("model/cube/cube.obj"), scene.getTextureModelCache());
+        Model cubeModel = ModelLoader.loadModel("cube-model", new ResourcesLocation("model/cube/cube.obj"), scene.getTextureModelCache());
         scene.addModel(cubeModel);
 
         cubeEntity = new Entity("cube-entity", cubeModel.getId());
-        cubeEntity.setPosition(0, 0, -2);
+        cubeEntity.setPosition(0, 0f, -2);
+        cubeEntity.updateModelMatrix();
         scene.addEntity(cubeEntity);
+
+        SceneLights sceneLights = new SceneLights();
+        sceneLights.getAmbientLight().setIntensity(0.0f);
+        scene.setSceneLights(sceneLights);
+        sceneLights.getPointLights().add(new PointLight(new Vector3f(1, 1, 1), new Vector3f(0, 0, -1.4f), 1.0f));
+
+        Vector3f coneDir = new Vector3f(0, 0, -1);
+        sceneLights.getSpotLights().add(new SpotLight(new PointLight(new Vector3f(1, 1, 1), new Vector3f(0, 0, -1.4f), 0.0f), coneDir, 140.0f));
     }
 
     public void objectInit() {
@@ -117,11 +128,11 @@ public class TestGuiFrame implements LFJGFrame {
         ResourcesLocation font = new ResourcesLocation("font/default.ttf");
         fontCache.createCache(font, 64);
 
-        gl1 = new GLRect("test1");
-        gl1.setProjectionMatrix(projection.getProjMatrix());
-        gl1.setResolution(resolution);
-        gl1.uv(0, 1, 1, 0);
-        gl1.rectWH(0, 0, resolution.x(), resolution.y(), new Color(0, 0, 0, 0));
+//        gl1 = new GLRect("test1");
+//        gl1.setProjectionMatrix(projection.getProjMatrix());
+//        gl1.setResolution(resolution);
+//        gl1.uv(0, 1, 1, 0);
+//        gl1.rectWH(0, 0, resolution.x(), resolution.y(), new Color(0, 0, 0, 0));
 
         glFont = new GLFont("Font");
         glFont.setProjectionMatrix(projection.getProjMatrix());
@@ -140,11 +151,11 @@ public class TestGuiFrame implements LFJGFrame {
         ResourcesLocation image = new ResourcesLocation("texture/test/test_image_3840x2160.jpg");
         textureCache.createCache(image);
 
-        gl1EffectCache = new EffectCache();
+//        gl1EffectCache = new EffectCache();
         glFontEffectCache = new EffectCache();
 
-        gl1EffectCache.createCache(new Texture(resolution, textureCache, image), gl1);
-        gl1EffectCache.createCache(new DrawObject(resolution), gl1);
+//        gl1EffectCache.createCache(new Texture(resolution, textureCache, image), gl1);
+//        gl1EffectCache.createCache(new DrawObject(resolution), gl1);
 //        gl1EffectCache.createCache(new Gradation(resolution, resolution.x / 2, resolution.y / 2, (float) Math.toRadians(90), 0.1f, Gradation.ShapeMode.Rectangle, BlendType.Multiply, new Color(0, 0, 0, 255), new Color(255, 255, 255, 255), 1f), gl1);
 //        gl1EffectCache.createCache(new Monochrome(resolution, 1f, new Color(255, 0, 255), true), gl1);
 //        gl1EffectCache.createCache(new ChromaticAberration(resolution, 0.002f, 90, 5f, ChromaticAberration.AberrationType.RedBlueB), gl1);
@@ -169,7 +180,7 @@ public class TestGuiFrame implements LFJGFrame {
         glFontEffectCache.createCache(new Translate(resolution, 200, 0), glFont);
 //        glFontEffectCache.createCache(new Pixelate(resolution, 10f), glFont);
 
-        gl1.setEffectCache(gl1EffectCache);
+//        gl1.setEffectCache(gl1EffectCache);
         glFont.setEffectCache(glFontEffectCache);
 //        gl2.setEffectCache(effectCache);
     }
@@ -273,7 +284,7 @@ public class TestGuiFrame implements LFJGFrame {
     public void stopFrame() {
         glObjectCache.cleanup();
         textureCache.cleanup();
-//        fontCache.cleanup();
+        fontCache.cleanup();
 //        soundCache.cleanup();
 //        threadCache.cleanup();
 

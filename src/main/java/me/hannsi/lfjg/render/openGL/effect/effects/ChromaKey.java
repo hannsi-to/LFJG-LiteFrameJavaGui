@@ -53,11 +53,11 @@ public class ChromaKey extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform3f("chromaKeyColor", new Vector3f(chromaKeyColor.getRedF(), chromaKeyColor.getGreenF(), chromaKeyColor.getBlueF()));
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("hueRange", hueRange);
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("saturationRange", saturationRange);
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("boundarySmoothness", boundarySmoothness);
-        getFrameBuffer().getShaderProgramFBO().setUniform3f("colorAdjustment", new Vector3f(colorAdjustment.getRedF(), colorAdjustment.getGreenF(), colorAdjustment.getBlueF()));
+        getFrameBuffer().getShaderProgramFBO().setUniform("chromaKeyColor", new Vector3f(chromaKeyColor.getRedF(), chromaKeyColor.getGreenF(), chromaKeyColor.getBlueF()));
+        getFrameBuffer().getShaderProgramFBO().setUniform("hueRange", hueRange);
+        getFrameBuffer().getShaderProgramFBO().setUniform("saturationRange", saturationRange);
+        getFrameBuffer().getShaderProgramFBO().setUniform("boundarySmoothness", boundarySmoothness);
+        getFrameBuffer().getShaderProgramFBO().setUniform("colorAdjustment", new Vector3f(colorAdjustment.getRedF(), colorAdjustment.getGreenF(), colorAdjustment.getBlueF()));
 
         super.setUniform(baseGLObject);
     }

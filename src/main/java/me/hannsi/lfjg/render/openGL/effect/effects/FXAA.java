@@ -36,8 +36,8 @@ public class FXAA extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform2f("texelStep", new Vector2f(1.0f / resolution.x(), 1.0f / resolution.y()));
-        getFrameBuffer().getShaderProgramFBO().setUniformBoolean("useAlpha", useAlpha);
+        getFrameBuffer().getShaderProgramFBO().setUniform("texelStep", new Vector2f(1.0f / resolution.x(), 1.0f / resolution.y()));
+        getFrameBuffer().getShaderProgramFBO().setUniform("useAlpha", useAlpha);
 
         super.setUniform(baseGLObject);
     }

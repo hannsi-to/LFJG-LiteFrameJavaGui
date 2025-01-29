@@ -54,11 +54,11 @@ public class Flash extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform2f("screenSize", resolution);
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("intensity", intensity);
-        getFrameBuffer().getShaderProgramFBO().setUniform2f("screenPosition", new Vector2f(x, y));
+        getFrameBuffer().getShaderProgramFBO().setUniform("screenSize", resolution);
+        getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
+        getFrameBuffer().getShaderProgramFBO().setUniform("screenPosition", new Vector2f(x, y));
         getFrameBuffer().getShaderProgramFBO().setUniform1i("blendMode", flashBlendMode.getId());
-        getFrameBuffer().getShaderProgramFBO().setUniform3f("lightColor", new Vector3f(lightColor.getRedF(), lightColor.getGreenF(), lightColor.getBlueF()));
+        getFrameBuffer().getShaderProgramFBO().setUniform("lightColor", new Vector3f(lightColor.getRedF(), lightColor.getGreenF(), lightColor.getBlueF()));
 
         super.setUniform(baseGLObject);
     }
