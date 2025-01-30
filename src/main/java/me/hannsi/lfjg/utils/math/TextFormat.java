@@ -29,12 +29,15 @@ public class TextFormat {
     public static final String UNDERLINE = PREFIX_CODE + "j";
     public static final String ITALIC = PREFIX_CODE + "k";
     public static final String RESET = PREFIX_CODE + "r";
-    public static final String NEWLINE = PREFIX_CODE + "n";
+    public static final String NEWLINE = PREFIX_CODE + "l";
+    public static final String SPASE_X =  PREFIX_CODE + "m";
+    public static final String SPASE_Y =  PREFIX_CODE + "n";
+    public static final String RESET_POINT_X = PREFIX_CODE + "o";
+    public static final String RESET_POINT_Y = PREFIX_CODE + "p";
 
     public static Color getColor(String format, Color defaultColor) {
         return switch (format) {
             case BLACK -> new Color(0, 0, 0);
-            case NEWLINE, RESET, ITALIC, UNDERLINE, BOLD, STRIKETHROUGH, OBFUSCATED -> defaultColor;
             case DARK_BLUE -> new Color(0, 0, 170);
             case DARK_GREEN -> new Color(0, 170, 0);
             case DARK_AQUA -> new Color(0, 170, 170);
@@ -50,7 +53,7 @@ public class TextFormat {
             case LIGHT_PURPLE -> new Color(255, 85, 255);
             case YELLOW -> new Color(255, 255, 85);
             case WHITE -> new Color(255, 255, 255);
-            default -> throw new IllegalStateException("Unexpected value: " + format);
+            default -> defaultColor;
         };
     }
 

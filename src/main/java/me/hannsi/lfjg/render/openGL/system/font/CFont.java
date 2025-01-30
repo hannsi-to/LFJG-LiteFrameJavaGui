@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -92,26 +93,28 @@ public class CFont {
 
         int estimatedWidth = (int) Math.sqrt(font.getNumGlyphs()) * font.getSize() + 1;
         width = 0;
-        height = fontMetrics.getHeight();
-        lineHeight = fontMetrics.getHeight();
+        height = fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent();
+        lineHeight = fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent();
         int x = 0;
-        int y = (int) (fontMetrics.getHeight() * 1.4f);
+        int y = (int) (fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent() * 1.4f);
 
-        for (int i = 0; i < font.getNumGlyphs(); i++) {
-            if (font.canDisplay(i)) {
-                CharInfo charInfo = new CharInfo(x, y, fontMetrics.charWidth(i), fontMetrics.getHeight());
-                characterMap.put(i, charInfo);
-                width = Math.max(x + fontMetrics.charWidth(i), width);
+        for (int i = 0; i <= 0x10FFFF; i++) {
+            if (!Objects.requireNonNull(font).canDisplay(i)) {
+                continue;
+            }
 
-                x += charInfo.getWidth();
-                if (x > estimatedWidth) {
-                    x = 0;
-                    y += (int) (fontMetrics.getHeight() * 1.4f);
-                    height += (int) (fontMetrics.getHeight() * 1.4f);
-                }
+            CharInfo charInfo = new CharInfo(x, y, fontMetrics.charWidth(i), fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent());
+            characterMap.put(i, charInfo);
+            width = Math.max(x + fontMetrics.charWidth(i), width);
+
+            x += charInfo.getWidth();
+            if (x > estimatedWidth) {
+                x = 0;
+                y += (int) (fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent() * 1.4f);
+                height += (int) (fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent() * 1.4f);
             }
         }
-        height += (int) (fontMetrics.getHeight() * 1.4f);
+        height += (int) (fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent() * 1.4f);
         g2d.dispose();
 
         img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -119,12 +122,14 @@ public class CFont {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setFont(font);
         g2d.setColor(Color.WHITE);
-        for (int i = 0; i < font.getNumGlyphs(); i++) {
-            if (font.canDisplay(i)) {
-                CharInfo info = characterMap.get(i);
-                info.calculateTextureCoordinates(width, height);
-                g2d.drawString("" + (char) i, info.getSourceX(), info.getSourceY());
+        for (int i = 0; i <= 0x10FFFF; i++) {
+            if (!Objects.requireNonNull(font).canDisplay(i)) {
+                continue;
             }
+
+            CharInfo info = characterMap.get(i);
+            info.calculateTextureCoordinates(width, height);
+            g2d.drawString("" + (char) i, info.getSourceX(), info.getSourceY());
         }
 
         g2d.dispose();

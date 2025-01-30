@@ -103,7 +103,7 @@ public class TestGuiFrame implements LFJGFrame {
         scene = new Scene(resolution);
         render = new Render();
 
-        Model cubeModel = ModelLoader.loadModel("cube-model", new ResourcesLocation("model/sphere/sphere.obj"), scene.getTextureModelCache());
+        Model cubeModel = ModelLoader.loadModel("cube-model", new ResourcesLocation("model/cube/cube.obj"), scene.getTextureModelCache());
         scene.addModel(cubeModel);
 
         cubeEntity = new Entity("cube-entity", cubeModel.getId());
@@ -137,8 +137,8 @@ public class TestGuiFrame implements LFJGFrame {
         glFont = new GLFont("Font");
         glFont.setProjectionMatrix(projection.getProjMatrix());
         glFont.setResolution(resolution);
-        glFont.setFont(fontCache, font, 64);
-        glFont.font(TextFormat.RED + "K" + TextFormat.NEWLINE + "a" + TextFormat.BOLD + "zu" + TextFormat.ITALIC + "bon" + TextFormat.RESET + "です!" + TextFormat.OBFUSCATED + "test sdaasd aaaa", 0, 200, 1f, Color.of(255, 255, 255, 255));
+        glFont.setFont(fontCache, font, 32);
+        glFont.font(TextFormat.SPASE_X + "{100}" + "字間を確認" + TextFormat.RESET + "字間を確認" + TextFormat.SPASE_Y + "{100}" + TextFormat.NEWLINE + TextFormat.RESET_POINT_X + TextFormat.RED + "Ka" + TextFormat.BOLD + "zu" + TextFormat.ITALIC + "bon" + "です!" + TextFormat.OBFUSCATED + "test sdaasd aaaa", 0, 200, 1f, Color.of(255, 255, 255, 255));
 
 //        gl2 = new GLRect("test2");
 //        gl2.setProjectionMatrix(projection.getProjMatrix());
@@ -177,7 +177,7 @@ public class TestGuiFrame implements LFJGFrame {
 //        gl1EffectCache.createCache(new Clipping2DRect(resolution, 0, 0, 500, 500), gl1);
 
         glFontEffectCache.createCache(new DrawObject(resolution), glFont);
-        glFontEffectCache.createCache(new Translate(resolution, 200, 0), glFont);
+        glFontEffectCache.createCache(new Translate(resolution, 0, 0), glFont);
 //        glFontEffectCache.createCache(new Pixelate(resolution, 10f), glFont);
 
 //        gl1.setEffectCache(gl1EffectCache);

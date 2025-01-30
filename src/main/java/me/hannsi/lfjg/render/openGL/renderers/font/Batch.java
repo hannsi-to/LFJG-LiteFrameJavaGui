@@ -122,7 +122,8 @@ public class Batch {
         float b = color.getBlueF();
         float a = color.getAlphaF();
 
-        x += italic * scale;
+        float uItalic = (italic * scale) / (2 * scale);
+        x += (italic * scale) / (4 * scale);
         float x1 = x + scale * charInfo.getWidth();
         float y1 = y + scale * charInfo.getHeight();
 
@@ -132,7 +133,7 @@ public class Batch {
         float uy1 = charInfo.textureCoordinates[1].y;
 
         int index = size * VERTEX_SIZE;
-        vertices[index] = x1 - italic;
+        vertices[index] = x1 - uItalic;
         vertices[index + 1] = y;
         vertices[index + 2] = r;
         vertices[index + 3] = g;
@@ -142,7 +143,7 @@ public class Batch {
         vertices[index + 7] = uy0;
 
         index += VERTEX_SIZE;
-        vertices[index] = x1 + italic;
+        vertices[index] = x1 + uItalic;
         vertices[index + 1] = y1;
         vertices[index + 2] = r;
         vertices[index + 3] = g;
@@ -152,7 +153,7 @@ public class Batch {
         vertices[index + 7] = uy1;
 
         index += VERTEX_SIZE;
-        vertices[index] = x + italic;
+        vertices[index] = x + uItalic;
         vertices[index + 1] = y1;
         vertices[index + 2] = r;
         vertices[index + 3] = g;
@@ -162,7 +163,7 @@ public class Batch {
         vertices[index + 7] = uy1;
 
         index += VERTEX_SIZE;
-        vertices[index] = x - italic;
+        vertices[index] = x - uItalic;
         vertices[index + 1] = y;
         vertices[index + 2] = r;
         vertices[index + 3] = g;
@@ -178,11 +179,23 @@ public class Batch {
         boolean format = false;
         String formatCode = "";
 
+        Color color1 = color;
         boolean newLine = false;
+        float xPos = x;
+        float yPos = y;
         float italic = 0.0f;
         boolean underLine = false;
         float bold = 1f;
         boolean obfuscated = false;
+        boolean spaceCheckX = false;
+        boolean spaceCheckedX = false;
+        String spaceXs = "";
+        float spaceXf = 0.0f;
+        boolean spaceCheckY = false;
+        boolean spaceCheckedY = false;
+        String spaceYs = "";
+        float spaceYf = 0.0f;
+        boolean reset = false;
 
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
@@ -190,11 +203,45 @@ public class Batch {
             if (format) {
                 formatCode = TextFormat.PREFIX_CODE + String.valueOf(c);
                 format = false;
-                continue;
             }
 
             if (TextFormat.isPrefix(c)) {
                 format = true;
+                reset = true;
+                continue;
+            }
+
+            if (spaceCheckX) {
+                if (c == '{') {
+                    continue;
+                }
+
+                if (c == '}') {
+                    spaceXf = Float.parseFloat(spaceXs);
+                    spaceCheckX = false;
+                    spaceCheckedX = true;
+
+                    continue;
+                }
+
+                spaceXs += String.valueOf(c);
+                continue;
+            }
+
+            if (spaceCheckY) {
+                if (c == '{') {
+                    continue;
+                }
+
+                if (c == '}') {
+                    spaceYf = Float.parseFloat(spaceYs);
+                    spaceCheckY = false;
+                    spaceCheckedY = true;
+
+                    continue;
+                }
+
+                spaceYs += String.valueOf(c);
                 continue;
             }
 
@@ -204,18 +251,15 @@ public class Batch {
                 continue;
             }
 
-            Color newColor = TextFormat.getColor(formatCode, color);
-
             shaderProgram.bind();
             shaderProgram.setUniform("uItalicAmount", 0.0f);
 
             if (formatCode.equals(TextFormat.NEWLINE) && !newLine) {
-                y -= charInfo.getHeight() * scale;
-                x = 0;
+                yPos -= charInfo.getHeight() * scale + spaceYf;
                 newLine = true;
             }
             if (formatCode.equals(TextFormat.ITALIC)) {
-                italic = 10f;
+                italic = 20f;
             }
             if (formatCode.equals(TextFormat.UNDERLINE)) {
                 underLine = true;
@@ -226,11 +270,38 @@ public class Batch {
             if (formatCode.equals(TextFormat.OBFUSCATED)) {
                 obfuscated = true;
             }
-            if (formatCode.equals(TextFormat.RESET)) {
+            if (formatCode.equals(TextFormat.SPASE_X) && !spaceCheckedX) {
+                spaceCheckX = true;
+            }
+            if (formatCode.equals(TextFormat.SPASE_Y) && !spaceCheckedY) {
+                spaceCheckY = true;
+            }
+            if (formatCode.equals(TextFormat.RESET) && reset) {
+                color1 = color;
+                newLine = false;
                 italic = 0.0f;
                 underLine = false;
                 bold = 1f;
                 obfuscated = false;
+                spaceCheckedX = false;
+                spaceXs = "";
+                spaceXf = 0.0f;
+                spaceCheckedY = false;
+                spaceYs = "";
+                spaceYf = 0.0f;
+                reset = false;
+            }
+            if (formatCode.equals(TextFormat.RESET_POINT_X)) {
+                xPos = x;
+            }
+            if (formatCode.equals(TextFormat.RESET_POINT_Y)) {
+                yPos = y;
+            }
+
+            if (!formatCode.isEmpty()) {
+                color1 = TextFormat.getColor(formatCode, color1);
+                formatCode = "";
+                continue;
             }
 
             shaderProgram.unbind();
@@ -244,10 +315,11 @@ public class Batch {
                 }
             }
 
-            float xPos = x;
-            addCharacter(xPos, y, scale * bold, italic, charInfo, newColor);
+            Color newColor = color1;
 
-            x += (int) (charInfo.getWidth() * scale * bold);
+            addCharacter(xPos, yPos, scale * bold, italic, charInfo, newColor);
+
+            xPos += (charInfo.getWidth() * scale * bold) + spaceXf;
         }
     }
 
