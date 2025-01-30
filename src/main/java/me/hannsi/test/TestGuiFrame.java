@@ -103,7 +103,7 @@ public class TestGuiFrame implements LFJGFrame {
         scene = new Scene(resolution);
         render = new Render();
 
-        Model cubeModel = ModelLoader.loadModel("cube-model", new ResourcesLocation("model/cube/cube.obj"), scene.getTextureModelCache());
+        Model cubeModel = ModelLoader.loadModel("cube-model", new ResourcesLocation("model/sphere/sphere.obj"), scene.getTextureModelCache());
         scene.addModel(cubeModel);
 
         cubeEntity = new Entity("cube-entity", cubeModel.getId());
