@@ -5,13 +5,13 @@ import org.joml.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SceneLights {
+public class Lights {
     private AmbientLight ambientLight;
     private DirLight dirLight;
     private List<PointLight> pointLights;
     private List<SpotLight> spotLights;
 
-    public SceneLights() {
+    public Lights() {
         ambientLight = new AmbientLight();
         pointLights = new ArrayList<>();
         spotLights = new ArrayList<>();

@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.render.openGL.system.rendering;
 
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
+import me.hannsi.lfjg.render.openGL.system.Mesh;
 import org.lwjgl.opengl.GL30;
 
 import static org.lwjgl.opengl.GL11.glDrawArrays;

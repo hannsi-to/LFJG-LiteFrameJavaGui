@@ -1,7 +1,7 @@
-package me.hannsi.lfjg.render.openGL.system.model;
+package me.hannsi.lfjg.render.openGL.system.model.model;
 
-import me.hannsi.lfjg.render.openGL.renderers.model.Model;
-import me.hannsi.lfjg.render.openGL.system.rendering.Mesh;
+import me.hannsi.lfjg.render.openGL.system.Mesh;
+import me.hannsi.lfjg.render.openGL.system.model.texture.TextureModelCache;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
 import org.joml.Vector4f;
 import org.lwjgl.PointerBuffer;

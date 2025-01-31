@@ -11,17 +11,17 @@ import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
 import me.hannsi.lfjg.render.openGL.effect.effects.Translate;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.font.GLFont;
-import me.hannsi.lfjg.render.openGL.renderers.model.Entity;
-import me.hannsi.lfjg.render.openGL.renderers.model.Model;
+import me.hannsi.lfjg.render.openGL.system.model.model.Entity;
+import me.hannsi.lfjg.render.openGL.system.model.model.Model;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
-import me.hannsi.lfjg.render.openGL.system.Camera;
-import me.hannsi.lfjg.render.openGL.system.MouseInfo;
+import me.hannsi.lfjg.render.openGL.system.user.Camera;
+import me.hannsi.lfjg.render.openGL.system.user.MouseInfo;
 import me.hannsi.lfjg.render.openGL.system.font.FontCache;
-import me.hannsi.lfjg.render.openGL.system.model.ModelLoader;
-import me.hannsi.lfjg.render.openGL.system.model.Render;
-import me.hannsi.lfjg.render.openGL.system.model.Scene;
+import me.hannsi.lfjg.render.openGL.system.model.model.ModelLoader;
+import me.hannsi.lfjg.render.openGL.system.model.Object3DCache;
+import me.hannsi.lfjg.render.openGL.renderers.model.Object3DCacheRender;
+import me.hannsi.lfjg.render.openGL.system.model.lights.Lights;
 import me.hannsi.lfjg.render.openGL.system.model.lights.PointLight;
-import me.hannsi.lfjg.render.openGL.system.model.lights.SceneLights;
 import me.hannsi.lfjg.render.openGL.system.model.lights.SpotLight;
 import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.utils.graphics.color.Color;
@@ -58,11 +58,11 @@ public class TestGuiFrame implements LFJGFrame {
 //    VideoFrameExtractor videoFrameExtractor;
 
     MouseInfo mouseInfo;
+    Camera camera;
     float rotation;
 
-    Scene scene;
+    Object3DCacheRender object3DCacheRender;
     Entity cubeEntity;
-    Render render;
 
     private Frame frame;
 
@@ -98,26 +98,29 @@ public class TestGuiFrame implements LFJGFrame {
 //        this.easingUtil = new EasingUtil(Easing.easeOutBounce);
 //        this.easingUtil.reset();
 
-        this.mouseInfo = new me.hannsi.lfjg.render.openGL.system.MouseInfo();
+        mouseInfo = new MouseInfo();
+        camera = new Camera();
 
-        scene = new Scene(resolution);
-        render = new Render();
+        object3DCacheRender = new Object3DCacheRender();
 
-        Model cubeModel = ModelLoader.loadModel("cube-model", new ResourcesLocation("model/cube/cube.obj"), scene.getTextureModelCache());
-        scene.addModel(cubeModel);
+        Object3DCache object3DCache = new Object3DCache(resolution);
 
+        Model cubeModel = ModelLoader.loadModel("cube-model", new ResourcesLocation("model/cube/cube.obj"), object3DCache.getTextureModelCache());
         cubeEntity = new Entity("cube-entity", cubeModel.getId());
         cubeEntity.setPosition(0, 0f, -2);
         cubeEntity.updateModelMatrix();
-        scene.addEntity(cubeEntity);
 
-        SceneLights sceneLights = new SceneLights();
-        sceneLights.getAmbientLight().setIntensity(0.0f);
-        scene.setSceneLights(sceneLights);
-        sceneLights.getPointLights().add(new PointLight(new Vector3f(1, 1, 1), new Vector3f(0, 0, -1.4f), 1.0f));
+        object3DCache.createCache(cubeModel, cubeEntity);
+
+        Lights lights = new Lights();
+        lights.getAmbientLight().setIntensity(0.3f);
+        object3DCache.setSceneLights(lights);
+        lights.getPointLights().add(new PointLight(new Vector3f(1, 1, 1), new Vector3f(0, 0, -1.4f), 1.0f));
 
         Vector3f coneDir = new Vector3f(0, 0, -1);
-        sceneLights.getSpotLights().add(new SpotLight(new PointLight(new Vector3f(1, 1, 1), new Vector3f(0, 0, -1.4f), 0.0f), coneDir, 140.0f));
+        lights.getSpotLights().add(new SpotLight(new PointLight(new Vector3f(1, 1, 1), new Vector3f(0, 0, -1.4f), 0.0f), coneDir, 140.0f));
+
+        object3DCacheRender.setScene(object3DCache);
     }
 
     public void objectInit() {
@@ -177,7 +180,7 @@ public class TestGuiFrame implements LFJGFrame {
 //        gl1EffectCache.createCache(new Clipping2DRect(resolution, 0, 0, 500, 500), gl1);
 
         glFontEffectCache.createCache(new DrawObject(resolution), glFont);
-        glFontEffectCache.createCache(new Translate(resolution, 0, 0), glFont);
+        glFontEffectCache.createCache(new Translate(resolution, 200, 0), glFont);
 //        glFontEffectCache.createCache(new Pixelate(resolution, 10f), glFont);
 
 //        gl1.setEffectCache(gl1EffectCache);
@@ -212,8 +215,9 @@ public class TestGuiFrame implements LFJGFrame {
 //        soundCache.getSoundSource("test").setGain(1 * value);
 //        soundCache.playSoundSource("test");
 
-        render.render(resolution, scene);
+
         glObjectCache.draw();
+        object3DCacheRender.render(camera);
 
 //        FrameData frameData = videoFrameExtractor.getFrameRender();
 //        if (frameData == null){
@@ -245,9 +249,6 @@ public class TestGuiFrame implements LFJGFrame {
 //        }
 //        cubeEntity.setRotation(1, 1, 1, (float) Math.toRadians(rotation));
 //        cubeEntity.updateModelMatrix();
-//
-
-        Camera camera = scene.getCamera();
 
         float move = 0.01f;
         if (isKeyPressed(GLFW.GLFW_KEY_W)) {
@@ -288,8 +289,7 @@ public class TestGuiFrame implements LFJGFrame {
 //        soundCache.cleanup();
 //        threadCache.cleanup();
 
-        scene.cleanup();
-        render.cleanup();
+        object3DCacheRender.cleanup();
 
         DebugLog.debug(getClass(), "Frame Stopped");
     }

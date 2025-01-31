@@ -1,6 +1,4 @@
-package me.hannsi.lfjg.render.openGL.renderers.model;
-
-import me.hannsi.lfjg.render.openGL.system.model.Material;
+package me.hannsi.lfjg.render.openGL.system.model.model;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.openGL.system.model;
+package me.hannsi.lfjg.render.openGL.system.model.texture;
 
 import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;

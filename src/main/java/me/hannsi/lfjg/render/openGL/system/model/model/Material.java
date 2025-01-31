@@ -1,6 +1,6 @@
-package me.hannsi.lfjg.render.openGL.system.model;
+package me.hannsi.lfjg.render.openGL.system.model.model;
 
-import me.hannsi.lfjg.render.openGL.system.rendering.Mesh;
+import me.hannsi.lfjg.render.openGL.system.Mesh;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
 import org.joml.Vector4f;
 

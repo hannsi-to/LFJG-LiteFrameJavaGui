@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.openGL.renderers.model;
+package me.hannsi.lfjg.render.openGL.system.model.model;
 
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;

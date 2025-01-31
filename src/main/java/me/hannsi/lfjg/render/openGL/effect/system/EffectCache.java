@@ -3,7 +3,7 @@ package me.hannsi.lfjg.render.openGL.effect.system;
 import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
-import me.hannsi.lfjg.render.openGL.system.rendering.Id;
+import me.hannsi.lfjg.render.openGL.system.Id;
 
 import java.util.*;
 

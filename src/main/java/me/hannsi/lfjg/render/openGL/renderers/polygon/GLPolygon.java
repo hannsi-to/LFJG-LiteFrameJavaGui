@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.openGL.renderers.polygon;
 
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
-import me.hannsi.lfjg.render.openGL.system.rendering.Mesh;
+import me.hannsi.lfjg.render.openGL.system.Mesh;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;

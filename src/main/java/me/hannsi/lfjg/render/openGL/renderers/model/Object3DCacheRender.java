@@ -1,10 +1,16 @@
-package me.hannsi.lfjg.render.openGL.system.model;
+package me.hannsi.lfjg.render.openGL.renderers.model;
 
-import me.hannsi.lfjg.render.openGL.renderers.model.Entity;
-import me.hannsi.lfjg.render.openGL.renderers.model.Model;
+import me.hannsi.lfjg.render.openGL.system.user.Camera;
+import me.hannsi.lfjg.render.openGL.system.model.*;
 import me.hannsi.lfjg.render.openGL.system.model.lights.*;
-import me.hannsi.lfjg.render.openGL.system.rendering.Mesh;
+import me.hannsi.lfjg.render.openGL.system.Mesh;
+import me.hannsi.lfjg.render.openGL.system.model.model.Entity;
+import me.hannsi.lfjg.render.openGL.system.model.model.Material;
+import me.hannsi.lfjg.render.openGL.system.model.model.Model;
+import me.hannsi.lfjg.render.openGL.system.model.texture.TextureModel;
+import me.hannsi.lfjg.render.openGL.system.model.texture.TextureModelCache;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
+import me.hannsi.lfjg.utils.graphics.GLUtil;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -15,13 +21,19 @@ import java.util.List;
 
 import static org.lwjgl.opengl.GL30.*;
 
-public class SceneRender {
+public class Object3DCacheRender {
     private static final int MAX_POINT_LIGHTS = 5;
     private static final int MAX_SPOT_LIGHTS = 5;
 
+    private Object3DCache object3DCache;
     private ShaderProgram shaderProgram;
+    private GLUtil glUtil;
 
-    public SceneRender() {
+    public Object3DCacheRender() {
+        this.glUtil = new GLUtil();
+        this.glUtil.addGLTarget(GL_DEPTH_TEST);
+        this.glUtil.addGLTarget(GL_CULL_FACE);
+
         this.shaderProgram = new ShaderProgram();
         this.shaderProgram.createVertexShader(new ResourcesLocation("shader/scene/model/VertexShader.vsh"));
         this.shaderProgram.createFragmentShader(new ResourcesLocation("shader/scene/model/FragmentShader.fsh"));
@@ -29,21 +41,25 @@ public class SceneRender {
     }
 
     public void cleanup() {
+        object3DCache.cleanup();
         shaderProgram.cleanup();
     }
 
-    public void render(Scene scene) {
+    public void render(Camera camera) {
+        glUtil.enableTargets();
+        glCullFace(GL_BACK);
+
         shaderProgram.bind();
 
-        shaderProgram.setUniform("projectionMatrix", scene.getProjection().getProjMatrix());
-        shaderProgram.setUniform("viewMatrix", scene.getCamera().getViewMatrix());
+        shaderProgram.setUniform("projectionMatrix", object3DCache.getProjection().getProjMatrix());
+        shaderProgram.setUniform("viewMatrix", camera.getViewMatrix());
 
         shaderProgram.setUniform1i("txtSampler", 0);
 
-        updateLights(scene);
+        updateLights(object3DCache, camera);
 
-        Collection<Model> models = scene.getModelMap().values();
-        TextureModelCache textureCache = scene.getTextureModelCache();
+        Collection<Model> models = object3DCache.getModelMap().values();
+        TextureModelCache textureCache = object3DCache.getTextureModelCache();
         for (Model model : models) {
             List<Entity> entities = model.getEntitiesList();
 
@@ -72,17 +88,19 @@ public class SceneRender {
         glBindVertexArray(0);
 
         shaderProgram.unbind();
+
+        glUtil.disableTargets();
     }
 
-    private void updateLights(Scene scene) {
-        Matrix4f viewMatrix = scene.getCamera().getViewMatrix();
+    private void updateLights(Object3DCache object3DCache, Camera camera) {
+        Matrix4f viewMatrix = camera.getViewMatrix();
 
-        SceneLights sceneLights = scene.getSceneLights();
-        AmbientLight ambientLight = sceneLights.getAmbientLight();
+        Lights lights = object3DCache.getSceneLights();
+        AmbientLight ambientLight = lights.getAmbientLight();
         shaderProgram.setUniform("ambientLight.factor", ambientLight.getIntensity());
         shaderProgram.setUniform("ambientLight.color", ambientLight.getColor());
 
-        DirLight dirLight = sceneLights.getDirLight();
+        DirLight dirLight = lights.getDirLight();
         Vector4f auxDir = new Vector4f(dirLight.getDirection(), 0);
         auxDir.mul(viewMatrix);
         Vector3f dir = new Vector3f(auxDir.x, auxDir.y, auxDir.z);
@@ -90,7 +108,7 @@ public class SceneRender {
         shaderProgram.setUniform("dirLight.direction", dir);
         shaderProgram.setUniform("dirLight.intensity", dirLight.getIntensity());
 
-        List<PointLight> pointLights = sceneLights.getPointLights();
+        List<PointLight> pointLights = lights.getPointLights();
         int numPointLights = pointLights.size();
         PointLight pointLight;
         for (int i = 0; i < MAX_POINT_LIGHTS; i++) {
@@ -104,7 +122,7 @@ public class SceneRender {
             updatePointLight(pointLight, name, viewMatrix);
         }
 
-        List<SpotLight> spotLights = sceneLights.getSpotLights();
+        List<SpotLight> spotLights = lights.getSpotLights();
         int numSpotLights = spotLights.size();
         SpotLight spotLight;
         for (int i = 0; i < MAX_SPOT_LIGHTS; i++) {
@@ -170,5 +188,21 @@ public class SceneRender {
 
     public void setShaderProgram(ShaderProgram shaderProgram) {
         this.shaderProgram = shaderProgram;
+    }
+
+    public Object3DCache getScene() {
+        return object3DCache;
+    }
+
+    public void setScene(Object3DCache object3DCache) {
+        this.object3DCache = object3DCache;
+    }
+
+    public GLUtil getGlUtil() {
+        return glUtil;
+    }
+
+    public void setGlUtil(GLUtil glUtil) {
+        this.glUtil = glUtil;
     }
 }

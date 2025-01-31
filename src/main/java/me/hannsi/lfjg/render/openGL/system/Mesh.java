@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.openGL.system.rendering;
+package me.hannsi.lfjg.render.openGL.system;
 
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.lwjgl.opengl.GL30;

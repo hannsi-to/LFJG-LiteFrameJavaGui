@@ -2,13 +2,15 @@ package me.hannsi.lfjg.render.openGL.system.model.lights;
 
 import org.joml.Vector3f;
 
-public class SpotLight {
+public class SpotLight extends Light {
     private Vector3f coneDirection;
     private float cutOff;
     private float cutOffAngle;
     private PointLight pointLight;
 
     public SpotLight(PointLight pointLight, Vector3f coneDirection, float cutOffAngle) {
+        super("SpotLight", 3);
+
         this.pointLight = pointLight;
         this.coneDirection = coneDirection;
         this.cutOffAngle = cutOffAngle;

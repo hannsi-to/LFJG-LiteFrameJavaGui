@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.openGL.system.rendering;
+package me.hannsi.lfjg.render.openGL.system;
 
 public class Id {
     public static final long initialGLObjectId = Long.MIN_VALUE;
