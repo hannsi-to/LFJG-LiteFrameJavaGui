@@ -23,7 +23,6 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGL3;
-import org.lwjgl.openal.AL11;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -53,17 +52,6 @@ public class Frame implements IFrame {
                 lfjgFrame.stopFrame();
             }
         }, threadName).start();
-    }
-
-    private static String getALErrorString(int error) {
-        return switch (error) {
-            case AL11.AL_INVALID_NAME -> "Invalid Name";
-            case AL11.AL_INVALID_ENUM -> "Invalid Enum";
-            case AL11.AL_INVALID_VALUE -> "Invalid Value";
-            case AL11.AL_INVALID_OPERATION -> "Invalid Operation";
-            case AL11.AL_OUT_OF_MEMORY -> "Out of Memory";
-            default -> "Unknown Error";
-        };
     }
 
     private void registerManagers() {
@@ -167,17 +155,6 @@ public class Frame implements IFrame {
                 setAntiAliasing();
 
                 draw();
-
-//                if (AL.getCapabilities().OpenAL11) {
-//                    int error = AL11.alGetError();
-//                    if (error != AL11.AL_NO_ERROR) {
-//                        String errorMessage = getALErrorString(error);
-//
-//                        LogGenerator logGenerator = new LogGenerator(" OpenAL Debug Message", "Type: Error", "ID: " + error, "Severity: High", "Message: " + errorMessage);
-//
-//                        DebugLog.error(getClass(), logGenerator.createLog());
-//                    }
-//                }
 
                 GLFW.glfwSwapBuffers(windowID);
                 GLFW.glfwPollEvents();

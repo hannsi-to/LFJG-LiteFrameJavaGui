@@ -1,5 +1,9 @@
 package me.hannsi.test;
 
+import me.hannsi.lfjg.audio.SoundBuffer;
+import me.hannsi.lfjg.audio.SoundCache;
+import me.hannsi.lfjg.audio.SoundListener;
+import me.hannsi.lfjg.audio.SoundSource;
 import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.event.events.user.*;
 import me.hannsi.lfjg.event.system.EventHandler;
@@ -11,31 +15,23 @@ import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
 import me.hannsi.lfjg.render.openGL.effect.effects.Translate;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.font.GLFont;
-import me.hannsi.lfjg.render.openGL.system.model.model.Entity;
-import me.hannsi.lfjg.render.openGL.system.model.model.Model;
+import me.hannsi.lfjg.render.openGL.renderers.model.Object3DCacheRender;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
+import me.hannsi.lfjg.render.openGL.system.font.FontCache;
+import me.hannsi.lfjg.render.openGL.system.model.model.Entity;
+import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.render.openGL.system.user.Camera;
 import me.hannsi.lfjg.render.openGL.system.user.MouseInfo;
-import me.hannsi.lfjg.render.openGL.system.font.FontCache;
-import me.hannsi.lfjg.render.openGL.system.model.model.ModelLoader;
-import me.hannsi.lfjg.render.openGL.system.model.Object3DCache;
-import me.hannsi.lfjg.render.openGL.renderers.model.Object3DCacheRender;
-import me.hannsi.lfjg.render.openGL.system.model.lights.Lights;
-import me.hannsi.lfjg.render.openGL.system.model.lights.PointLight;
-import me.hannsi.lfjg.render.openGL.system.model.lights.SpotLight;
-import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.math.TextFormat;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import me.hannsi.lfjg.utils.type.types.AntiAliasingType;
-import me.hannsi.lfjg.utils.type.types.MonitorType;
-import me.hannsi.lfjg.utils.type.types.ProjectionType;
-import me.hannsi.lfjg.utils.type.types.VSyncType;
+import me.hannsi.lfjg.utils.type.types.*;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.openal.AL11;
 
 public class TestGuiFrame implements LFJGFrame {
     GLRect gl1;
@@ -49,7 +45,7 @@ public class TestGuiFrame implements LFJGFrame {
 
     Vector2f resolution;
 
-//    SoundCache soundCache;
+    SoundCache soundCache;
 
 //    EasingUtil easingUtil;
 
@@ -101,26 +97,26 @@ public class TestGuiFrame implements LFJGFrame {
         mouseInfo = new MouseInfo();
         camera = new Camera();
 
-        object3DCacheRender = new Object3DCacheRender();
-
-        Object3DCache object3DCache = new Object3DCache(resolution);
-
-        Model cubeModel = ModelLoader.loadModel("cube-model", new ResourcesLocation("model/cube/cube.obj"), object3DCache.getTextureModelCache());
-        cubeEntity = new Entity("cube-entity", cubeModel.getId());
-        cubeEntity.setPosition(0, 0f, -2);
-        cubeEntity.updateModelMatrix();
-
-        object3DCache.createCache(cubeModel, cubeEntity);
-
-        Lights lights = new Lights();
-        lights.getAmbientLight().setIntensity(0.3f);
-        object3DCache.setSceneLights(lights);
-        lights.getPointLights().add(new PointLight(new Vector3f(1, 1, 1), new Vector3f(0, 0, -1.4f), 1.0f));
-
-        Vector3f coneDir = new Vector3f(0, 0, -1);
-        lights.getSpotLights().add(new SpotLight(new PointLight(new Vector3f(1, 1, 1), new Vector3f(0, 0, -1.4f), 0.0f), coneDir, 140.0f));
-
-        object3DCacheRender.setScene(object3DCache);
+//        object3DCacheRender = new Object3DCacheRender();
+//
+//        Object3DCache object3DCache = new Object3DCache(resolution);
+//
+//        Model cubeModel = ModelLoader.loadModel("cube-model", new ResourcesLocation("model/cube/cube.obj"), object3DCache.getTextureModelCache());
+//        cubeEntity = new Entity("cube-entity", cubeModel.getId());
+//        cubeEntity.setPosition(0, 0f, -2);
+//        cubeEntity.updateModelMatrix();
+//
+//        object3DCache.createCache(cubeModel, cubeEntity);
+//
+//        Lights lights = new Lights();
+//        lights.getAmbientLight().setIntensity(0.3f);
+//        object3DCache.setSceneLights(lights);
+//        lights.getPointLights().add(new PointLight(new Vector3f(1, 1, 1), new Vector3f(0, 0, -1.4f), 1.0f));
+//
+//        Vector3f coneDir = new Vector3f(0, 0, -1);
+//        lights.getSpotLights().add(new SpotLight(new PointLight(new Vector3f(1, 1, 1), new Vector3f(0, 0, -1.4f), 0.0f), coneDir, 140.0f));
+//
+//        object3DCacheRender.setScene(object3DCache);
     }
 
     public void objectInit() {
@@ -140,7 +136,7 @@ public class TestGuiFrame implements LFJGFrame {
         glFont = new GLFont("Font");
         glFont.setProjectionMatrix(projection.getProjMatrix());
         glFont.setResolution(resolution);
-        glFont.setFont(fontCache, font, 32);
+        glFont.setFont(fontCache, font, 16);
         glFont.font(TextFormat.SPASE_X + "{100}" + "字間を確認" + TextFormat.RESET + "字間を確認" + TextFormat.SPASE_Y + "{100}" + TextFormat.NEWLINE + TextFormat.RESET_POINT_X + TextFormat.RED + "Ka" + TextFormat.BOLD + "zu" + TextFormat.ITALIC + "bon" + "です!" + TextFormat.OBFUSCATED + "test sdaasd aaaa", 0, 200, 1f, Color.of(255, 255, 255, 255));
 
 //        gl2 = new GLRect("test2");
@@ -189,16 +185,16 @@ public class TestGuiFrame implements LFJGFrame {
     }
 
     public void soundCacheInit() {
-//        soundCache = new SoundCache();
-//        soundCache.setAttenuationModel(AL11.AL_EXPONENT_DISTANCE);
-//        soundCache.setListener(new SoundListener(new Vector3f(0, 0, 0)));
+        soundCache = new SoundCache();
+        soundCache.setAttenuationModel(AL11.AL_EXPONENT_DISTANCE);
+        soundCache.setListener(new SoundListener(new Vector3f(0, 0, 0)));
 
-//        SoundBuffer buffer = new SoundBuffer(SoundLoaderType.STBVorbis, new ResourcesLocation("sound/test.ogg"));
-//        SoundSource playerSoundSource = new SoundSource(false, false);
-//        playerSoundSource.setPosition(new Vector3f(0, 0, 0));
-//        playerSoundSource.setBuffer(buffer.getBufferId());
+        SoundBuffer buffer = new SoundBuffer(SoundLoaderType.STBVorbis, new ResourcesLocation("sound/test.ogg"));
+        SoundSource playerSoundSource = new SoundSource(false, false);
+        playerSoundSource.setPosition(new Vector3f(0, 0, 0));
+        playerSoundSource.setBuffer(buffer.getBufferId());
 
-//        soundCache.createCache("test", buffer, playerSoundSource);
+        soundCache.createCache("test", buffer, playerSoundSource);
     }
 
     @Override
@@ -212,12 +208,12 @@ public class TestGuiFrame implements LFJGFrame {
 //        Translate translate = (Translate) glObjectCache.getGLObject(glFont.getObjectId()).getEffectBase(1);
 //        translate.setX(value * resolution.x());
 
-//        soundCache.getSoundSource("test").setGain(1 * value);
-//        soundCache.playSoundSource("test");
-
+        soundCache.getSoundSource("test").setGain(0.05f);
+        soundCache.playSoundSource("test");
+        soundCache.getOpenALError();
 
         glObjectCache.draw();
-        object3DCacheRender.render(camera);
+//        object3DCacheRender.render(camera);
 
 //        FrameData frameData = videoFrameExtractor.getFrameRender();
 //        if (frameData == null){
@@ -289,7 +285,7 @@ public class TestGuiFrame implements LFJGFrame {
 //        soundCache.cleanup();
 //        threadCache.cleanup();
 
-        object3DCacheRender.cleanup();
+//        object3DCacheRender.cleanup();
 
         DebugLog.debug(getClass(), "Frame Stopped");
     }
