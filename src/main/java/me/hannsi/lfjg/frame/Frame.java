@@ -56,6 +56,49 @@ public class Frame implements IFrame {
         }, threadName).start();
     }
 
+    public void createFrame() {
+        registerManagers();
+
+        lfjgFrame.setFrameSetting();
+
+        initGLFW();
+        initRendering();
+        updateViewport();
+
+        frameSettingManager.updateFrameSettings(false);
+
+        GLFWCallback glfwCallback = new GLFWCallback(this);
+        glfwCallback.glfwInvoke();
+
+        lfjgFrame.init();
+        eventManager.register(this);
+
+        mainLoop();
+    }
+
+    private void initGLFW() {
+        GLFWDebug.getGLFWDebug(this);
+
+        if (!GLFW.glfwInit()) {
+            throw new IllegalStateException("Unable to initialize GLFW");
+        }
+
+        glfwWindowHints();
+
+        Vector2i windowSizes = GLFWUtil.getWindowSizes(this, getFrameSettingValue(MonitorSetting.class));
+        windowWidth = windowSizes.x();
+        windowHeight = windowSizes.y();
+
+        windowID = GLFW.glfwCreateWindow(windowWidth, windowHeight, getFrameSettingValue(TitleSetting.class).toString(), GLFWUtil.getMonitorTypeCode(getFrameSettingValue(MonitorSetting.class)), MemoryUtil.NULL);
+        if (windowID == MemoryUtil.NULL) {
+            throw new RuntimeException("Failed to create the GLFW window");
+        }
+
+        GLFW.glfwMakeContextCurrent(windowID);
+        GLFW.glfwSwapInterval(((VSyncType) getFrameSettingValue(VSyncSetting.class)).getId());
+        GLFW.glfwShowWindow(windowID);
+    }
+
     private void registerManagers() {
         DebugLog.debug(getClass(), "Managers loading...\n");
         long tookTime = TimeCalculator.calculate(() -> {
@@ -64,43 +107,7 @@ public class Frame implements IFrame {
         DebugLog.debug(getClass(), ANSIFormat.GREEN + "Managers took " + tookTime + "ms to load!\n");
     }
 
-    public void createFrame() {
-        registerManagers();
-
-        GLFWDebug.getGLFWDebug(this);
-
-        if (!GLFW.glfwInit()) {
-            throw new IllegalStateException("Unable to initialize GLFW");
-        }
-
-        lfjgFrame.setFrameSetting();
-        glfwWindowHints();
-
-        Vector2i windowSizes = GLFWUtil.getWindowSizes(this, getFrameSettingValue(MonitorSetting.class));
-        windowWidth = windowSizes.x();
-        windowHeight = windowSizes.y();
-
-        windowID = GLFW.glfwCreateWindow(windowWidth, windowHeight, getFrameSettingValue(TitleSetting.class).toString(), GLFWUtil.getMonitorTypeCode(getFrameSettingValue(MonitorSetting.class)), MemoryUtil.NULL);
-
-        if (windowID == MemoryUtil.NULL) {
-            throw new RuntimeException("Failed to create the GLFW window");
-        }
-
-        GLFW.glfwMakeContextCurrent(windowID);
-        GLFW.glfwSwapInterval(((VSyncType) getFrameSettingValue(VSyncSetting.class)).getId());
-        GLFW.glfwShowWindow(windowID);
-
-        initializeRendering();
-
-        updateViewport();
-        frameSettingManager.updateFrameSettings(false);
-
-        GLFWCallback glfwCallback = new GLFWCallback(this);
-        glfwCallback.glfwInvoke();
-        mainLoop();
-    }
-
-    private void initializeRendering() {
+    private void initRendering() {
         switch ((RenderingType) getFrameSettingValue(RenderingTypeSetting.class)) {
             case OpenGL -> {
                 GL.createCapabilities();
@@ -132,10 +139,6 @@ public class Frame implements IFrame {
     }
 
     private void mainLoop() {
-        lfjgFrame.init();
-
-        eventManager.register(this);
-
         long lastTime2 = TimeSourceUtil.getNanoTime(this);
         double deltaTime2 = 0;
         double targetTime = 1_000_000_000.0 / (int) getFrameSettingValue(RefreshRateSetting.class);
@@ -185,7 +188,6 @@ public class Frame implements IFrame {
         }
 
         finishTime = TimeSourceUtil.getTimeMills(this);
-
         lfjgFrame.stopFrame();
 
         breakFrame();
