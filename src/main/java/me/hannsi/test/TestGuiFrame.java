@@ -210,7 +210,6 @@ public class TestGuiFrame implements LFJGFrame {
 
         soundCache.getSoundSource("test").setGain(0.05f);
         soundCache.playSoundSource("test");
-        soundCache.getOpenALError();
 
         glObjectCache.draw();
 //        object3DCacheRender.render(camera);

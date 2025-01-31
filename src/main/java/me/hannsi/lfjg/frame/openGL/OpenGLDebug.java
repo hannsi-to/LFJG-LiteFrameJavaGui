@@ -1,83 +1,18 @@
-package me.hannsi.lfjg.frame;
+package me.hannsi.lfjg.frame.openGL;
 
 import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
-import me.hannsi.lfjg.event.events.user.*;
+import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
-import me.hannsi.lfjg.frame.setting.settings.MonitorSetting;
-import me.hannsi.lfjg.utils.graphics.GLFWUtil;
 import me.hannsi.lfjg.utils.type.types.SeverityType;
-import org.joml.Vector2i;
-import org.lwjgl.glfw.*;
-import org.lwjgl.openal.AL11;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL43;
 import org.lwjgl.opengl.GLDebugMessageCallback;
 
 import static org.lwjgl.system.MemoryUtil.memUTF8;
 
-public class GLFWCallback implements IFrame {
-    private final Frame frame;
-
-    public GLFWCallback(Frame frame) {
-        this.frame = frame;
-    }
-
-    public void glfwInvoke() {
-        GLFW.glfwSetWindowFocusCallback(frame.getWindowID(), new GLFWWindowFocusCallbackI() {
-            @Override
-            public void invoke(long window, boolean focused) {
-
-            }
-        });
-        GLFW.glfwSetFramebufferSizeCallback(frame.getWindowID(), new GLFWFramebufferSizeCallback() {
-            @Override
-            public void invoke(long window, int width, int height) {
-                Vector2i windowSizes = GLFWUtil.getWindowSizes(frame, frame.getFrameSettingValue(MonitorSetting.class));
-                frame.setWindowWidth(windowSizes.x());
-                frame.setWindowHeight(windowSizes.y());
-
-                frame.updateViewport();
-            }
-        });
-
-        GLFW.glfwSetKeyCallback(frame.getWindowID(), new GLFWKeyCallback() {
-            @Override
-            public void invoke(long window, int key, int scancode, int action, int mods) {
-                if (action == GLFW.GLFW_PRESS) {
-                    eventManager.call(new KeyPressEvent(key, scancode, mods, window));
-                } else if (action == GLFW.GLFW_RELEASE) {
-                    eventManager.call(new KeyReleasedEvent(key, scancode, mods, window));
-                }
-            }
-        });
-
-        GLFW.glfwSetCursorPosCallback(frame.getWindowID(), new GLFWCursorPosCallback() {
-            @Override
-            public void invoke(long window, double xpos, double ypos) {
-                eventManager.call(new CursorPosEvent(xpos, ypos, window));
-            }
-        });
-
-        GLFW.glfwSetCursorEnterCallback(frame.getWindowID(), new GLFWCursorEnterCallback() {
-            @Override
-            public void invoke(long window, boolean entered) {
-                eventManager.call(new CursorEnterEvent(window, entered));
-            }
-        });
-
-        GLFW.glfwSetMouseButtonCallback(frame.getWindowID(), new GLFWMouseButtonCallback() {
-            @Override
-            public void invoke(long window, int button, int action, int mods) {
-                eventManager.call(new MouseButtonCallbackEvent(window, button, action, mods));
-                if (action == GLFW.GLFW_PRESS) {
-                    eventManager.call(new MouseButtonPressEvent(button, mods, window));
-                } else if (action == GLFW.GLFW_RELEASE) {
-                    eventManager.call(new MouseButtonReleasedEvent(button, mods, window));
-                }
-            }
-        });
-
+public class OpenGLDebug {
+    public static void getOpenGLDebug(Frame frame) {
         if (GL.getCapabilities().OpenGL43) {
             GL43.glEnable(GL43.GL_DEBUG_OUTPUT);
             GL43.glDebugMessageCallback(new GLDebugMessageCallback() {
@@ -107,11 +42,11 @@ public class GLFWCallback implements IFrame {
                 }
             }, 0);
         } else {
-            DebugLog.debug(getClass(), "OpenGL 4.3 or higher is required for debug messages.");
+            DebugLog.debug(OpenGLDebug.class, "OpenGL 4.3 or higher is required for debug messages.");
         }
     }
 
-    private String getSourceString(int source) {
+    public static String getSourceString(int source) {
         return switch (source) {
             case GL43.GL_DEBUG_SOURCE_API -> "API";
             case GL43.GL_DEBUG_SOURCE_WINDOW_SYSTEM -> "Window System";
@@ -123,7 +58,7 @@ public class GLFWCallback implements IFrame {
         };
     }
 
-    private String getTypeString(int type) {
+    public static String getTypeString(int type) {
         return switch (type) {
             case GL43.GL_DEBUG_TYPE_ERROR -> "Error";
             case GL43.GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR -> "Deprecated Behavior";
@@ -135,7 +70,7 @@ public class GLFWCallback implements IFrame {
         };
     }
 
-    private String getSeverityString(int severity) {
+    public static String getSeverityString(int severity) {
         return switch (severity) {
             case GL43.GL_DEBUG_SEVERITY_NOTIFICATION -> "Notification";
             case GL43.GL_DEBUG_SEVERITY_LOW -> "Low";

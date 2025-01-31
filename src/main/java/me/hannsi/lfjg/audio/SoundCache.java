@@ -6,7 +6,6 @@ import me.hannsi.lfjg.render.openGL.system.user.Camera;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.openal.AL;
-import org.lwjgl.openal.AL11;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
 
@@ -45,17 +44,6 @@ public class SoundCache {
         AL.createCapabilities(deviceCaps);
     }
 
-    private static String getALErrorString(int error) {
-        return switch (error) {
-            case AL11.AL_INVALID_NAME -> "Invalid Name";
-            case AL11.AL_INVALID_ENUM -> "Invalid Enum";
-            case AL11.AL_INVALID_VALUE -> "Invalid Value";
-            case AL11.AL_INVALID_OPERATION -> "Invalid Operation";
-            case AL11.AL_OUT_OF_MEMORY -> "Out of Memory";
-            default -> "Unknown Error";
-        };
-    }
-
     public void addSoundBuffer(SoundBuffer soundBuffer) {
         this.soundBufferList.add(soundBuffer);
     }
@@ -71,19 +59,6 @@ public class SoundCache {
         LogGenerator logGenerator = new LogGenerator("SoundCache Debug Message", "Source: SoundCache", "Type: Cache Creation", "Name: " + name, "Severity: Info", "Message: Create sound cache");
 
         DebugLog.debug(getClass(), logGenerator.createLog());
-    }
-
-    public void getOpenALError() {
-        if (AL.getCapabilities().OpenAL11) {
-            int error = AL11.alGetError();
-            if (error != AL11.AL_NO_ERROR) {
-                String errorMessage = getALErrorString(error);
-
-                LogGenerator logGenerator = new LogGenerator(" OpenAL Debug Message", "Type: Error", "ID: " + error, "Severity: High", "Message: " + errorMessage);
-
-                DebugLog.error(getClass(), logGenerator.createLog());
-            }
-        }
     }
 
     public void cleanup() {

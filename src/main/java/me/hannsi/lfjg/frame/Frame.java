@@ -4,6 +4,8 @@ import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.event.events.render.DrawFrameWithNanoVGEvent;
 import me.hannsi.lfjg.event.events.render.DrawFrameWithOpenGLEvent;
 import me.hannsi.lfjg.event.system.EventHandler;
+import me.hannsi.lfjg.frame.glfw.GLFWCallback;
+import me.hannsi.lfjg.frame.glfw.GLFWDebug;
 import me.hannsi.lfjg.frame.manager.managers.FrameSettingManager;
 import me.hannsi.lfjg.frame.manager.managers.LoggerManager;
 import me.hannsi.lfjg.frame.setting.settings.*;
@@ -65,7 +67,7 @@ public class Frame implements IFrame {
     public void createFrame() {
         registerManagers();
 
-        GLFWErrorCallback.createPrint(System.err).set();
+        GLFWDebug.getGLFWDebug(this);
 
         if (!GLFW.glfwInit()) {
             throw new IllegalStateException("Unable to initialize GLFW");
