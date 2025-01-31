@@ -136,7 +136,7 @@ public class TestGuiFrame implements LFJGFrame {
         glFont = new GLFont("Font");
         glFont.setProjectionMatrix(projection.getProjMatrix());
         glFont.setResolution(resolution);
-        glFont.setFont(fontCache, font, 16);
+        glFont.setFont(fontCache, font, 64);
         glFont.font(TextFormat.SPASE_X + "{100}" + "字間を確認" + TextFormat.RESET + "字間を確認" + TextFormat.SPASE_Y + "{100}" + TextFormat.NEWLINE + TextFormat.RESET_POINT_X + TextFormat.RED + "Ka" + TextFormat.BOLD + "zu" + TextFormat.ITALIC + "bon" + "です!" + TextFormat.OBFUSCATED + "test sdaasd aaaa", 0, 200, 1f, Color.of(255, 255, 255, 255));
 
 //        gl2 = new GLRect("test2");
