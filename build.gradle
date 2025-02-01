@@ -116,3 +116,12 @@ jar {
         attributes "Main-Class": "me.hannsi.test.TestGuiFrame"
     }
 }
+
+sourceCompatibility = JavaVersion.VERSION_22
+targetCompatibility = JavaVersion.VERSION_22
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(22)
+    }
+}
