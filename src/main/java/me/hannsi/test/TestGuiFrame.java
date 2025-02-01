@@ -181,7 +181,6 @@ public class TestGuiFrame implements LFJGFrame {
 
 //        gl1.setEffectCache(gl1EffectCache);
         glFont.setEffectCache(glFontEffectCache);
-//        gl2.setEffectCache(effectCache);
     }
 
     public void soundCacheInit() {
