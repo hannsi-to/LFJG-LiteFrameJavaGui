@@ -1,3 +1,9 @@
 before_install:
    - sdk install java 19-open
    - sdk use java 19-open
+
+install:
+   - mvn install -DskipTests=true
+
+script:
+   - mvn test
