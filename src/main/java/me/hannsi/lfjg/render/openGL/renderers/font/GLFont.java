@@ -1,12 +1,18 @@
 package me.hannsi.lfjg.render.openGL.renderers.font;
 
+import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.system.font.CFont;
+import me.hannsi.lfjg.render.openGL.system.font.CharInfo;
 import me.hannsi.lfjg.render.openGL.system.font.FontCache;
 import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.lwjgl.opengl.GL30;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -42,6 +48,38 @@ public class GLFont extends GLRect {
         this.y = y;
         this.scale = scale;
         this.color = color;
+
+
+        StringBuilder unknownCharacters = new StringBuilder();
+        StringBuilder unknownCharacters2 = new StringBuilder();
+        Set<Character> loggedCharacters = new HashSet<>();
+
+        int index = 0;
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            CharInfo charInfo = cFont.getCharacter(c);
+            if (charInfo.getWidth() == 0 && !loggedCharacters.contains(c)) {
+                unknownCharacters2.append(String.format("U+%04X (\"%c\"), ", (int) c, c));
+                loggedCharacters.add(c);
+
+                index++;
+                if (index == 10) {
+                    unknownCharacters.append(unknownCharacters.isEmpty() ? "" : "\n\t").append(unknownCharacters2);
+                    unknownCharacters2.delete(0, unknownCharacters2.length());
+                    index = 0;
+                }
+            }
+        }
+
+        if (!unknownCharacters2.isEmpty()) {
+            unknownCharacters.append(unknownCharacters2);
+        }
+
+        if (!unknownCharacters.isEmpty()) {
+            unknownCharacters.setLength(unknownCharacters.length() - 2);
+            LogGenerator logGenerator = new LogGenerator("Unknown characters", unknownCharacters.toString());
+            DebugLog.warning(getClass(), logGenerator.createLog());
+        }
 
         frameBuffer = new FrameBuffer(getResolution());
         frameBuffer.createFrameBuffer();

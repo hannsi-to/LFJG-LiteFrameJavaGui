@@ -247,7 +247,6 @@ public class Batch {
 
             CharInfo charInfo = font.getCharacter(c);
             if (charInfo.getWidth() == 0) {
-                DebugLog.warning(getClass(), "Unknown character " + c);
                 continue;
             }
 
@@ -310,7 +309,6 @@ public class Batch {
                 c = StringUtil.getRandomCharacter("0123456789abcdefghijklmnopqrstyvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
                 charInfo = font.getCharacter(c);
                 if (charInfo.getWidth() == 0) {
-                    DebugLog.warning(getClass(), "Unknown character " + c);
                     continue;
                 }
             }
