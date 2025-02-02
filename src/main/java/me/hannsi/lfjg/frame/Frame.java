@@ -46,14 +46,7 @@ public class Frame implements IFrame {
     public Frame(LFJGFrame lfjgFrame, String threadName) {
         this.lfjgFrame = lfjgFrame;
 
-        new Thread(() -> {
-            try {
-                Runtime.getRuntime().addShutdownHook(new Thread(lfjgFrame::stopFrame));
-                createFrame();
-            } finally {
-                lfjgFrame.stopFrame();
-            }
-        }, threadName).start();
+        new Thread(this::createFrame, threadName).start();
     }
 
     public void createFrame() {

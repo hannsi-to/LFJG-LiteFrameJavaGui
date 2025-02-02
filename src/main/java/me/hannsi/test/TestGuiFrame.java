@@ -17,7 +17,9 @@ import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.font.GLFont;
 import me.hannsi.lfjg.render.openGL.renderers.model.Object3DCacheRender;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
+import me.hannsi.lfjg.render.openGL.system.font.CFont;
 import me.hannsi.lfjg.render.openGL.system.font.FontCache;
+import me.hannsi.lfjg.render.openGL.system.font.UnicodeRange;
 import me.hannsi.lfjg.render.openGL.system.model.model.Entity;
 import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.render.openGL.system.user.Camera;
@@ -81,6 +83,10 @@ public class TestGuiFrame implements LFJGFrame {
 //        threadCache.createCache(thread);
 //        threadCache.run(thread.threadId());
 
+        CFont.addUnicodeRange(UnicodeRange.HIRAGANA_START, UnicodeRange.HIRAGANA_END);
+        CFont.addUnicodeRange(UnicodeRange.KATAKANA_START, UnicodeRange.KATAKANA_END);
+        CFont.addUnicodeRange(UnicodeRange.CJK_IDEOGRAPHS_START, UnicodeRange.CJK_IDEOGRAPHS_END);
+
         objectInit();
 
         glObjectCache = new GLObjectCache(resolution);
@@ -125,7 +131,7 @@ public class TestGuiFrame implements LFJGFrame {
 
         fontCache = new FontCache();
         ResourcesLocation font = new ResourcesLocation("font/default.ttf");
-        fontCache.createCache(font, 64);
+        fontCache.createCache(font, 16);
 
 //        gl1 = new GLRect("test1");
 //        gl1.setProjectionMatrix(projection.getProjMatrix());
@@ -136,7 +142,7 @@ public class TestGuiFrame implements LFJGFrame {
         glFont = new GLFont("Font");
         glFont.setProjectionMatrix(projection.getProjMatrix());
         glFont.setResolution(resolution);
-        glFont.setFont(fontCache, font, 64);
+        glFont.setFont(fontCache, font, 16);
         glFont.font(TextFormat.SPASE_X + "{100}" + "字間を確認" + TextFormat.RESET + "字間を確認" + TextFormat.SPASE_Y + "{100}" + TextFormat.NEWLINE + TextFormat.RESET_POINT_X + TextFormat.RED + "Ka" + TextFormat.BOLD + "zu" + TextFormat.ITALIC + "bon" + "です!" + TextFormat.OBFUSCATED + "test sdaasd aaaa", 0, 200, 1f, Color.of(255, 255, 255, 255));
 
 //        gl2 = new GLRect("test2");
