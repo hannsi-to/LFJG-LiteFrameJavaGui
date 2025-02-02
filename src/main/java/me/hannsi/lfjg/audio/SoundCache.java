@@ -28,10 +28,14 @@ public class SoundCache {
     private SoundListener listener;
 
     public SoundCache() {
+        this(AudioDevices.DEFAULT);
+    }
+
+    public SoundCache(ByteBuffer deviceByte) {
         soundBufferList = new ArrayList<>();
         soundSourceMap = new HashMap<>();
 
-        device = alcOpenDevice((ByteBuffer) null);
+        device = alcOpenDevice(deviceByte);
         if (device == NULL) {
             throw new IllegalStateException("Failed to open the default OpenAL device.");
         }

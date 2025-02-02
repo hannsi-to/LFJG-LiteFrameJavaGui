@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.debug.debug;
 
 public class LogGenerator {
-    private int barCount = 10;
+    private int barCount = 30;
     private String title;
     private String[] texts;
 
