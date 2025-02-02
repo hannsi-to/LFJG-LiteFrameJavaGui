@@ -11,8 +11,7 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
-import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
-import me.hannsi.lfjg.render.openGL.effect.effects.Translate;
+import me.hannsi.lfjg.render.openGL.effect.effects.*;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.font.GLFont;
 import me.hannsi.lfjg.render.openGL.renderers.model.Object3DCacheRender;
@@ -38,10 +37,10 @@ import org.lwjgl.openal.AL11;
 public class TestGuiFrame implements LFJGFrame {
     GLRect gl1;
     GLFont glFont;
-    //    GLRect gl2;
+    GLRect gl2;
     GLObjectCache glObjectCache;
     TextureCache textureCache;
-    //    EffectCache gl1EffectCache;
+    EffectCache gl1EffectCache;
     EffectCache glFontEffectCache;
     FontCache fontCache;
 
@@ -91,7 +90,7 @@ public class TestGuiFrame implements LFJGFrame {
 
         glObjectCache = new GLObjectCache(resolution);
 //        glObjectCache.createCache(gl2);
-//        glObjectCache.createCache(gl1);
+        glObjectCache.createCache(gl1);
         glObjectCache.createCache(glFont);
 
         effectCacheInit();
@@ -131,24 +130,19 @@ public class TestGuiFrame implements LFJGFrame {
 
         fontCache = new FontCache();
         ResourcesLocation font = new ResourcesLocation("font/default.ttf");
-        fontCache.createCache(font, 16);
+        fontCache.createCache(font, 64);
 
-//        gl1 = new GLRect("test1");
-//        gl1.setProjectionMatrix(projection.getProjMatrix());
-//        gl1.setResolution(resolution);
-//        gl1.uv(0, 1, 1, 0);
-//        gl1.rectWH(0, 0, resolution.x(), resolution.y(), new Color(0, 0, 0, 0));
+        gl1 = new GLRect("test1");
+        gl1.setProjectionMatrix(projection.getProjMatrix());
+        gl1.setResolution(resolution);
+        gl1.uv(0, 1, 1, 0);
+        gl1.rectWH(0, 0, resolution.x(), resolution.y(), new Color(0, 0, 0, 0));
 
         glFont = new GLFont("Font");
         glFont.setProjectionMatrix(projection.getProjMatrix());
         glFont.setResolution(resolution);
-        glFont.setFont(fontCache, font, 16);
+        glFont.setFont(fontCache, font, 64);
         glFont.font(TextFormat.SPASE_X + "{100}" + "字間を確認" + TextFormat.RESET + "字間を確認" + TextFormat.SPASE_Y + "{100}" + TextFormat.NEWLINE + TextFormat.RESET_POINT_X + TextFormat.RED + "Ka" + TextFormat.BOLD + "zu" + TextFormat.ITALIC + "bon" + "です!" + TextFormat.OBFUSCATED + "test sdaasd aaaa", 0, 200, 1f, Color.of(255, 255, 255, 255));
-
-//        gl2 = new GLRect("test2");
-//        gl2.setProjectionMatrix(projection.getProjMatrix());
-//        gl2.setResolution(resolution);
-//        gl2.rect(0, 0, 1920, 1080, new Color(0, 255, 0, 255));
     }
 
     public void effectCacheInit() {
@@ -156,11 +150,14 @@ public class TestGuiFrame implements LFJGFrame {
         ResourcesLocation image = new ResourcesLocation("texture/test/test_image_3840x2160.jpg");
         textureCache.createCache(image);
 
-//        gl1EffectCache = new EffectCache();
+        gl1EffectCache = new EffectCache();
         glFontEffectCache = new EffectCache();
 
-//        gl1EffectCache.createCache(new Texture(resolution, textureCache, image), gl1);
-//        gl1EffectCache.createCache(new DrawObject(resolution), gl1);
+        gl1EffectCache.createCache(new Texture(resolution, textureCache, image), gl1);
+        gl1EffectCache.createCache(new DrawObject(resolution), gl1);
+        gl1EffectCache.createCache(new FrameBufferContents(resolution), gl1);
+        gl1EffectCache.createCache(new DiagonalClipping(resolution, resolution.x / 2, resolution.y / 2, (float) Math.toRadians(0), 0.0f, true), gl1);
+        gl1EffectCache.createCache(new Pixelate(resolution, 10f), gl1);
 //        gl1EffectCache.createCache(new Gradation(resolution, resolution.x / 2, resolution.y / 2, (float) Math.toRadians(90), 0.1f, Gradation.ShapeMode.Rectangle, BlendType.Multiply, new Color(0, 0, 0, 255), new Color(255, 255, 255, 255), 1f), gl1);
 //        gl1EffectCache.createCache(new Monochrome(resolution, 1f, new Color(255, 0, 255), true), gl1);
 //        gl1EffectCache.createCache(new ChromaticAberration(resolution, 0.002f, 90, 5f, ChromaticAberration.AberrationType.RedBlueB), gl1);
@@ -183,9 +180,8 @@ public class TestGuiFrame implements LFJGFrame {
 
         glFontEffectCache.createCache(new DrawObject(resolution), glFont);
         glFontEffectCache.createCache(new Translate(resolution, 200, 0), glFont);
-//        glFontEffectCache.createCache(new Pixelate(resolution, 10f), glFont);
 
-//        gl1.setEffectCache(gl1EffectCache);
+        gl1.setEffectCache(gl1EffectCache);
         glFont.setEffectCache(glFontEffectCache);
     }
 
@@ -286,7 +282,7 @@ public class TestGuiFrame implements LFJGFrame {
         glObjectCache.cleanup();
         textureCache.cleanup();
         fontCache.cleanup();
-//        soundCache.cleanup();
+        soundCache.cleanup();
 //        threadCache.cleanup();
 
 //        object3DCacheRender.cleanup();

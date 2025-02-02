@@ -88,12 +88,13 @@ public class EffectCache {
         int maxSize = new ArrayList<>(effectBases.entrySet()).size() - 1;
 
         for (Map.Entry<EffectBase, Long> effectBase : effectBases.entrySet()) {
-            if (index == maxSize) {
+            if (index == maxSize || effectBase.getKey().getName().equals("FrameBufferContents")) {
                 effectBase.getKey().getFrameBuffer().getShaderProgramFBO().bind();
                 effectBase.getKey().setUniform(glObject);
                 effectBase.getKey().getFrameBuffer().getShaderProgramFBO().unbind();
                 effectBase.getKey().frameBuffer(glObject);
-            } else {
+            }
+            if (index != maxSize || effectBase.getKey().getName().equals("FrameBufferContents")) {
                 Map.Entry<EffectBase, Long> nextEffectBase = getLinkedHashMapEntry(effectBases, index + 1);
 
                 nextEffectBase.getKey().frameBufferPush(glObject);

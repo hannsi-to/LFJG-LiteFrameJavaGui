@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class FontCache {
     public static final ResourcesLocation DEFAULT_TEXTURE = new ResourcesLocation("font/default.ttf");
-    public static final int DEFAULT_FONT_SIZE = 64;
+    public static final int DEFAULT_FONT_SIZE = 1;
     private static boolean autoCreateFontCache = true;
 
     private Map<FileLocation, FontData> fontMap;
