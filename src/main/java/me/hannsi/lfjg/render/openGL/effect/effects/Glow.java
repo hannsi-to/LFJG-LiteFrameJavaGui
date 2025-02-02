@@ -8,7 +8,6 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class Glow extends EffectBase {
-    private Vector2f resolution;
     private float intensity;
     private float threshold;
     private float spread;
@@ -19,7 +18,6 @@ public class Glow extends EffectBase {
     public Glow(Vector2f resolution, float intensity, float threshold, float spread, boolean useOriginalColor, Color glowColor, boolean glowOnly) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Glow.fsh"), true, 11, "Glow");
 
-        this.resolution = resolution;
         this.intensity = intensity;
         this.spread = spread;
         this.threshold = threshold;
@@ -35,7 +33,6 @@ public class Glow extends EffectBase {
     public Glow(Vector2f resolution, double intensity, double threshold, double spread, boolean useOriginalColor, Color glowColor, boolean glowOnly) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Glow.fsh"), true, 11, "Glow");
 
-        this.resolution = resolution;
         this.intensity = (float) intensity;
         this.spread = (float) spread;
         this.threshold = (float) threshold;
@@ -127,13 +124,5 @@ public class Glow extends EffectBase {
 
     public void setIntensity(float intensity) {
         this.intensity = intensity;
-    }
-
-    public Vector2f getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(Vector2f resolution) {
-        this.resolution = resolution;
     }
 }

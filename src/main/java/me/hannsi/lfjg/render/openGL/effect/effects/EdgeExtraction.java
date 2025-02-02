@@ -8,7 +8,6 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 public class EdgeExtraction extends EffectBase {
-    private Vector2f resolution;
     private float edgeStrength;
     private float threshold;
     private boolean enableLuminanceEdge;
@@ -18,7 +17,6 @@ public class EdgeExtraction extends EffectBase {
     public EdgeExtraction(Vector2f resolution, float edgeStrength, float threshold, boolean enableLuminanceEdge, boolean enableAlphaEdge, Color edgeColor) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/EdgeExtraction.fsh"), true, 14, "EdgeExtraction");
 
-        this.resolution = resolution;
         this.edgeStrength = edgeStrength;
         this.threshold = threshold;
         this.enableLuminanceEdge = enableLuminanceEdge;
@@ -60,14 +58,6 @@ public class EdgeExtraction extends EffectBase {
         getFrameBuffer().getShaderProgramFBO().setUniform("edgeColor", new Vector4f(edgeColor.getRedF(), edgeColor.getGreenF(), edgeColor.getBlueF(), edgeColor.getAlphaF()));
 
         super.setUniform(baseGLObject);
-    }
-
-    public Vector2f getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(Vector2f resolution) {
-        this.resolution = resolution;
     }
 
     public float getEdgeStrength() {

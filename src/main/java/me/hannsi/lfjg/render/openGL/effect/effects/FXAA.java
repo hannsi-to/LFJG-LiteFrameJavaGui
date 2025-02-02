@@ -6,13 +6,11 @@ import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Vector2f;
 
 public class FXAA extends EffectBase {
-    private Vector2f resolution;
     private boolean useAlpha;
 
     public FXAA(Vector2f resolution, boolean useAlpha) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/FXAA.fsh"), true, 17, "FastApproximateAntiAliasing");
 
-        this.resolution = resolution;
         this.useAlpha = useAlpha;
     }
 
@@ -36,18 +34,10 @@ public class FXAA extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("texelStep", new Vector2f(1.0f / resolution.x(), 1.0f / resolution.y()));
+        getFrameBuffer().getShaderProgramFBO().setUniform("texelStep", new Vector2f(1.0f / getResolution().x(), 1.0f / getResolution().y()));
         getFrameBuffer().getShaderProgramFBO().setUniform("useAlpha", useAlpha);
 
         super.setUniform(baseGLObject);
-    }
-
-    public Vector2f getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(Vector2f resolution) {
-        this.resolution = resolution;
     }
 
     public boolean isUseAlpha() {

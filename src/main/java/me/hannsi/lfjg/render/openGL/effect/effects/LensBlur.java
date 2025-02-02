@@ -6,14 +6,12 @@ import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Vector2f;
 
 public class LensBlur extends EffectBase {
-    private Vector2f resolution;
     private float range;
     private float intensity;
 
     public LensBlur(Vector2f resolution, float range, float intensity) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/LensBlur.fsh"), true, 20, "LensBlur");
 
-        this.resolution = resolution;
         this.range = range;
         this.intensity = intensity;
     }
@@ -46,14 +44,6 @@ public class LensBlur extends EffectBase {
         getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
 
         super.setUniform(baseGLObject);
-    }
-
-    public Vector2f getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(Vector2f resolution) {
-        this.resolution = resolution;
     }
 
     public float getRange() {

@@ -6,13 +6,11 @@ import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Vector2f;
 
 public class Pixelate extends EffectBase {
-    private Vector2f resolution;
     private float mosaicSize;
 
     public Pixelate(Vector2f resolution, float mosaicSize) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Pixelate.fsh"), true, 8, "Pixelate");
 
-        this.resolution = resolution;
         this.mosaicSize = mosaicSize;
     }
 
@@ -43,18 +41,10 @@ public class Pixelate extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("resolution", resolution);
+        getFrameBuffer().getShaderProgramFBO().setUniform("resolution", getResolution());
         getFrameBuffer().getShaderProgramFBO().setUniform("mosaicSize", mosaicSize);
 
         super.setUniform(baseGLObject);
-    }
-
-    public Vector2f getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(Vector2f resolution) {
-        this.resolution = resolution;
     }
 
     public float getMosaicSize() {

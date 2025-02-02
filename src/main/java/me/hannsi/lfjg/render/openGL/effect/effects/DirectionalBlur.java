@@ -6,14 +6,12 @@ import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Vector2f;
 
 public class DirectionalBlur extends EffectBase {
-    private Vector2f resolution;
     private float radius;
     private float angle;
 
     public DirectionalBlur(Vector2f resolution, float radius, float angle) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/DirectionalBlur.fsh"), true, 19, "DirectionalBlur");
 
-        this.resolution = resolution;
         this.radius = radius;
         this.angle = angle;
     }
@@ -46,14 +44,6 @@ public class DirectionalBlur extends EffectBase {
         getFrameBuffer().getShaderProgramFBO().setUniform("angle", angle);
 
         super.setUniform(baseGLObject);
-    }
-
-    public Vector2f getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(Vector2f resolution) {
-        this.resolution = resolution;
     }
 
     public float getRadius() {

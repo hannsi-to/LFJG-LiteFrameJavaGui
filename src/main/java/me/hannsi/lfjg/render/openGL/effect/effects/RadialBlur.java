@@ -6,7 +6,6 @@ import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Vector2f;
 
 public class RadialBlur extends EffectBase {
-    private Vector2f resolution;
     private float range;
     private float centerX;
     private float centerY;
@@ -14,7 +13,6 @@ public class RadialBlur extends EffectBase {
     public RadialBlur(Vector2f resolution, float range, float centerX, float centerY) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/RadialBlur.fsh"), true, 18, "RadialBlur");
 
-        this.resolution = resolution;
         this.range = range;
         this.centerX = centerX;
         this.centerY = centerY;
@@ -23,7 +21,6 @@ public class RadialBlur extends EffectBase {
     public RadialBlur(Vector2f resolution, double range, double centerX, double centerY) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/RadialBlur.fsh"), true, 18, "RadialBlur");
 
-        this.resolution = resolution;
         this.range = (float) range;
         this.centerX = (float) centerX;
         this.centerY = (float) centerY;
@@ -50,18 +47,10 @@ public class RadialBlur extends EffectBase {
     @Override
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().setUniform("range", range);
-        getFrameBuffer().getShaderProgramFBO().setUniform("centerX", centerX / resolution.x);
-        getFrameBuffer().getShaderProgramFBO().setUniform("centerY", centerY / resolution.y);
+        getFrameBuffer().getShaderProgramFBO().setUniform("centerX", centerX / getResolution().x);
+        getFrameBuffer().getShaderProgramFBO().setUniform("centerY", centerY / getResolution().y);
 
         super.setUniform(baseGLObject);
-    }
-
-    public Vector2f getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(Vector2f resolution) {
-        this.resolution = resolution;
     }
 
     public float getRange() {

@@ -10,7 +10,6 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 public class Gradation extends EffectBase {
-    private Vector2f resolution;
     private float centerX;
     private float centerY;
     private float angle;
@@ -24,7 +23,6 @@ public class Gradation extends EffectBase {
     public Gradation(Vector2f resolution, float centerX, float centerY, float angle, float width, ShapeMode shapeMode, BlendType blendType, Color startColor, Color endColor, float intensity) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Gradation.fsh"), true, 24, "Gradation");
 
-        this.resolution = resolution;
         this.centerX = centerX;
         this.centerY = centerY;
         this.angle = angle;
@@ -60,7 +58,7 @@ public class Gradation extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("center", new Vector2f(centerX / resolution.x, centerY / resolution.y));
+        getFrameBuffer().getShaderProgramFBO().setUniform("center", new Vector2f(centerX / getResolution().x, centerY / getResolution().y));
         getFrameBuffer().getShaderProgramFBO().setUniform("angle", angle);
         getFrameBuffer().getShaderProgramFBO().setUniform("width", width);
         getFrameBuffer().getShaderProgramFBO().setUniform1i("gradientShape", shapeMode.getId());
@@ -70,14 +68,6 @@ public class Gradation extends EffectBase {
         getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
 
         super.setUniform(baseGLObject);
-    }
-
-    public Vector2f getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(Vector2f resolution) {
-        this.resolution = resolution;
     }
 
     public float getCenterX() {

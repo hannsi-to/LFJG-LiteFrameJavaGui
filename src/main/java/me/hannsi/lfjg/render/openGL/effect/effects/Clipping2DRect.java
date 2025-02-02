@@ -7,7 +7,6 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 public class Clipping2DRect extends EffectBase {
-    private Vector2f resolution;
     private float x1;
     private float y1;
     private float x2;
@@ -17,7 +16,6 @@ public class Clipping2DRect extends EffectBase {
     public Clipping2DRect(Vector2f resolution, float x1, float y1, float x2, float y2, boolean invert) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Clipping2D.fsh"), true, 5, "Clipping2DRect", (Class<GLObject>) null);
 
-        this.resolution = resolution;
         this.x1 = x1;
         this.y1 = y1;
         this.x2 = x2;
@@ -32,7 +30,6 @@ public class Clipping2DRect extends EffectBase {
     public Clipping2DRect(Vector2f resolution, double x1, double y1, double x2, double y2, boolean invert) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Clipping2D.fsh"), true, 5, "Clipping2DRect", (Class<GLObject>) null);
 
-        this.resolution = resolution;
         this.x1 = (float) x1;
         this.y1 = (float) y1;
         this.x2 = (float) x2;
@@ -67,7 +64,7 @@ public class Clipping2DRect extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("resolution", resolution);
+        getFrameBuffer().getShaderProgramFBO().setUniform("resolution", getResolution());
         getFrameBuffer().getShaderProgramFBO().setUniform("clippingRect2DBool", true);
         getFrameBuffer().getShaderProgramFBO().setUniform("clippingRect2DInvert", invert);
         getFrameBuffer().getShaderProgramFBO().setUniform("clippingRect2DSize", new Vector4f(x1, y1, x2, y2));
@@ -113,13 +110,5 @@ public class Clipping2DRect extends EffectBase {
 
     public void setInvert(boolean invert) {
         this.invert = invert;
-    }
-
-    public Vector2f getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(Vector2f resolution) {
-        this.resolution = resolution;
     }
 }

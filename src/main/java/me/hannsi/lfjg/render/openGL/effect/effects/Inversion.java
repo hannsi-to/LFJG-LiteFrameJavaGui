@@ -6,7 +6,6 @@ import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Vector2f;
 
 public class Inversion extends EffectBase {
-    private Vector2f resolution;
     private boolean flipVertical;
     private boolean flipHorizontal;
     private boolean invertBrightness;
@@ -16,7 +15,6 @@ public class Inversion extends EffectBase {
     public Inversion(Vector2f resolution, boolean flipVertical, boolean flipHorizontal, boolean invertBrightness, boolean invertHue, boolean invertAlpha) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Inversion.fsh"), true, 21, "Inversion");
 
-        this.resolution = resolution;
         this.flipVertical = flipVertical;
         this.flipHorizontal = flipHorizontal;
         this.invertBrightness = invertBrightness;
@@ -51,14 +49,6 @@ public class Inversion extends EffectBase {
         getFrameBuffer().getShaderProgramFBO().setUniform("invertAlpha", invertAlpha);
 
         super.setUniform(baseGLObject);
-    }
-
-    public Vector2f getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(Vector2f resolution) {
-        this.resolution = resolution;
     }
 
     public boolean isFlipVertical() {

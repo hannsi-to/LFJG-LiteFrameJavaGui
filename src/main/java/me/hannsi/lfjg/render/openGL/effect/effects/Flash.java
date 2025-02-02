@@ -9,7 +9,6 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class Flash extends EffectBase {
-    private Vector2f resolution;
     private float intensity;
     private float x;
     private float y;
@@ -19,7 +18,6 @@ public class Flash extends EffectBase {
     public Flash(Vector2f resolution, float intensity, float x, float y, FlashBlendMode flashBlendMode, Color lightColor) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Flash.fsh"), true, 10, "Flash");
 
-        this.resolution = resolution;
         this.intensity = intensity;
         this.x = x;
         this.y = y;
@@ -54,21 +52,13 @@ public class Flash extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("screenSize", resolution);
+        getFrameBuffer().getShaderProgramFBO().setUniform("screenSize", getResolution());
         getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
         getFrameBuffer().getShaderProgramFBO().setUniform("screenPosition", new Vector2f(x, y));
         getFrameBuffer().getShaderProgramFBO().setUniform1i("blendMode", flashBlendMode.getId());
         getFrameBuffer().getShaderProgramFBO().setUniform("lightColor", new Vector3f(lightColor.getRedF(), lightColor.getGreenF(), lightColor.getBlueF()));
 
         super.setUniform(baseGLObject);
-    }
-
-    public Vector2f getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(Vector2f resolution) {
-        this.resolution = resolution;
     }
 
     public float getIntensity() {

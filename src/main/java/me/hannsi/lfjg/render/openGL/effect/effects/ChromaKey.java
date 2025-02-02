@@ -8,7 +8,6 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class ChromaKey extends EffectBase {
-    private Vector2f resolution;
     private Color chromaKeyColor;
     private float hueRange;
     private float saturationRange;
@@ -18,7 +17,6 @@ public class ChromaKey extends EffectBase {
     public ChromaKey(Vector2f resolution, Color chromaKeyColor, float hueRange, float saturationRange, float boundarySmoothness, Color colorAdjustment) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/ChromaKey.fsh"), true, 12, "ChromaKey");
 
-        this.resolution = resolution;
         this.chromaKeyColor = chromaKeyColor;
         this.hueRange = hueRange;
         this.saturationRange = saturationRange;
@@ -60,14 +58,6 @@ public class ChromaKey extends EffectBase {
         getFrameBuffer().getShaderProgramFBO().setUniform("colorAdjustment", new Vector3f(colorAdjustment.getRedF(), colorAdjustment.getGreenF(), colorAdjustment.getBlueF()));
 
         super.setUniform(baseGLObject);
-    }
-
-    public Vector2f getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(Vector2f resolution) {
-        this.resolution = resolution;
     }
 
     public Color getChromaKeyColor() {

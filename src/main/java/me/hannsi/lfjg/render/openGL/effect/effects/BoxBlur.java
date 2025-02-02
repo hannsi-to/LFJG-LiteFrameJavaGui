@@ -6,14 +6,12 @@ import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Vector2f;
 
 public class BoxBlur extends EffectBase {
-    private Vector2f resolution;
     private int kernelX;
     private int kernelY;
 
     public BoxBlur(Vector2f resolution, int kernelX, int kernelY) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/BoxBlur.fsh"), true, 16, "BoxBlur");
 
-        this.resolution = resolution;
         this.kernelX = kernelX;
         this.kernelY = kernelY;
     }
@@ -45,14 +43,6 @@ public class BoxBlur extends EffectBase {
         getFrameBuffer().getShaderProgramFBO().setUniform1i("kernelY", kernelY);
 
         super.setUniform(baseGLObject);
-    }
-
-    public Vector2f getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(Vector2f resolution) {
-        this.resolution = resolution;
     }
 
     public int getKernelX() {

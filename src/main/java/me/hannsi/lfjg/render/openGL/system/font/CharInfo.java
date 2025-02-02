@@ -3,13 +3,15 @@ package me.hannsi.lfjg.render.openGL.system.font;
 import org.joml.Vector2f;
 
 public class CharInfo {
-    public Vector2f[] textureCoordinates = new Vector2f[4];
+    public Vector2f[] textureCoordinates;
     private int sourceX;
     private int sourceY;
     private int width;
     private int height;
 
     public CharInfo(int sourceX, int sourceY, int width, int height) {
+        this.textureCoordinates = new Vector2f[2];
+
         this.sourceX = sourceX;
         this.sourceY = sourceY;
         this.width = width;

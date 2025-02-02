@@ -46,6 +46,7 @@ public class TestGuiFrame implements LFJGFrame {
 
     Vector2f resolution;
 
+    SoundBuffer soundBuffer;
     SoundCache soundCache;
 
 //    EasingUtil easingUtil;
@@ -93,8 +94,8 @@ public class TestGuiFrame implements LFJGFrame {
         glObjectCache.createCache(gl1);
         glObjectCache.createCache(glFont);
 
-        effectCacheInit();
         soundCacheInit();
+        effectCacheInit();
 
 //        this.easingUtil = new EasingUtil(Easing.easeOutBounce);
 //        this.easingUtil.reset();
@@ -190,12 +191,12 @@ public class TestGuiFrame implements LFJGFrame {
         soundCache.setAttenuationModel(AL11.AL_EXPONENT_DISTANCE);
         soundCache.setListener(new SoundListener(new Vector3f(0, 0, 0)));
 
-        SoundBuffer buffer = new SoundBuffer(SoundLoaderType.STBVorbis, new ResourcesLocation("sound/test.ogg"));
+        soundBuffer = new SoundBuffer(SoundLoaderType.STBVorbis, new ResourcesLocation("sound/test.ogg"));
         SoundSource playerSoundSource = new SoundSource(false, false);
         playerSoundSource.setPosition(new Vector3f(0, 0, 0));
-        playerSoundSource.setBuffer(buffer.getBufferId());
+        playerSoundSource.setBuffer(soundBuffer.getBufferId());
 
-        soundCache.createCache("test", buffer, playerSoundSource);
+        soundCache.createCache("test", soundBuffer, playerSoundSource);
     }
 
     @Override

@@ -10,13 +10,11 @@ import org.lwjgl.BufferUtils;
 import java.nio.FloatBuffer;
 
 public class GaussianBlurVertical extends EffectBase {
-    private Vector2f resolution;
     private float radiusY;
 
     public GaussianBlurVertical(Vector2f resolution, float radiusY) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/GaussianBlur.fsh"), true, 6, "GaussianBlurVertical", (Class<GLObject>) null);
 
-        this.resolution = resolution;
         this.radiusY = radiusY;
     }
 
@@ -59,14 +57,6 @@ public class GaussianBlurVertical extends EffectBase {
         getFrameBuffer().getShaderProgramFBO().setUniform("values", weightBuffer);
 
         super.setUniform(baseGLObject);
-    }
-
-    public Vector2f getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(Vector2f resolution) {
-        this.resolution = resolution;
     }
 
     public float getRadiusY() {

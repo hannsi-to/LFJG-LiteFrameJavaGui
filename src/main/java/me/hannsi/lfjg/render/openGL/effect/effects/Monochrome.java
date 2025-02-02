@@ -8,7 +8,6 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class Monochrome extends EffectBase {
-    private Vector2f resolution;
     private float intensity;
     private Color color;
     private boolean preserveBrightness;
@@ -16,7 +15,6 @@ public class Monochrome extends EffectBase {
     public Monochrome(Vector2f resolution, float intensity, Color color, boolean preserveBrightness) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Monochrome.fsh"), true, 23, "Monochrome");
 
-        this.resolution = resolution;
         this.intensity = intensity;
         this.color = color;
         this.preserveBrightness = preserveBrightness;
@@ -51,14 +49,6 @@ public class Monochrome extends EffectBase {
         getFrameBuffer().getShaderProgramFBO().setUniform("preserveBrightness", preserveBrightness);
 
         super.setUniform(baseGLObject);
-    }
-
-    public Vector2f getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(Vector2f resolution) {
-        this.resolution = resolution;
     }
 
     public float getIntensity() {

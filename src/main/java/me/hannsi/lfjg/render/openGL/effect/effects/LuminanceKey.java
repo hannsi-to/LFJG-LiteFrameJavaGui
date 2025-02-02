@@ -7,7 +7,6 @@ import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
 import org.joml.Vector2f;
 
 public class LuminanceKey extends EffectBase {
-    private Vector2f resolution;
     private float threshold;
     private float blurAmount;
     private LuminanceMode luminanceMode;
@@ -15,7 +14,6 @@ public class LuminanceKey extends EffectBase {
     public LuminanceKey(Vector2f resolution, float threshold, float blurAmount, LuminanceMode luminanceMode) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/LuminanceKey.fsh"), true, 13, "LuminanceKey");
 
-        this.resolution = resolution;
         this.threshold = threshold;
         this.blurAmount = blurAmount;
         this.luminanceMode = luminanceMode;
@@ -53,14 +51,6 @@ public class LuminanceKey extends EffectBase {
         getFrameBuffer().getShaderProgramFBO().setUniform1i("mode", luminanceMode.getId());
 
         super.setUniform(baseGLObject);
-    }
-
-    public Vector2f getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(Vector2f resolution) {
-        this.resolution = resolution;
     }
 
     public float getThreshold() {

@@ -7,7 +7,6 @@ import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
 import org.joml.Vector2f;
 
 public class ChromaticAberration extends EffectBase {
-    private Vector2f resolution;
     private float offsetAmount;
     private float angle;
     private float strength;
@@ -16,7 +15,6 @@ public class ChromaticAberration extends EffectBase {
     public ChromaticAberration(Vector2f resolution, float offsetAmount, float angle, float strength, AberrationType aberrationType) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/ChromaticAberration.fsh"), true, 22, "ChromaticAberration");
 
-        this.resolution = resolution;
         this.offsetAmount = offsetAmount;
         this.angle = angle;
         this.strength = strength;
@@ -52,14 +50,6 @@ public class ChromaticAberration extends EffectBase {
         getFrameBuffer().getShaderProgramFBO().setUniform("strength", strength);
         getFrameBuffer().getShaderProgramFBO().setUniform1i("aberrationType", aberrationType.getId());
         super.setUniform(baseGLObject);
-    }
-
-    public Vector2f getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(Vector2f resolution) {
-        this.resolution = resolution;
     }
 
     public float getOffsetAmount() {

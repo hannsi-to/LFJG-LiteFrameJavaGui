@@ -7,12 +7,14 @@ import org.joml.Vector2f;
 
 public class EffectBase {
     private final FrameBuffer frameBuffer;
+    private final Vector2f resolution;
     private int id;
     private String name;
     private Class<GLObject>[] ignoreGLObject;
 
     @SafeVarargs
     public EffectBase(Vector2f resolution, ResourcesLocation vertexPath, ResourcesLocation fragmentPath, int id, String name, Class<GLObject>... ignoreGLObject) {
+        this.resolution = resolution;
         this.id = id;
         this.name = name;
         this.ignoreGLObject = ignoreGLObject;
@@ -29,6 +31,10 @@ public class EffectBase {
 
         frameBuffer.createFrameBuffer();
         frameBuffer.createShaderProgram();
+    }
+
+    public EffectBase(Vector2f resolution, ResourcesLocation path, boolean isFragmentPath, int id, String name) {
+        this(resolution, isFragmentPath ? null : path, isFragmentPath ? path : null, id, name);
     }
 
     @SafeVarargs
@@ -67,6 +73,10 @@ public class EffectBase {
 
     public void setUniform(GLObject baseGLObject) {
 
+    }
+
+    public Vector2f getResolution() {
+        return resolution;
     }
 
     public int getId() {

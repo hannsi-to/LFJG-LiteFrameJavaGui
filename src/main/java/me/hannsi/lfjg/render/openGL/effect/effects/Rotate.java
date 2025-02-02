@@ -5,7 +5,6 @@ import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import org.joml.Vector2f;
 
 public class Rotate extends EffectBase {
-    private final Vector2f resolution;
     private float x;
     private float y;
     private float z;
@@ -32,7 +31,6 @@ public class Rotate extends EffectBase {
     public Rotate(Vector2f resolution, float x, float y, float z, float cx, float cy, float cz) {
         super(resolution, 1, "Rotate", (Class<GLObject>) null);
 
-        this.resolution = resolution;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -132,9 +130,5 @@ public class Rotate extends EffectBase {
 
     public void setCz(float cz) {
         this.cz = cz;
-    }
-
-    public Vector2f getResolution() {
-        return resolution;
     }
 }

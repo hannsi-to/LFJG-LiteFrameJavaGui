@@ -6,7 +6,6 @@ import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Vector2f;
 
 public class DiagonalClipping extends EffectBase {
-    private Vector2f resolution;
     private float centerX;
     private float centerY;
     private float clipAngle;
@@ -16,7 +15,6 @@ public class DiagonalClipping extends EffectBase {
     public DiagonalClipping(Vector2f resolution, float centerX, float centerY, float clipAngle, float blurWidth, boolean invertClip) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/DiagonalClipping.fsh"), true, 15, "DiagonalClipping");
 
-        this.resolution = resolution;
         this.centerX = centerX;
         this.centerY = centerY;
         this.clipAngle = clipAngle;
@@ -51,20 +49,12 @@ public class DiagonalClipping extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("clipCenter", new Vector2f((centerX / resolution.x) * 2.0f - 1.0f, (centerY / resolution.y) * 2.0f - 1.0f));
+        getFrameBuffer().getShaderProgramFBO().setUniform("clipCenter", new Vector2f((centerX / getResolution().x) * 2.0f - 1.0f, (centerY / getResolution().y) * 2.0f - 1.0f));
         getFrameBuffer().getShaderProgramFBO().setUniform("clipAngle", clipAngle);
         getFrameBuffer().getShaderProgramFBO().setUniform("blurWidth", blurWidth);
         getFrameBuffer().getShaderProgramFBO().setUniform("invertClip", invertClip);
 
         super.setUniform(baseGLObject);
-    }
-
-    public Vector2f getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(Vector2f resolution) {
-        this.resolution = resolution;
     }
 
     public float getCenterX() {

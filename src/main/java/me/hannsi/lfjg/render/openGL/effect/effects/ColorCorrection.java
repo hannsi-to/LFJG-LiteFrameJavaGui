@@ -6,7 +6,6 @@ import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Vector2f;
 
 public class ColorCorrection extends EffectBase {
-    private Vector2f resolution;
     private float brightness;
     private float contrast;
     private float saturation;
@@ -15,7 +14,6 @@ public class ColorCorrection extends EffectBase {
     public ColorCorrection(Vector2f resolution, float brightness, float contrast, float saturation, float hue) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/ColorCorrection.fsh"), true, 4, "ColorCorrection", (Class<GLObject>) null);
 
-        this.resolution = resolution;
         this.brightness = brightness;
         this.contrast = contrast;
         this.saturation = saturation;
@@ -87,13 +85,5 @@ public class ColorCorrection extends EffectBase {
 
     public void setHue(float hue) {
         this.hue = hue;
-    }
-
-    public Vector2f getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(Vector2f resolution) {
-        this.resolution = resolution;
     }
 }
