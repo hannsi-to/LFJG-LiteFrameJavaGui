@@ -22,9 +22,19 @@ public class TextFormat {
     public static final String YELLOW = PREFIX_CODE + "e";
     public static final String WHITE = PREFIX_CODE + "f";
     public static final String OBFUSCATED = PREFIX_CODE + "g";
+    /**
+     * BOLD: 一様仕様はできるが安定はしないので使うのをおすすめしない
+     */
+    @Deprecated()
     public static final String BOLD = PREFIX_CODE + "h";
+    /**
+     * STRIKETHROUGH: 使うな！！
+     */
     @Deprecated
     public static final String STRIKETHROUGH = PREFIX_CODE + "i";
+    /**
+     * UNDERLINE: 使うな！！(2)
+     */
     @Deprecated
     public static final String UNDERLINE = PREFIX_CODE + "j";
     public static final String ITALIC = PREFIX_CODE + "k";

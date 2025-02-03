@@ -260,9 +260,9 @@ public class Batch {
             if (formatCode.equals(TextFormat.ITALIC)) {
                 italic = 20f;
             }
-            if (formatCode.equals(TextFormat.UNDERLINE)) {
-                underLine = true;
-            }
+//            if (formatCode.equals(TextFormat.UNDERLINE)) {
+//                underLine = true;
+//            }
             if (formatCode.equals(TextFormat.BOLD)) {
                 bold = 1.2f;
             }
