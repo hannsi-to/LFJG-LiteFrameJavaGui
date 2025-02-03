@@ -5,6 +5,7 @@ import me.hannsi.lfjg.debug.exceptions.shader.CompilingShaderException;
 import me.hannsi.lfjg.debug.exceptions.shader.CreatingShaderException;
 import me.hannsi.lfjg.debug.exceptions.shader.CreatingShaderProgramException;
 import me.hannsi.lfjg.debug.exceptions.shader.LinkingShaderException;
+import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -150,6 +151,12 @@ public class ShaderProgram {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform4f(uniformId, value1, value2, value3, value4);
+    }
+
+    public void setUniform(String name, Color color) {
+        int uniformId = glGetUniformLocation(programId, name);
+
+        glUniform4f(uniformId, color.getRedF(), color.getGreenF(), color.getBlueF(), color.getAlphaF());
     }
 
     public void bind() {

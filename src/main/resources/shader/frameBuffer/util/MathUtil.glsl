@@ -65,3 +65,7 @@ vec3 hsv2rgb(vec3 c) {
 
     return rgb;
 }
+
+float random(float x) {
+    return fract(sin(x) * 43758.5453);
+}
