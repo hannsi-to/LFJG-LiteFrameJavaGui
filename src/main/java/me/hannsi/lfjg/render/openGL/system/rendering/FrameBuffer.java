@@ -7,9 +7,9 @@ import me.hannsi.lfjg.debug.exceptions.render.CreatingRenderBufferException;
 import me.hannsi.lfjg.debug.exceptions.texture.CreatingTextureException;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.render.openGL.system.Mesh;
-import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
 import me.hannsi.lfjg.utils.graphics.GLUtil;
+import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.joml.Matrix4f;
@@ -25,12 +25,9 @@ public class FrameBuffer {
     private final int frameBufferId;
     private final int textureId;
     private final int renderBufferId;
-
-    private final Vector2f resolution;
-
     private final Mesh mesh;
     private final VAORendering vaoRendering;
-
+    private Vector2f resolution;
     private ShaderProgram shaderProgramFBO;
     private ResourcesLocation vertexShaderFBO;
     private ResourcesLocation fragmentShaderFBO;
@@ -91,7 +88,7 @@ public class FrameBuffer {
         viewMatrix = new Matrix4f();
     }
 
-    public void cleanup(){
+    public void cleanup() {
         GL30.glDeleteFramebuffers(frameBufferId);
         GL30.glDeleteTextures(textureId);
     }
@@ -245,6 +242,10 @@ public class FrameBuffer {
         return flipped;
     }
 
+    public void updateResolution(Vector2f resolution) {
+        this.resolution = resolution;
+    }
+
     public int getFrameBufferId() {
         return frameBufferId;
     }
@@ -296,6 +297,10 @@ public class FrameBuffer {
 
     public Vector2f getResolution() {
         return resolution;
+    }
+
+    public void setResolution(Vector2f resolution) {
+        this.resolution = resolution;
     }
 
     public int getRenderBufferId() {

@@ -26,17 +26,24 @@ import me.hannsi.lfjg.render.openGL.system.user.Camera;
 import me.hannsi.lfjg.render.openGL.system.user.MouseInfo;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
+import me.hannsi.lfjg.utils.graphics.video.FrameData;
 import me.hannsi.lfjg.utils.graphics.video.VideoFrameExtractor;
 import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.math.TextFormat;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.toolkit.ThreadCache;
 import me.hannsi.lfjg.utils.type.types.*;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.openal.AL11;
+import org.lwjgl.opengl.GL11;
+
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 
 public class TestGuiFrame implements LFJGFrame {
+    Projection projection;
+
     GLRect gl1;
     GLFont glFont;
     GLRect gl2;
@@ -46,11 +53,10 @@ public class TestGuiFrame implements LFJGFrame {
     EffectCache glFontEffectCache;
     FontCache fontCache;
 
-    Vector2f resolution;
-
     SoundBuffer soundBuffer;
     SoundCache soundCache;
 
+    ThreadCache threadCache;
     VideoFrameExtractor videoFrameExtractor;
 
 //    EasingUtil easingUtil;
@@ -77,7 +83,11 @@ public class TestGuiFrame implements LFJGFrame {
         IFrame.eventManager.register(this);
 
         videoFrameExtractor = new VideoFrameExtractor(new ResourcesLocation("video/test.mp4"));
-        videoFrameExtractor.start();
+        Thread thread = new Thread(videoFrameExtractor::createVideoCache);
+
+        threadCache = new ThreadCache();
+        threadCache.createCache(thread);
+        threadCache.run(thread.threadId());
 
         CFont.addUnicodeRange(UnicodeRange.HIRAGANA_START, UnicodeRange.HIRAGANA_END);
         CFont.addUnicodeRange(UnicodeRange.KATAKANA_START, UnicodeRange.KATAKANA_END);
@@ -85,7 +95,7 @@ public class TestGuiFrame implements LFJGFrame {
 
         objectInit();
 
-        glObjectCache = new GLObjectCache(resolution);
+        glObjectCache = new GLObjectCache();
 //        glObjectCache.createCache(gl2);
         glObjectCache.createCache(gl1);
         glObjectCache.createCache(glFont);
@@ -122,8 +132,7 @@ public class TestGuiFrame implements LFJGFrame {
     }
 
     public void objectInit() {
-        Projection projection = new Projection(ProjectionType.OrthographicProjection, frame.getWindowWidth(), frame.getWindowHeight());
-        resolution = new Vector2f(frame.getWindowWidth(), frame.getWindowHeight());
+        projection = new Projection(ProjectionType.OrthographicProjection, (int) (frame.getWindowWidth() / frame.getContentScaleX()), (int) (frame.getWindowHeight() / frame.getContentScaleY()));
 
         fontCache = new FontCache();
         ResourcesLocation font = new ResourcesLocation("font/default.ttf");
@@ -131,13 +140,13 @@ public class TestGuiFrame implements LFJGFrame {
 
         gl1 = new GLRect("test1");
         gl1.setProjectionMatrix(projection.getProjMatrix());
-        gl1.setResolution(resolution);
+        gl1.setResolution(new Vector2f(frame.getWindowWidth(), frame.getWindowHeight()));
 //        gl1.uv(0, 1, 1, 0);
-        gl1.rectWHOutLine(0, 0, resolution.x(), resolution.y(), 3f, new Color(255, 255, 255, 255));
+        gl1.rectWHOutLine(0, 0, frame.getWindowWidth(), frame.getWindowHeight(), 3f, new Color(255, 255, 255, 255));
 
         glFont = new GLFont("Font");
         glFont.setProjectionMatrix(projection.getProjMatrix());
-        glFont.setResolution(resolution);
+        glFont.setResolution(new Vector2f(frame.getWindowWidth(), frame.getWindowHeight()));
         glFont.setFont(fontCache, font, 64);
         glFont.font(TextFormat.SPASE_X + "{100}" + "字間を確認" + TextFormat.RESET + "字間を確認" + TextFormat.SPASE_Y + "{100}" + TextFormat.NEWLINE + TextFormat.RESET_POINT_X + TextFormat.RED + "Ka" + TextFormat.BOLD + "zu" + TextFormat.ITALIC + "bon" + "です!" + TextFormat.OBFUSCATED + "test sdaasd aaaa", 0, 200, 1f, Color.of(255, 255, 255, 255));
     }
@@ -151,7 +160,7 @@ public class TestGuiFrame implements LFJGFrame {
         glFontEffectCache = new EffectCache();
 
 //        gl1EffectCache.createCache(new Texture(resolution, textureCache, image), gl1);
-        gl1EffectCache.createCache(new DrawObject(resolution), gl1);
+        gl1EffectCache.createCache(new DrawObject(new Vector2f(frame.getWindowWidth(), frame.getWindowHeight())), gl1);
 //        gl1EffectCache.createCache(new Gradation(resolution, resolution.x / 2, resolution.y / 2, (float) Math.toRadians(90), 0.1f, Gradation.ShapeMode.Rectangle, BlendType.Multiply, new Color(0, 0, 0, 255), new Color(255, 255, 255, 255), 1f), gl1);
 //        gl1EffectCache.createCache(new Monochrome(resolution, 1f, new Color(255, 0, 255), true), gl1);
 //        gl1EffectCache.createCache(new ChromaticAberration(resolution, 0.002f, 90, 5f, ChromaticAberration.AberrationType.RedBlueB), gl1);
@@ -172,8 +181,8 @@ public class TestGuiFrame implements LFJGFrame {
 //        gl1EffectCache.createCache(new ColorCorrection(resolution, 0.5f, 0, 0, 0), gl1);
 //        gl1EffectCache.createCache(new Clipping2DRect(resolution, 0, 0, 500, 500), gl1);
 
-        glFontEffectCache.createCache(new DrawObject(resolution), glFont);
-        glFontEffectCache.createCache(new Translate(resolution, 200, 0), glFont);
+        glFontEffectCache.createCache(new DrawObject(new Vector2f(frame.getWindowWidth(), frame.getWindowHeight())), glFont);
+        glFontEffectCache.createCache(new Translate(new Vector2f(frame.getWindowWidth(), frame.getWindowHeight()), 200, 0), glFont);
 
         gl1.setEffectCache(gl1EffectCache);
         glFont.setEffectCache(glFontEffectCache);
@@ -206,29 +215,32 @@ public class TestGuiFrame implements LFJGFrame {
 //        soundCache.getSoundSource("test").setGain(0.05f);
 //        soundCache.playSoundSource("test");
 
-        glObjectCache.draw();
+//        projection = projection.updateProjMatrix(Projection.DEFAULT_FOV, (int) (frame.getWindowWidth() / frame.getContentScaleX()), (int) (frame.getWindowHeight() / frame.getContentScaleY()),-1,1);
+//        glObjectCache.draw(new Vector2f(frame.getWindowWidth(),frame.getWindowHeight()),projection);
 
-//        FrameData frameData = videoFrameExtractor.frame();
-//        if(frameData != null){
-//            GL11.glEnable(GL_TEXTURE_2D);
-//            GL11.glBindTexture(GL11.GL_TEXTURE_2D,frameData.getTextureId());
-//            GL11.glBegin(GL11.GL_QUADS);
-//            GL11.glVertex2f(0,0);
-//            GL11.glTexCoord2i(1,1);
-//
-//            GL11.glVertex2f(resolution.x,0);
-//            GL11.glTexCoord2i(1,0);
-//
-//            GL11.glVertex2f(resolution.x,resolution.y);
-//            GL11.glTexCoord2i(0,0);
-//
-//            GL11.glVertex2f(0,resolution.y );
-//            GL11.glTexCoord2i(0,1);
-//
-//            GL11.glEnd();
-//            GL11.glBindTexture(GL11.GL_TEXTURE_2D,0);
-//            GL11.glDisable(GL_TEXTURE_2D);
-//        }
+        if (!videoFrameExtractor.getVideoCache().getFrames().isEmpty()) {
+            FrameData frameData = videoFrameExtractor.frame();
+            frameData.createTexture();
+
+            GL11.glEnable(GL_TEXTURE_2D);
+            GL11.glBindTexture(GL_TEXTURE_2D, frameData.getTextureId());
+            GL11.glBegin(GL11.GL_QUADS);
+            GL11.glVertex2f(0, 0);
+            GL11.glTexCoord2i(1, 1);
+
+            GL11.glVertex2f(frame.getWindowWidth(), 0);
+            GL11.glTexCoord2i(1, 0);
+
+            GL11.glVertex2f(frame.getWindowWidth(), frame.getWindowHeight());
+            GL11.glTexCoord2i(0, 0);
+
+            GL11.glVertex2f(0, frame.getWindowHeight());
+            GL11.glTexCoord2i(0, 1);
+
+            GL11.glEnd();
+            GL11.glBindTexture(GL_TEXTURE_2D, 0);
+            GL11.glDisable(GL_TEXTURE_2D);
+        }
 
 //        object3DCacheRender.render(camera);
 

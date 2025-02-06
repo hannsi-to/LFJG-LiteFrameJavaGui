@@ -3,6 +3,7 @@ package me.hannsi.lfjg.render.openGL.system.rendering;
 import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
+import me.hannsi.lfjg.utils.math.Projection;
 import org.joml.Vector2f;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.List;
 public class GLObjectCache {
     private List<GLObject> glObjects;
 
-    public GLObjectCache(Vector2f resolution) {
+    public GLObjectCache() {
         glObjects = new ArrayList<>();
     }
 
@@ -23,9 +24,9 @@ public class GLObjectCache {
         DebugLog.debug(getClass(), logGenerator.createLog());
     }
 
-    public void draw() {
+    public void draw(Vector2f resolution, Projection projection) {
         for (GLObject glObject : glObjects) {
-            glObject.draw();
+            glObject.draw(resolution, projection);
         }
     }
 

@@ -13,7 +13,6 @@ import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.render.nanoVG.system.NanoVGUtil;
 import me.hannsi.lfjg.utils.graphics.GLFWUtil;
 import me.hannsi.lfjg.utils.math.ANSIFormat;
-import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.time.TimeCalculator;
 import me.hannsi.lfjg.utils.time.TimeSourceUtil;
 import me.hannsi.lfjg.utils.toolkit.RuntimeUtil;
@@ -275,7 +274,7 @@ public class Frame implements IFrame {
 
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();
-        GL11.glOrtho(0, windowWidth / contentScaleX, 0, windowHeight / contentScaleY, Projection.DEFAULT_Z_NEAR, Projection.DEFAULT_Z_FAR);
+        GL11.glOrtho(0, windowWidth / contentScaleX, 0, windowHeight / contentScaleY, -1, 1);
 
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         GL11.glLoadIdentity();

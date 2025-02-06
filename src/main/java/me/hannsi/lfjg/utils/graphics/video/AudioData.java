@@ -1,13 +1,13 @@
-package me.hannsi.lfjg.utils.graphics.audio;
+package me.hannsi.lfjg.utils.graphics.video;
 
 import java.nio.ShortBuffer;
 
-public class AudioFrameData {
+public class AudioData {
     private ShortBuffer samplesBuffer;
     private int sampleRate;
     private int channels;
 
-    public AudioFrameData(ShortBuffer samplesBuffer, int sampleRate, int channels) {
+    public AudioData(ShortBuffer samplesBuffer, int sampleRate, int channels) {
         this.samplesBuffer = samplesBuffer;
         this.sampleRate = sampleRate;
         this.channels = channels;

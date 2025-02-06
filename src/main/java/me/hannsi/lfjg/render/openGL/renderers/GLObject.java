@@ -2,12 +2,13 @@ package me.hannsi.lfjg.render.openGL.renderers;
 
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
-import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.openGL.system.Id;
 import me.hannsi.lfjg.render.openGL.system.Mesh;
+import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.openGL.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
 import me.hannsi.lfjg.utils.graphics.GLUtil;
+import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.BlendType;
 import me.hannsi.lfjg.utils.type.types.DrawType;
@@ -78,7 +79,10 @@ public class GLObject {
         glUtil = new GLUtil();
     }
 
-    public void draw() {
+    public void draw(Vector2f resolution, Projection projection) {
+        this.resolution = resolution;
+        this.projectionMatrix = projection.getProjMatrix();
+
         frameBuffer.bindFrameBuffer();
         GL30.glPushMatrix();
 

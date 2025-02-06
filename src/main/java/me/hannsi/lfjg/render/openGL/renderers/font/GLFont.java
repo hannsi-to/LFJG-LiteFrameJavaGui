@@ -8,7 +8,9 @@ import me.hannsi.lfjg.render.openGL.system.font.CharInfo;
 import me.hannsi.lfjg.render.openGL.system.font.FontCache;
 import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.utils.graphics.color.Color;
+import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import org.joml.Vector2f;
 import org.lwjgl.opengl.GL30;
 
 import java.util.HashSet;
@@ -94,7 +96,7 @@ public class GLFont extends GLRect {
     }
 
     @Override
-    public void draw() {
+    public void draw(Vector2f resolution, Projection projection) {
         frameBuffer.bindFrameBuffer();
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -109,7 +111,7 @@ public class GLFont extends GLRect {
         getGlUtil().addGLTarget(GL30.GL_TEXTURE_2D);
         GL30.glActiveTexture(GL30.GL_TEXTURE0);
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, frameBuffer.getTextureId());
-        super.draw();
+        super.draw(resolution, projection);
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
     }
 

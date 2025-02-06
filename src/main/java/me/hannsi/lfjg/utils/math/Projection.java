@@ -41,18 +41,20 @@ public class Projection {
         this.projMatrix = projMatrix;
     }
 
-    public void updateProjMatrix(float fov, int windowWidth, int windowHeight, float zFar, float zNear) {
+    public Projection updateProjMatrix(float fov, int windowWidth, int windowHeight, float zFar, float zNear) {
         float aspectWindow = (float) windowWidth / windowHeight;
 
         switch (projectionType) {
             case OrthographicProjection -> {
-                projMatrix.ortho(0, windowWidth, 0, windowHeight, -1f, 1f);
+                projMatrix = new Matrix4f().ortho(0, windowWidth, 0, windowHeight, -1f, 1f);
             }
             case PerspectiveProjection -> {
-                projMatrix.setPerspective(fov, aspectWindow, zNear, zFar);
+                projMatrix = new Matrix4f().setPerspective(fov, aspectWindow, zNear, zFar);
             }
             default -> throw new IllegalStateException("Unexpected value: " + projectionType);
         }
+
+        return this;
     }
 
     public ProjectionType getProjectionType() {
