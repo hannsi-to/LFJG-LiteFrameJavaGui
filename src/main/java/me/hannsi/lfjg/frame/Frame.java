@@ -31,6 +31,9 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.system.MemoryUtil;
 
+/**
+ * The Frame class is responsible for creating and managing the main application window, handling rendering, and managing frame settings.
+ */
 public class Frame implements IFrame {
     private final LFJGFrame lfjgFrame;
     private FrameSettingManager frameSettingManager;
@@ -46,12 +49,21 @@ public class Frame implements IFrame {
     private long finishTime;
     private long nvg;
 
+    /**
+     * Constructs a Frame object with the specified LFJGFrame and thread name.
+     *
+     * @param lfjgFrame The LFJGFrame associated with this Frame.
+     * @param threadName The name of the thread to create for the frame.
+     */
     public Frame(LFJGFrame lfjgFrame, String threadName) {
         this.lfjgFrame = lfjgFrame;
 
         new Thread(this::createFrame, threadName).start();
     }
 
+    /**
+     * Creates the frame, initializes GLFW, sets up rendering, and starts the main loop.
+     */
     public void createFrame() {
         registerManagers();
 
@@ -72,6 +84,9 @@ public class Frame implements IFrame {
         mainLoop();
     }
 
+    /**
+     * Initializes GLFW, creates the window, and sets up the context.
+     */
     private void initGLFW() {
         GLFWDebug.getGLFWDebug(this);
 
@@ -98,6 +113,9 @@ public class Frame implements IFrame {
         GLFW.glfwShowWindow(windowID);
     }
 
+    /**
+     * Registers the managers required for the frame.
+     */
     private void registerManagers() {
         DebugLog.debug(getClass(), "Managers loading...\n");
         long tookTime = TimeCalculator.calculate(() -> {
@@ -106,6 +124,9 @@ public class Frame implements IFrame {
         DebugLog.debug(getClass(), ANSIFormat.GREEN + "Managers took " + tookTime + "ms to load!\n");
     }
 
+    /**
+     * Initializes the rendering context based on the selected rendering type.
+     */
     private void initRendering() {
         switch ((RenderingType) getFrameSettingValue(RenderingTypeSetting.class)) {
             case OpenGL -> {
@@ -129,6 +150,9 @@ public class Frame implements IFrame {
         }
     }
 
+    /**
+     * Sets GLFW window hints based on the frame settings.
+     */
     private void glfwWindowHints() {
         GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED, GLFW.GLFW_FALSE);
         GLFW.glfwWindowHint(GLFW.GLFW_CENTER_CURSOR, GLFW.GLFW_FALSE);
@@ -137,6 +161,9 @@ public class Frame implements IFrame {
         frameSettingManager.updateFrameSettings(true);
     }
 
+    /**
+     * The main loop of the frame, responsible for rendering and handling events.
+     */
     private void mainLoop() {
         long lastTime2 = TimeSourceUtil.getNanoTime(this);
         double deltaTime2 = 0;
@@ -192,6 +219,9 @@ public class Frame implements IFrame {
         breakFrame();
     }
 
+    /**
+     * Draws the frame based on the selected rendering type.
+     */
     private void draw() {
         switch ((RenderingType) getFrameSettingValue(RenderingTypeSetting.class)) {
             case OpenGL -> {
@@ -216,20 +246,36 @@ public class Frame implements IFrame {
         }
     }
 
+    /**
+     * Event handler for drawing a frame with OpenGL.
+     *
+     * @param event The DrawFrameWithOpenGLEvent.
+     */
     @EventHandler
     public void drawFrameWidthOpenGLEvent(DrawFrameWithOpenGLEvent event) {
         lfjgFrame.drawFrame();
     }
 
+    /**
+     * Event handler for drawing a frame with NanoVG.
+     *
+     * @param event The DrawFrameWithNanoVGEvent.
+     */
     @EventHandler
     public void drawFrameWidthNanoVGEvent(DrawFrameWithNanoVGEvent event) {
 //        lfjgFrame.drawFrame(nvg);
     }
 
+    /**
+     * Stops the frame by setting the window should close flag.
+     */
     public void stopFrame() {
         GLFW.glfwSetWindowShouldClose(windowID, true);
     }
 
+    /**
+     * Sets the anti-aliasing mode based on the frame settings.
+     */
     private void setAntiAliasing() {
         switch (((AntiAliasingType) getFrameSettingValue(AntiAliasingSetting.class))) {
             case MSAA -> {
@@ -241,6 +287,9 @@ public class Frame implements IFrame {
         }
     }
 
+    /**
+     * Cleans up resources and terminates GLFW.
+     */
     private void breakFrame() {
         Callbacks.glfwFreeCallbacks(windowID);
 
@@ -269,6 +318,9 @@ public class Frame implements IFrame {
         }
     }
 
+    /**
+     * Updates the viewport based on the window size and content scale.
+     */
     public void updateViewport() {
         GL11.glViewport(0, 0, windowWidth, windowHeight);
 
@@ -280,136 +332,307 @@ public class Frame implements IFrame {
         GL11.glLoadIdentity();
     }
 
+    /**
+     * Retrieves the maximum memory available to the JVM.
+     *
+     * @return The maximum memory in MB.
+     */
     public String getMaxMemory() {
         return "MaxMemory: " + Math.round(RuntimeUtil.getMaxMemoryMB()) + "MB";
     }
 
+    /**
+     * Retrieves the allocated memory in the JVM.
+     *
+     * @return The allocated memory in MB.
+     */
     public String getAllocatedMemory() {
         return "AllocatedMemory: " + Math.round(RuntimeUtil.getAllocatedMemoryMB()) + "MB";
     }
 
+    /**
+     * Retrieves the free memory in the JVM.
+     *
+     * @return The free memory in MB.
+     */
     public String getFreeMemory() {
         return "FreeMemory: " + Math.round(RuntimeUtil.getFreeMemoryMB()) + "MB";
     }
 
+    /**
+     * Retrieves the used memory in the JVM.
+     *
+     * @return The used memory in MB.
+     */
     public String getUseMemory() {
         return "UsedMemory: " + Math.round(RuntimeUtil.getUseMemoryMB()) + "MB";
     }
 
+    /**
+     * Retrieves the window ID.
+     *
+     * @return The window ID.
+     */
     public long getWindowID() {
         return windowID;
     }
 
+    /**
+     * Sets the window ID.
+     *
+     * @param windowID The window ID to set.
+     */
     public void setWindowID(long windowID) {
         this.windowID = windowID;
     }
 
+    /**
+     * Retrieves the frame setting base for the specified frame setting class.
+     *
+     * @param frameSettingBase The frame setting class.
+     * @param <T> The type of the frame setting value.
+     * @return The frame setting base.
+     */
     @SuppressWarnings("unchecked")
     public <T> FrameSettingBase<T> getFrameSettingBase(Class<? extends FrameSettingBase<?>> frameSettingBase) {
         return ((FrameSettingBase<T>) frameSettingManager.getFrameSetting(frameSettingBase));
     }
 
+    /**
+     * Retrieves the frame setting value for the specified frame setting class.
+     *
+     * @param frameSettingBase The frame setting class.
+     * @param <T> The type of the frame setting value.
+     * @return The frame setting value.
+     */
     @SuppressWarnings("unchecked")
     public <T> T getFrameSettingValue(Class<? extends FrameSettingBase<?>> frameSettingBase) {
         return (T) getFrameSettingBase(frameSettingBase).getValue();
     }
 
+    /**
+     * Sets the frame setting value for the specified frame setting class.
+     *
+     * @param frameSettingBase The frame setting class.
+     * @param value The value to set.
+     * @param <T> The type of the frame setting value.
+     */
     public <T> void setFrameSettingValue(Class<? extends FrameSettingBase<?>> frameSettingBase, T value) {
         getFrameSettingBase(frameSettingBase).setValue(value);
     }
 
+    /**
+     * Retrieves the LoggerManager associated with this frame.
+     *
+     * @return The LoggerManager.
+     */
     public LoggerManager getLoggerManager() {
         return loggerManager;
     }
 
+    /**
+     * Retrieves the LFJGFrame associated with this frame.
+     *
+     * @return The LFJGFrame.
+     */
     public LFJGFrame getLfjgFrame() {
         return lfjgFrame;
     }
 
+    /**
+     * Retrieves the current frames per second (FPS).
+     *
+     * @return The current FPS.
+     */
     public int getFps() {
         return fps;
     }
 
+    /**
+     * Sets the current frames per second (FPS).
+     *
+     * @param fps The FPS to set.
+     */
     public void setFps(int fps) {
         this.fps = fps;
     }
 
+    /**
+     * Retrieves the current time in milliseconds.
+     *
+     * @return The current time in milliseconds.
+     */
     public long getCurrentTime() {
         return currentTime;
     }
 
+    /**
+     * Sets the current time in milliseconds.
+     *
+     * @param currentTime The current time to set in milliseconds.
+     */
     public void setCurrentTime(long currentTime) {
         this.currentTime = currentTime;
     }
 
+    /**
+     * Retrieves the last time in milliseconds.
+     *
+     * @return The last time in milliseconds.
+     */
     public long getLastTime() {
         return lastTime;
     }
 
+    /**
+     * Sets the last time in milliseconds.
+     *
+     * @param lastTime The last time to set in milliseconds.
+     */
     public void setLastTime(long lastTime) {
         this.lastTime = lastTime;
     }
 
+    /**
+     * Retrieves the start time in milliseconds.
+     *
+     * @return The start time in milliseconds.
+     */
     public long getStartTime() {
         return startTime;
     }
 
+    /**
+     * Sets the start time in milliseconds.
+     *
+     * @param startTime The start time to set in milliseconds.
+     */
     public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
 
+    /**
+     * Retrieves the finish time in milliseconds.
+     *
+     * @return The finish time in milliseconds.
+     */
     public long getFinishTime() {
         return finishTime;
     }
 
+    /**
+     * Sets the finish time in milliseconds.
+     *
+     * @param finishTime The finish time to set in milliseconds.
+     */
     public void setFinishTime(long finishTime) {
         this.finishTime = finishTime;
     }
 
+    /**
+     * Retrieves the window height.
+     *
+     * @return The window height.
+     */
     public int getWindowHeight() {
         return windowHeight;
     }
 
+    /**
+     * Sets the window height.
+     *
+     * @param windowHeight The window height to set.
+     */
     public void setWindowHeight(int windowHeight) {
         this.windowHeight = windowHeight;
     }
 
+    /**
+     * Retrieves the window width.
+     *
+     * @return The window width.
+     */
     public int getWindowWidth() {
         return windowWidth;
     }
 
+    /**
+     * Sets the window width.
+     *
+     * @param windowWidth The window width to set.
+     */
     public void setWindowWidth(int windowWidth) {
         this.windowWidth = windowWidth;
     }
 
+    /**
+     * Retrieves the FrameSettingManager associated with this frame.
+     *
+     * @return The FrameSettingManager.
+     */
     public FrameSettingManager getFrameSettingManager() {
         return frameSettingManager;
     }
 
+    /**
+     * Sets the FrameSettingManager for this frame.
+     *
+     * @param frameSettingManager The FrameSettingManager to set.
+     */
     public void setFrameSettingManager(FrameSettingManager frameSettingManager) {
         this.frameSettingManager = frameSettingManager;
     }
 
+    /**
+     * Retrieves the NanoVG context.
+     *
+     * @return The NanoVG context.
+     */
     public long getNvg() {
         return nvg;
     }
 
+    /**
+     * Sets the NanoVG context.
+     *
+     * @param nvg The NanoVG context to set.
+     */
     public void setNvg(long nvg) {
         this.nvg = nvg;
     }
 
+    /**
+     * Retrieves the content scale factor in the X direction.
+     *
+     * @return The content scale factor in the X direction.
+     */
     public float getContentScaleX() {
         return contentScaleX;
     }
 
+    /**
+     * Sets the content scale factor in the X direction.
+     *
+     * @param contentScaleX The content scale factor in the X direction to set.
+     */
     public void setContentScaleX(float contentScaleX) {
         this.contentScaleX = contentScaleX;
     }
 
+    /**
+     * Retrieves the content scale factor in the Y direction.
+     *
+     * @return The content scale factor in the Y direction.
+     */
     public float getContentScaleY() {
         return contentScaleY;
     }
 
+    /**
+     * Sets the content scale factor in the Y direction.
+     *
+     * @param contentScaleY The content scale factor in the Y direction to set.
+     */
     public void setContentScaleY(float contentScaleY) {
         this.contentScaleY = contentScaleY;
     }

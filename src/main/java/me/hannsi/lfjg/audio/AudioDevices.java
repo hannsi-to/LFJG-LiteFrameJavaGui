@@ -9,10 +9,16 @@ import static org.lwjgl.openal.ALC10.ALC_DEVICE_SPECIFIER;
 import static org.lwjgl.openal.ALC10.alcGetString;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+/**
+ * The AudioDevices class is responsible for managing audio devices and their corresponding ByteBuffer representations.
+ */
 public class AudioDevices {
     public static final ByteBuffer DEFAULT = null;
     private Map<String, ByteBuffer> deviceMap;
 
+    /**
+     * Constructs an AudioDevices object and initializes the device map with available audio devices.
+     */
     public AudioDevices() {
         this.deviceMap = new HashMap<>();
 
@@ -28,14 +34,30 @@ public class AudioDevices {
         }
     }
 
+    /**
+     * Retrieves the ByteBuffer representation of the specified audio device.
+     *
+     * @param deviceName The name of the audio device.
+     * @return The ByteBuffer representation of the audio device, or null if not found.
+     */
     public ByteBuffer getByteBuffer(String deviceName) {
         return deviceMap.get(deviceName);
     }
 
+    /**
+     * Retrieves the map of audio devices and their corresponding ByteBuffer representations.
+     *
+     * @return The map of audio devices and their ByteBuffer representations.
+     */
     public Map<String, ByteBuffer> getDeviceMap() {
         return deviceMap;
     }
 
+    /**
+     * Sets the map of audio devices and their corresponding ByteBuffer representations.
+     *
+     * @param deviceMap The map of audio devices and their ByteBuffer representations.
+     */
     public void setDeviceMap(Map<String, ByteBuffer> deviceMap) {
         this.deviceMap = deviceMap;
     }

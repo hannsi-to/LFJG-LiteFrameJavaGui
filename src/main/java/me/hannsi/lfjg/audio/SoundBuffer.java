@@ -14,12 +14,21 @@ import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.stb.STBVorbis.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+/**
+ * The SoundBuffer class is responsible for loading and managing audio data buffers.
+ */
 public class SoundBuffer {
     private final int bufferId;
     private final ShortBuffer pcm;
     private final FileLocation fileLocation;
     private final SoundLoaderType soundLoaderType;
 
+    /**
+     * Constructs a SoundBuffer object and loads audio data from the specified file location.
+     *
+     * @param soundLoaderType The type of sound loader to use (STBVorbis or JavaCV).
+     * @param fileLocation    The location of the audio file.
+     */
     public SoundBuffer(SoundLoaderType soundLoaderType, FileLocation fileLocation) {
         this.fileLocation = fileLocation;
         this.soundLoaderType = soundLoaderType;
@@ -51,6 +60,9 @@ public class SoundBuffer {
         }
     }
 
+    /**
+     * Cleans up the resources associated with this SoundBuffer.
+     */
     public void cleanup() {
         alDeleteBuffers(this.bufferId);
         if (pcm != null) {
@@ -58,10 +70,22 @@ public class SoundBuffer {
         }
     }
 
+    /**
+     * Retrieves the buffer ID of this SoundBuffer.
+     *
+     * @return The buffer ID.
+     */
     public int getBufferId() {
         return this.bufferId;
     }
 
+    /**
+     * Reads audio data from an FFmpegFrameGrabber and returns it as a ShortBuffer.
+     *
+     * @param grabber The FFmpegFrameGrabber to read audio data from.
+     * @return The ShortBuffer containing the audio data.
+     * @throws FFmpegFrameGrabber.Exception If an error occurs while reading the audio data.
+     */
     private ShortBuffer readAudio(FFmpegFrameGrabber grabber) throws FFmpegFrameGrabber.Exception {
         grabber.start();
 
@@ -94,6 +118,13 @@ public class SoundBuffer {
         return shortBuffer;
     }
 
+    /**
+     * Reads audio data from an Ogg Vorbis file and returns it as a ShortBuffer.
+     *
+     * @param filePath The path to the Ogg Vorbis file.
+     * @param info     The STBVorbisInfo object to store the audio file information.
+     * @return The ShortBuffer containing the audio data.
+     */
     private ShortBuffer readVorbis(String filePath, STBVorbisInfo info) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             IntBuffer error = stack.mallocInt(1);
@@ -117,14 +148,29 @@ public class SoundBuffer {
         }
     }
 
+    /**
+     * Retrieves the PCM data of this SoundBuffer.
+     *
+     * @return The ShortBuffer containing the PCM data.
+     */
     public ShortBuffer getPcm() {
         return pcm;
     }
 
+    /**
+     * Retrieves the file location of this SoundBuffer.
+     *
+     * @return The FileLocation object representing the file location.
+     */
     public FileLocation getFileLocation() {
         return fileLocation;
     }
 
+    /**
+     * Retrieves the sound loader type of this SoundBuffer.
+     *
+     * @return The SoundLoaderType of this SoundBuffer.
+     */
     public SoundLoaderType getSoundLoaderType() {
         return soundLoaderType;
     }

@@ -11,14 +11,25 @@ import me.hannsi.lfjg.frame.setting.settings.OpenALDebugSetting;
 import me.hannsi.lfjg.frame.setting.settings.OpenGLDebugSetting;
 import org.lwjgl.glfw.*;
 
+/**
+ * The GLFWCallback class is responsible for handling GLFW callbacks and managing events related to window focus, framebuffer size, content scale, key input, cursor position, cursor enter, and mouse button input.
+ */
 public class GLFWCallback implements IFrame {
     private final Frame frame;
 
+    /**
+     * Constructs a GLFWCallback object and registers it with the event manager.
+     *
+     * @param frame The Frame object associated with this callback.
+     */
     public GLFWCallback(Frame frame) {
         eventManager.register(this);
         this.frame = frame;
     }
 
+    /**
+     * Sets up GLFW callbacks for window focus, framebuffer size, content scale, key input, cursor position, cursor enter, and mouse button input.
+     */
     public void glfwInvoke() {
         GLFW.glfwSetWindowFocusCallback(frame.getWindowID(), new GLFWWindowFocusCallbackI() {
             @Override
@@ -86,6 +97,11 @@ public class GLFWCallback implements IFrame {
         }
     }
 
+    /**
+     * Handles the DrawFrameWithOpenGLEvent and checks for OpenAL errors if the OpenALDebugSetting is enabled.
+     *
+     * @param event The DrawFrameWithOpenGLEvent to handle.
+     */
     @EventHandler
     public void drawFrameWidthOpenGLEvent(DrawFrameWithOpenGLEvent event) {
         if (frame.getFrameSettingValue(OpenALDebugSetting.class)) {
