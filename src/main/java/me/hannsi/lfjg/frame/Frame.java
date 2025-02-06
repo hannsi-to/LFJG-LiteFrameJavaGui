@@ -13,12 +13,14 @@ import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.render.nanoVG.system.NanoVGUtil;
 import me.hannsi.lfjg.utils.graphics.GLFWUtil;
 import me.hannsi.lfjg.utils.math.ANSIFormat;
+import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.time.TimeCalculator;
 import me.hannsi.lfjg.utils.time.TimeSourceUtil;
 import me.hannsi.lfjg.utils.toolkit.RuntimeUtil;
 import me.hannsi.lfjg.utils.type.types.AntiAliasingType;
 import me.hannsi.lfjg.utils.type.types.RenderingType;
 import me.hannsi.lfjg.utils.type.types.VSyncType;
+import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
@@ -37,6 +39,8 @@ public class Frame implements IFrame {
     private int fps;
     private int windowWidth;
     private int windowHeight;
+    private float contentScaleX;
+    private float contentScaleY;
     private long currentTime;
     private long lastTime;
     private long startTime;
@@ -78,14 +82,17 @@ public class Frame implements IFrame {
 
         glfwWindowHints();
 
-        Vector2i windowSizes = GLFWUtil.getWindowSizes(this, getFrameSettingValue(MonitorSetting.class));
-        windowWidth = windowSizes.x();
-        windowHeight = windowSizes.y();
-
-        windowID = GLFW.glfwCreateWindow(windowWidth, windowHeight, getFrameSettingValue(TitleSetting.class).toString(), GLFWUtil.getMonitorTypeCode(getFrameSettingValue(MonitorSetting.class)), MemoryUtil.NULL);
+        windowID = GLFW.glfwCreateWindow(getFrameSettingValue(WidthSetting.class), getFrameSettingValue(HeightSetting.class), getFrameSettingValue(TitleSetting.class).toString(), GLFWUtil.getMonitorTypeCode(getFrameSettingValue(MonitorSetting.class)), MemoryUtil.NULL);
         if (windowID == MemoryUtil.NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
         }
+
+        Vector2i windowSizes = GLFWUtil.getWindowSize(getWindowID());
+        Vector2f contentScale = GLFWUtil.getContentScale(this);
+        windowWidth = windowSizes.x();
+        windowHeight = windowSizes.y();
+        contentScaleX = contentScale.x();
+        contentScaleY = contentScale.y();
 
         GLFW.glfwMakeContextCurrent(windowID);
         GLFW.glfwSwapInterval(((VSyncType) getFrameSettingValue(VSyncSetting.class)).getId());
@@ -268,7 +275,7 @@ public class Frame implements IFrame {
 
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();
-        GL11.glOrtho(0, windowWidth, 0, windowHeight, -1, 1);
+        GL11.glOrtho(0, windowWidth / contentScaleX, 0, windowHeight / contentScaleY, Projection.DEFAULT_Z_NEAR, Projection.DEFAULT_Z_FAR);
 
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         GL11.glLoadIdentity();
@@ -390,5 +397,21 @@ public class Frame implements IFrame {
 
     public void setNvg(long nvg) {
         this.nvg = nvg;
+    }
+
+    public float getContentScaleX() {
+        return contentScaleX;
+    }
+
+    public void setContentScaleX(float contentScaleX) {
+        this.contentScaleX = contentScaleX;
+    }
+
+    public float getContentScaleY() {
+        return contentScaleY;
+    }
+
+    public void setContentScaleY(float contentScaleY) {
+        this.contentScaleY = contentScaleY;
     }
 }

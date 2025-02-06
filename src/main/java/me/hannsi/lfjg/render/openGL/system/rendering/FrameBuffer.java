@@ -91,6 +91,11 @@ public class FrameBuffer {
         viewMatrix = new Matrix4f();
     }
 
+    public void cleanup(){
+        GL30.glDeleteFramebuffers(frameBufferId);
+        GL30.glDeleteTextures(textureId);
+    }
+
     public void createFrameBuffer() {
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBufferId);
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, textureId);

@@ -7,11 +7,8 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.openAL.OpenALDebug;
 import me.hannsi.lfjg.frame.openGL.OpenGLDebug;
-import me.hannsi.lfjg.frame.setting.settings.MonitorSetting;
 import me.hannsi.lfjg.frame.setting.settings.OpenALDebugSetting;
 import me.hannsi.lfjg.frame.setting.settings.OpenGLDebugSetting;
-import me.hannsi.lfjg.utils.graphics.GLFWUtil;
-import org.joml.Vector2i;
 import org.lwjgl.glfw.*;
 
 public class GLFWCallback implements IFrame {
@@ -32,14 +29,21 @@ public class GLFWCallback implements IFrame {
         GLFW.glfwSetFramebufferSizeCallback(frame.getWindowID(), new GLFWFramebufferSizeCallback() {
             @Override
             public void invoke(long window, int width, int height) {
-                Vector2i windowSizes = GLFWUtil.getWindowSizes(frame, frame.getFrameSettingValue(MonitorSetting.class));
-                frame.setWindowWidth(windowSizes.x());
-                frame.setWindowHeight(windowSizes.y());
+                frame.setWindowWidth(width);
+                frame.setWindowHeight(height);
 
                 frame.updateViewport();
             }
         });
+        GLFW.glfwSetWindowContentScaleCallback(frame.getWindowID(), new GLFWWindowContentScaleCallbackI() {
+            @Override
+            public void invoke(long window, float contentScaleX, float contentScaleY) {
+                frame.setContentScaleX(contentScaleX);
+                frame.setContentScaleY(contentScaleY);
 
+                frame.updateViewport();
+            }
+        });
         GLFW.glfwSetKeyCallback(frame.getWindowID(), new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {

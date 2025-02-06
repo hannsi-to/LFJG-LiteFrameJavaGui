@@ -12,7 +12,6 @@ import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
-import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
 import me.hannsi.lfjg.render.openGL.effect.effects.Translate;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.font.GLFont;
@@ -27,6 +26,7 @@ import me.hannsi.lfjg.render.openGL.system.user.Camera;
 import me.hannsi.lfjg.render.openGL.system.user.MouseInfo;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
+import me.hannsi.lfjg.utils.graphics.video.VideoFrameExtractor;
 import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.math.TextFormat;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
@@ -51,11 +51,9 @@ public class TestGuiFrame implements LFJGFrame {
     SoundBuffer soundBuffer;
     SoundCache soundCache;
 
+    VideoFrameExtractor videoFrameExtractor;
+
 //    EasingUtil easingUtil;
-
-//    ThreadCache threadCache;
-
-//    VideoFrameExtractor videoFrameExtractor;
 
     MouseInfo mouseInfo;
     Camera camera;
@@ -78,12 +76,8 @@ public class TestGuiFrame implements LFJGFrame {
     public void init() {
         IFrame.eventManager.register(this);
 
-//        videoFrameExtractor = new VideoFrameExtractor(new ResourcesLocation("video/test.mp4"));
-//        Thread thread = new Thread(videoFrameExtractor::createVideoCache);
-//
-//        threadCache = new ThreadCache();
-//        threadCache.createCache(thread);
-//        threadCache.run(thread.threadId());
+        videoFrameExtractor = new VideoFrameExtractor(new ResourcesLocation("video/test.mp4"));
+        videoFrameExtractor.start();
 
         CFont.addUnicodeRange(UnicodeRange.HIRAGANA_START, UnicodeRange.HIRAGANA_END);
         CFont.addUnicodeRange(UnicodeRange.KATAKANA_START, UnicodeRange.KATAKANA_END);
@@ -138,8 +132,8 @@ public class TestGuiFrame implements LFJGFrame {
         gl1 = new GLRect("test1");
         gl1.setProjectionMatrix(projection.getProjMatrix());
         gl1.setResolution(resolution);
-        gl1.uv(0, 1, 1, 0);
-        gl1.rectWH(0, 0, resolution.x(), resolution.y(), new Color(0, 0, 0, 0));
+//        gl1.uv(0, 1, 1, 0);
+        gl1.rectWHOutLine(0, 0, resolution.x(), resolution.y(), 3f, new Color(255, 255, 255, 255));
 
         glFont = new GLFont("Font");
         glFont.setProjectionMatrix(projection.getProjMatrix());
@@ -156,7 +150,7 @@ public class TestGuiFrame implements LFJGFrame {
         gl1EffectCache = new EffectCache();
         glFontEffectCache = new EffectCache();
 
-        gl1EffectCache.createCache(new Texture(resolution, textureCache, image), gl1);
+//        gl1EffectCache.createCache(new Texture(resolution, textureCache, image), gl1);
         gl1EffectCache.createCache(new DrawObject(resolution), gl1);
 //        gl1EffectCache.createCache(new Gradation(resolution, resolution.x / 2, resolution.y / 2, (float) Math.toRadians(90), 0.1f, Gradation.ShapeMode.Rectangle, BlendType.Multiply, new Color(0, 0, 0, 255), new Color(255, 255, 255, 255), 1f), gl1);
 //        gl1EffectCache.createCache(new Monochrome(resolution, 1f, new Color(255, 0, 255), true), gl1);
@@ -209,35 +203,34 @@ public class TestGuiFrame implements LFJGFrame {
 //        Translate translate = (Translate) glObjectCache.getGLObject(glFont.getObjectId()).getEffectBase(1);
 //        translate.setX(value * resolution.x());
 
-        soundCache.getSoundSource("test").setGain(0.05f);
-        soundCache.playSoundSource("test");
+//        soundCache.getSoundSource("test").setGain(0.05f);
+//        soundCache.playSoundSource("test");
 
         glObjectCache.draw();
-//        object3DCacheRender.render(camera);
 
-//        FrameData frameData = videoFrameExtractor.getFrameRender();
-//        if (frameData == null){
-//            return;
-//        }
-//        frameData.getVideoFrameData().createTexture();
-//        int id = frameData.getVideoFrameData().getTextureId();
+//        FrameData frameData = videoFrameExtractor.frame();
+//        if(frameData != null){
+//            GL11.glEnable(GL_TEXTURE_2D);
+//            GL11.glBindTexture(GL11.GL_TEXTURE_2D,frameData.getTextureId());
+//            GL11.glBegin(GL11.GL_QUADS);
+//            GL11.glVertex2f(0,0);
+//            GL11.glTexCoord2i(1,1);
 //
-//        if(id == 0){
-//            return;
+//            GL11.glVertex2f(resolution.x,0);
+//            GL11.glTexCoord2i(1,0);
+//
+//            GL11.glVertex2f(resolution.x,resolution.y);
+//            GL11.glTexCoord2i(0,0);
+//
+//            GL11.glVertex2f(0,resolution.y );
+//            GL11.glTexCoord2i(0,1);
+//
+//            GL11.glEnd();
+//            GL11.glBindTexture(GL11.GL_TEXTURE_2D,0);
+//            GL11.glDisable(GL_TEXTURE_2D);
 //        }
 
-//        GL11.glBindTexture(GL11.GL_TEXTURE_2D,id);
-//        GL11.glBegin(GL11.GL_QUADS);
-//        GL11.glVertex2f(0,0);
-//        GL11.glTexCoord2i(0,0);
-//        GL11.glVertex2f(1920,0);
-//        GL11.glTexCoord2i(1,0);
-//        GL11.glVertex2f(1920,1080);
-//        GL11.glTexCoord2i(1,1);
-//        GL11.glVertex2f(0,1080);
-//        GL11.glTexCoord2i(0,1);
-//        GL11.glEnd();
-//        GL11.glBindTexture(GL11.GL_TEXTURE_2D,0);
+//        object3DCacheRender.render(camera);
 
 //        rotation += 1.5;
 //        if (rotation > 360) {

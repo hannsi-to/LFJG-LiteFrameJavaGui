@@ -4,11 +4,13 @@ import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.render.openGL.system.Id;
+import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
 
 import java.util.*;
 
 public class EffectCache {
     public static long latestEffectCacheId;
+    public static int latestSubObjectId;
     private LinkedHashMap<EffectBase, Long> effectBases;
 
     public EffectCache() {
@@ -88,26 +90,31 @@ public class EffectCache {
         int maxSize = new ArrayList<>(effectBases.entrySet()).size() - 1;
 
         for (Map.Entry<EffectBase, Long> effectBase : effectBases.entrySet()) {
-            if (index == maxSize || effectBase.getKey().getName().equals("FrameBufferContents")) {
-                effectBase.getKey().getFrameBuffer().getShaderProgramFBO().bind();
-                effectBase.getKey().setUniform(glObject);
-                effectBase.getKey().getFrameBuffer().getShaderProgramFBO().unbind();
-                effectBase.getKey().frameBuffer(glObject);
-            }
-            if (index != maxSize || effectBase.getKey().getName().equals("FrameBufferContents")) {
-                Map.Entry<EffectBase, Long> nextEffectBase = getLinkedHashMapEntry(effectBases, index + 1);
-
-                nextEffectBase.getKey().frameBufferPush(glObject);
-
-                effectBase.getKey().getFrameBuffer().getShaderProgramFBO().bind();
-                effectBase.getKey().setUniform(glObject);
-                effectBase.getKey().getFrameBuffer().getShaderProgramFBO().unbind();
-                effectBase.getKey().frameBuffer(glObject);
-
-                nextEffectBase.getKey().frameBufferPop(glObject);
-            }
+            FrameBuffer frameBuffer = effectBase.getKey().getFrameBuffer();
+            applyEffect(frameBuffer, index, maxSize, effectBase.getKey(), glObject);
 
             index++;
+        }
+    }
+
+    public void applyEffect(FrameBuffer frameBuffer, int index, int maxSize, EffectBase effectBase, GLObject glObject) {
+        if (index == maxSize || effectBase.getName().equals("FrameBufferContents")) {
+            frameBuffer.getShaderProgramFBO().bind();
+            effectBase.setUniform(glObject);
+            frameBuffer.getShaderProgramFBO().unbind();
+            effectBase.frameBuffer(glObject);
+        }
+        if (index != maxSize || effectBase.getName().equals("FrameBufferContents")) {
+            Map.Entry<EffectBase, Long> nextEffectBase = getLinkedHashMapEntry(effectBases, index + 1);
+
+            nextEffectBase.getKey().frameBufferPush(glObject);
+
+            frameBuffer.getShaderProgramFBO().bind();
+            effectBase.setUniform(glObject);
+            frameBuffer.getShaderProgramFBO().unbind();
+            effectBase.frameBuffer(glObject);
+
+            nextEffectBase.getKey().frameBufferPop(glObject);
         }
     }
 

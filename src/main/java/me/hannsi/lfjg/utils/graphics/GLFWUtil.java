@@ -1,10 +1,9 @@
 package me.hannsi.lfjg.utils.graphics;
 
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.frame.setting.settings.HeightSetting;
-import me.hannsi.lfjg.frame.setting.settings.WidthSetting;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.MonitorType;
+import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWImage;
@@ -14,6 +13,7 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.Objects;
 
@@ -110,23 +110,18 @@ public class GLFWUtil {
         return monitor;
     }
 
-    public static Vector2i getWindowSizes(Frame frame, MonitorType monitorType) {
-        Vector2i windowSizes;
+    public static Vector2f getContentScale(Frame frame) {
+        Vector2f contentScale;
 
-        switch (monitorType) {
-            case Window, FullScreen ->
-                    windowSizes = new Vector2i(((Number) frame.getFrameSettingValue(WidthSetting.class)).intValue(), ((Number) frame.getFrameSettingValue(HeightSetting.class)).intValue());
-            case Borderless -> {
-                GLFWVidMode vidMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
-                if (vidMode == null) {
-                    throw new RuntimeException("Failed to get video mode for primary monitor");
-                }
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            FloatBuffer width = stack.mallocFloat(1);
+            FloatBuffer height = stack.mallocFloat(1);
 
-                windowSizes = new Vector2i(vidMode.width(), vidMode.height());
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + monitorType);
+            GLFW.glfwGetWindowContentScale(frame.getWindowID(), width, height);
+
+            contentScale = new Vector2f(width.get(0), height.get(0));
         }
 
-        return windowSizes;
+        return contentScale;
     }
 }
