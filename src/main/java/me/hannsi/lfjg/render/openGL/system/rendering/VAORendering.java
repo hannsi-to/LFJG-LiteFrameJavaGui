@@ -7,13 +7,24 @@ import org.lwjgl.opengl.GL30;
 import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
+/**
+ * Handles rendering of VAOs (Vertex Array Objects) in the OpenGL rendering system.
+ */
 public class VAORendering {
     private GLObject glObject;
 
+    /**
+     * Constructs a new VAORendering instance.
+     */
     public VAORendering() {
         this.glObject = null;
     }
 
+    /**
+     * Draws the specified GLObject using its associated VAO.
+     *
+     * @param glObject the GLObject to draw
+     */
     public void draw(GLObject glObject) {
         this.glObject = glObject;
 
@@ -35,6 +46,11 @@ public class VAORendering {
         glBindVertexArray(0);
     }
 
+    /**
+     * Draws the specified Mesh using its associated VAO.
+     *
+     * @param mesh the Mesh to draw
+     */
     public void draw(Mesh mesh) {
         glBindVertexArray(mesh.getVaoId());
 
@@ -54,14 +70,27 @@ public class VAORendering {
         glBindVertexArray(0);
     }
 
+    /**
+     * Cleans up the resources associated with the current GLObject.
+     */
     public void cleanup() {
         glObject.getMesh().cleanup();
     }
 
+    /**
+     * Gets the current GLObject.
+     *
+     * @return the current GLObject
+     */
     public GLObject getGlObject() {
         return glObject;
     }
 
+    /**
+     * Sets the current GLObject.
+     *
+     * @param glObject the new GLObject
+     */
     public void setGlObject(GLObject glObject) {
         this.glObject = glObject;
     }

@@ -5,11 +5,28 @@ import me.hannsi.lfjg.debug.debug.DebugLog;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Utility class for byte operations.
+ */
 public class ByteUtil {
+
+    /**
+     * Converts a string to an InputStream using UTF-8 encoding.
+     *
+     * @param value the string to convert
+     * @return an InputStream containing the string data
+     */
     public static InputStream convertStringToInputStream(String value) {
         return new ByteArrayInputStream(value.getBytes(StandardCharsets.UTF_8));
     }
 
+    /**
+     * Converts a file path or resource path to an InputStream.
+     *
+     * @param path the path to the file or resource
+     * @return an InputStream for the file or resource
+     * @throws IllegalArgumentException if the file or resource is not found
+     */
     public static InputStream convertStringPathToInputStream(String path) {
         InputStream inputStream = ByteUtil.class.getClassLoader().getResourceAsStream(path);
 
@@ -29,6 +46,13 @@ public class ByteUtil {
         return inputStream;
     }
 
+    /**
+     * Converts an InputStream to a byte array.
+     *
+     * @param inputStream the InputStream to convert
+     * @return a byte array containing the InputStream data
+     * @throws IOException if an I/O error occurs
+     */
     public static byte[] convertInputStreamToByteArray(InputStream inputStream) {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         int nRead;
@@ -43,10 +67,16 @@ public class ByteUtil {
             e.printStackTrace();
         }
 
-
         return buffer.toByteArray();
     }
 
+    /**
+     * Reads an InputStream and converts it to a string using UTF-8 encoding.
+     *
+     * @param inputStream the InputStream to read
+     * @return a string containing the InputStream data
+     * @throws RuntimeException if an I/O error occurs
+     */
     public static String readInputStreamToString(InputStream inputStream) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         byte[] buffer = new byte[512];

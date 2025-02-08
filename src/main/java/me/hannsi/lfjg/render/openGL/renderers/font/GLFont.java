@@ -18,9 +18,11 @@ import java.util.Set;
 
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * Class representing a font renderer in OpenGL.
+ */
 public class GLFont extends GLRect {
     private FrameBuffer frameBuffer;
-
     private Batch batch;
     private FontCache fontCache;
     private ResourcesLocation fontPath;
@@ -31,10 +33,22 @@ public class GLFont extends GLRect {
     private float scale;
     private Color color;
 
+    /**
+     * Constructs a new GLFont with the specified name.
+     *
+     * @param name the name of the font renderer
+     */
     public GLFont(String name) {
         super(name);
     }
 
+    /**
+     * Sets the font for the renderer.
+     *
+     * @param fontCache the font cache
+     * @param fontPath the path to the font
+     * @param size the size of the font
+     */
     public void setFont(FontCache fontCache, ResourcesLocation fontPath, int size) {
         this.fontCache = fontCache;
         this.fontPath = fontPath;
@@ -44,13 +58,21 @@ public class GLFont extends GLRect {
         batch.initBatch();
     }
 
+    /**
+     * Sets the text and its properties for rendering.
+     *
+     * @param text the text to render
+     * @param x the x position of the text
+     * @param y the y position of the text
+     * @param scale the scale of the text
+     * @param color the color of the text
+     */
     public void font(String text, float x, float y, float scale, Color color) {
         this.text = text;
         this.x = x;
         this.y = y;
         this.scale = scale;
         this.color = color;
-
 
         StringBuilder unknownCharacters = new StringBuilder();
         StringBuilder unknownCharacters2 = new StringBuilder();
@@ -91,10 +113,25 @@ public class GLFont extends GLRect {
         rectWH(0, 0, getResolution().x(), getResolution().y(), new Color(0, 0, 0, 0));
     }
 
+    /**
+     * Sets the text and its properties for rendering.
+     *
+     * @param text the text to render
+     * @param x the x position of the text
+     * @param y the y position of the text
+     * @param scale the scale of the text
+     * @param color the color of the text
+     */
     public void font(String text, double x, double y, double scale, Color color) {
         font(text, (float) x, (float) y, (float) scale, color);
     }
 
+    /**
+     * Draws the text with the specified resolution and projection.
+     *
+     * @param resolution the resolution of the rendering
+     * @param projection the projection matrix
+     */
     @Override
     public void draw(Vector2f resolution, Projection projection) {
         frameBuffer.bindFrameBuffer();
@@ -102,7 +139,6 @@ public class GLFont extends GLRect {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         batch.addText(text, x, y, scale, color);
-
         batch.flushBatch();
 
         glDisable(GL_BLEND);
@@ -115,74 +151,164 @@ public class GLFont extends GLRect {
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
     }
 
+    /**
+     * Gets the batch renderer.
+     *
+     * @return the batch renderer
+     */
     public Batch getBatch() {
         return batch;
     }
 
+    /**
+     * Sets the batch renderer.
+     *
+     * @param batch the batch renderer
+     */
     public void setBatch(Batch batch) {
         this.batch = batch;
     }
 
+    /**
+     * Gets the font cache.
+     *
+     * @return the font cache
+     */
     public FontCache getFontCache() {
         return fontCache;
     }
 
+    /**
+     * Sets the font cache.
+     *
+     * @param fontCache the font cache
+     */
     public void setFontCache(FontCache fontCache) {
         this.fontCache = fontCache;
     }
 
+    /**
+     * Gets the font path.
+     *
+     * @return the font path
+     */
     public ResourcesLocation getFontPath() {
         return fontPath;
     }
 
+    /**
+     * Sets the font path.
+     *
+     * @param fontPath the font path
+     */
     public void setFontPath(ResourcesLocation fontPath) {
         this.fontPath = fontPath;
     }
 
+    /**
+     * Gets the font.
+     *
+     * @return the font
+     */
     public CFont getcFont() {
         return cFont;
     }
 
+    /**
+     * Sets the font.
+     *
+     * @param cFont the font
+     */
     public void setcFont(CFont cFont) {
         this.cFont = cFont;
     }
 
+    /**
+     * Gets the text to render.
+     *
+     * @return the text to render
+     */
     public String getText() {
         return text;
     }
 
+    /**
+     * Sets the text to render.
+     *
+     * @param text the text to render
+     */
     public void setText(String text) {
         this.text = text;
     }
 
+    /**
+     * Gets the x position of the text.
+     *
+     * @return the x position of the text
+     */
     public float getX() {
         return x;
     }
 
+    /**
+     * Sets the x position of the text.
+     *
+     * @param x the x position of the text
+     */
     public void setX(float x) {
         this.x = x;
     }
 
+    /**
+     * Gets the y position of the text.
+     *
+     * @return the y position of the text
+     */
     public float getY() {
         return y;
     }
 
+    /**
+     * Sets the y position of the text.
+     *
+     * @param y the y position of the text
+     */
     public void setY(float y) {
         this.y = y;
     }
 
+    /**
+     * Gets the scale of the text.
+     *
+     * @return the scale of the text
+     */
     public float getScale() {
         return scale;
     }
 
+    /**
+     * Sets the scale of the text.
+     *
+     * @param scale the scale of the text
+     */
     public void setScale(float scale) {
         this.scale = scale;
     }
 
+    /**
+     * Gets the color of the text.
+     *
+     * @return the color of the text
+     */
     public Color getColor() {
         return color;
     }
 
+    /**
+     * Sets the color of the text.
+     *
+     * @param color the color of the text
+     */
     public void setColor(Color color) {
         this.color = color;
     }

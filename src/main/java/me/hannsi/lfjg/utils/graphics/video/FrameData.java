@@ -7,16 +7,30 @@ import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * Class representing frame data, including the frame image, buffered image, and texture ID.
+ */
 public class FrameData {
     private BufferedImage frameImage;
     private ByteBuffer bufferedImage;
     private int textureId;
 
+    /**
+     * Constructs a FrameData instance with the specified buffered image.
+     *
+     * @param bufferedImage the buffered image
+     */
     public FrameData(BufferedImage bufferedImage) {
         this.frameImage = bufferedImage;
         this.bufferedImage = convert(bufferedImage);
     }
 
+    /**
+     * Converts a BufferedImage to a ByteBuffer.
+     *
+     * @param image the BufferedImage to convert
+     * @return the ByteBuffer containing the image data
+     */
     public ByteBuffer convert(BufferedImage image) {
         int width = image.getWidth();
         int height = image.getHeight();
@@ -45,6 +59,9 @@ public class FrameData {
         return buffer;
     }
 
+    /**
+     * Creates an OpenGL texture from the buffered image.
+     */
     public void createTexture() {
         textureId = glGenTextures();
 
@@ -62,26 +79,56 @@ public class FrameData {
         bufferedImage.clear();
     }
 
+    /**
+     * Gets the frame image.
+     *
+     * @return the frame image
+     */
     public BufferedImage getFrameImage() {
         return frameImage;
     }
 
+    /**
+     * Sets the frame image.
+     *
+     * @param frameImage the new frame image
+     */
     public void setFrameImage(BufferedImage frameImage) {
         this.frameImage = frameImage;
     }
 
+    /**
+     * Gets the buffered image.
+     *
+     * @return the buffered image
+     */
     public ByteBuffer getBufferedImage() {
         return bufferedImage;
     }
 
+    /**
+     * Sets the buffered image.
+     *
+     * @param bufferedImage the new buffered image
+     */
     public void setBufferedImage(ByteBuffer bufferedImage) {
         this.bufferedImage = bufferedImage;
     }
 
+    /**
+     * Gets the texture ID.
+     *
+     * @return the texture ID
+     */
     public int getTextureId() {
         return textureId;
     }
 
+    /**
+     * Sets the texture ID.
+     *
+     * @param textureId the new texture ID
+     */
     public void setTextureId(int textureId) {
         this.textureId = textureId;
     }

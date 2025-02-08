@@ -5,10 +5,20 @@ import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Vector2f;
 
+/**
+ * Class representing a Lens Blur effect in OpenGL.
+ */
 public class LensBlur extends EffectBase {
     private float range;
     private float intensity;
 
+    /**
+     * Constructs a new LensBlur effect with the specified parameters.
+     *
+     * @param resolution the resolution of the effect
+     * @param range the range of the blur
+     * @param intensity the intensity of the blur
+     */
     public LensBlur(Vector2f resolution, float range, float intensity) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/LensBlur.fsh"), true, 20, "LensBlur");
 
@@ -16,28 +26,55 @@ public class LensBlur extends EffectBase {
         this.intensity = intensity;
     }
 
+    /**
+     * Constructs a new LensBlur effect with the specified parameters.
+     *
+     * @param resolution the resolution of the effect
+     * @param range the range of the blur
+     * @param intensity the intensity of the blur
+     */
     public LensBlur(Vector2f resolution, double range, double intensity) {
         this(resolution, (float) range, (float) intensity);
     }
 
+    /**
+     * Pushes the frame buffer for the base GL object.
+     *
+     * @param baseGLObject the base GL object
+     */
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();
         super.frameBufferPush(baseGLObject);
     }
 
+    /**
+     * Pops the frame buffer for the base GL object.
+     *
+     * @param baseGLObject the base GL object
+     */
     @Override
     public void frameBufferPop(GLObject baseGLObject) {
         getFrameBuffer().unbindFrameBuffer();
         super.frameBufferPop(baseGLObject);
     }
 
+    /**
+     * Draws the frame buffer for the base GL object.
+     *
+     * @param baseGLObject the base GL object
+     */
     @Override
     public void frameBuffer(GLObject baseGLObject) {
         getFrameBuffer().drawFrameBuffer();
         super.frameBuffer(baseGLObject);
     }
 
+    /**
+     * Sets the uniform variables for the shader program.
+     *
+     * @param baseGLObject the base GL object
+     */
     @Override
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().setUniform("range", range);
@@ -46,18 +83,38 @@ public class LensBlur extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
+    /**
+     * Gets the range of the blur.
+     *
+     * @return the range of the blur
+     */
     public float getRange() {
         return range;
     }
 
+    /**
+     * Sets the range of the blur.
+     *
+     * @param range the range of the blur
+     */
     public void setRange(float range) {
         this.range = range;
     }
 
+    /**
+     * Gets the intensity of the blur.
+     *
+     * @return the intensity of the blur
+     */
     public float getIntensity() {
         return intensity;
     }
 
+    /**
+     * Sets the intensity of the blur.
+     *
+     * @param intensity the intensity of the blur
+     */
     public void setIntensity(float intensity) {
         this.intensity = intensity;
     }

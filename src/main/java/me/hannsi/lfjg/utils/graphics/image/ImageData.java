@@ -11,11 +11,19 @@ import java.nio.ByteBuffer;
 
 import static org.bytedeco.opencv.global.opencv_imgproc.cvtColor;
 
+/**
+ * Class representing image data, including the image path, OpenCV Mat object, and ByteBuffer.
+ */
 public class ImageData {
     private ResourcesLocation imagePath;
     private Mat mat;
     private ByteBuffer byteBuffer;
 
+    /**
+     * Constructs an ImageData instance from the specified image path.
+     *
+     * @param imagePath the path to the image resource
+     */
     public ImageData(ResourcesLocation imagePath) {
         this.imagePath = imagePath;
 
@@ -32,26 +40,56 @@ public class ImageData {
         this.byteBuffer = BufferUtil.matToByteBufferRGBA(mat);
     }
 
+    /**
+     * Gets the image path.
+     *
+     * @return the image path
+     */
     public ResourcesLocation getImagePath() {
         return imagePath;
     }
 
+    /**
+     * Sets the image path.
+     *
+     * @param imagePath the new image path
+     */
     public void setImagePath(ResourcesLocation imagePath) {
         this.imagePath = imagePath;
     }
 
+    /**
+     * Gets the OpenCV Mat object.
+     *
+     * @return the Mat object
+     */
     public Mat getMat() {
         return mat;
     }
 
+    /**
+     * Sets the OpenCV Mat object.
+     *
+     * @param mat the new Mat object
+     */
     public void setMat(Mat mat) {
         this.mat = mat;
     }
 
+    /**
+     * Gets the ByteBuffer containing the image data in RGBA format.
+     *
+     * @return the ByteBuffer
+     */
     public ByteBuffer getByteBuffer() {
         return byteBuffer;
     }
 
+    /**
+     * Sets the ByteBuffer containing the image data in RGBA format.
+     *
+     * @param byteBuffer the new ByteBuffer
+     */
     public void setByteBuffer(ByteBuffer byteBuffer) {
         this.byteBuffer = byteBuffer;
     }

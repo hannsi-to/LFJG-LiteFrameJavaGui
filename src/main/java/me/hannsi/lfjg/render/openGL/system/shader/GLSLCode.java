@@ -6,20 +6,34 @@ import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Represents a GLSL (OpenGL Shading Language) code processor.
+ * This class handles the inclusion of other shader files within a shader code.
+ */
 public class GLSLCode {
     private final ResourcesLocation resourcesLocation;
     private boolean checkInclude;
 
+    /**
+     * Constructs a new GLSLCode instance with the specified resource location.
+     *
+     * @param resourcesLocation the location of the shader resource
+     */
     public GLSLCode(ResourcesLocation resourcesLocation) {
         this.resourcesLocation = resourcesLocation;
         checkInclude = true;
     }
 
+    /**
+     * Processes the includes within the shader code.
+     * Recursively replaces #include directives with the content of the included files.
+     *
+     * @param shaderCode the shader code to process
+     * @return the processed shader code with includes replaced
+     */
     private String processIncludes(String shaderCode) {
         Pattern pattern = Pattern.compile("#include\\s+\"([^\"]+)\"");
         Matcher matcher = pattern.matcher(shaderCode);
-
-//        checkInclude = matcher.find();
 
         checkInclude = false;
         while (matcher.find()) {
@@ -37,20 +51,27 @@ public class GLSLCode {
         return shaderCode;
     }
 
+    /**
+     * Creates the final shader code by reading the shader file and processing includes.
+     *
+     * @return the final shader code
+     */
     public String createCode() {
         if (resourcesLocation.getPath().equals(new ResourcesLocation("shader/frameBuffer/filter/Glow.fsh").getPath())) {
             System.out.println("A");
         }
 
         String shaderCode = ByteUtil.readInputStreamToString(resourcesLocation.getInputStream());
-
-//        while (checkInclude){
         shaderCode = processIncludes(shaderCode);
-//        }
 
         return shaderCode;
     }
 
+    /**
+     * Gets the resource location of the shader.
+     *
+     * @return the resource location of the shader
+     */
     public ResourcesLocation getResourcesLocation() {
         return resourcesLocation;
     }

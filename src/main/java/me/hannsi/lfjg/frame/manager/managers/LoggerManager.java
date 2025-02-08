@@ -11,14 +11,25 @@ import me.hannsi.lfjg.utils.math.ANSIFormat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Manages logging for the application.
+ */
 public class LoggerManager {
     private Logger logger;
 
+    /**
+     * Constructs a new LoggerManager and registers it with the event manager.
+     */
     public LoggerManager() {
         IFrame.eventManager.register(this);
         this.logger = LogManager.getLogger(Frame.class);
     }
 
+    /**
+     * Handles logging events.
+     *
+     * @param loggingEvent the logging event to handle
+     */
     @EventHandler
     public void loggingEvent(LoggingEvent loggingEvent) {
         DebugLog debugLog = loggingEvent.getDebugLog();
@@ -55,10 +66,20 @@ public class LoggerManager {
         }
     }
 
+    /**
+     * Retrieves the logger.
+     *
+     * @return the logger
+     */
     public Logger getLogger() {
         return logger;
     }
 
+    /**
+     * Sets the logger.
+     *
+     * @param logger the logger to set
+     */
     public void setLogger(Logger logger) {
         this.logger = logger;
     }

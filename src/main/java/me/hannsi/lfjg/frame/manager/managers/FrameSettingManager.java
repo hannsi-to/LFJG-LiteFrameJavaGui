@@ -15,15 +15,28 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Manages frame settings for a given frame.
+ */
 public class FrameSettingManager extends Manager {
     private final List<FrameSettingBase<?>> frameSettings;
 
+    /**
+     * Constructs a new FrameSettingManager for the specified frame.
+     *
+     * @param frame the frame to manage settings for
+     */
     public FrameSettingManager(Frame frame) {
         super(frame, "FrameSettingManager");
         this.frameSettings = new ArrayList<>();
         loadFrameSettings();
     }
 
+    /**
+     * Updates the frame settings.
+     *
+     * @param windowHint a flag indicating whether to update window hint settings
+     */
     public void updateFrameSettings(boolean windowHint) {
         StringBuilder sb = new StringBuilder().append("\n\nFrameSettings Updating...\n\n");
         long tookTime = TimeCalculator.calculate(() -> {
@@ -41,6 +54,12 @@ public class FrameSettingManager extends Manager {
         DebugLog.debug(getClass(), sb.toString());
     }
 
+    /**
+     * Retrieves a frame setting by its class.
+     *
+     * @param frameSettingBase the class of the frame setting to retrieve
+     * @return the frame setting, or null if not found
+     */
     public FrameSettingBase<?> getFrameSetting(Class<? extends FrameSettingBase<?>> frameSettingBase) {
         FrameSettingBase<?> result = null;
 
@@ -55,6 +74,9 @@ public class FrameSettingManager extends Manager {
         return result;
     }
 
+    /**
+     * Loads all frame settings.
+     */
     @SuppressWarnings("unchecked")
     public void loadFrameSettings() {
         Set<Class<? extends FrameSettingBase<?>>> subTypes = (Set<Class<? extends FrameSettingBase<?>>>) (Set<?>) ClassUtil.getClassesFormPackage(PackagePath.frameSettings, FrameSettingBase.class);
@@ -88,10 +110,20 @@ public class FrameSettingManager extends Manager {
         DebugLog.debug(getClass(), sb.toString());
     }
 
+    /**
+     * Registers a frame setting.
+     *
+     * @param frameSetting the frame setting to register
+     */
     public void register(FrameSettingBase<?> frameSetting) {
         frameSettings.add(frameSetting);
     }
 
+    /**
+     * Retrieves all frame settings.
+     *
+     * @return a list of all frame settings
+     */
     public List<FrameSettingBase<?>> getFrameSettings() {
         return frameSettings;
     }

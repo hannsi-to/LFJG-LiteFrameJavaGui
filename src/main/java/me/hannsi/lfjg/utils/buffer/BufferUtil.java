@@ -4,7 +4,17 @@ import org.bytedeco.opencv.opencv_core.Mat;
 
 import java.nio.ByteBuffer;
 
+/**
+ * Utility class for buffer operations.
+ */
 public class BufferUtil {
+
+    /**
+     * Converts an OpenCV Mat object to a ByteBuffer in RGBA format.
+     *
+     * @param mat the OpenCV Mat object to convert
+     * @return a ByteBuffer containing the RGBA data
+     */
     public static ByteBuffer matToByteBufferRGBA(Mat mat) {
         int width = mat.cols();
         int height = mat.rows();

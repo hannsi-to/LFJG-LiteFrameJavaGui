@@ -6,12 +6,25 @@ import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
 import me.hannsi.lfjg.utils.graphics.DisplayUtil;
 import org.lwjgl.glfw.GLFW;
 
+/**
+ * Represents a setting for the width of a frame.
+ */
 @ReflectionsLevel(level = 2)
 public class WidthSetting extends FrameSettingBase<Integer> {
+
+    /**
+     * Constructs a new WidthSetting with the specified frame.
+     *
+     * @param frame the frame to associate with this setting
+     */
     public WidthSetting(Frame frame) {
         super(frame, "WidthSetting", 2, DisplayUtil.getDisplaySizeDimension().width);
     }
 
+    /**
+     * Updates the width setting.
+     * Sets the GLFW window size based on the current width value and the height value from the HeightSetting.
+     */
     @Override
     public void updateSetting() {
         if (getFrame().getWindowID() != -1L) {

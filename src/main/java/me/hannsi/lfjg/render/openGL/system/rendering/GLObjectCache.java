@@ -9,13 +9,24 @@ import org.joml.Vector2f;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Caches OpenGL objects for rendering.
+ */
 public class GLObjectCache {
     private List<GLObject> glObjects;
 
+    /**
+     * Constructs a new GLObjectCache.
+     */
     public GLObjectCache() {
         glObjects = new ArrayList<>();
     }
 
+    /**
+     * Creates a cache for the specified GLObject.
+     *
+     * @param glObject the GLObject to cache
+     */
     public void createCache(GLObject glObject) {
         glObjects.add(glObject);
 
@@ -24,18 +35,33 @@ public class GLObjectCache {
         DebugLog.debug(getClass(), logGenerator.createLog());
     }
 
+    /**
+     * Draws all cached GLObjects with the specified resolution and projection.
+     *
+     * @param resolution the resolution to use for drawing
+     * @param projection the projection to use for drawing
+     */
     public void draw(Vector2f resolution, Projection projection) {
         for (GLObject glObject : glObjects) {
             glObject.draw(resolution, projection);
         }
     }
 
+    /**
+     * Cleans up all cached GLObjects.
+     */
     public void cleanup() {
         for (GLObject glObject : glObjects) {
             glObject.cleanup();
         }
     }
 
+    /**
+     * Gets the GLObject with the specified object ID.
+     *
+     * @param objectId the ID of the GLObject to retrieve
+     * @return the GLObject with the specified ID, or null if not found
+     */
     public GLObject getGLObject(long objectId) {
         for (GLObject glObject : glObjects) {
             if (glObject.getObjectId() == objectId) {
@@ -45,10 +71,20 @@ public class GLObjectCache {
         return null;
     }
 
+    /**
+     * Gets the list of cached GLObjects.
+     *
+     * @return the list of cached GLObjects
+     */
     public List<GLObject> getGlObjects() {
         return glObjects;
     }
 
+    /**
+     * Sets the list of cached GLObjects.
+     *
+     * @param glObjects the new list of cached GLObjects
+     */
     public void setGlObjects(List<GLObject> glObjects) {
         this.glObjects = glObjects;
     }

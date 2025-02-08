@@ -16,15 +16,34 @@ import java.util.Objects;
 
 import static org.lwjgl.assimp.Assimp.*;
 
+/**
+ * Utility class for loading models in the OpenGL rendering system.
+ */
 public class ModelLoader {
     private ModelLoader() {
     }
 
+    /**
+     * Loads a model with the specified ID and path, using the given texture cache and default processing flags.
+     *
+     * @param modelId the unique identifier of the model
+     * @param modelPath the file location of the model
+     * @param textureCache the texture cache to use
+     * @return the loaded model
+     */
     public static Model loadModel(String modelId, FileLocation modelPath, TextureModelCache textureCache) {
         return loadModel(modelId, modelPath, textureCache, aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_FixInfacingNormals | aiProcess_CalcTangentSpace | aiProcess_LimitBoneWeights | aiProcess_PreTransformVertices);
-
     }
 
+    /**
+     * Loads a model with the specified ID, path, texture cache, and processing flags.
+     *
+     * @param modelId the unique identifier of the model
+     * @param modelPath the file location of the model
+     * @param textureCache the texture cache to use
+     * @param flags the processing flags to use
+     * @return the loaded model
+     */
     public static Model loadModel(String modelId, FileLocation modelPath, TextureModelCache textureCache, int flags) {
         File file = new File(modelPath.getPath());
         if (!file.exists()) {
@@ -69,6 +88,12 @@ public class ModelLoader {
         return new Model(modelId, materialList);
     }
 
+    /**
+     * Processes the indices of the given mesh.
+     *
+     * @param aiMesh the mesh to process
+     * @return an array of indices
+     */
     private static int[] processIndices(AIMesh aiMesh) {
         List<Integer> indices = new ArrayList<>();
         int numFaces = aiMesh.mNumFaces();
@@ -84,6 +109,14 @@ public class ModelLoader {
         return indices.stream().mapToInt(Integer::intValue).toArray();
     }
 
+    /**
+     * Processes the material of the given Assimp material.
+     *
+     * @param aiMaterial the Assimp material to process
+     * @param modelDir the directory of the model
+     * @param textureCache the texture cache to use
+     * @return the processed material
+     */
     private static Material processMaterial(AIMaterial aiMaterial, String modelDir, TextureModelCache textureCache) {
         Material material = new Material();
         try (MemoryStack stack = MemoryStack.stackPush()) {
@@ -127,6 +160,12 @@ public class ModelLoader {
         }
     }
 
+    /**
+     * Processes the given Assimp mesh.
+     *
+     * @param aiMesh the Assimp mesh to process
+     * @return the processed mesh
+     */
     private static Mesh processMesh(AIMesh aiMesh) {
         float[] vertices = processVertices(aiMesh);
         float[] normals = processNormals(aiMesh);
@@ -141,6 +180,12 @@ public class ModelLoader {
         return new Mesh(vertices, normals, textCoords, indices);
     }
 
+    /**
+     * Processes the normals of the given Assimp mesh.
+     *
+     * @param aiMesh the Assimp mesh to process
+     * @return an array of normals
+     */
     private static float[] processNormals(AIMesh aiMesh) {
         AIVector3D.Buffer buffer = aiMesh.mNormals();
         assert buffer != null;
@@ -155,6 +200,12 @@ public class ModelLoader {
         return data;
     }
 
+    /**
+     * Processes the texture coordinates of the given Assimp mesh.
+     *
+     * @param aiMesh the Assimp mesh to process
+     * @return an array of texture coordinates
+     */
     private static float[] processTextCoords(AIMesh aiMesh) {
         AIVector3D.Buffer buffer = aiMesh.mTextureCoords(0);
         if (buffer == null) {
@@ -172,6 +223,12 @@ public class ModelLoader {
         return data;
     }
 
+    /**
+     * Processes the vertices of the given Assimp mesh.
+     *
+     * @param aiMesh the Assimp mesh to process
+     * @return an array of vertices
+     */
     private static float[] processVertices(AIMesh aiMesh) {
         AIVector3D.Buffer buffer = aiMesh.mVertices();
         float[] data = new float[buffer.remaining() * 3];

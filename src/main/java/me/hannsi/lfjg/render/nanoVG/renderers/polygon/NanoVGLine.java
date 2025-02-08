@@ -4,12 +4,23 @@ import me.hannsi.lfjg.render.nanoVG.system.NanoVGUtil;
 import me.hannsi.lfjg.render.nanoVG.system.polygon.NanoVGRendererBase;
 import org.lwjgl.nanovg.NanoVG;
 
+/**
+ * Represents a renderer for drawing lines using NanoVG.
+ */
 public class NanoVGLine extends NanoVGRendererBase {
 
+    /**
+     * Constructs a new NanoVGLine with the specified NanoVG context.
+     *
+     * @param nvg the NanoVG context
+     */
     public NanoVGLine(long nvg) {
         super(nvg);
     }
 
+    /**
+     * Draws the line with the current settings.
+     */
     @Override
     public void draw() {
         NanoVG.nvgBeginPath(nvg);

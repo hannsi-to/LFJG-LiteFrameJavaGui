@@ -7,7 +7,14 @@ import org.lwjgl.openal.ALCapabilities;
 
 import static org.lwjgl.openal.AL10.*;
 
+/**
+ * Provides debugging utilities for OpenAL.
+ */
 public class OpenALDebug {
+
+    /**
+     * Checks for OpenAL errors and logs them if any are found.
+     */
     public static void getOpenALError() {
         ALCapabilities alCapabilities;
         try {
@@ -28,6 +35,12 @@ public class OpenALDebug {
         }
     }
 
+    /**
+     * Converts an OpenAL error code to a human-readable string.
+     *
+     * @param error the OpenAL error code
+     * @return the corresponding error message
+     */
     public static String getALErrorString(int error) {
         return switch (error) {
             case AL_INVALID_NAME -> "Invalid Name";
