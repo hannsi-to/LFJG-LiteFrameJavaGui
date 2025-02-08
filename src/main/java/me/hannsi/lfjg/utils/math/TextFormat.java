@@ -2,7 +2,13 @@ package me.hannsi.lfjg.utils.math;
 
 import me.hannsi.lfjg.utils.graphics.color.Color;
 
+/**
+ * Utility class for text formatting using custom codes.
+ */
 public class TextFormat {
+    /**
+     * Prefix code for text formatting.
+     */
     public static final char PREFIX_CODE = '§';
 
     public static final String BLACK = PREFIX_CODE + "0";
@@ -22,21 +28,25 @@ public class TextFormat {
     public static final String YELLOW = PREFIX_CODE + "e";
     public static final String WHITE = PREFIX_CODE + "f";
     public static final String OBFUSCATED = PREFIX_CODE + "g";
+
     /**
-     * BOLD: 一様仕様はできるが安定はしないので使うのをおすすめしない
+     * Bold text format (deprecated).
      */
-    @Deprecated()
+    @Deprecated
     public static final String BOLD = PREFIX_CODE + "h";
+
     /**
-     * STRIKETHROUGH: 使うな！！
+     * Strikethrough text format (deprecated).
      */
     @Deprecated
     public static final String STRIKETHROUGH = PREFIX_CODE + "i";
+
     /**
-     * UNDERLINE: 使うな！！(2)
+     * Underline text format (deprecated).
      */
     @Deprecated
     public static final String UNDERLINE = PREFIX_CODE + "j";
+
     public static final String ITALIC = PREFIX_CODE + "k";
     public static final String RESET = PREFIX_CODE + "r";
     public static final String NEWLINE = PREFIX_CODE + "l";
@@ -45,6 +55,13 @@ public class TextFormat {
     public static final String RESET_POINT_X = PREFIX_CODE + "o";
     public static final String RESET_POINT_Y = PREFIX_CODE + "p";
 
+    /**
+     * Gets the color associated with a text format code.
+     *
+     * @param format the text format code
+     * @param defaultColor the default color to return if the format code is not recognized
+     * @return the color associated with the format code, or the default color if the format code is not recognized
+     */
     public static Color getColor(String format, Color defaultColor) {
         return switch (format) {
             case BLACK -> new Color(0, 0, 0);
@@ -67,10 +84,22 @@ public class TextFormat {
         };
     }
 
+    /**
+     * Checks if a character is a prefix code.
+     *
+     * @param c the character to check
+     * @return true if the character is a prefix code, false otherwise
+     */
     public static boolean isPrefix(char c) {
         return PREFIX_CODE == c;
     }
 
+    /**
+     * Checks if a string starts with a prefix code.
+     *
+     * @param s the string to check
+     * @return true if the string starts with a prefix code, false otherwise
+     */
     public static boolean isPrefix(String s) {
         return isPrefix(s.charAt(0));
     }

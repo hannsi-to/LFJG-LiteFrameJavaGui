@@ -11,6 +11,10 @@ import java.util.List;
 
 import static org.lwjgl.opengl.GL30.*;
 
+/**
+ * Represents a mesh in the OpenGL rendering system.
+ * Handles the creation and management of vertex buffer objects (VBOs) and vertex array objects (VAOs).
+ */
 public class Mesh {
     private static final ProjectionType DEFAULT_PROJECTION_TYPE = ProjectionType.OrthographicProjection;
     private final float[] positions;
@@ -21,18 +25,45 @@ public class Mesh {
     private final List<Integer> vboIdList;
     private int numVertices;
 
+    /**
+     * Constructs a new Mesh instance with the specified positions and colors.
+     *
+     * @param positions the vertex positions
+     * @param colors the vertex colors
+     */
     public Mesh(float[] positions, float[] colors) {
         this(DEFAULT_PROJECTION_TYPE, positions, colors);
     }
 
+    /**
+     * Constructs a new Mesh instance with the specified projection type and positions.
+     *
+     * @param projectionType the projection type
+     * @param positions the vertex positions
+     */
     public Mesh(ProjectionType projectionType, float[] positions) {
         this(projectionType, positions, null, null);
     }
 
+    /**
+     * Constructs a new Mesh instance with the specified projection type, positions, and colors.
+     *
+     * @param projectionType the projection type
+     * @param positions the vertex positions
+     * @param colors the vertex colors
+     */
     public Mesh(ProjectionType projectionType, float[] positions, float[] colors) {
         this(projectionType, positions, colors, null);
     }
 
+    /**
+     * Constructs a new Mesh instance with the specified projection type, positions, colors, and texture coordinates.
+     *
+     * @param projectionType the projection type
+     * @param positions the vertex positions
+     * @param colors the vertex colors
+     * @param texture the texture coordinates
+     */
     public Mesh(ProjectionType projectionType, float[] positions, float[] colors, float[] texture) {
         this.projectionType = projectionType;
         this.positions = positions;
@@ -97,6 +128,13 @@ public class Mesh {
         MemoryUtil.memFree(positionsBuffer);
     }
 
+    /**
+     * Constructs a new Mesh instance with the specified positions, texture coordinates, and indices.
+     *
+     * @param positions the vertex positions
+     * @param textCoords the texture coordinates
+     * @param indices the indices
+     */
     public Mesh(float[] positions, float[] textCoords, int[] indices) {
         this.positions = positions;
         this.texture = textCoords;
@@ -142,6 +180,14 @@ public class Mesh {
         MemoryUtil.memFree(indicesBuffer);
     }
 
+    /**
+     * Constructs a new Mesh instance with the specified positions, normals, texture coordinates, and indices.
+     *
+     * @param positions the vertex positions
+     * @param normals the vertex normals
+     * @param textCoords the texture coordinates
+     * @param indices the indices
+     */
     public Mesh(float[] positions, float[] normals, float[] textCoords, int[] indices) {
         this.positions = positions;
         this.texture = textCoords;
@@ -197,35 +243,73 @@ public class Mesh {
         MemoryUtil.memFree(indicesBuffer);
     }
 
+    /**
+     * Cleans up the mesh by deleting the VBOs and VAO.
+     */
     public void cleanup() {
         vboIdList.forEach(GL30::glDeleteBuffers);
         glDeleteVertexArrays(vaoId);
     }
 
+    /**
+     * Gets the VAO ID.
+     *
+     * @return the VAO ID
+     */
     public final int getVaoId() {
         return vaoId;
     }
 
+    /**
+     * Gets the projection type.
+     *
+     * @return the projection type
+     */
     public ProjectionType getProjectionType() {
         return projectionType;
     }
 
+    /**
+     * Gets the list of VBO IDs.
+     *
+     * @return the list of VBO IDs
+     */
     public List<Integer> getVboIdList() {
         return vboIdList;
     }
 
+    /**
+     * Gets the vertex positions.
+     *
+     * @return the vertex positions
+     */
     public float[] getPositions() {
         return positions;
     }
 
+    /**
+     * Gets the vertex colors.
+     *
+     * @return the vertex colors
+     */
     public float[] getColors() {
         return colors;
     }
 
+    /**
+     * Gets the texture coordinates.
+     *
+     * @return the texture coordinates
+     */
     public float[] getTexture() {
         return texture;
     }
 
+    /**
+     * Gets the number of vertices.
+     *
+     * @return the number of vertices
+     */
     public int getNumVertices() {
         return numVertices;
     }

@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.openGL.renderers.font;
 
-import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.render.openGL.system.font.CFont;
 import me.hannsi.lfjg.render.openGL.system.font.CharInfo;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
@@ -21,6 +20,9 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import static org.lwjgl.opengl.GL31.GL_TEXTURE_BUFFER;
 
+/**
+ * Class representing a batch renderer for fonts in OpenGL.
+ */
 public class Batch {
     public static final int BATCH_SIZE = 100;
     public static final int VERTEX_SIZE = 8;
@@ -34,15 +36,28 @@ public class Batch {
     public ShaderProgram shaderProgram;
     public CFont font;
 
+    /**
+     * Constructs a new Batch with the specified projection.
+     *
+     * @param projection the projection to use
+     */
     public Batch(Projection projection) {
         this(projection.getProjMatrix());
     }
 
+    /**
+     * Constructs a new Batch with the specified projection matrix.
+     *
+     * @param projectionMatrix the projection matrix to use
+     */
     public Batch(Matrix4f projectionMatrix) {
         this.projectionMatrix = projectionMatrix;
         this.vertices = new float[BATCH_SIZE * VERTEX_SIZE];
     }
 
+    /**
+     * Generates the element buffer object (EBO) for the batch.
+     */
     private void generateEbo() {
         int elementSize = BATCH_SIZE * 3;
         int[] elementBuffer = new int[elementSize];
@@ -56,6 +71,9 @@ public class Batch {
         glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, elementBuffer, GL_STATIC_DRAW);
     }
 
+    /**
+     * Generates the shader program for the batch.
+     */
     private void generateShader() {
         shaderProgram = new ShaderProgram();
         shaderProgram.createVertexShader(new ResourcesLocation("shader/scene/font/VertexShader.vsh"));
@@ -63,6 +81,9 @@ public class Batch {
         shaderProgram.link();
     }
 
+    /**
+     * Initializes the batch by setting up the VAO, VBO, and shaders.
+     */
     public void initBatch() {
         vao = glGenVertexArrays();
         glBindVertexArray(vao);
@@ -86,6 +107,9 @@ public class Batch {
         generateShader();
     }
 
+    /**
+     * Flushes the batch, rendering all characters and resetting the batch.
+     */
     public void flushBatch() {
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, (long) Float.BYTES * VERTEX_SIZE * BATCH_SIZE, GL_DYNAMIC_DRAW);
@@ -112,6 +136,16 @@ public class Batch {
         size = 0;
     }
 
+    /**
+     * Adds a character to the batch.
+     *
+     * @param x the x position of the character
+     * @param y the y position of the character
+     * @param scale the scale of the character
+     * @param italic the italic amount of the character
+     * @param charInfo the character information
+     * @param color the color of the character
+     */
     public void addCharacter(float x, float y, float scale, float italic, CharInfo charInfo, Color color) {
         if (size >= BATCH_SIZE - 4) {
             flushBatch();
@@ -175,6 +209,15 @@ public class Batch {
         size += 4;
     }
 
+    /**
+     * Adds text to the batch.
+     *
+     * @param text the text to add
+     * @param x the x position of the text
+     * @param y the y position of the text
+     * @param scale the scale of the text
+     * @param color the color of the text
+     */
     public void addText(String text, float x, float y, float scale, Color color) {
         boolean format = false;
         String formatCode = "";
@@ -321,10 +364,21 @@ public class Batch {
         }
     }
 
+    /**
+     * Gets the width of the specified text.
+     *
+     * @param text the text to measure
+     * @return the width of the text
+     */
     public float getFontWidth(String text) {
         return font.getFontWidth(text);
     }
 
+    /**
+     * Gets the height of the specified text.
+     *
+     * @return the height of the text
+     */
     public float getFontHeight() {
         return font.getFontHeight();
     }

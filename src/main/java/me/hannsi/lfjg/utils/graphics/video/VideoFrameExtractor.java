@@ -16,6 +16,9 @@ import java.nio.ShortBuffer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Class for extracting video frames and audio data from a video file.
+ */
 public class VideoFrameExtractor {
     private final ResourcesLocation videoFileLocation;
     private Frame frame;
@@ -25,11 +28,19 @@ public class VideoFrameExtractor {
     private VideoCache videoCache;
     private final int threadCount = 100;
 
+    /**
+     * Constructs a VideoFrameExtractor instance with the specified video file location.
+     *
+     * @param videoFileLocation the location of the video file
+     */
     public VideoFrameExtractor(ResourcesLocation videoFileLocation) {
         this.videoFileLocation = videoFileLocation;
         this.videoCache = new VideoCache();
     }
 
+    /**
+     * Creates a cache of video frames and audio data from the video file.
+     */
     public void createVideoCache() {
         DebugLog.debug(getClass(), "Start extract video frame: " + videoFileLocation.getPath());
         long tookTime = TimeCalculator.calculate(() -> {
@@ -91,52 +102,112 @@ public class VideoFrameExtractor {
         DebugLog.debug(getClass(), "End extract video frame: " + videoFileLocation.getPath() + " | took: " + tookTime + "ms");
     }
 
+    /**
+     * Retrieves the next frame data from the video cache.
+     *
+     * @return the next frame data
+     */
     public FrameData frame() {
         FrameData frameData = videoCache.getFrames().get(frameNumber).getFrameData();
         frameNumber++;
         return frameData;
     }
 
+    /**
+     * Gets the video file location.
+     *
+     * @return the video file location
+     */
     public FileLocation getVideoFileLocation() {
         return videoFileLocation;
     }
 
+    /**
+     * Gets the current frame.
+     *
+     * @return the current frame
+     */
     public Frame getFrame() {
         return frame;
     }
 
+    /**
+     * Sets the current frame.
+     *
+     * @param frame the new frame
+     */
     public void setFrame(Frame frame) {
         this.frame = frame;
     }
 
+    /**
+     * Gets the FFmpeg frame grabber.
+     *
+     * @return the FFmpeg frame grabber
+     */
     public FFmpegFrameGrabber getfFmpegFrameGrabber() {
         return fFmpegFrameGrabber;
     }
 
+    /**
+     * Sets the FFmpeg frame grabber.
+     *
+     * @param fFmpegFrameGrabber the new FFmpeg frame grabber
+     */
     public void setfFmpegFrameGrabber(FFmpegFrameGrabber fFmpegFrameGrabber) {
         this.fFmpegFrameGrabber = fFmpegFrameGrabber;
     }
 
+    /**
+     * Gets the Java2D frame converter.
+     *
+     * @return the Java2D frame converter
+     */
     public Java2DFrameConverter getJava2DFrameConverter() {
         return java2DFrameConverter;
     }
 
+    /**
+     * Sets the Java2D frame converter.
+     *
+     * @param java2DFrameConverter the new Java2D frame converter
+     */
     public void setJava2DFrameConverter(Java2DFrameConverter java2DFrameConverter) {
         this.java2DFrameConverter = java2DFrameConverter;
     }
 
+    /**
+     * Gets the current frame number.
+     *
+     * @return the current frame number
+     */
     public int getFrameNumber() {
         return frameNumber;
     }
 
+    /**
+     * Sets the current frame number.
+     *
+     * @param frameNumber the new frame number
+     */
     public void setFrameNumber(int frameNumber) {
         this.frameNumber = frameNumber;
     }
 
+    /**
+     * Gets the video cache.
+     *
+     * @return the video cache
+     */
     public VideoCache getVideoCache() {
         return videoCache;
     }
 
+    /**
+     * Sets the video cache.
+     *
+     * @param videoCache the new video cache
+     */
     public void setVideoCache(VideoCache videoCache) {
         this.videoCache = videoCache;
     }

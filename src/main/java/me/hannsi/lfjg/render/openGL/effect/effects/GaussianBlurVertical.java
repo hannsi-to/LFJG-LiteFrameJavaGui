@@ -9,40 +9,72 @@ import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
 
+/**
+ * Class representing a Gaussian Blur Vertical effect in OpenGL.
+ */
 public class GaussianBlurVertical extends EffectBase {
     private float radiusY;
 
+    /**
+     * Constructs a new GaussianBlurVertical effect with the specified resolution and radius.
+     *
+     * @param resolution the resolution of the effect
+     * @param radiusY the radius of the blur in the y-direction
+     */
     public GaussianBlurVertical(Vector2f resolution, float radiusY) {
         super(resolution, new ResourcesLocation("shader/frameBuffer/filter/GaussianBlur.fsh"), true, 6, "GaussianBlurVertical", (Class<GLObject>) null);
 
         this.radiusY = radiusY;
     }
 
+    /**
+     * Constructs a new GaussianBlurVertical effect with the specified resolution and radius.
+     *
+     * @param resolution the resolution of the effect
+     * @param radiusY the radius of the blur in the y-direction
+     */
     public GaussianBlurVertical(Vector2f resolution, double radiusY) {
         this(resolution, (float) radiusY);
     }
 
+    /**
+     * Pushes the frame buffer for the base GL object.
+     *
+     * @param baseGLObject the base GL object
+     */
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();
-
         super.frameBufferPush(baseGLObject);
     }
 
+    /**
+     * Pops the frame buffer for the base GL object.
+     *
+     * @param baseGLObject the base GL object
+     */
     @Override
     public void frameBufferPop(GLObject baseGLObject) {
         getFrameBuffer().unbindFrameBuffer();
-
         super.frameBufferPop(baseGLObject);
     }
 
+    /**
+     * Draws the frame buffer for the base GL object.
+     *
+     * @param baseGLObject the base GL object
+     */
     @Override
     public void frameBuffer(GLObject baseGLObject) {
         getFrameBuffer().drawFrameBuffer();
-
         super.frameBuffer(baseGLObject);
     }
 
+    /**
+     * Sets the uniform variables for the shader program.
+     *
+     * @param baseGLObject the base GL object
+     */
     @Override
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().setUniform("direction", new Vector2f(0, 1));
@@ -59,10 +91,20 @@ public class GaussianBlurVertical extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
+    /**
+     * Gets the radius of the blur in the y-direction.
+     *
+     * @return the radius of the blur in the y-direction
+     */
     public float getRadiusY() {
         return radiusY;
     }
 
+    /**
+     * Sets the radius of the blur in the y-direction.
+     *
+     * @param radiusY the radius of the blur in the y-direction
+     */
     public void setRadiusY(float radiusY) {
         this.radiusY = radiusY;
     }

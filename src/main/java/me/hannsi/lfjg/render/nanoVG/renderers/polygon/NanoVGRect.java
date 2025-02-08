@@ -4,11 +4,23 @@ import me.hannsi.lfjg.render.nanoVG.system.NanoVGUtil;
 import me.hannsi.lfjg.render.nanoVG.system.polygon.NanoVGRendererBase;
 import org.lwjgl.nanovg.NanoVG;
 
+/**
+ * Represents a renderer for drawing rectangles using NanoVG.
+ */
 public class NanoVGRect extends NanoVGRendererBase {
+
+    /**
+     * Constructs a new NanoVGRect with the specified NanoVG context.
+     *
+     * @param nvg the NanoVG context
+     */
     public NanoVGRect(long nvg) {
         super(nvg);
     }
 
+    /**
+     * Draws the rectangle with the current settings.
+     */
     @Override
     public void draw() {
         NanoVG.nvgBeginPath(nvg);

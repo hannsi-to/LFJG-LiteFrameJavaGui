@@ -10,6 +10,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * Represents a renderer for drawing polygons using NanoVG.
+ */
 public class NanoVGPolygon {
     public long nvg;
     public boolean base;
@@ -26,11 +29,21 @@ public class NanoVGPolygon {
     public Color color1;
     public Color outLineColor1;
 
+    /**
+     * Constructs a new NanoVGPolygon with the specified NanoVG context.
+     *
+     * @param nvg the NanoVG context
+     */
     public NanoVGPolygon(long nvg) {
         this.nvg = nvg;
         this.poses = new CopyOnWriteArrayList<>();
     }
 
+    /**
+     * Sets the size of the polygon based on the given positions.
+     *
+     * @param pos the positions of the vertices
+     */
     public void setSize(Vector2f... pos) {
         Collections.addAll(this.poses, pos);
         float[] xs = new float[pos.length];
@@ -40,7 +53,6 @@ public class NanoVGPolygon {
         for (Vector2f p : pos) {
             xs[count] = p.x();
             ys[count] = p.y();
-
             count++;
         }
 
@@ -60,16 +72,30 @@ public class NanoVGPolygon {
         this.cy = y + (height / 2f);
     }
 
+    /**
+     * Sets the outline properties of the polygon.
+     *
+     * @param lineWidth the width of the outline
+     * @param outLineColor1 the color of the outline
+     */
     public void setOutLineBase(float lineWidth, Color outLineColor1) {
         this.outLine = true;
         this.lineWidth = lineWidth;
         this.outLineColor1 = outLineColor1;
     }
 
+    /**
+     * Sets the size of the polygon based on the given list of positions.
+     *
+     * @param poses the list of positions of the vertices
+     */
     public void setSize(List<Vector2f> poses) {
         this.poses.addAll(poses);
     }
 
+    /**
+     * Draws the polygon with the current settings.
+     */
     public void draw() {
         NanoVG.nvgBeginPath(nvg);
 
@@ -78,9 +104,7 @@ public class NanoVGPolygon {
             if (count == 0) {
                 NanoVG.nvgMoveTo(nvg, vec2f.x(), vec2f.y());
             }
-
             NanoVG.nvgLineTo(nvg, vec2f.x(), vec2f.y());
-
             count++;
         }
 
@@ -91,9 +115,7 @@ public class NanoVGPolygon {
         if (outLine) {
             Vector2f vec2f = poses.get(0);
             NanoVG.nvgLineTo(nvg, vec2f.x(), vec2f.y());
-
             NanoVG.nvgStrokeWidth(nvg, lineWidth);
-
             NanoVGUtil.strokeColor(nvg, outLineColor1);
         }
 

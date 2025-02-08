@@ -4,15 +4,28 @@ import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import org.joml.Vector2f;
 
+/**
+ * Class representing a Draw Object effect in OpenGL.
+ */
 public class DrawObject extends EffectBase {
+
+    /**
+     * Constructs a new DrawObject effect with the specified resolution.
+     *
+     * @param resolution the resolution of the effect
+     */
     public DrawObject(Vector2f resolution) {
         super(resolution, Integer.MAX_VALUE, "DrawObject", (Class<GLObject>) null);
     }
 
+    /**
+     * Draws the frame buffer for the base GL object.
+     *
+     * @param baseGLObject the base GL object
+     */
     @Override
     public void frameBuffer(GLObject baseGLObject) {
         baseGLObject.getFrameBuffer().drawFrameBuffer();
-
         super.frameBuffer(baseGLObject);
     }
 }

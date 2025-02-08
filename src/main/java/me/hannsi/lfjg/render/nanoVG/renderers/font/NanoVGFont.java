@@ -12,6 +12,9 @@ import org.lwjgl.nanovg.NanoVG;
 
 import java.util.List;
 
+/**
+ * Represents a font renderer using NanoVG.
+ */
 public class NanoVGFont {
     public long nvg;
     public Font font;
@@ -26,17 +29,36 @@ public class NanoVGFont {
     public float blurSize;
     public Color blurColor;
 
+    /**
+     * Constructs a new NanoVGFont with the specified NanoVG context.
+     *
+     * @param nvg the NanoVG context
+     */
     public NanoVGFont(long nvg) {
         this.nvg = nvg;
         this.base = false;
         this.blur = false;
     }
 
+    /**
+     * Sets the font and text for rendering.
+     *
+     * @param font the font to use
+     * @param text the text to render
+     */
     public void setFontSetting(Font font, String text) {
         this.font = font;
         this.text = text;
     }
 
+    /**
+     * Sets the size and alignment for rendering.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @param fontSize the font size
+     * @param align the alignment
+     */
     public void setSize(float x, float y, float fontSize, int align) {
         this.x = x;
         this.y = y;
@@ -44,17 +66,34 @@ public class NanoVGFont {
         this.align = align;
     }
 
+    /**
+     * Sets the base rendering options.
+     *
+     * @param base whether to render the base text
+     * @param baseColor the color of the base text
+     */
     public void setBase(boolean base, Color baseColor) {
         this.base = base;
         this.baseColor = baseColor;
     }
 
+    /**
+     * Sets the blur effect for the font rendering.
+     *
+     * @param blur whether to apply the blur effect
+     * @param blurSize the size of the blur effect
+     * @param blurColor the color of the blur effect
+     */
     public void setBlur(boolean blur, float blurSize, Color blurColor) {
         this.blur = blur;
         this.blurSize = blurSize;
         this.blurColor = blurColor;
     }
 
+    /**
+     * Draws the text with the specified settings.
+     * Applies blur and base rendering options if enabled.
+     */
     public void draw() {
         if (blur) {
             NanoVG.nvgFontBlur(nvg, blurSize);
@@ -66,6 +105,15 @@ public class NanoVGFont {
         }
     }
 
+    /**
+     * Draws the text with chat formatting options such as bold, italic, underline, and strikethrough.
+     *
+     * @param text the text to render
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @param color the color of the text
+     * @param align the alignment of the text
+     */
     private void drawChatFormattingText(String text, float x, float y, Color color, int align) {
         float offsetX = 0.0f;
         float offsetY = 0.0f;
@@ -230,6 +278,17 @@ public class NanoVGFont {
         }
     }
 
+    /**
+     * Draws the text using NanoVG with the specified settings.
+     *
+     * @param text the text to render
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @param color the color of the text
+     * @param align the alignment of the text
+     * @param italic the italic angle
+     * @param plusSize the additional size for bold text
+     */
     private void drawNanoVGText(String text, float x, float y, Color color, int align, float italic, float plusSize) {
         NanoVG.nvgBeginPath(nvg);
 
@@ -254,12 +313,23 @@ public class NanoVGFont {
         NanoVG.nvgClosePath(nvg);
     }
 
+    /**
+     * Gets the width of the specified text.
+     *
+     * @param text the text to measure
+     * @return the width of the text
+     */
     public float getWidth(String text) {
         NanoVG.nvgFontFace(nvg, font.getName());
         NanoVG.nvgFontSize(nvg, fontSize);
         return NanoVG.nvgTextBounds(nvg, 0, 0, text, new float[4]);
     }
 
+    /**
+     * Gets the height of the current font.
+     *
+     * @return the height of the font
+     */
     public float getHeight() {
         NanoVG.nvgFontFace(nvg, font.getName());
         NanoVG.nvgFontSize(nvg, fontSize);

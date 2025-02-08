@@ -11,11 +11,33 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Utility class for reflection-based operations.
+ */
 public class ClassUtil {
+
+    /**
+     * Retrieves a set of classes from a specified package that are subclasses of a given class.
+     *
+     * @param packagePath the package path to search for classes
+     * @param clazz the superclass to match subclasses against
+     * @param <T> the type of the superclass
+     * @return a set of classes that are subclasses of the specified class
+     */
     public static <T> Set<Class<? extends T>> getClassesFormPackage(String packagePath, Class<T> clazz) {
         return new HashSet<>(new Reflections(packagePath).getSubTypesOf(clazz));
     }
 
+    /**
+     * Creates an instance of a specified class using the provided arguments.
+     *
+     * @param frame the frame context
+     * @param clazz the class to instantiate
+     * @param args the arguments to pass to the constructor
+     * @param <T> the type of the class
+     * @return an instance of the specified class
+     * @throws RuntimeException if the class cannot be instantiated
+     */
     public static <T> T createInstance(Frame frame, Class<T> clazz, Object... args) {
         T instance;
         List<Class<?>> parameterTypes = new ArrayList<>();

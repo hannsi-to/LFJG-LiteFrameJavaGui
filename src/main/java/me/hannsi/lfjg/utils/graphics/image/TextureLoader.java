@@ -22,11 +22,20 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 
+/**
+ * Class for loading textures from various sources.
+ */
 public class TextureLoader {
     private final ResourcesLocation texturePath;
     private final TextureLoaderType textureLoaderType;
     private int textureId;
 
+    /**
+     * Constructs a TextureLoader instance with the specified texture path and loader type.
+     *
+     * @param texturePath the path to the texture resource
+     * @param textureLoaderType the type of texture loader to use
+     */
     public TextureLoader(ResourcesLocation texturePath, TextureLoaderType textureLoaderType) {
         this.textureLoaderType = textureLoaderType;
         this.texturePath = texturePath;
@@ -34,6 +43,15 @@ public class TextureLoader {
         loadTexture();
     }
 
+    /**
+     * Loads an image using STBImage and returns it as a ByteBuffer.
+     *
+     * @param resourcesLocation the location of the resource
+     * @param widthBuffer the buffer to store the image width
+     * @param heightBuffer the buffer to store the image height
+     * @param channelsBuffer the buffer to store the number of channels
+     * @return the ByteBuffer containing the image data
+     */
     public static ByteBuffer loadImageInSTBImage(ResourcesLocation resourcesLocation, IntBuffer widthBuffer, IntBuffer heightBuffer, IntBuffer channelsBuffer) {
         ByteBuffer image;
         ByteBuffer buffer = null;
@@ -70,6 +88,9 @@ public class TextureLoader {
         }
     }
 
+    /**
+     * Loads the texture based on the specified loader type.
+     */
     private void loadTexture() {
         switch (textureLoaderType) {
             case STBImage -> {
@@ -105,6 +126,13 @@ public class TextureLoader {
         }
     }
 
+    /**
+     * Generates an OpenGL texture from the given image data.
+     *
+     * @param width the width of the image
+     * @param height the height of the image
+     * @param buf the ByteBuffer containing the image data
+     */
     private void generateTexture(int width, int height, ByteBuffer buf) {
         textureId = glGenTextures();
         if (textureId == 0) {
@@ -125,26 +153,50 @@ public class TextureLoader {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
+    /**
+     * Binds the texture for rendering.
+     */
     public void bind() {
         glBindTexture(GL_TEXTURE_2D, textureId);
     }
 
+    /**
+     * Unbinds the texture.
+     */
     public void unbind() {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
+    /**
+     * Cleans up the texture resources.
+     */
     public void cleanup() {
         glDeleteTextures(textureId);
     }
 
+    /**
+     * Gets the texture path.
+     *
+     * @return the texture path
+     */
     public ResourcesLocation getTexturePath() {
         return texturePath;
     }
 
+    /**
+     * Gets the texture loader type.
+     *
+     * @return the texture loader type
+     */
     public TextureLoaderType getTextureLoaderType() {
         return textureLoaderType;
     }
 
+    /**
+     * Gets the texture ID.
+     *
+     * @return the texture ID
+     */
     public int getTextureId() {
         return textureId;
     }

@@ -17,7 +17,17 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.Objects;
 
+/**
+ * Utility class for various GLFW operations.
+ */
 public class GLFWUtil {
+
+    /**
+     * Gets the GLFW video mode for the specified window.
+     *
+     * @param windowId the ID of the window
+     * @return the GLFW video mode
+     */
     public static GLFWVidMode getGLFWVidMode(long windowId) {
         GLFWVidMode videoMode;
 
@@ -32,22 +42,52 @@ public class GLFWUtil {
         return videoMode;
     }
 
+    /**
+     * Sets a GLFW window hint with a boolean value.
+     *
+     * @param hint the hint to set
+     * @param value the boolean value of the hint
+     */
     public static void windowHintBoolean(int hint, boolean value) {
         windowHintValue(hint, (value ? GLFW.GLFW_TRUE : GLFW.GLFW_FALSE));
     }
 
+    /**
+     * Sets a GLFW window hint with an integer value.
+     *
+     * @param hint the hint to set
+     * @param value the integer value of the hint
+     */
     public static void windowHintValue(int hint, int value) {
         GLFW.glfwWindowHint(hint, value);
     }
 
+    /**
+     * Sets the window icon using a resource location.
+     *
+     * @param windowID the ID of the window
+     * @param resourcesLocation the location of the icon resource
+     */
     public static void setWindowIcon(long windowID, ResourcesLocation resourcesLocation) {
         GLFW.glfwSetWindowIcon(windowID, loadIconImageBuffer(resourcesLocation));
     }
 
+    /**
+     * Sets the window icon using a GLFWImage buffer.
+     *
+     * @param windowID the ID of the window
+     * @param iconBuffer the GLFWImage buffer containing the icon
+     */
     public static void setWindowIcon(long windowID, GLFWImage.Buffer iconBuffer) {
         GLFW.glfwSetWindowIcon(windowID, iconBuffer);
     }
 
+    /**
+     * Loads an icon image buffer from a resource location.
+     *
+     * @param resourcesLocation the location of the icon resource
+     * @return the GLFWImage buffer containing the icon
+     */
     public static GLFWImage.Buffer loadIconImageBuffer(ResourcesLocation resourcesLocation) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             IntBuffer width = stack.mallocInt(1);
@@ -69,6 +109,12 @@ public class GLFWUtil {
         }
     }
 
+    /**
+     * Gets the window size as a Vector2i.
+     *
+     * @param windowId the ID of the window
+     * @return the window size as a Vector2i
+     */
     public static Vector2i getWindowSize(long windowId) {
         int[] width = new int[1];
         int[] height = new int[1];
@@ -77,6 +123,12 @@ public class GLFWUtil {
         return new Vector2i(width[0], height[0]);
     }
 
+    /**
+     * Gets the center position of the monitor for the specified window.
+     *
+     * @param windowId the ID of the window
+     * @return the center position of the monitor as a Vector2i
+     */
     public static Vector2i getMonitorCenter(long windowId) {
         int cx;
         int cy;
@@ -94,6 +146,12 @@ public class GLFWUtil {
         }
     }
 
+    /**
+     * Gets the monitor type code for the specified monitor type.
+     *
+     * @param monitorType the monitor type
+     * @return the monitor type code
+     */
     public static long getMonitorTypeCode(MonitorType monitorType) {
         long monitor;
 
@@ -110,6 +168,12 @@ public class GLFWUtil {
         return monitor;
     }
 
+    /**
+     * Gets the content scale of the specified frame.
+     *
+     * @param frame the frame
+     * @return the content scale as a Vector2f
+     */
     public static Vector2f getContentScale(Frame frame) {
         Vector2f contentScale;
 

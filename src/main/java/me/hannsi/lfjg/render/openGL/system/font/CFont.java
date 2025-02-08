@@ -15,6 +15,9 @@ import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * Represents a font used in OpenGL rendering.
+ */
 public class CFont {
     public static final List<Integer> unicodeRanges = new ArrayList<>();
     public int textureId;
@@ -25,6 +28,13 @@ public class CFont {
     private int height;
     private int lineHeight;
     private Map<Integer, CharInfo> characterMap;
+
+    /**
+     * Constructs a new CFont with the specified file path and font size.
+     *
+     * @param filepath the file path of the font
+     * @param fontSize the size of the font
+     */
     public CFont(FileLocation filepath, int fontSize) {
         addUnicodeRange(UnicodeRange.BASIC_LATIN_START, UnicodeRange.BASIC_LATIN_END);
 
@@ -34,19 +44,39 @@ public class CFont {
         generateBitmap();
     }
 
+    /**
+     * Constructs a new CFont with the specified resource location and font size.
+     *
+     * @param filepath the resource location of the font
+     * @param fontSize the size of the font
+     */
     public CFont(ResourcesLocation filepath, int fontSize) {
         this((FileLocation) filepath, fontSize);
     }
 
+    /**
+     * Adds a range of Unicode characters to be included in the font.
+     *
+     * @param start the start of the Unicode range
+     * @param end   the end of the Unicode range
+     */
     public static void addUnicodeRange(int start, int end) {
         unicodeRanges.add(start);
         unicodeRanges.add(end);
     }
 
+    /**
+     * Cleans up the resources used by the font.
+     */
     public void cleanup() {
         characterMap.clear();
     }
 
+    /**
+     * Gets the height of the font.
+     *
+     * @return the height of the font
+     */
     public int getFontHeight() {
         BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         Graphics graphics = image.getGraphics();
@@ -60,6 +90,12 @@ public class CFont {
         return fontHeight;
     }
 
+    /**
+     * Gets the width of the specified text.
+     *
+     * @param text the text to measure
+     * @return the width of the text
+     */
     public int getFontWidth(String text) {
         BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         Graphics graphics = image.getGraphics();
@@ -73,10 +109,22 @@ public class CFont {
         return fontWidth;
     }
 
+    /**
+     * Gets the character information for the specified codepoint.
+     *
+     * @param codepoint the Unicode codepoint of the character
+     * @return the character information
+     */
     public CharInfo getCharacter(int codepoint) {
         return characterMap.getOrDefault(codepoint, new CharInfo(0, 0, 0, 0));
     }
 
+    /**
+     * Registers the font from the specified file location.
+     *
+     * @param fontFile the file location of the font
+     * @return the registered font
+     */
     private Font registerFont(FileLocation fontFile) {
         try {
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -89,6 +137,9 @@ public class CFont {
         return null;
     }
 
+    /**
+     * Generates a bitmap for the font and uploads it as a texture.
+     */
     public void generateBitmap() {
         font = registerFont(filepath);
         assert font != null;
@@ -154,6 +205,11 @@ public class CFont {
         uploadTexture(img);
     }
 
+    /**
+     * Uploads the specified image as a texture to OpenGL.
+     *
+     * @param image the image to upload
+     */
     private void uploadTexture(BufferedImage image) {
         int[] pixels = new int[image.getHeight() * image.getWidth()];
         image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
@@ -182,66 +238,146 @@ public class CFont {
         buffer.clear();
     }
 
+    /**
+     * Gets the font.
+     *
+     * @return the font
+     */
     public Font getFont() {
         return font;
     }
 
+    /**
+     * Sets the font.
+     *
+     * @param font the font to set
+     */
     public void setFont(Font font) {
         this.font = font;
     }
 
+    /**
+     * Gets the file path of the font.
+     *
+     * @return the file path of the font
+     */
     public FileLocation getFilepath() {
         return filepath;
     }
 
+    /**
+     * Sets the file path of the font.
+     *
+     * @param filepath the file path to set
+     */
     public void setFilepath(FileLocation filepath) {
         this.filepath = filepath;
     }
 
+    /**
+     * Gets the size of the font.
+     *
+     * @return the size of the font
+     */
     public int getFontSize() {
         return fontSize;
     }
 
+    /**
+     * Sets the size of the font.
+     *
+     * @param fontSize the size to set
+     */
     public void setFontSize(int fontSize) {
         this.fontSize = fontSize;
     }
 
+    /**
+     * Gets the width of the font texture.
+     *
+     * @return the width of the font texture
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * Sets the width of the font texture.
+     *
+     * @param width the width to set
+     */
     public void setWidth(int width) {
         this.width = width;
     }
 
+    /**
+     * Gets the height of the font texture.
+     *
+     * @return the height of the font texture
+     */
     public int getHeight() {
         return height;
     }
 
+    /**
+     * Sets the height of the font texture.
+     *
+     * @param height the height to set
+     */
     public void setHeight(int height) {
         this.height = height;
     }
 
+    /**
+     * Gets the line height of the font.
+     *
+     * @return the line height of the font
+     */
     public int getLineHeight() {
         return lineHeight;
     }
 
+    /**
+     * Sets the line height of the font.
+     *
+     * @param lineHeight the line height to set
+     */
     public void setLineHeight(int lineHeight) {
         this.lineHeight = lineHeight;
     }
 
+    /**
+     * Gets the character map of the font.
+     *
+     * @return the character map of the font
+     */
     public Map<Integer, CharInfo> getCharacterMap() {
         return characterMap;
     }
 
+    /**
+     * Sets the character map of the font.
+     *
+     * @param characterMap the character map to set
+     */
     public void setCharacterMap(Map<Integer, CharInfo> characterMap) {
         this.characterMap = characterMap;
     }
 
+    /**
+     * Gets the texture ID of the font.
+     *
+     * @return the texture ID of the font
+     */
     public int getTextureId() {
         return textureId;
     }
 
+    /**
+     * Sets the texture ID of the font.
+     *
+     * @param textureId the texture ID to set
+     */
     public void setTextureId(int textureId) {
         this.textureId = textureId;
     }

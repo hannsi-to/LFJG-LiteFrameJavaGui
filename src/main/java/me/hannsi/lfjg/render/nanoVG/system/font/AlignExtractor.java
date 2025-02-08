@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 public class AlignExtractor {
+    /**
+     * A map that associates alignment names with their corresponding NanoVG alignment constants.
+     */
     public static final Map<String, Integer> alignMap = new HashMap<>();
 
     static {
@@ -20,6 +23,12 @@ public class AlignExtractor {
         alignMap.put("NVG_ALIGN_BASELINE", NanoVG.NVG_ALIGN_BASELINE);
     }
 
+    /**
+     * Converts an alignment integer to a list of corresponding NanoVG alignment constants.
+     *
+     * @param align the alignment integer
+     * @return a list of NanoVG alignment constants as integers
+     */
     public static List<Integer> getAlignmentsAsInteger(int align) {
         List<String> alignmentsString = getAlignmentsAsList(align);
 
@@ -31,6 +40,12 @@ public class AlignExtractor {
         return alignmentsInteger;
     }
 
+    /**
+     * Converts an alignment integer to a list of corresponding alignment names.
+     *
+     * @param align the alignment integer
+     * @return a list of alignment names
+     */
     public static List<String> getAlignmentsAsList(int align) {
         List<String> alignments = new ArrayList<>();
 
@@ -59,6 +74,12 @@ public class AlignExtractor {
         return alignments;
     }
 
+    /**
+     * Retrieves the NanoVG alignment constant corresponding to the given alignment name.
+     *
+     * @param align the alignment name
+     * @return the NanoVG alignment constant
+     */
     public static int getAlignFromString(String align) {
         return alignMap.get(align);
     }

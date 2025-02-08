@@ -11,7 +11,16 @@ import org.lwjgl.opengl.GLDebugMessageCallback;
 
 import static org.lwjgl.system.MemoryUtil.memUTF8;
 
+/**
+ * Provides debugging utilities for OpenGL.
+ */
 public class OpenGLDebug {
+
+    /**
+     * Enables OpenGL debug output and sets up a callback to handle debug messages.
+     *
+     * @param frame the frame to use for retrieving settings
+     */
     public static void getOpenGLDebug(Frame frame) {
         if (GL.getCapabilities().OpenGL43) {
             GL43.glEnable(GL43.GL_DEBUG_OUTPUT);
@@ -46,6 +55,12 @@ public class OpenGLDebug {
         }
     }
 
+    /**
+     * Converts an OpenGL debug source code to a human-readable string.
+     *
+     * @param source the OpenGL debug source code
+     * @return the corresponding source string
+     */
     public static String getSourceString(int source) {
         return switch (source) {
             case GL43.GL_DEBUG_SOURCE_API -> "API";
@@ -58,6 +73,12 @@ public class OpenGLDebug {
         };
     }
 
+    /**
+     * Converts an OpenGL debug type code to a human-readable string.
+     *
+     * @param type the OpenGL debug type code
+     * @return the corresponding type string
+     */
     public static String getTypeString(int type) {
         return switch (type) {
             case GL43.GL_DEBUG_TYPE_ERROR -> "Error";
@@ -70,6 +91,12 @@ public class OpenGLDebug {
         };
     }
 
+    /**
+     * Converts an OpenGL debug severity code to a human-readable string.
+     *
+     * @param severity the OpenGL debug severity code
+     * @return the corresponding severity string
+     */
     public static String getSeverityString(int severity) {
         return switch (severity) {
             case GL43.GL_DEBUG_SEVERITY_NOTIFICATION -> "Notification";

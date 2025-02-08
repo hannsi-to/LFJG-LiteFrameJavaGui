@@ -1,5 +1,8 @@
 package me.hannsi.lfjg.render.openGL.system.font;
 
+/**
+ * Defines various Unicode ranges used for font rendering.
+ */
 public class UnicodeRange {
     public static final int ASCII_START = 0x20;  // U+0020
     public static final int ASCII_END = 0x7E;    // U+007E
