@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -37,11 +38,11 @@ public class FrameData {
 
         BufferedImage convertedImage = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
         Graphics2D g = convertedImage.createGraphics();
-        g.drawImage(image, 0, 0, frameImage.getWidth(), frameImage.getHeight(), null);
+        g.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), null);
         g.dispose();
 
         byte[] pixelData = ((DataBufferByte) convertedImage.getRaster().getDataBuffer()).getData();
-        ByteBuffer buffer = ByteBuffer.allocateDirect(width * height * 4);
+        ByteBuffer buffer = ByteBuffer.allocateDirect(width * height * 4).order(ByteOrder.nativeOrder());
 
         for (int i = 0; i < pixelData.length; i += 4) {
             byte a = pixelData[i];

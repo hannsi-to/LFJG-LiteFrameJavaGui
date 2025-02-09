@@ -1,10 +1,7 @@
 package me.hannsi.lfjg.utils.graphics.video;
 
-import org.bytedeco.ffmpeg.avcodec.AVCodecContext;
-
-import javax.xml.crypto.Data;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Class for managing a cache of video frames.
@@ -16,7 +13,7 @@ public class VideoCache {
      * Constructs a VideoCache instance and initializes the frame list.
      */
     public VideoCache() {
-        this.frames = new ArrayList<>();
+        this.frames = new CopyOnWriteArrayList<>();
     }
 
     /**

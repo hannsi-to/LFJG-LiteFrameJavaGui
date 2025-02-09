@@ -215,26 +215,28 @@ public class TestGuiFrame implements LFJGFrame {
 
         if (!videoFrameExtractor.getVideoCache().getFrames().isEmpty()) {
             FrameData frameData = videoFrameExtractor.frame();
-            frameData.createTexture();
+            if (frameData != null) {
+                frameData.createTexture();
 
-            GL11.glEnable(GL_TEXTURE_2D);
-            GL11.glBindTexture(GL_TEXTURE_2D, frameData.getTextureId());
-            GL11.glBegin(GL11.GL_QUADS);
-            GL11.glVertex2f(0, 0);
-            GL11.glTexCoord2i(1, 1);
+                GL11.glEnable(GL_TEXTURE_2D);
+                GL11.glBindTexture(GL_TEXTURE_2D, frameData.getTextureId());
+                GL11.glBegin(GL11.GL_QUADS);
+                GL11.glVertex2f(0, 0);
+                GL11.glTexCoord2i(1, 1);
 
-            GL11.glVertex2f(frame.getWindowWidth(), 0);
-            GL11.glTexCoord2i(1, 0);
+                GL11.glVertex2f(frame.getWindowWidth(), 0);
+                GL11.glTexCoord2i(1, 0);
 
-            GL11.glVertex2f(frame.getWindowWidth(), frame.getWindowHeight());
-            GL11.glTexCoord2i(0, 0);
+                GL11.glVertex2f(frame.getWindowWidth(), frame.getWindowHeight());
+                GL11.glTexCoord2i(0, 0);
 
-            GL11.glVertex2f(0, frame.getWindowHeight());
-            GL11.glTexCoord2i(0, 1);
+                GL11.glVertex2f(0, frame.getWindowHeight());
+                GL11.glTexCoord2i(0, 1);
 
-            GL11.glEnd();
-            GL11.glBindTexture(GL_TEXTURE_2D, 0);
-            GL11.glDisable(GL_TEXTURE_2D);
+                GL11.glEnd();
+                GL11.glBindTexture(GL_TEXTURE_2D, 0);
+                GL11.glDisable(GL_TEXTURE_2D);
+            }
         }
 
 //        object3DCacheRender.render(camera);
@@ -292,7 +294,7 @@ public class TestGuiFrame implements LFJGFrame {
 
     @Override
     public void setFrameSetting() {
-        frame.setFrameSettingValue(RefreshRateSetting.class, 240);
+        frame.setFrameSettingValue(RefreshRateSetting.class, 30);
         frame.setFrameSettingValue(MonitorSetting.class, MonitorType.Window);
         frame.setFrameSettingValue(VSyncSetting.class, VSyncType.VSyncOn);
         frame.setFrameSettingValue(FloatingSetting.class, false);

@@ -13,20 +13,18 @@ import org.bytedeco.javacv.Java2DFrameConverter;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.ShortBuffer;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Class for extracting video frames and audio data from a video file.
  */
 public class VideoFrameExtractor {
     private final ResourcesLocation videoFileLocation;
+    private final int threadCount = 100;
     private Frame frame;
     private FFmpegFrameGrabber fFmpegFrameGrabber;
     private Java2DFrameConverter java2DFrameConverter;
     private int frameNumber;
     private VideoCache videoCache;
-    private final int threadCount = 100;
 
     /**
      * Constructs a VideoFrameExtractor instance with the specified video file location.
@@ -45,56 +43,56 @@ public class VideoFrameExtractor {
         DebugLog.debug(getClass(), "Start extract video frame: " + videoFileLocation.getPath());
         long tookTime = TimeCalculator.calculate(() -> {
 
-            try (FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(videoFileLocation.getPath()); Java2DFrameConverter converter = new Java2DFrameConverter(); ExecutorService executorService = Executors.newFixedThreadPool(threadCount)) {
-                executorService.submit(() -> {
-                    try {
-                        grabber.start();
+            try (FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(videoFileLocation.getPath()); Java2DFrameConverter converter = new Java2DFrameConverter()) {
+                try {
+                    grabber.start();
 
-                        int frameNumber = 0;
-                        Frame frame;
+                    int frameCount = 0;
+                    Frame frame;
 
-                        double totalDuration = grabber.getLengthInTime() / 1000000.0;
+                    double totalDuration = grabber.getLengthInTime() / 1000000.0;
 
-                        while ((frame = grabber.grab()) != null) {
-                            BufferedImage image = converter.convert(frame);
-                            ShortBuffer samplesBuffer = null;
-                            int sampleRate = -1;
-                            int channels = -1;
+                    while ((frame = grabber.grab()) != null) {
+                        BufferedImage image = converter.convert(frame);
+                        ShortBuffer samplesBuffer = null;
+                        int sampleRate = -1;
+                        int channels = -1;
 
-                            if ((frame = grabber.grabSamples()) != null) {
-                                samplesBuffer = (ShortBuffer) frame.samples[0];
-                                sampleRate = grabber.getSampleRate();
-                                channels = grabber.getAudioChannels();
-                            }
-
-                            videoCache.createCache(new FrameData(image), new AudioData(samplesBuffer, sampleRate, channels));
-
-                            frameNumber++;
-
-                            double currentTime = grabber.getTimestamp() / 1000000.0;
-                            int nowStep = (int) ((100 * currentTime) / totalDuration);
-
-                            String bar = "                    ";
-                            for (int i = 0; i < nowStep; i++) {
-                                if ((i % 5) == 0) {
-                                    bar = StringUtil.addInsertChar(bar, "■");
-                                }
-                            }
-                            bar = StringUtil.getFirstNCharacters(bar, 20);
-
-                            System.out.print(ANSIFormat.MAGENTA + "\rVideo convert: " + "[" + bar + "] " + nowStep + "% | Total Duration: " + totalDuration + "s | Processed: " + frameNumber + ANSIFormat.RESET);
+                        if ((frame = grabber.grabSamples()) != null) {
+                            samplesBuffer = (ShortBuffer) frame.samples[0];
+                            sampleRate = grabber.getSampleRate();
+                            channels = grabber.getAudioChannels();
                         }
 
-                        int nowStep = 100;
-                        System.out.println(ANSIFormat.MAGENTA + "\rVideo convert: " + "[■■■■■■■■■■■■■■■■■■■■] " + nowStep + "% | Total Duration: " + totalDuration + "s | Processed: " + frameNumber + ANSIFormat.RESET);
+                        if (image == null) {
+                            continue;
+                        }
 
-                        grabber.stop();
-                    } catch (FFmpegFrameGrabber.Exception e) {
-                        DebugLog.error(getClass(), e);
+                        videoCache.createCache(new FrameData(image), new AudioData(samplesBuffer, sampleRate, channels));
+
+                        frameCount++;
+
+                        double currentTime = grabber.getTimestamp() / 1000000.0;
+                        int nowStep = (int) ((100 * currentTime) / totalDuration);
+
+                        String bar = "                    ";
+                        for (int i = 0; i < nowStep; i++) {
+                            if ((i % 5) == 0) {
+                                bar = StringUtil.addInsertChar(bar, "■");
+                            }
+                        }
+                        bar = StringUtil.getFirstNCharacters(bar, 20);
+
+                        System.out.print(ANSIFormat.MAGENTA + "Video convert: " + "[" + bar + "] " + nowStep + "% | Total Duration: " + totalDuration + "s | Processed: " + frameCount + ANSIFormat.RESET + "\r");
                     }
-                });
 
-                executorService.shutdown();
+                    int nowStep = 100;
+                    System.out.println(ANSIFormat.MAGENTA + "Video convert: " + "[■■■■■■■■■■■■■■■■■■■■] " + nowStep + "% | Total Duration: " + totalDuration + "s | Processed: " + frameCount + ANSIFormat.RESET);
+
+                    grabber.stop();
+                } catch (FFmpegFrameGrabber.Exception e) {
+                    DebugLog.error(getClass(), e);
+                }
             } catch (IOException e) {
                 DebugLog.error(getClass(), e);
             }
@@ -108,8 +106,13 @@ public class VideoFrameExtractor {
      * @return the next frame data
      */
     public FrameData frame() {
-        FrameData frameData = videoCache.getFrames().get(frameNumber).getFrameData();
-        frameNumber++;
+        if (videoCache.getFrames().isEmpty()) {
+            return null;
+        }
+
+        FrameData frameData = videoCache.getFrames().get(0).getFrameData();
+
+        videoCache.getFrames().remove(0);
         return frameData;
     }
 
