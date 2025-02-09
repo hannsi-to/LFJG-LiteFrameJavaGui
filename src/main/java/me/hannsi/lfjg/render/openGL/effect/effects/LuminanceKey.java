@@ -4,7 +4,6 @@ import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
-import org.joml.Vector2f;
 
 /**
  * Class representing a Luminance Key effect in OpenGL.
@@ -17,13 +16,12 @@ public class LuminanceKey extends EffectBase {
     /**
      * Constructs a new LuminanceKey effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param threshold the threshold for the luminance key
-     * @param blurAmount the amount of blur to apply
+     * @param threshold     the threshold for the luminance key
+     * @param blurAmount    the amount of blur to apply
      * @param luminanceMode the mode of the luminance key
      */
-    public LuminanceKey(Vector2f resolution, float threshold, float blurAmount, LuminanceMode luminanceMode) {
-        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/LuminanceKey.fsh"), true, 13, "LuminanceKey");
+    public LuminanceKey(float threshold, float blurAmount, LuminanceMode luminanceMode) {
+        super(new ResourcesLocation("shader/frameBuffer/filter/LuminanceKey.fsh"), true, 13, "LuminanceKey");
 
         this.threshold = threshold;
         this.blurAmount = blurAmount;
@@ -33,13 +31,12 @@ public class LuminanceKey extends EffectBase {
     /**
      * Constructs a new LuminanceKey effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param threshold the threshold for the luminance key
-     * @param blurAmount the amount of blur to apply
+     * @param threshold     the threshold for the luminance key
+     * @param blurAmount    the amount of blur to apply
      * @param luminanceMode the mode of the luminance key
      */
-    public LuminanceKey(Vector2f resolution, double threshold, double blurAmount, LuminanceMode luminanceMode) {
-        this(resolution, (float) threshold, (float) blurAmount, luminanceMode);
+    public LuminanceKey(double threshold, double blurAmount, LuminanceMode luminanceMode) {
+        this((float) threshold, (float) blurAmount, luminanceMode);
     }
 
     /**

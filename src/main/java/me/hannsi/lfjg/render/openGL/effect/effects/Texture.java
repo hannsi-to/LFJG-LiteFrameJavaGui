@@ -5,7 +5,6 @@ import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.utils.graphics.image.TextureLoader;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import org.joml.Vector2f;
 import org.lwjgl.opengl.GL30;
 
 /**
@@ -20,12 +19,11 @@ public class Texture extends EffectBase {
     /**
      * Constructs a new Texture effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param textureCache the texture cache to be used
+     * @param textureCache      the texture cache to be used
      * @param resourcesLocation the location of the resources
      */
-    public Texture(Vector2f resolution, TextureCache textureCache, ResourcesLocation resourcesLocation) {
-        super(resolution, 3, "Texture", (Class<GLObject>) null);
+    public Texture(TextureCache textureCache, ResourcesLocation resourcesLocation) {
+        super(3, "Texture", (Class<GLObject>) null);
 
         this.textureCache = textureCache;
         this.resourcesLocation = resourcesLocation;
@@ -35,11 +33,10 @@ public class Texture extends EffectBase {
     /**
      * Constructs a new Texture effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
      * @param textureId the ID of the texture
      */
-    public Texture(Vector2f resolution, int textureId) {
-        super(resolution, 3, "Texture", (Class<GLObject>) null);
+    public Texture(int textureId) {
+        super(3, "Texture", (Class<GLObject>) null);
 
         this.textureId = textureId;
     }

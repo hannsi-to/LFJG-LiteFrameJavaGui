@@ -1,14 +1,13 @@
 package me.hannsi.lfjg.render.openGL.renderers.font;
 
+import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.system.font.CFont;
 import me.hannsi.lfjg.render.openGL.system.font.CharInfo;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
 import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.math.StringUtil;
 import me.hannsi.lfjg.utils.math.TextFormat;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL15;
 
 import static org.lwjgl.opengl.GL15.*;
@@ -29,7 +28,6 @@ public class Batch {
     private final int[] indices = {0, 1, 3, 1, 2, 3};
     public float[] vertices;
     public int size = 0;
-    public Matrix4f projectionMatrix;
 
     public int vao;
     public int vbo;
@@ -37,21 +35,9 @@ public class Batch {
     public CFont font;
 
     /**
-     * Constructs a new Batch with the specified projection.
-     *
-     * @param projection the projection to use
-     */
-    public Batch(Projection projection) {
-        this(projection.getProjMatrix());
-    }
-
-    /**
      * Constructs a new Batch with the specified projection matrix.
-     *
-     * @param projectionMatrix the projection matrix to use
      */
-    public Batch(Matrix4f projectionMatrix) {
-        this.projectionMatrix = projectionMatrix;
+    public Batch() {
         this.vertices = new float[BATCH_SIZE * VERTEX_SIZE];
     }
 
@@ -121,7 +107,7 @@ public class Batch {
         glBindTexture(GL_TEXTURE_BUFFER, font.textureId);
 
         shaderProgram.setUniform1i("uFontTexture", 0);
-        shaderProgram.setUniform("uProjection", projectionMatrix);
+        shaderProgram.setUniform("uProjection", LFJGContext.projection.getProjMatrix());
 
         glBindVertexArray(vao);
 
@@ -139,12 +125,12 @@ public class Batch {
     /**
      * Adds a character to the batch.
      *
-     * @param x the x position of the character
-     * @param y the y position of the character
-     * @param scale the scale of the character
-     * @param italic the italic amount of the character
+     * @param x        the x position of the character
+     * @param y        the y position of the character
+     * @param scale    the scale of the character
+     * @param italic   the italic amount of the character
      * @param charInfo the character information
-     * @param color the color of the character
+     * @param color    the color of the character
      */
     public void addCharacter(float x, float y, float scale, float italic, CharInfo charInfo, Color color) {
         if (size >= BATCH_SIZE - 4) {
@@ -212,9 +198,9 @@ public class Batch {
     /**
      * Adds text to the batch.
      *
-     * @param text the text to add
-     * @param x the x position of the text
-     * @param y the y position of the text
+     * @param text  the text to add
+     * @param x     the x position of the text
+     * @param y     the y position of the text
      * @param scale the scale of the text
      * @param color the color of the text
      */

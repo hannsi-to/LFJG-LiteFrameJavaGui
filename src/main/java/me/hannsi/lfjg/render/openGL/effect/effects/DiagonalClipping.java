@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.render.openGL.effect.effects;
 
+import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
@@ -18,15 +19,14 @@ public class DiagonalClipping extends EffectBase {
     /**
      * Constructs a new DiagonalClipping effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param centerX the x-coordinate of the clipping center
-     * @param centerY the y-coordinate of the clipping center
-     * @param clipAngle the angle of the clipping
-     * @param blurWidth the width of the blur
+     * @param centerX    the x-coordinate of the clipping center
+     * @param centerY    the y-coordinate of the clipping center
+     * @param clipAngle  the angle of the clipping
+     * @param blurWidth  the width of the blur
      * @param invertClip whether to invert the clipping
      */
-    public DiagonalClipping(Vector2f resolution, float centerX, float centerY, float clipAngle, float blurWidth, boolean invertClip) {
-        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/DiagonalClipping.fsh"), true, 15, "DiagonalClipping");
+    public DiagonalClipping(float centerX, float centerY, float clipAngle, float blurWidth, boolean invertClip) {
+        super(new ResourcesLocation("shader/frameBuffer/filter/DiagonalClipping.fsh"), true, 15, "DiagonalClipping");
 
         this.centerX = centerX;
         this.centerY = centerY;
@@ -38,15 +38,14 @@ public class DiagonalClipping extends EffectBase {
     /**
      * Constructs a new DiagonalClipping effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param centerX the x-coordinate of the clipping center
-     * @param centerY the y-coordinate of the clipping center
-     * @param clipAngle the angle of the clipping
-     * @param blurWidth the width of the blur
+     * @param centerX    the x-coordinate of the clipping center
+     * @param centerY    the y-coordinate of the clipping center
+     * @param clipAngle  the angle of the clipping
+     * @param blurWidth  the width of the blur
      * @param invertClip whether to invert the clipping
      */
-    public DiagonalClipping(Vector2f resolution, double centerX, double centerY, double clipAngle, double blurWidth, boolean invertClip) {
-        this(resolution, (float) centerX, (float) centerY, (float) clipAngle, (float) blurWidth, invertClip);
+    public DiagonalClipping(double centerX, double centerY, double clipAngle, double blurWidth, boolean invertClip) {
+        this((float) centerX, (float) centerY, (float) clipAngle, (float) blurWidth, invertClip);
     }
 
     /**
@@ -92,7 +91,7 @@ public class DiagonalClipping extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("clipCenter", new Vector2f((centerX / getResolution().x) * 2.0f - 1.0f, (centerY / getResolution().y) * 2.0f - 1.0f));
+        getFrameBuffer().getShaderProgramFBO().setUniform("clipCenter", new Vector2f((centerX / LFJGContext.resolution.x) * 2.0f - 1.0f, (centerY / LFJGContext.resolution.y) * 2.0f - 1.0f));
         getFrameBuffer().getShaderProgramFBO().setUniform("clipAngle", clipAngle);
         getFrameBuffer().getShaderProgramFBO().setUniform("blurWidth", blurWidth);
         getFrameBuffer().getShaderProgramFBO().setUniform("invertClip", invertClip);

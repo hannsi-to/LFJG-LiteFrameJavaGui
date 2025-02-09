@@ -4,7 +4,6 @@ import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
-import org.joml.Vector2f;
 
 /**
  * Class representing a Chromatic Aberration effect in OpenGL.
@@ -18,14 +17,13 @@ public class ChromaticAberration extends EffectBase {
     /**
      * Constructs a new ChromaticAberration effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param offsetAmount the offset amount for the chromatic aberration
-     * @param angle the angle of the chromatic aberration
-     * @param strength the strength of the chromatic aberration
+     * @param offsetAmount   the offset amount for the chromatic aberration
+     * @param angle          the angle of the chromatic aberration
+     * @param strength       the strength of the chromatic aberration
      * @param aberrationType the type of chromatic aberration
      */
-    public ChromaticAberration(Vector2f resolution, float offsetAmount, float angle, float strength, AberrationType aberrationType) {
-        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/ChromaticAberration.fsh"), true, 22, "ChromaticAberration");
+    public ChromaticAberration(float offsetAmount, float angle, float strength, AberrationType aberrationType) {
+        super(new ResourcesLocation("shader/frameBuffer/filter/ChromaticAberration.fsh"), true, 22, "ChromaticAberration");
 
         this.offsetAmount = offsetAmount;
         this.angle = angle;
@@ -36,14 +34,13 @@ public class ChromaticAberration extends EffectBase {
     /**
      * Constructs a new ChromaticAberration effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param offsetAmount the offset amount for the chromatic aberration
-     * @param angle the angle of the chromatic aberration
-     * @param strength the strength of the chromatic aberration
+     * @param offsetAmount   the offset amount for the chromatic aberration
+     * @param angle          the angle of the chromatic aberration
+     * @param strength       the strength of the chromatic aberration
      * @param aberrationType the type of chromatic aberration
      */
-    public ChromaticAberration(Vector2f resolution, double offsetAmount, double angle, double strength, AberrationType aberrationType) {
-        this(resolution, (float) offsetAmount, (float) angle, (float) strength, aberrationType);
+    public ChromaticAberration(double offsetAmount, double angle, double strength, AberrationType aberrationType) {
+        this((float) offsetAmount, (float) angle, (float) strength, aberrationType);
     }
 
     /**
@@ -169,12 +166,7 @@ public class ChromaticAberration extends EffectBase {
      * Enum representing the types of chromatic aberration.
      */
     public enum AberrationType implements IEnumTypeBase {
-        RedGreenA("RedGreenA", 0),
-        RedBlueA("RedBlueA", 1),
-        GreenBlueA("GreenBlueA", 2),
-        RedGreenB("RedGreenB", 3),
-        RedBlueB("RedBlueB", 4),
-        GreenBlueB("GreenBlueB", 5);
+        RedGreenA("RedGreenA", 0), RedBlueA("RedBlueA", 1), GreenBlueA("GreenBlueA", 2), RedGreenB("RedGreenB", 3), RedBlueB("RedBlueB", 4), GreenBlueB("GreenBlueB", 5);
 
         final String name;
         final int id;

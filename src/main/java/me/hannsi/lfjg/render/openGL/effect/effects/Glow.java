@@ -4,7 +4,6 @@ import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 /**
@@ -21,16 +20,15 @@ public class Glow extends EffectBase {
     /**
      * Constructs a new Glow effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param intensity the intensity of the glow
-     * @param threshold the threshold for the glow effect
-     * @param spread the spread of the glow
+     * @param intensity        the intensity of the glow
+     * @param threshold        the threshold for the glow effect
+     * @param spread           the spread of the glow
      * @param useOriginalColor whether to use the original color
-     * @param glowColor the color of the glow
-     * @param glowOnly whether to apply only the glow effect
+     * @param glowColor        the color of the glow
+     * @param glowOnly         whether to apply only the glow effect
      */
-    public Glow(Vector2f resolution, float intensity, float threshold, float spread, boolean useOriginalColor, Color glowColor, boolean glowOnly) {
-        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Glow.fsh"), true, 11, "Glow");
+    public Glow(float intensity, float threshold, float spread, boolean useOriginalColor, Color glowColor, boolean glowOnly) {
+        super(new ResourcesLocation("shader/frameBuffer/filter/Glow.fsh"), true, 11, "Glow");
 
         this.intensity = intensity;
         this.spread = spread;
@@ -43,29 +41,27 @@ public class Glow extends EffectBase {
     /**
      * Constructs a new Glow effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
      * @param intensity the intensity of the glow
      * @param threshold the threshold for the glow effect
-     * @param spread the spread of the glow
-     * @param glowOnly whether to apply only the glow effect
+     * @param spread    the spread of the glow
+     * @param glowOnly  whether to apply only the glow effect
      */
-    public Glow(Vector2f resolution, float intensity, float threshold, float spread, boolean glowOnly) {
-        this(resolution, intensity, threshold, spread, true, new Color(0, 0, 0, 0), glowOnly);
+    public Glow(float intensity, float threshold, float spread, boolean glowOnly) {
+        this(intensity, threshold, spread, true, new Color(0, 0, 0, 0), glowOnly);
     }
 
     /**
      * Constructs a new Glow effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param intensity the intensity of the glow
-     * @param threshold the threshold for the glow effect
-     * @param spread the spread of the glow
+     * @param intensity        the intensity of the glow
+     * @param threshold        the threshold for the glow effect
+     * @param spread           the spread of the glow
      * @param useOriginalColor whether to use the original color
-     * @param glowColor the color of the glow
-     * @param glowOnly whether to apply only the glow effect
+     * @param glowColor        the color of the glow
+     * @param glowOnly         whether to apply only the glow effect
      */
-    public Glow(Vector2f resolution, double intensity, double threshold, double spread, boolean useOriginalColor, Color glowColor, boolean glowOnly) {
-        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Glow.fsh"), true, 11, "Glow");
+    public Glow(double intensity, double threshold, double spread, boolean useOriginalColor, Color glowColor, boolean glowOnly) {
+        super(new ResourcesLocation("shader/frameBuffer/filter/Glow.fsh"), true, 11, "Glow");
 
         this.intensity = (float) intensity;
         this.spread = (float) spread;
@@ -78,14 +74,13 @@ public class Glow extends EffectBase {
     /**
      * Constructs a new Glow effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
      * @param intensity the intensity of the glow
      * @param threshold the threshold for the glow effect
-     * @param spread the spread of the glow
-     * @param glowOnly whether to apply only the glow effect
+     * @param spread    the spread of the glow
+     * @param glowOnly  whether to apply only the glow effect
      */
-    public Glow(Vector2f resolution, double intensity, double threshold, double spread, boolean glowOnly) {
-        this(resolution, intensity, threshold, spread, true, new Color(0, 0, 0, 0), glowOnly);
+    public Glow(double intensity, double threshold, double spread, boolean glowOnly) {
+        this(intensity, threshold, spread, true, new Color(0, 0, 0, 0), glowOnly);
     }
 
     /**

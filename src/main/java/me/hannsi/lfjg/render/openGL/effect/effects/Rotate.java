@@ -2,7 +2,6 @@ package me.hannsi.lfjg.render.openGL.effect.effects;
 
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
-import org.joml.Vector2f;
 
 /**
  * Class representing a Rotate effect in OpenGL.
@@ -18,68 +17,63 @@ public class Rotate extends EffectBase {
     /**
      * Constructs a new Rotate effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
      * @param x the rotation angle around the X axis
      * @param y the rotation angle around the Y axis
      * @param z the rotation angle around the Z axis
      */
-    public Rotate(Vector2f resolution, float x, float y, float z) {
-        this(resolution, x, y, z, 0, 0, 0);
+    public Rotate(float x, float y, float z) {
+        this(x, y, z, 0, 0, 0);
     }
 
     /**
      * Constructs a new Rotate effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
      * @param x the rotation angle around the X axis
      * @param y the rotation angle around the Y axis
      * @param z the rotation angle around the Z axis
      */
-    public Rotate(Vector2f resolution, double x, double y, double z) {
-        this(resolution, (float) x, (float) y, (float) z, 0, 0, 0);
+    public Rotate(double x, double y, double z) {
+        this((float) x, (float) y, (float) z, 0, 0, 0);
     }
 
     /**
      * Constructs a new Rotate effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param x the rotation angle around the X axis
-     * @param y the rotation angle around the Y axis
-     * @param z the rotation angle around the Z axis
+     * @param x  the rotation angle around the X axis
+     * @param y  the rotation angle around the Y axis
+     * @param z  the rotation angle around the Z axis
      * @param cx the X coordinate of the rotation center
      * @param cy the Y coordinate of the rotation center
      */
-    public Rotate(Vector2f resolution, float x, float y, float z, float cx, float cy) {
-        this(resolution, x, y, z, cx, cy, 0);
+    public Rotate(float x, float y, float z, float cx, float cy) {
+        this(x, y, z, cx, cy, 0);
     }
 
     /**
      * Constructs a new Rotate effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param x the rotation angle around the X axis
-     * @param y the rotation angle around the Y axis
-     * @param z the rotation angle around the Z axis
+     * @param x  the rotation angle around the X axis
+     * @param y  the rotation angle around the Y axis
+     * @param z  the rotation angle around the Z axis
      * @param cx the X coordinate of the rotation center
      * @param cy the Y coordinate of the rotation center
      */
-    public Rotate(Vector2f resolution, double x, double y, double z, double cx, double cy) {
-        this(resolution, (float) x, (float) y, (float) z, (float) cx, (float) cy, 0);
+    public Rotate(double x, double y, double z, double cx, double cy) {
+        this((float) x, (float) y, (float) z, (float) cx, (float) cy, 0);
     }
 
     /**
      * Constructs a new Rotate effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param x the rotation angle around the X axis
-     * @param y the rotation angle around the Y axis
-     * @param z the rotation angle around the Z axis
+     * @param x  the rotation angle around the X axis
+     * @param y  the rotation angle around the Y axis
+     * @param z  the rotation angle around the Z axis
      * @param cx the X coordinate of the rotation center
      * @param cy the Y coordinate of the rotation center
      * @param cz the Z coordinate of the rotation center
      */
-    public Rotate(Vector2f resolution, float x, float y, float z, float cx, float cy, float cz) {
-        super(resolution, 1, "Rotate", (Class<GLObject>) null);
+    public Rotate(float x, float y, float z, float cx, float cy, float cz) {
+        super(1, "Rotate", (Class<GLObject>) null);
 
         this.x = x;
         this.y = y;
@@ -92,16 +86,15 @@ public class Rotate extends EffectBase {
     /**
      * Constructs a new Rotate effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param x the rotation angle around the X axis
-     * @param y the rotation angle around the Y axis
-     * @param z the rotation angle around the Z axis
+     * @param x  the rotation angle around the X axis
+     * @param y  the rotation angle around the Y axis
+     * @param z  the rotation angle around the Z axis
      * @param cx the X coordinate of the rotation center
      * @param cy the Y coordinate of the rotation center
      * @param cz the Z coordinate of the rotation center
      */
-    public Rotate(Vector2f resolution, double x, double y, double z, double cx, double cy, double cz) {
-        this(resolution, (float) x, (float) y, (float) z, (float) cx, (float) cy, (float) cz);
+    public Rotate(double x, double y, double z, double cx, double cy, double cz) {
+        this((float) x, (float) y, (float) z, (float) cx, (float) cy, (float) cz);
     }
 
     /**

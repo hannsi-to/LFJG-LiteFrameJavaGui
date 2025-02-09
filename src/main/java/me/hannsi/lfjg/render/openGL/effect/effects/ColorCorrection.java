@@ -3,7 +3,6 @@ package me.hannsi.lfjg.render.openGL.effect.effects;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import org.joml.Vector2f;
 
 /**
  * Class representing a Color Correction effect in OpenGL.
@@ -17,14 +16,13 @@ public class ColorCorrection extends EffectBase {
     /**
      * Constructs a new ColorCorrection effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
      * @param brightness the brightness level
-     * @param contrast the contrast level
+     * @param contrast   the contrast level
      * @param saturation the saturation level
-     * @param hue the hue level
+     * @param hue        the hue level
      */
-    public ColorCorrection(Vector2f resolution, float brightness, float contrast, float saturation, float hue) {
-        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/ColorCorrection.fsh"), true, 4, "ColorCorrection", (Class<GLObject>) null);
+    public ColorCorrection(float brightness, float contrast, float saturation, float hue) {
+        super(new ResourcesLocation("shader/frameBuffer/filter/ColorCorrection.fsh"), true, 4, "ColorCorrection", (Class<GLObject>) null);
 
         this.brightness = brightness;
         this.contrast = contrast;
@@ -35,14 +33,13 @@ public class ColorCorrection extends EffectBase {
     /**
      * Constructs a new ColorCorrection effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
      * @param brightness the brightness level
-     * @param contrast the contrast level
+     * @param contrast   the contrast level
      * @param saturation the saturation level
-     * @param hue the hue level
+     * @param hue        the hue level
      */
-    public ColorCorrection(Vector2f resolution, double brightness, double contrast, double saturation, double hue) {
-        this(resolution, (float) brightness, (float) contrast, (float) saturation, (float) hue);
+    public ColorCorrection(double brightness, double contrast, double saturation, double hue) {
+        this((float) brightness, (float) contrast, (float) saturation, (float) hue);
     }
 
     /**

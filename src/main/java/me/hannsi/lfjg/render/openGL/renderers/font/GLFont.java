@@ -2,15 +2,14 @@ package me.hannsi.lfjg.render.openGL.renderers.font;
 
 import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
+import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.system.font.CFont;
 import me.hannsi.lfjg.render.openGL.system.font.CharInfo;
 import me.hannsi.lfjg.render.openGL.system.font.FontCache;
 import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import org.joml.Vector2f;
 import org.lwjgl.opengl.GL30;
 
 import java.util.HashSet;
@@ -46,14 +45,14 @@ public class GLFont extends GLRect {
      * Sets the font for the renderer.
      *
      * @param fontCache the font cache
-     * @param fontPath the path to the font
-     * @param size the size of the font
+     * @param fontPath  the path to the font
+     * @param size      the size of the font
      */
     public void setFont(FontCache fontCache, ResourcesLocation fontPath, int size) {
         this.fontCache = fontCache;
         this.fontPath = fontPath;
         this.cFont = fontCache.getFont(fontPath, size);
-        batch = new Batch(getProjectionMatrix());
+        batch = new Batch();
         batch.font = cFont;
         batch.initBatch();
     }
@@ -61,9 +60,9 @@ public class GLFont extends GLRect {
     /**
      * Sets the text and its properties for rendering.
      *
-     * @param text the text to render
-     * @param x the x position of the text
-     * @param y the y position of the text
+     * @param text  the text to render
+     * @param x     the x position of the text
+     * @param y     the y position of the text
      * @param scale the scale of the text
      * @param color the color of the text
      */
@@ -105,20 +104,20 @@ public class GLFont extends GLRect {
             DebugLog.warning(getClass(), logGenerator.createLog());
         }
 
-        frameBuffer = new FrameBuffer(getResolution());
+        frameBuffer = new FrameBuffer();
         frameBuffer.createFrameBuffer();
         frameBuffer.createShaderProgram();
 
         uv(0, 0, 1, 1);
-        rectWH(0, 0, getResolution().x(), getResolution().y(), new Color(0, 0, 0, 0));
+        rectWH(0, 0, LFJGContext.resolution.x(), LFJGContext.resolution.y(), new Color(0, 0, 0, 0));
     }
 
     /**
      * Sets the text and its properties for rendering.
      *
-     * @param text the text to render
-     * @param x the x position of the text
-     * @param y the y position of the text
+     * @param text  the text to render
+     * @param x     the x position of the text
+     * @param y     the y position of the text
      * @param scale the scale of the text
      * @param color the color of the text
      */
@@ -128,12 +127,9 @@ public class GLFont extends GLRect {
 
     /**
      * Draws the text with the specified resolution and projection.
-     *
-     * @param resolution the resolution of the rendering
-     * @param projection the projection matrix
      */
     @Override
-    public void draw(Vector2f resolution, Projection projection) {
+    public void draw() {
         frameBuffer.bindFrameBuffer();
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -147,7 +143,7 @@ public class GLFont extends GLRect {
         getGlUtil().addGLTarget(GL30.GL_TEXTURE_2D);
         GL30.glActiveTexture(GL30.GL_TEXTURE0);
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, frameBuffer.getTextureId());
-        super.draw(resolution, projection);
+        super.draw();
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
     }
 

@@ -3,7 +3,6 @@ package me.hannsi.lfjg.render.openGL.effect.effects;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import org.joml.Vector2f;
 
 /**
  * Class representing a Directional Blur effect in OpenGL.
@@ -15,12 +14,11 @@ public class DirectionalBlur extends EffectBase {
     /**
      * Constructs a new DirectionalBlur effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
      * @param radius the radius of the blur
-     * @param angle the angle of the blur
+     * @param angle  the angle of the blur
      */
-    public DirectionalBlur(Vector2f resolution, float radius, float angle) {
-        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/DirectionalBlur.fsh"), true, 19, "DirectionalBlur");
+    public DirectionalBlur(float radius, float angle) {
+        super(new ResourcesLocation("shader/frameBuffer/filter/DirectionalBlur.fsh"), true, 19, "DirectionalBlur");
 
         this.radius = radius;
         this.angle = angle;
@@ -29,12 +27,11 @@ public class DirectionalBlur extends EffectBase {
     /**
      * Constructs a new DirectionalBlur effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
      * @param radius the radius of the blur
-     * @param angle the angle of the blur
+     * @param angle  the angle of the blur
      */
-    public DirectionalBlur(Vector2f resolution, double radius, double angle) {
-        this(resolution, (float) radius, (float) angle);
+    public DirectionalBlur(double radius, double angle) {
+        this((float) radius, (float) angle);
     }
 
     /**

@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.render.openGL.effect.effects;
 
+import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.color.Color;
@@ -21,15 +22,14 @@ public class Flash extends EffectBase {
     /**
      * Constructs a new Flash effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param intensity the intensity of the flash
-     * @param x the x-coordinate of the flash position
-     * @param y the y-coordinate of the flash position
+     * @param intensity      the intensity of the flash
+     * @param x              the x-coordinate of the flash position
+     * @param y              the y-coordinate of the flash position
      * @param flashBlendMode the blend mode of the flash
-     * @param lightColor the color of the light
+     * @param lightColor     the color of the light
      */
-    public Flash(Vector2f resolution, float intensity, float x, float y, FlashBlendMode flashBlendMode, Color lightColor) {
-        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Flash.fsh"), true, 10, "Flash");
+    public Flash(float intensity, float x, float y, FlashBlendMode flashBlendMode, Color lightColor) {
+        super(new ResourcesLocation("shader/frameBuffer/filter/Flash.fsh"), true, 10, "Flash");
 
         this.intensity = intensity;
         this.x = x;
@@ -41,15 +41,14 @@ public class Flash extends EffectBase {
     /**
      * Constructs a new Flash effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param intensity the intensity of the flash
-     * @param x the x-coordinate of the flash position
-     * @param y the y-coordinate of the flash position
+     * @param intensity      the intensity of the flash
+     * @param x              the x-coordinate of the flash position
+     * @param y              the y-coordinate of the flash position
      * @param flashBlendMode the blend mode of the flash
-     * @param lightColor the color of the light
+     * @param lightColor     the color of the light
      */
-    public Flash(Vector2f resolution, double intensity, double x, double y, FlashBlendMode flashBlendMode, Color lightColor) {
-        this(resolution, (float) intensity, (float) x, (float) y, flashBlendMode, lightColor);
+    public Flash(double intensity, double x, double y, FlashBlendMode flashBlendMode, Color lightColor) {
+        this((float) intensity, (float) x, (float) y, flashBlendMode, lightColor);
     }
 
     /**
@@ -95,7 +94,7 @@ public class Flash extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("screenSize", getResolution());
+        getFrameBuffer().getShaderProgramFBO().setUniform("screenSize", LFJGContext.resolution);
         getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
         getFrameBuffer().getShaderProgramFBO().setUniform("screenPosition", new Vector2f(x, y));
         getFrameBuffer().getShaderProgramFBO().setUniform1i("blendMode", flashBlendMode.getId());
@@ -198,10 +197,7 @@ public class Flash extends EffectBase {
      * Enum representing the blend modes for the Flash effect.
      */
     public enum FlashBlendMode implements IEnumTypeBase {
-        ForwardSynthesis("ForwardSynthesis", 0),
-        BackwardSynthesis("BackwardSynthesis", 1),
-        LightComponentOnly("LightComponentOnly", 2),
-        OriginalColor("OriginalColor", 3);
+        ForwardSynthesis("ForwardSynthesis", 0), BackwardSynthesis("BackwardSynthesis", 1), LightComponentOnly("LightComponentOnly", 2), OriginalColor("OriginalColor", 3);
 
         final String name;
         final int id;

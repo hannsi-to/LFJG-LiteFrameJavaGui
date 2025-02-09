@@ -12,11 +12,9 @@ public class FrameBufferContents extends EffectBase {
 
     /**
      * Constructs a new FrameBufferContents effect with the specified resolution.
-     *
-     * @param resolution the resolution of the effect
      */
-    public FrameBufferContents(Vector2f resolution) {
-        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/FrameBufferContents.fsh"), true, 25, "FrameBufferContents");
+    public FrameBufferContents() {
+        super(new ResourcesLocation("shader/frameBuffer/filter/FrameBufferContents.fsh"), true, 25, "FrameBufferContents");
     }
 
     /**

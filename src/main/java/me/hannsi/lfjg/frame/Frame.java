@@ -13,10 +13,12 @@ import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.render.nanoVG.system.NanoVGUtil;
 import me.hannsi.lfjg.utils.graphics.GLFWUtil;
 import me.hannsi.lfjg.utils.math.ANSIFormat;
+import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.time.TimeCalculator;
 import me.hannsi.lfjg.utils.time.TimeSourceUtil;
 import me.hannsi.lfjg.utils.toolkit.RuntimeUtil;
 import me.hannsi.lfjg.utils.type.types.AntiAliasingType;
+import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.utils.type.types.RenderingType;
 import me.hannsi.lfjg.utils.type.types.VSyncType;
 import org.joml.Vector2f;
@@ -52,7 +54,7 @@ public class Frame implements IFrame {
     /**
      * Constructs a Frame object with the specified LFJGFrame and thread name.
      *
-     * @param lfjgFrame The LFJGFrame associated with this Frame.
+     * @param lfjgFrame  The LFJGFrame associated with this Frame.
      * @param threadName The name of the thread to create for the frame.
      */
     public Frame(LFJGFrame lfjgFrame, String threadName) {
@@ -185,6 +187,8 @@ public class Frame implements IFrame {
                 GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
                 setAntiAliasing();
 
+                updateViewport();
+                updateLFJGLContext();
                 draw();
 
                 GLFW.glfwSwapBuffers(windowID);
@@ -217,6 +221,11 @@ public class Frame implements IFrame {
         lfjgFrame.stopFrame();
 
         breakFrame();
+    }
+
+    public void updateLFJGLContext() {
+        LFJGContext.resolution = new Vector2f(getWindowWidth() / getContentScaleX(), getWindowHeight() / getContentScaleY());
+        LFJGContext.projection = new Projection(ProjectionType.OrthographicProjection, getWindowWidth(), getWindowHeight());
     }
 
     /**
@@ -390,7 +399,7 @@ public class Frame implements IFrame {
      * Retrieves the frame setting base for the specified frame setting class.
      *
      * @param frameSettingBase The frame setting class.
-     * @param <T> The type of the frame setting value.
+     * @param <T>              The type of the frame setting value.
      * @return The frame setting base.
      */
     @SuppressWarnings("unchecked")
@@ -402,7 +411,7 @@ public class Frame implements IFrame {
      * Retrieves the frame setting value for the specified frame setting class.
      *
      * @param frameSettingBase The frame setting class.
-     * @param <T> The type of the frame setting value.
+     * @param <T>              The type of the frame setting value.
      * @return The frame setting value.
      */
     @SuppressWarnings("unchecked")
@@ -414,8 +423,8 @@ public class Frame implements IFrame {
      * Sets the frame setting value for the specified frame setting class.
      *
      * @param frameSettingBase The frame setting class.
-     * @param value The value to set.
-     * @param <T> The type of the frame setting value.
+     * @param value            The value to set.
+     * @param <T>              The type of the frame setting value.
      */
     public <T> void setFrameSettingValue(Class<? extends FrameSettingBase<?>> frameSettingBase, T value) {
         getFrameSettingBase(frameSettingBase).setValue(value);

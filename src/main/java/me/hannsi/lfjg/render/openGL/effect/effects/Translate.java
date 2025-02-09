@@ -2,7 +2,6 @@ package me.hannsi.lfjg.render.openGL.effect.effects;
 
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
-import org.joml.Vector2f;
 
 /**
  * Class representing a Translate effect in OpenGL.
@@ -15,13 +14,12 @@ public class Translate extends EffectBase {
     /**
      * Constructs a new Translate effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
      * @param x the translation distance along the X axis
      * @param y the translation distance along the Y axis
      * @param z the translation distance along the Z axis
      */
-    public Translate(Vector2f resolution, float x, float y, float z) {
-        super(resolution, 2, "Translate", (Class<GLObject>) null);
+    public Translate(float x, float y, float z) {
+        super(2, "Translate", (Class<GLObject>) null);
         this.x = x;
         this.y = y;
         this.z = z;
@@ -30,35 +28,32 @@ public class Translate extends EffectBase {
     /**
      * Constructs a new Translate effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
      * @param x the translation distance along the X axis
      * @param y the translation distance along the Y axis
      * @param z the translation distance along the Z axis
      */
-    public Translate(Vector2f resolution, double x, double y, double z) {
-        this(resolution, (float) x, (float) y, (float) z);
+    public Translate(double x, double y, double z) {
+        this((float) x, (float) y, (float) z);
     }
 
     /**
      * Constructs a new Translate effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
      * @param x the translation distance along the X axis
      * @param y the translation distance along the Y axis
      */
-    public Translate(Vector2f resolution, float x, float y) {
-        this(resolution, x, y, 0.0f);
+    public Translate(float x, float y) {
+        this(x, y, 0.0f);
     }
 
     /**
      * Constructs a new Translate effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
      * @param x the translation distance along the X axis
      * @param y the translation distance along the Y axis
      */
-    public Translate(Vector2f resolution, double x, double y) {
-        this(resolution, x, y, 0.0f);
+    public Translate(double x, double y) {
+        this(x, y, 0.0f);
     }
 
     /**

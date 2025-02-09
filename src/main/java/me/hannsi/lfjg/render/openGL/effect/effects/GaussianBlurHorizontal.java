@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.render.openGL.effect.effects;
 
+import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.math.MathUtil;
@@ -18,11 +19,10 @@ public class GaussianBlurHorizontal extends EffectBase {
     /**
      * Constructs a new GaussianBlurHorizontal effect with the specified resolution and radius.
      *
-     * @param resolution the resolution of the effect
      * @param radiusX the radius of the blur in the x-direction
      */
-    public GaussianBlurHorizontal(Vector2f resolution, float radiusX) {
-        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/GaussianBlur.fsh"), true, 6, "GaussianBlurHorizontal", (Class<GLObject>) null);
+    public GaussianBlurHorizontal(float radiusX) {
+        super(new ResourcesLocation("shader/frameBuffer/filter/GaussianBlur.fsh"), true, 6, "GaussianBlurHorizontal", (Class<GLObject>) null);
 
         this.radiusX = radiusX;
     }
@@ -30,11 +30,10 @@ public class GaussianBlurHorizontal extends EffectBase {
     /**
      * Constructs a new GaussianBlurHorizontal effect with the specified resolution and radius.
      *
-     * @param resolution the resolution of the effect
      * @param radiusX the radius of the blur in the x-direction
      */
-    public GaussianBlurHorizontal(Vector2f resolution, double radiusX) {
-        this(resolution, (float) radiusX);
+    public GaussianBlurHorizontal(double radiusX) {
+        this((float) radiusX);
     }
 
     /**
@@ -82,7 +81,7 @@ public class GaussianBlurHorizontal extends EffectBase {
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().setUniform("direction", new Vector2f(1, 0));
         getFrameBuffer().getShaderProgramFBO().setUniform("radius", radiusX);
-        getFrameBuffer().getShaderProgramFBO().setUniform("texelSize", new Vector2f(1.0f / baseGLObject.getResolution().x(), 1.0f / baseGLObject.getResolution().y()));
+        getFrameBuffer().getShaderProgramFBO().setUniform("texelSize", new Vector2f(1.0f / LFJGContext.resolution.x(), 1.0f / LFJGContext.resolution.y()));
 
         final FloatBuffer weightBuffer = BufferUtils.createFloatBuffer(256);
         for (int i = 0; i < radiusX; i++) {

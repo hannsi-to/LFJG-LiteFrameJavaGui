@@ -1,9 +1,9 @@
 package me.hannsi.lfjg.render.openGL.effect.effects;
 
+import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import org.joml.Vector2f;
 
 /**
  * Class representing a Radial Blur effect in OpenGL.
@@ -16,13 +16,12 @@ public class RadialBlur extends EffectBase {
     /**
      * Constructs a new RadialBlur effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param range the range of the blur
+     * @param range   the range of the blur
      * @param centerX the X coordinate of the blur center
      * @param centerY the Y coordinate of the blur center
      */
-    public RadialBlur(Vector2f resolution, float range, float centerX, float centerY) {
-        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/RadialBlur.fsh"), true, 18, "RadialBlur");
+    public RadialBlur(float range, float centerX, float centerY) {
+        super(new ResourcesLocation("shader/frameBuffer/filter/RadialBlur.fsh"), true, 18, "RadialBlur");
 
         this.range = range;
         this.centerX = centerX;
@@ -32,13 +31,12 @@ public class RadialBlur extends EffectBase {
     /**
      * Constructs a new RadialBlur effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param range the range of the blur
+     * @param range   the range of the blur
      * @param centerX the X coordinate of the blur center
      * @param centerY the Y coordinate of the blur center
      */
-    public RadialBlur(Vector2f resolution, double range, double centerX, double centerY) {
-        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/RadialBlur.fsh"), true, 18, "RadialBlur");
+    public RadialBlur(double range, double centerX, double centerY) {
+        super(new ResourcesLocation("shader/frameBuffer/filter/RadialBlur.fsh"), true, 18, "RadialBlur");
 
         this.range = (float) range;
         this.centerX = (float) centerX;
@@ -86,8 +84,8 @@ public class RadialBlur extends EffectBase {
     @Override
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().setUniform("range", range);
-        getFrameBuffer().getShaderProgramFBO().setUniform("centerX", centerX / getResolution().x);
-        getFrameBuffer().getShaderProgramFBO().setUniform("centerY", centerY / getResolution().y);
+        getFrameBuffer().getShaderProgramFBO().setUniform("centerX", centerX / LFJGContext.resolution.x);
+        getFrameBuffer().getShaderProgramFBO().setUniform("centerY", centerY / LFJGContext.resolution.y);
 
         super.setUniform(baseGLObject);
     }

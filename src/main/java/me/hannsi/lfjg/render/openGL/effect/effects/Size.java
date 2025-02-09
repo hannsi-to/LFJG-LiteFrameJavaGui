@@ -2,7 +2,6 @@ package me.hannsi.lfjg.render.openGL.effect.effects;
 
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
-import org.joml.Vector2f;
 
 /**
  * Class representing a Size effect in OpenGL.
@@ -18,16 +17,15 @@ public class Size extends EffectBase {
     /**
      * Constructs a new Size effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param x the scaling factor along the X axis
-     * @param y the scaling factor along the Y axis
-     * @param z the scaling factor along the Z axis
+     * @param x  the scaling factor along the X axis
+     * @param y  the scaling factor along the Y axis
+     * @param z  the scaling factor along the Z axis
      * @param cx the X coordinate of the scaling center
      * @param cy the Y coordinate of the scaling center
      * @param cz the Z coordinate of the scaling center
      */
-    public Size(Vector2f resolution, float x, float y, float z, float cx, float cy, float cz) {
-        super(resolution, 0, "Size", (Class<GLObject>) null);
+    public Size(float x, float y, float z, float cx, float cy, float cz) {
+        super(0, "Size", (Class<GLObject>) null);
         this.x = x;
         this.y = y;
         this.z = z;
@@ -39,88 +37,81 @@ public class Size extends EffectBase {
     /**
      * Constructs a new Size effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param x the scaling factor along the X axis
-     * @param y the scaling factor along the Y axis
-     * @param z the scaling factor along the Z axis
+     * @param x  the scaling factor along the X axis
+     * @param y  the scaling factor along the Y axis
+     * @param z  the scaling factor along the Z axis
      * @param cx the X coordinate of the scaling center
      * @param cy the Y coordinate of the scaling center
      * @param cz the Z coordinate of the scaling center
      */
-    public Size(Vector2f resolution, double x, double y, double z, double cx, double cy, double cz) {
-        this(resolution, (float) x, (float) y, (float) z, (float) cx, (float) cy, (float) cz);
+    public Size(double x, double y, double z, double cx, double cy, double cz) {
+        this((float) x, (float) y, (float) z, (float) cx, (float) cy, (float) cz);
     }
 
     /**
      * Constructs a new Size effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
      * @param x the scaling factor along the X axis
      * @param y the scaling factor along the Y axis
      */
-    public Size(Vector2f resolution, float x, float y) {
-        this(resolution, x, y, 1.0f);
+    public Size(float x, float y) {
+        this(x, y, 1.0f);
     }
 
     /**
      * Constructs a new Size effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
      * @param x the scaling factor along the X axis
      * @param y the scaling factor along the Y axis
      */
-    public Size(Vector2f resolution, double x, double y) {
-        this(resolution, (float) x, (float) y, 1.0f);
+    public Size(double x, double y) {
+        this((float) x, (float) y, 1.0f);
     }
 
     /**
      * Constructs a new Size effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
      * @param x the scaling factor along the X axis
      * @param y the scaling factor along the Y axis
      * @param z the scaling factor along the Z axis
      */
-    public Size(Vector2f resolution, float x, float y, float z) {
-        this(resolution, x, y, z, 0, 0, 0);
+    public Size(float x, float y, float z) {
+        this(x, y, z, 0, 0, 0);
     }
 
     /**
      * Constructs a new Size effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
      * @param x the scaling factor along the X axis
      * @param y the scaling factor along the Y axis
      * @param z the scaling factor along the Z axis
      */
-    public Size(Vector2f resolution, double x, double y, double z) {
-        this(resolution, x, y, z, 0, 0, 0);
+    public Size(double x, double y, double z) {
+        this(x, y, z, 0, 0, 0);
     }
 
     /**
      * Constructs a new Size effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param x the scaling factor along the X axis
-     * @param y the scaling factor along the Y axis
+     * @param x  the scaling factor along the X axis
+     * @param y  the scaling factor along the Y axis
      * @param cx the X coordinate of the scaling center
      * @param cy the Y coordinate of the scaling center
      */
-    public Size(Vector2f resolution, float x, float y, float cx, float cy) {
-        this(resolution, x, y, 1.0f, cx, cy, 0);
+    public Size(float x, float y, float cx, float cy) {
+        this(x, y, 1.0f, cx, cy, 0);
     }
 
     /**
      * Constructs a new Size effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param x the scaling factor along the X axis
-     * @param y the scaling factor along the Y axis
+     * @param x  the scaling factor along the X axis
+     * @param y  the scaling factor along the Y axis
      * @param cx the X coordinate of the scaling center
      * @param cy the Y coordinate of the scaling center
      */
-    public Size(Vector2f resolution, double x, double y, double cx, double cy) {
-        this(resolution, x, y, 1.0f, cx, cy, 0);
+    public Size(double x, double y, double cx, double cy) {
+        this(x, y, 1.0f, cx, cy, 0);
     }
 
     /**

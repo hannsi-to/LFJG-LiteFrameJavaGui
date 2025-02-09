@@ -3,7 +3,6 @@ package me.hannsi.lfjg.render.openGL.effect.effects;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import org.joml.Vector2f;
 
 /**
  * Class representing a Bloom effect in OpenGL.
@@ -16,13 +15,12 @@ public class Bloom extends EffectBase {
     /**
      * Constructs a new Bloom effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
      * @param intensity the intensity of the bloom
-     * @param spread the spread of the bloom
+     * @param spread    the spread of the bloom
      * @param threshold the threshold for the bloom
      */
-    public Bloom(Vector2f resolution, float intensity, float spread, float threshold) {
-        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Bloom.fsh"), true, 9, "Bloom");
+    public Bloom(float intensity, float spread, float threshold) {
+        super(new ResourcesLocation("shader/frameBuffer/filter/Bloom.fsh"), true, 9, "Bloom");
 
         this.intensity = intensity;
         this.spread = spread;
@@ -32,13 +30,12 @@ public class Bloom extends EffectBase {
     /**
      * Constructs a new Bloom effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
      * @param intensity the intensity of the bloom
-     * @param spread the spread of the bloom
+     * @param spread    the spread of the bloom
      * @param threshold the threshold for the bloom
      */
-    public Bloom(Vector2f resolution, double intensity, double spread, double threshold) {
-        this(resolution, (float) intensity, (float) spread, (float) threshold);
+    public Bloom(double intensity, double spread, double threshold) {
+        this((float) intensity, (float) spread, (float) threshold);
     }
 
     /**

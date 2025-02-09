@@ -3,7 +3,6 @@ package me.hannsi.lfjg.render.openGL.effect.effects;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import org.joml.Vector2f;
 
 /**
  * Class representing a Lens Blur effect in OpenGL.
@@ -15,12 +14,11 @@ public class LensBlur extends EffectBase {
     /**
      * Constructs a new LensBlur effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param range the range of the blur
+     * @param range     the range of the blur
      * @param intensity the intensity of the blur
      */
-    public LensBlur(Vector2f resolution, float range, float intensity) {
-        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/LensBlur.fsh"), true, 20, "LensBlur");
+    public LensBlur(float range, float intensity) {
+        super(new ResourcesLocation("shader/frameBuffer/filter/LensBlur.fsh"), true, 20, "LensBlur");
 
         this.range = range;
         this.intensity = intensity;
@@ -29,12 +27,11 @@ public class LensBlur extends EffectBase {
     /**
      * Constructs a new LensBlur effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param range the range of the blur
+     * @param range     the range of the blur
      * @param intensity the intensity of the blur
      */
-    public LensBlur(Vector2f resolution, double range, double intensity) {
-        this(resolution, (float) range, (float) intensity);
+    public LensBlur(double range, double intensity) {
+        this((float) range, (float) intensity);
     }
 
     /**

@@ -5,15 +5,14 @@ import me.hannsi.lfjg.debug.exceptions.frameBuffer.CompleteFrameBufferException;
 import me.hannsi.lfjg.debug.exceptions.frameBuffer.CreatingFrameBufferException;
 import me.hannsi.lfjg.debug.exceptions.render.CreatingRenderBufferException;
 import me.hannsi.lfjg.debug.exceptions.texture.CreatingTextureException;
+import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.render.openGL.system.Mesh;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
 import me.hannsi.lfjg.utils.graphics.GLUtil;
-import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
@@ -28,14 +27,12 @@ public class FrameBuffer {
     private final int frameBufferId;
     private final int textureId;
     private final int renderBufferId;
-    private final Mesh mesh;
     private final VAORendering vaoRendering;
-    private Vector2f resolution;
+    private Mesh mesh;
     private ShaderProgram shaderProgramFBO;
     private ResourcesLocation vertexShaderFBO;
     private ResourcesLocation fragmentShaderFBO;
 
-    private Matrix4f projectionMatrix;
     private Matrix4f modelMatrix;
     private Matrix4f viewMatrix;
 
@@ -44,23 +41,18 @@ public class FrameBuffer {
 
     /**
      * Constructs a new FrameBuffer with the specified resolution.
-     *
-     * @param resolution the resolution of the frame buffer
      */
-    public FrameBuffer(Vector2f resolution) {
-        this(resolution, false, null);
+    public FrameBuffer() {
+        this(false, null);
     }
 
     /**
      * Constructs a new FrameBuffer with the specified resolution, stencil usage, and GL object.
      *
-     * @param resolution the resolution of the frame buffer
      * @param uesStencil whether to use stencil buffer
-     * @param glObject the GL object associated with the frame buffer
+     * @param glObject   the GL object associated with the frame buffer
      */
-    public FrameBuffer(Vector2f resolution, boolean uesStencil, GLObject glObject) {
-        this.resolution = resolution;
-
+    public FrameBuffer(boolean uesStencil, GLObject glObject) {
         frameBufferId = GL30.glGenFramebuffers();
         if (frameBufferId == 0) {
             throw new CreatingFrameBufferException("Failed to create frame buffer");
@@ -82,7 +74,7 @@ public class FrameBuffer {
 
         vaoRendering = new VAORendering();
 
-        float[] positions = new float[]{0, 0, resolution.x(), 0, resolution.x(), resolution.y(), 0, resolution.y()};
+        float[] positions = new float[]{0, 0, LFJGContext.resolution.x(), 0, LFJGContext.resolution.x(), LFJGContext.resolution.y(), 0, LFJGContext.resolution.y()};
 
         float[] uvs = new float[]{0, 0, 1, 0, 1, 1, 0, 1};
 
@@ -100,8 +92,6 @@ public class FrameBuffer {
         shaderProgramFBO.createFragmentShader(fragmentShaderFBO);
         shaderProgramFBO.link();
 
-        Projection projection = new Projection(ProjectionType.OrthographicProjection, (int) resolution.x(), (int) resolution.y());
-        projectionMatrix = projection.getProjMatrix();
         modelMatrix = new Matrix4f();
         viewMatrix = new Matrix4f();
     }
@@ -122,7 +112,7 @@ public class FrameBuffer {
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, textureId);
         GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, renderBufferId);
 
-        GL30.glTexImage2D(GL30.GL_TEXTURE_2D, 0, GL30.GL_RGBA, (int) resolution.x(), (int) resolution.y(), 0, GL30.GL_RGBA, GL30.GL_UNSIGNED_BYTE, (ByteBuffer) null);
+        GL30.glTexImage2D(GL30.GL_TEXTURE_2D, 0, GL30.GL_RGBA, (int) LFJGContext.resolution.x(), (int) LFJGContext.resolution.y(), 0, GL30.GL_RGBA, GL30.GL_UNSIGNED_BYTE, (ByteBuffer) null);
         GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR);
         GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR);
 
@@ -132,7 +122,7 @@ public class FrameBuffer {
             throw new CompleteFrameBufferException("Frame Buffer not complete");
         }
 
-        GL30.glRenderbufferStorage(GL30.GL_RENDERBUFFER, GL30.GL_DEPTH32F_STENCIL8, (int) resolution.x(), (int) resolution.y());
+        GL30.glRenderbufferStorage(GL30.GL_RENDERBUFFER, GL30.GL_DEPTH32F_STENCIL8, (int) LFJGContext.resolution.x(), (int) LFJGContext.resolution.y());
         GL30.glFramebufferRenderbuffer(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_STENCIL_ATTACHMENT, GL30.GL_RENDERBUFFER, renderBufferId);
 
         if (GL30.glCheckFramebufferStatus(GL30.GL_FRAMEBUFFER) != GL30.GL_FRAMEBUFFER_COMPLETE) {
@@ -160,7 +150,7 @@ public class FrameBuffer {
         GL30.glPushMatrix();
         shaderProgramFBO.bind();
 
-        shaderProgramFBO.setUniform("projectionMatrix", projectionMatrix);
+        shaderProgramFBO.setUniform("projectionMatrix", LFJGContext.projection.getProjMatrix());
         shaderProgramFBO.setUniform("modelMatrix", modelMatrix);
         shaderProgramFBO.setUniform("viewMatrix", viewMatrix);
         shaderProgramFBO.setUniform1i("textureSampler", textureUnit);
@@ -284,8 +274,8 @@ public class FrameBuffer {
      * @param filePath the file path to save the image to
      */
     public void saveFrameBufferToImage(ResourcesLocation filePath) {
-        int width = (int) resolution.x();
-        int height = (int) resolution.y();
+        int width = (int) LFJGContext.resolution.x();
+        int height = (int) LFJGContext.resolution.y();
 
         ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
         bindFrameBuffer();
@@ -304,9 +294,9 @@ public class FrameBuffer {
     /**
      * Flips the given buffer vertically.
      *
-     * @param buffer the buffer to flip
-     * @param width the width of the buffer
-     * @param height the height of the buffer
+     * @param buffer   the buffer to flip
+     * @param width    the width of the buffer
+     * @param height   the height of the buffer
      * @param channels the number of channels in the buffer
      * @return the flipped buffer
      */
@@ -320,15 +310,6 @@ public class FrameBuffer {
             }
         }
         return flipped;
-    }
-
-    /**
-     * Updates the resolution of the frame buffer.
-     *
-     * @param resolution the new resolution
-     */
-    public void updateResolution(Vector2f resolution) {
-        this.resolution = resolution;
     }
 
     /**
@@ -347,24 +328,6 @@ public class FrameBuffer {
      */
     public int getTextureId() {
         return textureId;
-    }
-
-    /**
-     * Gets the projection matrix.
-     *
-     * @return the projection matrix
-     */
-    public Matrix4f getProjectionMatrix() {
-        return projectionMatrix;
-    }
-
-    /**
-     * Sets the projection matrix.
-     *
-     * @param projectionMatrix the new projection matrix
-     */
-    public void setProjectionMatrix(Matrix4f projectionMatrix) {
-        this.projectionMatrix = projectionMatrix;
     }
 
     /**
@@ -439,22 +402,8 @@ public class FrameBuffer {
         return mesh;
     }
 
-    /**
-     * Gets the resolution of the frame buffer.
-     *
-     * @return the resolution of the frame buffer
-     */
-    public Vector2f getResolution() {
-        return resolution;
-    }
-
-    /**
-     * Sets the resolution of the frame buffer.
-     *
-     * @param resolution the new resolution
-     */
-    public void setResolution(Vector2f resolution) {
-        this.resolution = resolution;
+    public void setMesh(Mesh mesh) {
+        this.mesh = mesh;
     }
 
     /**

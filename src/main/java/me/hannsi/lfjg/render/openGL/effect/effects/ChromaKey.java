@@ -4,7 +4,6 @@ import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 /**
@@ -20,15 +19,14 @@ public class ChromaKey extends EffectBase {
     /**
      * Constructs a new ChromaKey effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param chromaKeyColor the chroma key color
-     * @param hueRange the hue range for the chroma key
-     * @param saturationRange the saturation range for the chroma key
+     * @param chromaKeyColor     the chroma key color
+     * @param hueRange           the hue range for the chroma key
+     * @param saturationRange    the saturation range for the chroma key
      * @param boundarySmoothness the smoothness of the boundary
-     * @param colorAdjustment the color adjustment
+     * @param colorAdjustment    the color adjustment
      */
-    public ChromaKey(Vector2f resolution, Color chromaKeyColor, float hueRange, float saturationRange, float boundarySmoothness, Color colorAdjustment) {
-        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/ChromaKey.fsh"), true, 12, "ChromaKey");
+    public ChromaKey(Color chromaKeyColor, float hueRange, float saturationRange, float boundarySmoothness, Color colorAdjustment) {
+        super(new ResourcesLocation("shader/frameBuffer/filter/ChromaKey.fsh"), true, 12, "ChromaKey");
 
         this.chromaKeyColor = chromaKeyColor;
         this.hueRange = hueRange;
@@ -40,15 +38,14 @@ public class ChromaKey extends EffectBase {
     /**
      * Constructs a new ChromaKey effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param chromaKeyColor the chroma key color
-     * @param hueRange the hue range for the chroma key
-     * @param saturationRange the saturation range for the chroma key
+     * @param chromaKeyColor     the chroma key color
+     * @param hueRange           the hue range for the chroma key
+     * @param saturationRange    the saturation range for the chroma key
      * @param boundarySmoothness the smoothness of the boundary
-     * @param colorAdjustment the color adjustment
+     * @param colorAdjustment    the color adjustment
      */
-    public ChromaKey(Vector2f resolution, Color chromaKeyColor, double hueRange, double saturationRange, double boundarySmoothness, Color colorAdjustment) {
-        this(resolution, chromaKeyColor, (float) hueRange, (float) saturationRange, (float) boundarySmoothness, colorAdjustment);
+    public ChromaKey(Color chromaKeyColor, double hueRange, double saturationRange, double boundarySmoothness, Color colorAdjustment) {
+        this(chromaKeyColor, (float) hueRange, (float) saturationRange, (float) boundarySmoothness, colorAdjustment);
     }
 
     /**

@@ -4,7 +4,6 @@ import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 /**
@@ -20,15 +19,14 @@ public class EdgeExtraction extends EffectBase {
     /**
      * Constructs a new EdgeExtraction effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param edgeStrength the strength of the edges
-     * @param threshold the threshold for edge detection
+     * @param edgeStrength        the strength of the edges
+     * @param threshold           the threshold for edge detection
      * @param enableLuminanceEdge whether to enable luminance edge detection
-     * @param enableAlphaEdge whether to enable alpha edge detection
-     * @param edgeColor the color of the edges
+     * @param enableAlphaEdge     whether to enable alpha edge detection
+     * @param edgeColor           the color of the edges
      */
-    public EdgeExtraction(Vector2f resolution, float edgeStrength, float threshold, boolean enableLuminanceEdge, boolean enableAlphaEdge, Color edgeColor) {
-        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/EdgeExtraction.fsh"), true, 14, "EdgeExtraction");
+    public EdgeExtraction(float edgeStrength, float threshold, boolean enableLuminanceEdge, boolean enableAlphaEdge, Color edgeColor) {
+        super(new ResourcesLocation("shader/frameBuffer/filter/EdgeExtraction.fsh"), true, 14, "EdgeExtraction");
 
         this.edgeStrength = edgeStrength;
         this.threshold = threshold;
@@ -40,15 +38,14 @@ public class EdgeExtraction extends EffectBase {
     /**
      * Constructs a new EdgeExtraction effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param edgeStrength the strength of the edges
-     * @param threshold the threshold for edge detection
+     * @param edgeStrength        the strength of the edges
+     * @param threshold           the threshold for edge detection
      * @param enableLuminanceEdge whether to enable luminance edge detection
-     * @param enableAlphaEdge whether to enable alpha edge detection
-     * @param edgeColor the color of the edges
+     * @param enableAlphaEdge     whether to enable alpha edge detection
+     * @param edgeColor           the color of the edges
      */
-    public EdgeExtraction(Vector2f resolution, double edgeStrength, double threshold, boolean enableLuminanceEdge, boolean enableAlphaEdge, Color edgeColor) {
-        this(resolution, (float) edgeStrength, (float) threshold, enableLuminanceEdge, enableAlphaEdge, edgeColor);
+    public EdgeExtraction(double edgeStrength, double threshold, boolean enableLuminanceEdge, boolean enableAlphaEdge, Color edgeColor) {
+        this((float) edgeStrength, (float) threshold, enableLuminanceEdge, enableAlphaEdge, edgeColor);
     }
 
     /**

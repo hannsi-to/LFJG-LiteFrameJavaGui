@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.render.openGL.effect.effects;
 
+import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.color.Color;
@@ -26,19 +27,18 @@ public class Gradation extends EffectBase {
     /**
      * Constructs a new Gradation effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param centerX the x-coordinate of the center
-     * @param centerY the y-coordinate of the center
-     * @param angle the angle of the gradation
-     * @param width the width of the gradation
-     * @param shapeMode the shape mode of the gradation
-     * @param blendType the blend type of the gradation
+     * @param centerX    the x-coordinate of the center
+     * @param centerY    the y-coordinate of the center
+     * @param angle      the angle of the gradation
+     * @param width      the width of the gradation
+     * @param shapeMode  the shape mode of the gradation
+     * @param blendType  the blend type of the gradation
      * @param startColor the start color of the gradation
-     * @param endColor the end color of the gradation
-     * @param intensity the intensity of the gradation
+     * @param endColor   the end color of the gradation
+     * @param intensity  the intensity of the gradation
      */
-    public Gradation(Vector2f resolution, float centerX, float centerY, float angle, float width, ShapeMode shapeMode, BlendType blendType, Color startColor, Color endColor, float intensity) {
-        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Gradation.fsh"), true, 24, "Gradation");
+    public Gradation(float centerX, float centerY, float angle, float width, ShapeMode shapeMode, BlendType blendType, Color startColor, Color endColor, float intensity) {
+        super(new ResourcesLocation("shader/frameBuffer/filter/Gradation.fsh"), true, 24, "Gradation");
 
         this.centerX = centerX;
         this.centerY = centerY;
@@ -54,19 +54,18 @@ public class Gradation extends EffectBase {
     /**
      * Constructs a new Gradation effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param centerX the x-coordinate of the center
-     * @param centerY the y-coordinate of the center
-     * @param angle the angle of the gradation
-     * @param width the width of the gradation
-     * @param shapeMode the shape mode of the gradation
-     * @param blendType the blend type of the gradation
+     * @param centerX    the x-coordinate of the center
+     * @param centerY    the y-coordinate of the center
+     * @param angle      the angle of the gradation
+     * @param width      the width of the gradation
+     * @param shapeMode  the shape mode of the gradation
+     * @param blendType  the blend type of the gradation
      * @param startColor the start color of the gradation
-     * @param endColor the end color of the gradation
-     * @param intensity the intensity of the gradation
+     * @param endColor   the end color of the gradation
+     * @param intensity  the intensity of the gradation
      */
-    public Gradation(Vector2f resolution, double centerX, double centerY, double angle, double width, ShapeMode shapeMode, BlendType blendType, Color startColor, Color endColor, double intensity) {
-        this(resolution, (float) centerX, (float) centerY, (float) angle, (float) width, shapeMode, blendType, startColor, endColor, (float) intensity);
+    public Gradation(double centerX, double centerY, double angle, double width, ShapeMode shapeMode, BlendType blendType, Color startColor, Color endColor, double intensity) {
+        this((float) centerX, (float) centerY, (float) angle, (float) width, shapeMode, blendType, startColor, endColor, (float) intensity);
     }
 
     /**
@@ -109,7 +108,7 @@ public class Gradation extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("center", new Vector2f(centerX / getResolution().x, centerY / getResolution().y));
+        getFrameBuffer().getShaderProgramFBO().setUniform("center", new Vector2f(centerX / LFJGContext.resolution.x, centerY / LFJGContext.resolution.y));
         getFrameBuffer().getShaderProgramFBO().setUniform("angle", angle);
         getFrameBuffer().getShaderProgramFBO().setUniform("width", width);
         getFrameBuffer().getShaderProgramFBO().setUniform1i("gradientShape", shapeMode.getId());

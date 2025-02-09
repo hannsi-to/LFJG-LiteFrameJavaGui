@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.render.openGL.renderers;
 
+import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.system.Id;
@@ -8,12 +9,10 @@ import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.openGL.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
 import me.hannsi.lfjg.utils.graphics.GLUtil;
-import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.BlendType;
 import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
 import org.lwjgl.opengl.GL30;
 
 /**
@@ -32,8 +31,6 @@ public class GLObject {
     private ResourcesLocation vertexShader;
     private ResourcesLocation fragmentShader;
 
-    private Vector2f resolution;
-    private Matrix4f projectionMatrix;
     private Matrix4f modelMatrix;
     private Matrix4f viewMatrix;
 
@@ -58,8 +55,6 @@ public class GLObject {
         this.pointSize = -1f;
         this.vertexShader = null;
         this.fragmentShader = null;
-        this.resolution = null;
-        this.projectionMatrix = null;
         this.modelMatrix = null;
         this.viewMatrix = null;
         this.blendType = null;
@@ -75,7 +70,7 @@ public class GLObject {
     public void create() {
         vaoRendering = new VAORendering();
 
-        frameBuffer = new FrameBuffer(resolution);
+        frameBuffer = new FrameBuffer();
         frameBuffer.createFrameBuffer();
         frameBuffer.createShaderProgram();
 
@@ -92,14 +87,8 @@ public class GLObject {
 
     /**
      * Draws the GLObject using the specified resolution and projection.
-     *
-     * @param resolution the resolution to use for drawing
-     * @param projection the projection to use for drawing
      */
-    public void draw(Vector2f resolution, Projection projection) {
-        this.resolution = resolution;
-        this.projectionMatrix = projection.getProjMatrix();
-
+    public void draw() {
         frameBuffer.bindFrameBuffer();
         GL30.glPushMatrix();
 
@@ -114,10 +103,10 @@ public class GLObject {
 
         effectCache.push(this);
 
-        shaderProgram.setUniform("projectionMatrix", projectionMatrix);
+        shaderProgram.setUniform("projectionMatrix", LFJGContext.projection.getProjMatrix());
         shaderProgram.setUniform("modelMatrix", modelMatrix);
         shaderProgram.setUniform("viewMatrix", viewMatrix);
-        shaderProgram.setUniform("resolution", resolution);
+        shaderProgram.setUniform("resolution", LFJGContext.resolution);
 
         if (mesh.getTexture() != null) {
             shaderProgram.setUniform1i("textureSampler", 0);
@@ -314,27 +303,6 @@ public class GLObject {
     }
 
     /**
-     * Gets the projection matrix of the GLObject.
-     *
-     * @return the projection matrix of the GLObject
-     */
-    public Matrix4f getProjectionMatrix() {
-        return projectionMatrix;
-    }
-
-    /**
-     * Sets the projection matrix of the GLObject.
-     *
-     * @param projectionMatrix the projection matrix to set
-     * @return the GLObject instance
-     */
-    public GLObject setProjectionMatrix(Matrix4f projectionMatrix) {
-        this.projectionMatrix = projectionMatrix;
-
-        return this;
-    }
-
-    /**
      * Gets the blend type of the GLObject.
      *
      * @return the blend type of the GLObject
@@ -416,24 +384,6 @@ public class GLObject {
         this.pointSize = pointSize;
 
         return this;
-    }
-
-    /**
-     * Gets the resolution of the GLObject.
-     *
-     * @return the resolution of the GLObject
-     */
-    public Vector2f getResolution() {
-        return resolution;
-    }
-
-    /**
-     * Sets the resolution of the GLObject.
-     *
-     * @param resolution the resolution to set
-     */
-    public void setResolution(Vector2f resolution) {
-        this.resolution = resolution;
     }
 
     /**

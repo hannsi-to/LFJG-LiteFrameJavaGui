@@ -42,8 +42,6 @@ public class GLFWCallback implements IFrame {
             public void invoke(long window, int width, int height) {
                 frame.setWindowWidth(width);
                 frame.setWindowHeight(height);
-
-                frame.updateViewport();
             }
         });
         GLFW.glfwSetWindowContentScaleCallback(frame.getWindowID(), new GLFWWindowContentScaleCallbackI() {
@@ -51,8 +49,6 @@ public class GLFWCallback implements IFrame {
             public void invoke(long window, float contentScaleX, float contentScaleY) {
                 frame.setContentScaleX(contentScaleX);
                 frame.setContentScaleY(contentScaleY);
-
-                frame.updateViewport();
             }
         });
         GLFW.glfwSetKeyCallback(frame.getWindowID(), new GLFWKeyCallback() {

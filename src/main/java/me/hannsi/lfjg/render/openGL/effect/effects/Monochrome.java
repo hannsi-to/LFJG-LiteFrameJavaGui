@@ -4,7 +4,6 @@ import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 /**
@@ -18,13 +17,12 @@ public class Monochrome extends EffectBase {
     /**
      * Constructs a new Monochrome effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param intensity the intensity of the monochrome effect
-     * @param color the color to be used for the monochrome effect
+     * @param intensity          the intensity of the monochrome effect
+     * @param color              the color to be used for the monochrome effect
      * @param preserveBrightness whether to preserve the brightness
      */
-    public Monochrome(Vector2f resolution, float intensity, Color color, boolean preserveBrightness) {
-        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Monochrome.fsh"), true, 23, "Monochrome");
+    public Monochrome(float intensity, Color color, boolean preserveBrightness) {
+        super(new ResourcesLocation("shader/frameBuffer/filter/Monochrome.fsh"), true, 23, "Monochrome");
 
         this.intensity = intensity;
         this.color = color;
@@ -34,13 +32,12 @@ public class Monochrome extends EffectBase {
     /**
      * Constructs a new Monochrome effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param intensity the intensity of the monochrome effect
-     * @param color the color to be used for the monochrome effect
+     * @param intensity          the intensity of the monochrome effect
+     * @param color              the color to be used for the monochrome effect
      * @param preserveBrightness whether to preserve the brightness
      */
-    public Monochrome(Vector2f resolution, double intensity, Color color, boolean preserveBrightness) {
-        this(resolution, (float) intensity, color, preserveBrightness);
+    public Monochrome(double intensity, Color color, boolean preserveBrightness) {
+        this((float) intensity, color, preserveBrightness);
     }
 
     /**

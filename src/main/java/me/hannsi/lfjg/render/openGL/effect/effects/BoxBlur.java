@@ -3,7 +3,6 @@ package me.hannsi.lfjg.render.openGL.effect.effects;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import org.joml.Vector2f;
 
 /**
  * Class representing a Box Blur effect in OpenGL.
@@ -15,12 +14,11 @@ public class BoxBlur extends EffectBase {
     /**
      * Constructs a new BoxBlur effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
      * @param kernelX the kernel size in the x-direction
      * @param kernelY the kernel size in the y-direction
      */
-    public BoxBlur(Vector2f resolution, int kernelX, int kernelY) {
-        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/BoxBlur.fsh"), true, 16, "BoxBlur");
+    public BoxBlur(int kernelX, int kernelY) {
+        super(new ResourcesLocation("shader/frameBuffer/filter/BoxBlur.fsh"), true, 16, "BoxBlur");
 
         this.kernelX = kernelX;
         this.kernelY = kernelY;

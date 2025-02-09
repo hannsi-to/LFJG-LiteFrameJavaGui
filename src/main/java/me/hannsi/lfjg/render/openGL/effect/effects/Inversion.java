@@ -3,7 +3,6 @@ package me.hannsi.lfjg.render.openGL.effect.effects;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import org.joml.Vector2f;
 
 /**
  * Class representing an Inversion effect in OpenGL.
@@ -18,15 +17,14 @@ public class Inversion extends EffectBase {
     /**
      * Constructs a new Inversion effect with the specified parameters.
      *
-     * @param resolution the resolution of the effect
-     * @param flipVertical whether to flip the image vertically
-     * @param flipHorizontal whether to flip the image horizontally
+     * @param flipVertical     whether to flip the image vertically
+     * @param flipHorizontal   whether to flip the image horizontally
      * @param invertBrightness whether to invert the brightness
-     * @param invertHue whether to invert the hue
-     * @param invertAlpha whether to invert the alpha
+     * @param invertHue        whether to invert the hue
+     * @param invertAlpha      whether to invert the alpha
      */
-    public Inversion(Vector2f resolution, boolean flipVertical, boolean flipHorizontal, boolean invertBrightness, boolean invertHue, boolean invertAlpha) {
-        super(resolution, new ResourcesLocation("shader/frameBuffer/filter/Inversion.fsh"), true, 21, "Inversion");
+    public Inversion(boolean flipVertical, boolean flipHorizontal, boolean invertBrightness, boolean invertHue, boolean invertAlpha) {
+        super(new ResourcesLocation("shader/frameBuffer/filter/Inversion.fsh"), true, 21, "Inversion");
 
         this.flipVertical = flipVertical;
         this.flipHorizontal = flipHorizontal;
