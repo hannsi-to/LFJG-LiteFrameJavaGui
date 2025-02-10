@@ -33,7 +33,7 @@ public class TextureLoader {
     /**
      * Constructs a TextureLoader instance with the specified texture path and loader type.
      *
-     * @param texturePath the path to the texture resource
+     * @param texturePath       the path to the texture resource
      * @param textureLoaderType the type of texture loader to use
      */
     public TextureLoader(ResourcesLocation texturePath, TextureLoaderType textureLoaderType) {
@@ -47,9 +47,9 @@ public class TextureLoader {
      * Loads an image using STBImage and returns it as a ByteBuffer.
      *
      * @param resourcesLocation the location of the resource
-     * @param widthBuffer the buffer to store the image width
-     * @param heightBuffer the buffer to store the image height
-     * @param channelsBuffer the buffer to store the number of channels
+     * @param widthBuffer       the buffer to store the image width
+     * @param heightBuffer      the buffer to store the image height
+     * @param channelsBuffer    the buffer to store the number of channels
      * @return the ByteBuffer containing the image data
      */
     public static ByteBuffer loadImageInSTBImage(ResourcesLocation resourcesLocation, IntBuffer widthBuffer, IntBuffer heightBuffer, IntBuffer channelsBuffer) {
@@ -86,6 +86,14 @@ public class TextureLoader {
                 MemoryUtil.memFree(buffer);
             }
         }
+    }
+
+    /**
+     * Cleans up the texture resources.
+     */
+    public void cleanup() {
+        texturePath.cleanup();
+        glDeleteTextures(textureId);
     }
 
     /**
@@ -129,9 +137,9 @@ public class TextureLoader {
     /**
      * Generates an OpenGL texture from the given image data.
      *
-     * @param width the width of the image
+     * @param width  the width of the image
      * @param height the height of the image
-     * @param buf the ByteBuffer containing the image data
+     * @param buf    the ByteBuffer containing the image data
      */
     private void generateTexture(int width, int height, ByteBuffer buf) {
         textureId = glGenTextures();
@@ -165,13 +173,6 @@ public class TextureLoader {
      */
     public void unbind() {
         glBindTexture(GL_TEXTURE_2D, 0);
-    }
-
-    /**
-     * Cleans up the texture resources.
-     */
-    public void cleanup() {
-        glDeleteTextures(textureId);
     }
 
     /**

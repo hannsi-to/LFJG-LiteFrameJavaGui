@@ -27,6 +27,7 @@ public class TextureModelCache {
      */
     public void cleanup() {
         textureMap.values().forEach(TextureModel::cleanup);
+        textureMap.clear();
     }
 
     /**

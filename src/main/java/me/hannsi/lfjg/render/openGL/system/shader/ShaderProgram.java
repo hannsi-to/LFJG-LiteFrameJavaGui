@@ -39,6 +39,18 @@ public class ShaderProgram {
     }
 
     /**
+     * Cleans up the shader program by deleting it.
+     */
+    public void cleanup() {
+        unbind();
+        if (programId != 0) {
+            glDeleteProgram(programId);
+            glDeleteShader(vertexShaderId);
+            glDeleteShader(fragmentShaderId);
+        }
+    }
+
+    /**
      * Creates a vertex shader from the specified resource location.
      *
      * @param resourcesLocation the location of the vertex shader resource
@@ -113,7 +125,7 @@ public class ShaderProgram {
     /**
      * Sets a boolean uniform in the shader program.
      *
-     * @param name the name of the uniform
+     * @param name  the name of the uniform
      * @param value the boolean value to set
      */
     public void setUniform(String name, boolean value) {
@@ -125,7 +137,7 @@ public class ShaderProgram {
     /**
      * Sets a Matrix4f uniform in the shader program.
      *
-     * @param name the name of the uniform
+     * @param name  the name of the uniform
      * @param value the Matrix4f value to set
      */
     public void setUniform(String name, Matrix4f value) {
@@ -139,7 +151,7 @@ public class ShaderProgram {
     /**
      * Sets a FloatBuffer uniform in the shader program.
      *
-     * @param name the name of the uniform
+     * @param name  the name of the uniform
      * @param value the FloatBuffer value to set
      */
     public void setUniform(String name, FloatBuffer value) {
@@ -151,7 +163,7 @@ public class ShaderProgram {
     /**
      * Sets a float uniform in the shader program.
      *
-     * @param name the name of the uniform
+     * @param name  the name of the uniform
      * @param value the float value to set
      */
     public void setUniform(String name, float value) {
@@ -163,7 +175,7 @@ public class ShaderProgram {
     /**
      * Sets a Vector2f uniform in the shader program.
      *
-     * @param name the name of the uniform
+     * @param name  the name of the uniform
      * @param value the Vector2f value to set
      */
     public void setUniform(String name, Vector2f value) {
@@ -175,7 +187,7 @@ public class ShaderProgram {
     /**
      * Sets a 2-component float uniform in the shader program.
      *
-     * @param name the name of the uniform
+     * @param name   the name of the uniform
      * @param value1 the first float value
      * @param value2 the second float value
      */
@@ -188,7 +200,7 @@ public class ShaderProgram {
     /**
      * Sets a Vector3f uniform in the shader program.
      *
-     * @param name the name of the uniform
+     * @param name  the name of the uniform
      * @param value the Vector3f value to set
      */
     public void setUniform(String name, Vector3f value) {
@@ -200,7 +212,7 @@ public class ShaderProgram {
     /**
      * Sets a 3-component float uniform in the shader program.
      *
-     * @param name the name of the uniform
+     * @param name   the name of the uniform
      * @param value1 the first float value
      * @param value2 the second float value
      * @param value3 the third float value
@@ -214,7 +226,7 @@ public class ShaderProgram {
     /**
      * Sets an integer uniform in the shader program.
      *
-     * @param name the name of the uniform
+     * @param name  the name of the uniform
      * @param value the integer value to set
      */
     public void setUniform1i(String name, int value) {
@@ -226,7 +238,7 @@ public class ShaderProgram {
     /**
      * Sets a Vector4f uniform in the shader program.
      *
-     * @param name the name of the uniform
+     * @param name  the name of the uniform
      * @param value the Vector4f value to set
      */
     public void setUniform(String name, Vector4f value) {
@@ -238,7 +250,7 @@ public class ShaderProgram {
     /**
      * Sets a 4-component float uniform in the shader program.
      *
-     * @param name the name of the uniform
+     * @param name   the name of the uniform
      * @param value1 the first float value
      * @param value2 the second float value
      * @param value3 the third float value
@@ -253,7 +265,7 @@ public class ShaderProgram {
     /**
      * Sets a Color uniform in the shader program.
      *
-     * @param name the name of the uniform
+     * @param name  the name of the uniform
      * @param color the Color value to set
      */
     public void setUniform(String name, Color color) {
@@ -277,16 +289,6 @@ public class ShaderProgram {
      */
     public void unbind() {
         glUseProgram(0);
-    }
-
-    /**
-     * Cleans up the shader program by deleting it.
-     */
-    public void cleanup() {
-        unbind();
-        if (programId != 0) {
-            glDeleteProgram(programId);
-        }
     }
 
     /**

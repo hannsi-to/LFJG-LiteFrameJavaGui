@@ -40,6 +40,12 @@ public class ImageData {
         this.byteBuffer = BufferUtil.matToByteBufferRGBA(mat);
     }
 
+    public void cleanup() {
+        imagePath.cleanup();
+        mat = null;
+        byteBuffer.clear();
+    }
+
     /**
      * Gets the image path.
      *

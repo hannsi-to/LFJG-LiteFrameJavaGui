@@ -29,7 +29,7 @@ public class Mesh {
      * Constructs a new Mesh instance with the specified positions and colors.
      *
      * @param positions the vertex positions
-     * @param colors the vertex colors
+     * @param colors    the vertex colors
      */
     public Mesh(float[] positions, float[] colors) {
         this(DEFAULT_PROJECTION_TYPE, positions, colors);
@@ -39,7 +39,7 @@ public class Mesh {
      * Constructs a new Mesh instance with the specified projection type and positions.
      *
      * @param projectionType the projection type
-     * @param positions the vertex positions
+     * @param positions      the vertex positions
      */
     public Mesh(ProjectionType projectionType, float[] positions) {
         this(projectionType, positions, null, null);
@@ -49,8 +49,8 @@ public class Mesh {
      * Constructs a new Mesh instance with the specified projection type, positions, and colors.
      *
      * @param projectionType the projection type
-     * @param positions the vertex positions
-     * @param colors the vertex colors
+     * @param positions      the vertex positions
+     * @param colors         the vertex colors
      */
     public Mesh(ProjectionType projectionType, float[] positions, float[] colors) {
         this(projectionType, positions, colors, null);
@@ -60,9 +60,9 @@ public class Mesh {
      * Constructs a new Mesh instance with the specified projection type, positions, colors, and texture coordinates.
      *
      * @param projectionType the projection type
-     * @param positions the vertex positions
-     * @param colors the vertex colors
-     * @param texture the texture coordinates
+     * @param positions      the vertex positions
+     * @param colors         the vertex colors
+     * @param texture        the texture coordinates
      */
     public Mesh(ProjectionType projectionType, float[] positions, float[] colors, float[] texture) {
         this.projectionType = projectionType;
@@ -131,9 +131,9 @@ public class Mesh {
     /**
      * Constructs a new Mesh instance with the specified positions, texture coordinates, and indices.
      *
-     * @param positions the vertex positions
+     * @param positions  the vertex positions
      * @param textCoords the texture coordinates
-     * @param indices the indices
+     * @param indices    the indices
      */
     public Mesh(float[] positions, float[] textCoords, int[] indices) {
         this.positions = positions;
@@ -183,10 +183,10 @@ public class Mesh {
     /**
      * Constructs a new Mesh instance with the specified positions, normals, texture coordinates, and indices.
      *
-     * @param positions the vertex positions
-     * @param normals the vertex normals
+     * @param positions  the vertex positions
+     * @param normals    the vertex normals
      * @param textCoords the texture coordinates
-     * @param indices the indices
+     * @param indices    the indices
      */
     public Mesh(float[] positions, float[] normals, float[] textCoords, int[] indices) {
         this.positions = positions;
@@ -249,6 +249,7 @@ public class Mesh {
     public void cleanup() {
         vboIdList.forEach(GL30::glDeleteBuffers);
         glDeleteVertexArrays(vaoId);
+        vboIdList.clear();
     }
 
     /**

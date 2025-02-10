@@ -69,6 +69,8 @@ public class CFont {
      * Cleans up the resources used by the font.
      */
     public void cleanup() {
+        filepath.cleanup();
+        font = null;
         characterMap.clear();
     }
 

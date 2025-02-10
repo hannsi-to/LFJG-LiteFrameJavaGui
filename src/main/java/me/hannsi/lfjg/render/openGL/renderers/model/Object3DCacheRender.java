@@ -1,15 +1,15 @@
 package me.hannsi.lfjg.render.openGL.renderers.model;
 
-import me.hannsi.lfjg.render.openGL.system.user.Camera;
-import me.hannsi.lfjg.render.openGL.system.model.*;
-import me.hannsi.lfjg.render.openGL.system.model.lights.*;
 import me.hannsi.lfjg.render.openGL.system.Mesh;
+import me.hannsi.lfjg.render.openGL.system.model.Object3DCache;
+import me.hannsi.lfjg.render.openGL.system.model.lights.*;
 import me.hannsi.lfjg.render.openGL.system.model.model.Entity;
 import me.hannsi.lfjg.render.openGL.system.model.model.Material;
 import me.hannsi.lfjg.render.openGL.system.model.model.Model;
 import me.hannsi.lfjg.render.openGL.system.model.texture.TextureModel;
 import me.hannsi.lfjg.render.openGL.system.model.texture.TextureModelCache;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
+import me.hannsi.lfjg.render.openGL.system.user.Camera;
 import me.hannsi.lfjg.utils.graphics.GLUtil;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Matrix4f;
@@ -52,6 +52,7 @@ public class Object3DCacheRender {
     public void cleanup() {
         object3DCache.cleanup();
         shaderProgram.cleanup();
+        glUtil.cleanup();
     }
 
     /**
@@ -110,7 +111,7 @@ public class Object3DCacheRender {
      * Updates the lights in the shader program.
      *
      * @param object3DCache the cache containing the lights
-     * @param camera the camera to use for view matrix
+     * @param camera        the camera to use for view matrix
      */
     private void updateLights(Object3DCache object3DCache, Camera camera) {
         Matrix4f viewMatrix = camera.getViewMatrix();
@@ -161,7 +162,7 @@ public class Object3DCacheRender {
      * Updates a point light in the shader program.
      *
      * @param pointLight the point light to update
-     * @param prefix the prefix for the uniform names
+     * @param prefix     the prefix for the uniform names
      * @param viewMatrix the view matrix to transform the light position
      */
     private void updatePointLight(PointLight pointLight, String prefix, Matrix4f viewMatrix) {
@@ -196,8 +197,8 @@ public class Object3DCacheRender {
     /**
      * Updates a spot light in the shader program.
      *
-     * @param spotLight the spot light to update
-     * @param prefix the prefix for the uniform names
+     * @param spotLight  the spot light to update
+     * @param prefix     the prefix for the uniform names
      * @param viewMatrix the view matrix to transform the light position
      */
     private void updateSpotLight(SpotLight spotLight, String prefix, Matrix4f viewMatrix) {

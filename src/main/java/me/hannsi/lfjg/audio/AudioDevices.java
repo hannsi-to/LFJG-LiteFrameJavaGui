@@ -34,6 +34,10 @@ public class AudioDevices {
         }
     }
 
+    public void cleanup() {
+        deviceMap.clear();
+    }
+
     /**
      * Retrieves the ByteBuffer representation of the specified audio device.
      *

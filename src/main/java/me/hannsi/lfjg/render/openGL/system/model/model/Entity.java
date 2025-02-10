@@ -18,7 +18,7 @@ public class Entity {
     /**
      * Constructs a new Entity with the specified id and modelId.
      *
-     * @param id the unique identifier of the entity
+     * @param id      the unique identifier of the entity
      * @param modelId the identifier of the model associated with the entity
      */
     public Entity(String id, String modelId) {
@@ -28,6 +28,12 @@ public class Entity {
         position = new Vector3f();
         rotation = new Quaternionf();
         scale = 1;
+    }
+
+    public void cleanup() {
+        modelMatrix = null;
+        position = null;
+        rotation = null;
     }
 
     /**
@@ -136,9 +142,9 @@ public class Entity {
     /**
      * Sets the rotation of the entity using individual coordinates and an angle.
      *
-     * @param x the x-coordinate of the rotation axis
-     * @param y the y-coordinate of the rotation axis
-     * @param z the z-coordinate of the rotation axis
+     * @param x     the x-coordinate of the rotation axis
+     * @param y     the y-coordinate of the rotation axis
+     * @param z     the z-coordinate of the rotation axis
      * @param angle the angle of rotation in radians
      */
     public void setRotation(float x, float y, float z, float angle) {

@@ -19,9 +19,9 @@ public class TextureModel {
     /**
      * Constructs a new TextureModel with the specified width, height, and buffer.
      *
-     * @param width the width of the texture
+     * @param width  the width of the texture
      * @param height the height of the texture
-     * @param buf the buffer containing the texture data
+     * @param buf    the buffer containing the texture data
      */
     public TextureModel(int width, int height, ByteBuffer buf) {
         this.texturePath = null;
@@ -72,15 +72,16 @@ public class TextureModel {
      * Cleans up the texture by deleting it.
      */
     public void cleanup() {
+        texturePath.cleanup();
         glDeleteTextures(textureId);
     }
 
     /**
      * Generates the texture with the specified width, height, and buffer.
      *
-     * @param width the width of the texture
+     * @param width  the width of the texture
      * @param height the height of the texture
-     * @param buf the buffer containing the texture data
+     * @param buf    the buffer containing the texture data
      */
     private void generateTexture(int width, int height, ByteBuffer buf) {
         textureId = glGenTextures();

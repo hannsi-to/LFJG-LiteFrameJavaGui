@@ -24,6 +24,10 @@ public class GLSLCode {
         checkInclude = true;
     }
 
+    public void cleanup() {
+        resourcesLocation.cleanup();
+    }
+
     /**
      * Processes the includes within the shader code.
      * Recursively replaces #include directives with the content of the included files.

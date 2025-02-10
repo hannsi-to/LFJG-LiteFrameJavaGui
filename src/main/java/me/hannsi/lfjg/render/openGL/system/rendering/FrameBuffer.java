@@ -85,6 +85,26 @@ public class FrameBuffer {
     }
 
     /**
+     * Cleans up the frame buffer by deleting the frame buffer and texture.
+     */
+    public void cleanup() {
+        GL30.glDeleteFramebuffers(frameBufferId);
+        GL30.glDeleteTextures(textureId);
+        GL30.glDeleteRenderbuffers(renderBufferId);
+
+        vaoRendering.cleanup();
+        mesh.cleanup();
+        shaderProgramFBO.cleanup();
+        vaoRendering.cleanup();
+        fragmentShaderFBO.cleanup();
+
+        modelMatrix = null;
+        viewMatrix = null;
+
+        glObject.cleanup();
+    }
+
+    /**
      * Creates the shader program for the frame buffer.
      */
     public void createShaderProgram() {
@@ -94,14 +114,6 @@ public class FrameBuffer {
 
         modelMatrix = new Matrix4f();
         viewMatrix = new Matrix4f();
-    }
-
-    /**
-     * Cleans up the frame buffer by deleting the frame buffer and texture.
-     */
-    public void cleanup() {
-        GL30.glDeleteFramebuffers(frameBufferId);
-        GL30.glDeleteTextures(textureId);
     }
 
     /**
@@ -185,7 +197,7 @@ public class FrameBuffer {
         unbindTexture(textureUnit);
 
         glUtil.disableTargets();
-        glUtil.finish();
+        glUtil.cleanup();
 
         shaderProgramFBO.unbind();
         GL30.glPopMatrix();

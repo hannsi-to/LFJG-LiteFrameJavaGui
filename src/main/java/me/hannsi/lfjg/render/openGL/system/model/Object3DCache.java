@@ -36,7 +36,7 @@ public class Object3DCache {
     /**
      * Creates a cache for the specified model and entity.
      *
-     * @param model the model to cache
+     * @param model  the model to cache
      * @param entity the entity to cache
      */
     public void createCache(Model model, Entity entity) {
@@ -52,6 +52,8 @@ public class Object3DCache {
      * Cleans up the cache by cleaning up all models in the model map.
      */
     public void cleanup() {
+        lights.cleanup();
+        textureModelCache.cleanup();
         modelMap.values().forEach(Model::cleanup);
     }
 
@@ -112,7 +114,7 @@ public class Object3DCache {
     /**
      * Resizes the projection with the specified width and height.
      *
-     * @param width the new width
+     * @param width  the new width
      * @param height the new height
      */
     public void resize(int width, int height) {

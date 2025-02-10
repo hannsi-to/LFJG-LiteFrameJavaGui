@@ -8,7 +8,10 @@ import org.lwjgl.stb.STBVorbisInfo;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
-import java.nio.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 
 import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.stb.STBVorbis.*;
@@ -64,6 +67,7 @@ public class SoundBuffer {
      * Cleans up the resources associated with this SoundBuffer.
      */
     public void cleanup() {
+        fileLocation.cleanup();
         alDeleteBuffers(this.bufferId);
         if (pcm != null) {
             MemoryUtil.memFree(pcm);

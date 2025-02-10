@@ -75,6 +75,7 @@ public class VAORendering {
      */
     public void cleanup() {
         glObject.getMesh().cleanup();
+        glObject = null;
     }
 
     /**

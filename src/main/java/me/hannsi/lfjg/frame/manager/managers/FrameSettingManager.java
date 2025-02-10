@@ -110,6 +110,10 @@ public class FrameSettingManager extends Manager {
         DebugLog.debug(getClass(), sb.toString());
     }
 
+    public void cleanup() {
+        frameSettings.clear();
+    }
+
     /**
      * Registers a frame setting.
      *

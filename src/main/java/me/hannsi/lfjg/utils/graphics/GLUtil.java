@@ -30,7 +30,7 @@ public class GLUtil {
     /**
      * Adds an OpenGL target with the specified state.
      *
-     * @param target the OpenGL target to add
+     * @param target  the OpenGL target to add
      * @param disable the state of the target (true to disable, false to enable)
      */
     public void addGLTarget(int target, boolean disable) {
@@ -88,7 +88,7 @@ public class GLUtil {
     /**
      * Clears all OpenGL targets from the map.
      */
-    public void finish() {
+    public void cleanup() {
         targets.clear();
     }
 }

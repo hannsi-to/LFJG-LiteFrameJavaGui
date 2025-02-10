@@ -80,6 +80,12 @@ public class EffectBase {
         this(null, null, id, name, ignoreGLObject);
     }
 
+    public void cleanup() {
+        frameBuffer.cleanup();
+        name = "";
+        ignoreGLObject = null;
+    }
+
     /**
      * Draws the effect for the base GL object.
      *

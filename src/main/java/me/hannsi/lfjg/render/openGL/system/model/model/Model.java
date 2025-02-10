@@ -14,7 +14,7 @@ public class Model {
     /**
      * Constructs a new Model with the specified id and material list.
      *
-     * @param id the unique identifier of the model
+     * @param id           the unique identifier of the model
      * @param materialList the list of materials associated with the model
      */
     public Model(String id, List<Material> materialList) {
@@ -27,7 +27,10 @@ public class Model {
      * Cleans up the model by cleaning up all materials in the material list.
      */
     public void cleanup() {
+        entitiesList.forEach(Entity::cleanup);
         materialList.forEach(Material::cleanup);
+        entitiesList.clear();
+        materialList.clear();
     }
 
     /**

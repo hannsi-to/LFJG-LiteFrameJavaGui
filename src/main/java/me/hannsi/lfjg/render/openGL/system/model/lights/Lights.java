@@ -24,6 +24,13 @@ public class Lights {
         dirLight = new DirLight(new Vector3f(1, 1, 1), new Vector3f(0, 1, 0), 1.0f);
     }
 
+    public void cleanup() {
+        ambientLight = null;
+        dirLight = null;
+        pointLights.clear();
+        spotLights.clear();
+    }
+
     /**
      * Gets the ambient light.
      *

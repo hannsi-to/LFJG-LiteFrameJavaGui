@@ -28,6 +28,12 @@ public class MouseInfo {
         inWindow = false;
     }
 
+    public void cleanup() {
+        currentPos = null;
+        displVec = null;
+        previousPos = null;
+    }
+
     /**
      * Updates the current cursor position.
      *

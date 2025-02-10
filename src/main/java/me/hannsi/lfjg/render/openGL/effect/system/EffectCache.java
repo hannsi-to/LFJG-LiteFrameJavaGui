@@ -13,7 +13,6 @@ import java.util.*;
  */
 public class EffectCache {
     public static long latestEffectCacheId;
-    public static int latestSubObjectId;
     private LinkedHashMap<EffectBase, Long> effectBases;
 
     /**
@@ -28,9 +27,9 @@ public class EffectCache {
      * Sets a new LinkedHashMap with the specified value.
      *
      * @param originalMap the original LinkedHashMap
-     * @param value the value to set
-     * @param <K> the type of keys in the map
-     * @param <V> the type of values in the map
+     * @param value       the value to set
+     * @param <K>         the type of keys in the map
+     * @param <V>         the type of values in the map
      * @return a new LinkedHashMap with the specified value
      */
     private static <K, V> LinkedHashMap<K, V> setHashMap(LinkedHashMap<K, V> originalMap, V value) {
@@ -41,9 +40,9 @@ public class EffectCache {
      * Gets the entry at the specified index from the LinkedHashMap.
      *
      * @param originalMap the original LinkedHashMap
-     * @param index the index of the entry to get
-     * @param <K> the type of keys in the map
-     * @param <V> the type of values in the map
+     * @param index       the index of the entry to get
+     * @param <K>         the type of keys in the map
+     * @param <V>         the type of values in the map
      * @return the entry at the specified index
      */
     private static <K, V> Map.Entry<K, V> getLinkedHashMapEntry(LinkedHashMap<K, V> originalMap, int index) {
@@ -55,8 +54,8 @@ public class EffectCache {
      * Reverses the order of the entries in the LinkedHashMap.
      *
      * @param originalMap the original LinkedHashMap
-     * @param <K> the type of keys in the map
-     * @param <V> the type of values in the map
+     * @param <K>         the type of keys in the map
+     * @param <V>         the type of values in the map
      * @return a new LinkedHashMap with the entries in reverse order
      */
     private static <K, V> LinkedHashMap<K, V> reverseLinkedHashMap(LinkedHashMap<K, V> originalMap) {
@@ -75,7 +74,7 @@ public class EffectCache {
      * Creates a cache for the specified effect and GL object.
      *
      * @param effectBase the effect to cache
-     * @param glObject the GL object associated with the effect
+     * @param glObject   the GL object associated with the effect
      */
     public void createCache(EffectBase effectBase, GLObject glObject) {
         effectBase.getFrameBuffer().setUesStencil(true);
@@ -159,10 +158,10 @@ public class EffectCache {
      * Applies the effect to the frame buffer for the specified GL object.
      *
      * @param frameBuffer the frame buffer
-     * @param index the index of the effect
-     * @param maxSize the maximum size of the effect list
-     * @param effectBase the effect to apply
-     * @param glObject the GL object
+     * @param index       the index of the effect
+     * @param maxSize     the maximum size of the effect list
+     * @param effectBase  the effect to apply
+     * @param glObject    the GL object
      */
     public void applyEffect(FrameBuffer frameBuffer, int index, int maxSize, EffectBase effectBase, GLObject glObject) {
         if (index == maxSize || effectBase.getName().equals("FrameBufferContents")) {
@@ -200,6 +199,7 @@ public class EffectCache {
      * Cleans up the effect cache.
      */
     public void cleanup() {
+        effectBases.forEach((effectBase, id) -> effectBase.cleanup());
         effectBases.clear();
     }
 

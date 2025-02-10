@@ -220,7 +220,12 @@ public class Frame implements IFrame {
         finishTime = TimeSourceUtil.getTimeMills(this);
         lfjgFrame.stopFrame();
 
+        cleanupManager();
         breakFrame();
+    }
+
+    private void cleanupManager() {
+        frameSettingManager.cleanup();
     }
 
     public void updateLFJGLContext() {

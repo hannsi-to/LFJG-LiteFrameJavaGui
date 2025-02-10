@@ -65,6 +65,22 @@ public class GLObject {
     }
 
     /**
+     * Cleans up the resources used by the GLObject.
+     */
+    public void cleanup() {
+        mesh.cleanup();
+        frameBuffer.cleanup();
+        shaderProgram.cleanup();
+        vertexShader.cleanup();
+        frameBuffer.cleanup();
+        modelMatrix = null;
+        viewMatrix = null;
+        effectCache.cleanup();
+        vaoRendering.cleanup();
+        glUtil.cleanup();
+    }
+
+    /**
      * Initializes the GLObject by creating necessary OpenGL resources.
      */
     public void create() {
@@ -120,7 +136,7 @@ public class GLObject {
         vaoRendering.draw(this);
 
         glUtil.disableTargets();
-        glUtil.finish();
+        glUtil.cleanup();
 
         effectCache.pop(this);
 
@@ -130,15 +146,6 @@ public class GLObject {
         frameBuffer.unbindFrameBuffer();
 
         effectCache.frameBuffer(this);
-    }
-
-    /**
-     * Cleans up the resources used by the GLObject.
-     */
-    public void cleanup() {
-        vaoRendering.cleanup();
-        shaderProgram.cleanup();
-        effectCache.cleanup();
     }
 
     /**

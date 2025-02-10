@@ -32,6 +32,22 @@ public class SplitFrameBuffer {
     }
 
     /**
+     * Cleans up all small frame buffers.
+     */
+    public void cleanup() {
+        mainFrameBuffer.cleanup();
+
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < cols; x++) {
+                smallFrameBuffers[y][x].cleanup();
+            }
+        }
+
+        smallFrameBuffers = null;
+        smallResolution = null;
+    }
+
+    /**
      * Creates the small frame buffers based on the specified columns and rows.
      */
     public void createSmallFrameBuffers() {
@@ -79,17 +95,6 @@ public class SplitFrameBuffer {
      */
     public FrameBuffer getSmallFrameBuffer(int x, int y) {
         return smallFrameBuffers[y][x];
-    }
-
-    /**
-     * Cleans up all small frame buffers.
-     */
-    public void cleanup() {
-        for (int y = 0; y < rows; y++) {
-            for (int x = 0; x < cols; x++) {
-                smallFrameBuffers[y][x].cleanup();
-            }
-        }
     }
 
     /**

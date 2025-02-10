@@ -13,7 +13,6 @@ import java.util.Arrays;
  * Class representing a polygon renderer in OpenGL.
  */
 public class GLPolygon extends GLObject {
-
     private float[] vertex;
     private float[] color;
     private float[] texture;

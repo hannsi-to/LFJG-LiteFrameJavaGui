@@ -51,23 +51,24 @@ public class EventManager {
      * Calls an event, dispatching it to all registered handlers.
      *
      * @param source the event to call
-     * @param <E> the type of the event
+     * @param <E>    the type of the event
      */
     public <E extends Event> void call(E source) {
         for (Object handler : handlers) {
             Class<?> clazz = handler.getClass();
-            Arrays.stream(clazz.getDeclaredMethods())
-                    .filter(method -> method.isAnnotationPresent(EventHandler.class))
-                    .filter(method -> method.getParameters().length == 1 && method.getParameters()[0].getType().isAssignableFrom(source.getClass()))
-                    .forEach(method -> {
-                        try {
-                            if (!source.isCanceled()) {
-                                method.invoke(handler, source);
-                            }
-                        } catch (Throwable e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
+            Arrays.stream(clazz.getDeclaredMethods()).filter(method -> method.isAnnotationPresent(EventHandler.class)).filter(method -> method.getParameters().length == 1 && method.getParameters()[0].getType().isAssignableFrom(source.getClass())).forEach(method -> {
+                try {
+                    if (!source.isCanceled()) {
+                        method.invoke(handler, source);
+                    }
+                } catch (Throwable e) {
+                    throw new RuntimeException(e);
+                }
+            });
         }
+    }
+
+    public void cleanup() {
+        handlers.clear();
     }
 }

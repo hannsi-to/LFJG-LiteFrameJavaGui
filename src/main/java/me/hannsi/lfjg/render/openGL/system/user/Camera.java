@@ -30,6 +30,16 @@ public class Camera {
         rotation = new Vector2f();
     }
 
+    public void cleanup() {
+        direction = null;
+        invViewMatrix = null;
+        position = null;
+        right = null;
+        rotation = null;
+        up = null;
+        viewMatrix = null;
+    }
+
     /**
      * Adds rotation to the camera.
      *

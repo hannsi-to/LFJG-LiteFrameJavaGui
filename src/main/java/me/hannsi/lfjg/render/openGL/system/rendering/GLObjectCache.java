@@ -49,6 +49,8 @@ public class GLObjectCache {
         for (GLObject glObject : glObjects) {
             glObject.cleanup();
         }
+
+        glObjects.clear();
     }
 
     /**

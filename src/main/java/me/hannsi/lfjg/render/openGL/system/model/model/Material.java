@@ -12,10 +12,9 @@ import java.util.List;
  */
 public class Material {
     public static final Vector4f DEFAULT_COLOR = new Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
-
+    private final List<Mesh> meshList;
     private Vector4f ambientColor;
     private Vector4f diffuseColor;
-    private final List<Mesh> meshList;
     private float reflectance;
     private Vector4f specularColor;
     private FileLocation texturePath;
@@ -35,7 +34,11 @@ public class Material {
      * Cleans up the material by cleaning up all meshes in the mesh list.
      */
     public void cleanup() {
+        ambientColor = null;
+        diffuseColor = null;
         meshList.forEach(Mesh::cleanup);
+        specularColor = null;
+        texturePath.cleanup();
     }
 
     /**
