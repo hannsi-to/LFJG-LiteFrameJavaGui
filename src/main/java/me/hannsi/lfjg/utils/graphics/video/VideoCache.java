@@ -44,6 +44,15 @@ public class VideoCache {
         this.frames = frames;
     }
 
+    public void cleanup() {
+        frames.forEach(frame -> {
+            frame.getFrameData().cleanup();
+            frame.getAudioData().cleanup();
+        });
+
+        frames.clear();
+    }
+
     /**
      * Class representing a video frame, including frame data and audio data.
      */

@@ -41,6 +41,8 @@ import org.lwjgl.openal.AL11;
 import org.lwjgl.opengl.GL11;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glGenTextures;
+import static org.lwjgl.opengl.GL15.glGenBuffers;
 
 public class TestGuiFrame implements LFJGFrame {
     GLRect gl1;
@@ -57,6 +59,8 @@ public class TestGuiFrame implements LFJGFrame {
 
     ThreadCache threadCache;
     VideoFrameExtractor videoFrameExtractor;
+    int textureId = -1;
+    int pboId = -1;
 
 //    EasingUtil easingUtil;
 
@@ -215,7 +219,22 @@ public class TestGuiFrame implements LFJGFrame {
 
         if (!videoFrameExtractor.getVideoCache().getFrames().isEmpty()) {
             FrameData frameData = videoFrameExtractor.frame();
+
+            if (textureId == -1) {
+                textureId = glGenTextures();
+            }
+
+            if (pboId == -1) {
+                pboId = glGenBuffers();
+            }
+
             if (frameData != null) {
+                if (frameData.getTextureId() == -1) {
+                    frameData.setTextureId(textureId);
+                }
+                if (frameData.getPboId() == -1) {
+                    frameData.setPboId(pboId);
+                }
                 frameData.createTexture();
 
                 GL11.glEnable(GL_TEXTURE_2D);

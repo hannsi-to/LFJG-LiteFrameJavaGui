@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL21.GL_PIXEL_UNPACK_BUFFER;
 
 /**
  * Class representing frame data, including the frame image, buffered image, and texture ID.
@@ -14,7 +16,8 @@ import static org.lwjgl.opengl.GL11.*;
 public class FrameData {
     private BufferedImage frameImage;
     private ByteBuffer bufferedImage;
-    private int textureId;
+    private int textureId = -1;
+    private int pboId = -1;
 
     /**
      * Constructs a FrameData instance with the specified buffered image.
@@ -64,16 +67,27 @@ public class FrameData {
      * Creates an OpenGL texture from the buffered image.
      */
     public void createTexture() {
-        textureId = glGenTextures();
-
         glBindTexture(GL_TEXTURE_2D, textureId);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, frameImage.getWidth(), frameImage.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, frameImage.getWidth(), frameImage.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, bufferedImage);
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pboId);
+
+        glBufferData(GL_PIXEL_UNPACK_BUFFER, (long) frameImage.getWidth() * frameImage.getHeight() * 4, GL_STREAM_DRAW);
+
+        ByteBuffer buffer = glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
+        if (buffer != null) {
+            buffer.put(bufferedImage);
+            glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+        }
+
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, frameImage.getWidth(), frameImage.getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
         glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -132,5 +146,20 @@ public class FrameData {
      */
     public void setTextureId(int textureId) {
         this.textureId = textureId;
+    }
+
+    public int getPboId() {
+        return pboId;
+    }
+
+    public void setPboId(int pboId) {
+        this.pboId = pboId;
+    }
+
+    public void cleanup() {
+        glDeleteTextures(textureId);
+        glDeleteBuffers(pboId);
+        bufferedImage.clear();
+        frameImage = null;
     }
 }

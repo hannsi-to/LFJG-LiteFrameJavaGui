@@ -19,12 +19,13 @@ import java.nio.ShortBuffer;
  */
 public class VideoFrameExtractor {
     private final ResourcesLocation videoFileLocation;
-    private final int threadCount = 100;
+    private final int threadCount = 4;
     private Frame frame;
     private FFmpegFrameGrabber fFmpegFrameGrabber;
     private Java2DFrameConverter java2DFrameConverter;
     private int frameNumber;
     private VideoCache videoCache;
+    private boolean finished;
 
     /**
      * Constructs a VideoFrameExtractor instance with the specified video file location.
@@ -42,17 +43,24 @@ public class VideoFrameExtractor {
     public void createVideoCache() {
         DebugLog.debug(getClass(), "Start extract video frame: " + videoFileLocation.getPath());
         long tookTime = TimeCalculator.calculate(() -> {
+            this.finished = false;
 
             try (FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(videoFileLocation.getPath()); Java2DFrameConverter converter = new Java2DFrameConverter()) {
+                grabber.setOption("threads", String.valueOf(threadCount));
+                grabber.setOption("avioflags", "direct");
+                grabber.setFrameRate(grabber.getFrameRate());
+
                 try {
                     grabber.start();
 
                     int frameCount = 0;
-                    Frame frame;
 
                     double totalDuration = grabber.getLengthInTime() / 1000000.0;
 
                     while ((frame = grabber.grab()) != null) {
+                        while (videoCache.getFrames().size() > 120) {
+                        }
+
                         BufferedImage image = converter.convert(frame);
                         ShortBuffer samplesBuffer = null;
                         int sampleRate = -1;
@@ -97,6 +105,7 @@ public class VideoFrameExtractor {
                 DebugLog.error(getClass(), e);
             }
         });
+        this.finished = true;
         DebugLog.debug(getClass(), "End extract video frame: " + videoFileLocation.getPath() + " | took: " + tookTime + "ms");
     }
 
@@ -110,10 +119,20 @@ public class VideoFrameExtractor {
             return null;
         }
 
-        FrameData frameData = videoCache.getFrames().get(0).getFrameData();
+        if (finished) {
+            cleanup();
+            return null;
+        }
 
+        FrameData frameData = videoCache.getFrames().get(0).getFrameData();
         videoCache.getFrames().remove(0);
+
         return frameData;
+    }
+
+    public void cleanup() {
+        videoCache.cleanup();
+        videoFileLocation.cleanup();
     }
 
     /**

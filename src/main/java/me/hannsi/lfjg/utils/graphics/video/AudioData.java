@@ -14,8 +14,8 @@ public class AudioData {
      * Constructs an AudioData instance with the specified samples buffer, sample rate, and number of channels.
      *
      * @param samplesBuffer the buffer containing the audio samples
-     * @param sampleRate the sample rate of the audio
-     * @param channels the number of audio channels
+     * @param sampleRate    the sample rate of the audio
+     * @param channels      the number of audio channels
      */
     public AudioData(ShortBuffer samplesBuffer, int sampleRate, int channels) {
         this.samplesBuffer = samplesBuffer;
@@ -75,5 +75,9 @@ public class AudioData {
      */
     public void setChannels(int channels) {
         this.channels = channels;
+    }
+
+    public void cleanup() {
+//        samplesBuffer.clear();
     }
 }

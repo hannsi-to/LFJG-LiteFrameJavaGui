@@ -55,4 +55,8 @@ public class FileLocation {
     public byte[] getBytes() {
         return ByteUtil.convertInputStreamToByteArray(Objects.requireNonNull(getInputStream()));
     }
+
+    public void cleanup() {
+        this.path = "";
+    }
 }
