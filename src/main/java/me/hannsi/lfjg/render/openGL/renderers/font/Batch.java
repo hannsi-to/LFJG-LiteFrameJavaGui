@@ -41,6 +41,15 @@ public class Batch {
         this.vertices = new float[BATCH_SIZE * VERTEX_SIZE];
     }
 
+    public void cleanup() {
+        vertices = null;
+
+        glDeleteBuffers(vbo);
+        glDeleteBuffers(vao);
+        shaderProgram.cleanup();
+        font.cleanup();
+    }
+
     /**
      * Generates the element buffer object (EBO) for the batch.
      */
