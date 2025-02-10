@@ -21,7 +21,7 @@ public class OpenGLDebug {
      *
      * @param frame the frame to use for retrieving settings
      */
-    public static void getOpenGLDebug(Frame frame) {
+    public static <T> void getOpenGLDebug(Frame frame) {
         if (GL.getCapabilities().OpenGL43) {
             GL43.glEnable(GL43.GL_DEBUG_OUTPUT);
             GL43.glDebugMessageCallback(new GLDebugMessageCallback() {
@@ -33,7 +33,18 @@ public class OpenGLDebug {
                     String typeString = getTypeString(type);
                     String severityString = getSeverityString(severity);
 
-                    for (SeverityType checkSeverity : ((SeverityType[]) frame.getFrameSettingValue(CheckSeveritiesSetting.class))) {
+                    T value = frame.getFrameSettingValue(CheckSeveritiesSetting.class);
+                    SeverityType[] severityTypes;
+
+                    if (value instanceof SeverityType[]) {
+                        severityTypes = (SeverityType[]) value;
+                    } else if (value instanceof SeverityType) {
+                        severityTypes = new SeverityType[]{(SeverityType) value};
+                    } else {
+                        severityTypes = new SeverityType[0];
+                    }
+
+                    for (SeverityType checkSeverity : severityTypes) {
                         if (checkSeverity.getId() == severity) {
                             LogGenerator logGenerator = new LogGenerator("OpenGL Debug Message", "Source: " + sourceString, "Type: " + typeString, "ID: " + id, "Severity: " + severityString, "Message: " + errorMessage);
 
