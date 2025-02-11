@@ -83,11 +83,10 @@ public class OpenGLDebug {
             }
 
             StackTraceElement[] stackTrace = entry.getValue();
-            stackTraceStr.append("\t\tThread: ").append(thread.getName()).append("\n");
 
             int index = 0;
             for (StackTraceElement element : stackTrace) {
-                if (element.getMethodName().equals("invoke") || element.getMethodName().equals("callback")) {
+                if (element.getMethodName().equals("invoke") || element.getMethodName().equals("callback") || element.getMethodName().equals("getStackTrace")) {
                     continue;
                 }
 
