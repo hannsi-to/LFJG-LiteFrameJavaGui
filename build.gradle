@@ -2,6 +2,7 @@ plugins {
     id "java"
     id "com.github.johnrengelman.shadow" version "8.1.1"
     id 'java-library'
+    id "io.freefair.aspectj.post-compile-weaving" version "8.6"
 }
 
 group = "me.hannsi.lfjg"
@@ -19,6 +20,9 @@ repositories {
 }
 
 dependencies {
+    implementation "org.aspectj:aspectjrt:1.9.22"
+    implementation "org.aspectj:aspectjweaver:1.9.22"
+
     api "org.jetbrains:annotations:24.0.0"
 
     testImplementation platform("org.junit:junit-bom:5.9.1")
@@ -39,15 +43,13 @@ dependencies {
     api "org.apache.xmlgraphics:batik-transcoder:1.17"
 
     api platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
-    def lwjglModules = [
-            "lwjgl",
-            "lwjgl-assimp",
-            "lwjgl-glfw",
-            "lwjgl-nanovg",
-            "lwjgl-openal",
-            "lwjgl-opengl",
-            "lwjgl-stb",
-    ]
+    def lwjglModules = ["lwjgl",
+                        "lwjgl-assimp",
+                        "lwjgl-glfw",
+                        "lwjgl-nanovg",
+                        "lwjgl-openal",
+                        "lwjgl-opengl",
+                        "lwjgl-stb",]
     lwjglModules.each { module ->
         implementation "org.lwjgl:$module"
         if (module != "lwjgl-cuda" && module != "lwjgl-egl" && module != "lwjgl-fmod" && module != "lwjgl-jawt" && module != "lwjgl-odbc" && module != "lwjgl-opencl" && module != "lwjgl-vulkan") {
@@ -66,6 +68,15 @@ dependencies {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = "UTF-8"
+}
+
+compileTestJava {
+    ajc {
+        options {
+            aspectpath.setFrom configurations.aspect
+            compilerArgs = ["-Xlint:ignore", "-Xajruntimetarget:1.5"]
+        }
+    }
 }
 
 test {

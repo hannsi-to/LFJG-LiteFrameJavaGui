@@ -4,12 +4,11 @@ import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
+import me.hannsi.lfjg.utils.reflection.StackTraceUtil;
 import me.hannsi.lfjg.utils.type.types.SeverityType;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL43;
 import org.lwjgl.opengl.GLDebugMessageCallback;
-
-import java.util.Map;
 
 import static org.lwjgl.system.MemoryUtil.memUTF8;
 
@@ -32,7 +31,7 @@ public class OpenGLDebug {
                 public void invoke(int source, int type, int id, int severity, int length, long message, long userParam) {
                     String errorMessage = memUTF8(message);
 
-                    String stackTrace = getStackTrace(frame.getThreadName());
+                    String stackTrace = StackTraceUtil.getStackTrace(frame.getThreadName(), "invoke", "callback", "getStackTrace");
 
                     String sourceString = getSourceString(source);
                     String typeString = getTypeString(type);
@@ -69,52 +68,6 @@ public class OpenGLDebug {
         } else {
             DebugLog.debug(OpenGLDebug.class, "OpenGL 4.3 or higher is required for debug messages.");
         }
-    }
-
-    private static String getStackTrace(String mainThreadName) {
-        Map<Thread, StackTraceElement[]> allStackTraces = Thread.getAllStackTraces();
-        StringBuilder stackTraceStr = new StringBuilder();
-
-        for (Map.Entry<Thread, StackTraceElement[]> entry : allStackTraces.entrySet()) {
-            Thread thread = entry.getKey();
-
-            if (!thread.getName().equals(mainThreadName)) {
-                continue;
-            }
-
-            StackTraceElement[] stackTrace = entry.getValue();
-
-            int index = 0;
-            for (StackTraceElement element : stackTrace) {
-                if (element.getMethodName().equals("invoke") || element.getMethodName().equals("callback") || element.getMethodName().equals("getStackTrace")) {
-                    continue;
-                }
-
-                if (isLibraryClass(element.getClassName())) {
-                    continue;
-                }
-
-                if (element.isNativeMethod()) {
-                    continue;
-                }
-
-                if (index == 0) {
-                    stackTraceStr.append("\t\t");
-                } else {
-                    stackTraceStr.append("\t\t\t");
-                }
-                stackTraceStr.append(element).append("\n");
-
-                index++;
-            }
-        }
-        stackTraceStr.delete(stackTraceStr.length() - 1, stackTraceStr.length());
-
-        return stackTraceStr.toString();
-    }
-
-    private static boolean isLibraryClass(String className) {
-        return className.startsWith("java.") || className.startsWith("sun.") || className.startsWith("com.sun.") || className.startsWith("jdk.");
     }
 
     /**

@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static me.hannsi.lfjg.frame.LFJGContext.openALDevice;
 import static org.lwjgl.openal.AL10.alDistanceModel;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -27,7 +28,6 @@ public class SoundCache {
     private final List<SoundBuffer> soundBufferList;
     private final Map<String, SoundSource> soundSourceMap;
     private long context;
-    private long device;
     private SoundListener listener;
 
     /**
@@ -46,12 +46,12 @@ public class SoundCache {
         soundBufferList = new ArrayList<>();
         soundSourceMap = new HashMap<>();
 
-        device = alcOpenDevice(deviceByte);
-        if (device == NULL) {
+        openALDevice = alcOpenDevice(deviceByte);
+        if (openALDevice == NULL) {
             throw new IllegalStateException("Failed to open the default OpenAL device.");
         }
-        ALCCapabilities deviceCaps = ALC.createCapabilities(device);
-        this.context = alcCreateContext(device, (IntBuffer) null);
+        ALCCapabilities deviceCaps = ALC.createCapabilities(openALDevice);
+        this.context = alcCreateContext(openALDevice, (IntBuffer) null);
         if (context == NULL) {
             throw new IllegalStateException("Failed to create OpenAL context.");
         }
@@ -105,8 +105,8 @@ public class SoundCache {
         if (context != NULL) {
             alcDestroyContext(context);
         }
-        if (device != NULL) {
-            alcCloseDevice(device);
+        if (openALDevice != NULL) {
+            alcCloseDevice(openALDevice);
         }
     }
 
@@ -224,16 +224,7 @@ public class SoundCache {
      *
      * @return The OpenAL device.
      */
-    public long getDevice() {
-        return device;
-    }
-
-    /**
-     * Sets the OpenAL device for this SoundCache.
-     *
-     * @param device The OpenAL device to set.
-     */
-    public void setDevice(long device) {
-        this.device = device;
+    public long getOpenALDevice() {
+        return openALDevice;
     }
 }

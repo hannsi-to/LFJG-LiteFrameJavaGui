@@ -1,13 +1,9 @@
 package me.hannsi.lfjg.frame.glfw;
 
-import me.hannsi.lfjg.event.events.render.DrawFrameWithOpenGLEvent;
 import me.hannsi.lfjg.event.events.user.*;
-import me.hannsi.lfjg.event.system.EventHandler;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.IFrame;
-import me.hannsi.lfjg.frame.openAL.OpenALDebug;
 import me.hannsi.lfjg.frame.openGL.OpenGLDebug;
-import me.hannsi.lfjg.frame.setting.settings.OpenALDebugSetting;
 import me.hannsi.lfjg.frame.setting.settings.OpenGLDebugSetting;
 import org.lwjgl.glfw.*;
 
@@ -98,18 +94,6 @@ public class GLFWCallback implements IFrame {
 
         if (frame.getFrameSettingValue(OpenGLDebugSetting.class)) {
             OpenGLDebug.getOpenGLDebug(frame);
-        }
-    }
-
-    /**
-     * Handles the DrawFrameWithOpenGLEvent and checks for OpenAL errors if the OpenALDebugSetting is enabled.
-     *
-     * @param event The DrawFrameWithOpenGLEvent to handle.
-     */
-    @EventHandler
-    public void drawFrameWidthOpenGLEvent(DrawFrameWithOpenGLEvent event) {
-        if (frame.getFrameSettingValue(OpenALDebugSetting.class)) {
-            OpenALDebug.getOpenALError();
         }
     }
 }

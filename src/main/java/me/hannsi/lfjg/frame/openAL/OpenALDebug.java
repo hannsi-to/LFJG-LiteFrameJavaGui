@@ -2,9 +2,10 @@ package me.hannsi.lfjg.frame.openAL;
 
 import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
-import org.lwjgl.openal.AL;
-import org.lwjgl.openal.ALCapabilities;
+import me.hannsi.lfjg.frame.setting.settings.OpenALDebugSetting;
+import me.hannsi.lfjg.utils.reflection.StackTraceUtil;
 
+import static me.hannsi.lfjg.frame.LFJGContext.frame;
 import static org.lwjgl.openal.AL10.*;
 
 /**
@@ -15,23 +16,19 @@ public class OpenALDebug {
     /**
      * Checks for OpenAL errors and logs them if any are found.
      */
-    public static void getOpenALError() {
-        ALCapabilities alCapabilities;
-        try {
-            alCapabilities = AL.getCapabilities();
-        } catch (Exception e) {
-            return;
-        }
-
-        if (alCapabilities.OpenAL11) {
-            int error = alGetError();
-            if (error != AL_NO_ERROR) {
-                String errorMessage = getALErrorString(error);
-
-                LogGenerator logGenerator = new LogGenerator(" OpenAL Debug Message", "Type: Error", "ID: " + error, "Severity: High", "Message: " + errorMessage);
-
-                DebugLog.error(OpenALDebug.class, logGenerator.createLog());
+    public static void getOpenALError(String ignoreMethod) {
+        int error = alGetError();
+        if (error != AL_NO_ERROR) {
+            if (!(boolean) frame.getFrameSettingValue(OpenALDebugSetting.class)) {
+                return;
             }
+
+            String errorMessage = getALErrorString(error);
+            String stackTrace = StackTraceUtil.getStackTrace(frame.getThreadName(), "getStackTrace", "getOpenALError", ignoreMethod);
+
+            LogGenerator logGenerator = new LogGenerator(" OpenAL Debug Message", "Type: Error", "ID: " + error, "Severity: High", "Message: " + errorMessage, "Stack Trace: \n" + stackTrace);
+
+            DebugLog.error(OpenALDebug.class, logGenerator.createLog());
         }
     }
 
