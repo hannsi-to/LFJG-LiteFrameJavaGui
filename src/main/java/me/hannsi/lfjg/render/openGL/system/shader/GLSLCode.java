@@ -61,10 +61,6 @@ public class GLSLCode {
      * @return the final shader code
      */
     public String createCode() {
-        if (resourcesLocation.getPath().equals(new ResourcesLocation("shader/frameBuffer/filter/Glow.fsh").getPath())) {
-            System.out.println("A");
-        }
-
         String shaderCode = ByteUtil.readInputStreamToString(resourcesLocation.getInputStream());
         shaderCode = processIncludes(shaderCode);
 

@@ -2,6 +2,7 @@ package me.hannsi.lfjg.utils.graphics.image;
 
 import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
+import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.TextureLoaderType;
 
@@ -14,7 +15,7 @@ import java.util.Map;
 public class TextureCache {
     public static final ResourcesLocation DEFAULT_TEXTURE = new ResourcesLocation("texture/default.png");
 
-    private Map<ResourcesLocation, TextureLoader> textureMap;
+    private Map<FileLocation, TextureLoader> textureMap;
 
     /**
      * Constructs a TextureCache instance and initializes the cache with the default texture.
@@ -37,7 +38,7 @@ public class TextureCache {
      *
      * @param texturePath the path to the texture resource
      */
-    public void createCache(ResourcesLocation texturePath) {
+    public void createCache(FileLocation texturePath) {
         textureMap.put(texturePath, new TextureLoader(texturePath, TextureLoaderType.STBImage));
 
         LogGenerator logGenerator = new LogGenerator("TextureCache Debug Message", "Source: TextureCache", "Type: Cache Creation", "ID: " + texturePath.hashCode(), "Severity: Info", "Message: Create texture cache: " + texturePath.getPath());
@@ -52,7 +53,7 @@ public class TextureCache {
      * @param texturePath the path to the texture resource
      * @return the texture loader for the specified path, or the default texture loader if not found
      */
-    public TextureLoader getTexture(ResourcesLocation texturePath) {
+    public TextureLoader getTexture(FileLocation texturePath) {
         TextureLoader texture = null;
         if (texturePath != null) {
             texture = textureMap.get(texturePath);
@@ -68,7 +69,7 @@ public class TextureCache {
      *
      * @return the texture map
      */
-    public Map<ResourcesLocation, TextureLoader> getTextureMap() {
+    public Map<FileLocation, TextureLoader> getTextureMap() {
         return textureMap;
     }
 
@@ -77,7 +78,7 @@ public class TextureCache {
      *
      * @param textureMap the new texture map
      */
-    public void setTextureMap(Map<ResourcesLocation, TextureLoader> textureMap) {
+    public void setTextureMap(Map<FileLocation, TextureLoader> textureMap) {
         this.textureMap = textureMap;
     }
 }

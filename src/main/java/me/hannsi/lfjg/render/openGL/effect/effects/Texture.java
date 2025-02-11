@@ -4,7 +4,7 @@ import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.utils.graphics.image.TextureLoader;
-import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.FileLocation;
 import org.lwjgl.opengl.GL30;
 
 /**
@@ -12,22 +12,22 @@ import org.lwjgl.opengl.GL30;
  */
 public class Texture extends EffectBase {
     private TextureCache textureCache;
-    private ResourcesLocation resourcesLocation;
+    private FileLocation imagePath;
     private TextureLoader textureLoader;
     private int textureId;
 
     /**
      * Constructs a new Texture effect with the specified parameters.
      *
-     * @param textureCache      the texture cache to be used
-     * @param resourcesLocation the location of the resources
+     * @param textureCache the texture cache to be used
+     * @param imagePath    the location of the resources
      */
-    public Texture(TextureCache textureCache, ResourcesLocation resourcesLocation) {
+    public Texture(TextureCache textureCache, FileLocation imagePath) {
         super(3, "Texture", (Class<GLObject>) null);
 
         this.textureCache = textureCache;
-        this.resourcesLocation = resourcesLocation;
-        this.textureLoader = textureCache.getTexture(resourcesLocation);
+        this.imagePath = imagePath;
+        this.textureLoader = textureCache.getTexture(imagePath);
     }
 
     /**
@@ -139,22 +139,12 @@ public class Texture extends EffectBase {
         this.textureCache = textureCache;
     }
 
-    /**
-     * Gets the resources location.
-     *
-     * @return the resources location
-     */
-    public ResourcesLocation getResourcesLocation() {
-        return resourcesLocation;
+    public FileLocation getFileLocation() {
+        return imagePath;
     }
 
-    /**
-     * Sets the resources location.
-     *
-     * @param resourcesLocation the resources location
-     */
-    public void setResourcesLocation(ResourcesLocation resourcesLocation) {
-        this.resourcesLocation = resourcesLocation;
+    public void setImagePath(FileLocation imagePath) {
+        this.imagePath = imagePath;
     }
 
     /**

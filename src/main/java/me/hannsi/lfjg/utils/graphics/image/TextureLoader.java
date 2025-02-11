@@ -3,6 +3,7 @@ package me.hannsi.lfjg.utils.graphics.image;
 import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.debug.exceptions.texture.CreatingTextureException;
 import me.hannsi.lfjg.utils.buffer.BufferUtil;
+import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.TextureLoaderType;
 import org.bytedeco.opencv.global.opencv_imgcodecs;
@@ -26,7 +27,7 @@ import static org.lwjgl.opengl.GL30.glGenerateMipmap;
  * Class for loading textures from various sources.
  */
 public class TextureLoader {
-    private final ResourcesLocation texturePath;
+    private final FileLocation texturePath;
     private final TextureLoaderType textureLoaderType;
     private int textureId;
 
@@ -36,7 +37,7 @@ public class TextureLoader {
      * @param texturePath       the path to the texture resource
      * @param textureLoaderType the type of texture loader to use
      */
-    public TextureLoader(ResourcesLocation texturePath, TextureLoaderType textureLoaderType) {
+    public TextureLoader(FileLocation texturePath, TextureLoaderType textureLoaderType) {
         this.textureLoaderType = textureLoaderType;
         this.texturePath = texturePath;
 
@@ -180,7 +181,7 @@ public class TextureLoader {
      *
      * @return the texture path
      */
-    public ResourcesLocation getTexturePath() {
+    public FileLocation getTexturePath() {
         return texturePath;
     }
 
