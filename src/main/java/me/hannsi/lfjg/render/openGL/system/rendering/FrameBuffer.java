@@ -100,8 +100,6 @@ public class FrameBuffer {
 
         modelMatrix = null;
         viewMatrix = null;
-
-        glObject.cleanup();
     }
 
     /**

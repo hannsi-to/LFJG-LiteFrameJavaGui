@@ -39,6 +39,8 @@ import org.lwjgl.system.MemoryUtil;
 public class Frame implements IFrame {
     private final LFJGFrame lfjgFrame;
     private FrameSettingManager frameSettingManager;
+    private String threadName;
+    private boolean shouldCleanup = false;
     private long windowID = -1L;
     private int fps;
     private int windowWidth;
@@ -60,6 +62,12 @@ public class Frame implements IFrame {
     public Frame(LFJGFrame lfjgFrame, String threadName) {
         this.lfjgFrame = lfjgFrame;
 
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            shouldCleanup = true;
+            GLFW.glfwPostEmptyEvent();
+        }));
+
+        this.threadName = threadName;
         new Thread(this::createFrame, threadName).start();
     }
 
@@ -215,13 +223,23 @@ public class Frame implements IFrame {
             }
 
             lastTime = TimeSourceUtil.getTimeMills(this);
+
+            if (shouldCleanup) {
+                stopFrame();
+            }
         }
 
         finishTime = TimeSourceUtil.getTimeMills(this);
-        lfjgFrame.stopFrame();
 
-        cleanupManager();
+        finished();
+    }
+
+    private void finished() {
         breakFrame();
+        lfjgFrame.stopFrame();
+        cleanupManager();
+
+        DebugLog.debug(getClass(), "Finished");
     }
 
     private void cleanupManager() {
@@ -649,5 +667,21 @@ public class Frame implements IFrame {
      */
     public void setContentScaleY(float contentScaleY) {
         this.contentScaleY = contentScaleY;
+    }
+
+    public String getThreadName() {
+        return threadName;
+    }
+
+    public void setThreadName(String threadName) {
+        this.threadName = threadName;
+    }
+
+    public boolean isShouldCleanup() {
+        return shouldCleanup;
+    }
+
+    public void setShouldCleanup(boolean shouldCleanup) {
+        this.shouldCleanup = shouldCleanup;
     }
 }
