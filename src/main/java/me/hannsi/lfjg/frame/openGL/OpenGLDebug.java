@@ -32,44 +32,7 @@ public class OpenGLDebug {
                 public void invoke(int source, int type, int id, int severity, int length, long message, long userParam) {
                     String errorMessage = memUTF8(message);
 
-                    Map<Thread, StackTraceElement[]> allStackTraces = Thread.getAllStackTraces();
-                    StringBuilder stackTraceStr = new StringBuilder();
-
-                    for (Map.Entry<Thread, StackTraceElement[]> entry : allStackTraces.entrySet()) {
-                        Thread thread = entry.getKey();
-
-                        if (!thread.getName().equals(frame.getThreadName())) {
-                            continue;
-                        }
-
-                        StackTraceElement[] stackTrace = entry.getValue();
-                        stackTraceStr.append("\t\tThread: ").append(thread.getName()).append("\n");
-
-                        int index = 0;
-                        for (StackTraceElement element : stackTrace) {
-                            if (element.getMethodName().equals("invoke") || element.getMethodName().equals("callback")) {
-                                continue;
-                            }
-
-                            if (isLibraryClass(element.getClassName())) {
-                                continue;
-                            }
-
-                            if (element.isNativeMethod()) {
-                                continue;
-                            }
-
-                            if (index == 0) {
-                                stackTraceStr.append("\t\t");
-                            } else {
-                                stackTraceStr.append("\t\t\t");
-                            }
-                            stackTraceStr.append(element).append("\n");
-
-                            index++;
-                        }
-                    }
-                    stackTraceStr.delete(stackTraceStr.length() - 1, stackTraceStr.length());
+                    String stackTrace = getStackTrace(frame.getThreadName());
 
                     String sourceString = getSourceString(source);
                     String typeString = getTypeString(type);
@@ -88,7 +51,7 @@ public class OpenGLDebug {
 
                     for (SeverityType checkSeverity : severityTypes) {
                         if (checkSeverity.getId() == severity) {
-                            LogGenerator logGenerator = new LogGenerator("OpenGL Debug Message", "Source: " + sourceString, "Type: " + typeString, "ID: " + id, "Severity: " + severityString, "Message: " + errorMessage, "Stack Trace: \n" + stackTraceStr);
+                            LogGenerator logGenerator = new LogGenerator("OpenGL Debug Message", "Source: " + sourceString, "Type: " + typeString, "ID: " + id, "Severity: " + severityString, "Message: " + errorMessage, "Stack Trace: \n" + stackTrace);
 
                             if (type == GL43.GL_DEBUG_TYPE_ERROR || severity == GL43.GL_DEBUG_SEVERITY_HIGH) {
                                 DebugLog.error(getClass(), logGenerator.createLog());
@@ -106,6 +69,49 @@ public class OpenGLDebug {
         } else {
             DebugLog.debug(OpenGLDebug.class, "OpenGL 4.3 or higher is required for debug messages.");
         }
+    }
+
+    private static String getStackTrace(String mainThreadName) {
+        Map<Thread, StackTraceElement[]> allStackTraces = Thread.getAllStackTraces();
+        StringBuilder stackTraceStr = new StringBuilder();
+
+        for (Map.Entry<Thread, StackTraceElement[]> entry : allStackTraces.entrySet()) {
+            Thread thread = entry.getKey();
+
+            if (!thread.getName().equals(mainThreadName)) {
+                continue;
+            }
+
+            StackTraceElement[] stackTrace = entry.getValue();
+            stackTraceStr.append("\t\tThread: ").append(thread.getName()).append("\n");
+
+            int index = 0;
+            for (StackTraceElement element : stackTrace) {
+                if (element.getMethodName().equals("invoke") || element.getMethodName().equals("callback")) {
+                    continue;
+                }
+
+                if (isLibraryClass(element.getClassName())) {
+                    continue;
+                }
+
+                if (element.isNativeMethod()) {
+                    continue;
+                }
+
+                if (index == 0) {
+                    stackTraceStr.append("\t\t");
+                } else {
+                    stackTraceStr.append("\t\t\t");
+                }
+                stackTraceStr.append(element).append("\n");
+
+                index++;
+            }
+        }
+        stackTraceStr.delete(stackTraceStr.length() - 1, stackTraceStr.length());
+
+        return stackTraceStr.toString();
     }
 
     private static boolean isLibraryClass(String className) {
