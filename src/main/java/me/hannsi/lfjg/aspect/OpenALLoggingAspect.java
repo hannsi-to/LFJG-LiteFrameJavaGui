@@ -7,21 +7,12 @@ import org.aspectj.lang.annotation.Aspect;
 
 @Aspect
 public class OpenALLoggingAspect {
-    @After("call(public static * org.lwjgl.openal.AL10.*(..))")
-    public void checkAL10(JoinPoint joinPoint) {
+    @After("execution(* org.lwjgl.openal.AL10.*(..)) || execution(* org.lwjgl.openal.AL11.*(..))")
+    public void checkAL(JoinPoint joinPoint) {
         if (joinPoint.getSignature().getName().equals("alGetError")) {
             return;
         }
 
-        OpenALDebug.getOpenALError("checkAL10");
-    }
-
-    @After("call(public static * org.lwjgl.openal.AL11.*(..))")
-    public void checkAL11(JoinPoint joinPoint) {
-        if (joinPoint.getSignature().getName().equals("alGetError")) {
-            return;
-        }
-
-        OpenALDebug.getOpenALError("checkAL11");
+        OpenALDebug.getOpenALError("checkAL");
     }
 }
