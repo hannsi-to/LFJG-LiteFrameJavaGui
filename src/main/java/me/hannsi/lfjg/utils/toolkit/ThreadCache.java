@@ -36,7 +36,7 @@ public class ThreadCache {
      */
     public void run() {
         threadCache.forEach((key, value) -> {
-            value.start();
+            threadRun(value);
         });
     }
 
@@ -45,7 +45,7 @@ public class ThreadCache {
      */
     public void stop() {
         threadCache.forEach((key, value) -> {
-            value.interrupt();
+            threadStop(value);
         });
     }
 
@@ -58,7 +58,7 @@ public class ThreadCache {
         threadCache.forEach((key, value) -> {
             for (long l : threadId) {
                 if (key.equals(l)) {
-                    value.start();
+                    threadRun(value);
                 }
             }
         });
@@ -73,21 +73,33 @@ public class ThreadCache {
         threadCache.forEach((key, value) -> {
             for (long l : threadId) {
                 if (key.equals(l)) {
-                    value.interrupt();
+                    threadStop(value);
                 }
             }
         });
+    }
+
+    private void threadStop(Thread thread) {
+        thread.interrupt();
+
+        LogGenerator logGenerator = new LogGenerator("Thread Stop", "Thread Name: " + thread.getName(), "Thread ID: " + thread.threadId(), "State Before: " + thread.getState(), "Action: Interrupting thread");
+
+        DebugLog.debug(getClass(), logGenerator.createLog());
+    }
+
+    private void threadRun(Thread thread) {
+        thread.start();
+
+        LogGenerator logGenerator = new LogGenerator("Thread Start", "Thread Name: " + thread.getName(), "Thread ID: " + thread.threadId(), "State Before: " + thread.getState(), "Action: Starting thread");
+
+        DebugLog.debug(getClass(), logGenerator.createLog());
     }
 
     /**
      * Interrupts all threads in the cache and clears the cache.
      */
     public void cleanup() {
-        threadCache.forEach((key, value) -> {
-            if (!value.isInterrupted()) {
-                value.interrupt();
-            }
-        });
+        stop();
 
         threadCache.clear();
     }

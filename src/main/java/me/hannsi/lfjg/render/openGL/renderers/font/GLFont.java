@@ -100,7 +100,7 @@ public class GLFont extends GLRect {
 
         if (!unknownCharacters.isEmpty()) {
             unknownCharacters.setLength(unknownCharacters.length() - 2);
-            LogGenerator logGenerator = new LogGenerator("Unknown characters", unknownCharacters.toString());
+            LogGenerator logGenerator = new LogGenerator("Unknown characters", "Source: " + "GLFont", "Severity: Waring", unknownCharacters.toString());
             DebugLog.warning(getClass(), logGenerator.createLog());
         }
 

@@ -117,7 +117,9 @@ public class GLObject {
             GL30.glPointSize(pointSize);
         }
 
-        effectCache.push(this);
+        if (effectCache != null) {
+            effectCache.push(this);
+        }
 
         shaderProgram.setUniform("projectionMatrix", LFJGContext.projection.getProjMatrix());
         shaderProgram.setUniform("modelMatrix", modelMatrix);
@@ -138,14 +140,20 @@ public class GLObject {
         glUtil.disableTargets();
         glUtil.cleanup();
 
-        effectCache.pop(this);
+        if (effectCache != null) {
+            effectCache.pop(this);
+        }
 
         shaderProgram.unbind();
 
         GL30.glPopMatrix();
         frameBuffer.unbindFrameBuffer();
 
-        effectCache.frameBuffer(this);
+        if (effectCache != null) {
+            effectCache.frameBuffer(this);
+        } else {
+            frameBuffer.drawFrameBuffer();
+        }
     }
 
     /**
