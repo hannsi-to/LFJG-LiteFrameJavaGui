@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.render.openGL.renderers;
 
 import me.hannsi.lfjg.frame.LFJGContext;
+import me.hannsi.lfjg.render.openGL.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.system.Id;
@@ -35,6 +36,7 @@ public class GLObject {
     private Matrix4f viewMatrix;
 
     private EffectCache effectCache;
+    private AnimationCache animationCache;
     private BlendType blendType;
     private DrawType drawType;
     private GLUtil glUtil;
@@ -68,6 +70,7 @@ public class GLObject {
      * Cleans up the resources used by the GLObject.
      */
     public void cleanup() {
+        animationCache.cleanup(this);
         mesh.cleanup();
         frameBuffer.cleanup();
         shaderProgram.cleanup();
@@ -153,6 +156,10 @@ public class GLObject {
             effectCache.frameBuffer(this);
         } else {
             frameBuffer.drawFrameBuffer();
+        }
+
+        if (animationCache != null) {
+            animationCache.loop(this);
         }
     }
 
@@ -480,5 +487,13 @@ public class GLObject {
      */
     public long getObjectId() {
         return objectId;
+    }
+
+    public AnimationCache getAnimationCache() {
+        return animationCache;
+    }
+
+    public void setAnimationCache(AnimationCache animationCache) {
+        this.animationCache = animationCache;
     }
 }
