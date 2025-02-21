@@ -70,7 +70,9 @@ public class GLObject {
      * Cleans up the resources used by the GLObject.
      */
     public void cleanup() {
-        animationCache.cleanup(this);
+        if(animationCache != null){
+            animationCache.cleanup(this);
+        }
         mesh.cleanup();
         frameBuffer.cleanup();
         shaderProgram.cleanup();
