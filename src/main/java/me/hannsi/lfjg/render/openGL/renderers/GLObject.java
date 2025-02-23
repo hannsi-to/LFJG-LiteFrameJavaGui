@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.openGL.renderers;
 
+import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
@@ -19,9 +21,9 @@ import org.lwjgl.opengl.GL30;
 /**
  * Represents an OpenGL object with various properties and methods for rendering.
  */
-public class GLObject {
-    private final String name;
-    private final long objectId;
+public class GLObject implements Cloneable {
+    private String name;
+    private long objectId;
 
     private VAORendering vaoRendering;
     private Mesh mesh;
@@ -70,10 +72,10 @@ public class GLObject {
      * Cleans up the resources used by the GLObject.
      */
     public void cleanup() {
-        if(animationCache != null){
+        if (animationCache != null) {
             animationCache.cleanup(this);
         }
-        if(effectCache != null){
+        if (effectCache != null) {
             effectCache.cleanup();
         }
         mesh.cleanup();
@@ -167,6 +169,33 @@ public class GLObject {
         }
     }
 
+    public GLObject copy(String objectName) {
+        GLObject glObject;
+        try {
+            glObject = (GLObject) clone();
+            glObject.setName(objectName);
+            long copyId = this.getObjectId();
+            glObject.setObjectId(++copyId);
+
+            LogGenerator logGenerator = new LogGenerator("GLObject Debug Message", "Source: GLObject", "Type: Copy", "ID: " + glObject.getObjectId(), "Severity: Info", "Message: Create object copy: " + glObject.getName());
+
+            DebugLog.info(getClass(), logGenerator.createLog());
+        } catch (Exception e) {
+            LogGenerator logGenerator = new LogGenerator("GLObject Debug Message", "Source: GLObject", "Type: Copy", "ID: " + this.getObjectId(), "Severity: Error", "Message: Failed to create object copy: " + this.getName());
+
+            DebugLog.error(getClass(), logGenerator.createLog());
+
+            throw new RuntimeException(e);
+        }
+
+        return glObject;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
     /**
      * Gets the effect base at the specified index.
      *
@@ -200,6 +229,11 @@ public class GLObject {
      */
     public String getName() {
         return name;
+    }
+
+    @Deprecated
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -491,6 +525,11 @@ public class GLObject {
      */
     public long getObjectId() {
         return objectId;
+    }
+
+    @Deprecated
+    public void setObjectId(long objectId) {
+        this.objectId = objectId;
     }
 
     public AnimationCache getAnimationCache() {
