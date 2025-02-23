@@ -11,12 +11,10 @@ import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
+import me.hannsi.lfjg.render.openGL.animation.animations.Bounce;
 import me.hannsi.lfjg.render.openGL.animation.animations.Trembling;
 import me.hannsi.lfjg.render.openGL.animation.system.AnimationCache;
-import me.hannsi.lfjg.render.openGL.effect.effects.BoxBlur;
-import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
-import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
-import me.hannsi.lfjg.render.openGL.effect.effects.Translate;
+import me.hannsi.lfjg.render.openGL.effect.effects.*;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.font.GLFont;
 import me.hannsi.lfjg.render.openGL.renderers.model.Object3DCacheRender;
@@ -163,7 +161,6 @@ public class TestGuiFrame implements LFJGFrame {
         gl1EffectCache.createCache(new Texture(textureCache, image), gl1);
         gl1EffectCache.createCache(new DrawObject(), gl1);
         gl1EffectCache.createCache(new BoxBlur(10, 10), gl1);
-        gl1EffectCache.createCache(new Translate(0, 0), gl1);
 //        gl1EffectCache.createCache(new Gradation(resolution, resolution.x / 2, resolution.y / 2, (float) Math.toRadians(90), 0.1f, Gradation.ShapeMode.Rectangle, BlendType.Multiply, new Color(0, 0, 0, 255), new Color(255, 255, 255, 255), 1f), gl1);
 //        gl1EffectCache.createCache(new Monochrome(resolution, 1f, new Color(255, 0, 255), true), gl1);
 //        gl1EffectCache.createCache(new ChromaticAberration(resolution, 0.002f, 90, 5f, ChromaticAberration.AberrationType.RedBlueB), gl1);
@@ -197,7 +194,8 @@ public class TestGuiFrame implements LFJGFrame {
     public void animationCacheInit() {
         gl1AnimationCache = new AnimationCache();
 
-        gl1AnimationCache.createCache(new Trembling(0, 10, 5, resolution.x / 2, resolution.y / 2));
+        gl1AnimationCache.createCache(new Bounce(0, 500, 100f, 45));
+//        gl1AnimationCache.createCache(new Trembling(0, 1000, 90, resolution.x / 2, resolution.y / 2));
 
         gl1.setAnimationCache(gl1AnimationCache);
         gl1AnimationCache.start(gl1);
