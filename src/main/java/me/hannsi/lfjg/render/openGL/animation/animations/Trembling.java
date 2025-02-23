@@ -5,6 +5,9 @@ import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.math.animation.Easing;
 import me.hannsi.lfjg.utils.math.animation.EasingUtil;
 
+import static me.hannsi.lfjg.utils.math.MathHelper.sin;
+import static me.hannsi.lfjg.utils.math.MathHelper.toRadians;
+
 public class Trembling extends AnimationBase {
     protected EasingUtil easingUtil;
     protected float latestRadians;
@@ -45,7 +48,7 @@ public class Trembling extends AnimationBase {
         }
 
         float easeValue = easingUtil.get(millis);
-        float radian = (float) ((easingUtil.isReverse() ? -1 : 1) * (Math.toRadians(Math.sin(Math.toRadians(easeValue * 180)) * degreesValue)));
+        float radian = (easingUtil.isReverse() ? -1 : 1) * (toRadians(sin(toRadians(easeValue * 180)) * degreesValue));
 
         glObject.getModelMatrix().translate(cx, cy, cz).rotateXYZ(0, 0, -latestRadians).rotateXYZ(0, 0, radian).translate(-cx, -cy, -cz);
 

@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.utils.math.animation;
 
+import static me.hannsi.lfjg.utils.math.MathHelper.*;
+
 /**
  * Interface representing various easing functions for animations.
  */
@@ -12,17 +14,17 @@ public interface Easing {
     /**
      * Easing function for a sine wave easing in.
      */
-    Easing easeInSine = value -> 1 - Math.cos((value * Math.PI) / 2);
+    Easing easeInSine = value -> 1 - cos((value * PI) / 2);
 
     /**
      * Easing function for a sine wave easing out.
      */
-    Easing easeOutSine = value -> Math.sin((value * Math.PI) / 2);
+    Easing easeOutSine = value -> sin((value * PI) / 2);
 
     /**
      * Easing function for a sine wave easing in and out.
      */
-    Easing easeInOutSine = value -> -(Math.cos(Math.PI * value) - 1) / 2;
+    Easing easeInOutSine = value -> -(cos(PI * value) - 1) / 2;
 
     /**
      * Easing function for a quadratic easing in.
@@ -37,7 +39,7 @@ public interface Easing {
     /**
      * Easing function for a quadratic easing in and out.
      */
-    Easing easeInOutQuad = value -> value < 0.5 ? 2 * value * value : 1 - Math.pow(-2 * value + 2, 2) / 2;
+    Easing easeInOutQuad = value -> value < 0.5 ? 2 * value * value : 1 - pow(-2 * value + 2, 2) / 2;
 
     /**
      * Easing function for a cubic easing in.
@@ -47,12 +49,12 @@ public interface Easing {
     /**
      * Easing function for a cubic easing out.
      */
-    Easing easeOutCubic = value -> 1 - Math.pow(1 - value, 3);
+    Easing easeOutCubic = value -> 1 - pow(1 - value, 3);
 
     /**
      * Easing function for a cubic easing in and out.
      */
-    Easing easeInOutCubic = value -> value < 0.5 ? 4 * value * value * value : 1 - Math.pow(-2 * value + 2, 3) / 2;
+    Easing easeInOutCubic = value -> value < 0.5 ? 4 * value * value * value : 1 - pow(-2 * value + 2, 3) / 2;
 
     /**
      * Easing function for a quartic easing in.
@@ -62,12 +64,12 @@ public interface Easing {
     /**
      * Easing function for a quartic easing out.
      */
-    Easing easeOutQuart = value -> 1 - Math.pow(1 - value, 4);
+    Easing easeOutQuart = value -> 1 - pow(1 - value, 4);
 
     /**
      * Easing function for a quartic easing in and out.
      */
-    Easing easeInOutQuart = value -> value < 0.5 ? 8 * value * value * value * value : 1 - Math.pow(-2 * value + 2, 4) / 2;
+    Easing easeInOutQuart = value -> value < 0.5 ? 8 * value * value * value * value : 1 - pow(-2 * value + 2, 4) / 2;
 
     /**
      * Easing function for a quintic easing in.
@@ -77,42 +79,42 @@ public interface Easing {
     /**
      * Easing function for a quintic easing out.
      */
-    Easing easeOutQuint = value -> 1 - Math.pow(1 - value, 5);
+    Easing easeOutQuint = value -> 1 - pow(1 - value, 5);
 
     /**
      * Easing function for a quintic easing in and out.
      */
-    Easing easeInOutQuint = value -> value < 0.5 ? 16 * value * value * value * value * value : 1 - Math.pow(-2 * value + 2, 5) / 2;
+    Easing easeInOutQuint = value -> value < 0.5 ? 16 * value * value * value * value * value : 1 - pow(-2 * value + 2, 5) / 2;
 
     /**
      * Easing function for an exponential easing in.
      */
-    Easing easeInExpo = value -> value == 0 ? 0 : Math.pow(2, 10 * value - 10);
+    Easing easeInExpo = value -> value == 0 ? 0 : pow(2, 10 * value - 10);
 
     /**
      * Easing function for an exponential easing out.
      */
-    Easing easeOutExpo = value -> value == 1 ? 1 : 1 - Math.pow(2, -10 * value);
+    Easing easeOutExpo = value -> value == 1 ? 1 : 1 - pow(2, -10 * value);
 
     /**
      * Easing function for an exponential easing in and out.
      */
-    Easing easeInOutExpo = value -> value == 0 ? 0 : value == 1 ? 1 : value < 0.5 ? Math.pow(2, 20 * value - 10) / 2 : (2 - Math.pow(2, -20 * value + 10)) / 2;
+    Easing easeInOutExpo = value -> value == 0 ? 0 : value == 1 ? 1 : value < 0.5 ? pow(2, 20 * value - 10) / 2 : (2 - pow(2, -20 * value + 10)) / 2;
 
     /**
      * Easing function for a circular easing in.
      */
-    Easing easeInCirc = value -> 1 - Math.sqrt(1 - Math.pow(value, 2));
+    Easing easeInCirc = value -> 1 - sqrt(1 - pow(value, 2));
 
     /**
      * Easing function for a circular easing out.
      */
-    Easing easeOutCirc = value -> Math.sqrt(1 - Math.pow(value - 1, 2));
+    Easing easeOutCirc = value -> sqrt(1 - pow(value - 1, 2));
 
     /**
      * Easing function for a circular easing in and out.
      */
-    Easing easeInOutCirc = value -> value < 0.5 ? (1 - Math.sqrt(1 - Math.pow(2 * value, 2))) / 2 : (Math.sqrt(1 - Math.pow(-2 * value + 2, 2)) + 1) / 2;
+    Easing easeInOutCirc = value -> value < 0.5 ? (1 - sqrt(1 - pow(2 * value, 2))) / 2 : (sqrt(1 - pow(-2 * value + 2, 2)) + 1) / 2;
 
     /**
      * Easing function for a back easing in.
@@ -122,27 +124,27 @@ public interface Easing {
     /**
      * Easing function for a back easing out.
      */
-    Easing easeOutBack = value -> 1 + (1.70158 + 1) * Math.pow(value - 1, 3) + 1.70158 * Math.pow(value - 1, 2);
+    Easing easeOutBack = value -> 1 + (1.70158 + 1) * pow(value - 1, 3) + 1.70158 * pow(value - 1, 2);
 
     /**
      * Easing function for a back easing in and out.
      */
-    Easing easeInOutBack = value -> value < 0.5 ? (Math.pow(2 * value, 2) * (((1.70158 * 1.525) + 1) * 2 * value - (1.70158 * 1.525))) / 2 : (Math.pow(2 * value - 2, 2) * (((1.70158 * 1.525) + 1) * (value * 2 - 2) + (1.70158 * 1.525)) + 2) / 2;
+    Easing easeInOutBack = value -> value < 0.5 ? (pow(2 * value, 2) * (((1.70158 * 1.525) + 1) * 2 * value - (1.70158 * 1.525))) / 2 : (pow(2 * value - 2, 2) * (((1.70158 * 1.525) + 1) * (value * 2 - 2) + (1.70158 * 1.525)) + 2) / 2;
 
     /**
      * Easing function for an elastic easing in.
      */
-    Easing easeInElastic = value -> value == 0 ? 0 : value == 1 ? 1 : -Math.pow(2, 10 * value - 10) * Math.sin((value * 10 - 10.75) * (2 * Math.PI) / 3);
+    Easing easeInElastic = value -> value == 0 ? 0 : value == 1 ? 1 : -pow(2, 10 * value - 10) * sin((value * 10 - 10.75) * (2 * PI) / 3);
 
     /**
      * Easing function for an elastic easing out.
      */
-    Easing easeOutElastic = value -> value == 0 ? 0 : value == 1 ? 1 : Math.pow(2, -10 * value) * Math.sin((value * 10 - 0.75) * (2 * Math.PI) / 3) + 1;
+    Easing easeOutElastic = value -> value == 0 ? 0 : value == 1 ? 1 : pow(2, -10 * value) * sin((value * 10 - 0.75) * (2 * PI) / 3) + 1;
 
     /**
      * Easing function for an elastic easing in and out.
      */
-    Easing easeInOutElastic = value -> value == 0 ? 0 : value == 1 ? 1 : value < 0.5 ? -(Math.pow(2, 20 * value - 10) * Math.sin((20 * value - 11.125) * (2 * Math.PI) / 4.5)) / 2 : (Math.pow(2, -20 * value + 10) * Math.sin((20 * value - 11.125) * (2 * Math.PI) / 4.5)) / 2 + 1;
+    Easing easeInOutElastic = value -> value == 0 ? 0 : value == 1 ? 1 : value < 0.5 ? -(pow(2, 20 * value - 10) * sin((20 * value - 11.125) * (2 * PI) / 4.5)) / 2 : (pow(2, -20 * value + 10) * sin((20 * value - 11.125) * (2 * PI) / 4.5)) / 2 + 1;
 
     /**
      * Easing function for a bounce easing in.

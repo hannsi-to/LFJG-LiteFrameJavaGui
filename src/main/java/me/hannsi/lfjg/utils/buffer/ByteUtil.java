@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.utils.buffer;
 
-import me.hannsi.lfjg.debug.debug.DebugLog;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
@@ -39,7 +37,7 @@ public class ByteUtil {
                     throw new IllegalArgumentException("File or resource not found: " + path);
                 }
             } catch (Exception e) {
-                DebugLog.debug(ByteUtil.class, e);
+                throw new RuntimeException(e);
             }
         }
 
@@ -51,7 +49,6 @@ public class ByteUtil {
      *
      * @param inputStream the InputStream to convert
      * @return a byte array containing the InputStream data
-     * @throws IOException if an I/O error occurs
      */
     public static byte[] convertInputStreamToByteArray(InputStream inputStream) {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -64,7 +61,7 @@ public class ByteUtil {
             }
             buffer.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return buffer.toByteArray();

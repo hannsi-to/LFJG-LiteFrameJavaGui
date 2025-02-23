@@ -4,6 +4,8 @@ import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.joml.Vector2f;
 
+import static me.hannsi.lfjg.utils.math.MathHelper.*;
+
 /**
  * Class representing a rounded rectangle renderer in OpenGL.
  */
@@ -45,7 +47,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (leftBottom) {
             for (i = 0; i <= 90; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x + leftBottomRadius + Math.sin(i * Math.PI / 180.0D) * leftBottomRadius * -1.0D), (float) (y + leftBottomRadius + Math.cos(i * Math.PI / 180.0D) * leftBottomRadius * -1.0D))).color(bottomLeftColor).end();
+                put().vertex(new Vector2f((float) (x + leftBottomRadius + sin(i * PI / 180.0D) * leftBottomRadius * -1.0D), (float) (y + leftBottomRadius + cos(i * PI / 180.0D) * leftBottomRadius * -1.0D))).color(bottomLeftColor).end();
             }
         } else {
             put().vertex(new Vector2f(x, y)).color(bottomLeftColor).end();
@@ -53,7 +55,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (leftTop) {
             for (i = 90; i <= 180; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x + leftTopRadius + Math.sin(i * Math.PI / 180.0D) * leftTopRadius * -1.0D), (float) (y1 - leftTopRadius + Math.cos(i * Math.PI / 180.0D) * leftTopRadius * -1.0D))).color(topLeftColor).end();
+                put().vertex(new Vector2f((float) (x + leftTopRadius + sin(i * PI / 180.0D) * leftTopRadius * -1.0D), (float) (y1 - leftTopRadius + cos(i * PI / 180.0D) * leftTopRadius * -1.0D))).color(topLeftColor).end();
             }
         } else {
             put().vertex(new Vector2f(x, y1)).color(topLeftColor).end();
@@ -61,7 +63,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (rightTop) {
             for (i = 0; i <= 90; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x1 - rightTopRadius + Math.sin(i * Math.PI / 180.0D) * rightTopRadius), (float) (y1 - rightTopRadius + Math.cos(i * Math.PI / 180.0D) * rightTopRadius))).color(topRightColor).end();
+                put().vertex(new Vector2f((float) (x1 - rightTopRadius + sin(i * PI / 180.0D) * rightTopRadius), (float) (y1 - rightTopRadius + cos(i * PI / 180.0D) * rightTopRadius))).color(topRightColor).end();
             }
         } else {
             put().vertex(new Vector2f(x1, y1)).color(topRightColor).end();
@@ -69,7 +71,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (rightBottom) {
             for (i = 90; i <= 180; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x1 - rightBottomRadius + Math.sin(i * Math.PI / 180.0D) * rightBottomRadius), (float) (y + rightBottomRadius + Math.cos(i * Math.PI / 180.0D) * rightBottomRadius))).color(bottomRightColor).end();
+                put().vertex(new Vector2f((float) (x1 - rightBottomRadius + sin(i * PI / 180.0D) * rightBottomRadius), (float) (y + rightBottomRadius + cos(i * PI / 180.0D) * rightBottomRadius))).color(bottomRightColor).end();
             }
         } else {
             put().vertex(new Vector2f(x1, y)).color(bottomRightColor).end();
@@ -250,7 +252,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (leftBottom) {
             for (i = 0; i <= 90; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x + leftBottomRadius + Math.sin(i * Math.PI / 180.0D) * leftBottomRadius * -1.0D), (float) (y + leftBottomRadius + Math.cos(i * Math.PI / 180.0D) * leftBottomRadius * -1.0D))).color(bottomLeftColor).end();
+                put().vertex(new Vector2f((float) (x + leftBottomRadius + sin(i * PI / 180.0D) * leftBottomRadius * -1.0D), (float) (y + leftBottomRadius + cos(i * PI / 180.0D) * leftBottomRadius * -1.0D))).color(bottomLeftColor).end();
             }
         } else {
             put().vertex(new Vector2f(x, y)).color(bottomLeftColor).end();
@@ -258,7 +260,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (leftTop) {
             for (i = 90; i <= 180; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x + leftTopRadius + Math.sin(i * Math.PI / 180.0D) * leftTopRadius * -1.0D), (float) (y1 - leftTopRadius + Math.cos(i * Math.PI / 180.0D) * leftTopRadius * -1.0D))).color(topLeftColor).end();
+                put().vertex(new Vector2f((float) (x + leftTopRadius + sin(i * PI / 180.0D) * leftTopRadius * -1.0D), (float) (y1 - leftTopRadius + cos(i * PI / 180.0D) * leftTopRadius * -1.0D))).color(topLeftColor).end();
             }
         } else {
             put().vertex(new Vector2f(x, y1)).color(topLeftColor).end();
@@ -266,7 +268,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (rightTop) {
             for (i = 0; i <= 90; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x1 - rightTopRadius + Math.sin(i * Math.PI / 180.0D) * rightTopRadius), (float) (y1 - rightTopRadius + Math.cos(i * Math.PI / 180.0D) * rightTopRadius))).color(topRightColor).end();
+                put().vertex(new Vector2f((float) (x1 - rightTopRadius + sin(i * PI / 180.0D) * rightTopRadius), (float) (y1 - rightTopRadius + cos(i * PI / 180.0D) * rightTopRadius))).color(topRightColor).end();
             }
         } else {
             put().vertex(new Vector2f(x1, y1)).color(topRightColor).end();
@@ -274,7 +276,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (rightBottom) {
             for (i = 90; i <= 180; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x1 - rightBottomRadius + Math.sin(i * Math.PI / 180.0D) * rightBottomRadius), (float) (y + rightBottomRadius + Math.cos(i * Math.PI / 180.0D) * rightBottomRadius))).color(bottomRightColor).end();
+                put().vertex(new Vector2f((float) (x1 - rightBottomRadius + sin(i * PI / 180.0D) * rightBottomRadius), (float) (y + rightBottomRadius + cos(i * PI / 180.0D) * rightBottomRadius))).color(bottomRightColor).end();
             }
         } else {
             put().vertex(new Vector2f(x1, y)).color(bottomRightColor).end();
@@ -330,16 +332,16 @@ public class GLRoundedRect extends GLPolygon {
     /**
      * Draws a rounded rectangle outline with the specified parameters.
      *
-     * @param x                 the x-coordinate of the bottom-left corner
-     * @param y                 the y-coordinate of the bottom-left corner
-     * @param x1                the x-coordinate of the top-right corner
-     * @param y1                the y-coordinate of the top-right corner
-     * @param lineWidth         the width of the outline
-     * @param radius            the radius of the corners
-     * @param topLeftColor      the color of the top-left corner
-     * @param topRightColor     the color of the top-right corner
-     * @param bottomRightColor  the color of the bottom-right corner
-     * @param bottomLeftColor   the color of the bottom-left corner
+     * @param x                the x-coordinate of the bottom-left corner
+     * @param y                the y-coordinate of the bottom-left corner
+     * @param x1               the x-coordinate of the top-right corner
+     * @param y1               the y-coordinate of the top-right corner
+     * @param lineWidth        the width of the outline
+     * @param radius           the radius of the corners
+     * @param topLeftColor     the color of the top-left corner
+     * @param topRightColor    the color of the top-right corner
+     * @param bottomRightColor the color of the bottom-right corner
+     * @param bottomLeftColor  the color of the bottom-left corner
      */
     public void roundedRectOutLine(float x, float y, float x1, float y1, float lineWidth, float radius, Color topLeftColor, Color topRightColor, Color bottomRightColor, Color bottomLeftColor) {
         roundedRectOutLine(x, y, x1, y1, lineWidth, true, true, true, true, radius, radius, radius, radius, defaultSegmentCount, topLeftColor, topRightColor, bottomRightColor, bottomLeftColor);
@@ -406,16 +408,16 @@ public class GLRoundedRect extends GLPolygon {
     /**
      * Draws a rounded rectangle outline with the specified parameters.
      *
-     * @param x                 the x-coordinate of the bottom-left corner
-     * @param y                 the y-coordinate of the bottom-left corner
-     * @param width             the width of the rectangle
-     * @param height            the height of the rectangle
-     * @param lineWidth         the width of the outline
-     * @param radius            the radius of the corners
-     * @param topLeftColor      the color of the top-left corner
-     * @param topRightColor     the color of the top-right corner
-     * @param bottomRightColor  the color of the bottom-right corner
-     * @param bottomLeftColor   the color of the bottom-left corner
+     * @param x                the x-coordinate of the bottom-left corner
+     * @param y                the y-coordinate of the bottom-left corner
+     * @param width            the width of the rectangle
+     * @param height           the height of the rectangle
+     * @param lineWidth        the width of the outline
+     * @param radius           the radius of the corners
+     * @param topLeftColor     the color of the top-left corner
+     * @param topRightColor    the color of the top-right corner
+     * @param bottomRightColor the color of the bottom-right corner
+     * @param bottomLeftColor  the color of the bottom-left corner
      */
     public void roundedRectWHOutLine(float x, float y, float width, float height, float lineWidth, float radius, Color topLeftColor, Color topRightColor, Color bottomRightColor, Color bottomLeftColor) {
         roundedRectOutLine(x, y, x + width, y + height, lineWidth, true, true, true, true, radius, radius, radius, radius, defaultSegmentCount, topLeftColor, topRightColor, bottomRightColor, bottomLeftColor);
@@ -462,7 +464,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (leftBottom) {
             for (i = 0; i <= 90; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x + leftBottomRadius + Math.sin(i * Math.PI / 180.0) * leftBottomRadius * -1.0), (float) (y + leftBottomRadius + Math.cos(i * Math.PI / 180.0) * leftBottomRadius * -1.0))).color(bottomLeftColor).end();
+                put().vertex(new Vector2f((float) (x + leftBottomRadius + sin(i * PI / 180.0) * leftBottomRadius * -1.0), (float) (y + leftBottomRadius + cos(i * PI / 180.0) * leftBottomRadius * -1.0))).color(bottomLeftColor).end();
             }
         } else {
             put().vertex(new Vector2f((float) x, (float) y)).color(bottomLeftColor).end();
@@ -470,7 +472,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (leftTop) {
             for (i = 90; i <= 180; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x + leftTopRadius + Math.sin(i * Math.PI / 180.0) * leftTopRadius * -1.0), (float) (y1 - leftTopRadius + Math.cos(i * Math.PI / 180.0) * leftTopRadius * -1.0))).color(topLeftColor).end();
+                put().vertex(new Vector2f((float) (x + leftTopRadius + sin(i * PI / 180.0) * leftTopRadius * -1.0), (float) (y1 - leftTopRadius + cos(i * PI / 180.0) * leftTopRadius * -1.0))).color(topLeftColor).end();
             }
         } else {
             put().vertex(new Vector2f((float) x, (float) y1)).color(topLeftColor).end();
@@ -478,7 +480,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (rightTop) {
             for (i = 0; i <= 90; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x1 - rightTopRadius + Math.sin(i * Math.PI / 180.0) * rightTopRadius), (float) (y1 - rightTopRadius + Math.cos(i * Math.PI / 180.0) * rightTopRadius))).color(topRightColor).end();
+                put().vertex(new Vector2f((float) (x1 - rightTopRadius + sin(i * PI / 180.0) * rightTopRadius), (float) (y1 - rightTopRadius + cos(i * PI / 180.0) * rightTopRadius))).color(topRightColor).end();
             }
         } else {
             put().vertex(new Vector2f((float) x1, (float) y1)).color(topRightColor).end();
@@ -486,7 +488,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (rightBottom) {
             for (i = 90; i <= 180; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x1 - rightBottomRadius + Math.sin(i * Math.PI / 180.0) * rightBottomRadius), (float) (y + rightBottomRadius + Math.cos(i * Math.PI / 180.0) * rightBottomRadius))).color(bottomRightColor).end();
+                put().vertex(new Vector2f((float) (x1 - rightBottomRadius + sin(i * PI / 180.0) * rightBottomRadius), (float) (y + rightBottomRadius + cos(i * PI / 180.0) * rightBottomRadius))).color(bottomRightColor).end();
             }
         } else {
             put().vertex(new Vector2f((float) x1, (float) y)).color(bottomRightColor).end();
@@ -667,7 +669,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (leftBottom) {
             for (i = 0; i <= 90; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x + leftBottomRadius + Math.sin(i * Math.PI / 180.0D) * leftBottomRadius * -1.0D), (float) (y + leftBottomRadius + Math.cos(i * Math.PI / 180.0D) * leftBottomRadius * -1.0D))).color(bottomLeftColor).end();
+                put().vertex(new Vector2f((float) (x + leftBottomRadius + sin(i * PI / 180.0D) * leftBottomRadius * -1.0D), (float) (y + leftBottomRadius + cos(i * PI / 180.0D) * leftBottomRadius * -1.0D))).color(bottomLeftColor).end();
             }
         } else {
             put().vertex(new Vector2f((float) x, (float) y)).color(bottomLeftColor).end();
@@ -675,7 +677,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (leftTop) {
             for (i = 90; i <= 180; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x + leftTopRadius + Math.sin(i * Math.PI / 180.0D) * leftTopRadius * -1.0D), (float) (y1 - leftTopRadius + Math.cos(i * Math.PI / 180.0D) * leftTopRadius * -1.0D))).color(topLeftColor).end();
+                put().vertex(new Vector2f((float) (x + leftTopRadius + sin(i * PI / 180.0D) * leftTopRadius * -1.0D), (float) (y1 - leftTopRadius + cos(i * PI / 180.0D) * leftTopRadius * -1.0D))).color(topLeftColor).end();
             }
         } else {
             put().vertex(new Vector2f((float) x, (float) y1)).color(topLeftColor).end();
@@ -683,7 +685,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (rightTop) {
             for (i = 0; i <= 90; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x1 - rightTopRadius + Math.sin(i * Math.PI / 180.0D) * rightTopRadius), (float) (y1 - rightTopRadius + Math.cos(i * Math.PI / 180.0D) * rightTopRadius))).color(topRightColor).end();
+                put().vertex(new Vector2f((float) (x1 - rightTopRadius + sin(i * PI / 180.0D) * rightTopRadius), (float) (y1 - rightTopRadius + cos(i * PI / 180.0D) * rightTopRadius))).color(topRightColor).end();
             }
         } else {
             put().vertex(new Vector2f((float) x1, (float) y1)).color(topRightColor).end();
@@ -691,7 +693,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (rightBottom) {
             for (i = 90; i <= 180; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x1 - rightBottomRadius + Math.sin(i * Math.PI / 180.0D) * rightBottomRadius), (float) (y + rightBottomRadius + Math.cos(i * Math.PI / 180.0D) * rightBottomRadius))).color(bottomRightColor).end();
+                put().vertex(new Vector2f((float) (x1 - rightBottomRadius + sin(i * PI / 180.0D) * rightBottomRadius), (float) (y + rightBottomRadius + cos(i * PI / 180.0D) * rightBottomRadius))).color(bottomRightColor).end();
             }
         } else {
             put().vertex(new Vector2f((float) x1, (float) y)).color(bottomRightColor).end();
@@ -747,16 +749,16 @@ public class GLRoundedRect extends GLPolygon {
     /**
      * Draws a rounded rectangle outline with the specified parameters.
      *
-     * @param x                 the x-coordinate of the bottom-left corner
-     * @param y                 the y-coordinate of the bottom-left corner
-     * @param x1                the x-coordinate of the top-right corner
-     * @param y1                the y-coordinate of the top-right corner
-     * @param lineWidth         the width of the outline
-     * @param radius            the radius of the corners
-     * @param topLeftColor      the color of the top-left corner
-     * @param topRightColor     the color of the top-right corner
-     * @param bottomRightColor  the color of the bottom-right corner
-     * @param bottomLeftColor   the color of the bottom-left corner
+     * @param x                the x-coordinate of the bottom-left corner
+     * @param y                the y-coordinate of the bottom-left corner
+     * @param x1               the x-coordinate of the top-right corner
+     * @param y1               the y-coordinate of the top-right corner
+     * @param lineWidth        the width of the outline
+     * @param radius           the radius of the corners
+     * @param topLeftColor     the color of the top-left corner
+     * @param topRightColor    the color of the top-right corner
+     * @param bottomRightColor the color of the bottom-right corner
+     * @param bottomLeftColor  the color of the bottom-left corner
      */
     public void roundedRectOutLine(double x, double y, double x1, double y1, double lineWidth, double radius, Color topLeftColor, Color topRightColor, Color bottomRightColor, Color bottomLeftColor) {
         roundedRectOutLine(x, y, x1, y1, lineWidth, true, true, true, true, radius, radius, radius, radius, defaultSegmentCount, topLeftColor, topRightColor, bottomRightColor, bottomLeftColor);
@@ -823,16 +825,16 @@ public class GLRoundedRect extends GLPolygon {
     /**
      * Draws a rounded rectangle outline with the specified parameters.
      *
-     * @param x                 the x-coordinate of the bottom-left corner
-     * @param y                 the y-coordinate of the bottom-left corner
-     * @param width             the width of the rectangle
-     * @param height            the height of the rectangle
-     * @param lineWidth         the width of the outline
-     * @param radius            the radius of the corners
-     * @param topLeftColor      the color of the top-left corner
-     * @param topRightColor     the color of the top-right corner
-     * @param bottomRightColor  the color of the bottom-right corner
-     * @param bottomLeftColor   the color of the bottom-left corner
+     * @param x                the x-coordinate of the bottom-left corner
+     * @param y                the y-coordinate of the bottom-left corner
+     * @param width            the width of the rectangle
+     * @param height           the height of the rectangle
+     * @param lineWidth        the width of the outline
+     * @param radius           the radius of the corners
+     * @param topLeftColor     the color of the top-left corner
+     * @param topRightColor    the color of the top-right corner
+     * @param bottomRightColor the color of the bottom-right corner
+     * @param bottomLeftColor  the color of the bottom-left corner
      */
     public void roundedRectWHOutLine(double x, double y, double width, double height, double lineWidth, double radius, Color topLeftColor, Color topRightColor, Color bottomRightColor, Color bottomLeftColor) {
         roundedRectOutLine(x, y, x + width, y + height, lineWidth, true, true, true, true, radius, radius, radius, radius, defaultSegmentCount, topLeftColor, topRightColor, bottomRightColor, bottomLeftColor);

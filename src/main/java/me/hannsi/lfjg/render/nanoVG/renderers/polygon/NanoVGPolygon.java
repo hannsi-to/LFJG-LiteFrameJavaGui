@@ -2,7 +2,7 @@ package me.hannsi.lfjg.render.nanoVG.renderers.polygon;
 
 import me.hannsi.lfjg.render.nanoVG.system.NanoVGUtil;
 import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.math.MathUtil;
+import me.hannsi.lfjg.utils.math.MathHelper;
 import org.joml.Vector2f;
 import org.lwjgl.nanovg.NanoVG;
 
@@ -56,12 +56,12 @@ public class NanoVGPolygon {
             count++;
         }
 
-        float maxX = MathUtil.getLargest(xs);
-        float maxY = MathUtil.getLargest(ys);
-        float minX = MathUtil.getShortest(xs);
-        float minY = MathUtil.getShortest(ys);
+        float maxX = MathHelper.getLargest(xs);
+        float maxY = MathHelper.getLargest(ys);
+        float minX = MathHelper.getShortest(xs);
+        float minY = MathHelper.getShortest(ys);
 
-        float distance = MathUtil.distance(new Vector2f(minX, minY), new Vector2f(maxX, maxY));
+        float distance = MathHelper.distance(new Vector2f(minX, minY), new Vector2f(maxX, maxY));
 
         this.x = minX;
         this.y = minY;
@@ -75,7 +75,7 @@ public class NanoVGPolygon {
     /**
      * Sets the outline properties of the polygon.
      *
-     * @param lineWidth the width of the outline
+     * @param lineWidth     the width of the outline
      * @param outLineColor1 the color of the outline
      */
     public void setOutLineBase(float lineWidth, Color outLineColor1) {

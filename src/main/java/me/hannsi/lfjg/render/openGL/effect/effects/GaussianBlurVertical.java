@@ -3,7 +3,7 @@ package me.hannsi.lfjg.render.openGL.effect.effects;
 import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
-import me.hannsi.lfjg.utils.math.MathUtil;
+import me.hannsi.lfjg.utils.math.MathHelper;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
@@ -82,7 +82,7 @@ public class GaussianBlurVertical extends EffectBase {
 
         final FloatBuffer weightBuffer = BufferUtils.createFloatBuffer(256);
         for (int i = 0; i < radiusY; i++) {
-            weightBuffer.put(MathUtil.calculateGaussianValue(i, radiusY / 2));
+            weightBuffer.put(MathHelper.calculateGaussianValue(i, radiusY / 2));
         }
         weightBuffer.rewind();
         getFrameBuffer().getShaderProgramFBO().setUniform("values", weightBuffer);

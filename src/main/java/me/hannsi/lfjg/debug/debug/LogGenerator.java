@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.debug.debug;
 
+import me.hannsi.lfjg.utils.math.MathHelper;
+
 /**
  * The LogGenerator class is responsible for generating formatted log messages with a title and multiple text lines.
  */
@@ -28,9 +30,9 @@ public class LogGenerator {
         StringBuilder log = new StringBuilder("\n");
         StringBuilder firstLine = new StringBuilder();
 
-        firstLine.append("-".repeat(Math.max(0, barCount)));
+        firstLine.append("-".repeat(MathHelper.max(0, barCount)));
         firstLine.append(" ").append(title).append(" ");
-        firstLine.append("-".repeat(Math.max(0, barCount)));
+        firstLine.append("-".repeat(MathHelper.max(0, barCount)));
 
         log.append(firstLine);
 
@@ -39,7 +41,7 @@ public class LogGenerator {
         }
 
         log.append("\n");
-        log.append("-".repeat(Math.max(0, firstLine.length())));
+        log.append("-".repeat(MathHelper.max(0, firstLine.length())));
         log.append("\n");
 
         return log.toString();

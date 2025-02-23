@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.utils.math.animation;
 
-import me.hannsi.lfjg.utils.math.MathUtil;
+import me.hannsi.lfjg.utils.math.MathHelper;
 
 /**
  * Utility class for easing functions and animations.
@@ -54,7 +54,7 @@ public class EasingUtil {
      * @return the eased value
      */
     public float get(long millis) {
-        float clamped = MathUtil.clampF((float) (System.currentTimeMillis() - current) / millis, 0F, 1F);
+        float clamped = MathHelper.clamp((float) (System.currentTimeMillis() - current) / millis, 0F, 1F);
         return (float) (reverse ? 1 - easing.ease(clamped) : easing.ease(clamped));
     }
 

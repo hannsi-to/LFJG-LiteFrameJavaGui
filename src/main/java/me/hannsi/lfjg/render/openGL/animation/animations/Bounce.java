@@ -5,6 +5,8 @@ import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.math.animation.Easing;
 import me.hannsi.lfjg.utils.math.animation.EasingUtil;
 
+import static me.hannsi.lfjg.utils.math.MathHelper.*;
+
 public class Bounce extends AnimationBase {
     protected EasingUtil easingUtil;
     protected float lastX;
@@ -30,9 +32,9 @@ public class Bounce extends AnimationBase {
         }
 
         float easeValue = easingUtil.get(millis);
-        float distance = (float) (Math.abs(Math.sin(Math.toRadians(easeValue * 180))) * height);
-        float x = (float) (distance * Math.cos(Math.toRadians(degrees)));
-        float y = (float) (distance * Math.sin(Math.toRadians(degrees)));
+        float distance = abs(sin(toRadians(easeValue * 180))) * height;
+        float x = distance * cos(toRadians(degrees));
+        float y = distance * sin(toRadians(degrees));
 
         glObject.getModelMatrix().translate(-lastX, -lastY, 0).translate(x, y, 0);
 

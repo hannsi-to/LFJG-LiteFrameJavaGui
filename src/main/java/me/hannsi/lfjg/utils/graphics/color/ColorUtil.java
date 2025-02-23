@@ -1,18 +1,17 @@
 package me.hannsi.lfjg.utils.graphics.color;
 
-import me.hannsi.lfjg.utils.math.MathUtil;
-import org.joml.Math;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static me.hannsi.lfjg.utils.math.MathHelper.*;
 
 public class ColorUtil {
 
     /**
      * Generates a rainbow color based on the delay, timing, saturation, and brightness.
      *
-     * @param delay the delay in milliseconds
-     * @param timing the timing offset
+     * @param delay      the delay in milliseconds
+     * @param timing     the timing offset
      * @param saturation the saturation value
      * @param brightness the brightness value
      * @return the generated rainbow color
@@ -25,7 +24,7 @@ public class ColorUtil {
     /**
      * Generates a rainbow color based on the delay, saturation, and brightness.
      *
-     * @param delay the delay in milliseconds
+     * @param delay      the delay in milliseconds
      * @param saturation the saturation value
      * @param brightness the brightness value
      * @return the generated rainbow color
@@ -89,7 +88,7 @@ public class ColorUtil {
      * Sets the red component of the given color.
      *
      * @param color the original color
-     * @param red the new red component
+     * @param red   the new red component
      * @return the new color with the updated red component
      */
     public static Color setRed(Color color, float red) {
@@ -111,7 +110,7 @@ public class ColorUtil {
      * Sets the blue component of the given color.
      *
      * @param color the original color
-     * @param blue the new blue component
+     * @param blue  the new blue component
      * @return the new color with the updated blue component
      */
     public static Color setBlue(Color color, float blue) {
@@ -133,7 +132,7 @@ public class ColorUtil {
      * Sets the red component of the given color.
      *
      * @param color the original color
-     * @param red the new red component
+     * @param red   the new red component
      * @return the new color with the updated red component
      */
     public static Color setRed(Color color, int red) {
@@ -155,7 +154,7 @@ public class ColorUtil {
      * Sets the blue component of the given color.
      *
      * @param color the original color
-     * @param blue the new blue component
+     * @param blue  the new blue component
      * @return the new color with the updated blue component
      */
     public static Color setBlue(Color color, int blue) {
@@ -176,9 +175,9 @@ public class ColorUtil {
     /**
      * Checks if the given color components are within the valid range (0-255).
      *
-     * @param checkRed the red component to check
+     * @param checkRed   the red component to check
      * @param checkGreen the green component to check
-     * @param checkBlue the blue component to check
+     * @param checkBlue  the blue component to check
      * @param checkAlpha the alpha component to check
      * @return true if all components are within the valid range, false otherwise
      */
@@ -190,7 +189,7 @@ public class ColorUtil {
         checkColors.add(checkAlpha);
 
         for (Integer integer : checkColors) {
-            return MathUtil.isWithinRange(integer, 0, 255);
+            return isWithinRange(integer, 0, 255);
         }
 
         return true;
@@ -199,9 +198,9 @@ public class ColorUtil {
     /**
      * Fixes the given color components to be within the valid range (0-255).
      *
-     * @param fixRed the red component to fix
+     * @param fixRed   the red component to fix
      * @param fixGreen the green component to fix
-     * @param fixBlue the blue component to fix
+     * @param fixBlue  the blue component to fix
      * @param fixAlpha the alpha component to fix
      * @return the new color with the fixed components
      */
@@ -209,7 +208,7 @@ public class ColorUtil {
         if (checkColorRange(fixRed, fixGreen, fixBlue, fixAlpha)) {
             return new Color(fixRed, fixGreen, fixBlue, fixAlpha);
         } else {
-            return new Color(MathUtil.clampI(fixRed, 0, 255), MathUtil.clampI(fixGreen, 0, 255), MathUtil.clampI(fixBlue, 0, 255), MathUtil.clampI(fixAlpha, 0, 255));
+            return new Color(clamp(fixRed, 0, 255), clamp(fixGreen, 0, 255), clamp(fixBlue, 0, 255), clamp(fixAlpha, 0, 255));
         }
     }
 
@@ -221,9 +220,9 @@ public class ColorUtil {
      * @return the new color with gamma correction applied
      */
     public static Color applyGammaCorrection(Color color, float gamma) {
-        int r = clamp((int) (java.lang.Math.pow(color.getRed() / 255.0, gamma) * 255));
-        int g = clamp((int) (java.lang.Math.pow(color.getGreen() / 255.0, gamma) * 255));
-        int b = clamp((int) (java.lang.Math.pow(color.getBlue() / 255.0, gamma) * 255));
+        int r = clampColor((int) (pow(color.getRed() / 255.0, gamma) * 255));
+        int g = clampColor((int) (pow(color.getGreen() / 255.0, gamma) * 255));
+        int b = clampColor((int) (pow(color.getBlue() / 255.0, gamma) * 255));
         int a = color.getAlpha();
         return new Color(r, g, b, a);
     }
@@ -231,14 +230,14 @@ public class ColorUtil {
     /**
      * Applies brightness adjustment to the given color.
      *
-     * @param color the original color
+     * @param color  the original color
      * @param deltaB the brightness adjustment value
      * @return the new color with brightness adjusted
      */
     public static Color applyBrightness(Color color, float deltaB) {
-        int r = clamp((int) (color.getRed() + deltaB * 255));
-        int g = clamp((int) (color.getGreen() + deltaB * 255));
-        int b = clamp((int) (color.getBlue() + deltaB * 255));
+        int r = clampColor((int) (color.getRed() + deltaB * 255));
+        int g = clampColor((int) (color.getGreen() + deltaB * 255));
+        int b = clampColor((int) (color.getBlue() + deltaB * 255));
         int a = color.getAlpha();
         return new Color(r, g, b, a);
     }
@@ -251,9 +250,9 @@ public class ColorUtil {
      * @return the new color with contrast adjusted
      */
     public static Color applyContrast(Color color, float alpha) {
-        int r = clamp((int) (((color.getRed() / 255.0 - 0.5) * alpha + 0.5) * 255));
-        int g = clamp((int) (((color.getGreen() / 255.0 - 0.5) * alpha + 0.5) * 255));
-        int b = clamp((int) (((color.getBlue() / 255.0 - 0.5) * alpha + 0.5) * 255));
+        int r = clampColor((int) (((color.getRed() / 255.0 - 0.5) * alpha + 0.5) * 255));
+        int g = clampColor((int) (((color.getGreen() / 255.0 - 0.5) * alpha + 0.5) * 255));
+        int b = clampColor((int) (((color.getBlue() / 255.0 - 0.5) * alpha + 0.5) * 255));
         int a = color.getAlpha();
         return new Color(r, g, b, a);
     }
@@ -261,7 +260,7 @@ public class ColorUtil {
     /**
      * Applies saturation adjustment to the given color.
      *
-     * @param color the original color
+     * @param color  the original color
      * @param deltaS the saturation adjustment value
      * @return the new color with saturation adjusted
      */
@@ -275,7 +274,7 @@ public class ColorUtil {
     /**
      * Applies hue adjustment to the given color.
      *
-     * @param color the original color
+     * @param color  the original color
      * @param deltaH the hue adjustment value
      * @return the new color with hue adjusted
      */
@@ -293,7 +292,7 @@ public class ColorUtil {
      * @return the clamped saturation value
      */
     private static float clampSaturation(float value) {
-        return Math.max(0.0f, Math.min(1.0f, value));
+        return max(0.0f, min(1.0f, value));
     }
 
     /**
@@ -302,7 +301,7 @@ public class ColorUtil {
      * @param value the value to clamp
      * @return the clamped value
      */
-    private static int clamp(int value) {
-        return Math.max(0, Math.min(255, value));
+    private static int clampColor(int value) {
+        return max(0, min(255, value));
     }
 }

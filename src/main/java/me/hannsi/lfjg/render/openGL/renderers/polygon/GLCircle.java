@@ -4,6 +4,8 @@ import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.joml.Vector2f;
 
+import static me.hannsi.lfjg.utils.math.MathHelper.*;
+
 /**
  * Class representing a circle renderer in OpenGL.
  */
@@ -20,11 +22,11 @@ public class GLCircle extends GLPolygon {
     /**
      * Draws a filled circle with the specified parameters.
      *
-     * @param xCenter the x-coordinate of the circle center
-     * @param yCenter the y-coordinate of the circle center
-     * @param radius the radius of the circle
+     * @param xCenter      the x-coordinate of the circle center
+     * @param yCenter      the y-coordinate of the circle center
+     * @param radius       the radius of the circle
      * @param segmentCount the number of segments to use for the circle
-     * @param colors the colors to use for the circle
+     * @param colors       the colors to use for the circle
      */
     public void circle(double xCenter, double yCenter, double radius, int segmentCount, Color... colors) {
         circle((float) xCenter, (float) yCenter, (float) radius, (float) radius, segmentCount, colors);
@@ -33,11 +35,11 @@ public class GLCircle extends GLPolygon {
     /**
      * Draws a filled circle with the specified parameters.
      *
-     * @param xCenter the x-coordinate of the circle center
-     * @param yCenter the y-coordinate of the circle center
-     * @param radius the radius of the circle
+     * @param xCenter      the x-coordinate of the circle center
+     * @param yCenter      the y-coordinate of the circle center
+     * @param radius       the radius of the circle
      * @param segmentCount the number of segments to use for the circle
-     * @param colors the colors to use for the circle
+     * @param colors       the colors to use for the circle
      */
     public void circle(float xCenter, float yCenter, float radius, int segmentCount, Color... colors) {
         circle(xCenter, yCenter, radius, radius, segmentCount, colors);
@@ -46,12 +48,12 @@ public class GLCircle extends GLPolygon {
     /**
      * Draws a filled circle with the specified parameters.
      *
-     * @param xCenter the x-coordinate of the circle center
-     * @param yCenter the y-coordinate of the circle center
-     * @param xRadius the x-radius of the circle
-     * @param yRadius the y-radius of the circle
+     * @param xCenter      the x-coordinate of the circle center
+     * @param yCenter      the y-coordinate of the circle center
+     * @param xRadius      the x-radius of the circle
+     * @param yRadius      the y-radius of the circle
      * @param segmentCount the number of segments to use for the circle
-     * @param colors the colors to use for the circle
+     * @param colors       the colors to use for the circle
      */
     public void circle(double xCenter, double yCenter, double xRadius, double yRadius, int segmentCount, Color... colors) {
         circle((float) xCenter, (float) yCenter, (float) xRadius, (float) yRadius, segmentCount, colors);
@@ -60,12 +62,12 @@ public class GLCircle extends GLPolygon {
     /**
      * Draws a filled circle with the specified parameters.
      *
-     * @param xCenter the x-coordinate of the circle center
-     * @param yCenter the y-coordinate of the circle center
-     * @param xRadius the x-radius of the circle
-     * @param yRadius the y-radius of the circle
+     * @param xCenter      the x-coordinate of the circle center
+     * @param yCenter      the y-coordinate of the circle center
+     * @param xRadius      the x-radius of the circle
+     * @param yRadius      the y-radius of the circle
      * @param segmentCount the number of segments to use for the circle
-     * @param colors the colors to use for the circle
+     * @param colors       the colors to use for the circle
      */
     public void circle(float xCenter, float yCenter, float xRadius, float yRadius, int segmentCount, Color... colors) {
         int colorCount = colors.length;
@@ -75,15 +77,15 @@ public class GLCircle extends GLPolygon {
         }
 
         for (int i = 0; i <= segmentCount; i++) {
-            float theta = (float) (2.0f * Math.PI * i / segmentCount);
-            float x = xCenter + xRadius * (float) Math.cos(theta);
-            float y = yCenter + yRadius * (float) Math.sin(theta);
+            float theta = 2.0f * PI * i / segmentCount;
+            float x = xCenter + xRadius * cos(theta);
+            float y = yCenter + yRadius * sin(theta);
 
             Color color;
             if (colorCount > 1) {
                 float colorIndex = (float) i / segmentCount * (colorCount - 1);
                 int startColorIndex = (int) colorIndex;
-                int endColorIndex = Math.min(startColorIndex + 1, colorCount - 1);
+                int endColorIndex = min(startColorIndex + 1, colorCount - 1);
                 float factor = colorIndex - startColorIndex;
 
                 Color startColor = colors[startColorIndex];
@@ -110,12 +112,12 @@ public class GLCircle extends GLPolygon {
     /**
      * Draws a circle outline with the specified parameters.
      *
-     * @param xCenter the x-coordinate of the circle center
-     * @param yCenter the y-coordinate of the circle center
-     * @param radius the radius of the circle
+     * @param xCenter      the x-coordinate of the circle center
+     * @param yCenter      the y-coordinate of the circle center
+     * @param radius       the radius of the circle
      * @param segmentCount the number of segments to use for the circle
-     * @param lineWidth the width of the outline
-     * @param colors the colors to use for the circle
+     * @param lineWidth    the width of the outline
+     * @param colors       the colors to use for the circle
      */
     public void circleOutLine(double xCenter, double yCenter, double radius, int segmentCount, double lineWidth, Color... colors) {
         circleOutLine((float) xCenter, (float) yCenter, (float) radius, (float) radius, segmentCount, (float) lineWidth, colors);
@@ -124,12 +126,12 @@ public class GLCircle extends GLPolygon {
     /**
      * Draws a circle outline with the specified parameters.
      *
-     * @param xCenter the x-coordinate of the circle center
-     * @param yCenter the y-coordinate of the circle center
-     * @param radius the radius of the circle
+     * @param xCenter      the x-coordinate of the circle center
+     * @param yCenter      the y-coordinate of the circle center
+     * @param radius       the radius of the circle
      * @param segmentCount the number of segments to use for the circle
-     * @param lineWidth the width of the outline
-     * @param colors the colors to use for the circle
+     * @param lineWidth    the width of the outline
+     * @param colors       the colors to use for the circle
      */
     public void circleOutLine(float xCenter, float yCenter, float radius, int segmentCount, float lineWidth, Color... colors) {
         circleOutLine(xCenter, yCenter, radius, radius, segmentCount, lineWidth, colors);
@@ -138,13 +140,13 @@ public class GLCircle extends GLPolygon {
     /**
      * Draws a circle outline with the specified parameters.
      *
-     * @param xCenter the x-coordinate of the circle center
-     * @param yCenter the y-coordinate of the circle center
-     * @param xRadius the x-radius of the circle
-     * @param yRadius the y-radius of the circle
+     * @param xCenter      the x-coordinate of the circle center
+     * @param yCenter      the y-coordinate of the circle center
+     * @param xRadius      the x-radius of the circle
+     * @param yRadius      the y-radius of the circle
      * @param segmentCount the number of segments to use for the circle
-     * @param lineWidth the width of the outline
-     * @param colors the colors to use for the circle
+     * @param lineWidth    the width of the outline
+     * @param colors       the colors to use for the circle
      */
     public void circleOutLine(double xCenter, double yCenter, double xRadius, double yRadius, int segmentCount, double lineWidth, Color... colors) {
         circleOutLine((float) xCenter, (float) yCenter, (float) xRadius, (float) yRadius, segmentCount, (float) lineWidth, colors);
@@ -153,13 +155,13 @@ public class GLCircle extends GLPolygon {
     /**
      * Draws a circle outline with the specified parameters.
      *
-     * @param xCenter the x-coordinate of the circle center
-     * @param yCenter the y-coordinate of the circle center
-     * @param xRadius the x-radius of the circle
-     * @param yRadius the y-radius of the circle
+     * @param xCenter      the x-coordinate of the circle center
+     * @param yCenter      the y-coordinate of the circle center
+     * @param xRadius      the x-radius of the circle
+     * @param yRadius      the y-radius of the circle
      * @param segmentCount the number of segments to use for the circle
-     * @param lineWidth the width of the outline
-     * @param colors the colors to use for the circle
+     * @param lineWidth    the width of the outline
+     * @param colors       the colors to use for the circle
      */
     public void circleOutLine(float xCenter, float yCenter, float xRadius, float yRadius, int segmentCount, float lineWidth, Color... colors) {
         int colorCount = colors.length;
@@ -169,15 +171,15 @@ public class GLCircle extends GLPolygon {
         }
 
         for (int i = 0; i <= segmentCount; i++) {
-            float theta = (float) (2.0f * Math.PI * i / segmentCount);
-            float x = xCenter + xRadius * (float) Math.cos(theta);
-            float y = yCenter + yRadius * (float) Math.sin(theta);
+            float theta = 2.0f * PI * i / segmentCount;
+            float x = xCenter + xRadius * cos(theta);
+            float y = yCenter + yRadius * sin(theta);
 
             Color color;
             if (colorCount > 1) {
                 float colorIndex = (float) i / segmentCount * (colorCount - 1);
                 int startColorIndex = (int) colorIndex;
-                int endColorIndex = Math.min(startColorIndex + 1, colorCount - 1);
+                int endColorIndex = min(startColorIndex + 1, colorCount - 1);
                 float factor = colorIndex - startColorIndex;
 
                 Color startColor = colors[startColorIndex];

@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static me.hannsi.lfjg.utils.math.MathHelper.max;
+import static me.hannsi.lfjg.utils.math.MathHelper.sqrt;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
@@ -154,7 +156,7 @@ public class CFont {
         g2d.setFont(font);
         FontMetrics fontMetrics = g2d.getFontMetrics();
 
-        int estimatedWidth = (int) Math.sqrt(font.getNumGlyphs()) * font.getSize() + 1;
+        int estimatedWidth = (int) sqrt(font.getNumGlyphs()) * font.getSize() + 1;
         width = 0;
         height = fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent();
         lineHeight = fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent();
@@ -169,7 +171,7 @@ public class CFont {
 
                 CharInfo charInfo = new CharInfo(x, y, fontMetrics.charWidth(i), fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent());
                 characterMap.put(i, charInfo);
-                width = Math.max(x + fontMetrics.charWidth(i), width);
+                width = max(x + fontMetrics.charWidth(i), width);
 
                 x += charInfo.getWidth();
                 if (x > estimatedWidth) {

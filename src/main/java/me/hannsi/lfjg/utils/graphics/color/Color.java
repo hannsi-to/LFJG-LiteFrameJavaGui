@@ -6,6 +6,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ColorModel;
 
+import static me.hannsi.lfjg.utils.math.MathHelper.*;
+
 /**
  * Utility class for handling colors.
  */
@@ -83,7 +85,7 @@ public class Color {
     /**
      * Constructs a new Color instance with the specified RGBA value and alpha flag.
      *
-     * @param rgba the RGBA value
+     * @param rgba     the RGBA value
      * @param hasalpha true if the alpha component is included
      */
     public Color(int rgba, boolean hasalpha) {
@@ -116,9 +118,9 @@ public class Color {
     /**
      * Constructs a new Color instance with the specified ColorSpace, components, and alpha value.
      *
-     * @param cspace the ColorSpace
+     * @param cspace     the ColorSpace
      * @param components the color components
-     * @param alpha the alpha component
+     * @param alpha      the alpha component
      */
     public Color(ColorSpace cspace, float[] components, float alpha) {
         this(new java.awt.Color(cspace, components, alpha));
@@ -159,7 +161,7 @@ public class Color {
      * Gets a Color instance from a system property, with a default value.
      *
      * @param nm the name of the system property
-     * @param v the default value
+     * @param v  the default value
      * @return the Color instance
      */
     public static Color getColor(String nm, Color v) {
@@ -175,7 +177,7 @@ public class Color {
      * Gets a Color instance from a system property, with a default RGB value.
      *
      * @param nm the name of the system property
-     * @param v the default RGB value
+     * @param v  the default RGB value
      * @return the Color instance
      */
     public static Color getColor(String nm, int v) {
@@ -187,7 +189,7 @@ public class Color {
     /**
      * Converts HSB values to an RGB integer.
      *
-     * @param hue the hue component
+     * @param hue        the hue component
      * @param saturation the saturation component
      * @param brightness the brightness component
      * @return the RGB integer
@@ -197,8 +199,8 @@ public class Color {
         if (saturation == 0) {
             r = g = b = (int) (brightness * 255.0f + 0.5f);
         } else {
-            float h = (hue - (float) Math.floor(hue)) * 6.0f;
-            float f = h - (float) java.lang.Math.floor(h);
+            float h = (hue - floor(hue)) * 6.0f;
+            float f = h - floor(h);
             float p = brightness * (1.0f - saturation);
             float q = brightness * (1.0f - saturation * f);
             float t = brightness * (1.0f - (saturation * (1.0f - f)));
@@ -241,9 +243,9 @@ public class Color {
     /**
      * Converts RGB values to HSB values.
      *
-     * @param r the red component
-     * @param g the green component
-     * @param b the blue component
+     * @param r       the red component
+     * @param g       the green component
+     * @param b       the blue component
      * @param hsbvals the array to store the HSB values
      * @return the array containing the HSB values
      */
@@ -252,11 +254,11 @@ public class Color {
         if (hsbvals == null) {
             hsbvals = new float[3];
         }
-        int cmax = Math.max(r, g);
+        int cmax = max(r, g);
         if (b > cmax) {
             cmax = b;
         }
-        int cmin = Math.min(r, g);
+        int cmin = min(r, g);
         if (b < cmin) {
             cmin = b;
         }
@@ -301,6 +303,99 @@ public class Color {
      */
     public static Color getHSBColor(float h, float s, float b) {
         return new Color(HSBtoRGB(h, s, b));
+    }
+
+    /**
+     * Creates a new Color instance with the specified RGB values.
+     *
+     * @param r the red component
+     * @param g the green component
+     * @param b the blue component
+     * @return the new Color instance
+     */
+    public static Color of(int r, int g, int b) {
+        return new Color(r, g, b);
+    }
+
+    /**
+     * Creates a new Color instance with the specified RGBA values.
+     *
+     * @param r the red component
+     * @param g the green component
+     * @param b the blue component
+     * @param a the alpha component
+     * @return the new Color instance
+     */
+    public static Color of(int r, int g, int b, int a) {
+        return new Color(r, g, b, a);
+    }
+
+    /**
+     * Creates a new Color instance with the specified RGB value.
+     *
+     * @param rgb the RGB value
+     * @return the new Color instance
+     */
+    public static Color of(int rgb) {
+        return new Color(rgb);
+    }
+
+    /**
+     * Creates a new Color instance with the specified RGBA value and alpha flag.
+     *
+     * @param rgba     the RGBA value
+     * @param hasalpha true if the alpha component is included
+     * @return the new Color instance
+     */
+    public static Color of(int rgba, boolean hasalpha) {
+        return new Color(rgba, hasalpha);
+    }
+
+    /**
+     * Creates a new Color instance with the specified RGB float values.
+     *
+     * @param r the red component
+     * @param g the green component
+     * @param b the blue component
+     * @return the new Color instance
+     */
+    public static Color of(float r, float g, float b) {
+        return new Color(r, g, b);
+    }
+
+    /**
+     * Creates a new Color instance with the specified RGBA float values.
+     *
+     * @param r the red component
+     * @param g the green component
+     * @param b the blue component
+     * @param a the alpha component
+     * @return the new Color instance
+     */
+    public static Color of(float r, float g, float b, float a) {
+        return new Color(r, g, b, a);
+    }
+
+    /**
+     * Creates a new Color instance with the specified ColorSpace, components, and alpha value.
+     *
+     * @param cspace     the ColorSpace
+     * @param components the color components
+     * @param alpha      the alpha component
+     * @return the new Color instance
+     */
+    public static Color of(ColorSpace cspace, float[] components, float alpha) {
+        return new Color(cspace, components, alpha);
+    }
+
+    /**
+     * Creates a new Color instance from a string representation of the color.
+     *
+     * @param nm the string representation of the color
+     * @return the new Color instance
+     */
+    public static Color of(String nm) {
+        return new Color(nm);
     }
 
     /**
@@ -388,7 +483,7 @@ public class Color {
      * Sets the red component of the color.
      *
      * @param color the original color
-     * @param red the new red component
+     * @param red   the new red component
      * @return the new Color instance
      */
     public Color setRed(Color color, float red) {
@@ -410,7 +505,7 @@ public class Color {
      * Sets the blue component of the color.
      *
      * @param color the original color
-     * @param blue the new blue component
+     * @param blue  the new blue component
      * @return the new Color instance
      */
     public Color setBlue(Color color, float blue) {
@@ -432,7 +527,7 @@ public class Color {
      * Sets the red component of the color.
      *
      * @param color the original color
-     * @param red the new red component
+     * @param red   the new red component
      * @return the new Color instance
      */
     public Color setRed(java.awt.Color color, int red) {
@@ -454,7 +549,7 @@ public class Color {
      * Sets the blue component of the color.
      *
      * @param color the original color
-     * @param blue the new blue component
+     * @param blue  the new blue component
      * @return the new Color instance
      */
     public Color setBlue(Color color, int blue) {
@@ -561,7 +656,7 @@ public class Color {
     /**
      * Gets the components of the color in the specified ColorSpace.
      *
-     * @param cspace the ColorSpace
+     * @param cspace    the ColorSpace
      * @param compArray the array to store the components
      * @return the array containing the components
      */
@@ -572,7 +667,7 @@ public class Color {
     /**
      * Gets the color components of the color in the specified ColorSpace.
      *
-     * @param cspace the ColorSpace
+     * @param cspace    the ColorSpace
      * @param compArray the array to store the color components
      * @return the array containing the color components
      */
@@ -592,9 +687,9 @@ public class Color {
     /**
      * Creates a PaintContext for the color.
      *
-     * @param cm the ColorModel
-     * @param r the Rectangle
-     * @param r2d the Rectangle2D
+     * @param cm    the ColorModel
+     * @param r     the Rectangle
+     * @param r2d   the Rectangle2D
      * @param xform the AffineTransform
      * @param hints the RenderingHints
      * @return the PaintContext
@@ -617,100 +712,7 @@ public class Color {
      *
      * @return the java.awt.Color instance
      */
-    public java.awt.Color ofAwtColor(){
+    public java.awt.Color ofAwtColor() {
         return value;
-    }
-
-    /**
-     * Creates a new Color instance with the specified RGB values.
-     *
-     * @param r the red component
-     * @param g the green component
-     * @param b the blue component
-     * @return the new Color instance
-     */
-    public static Color of(int r, int g, int b) {
-        return new Color(r,g,b);
-    }
-
-    /**
-     * Creates a new Color instance with the specified RGBA values.
-     *
-     * @param r the red component
-     * @param g the green component
-     * @param b the blue component
-     * @param a the alpha component
-     * @return the new Color instance
-     */
-    public static Color of(int r, int g, int b, int a) {
-        return new Color(r,g,b,a);
-    }
-
-    /**
-     * Creates a new Color instance with the specified RGB value.
-     *
-     * @param rgb the RGB value
-     * @return the new Color instance
-     */
-    public static Color of(int rgb) {
-        return new Color(rgb);
-    }
-
-    /**
-     * Creates a new Color instance with the specified RGBA value and alpha flag.
-     *
-     * @param rgba the RGBA value
-     * @param hasalpha true if the alpha component is included
-     * @return the new Color instance
-     */
-    public static Color of(int rgba, boolean hasalpha) {
-        return new Color(rgba,hasalpha);
-    }
-
-    /**
-     * Creates a new Color instance with the specified RGB float values.
-     *
-     * @param r the red component
-     * @param g the green component
-     * @param b the blue component
-     * @return the new Color instance
-     */
-    public static Color of(float r, float g, float b) {
-        return new Color(r,g,b);
-    }
-
-    /**
-     * Creates a new Color instance with the specified RGBA float values.
-     *
-     * @param r the red component
-     * @param g the green component
-     * @param b the blue component
-     * @param a the alpha component
-     * @return the new Color instance
-     */
-    public static Color of(float r, float g, float b, float a) {
-        return new Color(r,g,b,a);
-    }
-
-    /**
-     * Creates a new Color instance with the specified ColorSpace, components, and alpha value.
-     *
-     * @param cspace the ColorSpace
-     * @param components the color components
-     * @param alpha the alpha component
-     * @return the new Color instance
-     */
-    public static Color of(ColorSpace cspace, float[] components, float alpha) {
-        return new Color(cspace,components,alpha);
-    }
-
-    /**
-     * Creates a new Color instance from a string representation of the color.
-     *
-     * @param nm the string representation of the color
-     * @return the new Color instance
-     */
-    public static Color of(String nm) {
-        return new Color(nm);
     }
 }
