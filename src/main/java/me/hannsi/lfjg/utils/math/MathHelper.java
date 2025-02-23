@@ -2373,4 +2373,57 @@ public class MathHelper {
     public static float linearInterpolate(float a, float b, float t) {
         return a + t * (b - a);
     }
+
+    /**
+     * Calculates the greatest common divisor (GCD) of two long numbers using the Euclidean algorithm.
+     * The GCD of two numbers is the largest number that divides both of them without leaving a remainder.
+     *
+     * @param a the first number
+     * @param b the second number
+     * @return the GCD of the two numbers
+     */
+    public static long gcd(long a, long b) {
+        if (a == 0) {
+            return b;
+        }
+        if (b == 0) {
+            return a;
+        }
+        if (b < a) {
+            return gcd(a % b, b);
+        }
+        return gcd(b % a, a);
+    }
+
+    /**
+     * Calculates the least common multiple (LCM) of two long numbers.
+     * The LCM is the smallest number that is a multiple of both a and b.
+     * The formula for calculating LCM is: LCM(a, b) = (a * b) / GCD(a, b)
+     *
+     * @param a the first number
+     * @param b the second number
+     * @return the LCM of the two numbers
+     */
+    public static long lcm(long a, long b) {
+        return (a * b) / gcd(a, b);
+    }
+
+    /**
+     * Checks whether a given integer is a prime number.
+     * A prime number is a number greater than 1 that has no divisors other than 1 and itself.
+     *
+     * @param num the number to check
+     * @return true if the number is prime, false otherwise
+     */
+    public static boolean isPrime(int num) {
+        if (num <= 1) {
+            return false;
+        }
+        for (int i = 2; i <= Math.sqrt(num); i++) {
+            if (num % i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
