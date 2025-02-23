@@ -2290,6 +2290,20 @@ public class MathHelper {
     }
 
     /**
+     * Calculates the mean (average) of the given array of values.
+     *
+     * @param values an array of double values
+     * @return the mean of the values
+     */
+    public static float mean(float[] values) {
+        float sum = 0.0f;
+        for (float value : values) {
+            sum += value;
+        }
+        return sum / values.length;
+    }
+
+    /**
      * Calculates the median of the given array of values.
      * If the array has an odd number of elements, returns the middle element.
      * If the array has an even number of elements, returns the average of the two middle elements.
@@ -2425,5 +2439,435 @@ public class MathHelper {
             }
         }
         return true;
+    }
+
+    /**
+     * Calculates the area of a circle.
+     *
+     * @param radius the radius of the circle
+     * @return the area of the circle
+     */
+    public static double circleArea(double radius) {
+        return Math.PI * radius * radius;
+    }
+
+    /**
+     * Calculates the area of a circle.
+     *
+     * @param radius the radius of the circle
+     * @return the area of the circle
+     */
+    public static float circleArea(float radius) {
+        return (float) (Math.PI * radius * radius);
+    }
+
+    /**
+     * Calculates the circumference of a circle.
+     *
+     * @param radius the radius of the circle
+     * @return the circumference of the circle
+     */
+    public static double circumference(double radius) {
+        return 2 * Math.PI * radius;
+    }
+
+    /**
+     * Calculates the circumference of a circle.
+     *
+     * @param radius the radius of the circle
+     * @return the circumference of the circle
+     */
+    public static float circumference(float radius) {
+        return (float) (2 * Math.PI * radius);
+    }
+
+    /**
+     * Calculates the variance of a dataset.
+     *
+     * @param data an array of data values
+     * @return the variance of the data
+     */
+    public static double variance(double[] data) {
+        double mean = mean(data);
+        double variance = 0;
+        for (double value : data) {
+            variance += pow(value - mean, 2);
+        }
+        return variance / data.length;
+    }
+
+    /**
+     * Calculates the variance of a dataset.
+     *
+     * @param data an array of data values
+     * @return the variance of the data
+     */
+    public static float variance(float[] data) {
+        float mean = mean(data);
+        float variance = 0;
+        for (float value : data) {
+            variance += pow(value - mean, 2);
+        }
+        return variance / data.length;
+    }
+
+    /**
+     * Calculates the covariance between two datasets.
+     *
+     * @param x an array of data values for the first dataset
+     * @param y an array of data values for the second dataset
+     * @return the covariance between the two datasets
+     */
+    public static double covariance(double[] x, double[] y) {
+        if (x.length != y.length) {
+            throw new IllegalArgumentException("Data arrays must have the same length.");
+        }
+
+        double meanX = mean(x);
+        double meanY = mean(y);
+        double covariance = 0;
+
+        for (int i = 0; i < x.length; i++) {
+            covariance += (x[i] - meanX) * (y[i] - meanY);
+        }
+
+        return covariance / x.length;
+    }
+
+    /**
+     * Calculates the covariance between two datasets.
+     *
+     * @param x an array of data values for the first dataset
+     * @param y an array of data values for the second dataset
+     * @return the covariance between the two datasets
+     */
+    public static float covariance(float[] x, float[] y) {
+        if (x.length != y.length) {
+            throw new IllegalArgumentException("Data arrays must have the same length.");
+        }
+
+        float meanX = mean(x);
+        float meanY = mean(y);
+        float covariance = 0;
+
+        for (int i = 0; i < x.length; i++) {
+            covariance += (x[i] - meanX) * (y[i] - meanY);
+        }
+
+        return covariance / x.length;
+    }
+
+    /**
+     * Multiplies two matrices.
+     *
+     * @param A the first matrix
+     * @param B the second matrix
+     * @return the product of the two matrices
+     */
+    public static double[][] multiplyMatrices(double[][] A, double[][] B) {
+        int aRows = A.length;
+        int aCols = A[0].length;
+        int bCols = B[0].length;
+
+        if (A[0].length != B.length) {
+            throw new IllegalArgumentException("Matrix dimensions are not compatible.");
+        }
+
+        double[][] result = new double[aRows][bCols];
+
+        for (int i = 0; i < aRows; i++) {
+            for (int j = 0; j < bCols; j++) {
+                for (int k = 0; k < aCols; k++) {
+                    result[i][j] += A[i][k] * B[k][j];
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Multiplies two matrices.
+     *
+     * @param A the first matrix
+     * @param B the second matrix
+     * @return the product of the two matrices
+     */
+    public static float[][] multiplyMatrices(float[][] A, float[][] B) {
+        int aRows = A.length;
+        int aCols = A[0].length;
+        int bCols = B[0].length;
+
+        if (A[0].length != B.length) {
+            throw new IllegalArgumentException("Matrix dimensions are not compatible.");
+        }
+
+        float[][] result = new float[aRows][bCols];
+
+        for (int i = 0; i < aRows; i++) {
+            for (int j = 0; j < bCols; j++) {
+                for (int k = 0; k < aCols; k++) {
+                    result[i][j] += A[i][k] * B[k][j];
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Calculates the inverse of a matrix.
+     *
+     * @param matrix the matrix to invert
+     * @return the inverse of the matrix
+     */
+    public static double[][] inverseMatrix(double[][] matrix) {
+        int n = matrix.length;
+        double[][] augmentedMatrix = new double[n][2 * n];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                augmentedMatrix[i][j] = matrix[i][j];
+                augmentedMatrix[i][j + n] = (i == j) ? 1 : 0;
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (augmentedMatrix[i][i] == 0) {
+                throw new ArithmeticException("Matrix is singular and cannot be inverted.");
+            }
+
+            double pivot = augmentedMatrix[i][i];
+            for (int j = 0; j < 2 * n; j++) {
+                augmentedMatrix[i][j] /= pivot;
+            }
+
+            for (int k = 0; k < n; k++) {
+                if (k != i) {
+                    double factor = augmentedMatrix[k][i];
+                    for (int j = 0; j < 2 * n; j++) {
+                        augmentedMatrix[k][j] -= factor * augmentedMatrix[i][j];
+                    }
+                }
+            }
+        }
+
+        double[][] inverse = new double[n][n];
+        for (int i = 0; i < n; i++) {
+            System.arraycopy(augmentedMatrix[i], n, inverse[i], 0, n);
+        }
+
+        return inverse;
+    }
+
+    /**
+     * Calculates the inverse of a matrix.
+     *
+     * @param matrix the matrix to invert
+     * @return the inverse of the matrix
+     */
+    public static float[][] inverseMatrix(float[][] matrix) {
+        int n = matrix.length;
+        float[][] augmentedMatrix = new float[n][2 * n];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                augmentedMatrix[i][j] = matrix[i][j];
+                augmentedMatrix[i][j + n] = (i == j) ? 1 : 0;
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (augmentedMatrix[i][i] == 0) {
+                throw new ArithmeticException("Matrix is singular and cannot be inverted.");
+            }
+
+            float pivot = augmentedMatrix[i][i];
+            for (int j = 0; j < 2 * n; j++) {
+                augmentedMatrix[i][j] /= pivot;
+            }
+
+            for (int k = 0; k < n; k++) {
+                if (k != i) {
+                    float factor = augmentedMatrix[k][i];
+                    for (int j = 0; j < 2 * n; j++) {
+                        augmentedMatrix[k][j] -= factor * augmentedMatrix[i][j];
+                    }
+                }
+            }
+        }
+
+        float[][] inverse = new float[n][n];
+        for (int i = 0; i < n; i++) {
+            System.arraycopy(augmentedMatrix[i], n, inverse[i], 0, n);
+        }
+
+        return inverse;
+    }
+
+    /**
+     * Calculates the absolute value (magnitude) of a complex number.
+     *
+     * @param real      the real part of the complex number
+     * @param imaginary the imaginary part of the complex number
+     * @return the absolute value (magnitude) of the complex number
+     */
+    public static double complexAbsoluteValue(double real, double imaginary) {
+        return Math.sqrt(real * real + imaginary * imaginary);
+    }
+
+    /**
+     * Calculates the absolute value (magnitude) of a complex number.
+     *
+     * @param real      the real part of the complex number
+     * @param imaginary the imaginary part of the complex number
+     * @return the absolute value (magnitude) of the complex number
+     */
+    public static float complexAbsoluteValue(float real, float imaginary) {
+        return Math.sqrt(real * real + imaginary * imaginary);
+    }
+
+    /**
+     * Calculates the argument (angle) of a complex number in radians.
+     *
+     * @param real      the real part of the complex number
+     * @param imaginary the imaginary part of the complex number
+     * @return the argument (angle) of the complex number in radians
+     */
+    public static double complexArgument(double real, double imaginary) {
+        return Math.atan2(imaginary, real);
+    }
+
+    /**
+     * Calculates the argument (angle) of a complex number in radians.
+     *
+     * @param real      the real part of the complex number
+     * @param imaginary the imaginary part of the complex number
+     * @return the argument (angle) of the complex number in radians
+     */
+    public static float complexArgument(float real, float imaginary) {
+        return Math.atan2(imaginary, real);
+    }
+
+    /**
+     * Adds two complex numbers.
+     *
+     * @param real1      the real part of the first complex number
+     * @param imaginary1 the imaginary part of the first complex number
+     * @param real2      the real part of the second complex number
+     * @param imaginary2 the imaginary part of the second complex number
+     * @return the result of the addition as a complex number [real, imaginary]
+     */
+    public static double[] complexAddition(double real1, double imaginary1, double real2, double imaginary2) {
+        return new double[]{real1 + real2, imaginary1 + imaginary2};
+    }
+
+    /**
+     * Adds two complex numbers.
+     *
+     * @param real1      the real part of the first complex number
+     * @param imaginary1 the imaginary part of the first complex number
+     * @param real2      the real part of the second complex number
+     * @param imaginary2 the imaginary part of the second complex number
+     * @return the result of the addition as a complex number [real, imaginary]
+     */
+    public static float[] complexAddition(float real1, float imaginary1, float real2, float imaginary2) {
+        return new float[]{real1 + real2, imaginary1 + imaginary2};
+    }
+
+    /**
+     * Subtracts two complex numbers.
+     *
+     * @param real1      the real part of the first complex number
+     * @param imaginary1 the imaginary part of the first complex number
+     * @param real2      the real part of the second complex number
+     * @param imaginary2 the imaginary part of the second complex number
+     * @return the result of the subtraction as a complex number [real, imaginary]
+     */
+    public static double[] complexSubtraction(double real1, double imaginary1, double real2, double imaginary2) {
+        return new double[]{real1 - real2, imaginary1 - imaginary2};
+    }
+
+    /**
+     * Subtracts two complex numbers.
+     *
+     * @param real1      the real part of the first complex number
+     * @param imaginary1 the imaginary part of the first complex number
+     * @param real2      the real part of the second complex number
+     * @param imaginary2 the imaginary part of the second complex number
+     * @return the result of the subtraction as a complex number [real, imaginary]
+     */
+    public static float[] complexSubtraction(float real1, float imaginary1, float real2, float imaginary2) {
+        return new float[]{real1 - real2, imaginary1 - imaginary2};
+    }
+
+    /**
+     * Multiplies two complex numbers.
+     *
+     * @param real1      the real part of the first complex number
+     * @param imaginary1 the imaginary part of the first complex number
+     * @param real2      the real part of the second complex number
+     * @param imaginary2 the imaginary part of the second complex number
+     * @return the result of the multiplication as a complex number [real, imaginary]
+     */
+    public static double[] complexMultiplication(double real1, double imaginary1, double real2, double imaginary2) {
+        double real = real1 * real2 - imaginary1 * imaginary2;
+        double imaginary = real1 * imaginary2 + imaginary1 * real2;
+        return new double[]{real, imaginary};
+    }
+
+    /**
+     * Multiplies two complex numbers.
+     *
+     * @param real1      the real part of the first complex number
+     * @param imaginary1 the imaginary part of the first complex number
+     * @param real2      the real part of the second complex number
+     * @param imaginary2 the imaginary part of the second complex number
+     * @return the result of the multiplication as a complex number [real, imaginary]
+     */
+    public static float[] complexMultiplication(float real1, float imaginary1, float real2, float imaginary2) {
+        float real = real1 * real2 - imaginary1 * imaginary2;
+        float imaginary = real1 * imaginary2 + imaginary1 * real2;
+        return new float[]{real, imaginary};
+    }
+
+    /**
+     * Divides two complex numbers.
+     *
+     * @param real1      the real part of the first complex number
+     * @param imaginary1 the imaginary part of the first complex number
+     * @param real2      the real part of the second complex number
+     * @param imaginary2 the imaginary part of the second complex number
+     * @return the result of the division as a complex number [real, imaginary]
+     * @throws ArithmeticException if division by zero occurs
+     */
+    public static double[] complexDivision(double real1, double imaginary1, double real2, double imaginary2) {
+        double denominator = real2 * real2 + imaginary2 * imaginary2;
+        if (denominator == 0) {
+            throw new ArithmeticException("Division by zero.");
+        }
+        double real = (real1 * real2 + imaginary1 * imaginary2) / denominator;
+        double imaginary = (imaginary1 * real2 - real1 * imaginary2) / denominator;
+        return new double[]{real, imaginary};
+    }
+
+    /**
+     * Divides two complex numbers.
+     *
+     * @param real1      the real part of the first complex number
+     * @param imaginary1 the imaginary part of the first complex number
+     * @param real2      the real part of the second complex number
+     * @param imaginary2 the imaginary part of the second complex number
+     * @return the result of the division as a complex number [real, imaginary]
+     * @throws ArithmeticException if division by zero occurs
+     */
+    public static float[] complexDivision(float real1, float imaginary1, float real2, float imaginary2) {
+        float denominator = real2 * real2 + imaginary2 * imaginary2;
+        if (denominator == 0) {
+            throw new ArithmeticException("Division by zero.");
+        }
+        float real = (real1 * real2 + imaginary1 * imaginary2) / denominator;
+        float imaginary = (imaginary1 * real2 - real1 * imaginary2) / denominator;
+        return new float[]{real, imaginary};
     }
 }
