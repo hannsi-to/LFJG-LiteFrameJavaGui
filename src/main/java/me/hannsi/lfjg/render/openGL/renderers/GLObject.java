@@ -73,6 +73,9 @@ public class GLObject {
         if(animationCache != null){
             animationCache.cleanup(this);
         }
+        if(effectCache != null){
+            effectCache.cleanup();
+        }
         mesh.cleanup();
         frameBuffer.cleanup();
         shaderProgram.cleanup();
@@ -80,7 +83,6 @@ public class GLObject {
         frameBuffer.cleanup();
         modelMatrix = null;
         viewMatrix = null;
-        effectCache.cleanup();
         vaoRendering.cleanup();
         glUtil.cleanup();
     }
