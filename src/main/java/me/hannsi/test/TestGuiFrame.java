@@ -12,9 +12,11 @@ import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.render.openGL.animation.animations.Bounce;
-import me.hannsi.lfjg.render.openGL.animation.animations.Trembling;
 import me.hannsi.lfjg.render.openGL.animation.system.AnimationCache;
-import me.hannsi.lfjg.render.openGL.effect.effects.*;
+import me.hannsi.lfjg.render.openGL.effect.effects.BoxBlur;
+import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
+import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
+import me.hannsi.lfjg.render.openGL.effect.effects.Translate;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.font.GLFont;
 import me.hannsi.lfjg.render.openGL.renderers.model.Object3DCacheRender;
@@ -39,7 +41,6 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.openal.AL11;
 
 import static me.hannsi.lfjg.frame.LFJGContext.frame;
-import static me.hannsi.lfjg.frame.LFJGContext.resolution;
 
 public class TestGuiFrame implements LFJGFrame {
     GLRect gl1;
@@ -100,8 +101,8 @@ public class TestGuiFrame implements LFJGFrame {
         glObjectCache = new GLObjectCache();
 //        glObjectCache.createCache(gl2);
         glObjectCache.createCache(gl1);
-//        glObjectCache.createCache(glFont);
-//        glObjectCache.createCache(glTriangle);
+        glObjectCache.createCache(glFont);
+        glObjectCache.createCache(glTriangle);
 
         soundCacheInit();
         effectCacheInit();
@@ -158,9 +159,9 @@ public class TestGuiFrame implements LFJGFrame {
         glFontEffectCache = new EffectCache();
         glTriangleEffectCache = new EffectCache();
 
-        gl1EffectCache.createCache(new Texture(textureCache, image), gl1);
-        gl1EffectCache.createCache(new DrawObject(), gl1);
-        gl1EffectCache.createCache(new BoxBlur(10, 10), gl1);
+        gl1EffectCache.createCache("Texture1", new Texture(textureCache, image), gl1);
+        gl1EffectCache.createCache("DrawObject1", new DrawObject(), gl1);
+        gl1EffectCache.createCache("BoxBlur1", new BoxBlur(10, 10), gl1);
 //        gl1EffectCache.createCache(new Gradation(resolution, resolution.x / 2, resolution.y / 2, (float) Math.toRadians(90), 0.1f, Gradation.ShapeMode.Rectangle, BlendType.Multiply, new Color(0, 0, 0, 255), new Color(255, 255, 255, 255), 1f), gl1);
 //        gl1EffectCache.createCache(new Monochrome(resolution, 1f, new Color(255, 0, 255), true), gl1);
 //        gl1EffectCache.createCache(new ChromaticAberration(resolution, 0.002f, 90, 5f, ChromaticAberration.AberrationType.RedBlueB), gl1);
@@ -181,10 +182,10 @@ public class TestGuiFrame implements LFJGFrame {
 //        gl1EffectCache.createCache(new ColorCorrection(resolution, 0.5f, 0, 0, 0), gl1);
 //        gl1EffectCache.createCache(new Clipping2DRect(resolution, 0, 0, 500, 500), gl1);
 
-        glFontEffectCache.createCache(new DrawObject(), glFont);
-        glFontEffectCache.createCache(new Translate(200, 0), glFont);
+        glFontEffectCache.createCache("DrawObject1", new DrawObject(), glFont);
+        glFontEffectCache.createCache("Translate1", new Translate(200, 0), glFont);
 
-        glTriangleEffectCache.createCache(new DrawObject(), glTriangle);
+        glTriangleEffectCache.createCache("DrawObject1", new DrawObject(), glTriangle);
 
         gl1.setEffectCache(gl1EffectCache);
         glFont.setEffectCache(glFontEffectCache);
@@ -218,6 +219,9 @@ public class TestGuiFrame implements LFJGFrame {
     public void drawFrame() {
         soundCache.getSoundSource("test").setGain(0.05f);
         soundCache.playSoundSource("test");
+
+        Translate translate = (Translate) glFontEffectCache.getEffectBase("Translate1");
+        translate.setX(translate.getX() + 0.1f);
 
         glObjectCache.draw();
 
