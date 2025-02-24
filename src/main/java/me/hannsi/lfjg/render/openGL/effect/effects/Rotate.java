@@ -104,7 +104,7 @@ public class Rotate extends EffectBase {
      */
     @Override
     public void pop(GLObject baseGLObject) {
-        baseGLObject.setModelMatrix(baseGLObject.getModelMatrix().translate(cx, cy, cz).rotateXYZ(-x, -y, -z).translate(cx, -cy, -cz));
+        baseGLObject.setModelMatrix(baseGLObject.getModelMatrix().translate(cx, cy, cz).rotateXYZ(-x, -y, -z).translate(-cx, -cy, -cz));
 
         super.pop(baseGLObject);
     }
@@ -116,7 +116,7 @@ public class Rotate extends EffectBase {
      */
     @Override
     public void push(GLObject baseGLObject) {
-        baseGLObject.setModelMatrix(baseGLObject.getModelMatrix().translate(cx, cy, cz).rotateXYZ(x, y, z).translate(cx, -cy, -cz));
+        baseGLObject.setModelMatrix(baseGLObject.getModelMatrix().translate(cx, cy, cz).rotateXYZ(x, y, z).translate(-cx, -cy, -cz));
 
         super.push(baseGLObject);
     }

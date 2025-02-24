@@ -61,14 +61,11 @@ public class EffectCache {
      * Creates a cache for the specified effect and GL object.
      *
      * @param effectBase the effect to cache
-     * @param glObject   the GL object associated with the effect
      */
-    public void createCache(String name, EffectBase effectBase, GLObject glObject) {
-        effectBase.getFrameBuffer().setUesStencil(true);
-        effectBase.getFrameBuffer().setGlObject(glObject);
+    public void createCache(String name, EffectBase effectBase) {
         this.effectBases.put(effectBase, new Identifier(name, latestEffectCacheId++));
 
-        LogGenerator logGenerator = new LogGenerator("EffectCache Debug Message", "Source: EffectCache", "Type: Cache Creation", "ID: " + effectBase.getId(), "Severity: Info", "Message: Create effect cache: " + effectBase.getName() + " | Object name: " + glObject.getName());
+        LogGenerator logGenerator = new LogGenerator("EffectCache Debug Message", "Source: EffectCache", "Type: Cache Creation", "ID: " + effectBase.getId(), "Severity: Info", "Message: Create effect cache: " + effectBase.getName());
 
         DebugLog.debug(getClass(), logGenerator.createLog());
     }
