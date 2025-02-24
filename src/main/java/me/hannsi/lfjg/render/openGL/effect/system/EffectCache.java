@@ -4,7 +4,6 @@ import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.render.openGL.system.Id;
-import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
 
 import java.util.*;
 
@@ -132,8 +131,7 @@ public class EffectCache {
         int maxSize = new ArrayList<>(effectBases.entrySet()).size() - 1;
 
         for (Map.Entry<EffectBase, Identifier> effectBase : effectBases.entrySet()) {
-            FrameBuffer frameBuffer = effectBase.getKey().getFrameBuffer();
-            applyEffect(frameBuffer, index, maxSize, effectBase.getKey(), glObject);
+            applyEffect(index, maxSize, effectBase.getKey(), glObject);
             index++;
         }
     }
@@ -141,17 +139,16 @@ public class EffectCache {
     /**
      * Applies the effect to the frame buffer for the specified GL object.
      *
-     * @param frameBuffer the frame buffer
-     * @param index       the index of the effect
-     * @param maxSize     the maximum size of the effect list
-     * @param effectBase  the effect to apply
-     * @param glObject    the GL object
+     * @param index      the index of the effect
+     * @param maxSize    the maximum size of the effect list
+     * @param effectBase the effect to apply
+     * @param glObject   the GL object
      */
-    public void applyEffect(FrameBuffer frameBuffer, int index, int maxSize, EffectBase effectBase, GLObject glObject) {
+    public void applyEffect(int index, int maxSize, EffectBase effectBase, GLObject glObject) {
         if (index == maxSize || effectBase.getName().equals("FrameBufferContents")) {
-            frameBuffer.getShaderProgramFBO().bind();
+            effectBase.getFrameBuffer().getShaderProgramFBO().bind();
             effectBase.setUniform(glObject);
-            frameBuffer.getShaderProgramFBO().unbind();
+            effectBase.getFrameBuffer().getShaderProgramFBO().unbind();
             effectBase.frameBuffer(glObject);
         }
         if (index != maxSize || effectBase.getName().equals("FrameBufferContents")) {
@@ -159,13 +156,14 @@ public class EffectCache {
 
             nextEffectBase.getKey().frameBufferPush(glObject);
 
-            frameBuffer.getShaderProgramFBO().bind();
+            effectBase.getFrameBuffer().getShaderProgramFBO().bind();
             effectBase.setUniform(glObject);
-            frameBuffer.getShaderProgramFBO().unbind();
+            effectBase.getFrameBuffer().getShaderProgramFBO().unbind();
             effectBase.frameBuffer(glObject);
 
             nextEffectBase.getKey().frameBufferPop(glObject);
         }
+
     }
 
     /**

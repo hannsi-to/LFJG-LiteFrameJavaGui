@@ -14,8 +14,10 @@ public class SplitFrameBuffer {
     private FrameBuffer mainFrameBuffer;
     private FrameBuffer[][] smallFrameBuffers;
     private Vector2f smallResolution;
-    private int cols;
-    private int rows;
+    private final int cols;
+    private final int rows;
+    private int offsetX;
+    private int offsetY;
     private int indexX;
     private int indexY;
 
@@ -26,14 +28,20 @@ public class SplitFrameBuffer {
      * @param cols            the number of columns
      * @param rows            the number of rows
      */
-    public SplitFrameBuffer(FrameBuffer mainFrameBuffer, int cols, int rows) {
+    public SplitFrameBuffer(FrameBuffer mainFrameBuffer, int cols, int rows, int offsetX, int offsetY) {
         this.mainFrameBuffer = mainFrameBuffer;
         this.cols = cols;
         this.rows = rows;
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
         this.indexX = 0;
         this.indexY = 0;
         this.smallFrameBuffers = new FrameBuffer[rows][cols];
         this.smallResolution = new Vector2f(LFJGContext.resolution.x() / cols, LFJGContext.resolution.y() / rows);
+    }
+
+    public SplitFrameBuffer(FrameBuffer mainFrameBuffer, int cols, int rows) {
+        this(mainFrameBuffer, cols, rows, 0, 0);
     }
 
     /**
@@ -73,6 +81,8 @@ public class SplitFrameBuffer {
     public void blitToSmallFrameBuffers() {
         mainFrameBuffer.bindReadFrameBuffer();
 
+        int ox = 0;
+        int oy = 0;
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
                 smallFrameBuffers[y][x].bindDrawFrameBuffer();
@@ -82,10 +92,14 @@ public class SplitFrameBuffer {
                 int srcX1 = (int) (srcX0 + smallResolution.x());
                 int srcY1 = (int) (srcY0 + smallResolution.y());
 
-                glBlitFramebuffer(srcX0, srcY0, srcX1, srcY1, srcX0, srcY0, srcX1, srcY1, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+                glBlitFramebuffer(srcX0, srcY0, srcX1, srcY1, srcX0 + ox, srcY0 + oy, srcX1 + ox, srcY1 + oy, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
                 smallFrameBuffers[y][x].unbindDrawFrameBuffer();
+                ox += offsetX;
             }
+
+            ox = 0;
+            oy += offsetY;
         }
 
         mainFrameBuffer.unbindRenderBuffer();
@@ -187,30 +201,12 @@ public class SplitFrameBuffer {
     }
 
     /**
-     * Sets the number of columns.
-     *
-     * @param cols the new number of columns
-     */
-    public void setCols(int cols) {
-        this.cols = cols;
-    }
-
-    /**
      * Gets the number of rows.
      *
      * @return the number of rows
      */
     public int getRows() {
         return rows;
-    }
-
-    /**
-     * Sets the number of rows.
-     *
-     * @param rows the new number of rows
-     */
-    public void setRows(int rows) {
-        this.rows = rows;
     }
 
     public int getIndexX() {
@@ -227,5 +223,21 @@ public class SplitFrameBuffer {
 
     public void setIndexY(int indexY) {
         this.indexY = indexY;
+    }
+
+    public int getOffsetX() {
+        return offsetX;
+    }
+
+    public void setOffsetX(int offsetX) {
+        this.offsetX = offsetX;
+    }
+
+    public int getOffsetY() {
+        return offsetY;
+    }
+
+    public void setOffsetY(int offsetY) {
+        this.offsetY = offsetY;
     }
 }
