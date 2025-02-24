@@ -5,7 +5,7 @@ import me.hannsi.lfjg.debug.exceptions.texture.CreatingTextureException;
 import me.hannsi.lfjg.utils.buffer.BufferUtil;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import me.hannsi.lfjg.utils.type.types.TextureLoaderType;
+import me.hannsi.lfjg.utils.type.types.ImageLoaderType;
 import org.bytedeco.opencv.global.opencv_imgcodecs;
 import org.bytedeco.opencv.global.opencv_imgproc;
 import org.bytedeco.opencv.opencv_core.Mat;
@@ -28,17 +28,17 @@ import static org.lwjgl.opengl.GL30.glGenerateMipmap;
  */
 public class TextureLoader {
     private final FileLocation texturePath;
-    private final TextureLoaderType textureLoaderType;
+    private final ImageLoaderType imageLoaderType;
     private int textureId;
 
     /**
      * Constructs a TextureLoader instance with the specified texture path and loader type.
      *
-     * @param texturePath       the path to the texture resource
-     * @param textureLoaderType the type of texture loader to use
+     * @param texturePath     the path to the texture resource
+     * @param imageLoaderType the type of texture loader to use
      */
-    public TextureLoader(FileLocation texturePath, TextureLoaderType textureLoaderType) {
-        this.textureLoaderType = textureLoaderType;
+    public TextureLoader(FileLocation texturePath, ImageLoaderType imageLoaderType) {
+        this.imageLoaderType = imageLoaderType;
         this.texturePath = texturePath;
 
         loadTexture();
@@ -101,7 +101,7 @@ public class TextureLoader {
      * Loads the texture based on the specified loader type.
      */
     private void loadTexture() {
-        switch (textureLoaderType) {
+        switch (imageLoaderType) {
             case STBImage -> {
                 try (MemoryStack stack = MemoryStack.stackPush()) {
                     IntBuffer width = stack.mallocInt(1);
@@ -131,7 +131,7 @@ public class TextureLoader {
 
                 generateTexture(mat.cols(), mat.rows(), BufferUtil.matToByteBufferRGBA(mat));
             }
-            default -> throw new IllegalStateException("Unexpected value: " + textureLoaderType);
+            default -> throw new IllegalStateException("Unexpected value: " + imageLoaderType);
         }
     }
 
@@ -190,8 +190,8 @@ public class TextureLoader {
      *
      * @return the texture loader type
      */
-    public TextureLoaderType getTextureLoaderType() {
-        return textureLoaderType;
+    public ImageLoaderType getTextureLoaderType() {
+        return imageLoaderType;
     }
 
     /**

@@ -4,7 +4,7 @@ import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import me.hannsi.lfjg.utils.type.types.TextureLoaderType;
+import me.hannsi.lfjg.utils.type.types.ImageLoaderType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +39,7 @@ public class TextureCache {
      * @param texturePath the path to the texture resource
      */
     public void createCache(FileLocation texturePath) {
-        textureMap.put(texturePath, new TextureLoader(texturePath, TextureLoaderType.STBImage));
+        textureMap.put(texturePath, new TextureLoader(texturePath, ImageLoaderType.STBImage));
 
         LogGenerator logGenerator = new LogGenerator("TextureCache Debug Message", "Source: TextureCache", "Type: Cache Creation", "ID: " + texturePath.hashCode(), "Severity: Info", "Message: Create texture cache: " + texturePath.getPath());
 

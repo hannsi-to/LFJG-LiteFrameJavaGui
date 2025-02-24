@@ -12,12 +12,18 @@ import java.util.List;
  */
 public class GLObjectCache {
     private List<GLObject> glObjects;
+    private FrameBuffer frameBuffer;
 
     /**
      * Constructs a new GLObjectCache.
      */
     public GLObjectCache() {
         glObjects = new ArrayList<>();
+
+        frameBuffer = new FrameBuffer();
+
+        frameBuffer.createShaderProgram();
+        frameBuffer.createFrameBuffer();
     }
 
     /**
@@ -37,9 +43,14 @@ public class GLObjectCache {
      * Draws all cached GLObjects with the specified resolution and projection.
      */
     public void draw() {
+        frameBuffer.bindFrameBuffer();
+
         for (GLObject glObject : glObjects) {
             glObject.draw();
         }
+
+        frameBuffer.unbindFrameBuffer();
+        frameBuffer.drawFrameBuffer();
     }
 
     /**
@@ -51,6 +62,7 @@ public class GLObjectCache {
         }
 
         glObjects.clear();
+        frameBuffer.cleanup();
     }
 
     /**
@@ -84,5 +96,13 @@ public class GLObjectCache {
      */
     public void setGlObjects(List<GLObject> glObjects) {
         this.glObjects = glObjects;
+    }
+
+    public FrameBuffer getFrameBuffer() {
+        return frameBuffer;
+    }
+
+    public void setFrameBuffer(FrameBuffer frameBuffer) {
+        this.frameBuffer = frameBuffer;
     }
 }

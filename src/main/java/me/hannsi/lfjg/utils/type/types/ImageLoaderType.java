@@ -5,8 +5,9 @@ import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
 /**
  * Enumeration representing different types of texture loaders.
  */
-public enum TextureLoaderType implements IEnumTypeBase {
+public enum ImageLoaderType implements IEnumTypeBase {
     STBImage(0, "STBImage"),
+    @Deprecated
     JavaCV(1, "JavaCV");
 
     final int id;
@@ -18,7 +19,7 @@ public enum TextureLoaderType implements IEnumTypeBase {
      * @param id the unique identifier of the texture loader type
      * @param name the name of the texture loader type
      */
-    TextureLoaderType(int id, String name) {
+    ImageLoaderType(int id, String name) {
         this.id = id;
         this.name = name;
     }

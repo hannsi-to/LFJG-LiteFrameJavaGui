@@ -11,7 +11,6 @@ import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
-import me.hannsi.lfjg.render.openGL.animation.animations.Bounce;
 import me.hannsi.lfjg.render.openGL.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.openGL.effect.effects.BoxBlur;
 import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
@@ -26,13 +25,17 @@ import me.hannsi.lfjg.render.openGL.system.font.CFont;
 import me.hannsi.lfjg.render.openGL.system.font.FontCache;
 import me.hannsi.lfjg.render.openGL.system.font.UnicodeRange;
 import me.hannsi.lfjg.render.openGL.system.model.model.Entity;
+import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
+import me.hannsi.lfjg.render.openGL.system.rendering.SplitFrameBuffer;
 import me.hannsi.lfjg.render.openGL.system.user.Camera;
 import me.hannsi.lfjg.render.openGL.system.user.MouseInfo;
 import me.hannsi.lfjg.utils.graphics.color.Color;
+import me.hannsi.lfjg.utils.graphics.image.ImageCapture;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.math.TextFormat;
+import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.*;
 import org.joml.Vector2f;
@@ -57,6 +60,9 @@ public class TestGuiFrame implements LFJGFrame {
 
     SoundBuffer soundBuffer;
     SoundCache soundCache;
+
+    int first;
+    ImageCapture imageCapture;
 
     //    ThreadCache threadCache;
 //    VideoFrameExtractor videoFrameExtractor;
@@ -91,6 +97,8 @@ public class TestGuiFrame implements LFJGFrame {
 
         LFJGContext.projection = new Projection(ProjectionType.OrthographicProjection, frame.getWindowWidth(), frame.getWindowHeight());
         LFJGContext.resolution = new Vector2f(frame.getWindowWidth() / frame.getContentScaleX(), frame.getWindowHeight() / frame.getContentScaleY());
+
+        imageCapture = new ImageCapture(new FileLocation("C:/Users/hanns/idea-project/LFJG-LiteFrameJavaGui/log/png"));
 
         CFont.addUnicodeRange(UnicodeRange.HIRAGANA_START, UnicodeRange.HIRAGANA_END);
         CFont.addUnicodeRange(UnicodeRange.KATAKANA_START, UnicodeRange.KATAKANA_END);
@@ -195,7 +203,7 @@ public class TestGuiFrame implements LFJGFrame {
     public void animationCacheInit() {
         gl1AnimationCache = new AnimationCache();
 
-        gl1AnimationCache.createCache(new Bounce(0, 500, 100f, 45));
+//        gl1AnimationCache.createCache(new Bounce(0, 500, 100f, 45));
 //        gl1AnimationCache.createCache(new Trembling(0, 1000, 90, resolution.x / 2, resolution.y / 2));
 
         gl1.setAnimationCache(gl1AnimationCache);
@@ -224,6 +232,23 @@ public class TestGuiFrame implements LFJGFrame {
         translate.setX(translate.getX() + 0.1f);
 
         glObjectCache.draw();
+
+        if (first <= 10) {
+            imageCapture.saveImage("ScreenShot");
+
+            SplitFrameBuffer splitFrameBuffer = new SplitFrameBuffer(glObjectCache.getGLObject(gl1.getObjectId()).getFrameBuffer(), 5, 5);
+            splitFrameBuffer.createSmallFrameBuffers();
+            splitFrameBuffer.blitToSmallFrameBuffers();
+
+            FrameBuffer sFb;
+            int index = 0;
+            while ((sFb = splitFrameBuffer.getNextFrameBuffer()) != null) {
+                imageCapture.saveImage(sFb, index + "");
+                index++;
+            }
+
+            first++;
+        }
 
 //        if (!videoFrameExtractor.getVideoCache().getFrames().isEmpty()) {
 //            VideoCache.Frame frame = videoFrameExtractor.frame();
@@ -314,6 +339,7 @@ public class TestGuiFrame implements LFJGFrame {
         textureCache.cleanup();
         fontCache.cleanup();
         soundCache.cleanup();
+        imageCapture.cleanup();
 //        threadCache.cleanup();
 
 //        object3DCacheRender.cleanup();

@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.openGL.system.rendering;
 
-import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.debug.exceptions.frameBuffer.CompleteFrameBufferException;
 import me.hannsi.lfjg.debug.exceptions.frameBuffer.CreatingFrameBufferException;
 import me.hannsi.lfjg.debug.exceptions.render.CreatingRenderBufferException;
@@ -13,10 +12,7 @@ import me.hannsi.lfjg.utils.graphics.GLUtil;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.joml.Matrix4f;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.stb.STBImageWrite;
 
 import java.nio.ByteBuffer;
 
@@ -28,11 +24,14 @@ public class FrameBuffer {
     private final int textureId;
     private final int renderBufferId;
     private final VAORendering vaoRendering;
+    private final float x;
+    private final float y;
+    private final float width;
+    private final float height;
     private Mesh mesh;
     private ShaderProgram shaderProgramFBO;
     private ResourcesLocation vertexShaderFBO;
     private ResourcesLocation fragmentShaderFBO;
-
     private Matrix4f modelMatrix;
     private Matrix4f viewMatrix;
 
@@ -46,13 +45,26 @@ public class FrameBuffer {
         this(false, null);
     }
 
+    public FrameBuffer(float x, float y, float width, float height) {
+        this(false, null, x, y, width, height);
+    }
+
+    public FrameBuffer(boolean uesStencil, GLObject glObject) {
+        this(uesStencil, glObject, 0, 0, LFJGContext.resolution.x(), LFJGContext.resolution.y());
+    }
+
     /**
      * Constructs a new FrameBuffer with the specified resolution, stencil usage, and GL object.
      *
      * @param uesStencil whether to use stencil buffer
      * @param glObject   the GL object associated with the frame buffer
      */
-    public FrameBuffer(boolean uesStencil, GLObject glObject) {
+    public FrameBuffer(boolean uesStencil, GLObject glObject, float x, float y, float width, float height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+
         frameBufferId = GL30.glGenFramebuffers();
         if (frameBufferId == 0) {
             throw new CreatingFrameBufferException("Failed to create frame buffer");
@@ -74,7 +86,7 @@ public class FrameBuffer {
 
         vaoRendering = new VAORendering();
 
-        float[] positions = new float[]{0, 0, LFJGContext.resolution.x(), 0, LFJGContext.resolution.x(), LFJGContext.resolution.y(), 0, LFJGContext.resolution.y()};
+        float[] positions = new float[]{x, y, width, y, width, height, x, height};
 
         float[] uvs = new float[]{0, 0, 1, 0, 1, 1, 0, 1};
 
@@ -252,6 +264,10 @@ public class FrameBuffer {
         GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT | GL30.GL_STENCIL_BUFFER_BIT);
     }
 
+    public void bindFrameBufferNoClear() {
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBufferId);
+    }
+
     /**
      * Unbinds the frame buffer.
      */
@@ -276,50 +292,6 @@ public class FrameBuffer {
      */
     public void unbindTexture(int textureUnit) {
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
-    }
-
-    /**
-     * Saves the frame buffer to an image file.
-     *
-     * @param filePath the file path to save the image to
-     */
-    public void saveFrameBufferToImage(ResourcesLocation filePath) {
-        int width = (int) LFJGContext.resolution.x();
-        int height = (int) LFJGContext.resolution.y();
-
-        ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
-        bindFrameBuffer();
-        GL11.glReadPixels(0, 0, width, height, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
-        unbindFrameBuffer();
-
-        ByteBuffer flippedBuffer = flipVertically(buffer, width, height, 4);
-
-        if (!STBImageWrite.stbi_write_png(filePath.getPath(), width, height, 4, flippedBuffer, width * 4)) {
-            throw new RuntimeException("Failed to save frame buffer to image: " + filePath.getPath());
-        }
-
-        DebugLog.debug(getClass(), "Saved frame buffer to image: " + filePath.getPath());
-    }
-
-    /**
-     * Flips the given buffer vertically.
-     *
-     * @param buffer   the buffer to flip
-     * @param width    the width of the buffer
-     * @param height   the height of the buffer
-     * @param channels the number of channels in the buffer
-     * @return the flipped buffer
-     */
-    private ByteBuffer flipVertically(ByteBuffer buffer, int width, int height, int channels) {
-        ByteBuffer flipped = BufferUtils.createByteBuffer(buffer.capacity());
-        int stride = width * channels;
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < stride; x++) {
-                flipped.put((height - y - 1) * stride + x, buffer.get(y * stride + x));
-            }
-        }
-        return flipped;
     }
 
     /**
@@ -495,5 +467,21 @@ public class FrameBuffer {
      */
     public void setGlObject(GLObject glObject) {
         this.glObject = glObject;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
     }
 }
