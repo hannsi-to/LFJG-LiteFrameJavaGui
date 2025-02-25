@@ -291,13 +291,15 @@ public class GLFont extends GLRect {
         this.scale = scale;
     }
 
-    /**
-     * Gets the color of the text.
-     *
-     * @return the color of the text
-     */
-    public Color getColor() {
-        return color;
+
+    @Override
+    public FrameBuffer getFrameBuffer() {
+        return frameBuffer;
+    }
+
+    @Override
+    public void setFrameBuffer(FrameBuffer frameBuffer) {
+        this.frameBuffer = frameBuffer;
     }
 
     /**

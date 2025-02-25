@@ -12,7 +12,9 @@ import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.render.openGL.animation.system.AnimationCache;
-import me.hannsi.lfjg.render.openGL.effect.effects.*;
+import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
+import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
+import me.hannsi.lfjg.render.openGL.effect.effects.Translate;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.font.GLFont;
 import me.hannsi.lfjg.render.openGL.renderers.model.Object3DCacheRender;
@@ -28,11 +30,11 @@ import me.hannsi.lfjg.render.openGL.system.user.MouseInfo;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.graphics.image.ImageCapture;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
-import me.hannsi.lfjg.utils.math.MathHelper;
 import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.math.TextFormat;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.URLLocation;
 import me.hannsi.lfjg.utils.type.types.*;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -159,7 +161,7 @@ public class TestGuiFrame implements LFJGFrame {
 
     public void effectCacheInit() {
         textureCache = new TextureCache();
-        ResourcesLocation image = new ResourcesLocation("texture/test/test_image_3840x2160.jpg");
+        URLLocation image = new URLLocation("https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png");
         textureCache.createCache(image);
 
         gl1EffectCache = new EffectCache();
@@ -167,11 +169,11 @@ public class TestGuiFrame implements LFJGFrame {
         glFontEffectCache = new EffectCache();
         glTriangleEffectCache = new EffectCache();
 
-        gl1SplitObjectEffectCache.createCache("Rotate1", new Rotate(0, 0, MathHelper.toRadians(45), true));
+//        gl1SplitObjectEffectCache.createCache("Rotate1", new Rotate(0, 0, MathHelper.toRadians(45), true));
 
         gl1EffectCache.createCache("Texture1", new Texture(textureCache, image));
         gl1EffectCache.createCache("DrawObject1", new DrawObject());
-        gl1EffectCache.createCache("SplitObject1", new SplitObject(5, 5, 0, 0, gl1SplitObjectEffectCache));
+//        gl1EffectCache.createCache("SplitObject1", new SplitObject(5, 5, 0, 0, gl1SplitObjectEffectCache));
 //        gl1EffectCache.createCache(new Gradation(resolution, resolution.x / 2, resolution.y / 2, (float) Math.toRadians(90), 0.1f, Gradation.ShapeMode.Rectangle, BlendType.Multiply, new Color(0, 0, 0, 255), new Color(255, 255, 255, 255), 1f), gl1);
 //        gl1EffectCache.createCache(new Monochrome(resolution, 1f, new Color(255, 0, 255), true), gl1);
 //        gl1EffectCache.createCache(new ChromaticAberration(resolution, 0.002f, 90, 5f, ChromaticAberration.AberrationType.RedBlueB), gl1);

@@ -2,7 +2,7 @@ package me.hannsi.lfjg.utils.graphics.image;
 
 import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
-import me.hannsi.lfjg.utils.reflection.FileLocation;
+import me.hannsi.lfjg.utils.reflection.Location;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.ImageLoaderType;
 
@@ -15,7 +15,7 @@ import java.util.Map;
 public class TextureCache {
     public static final ResourcesLocation DEFAULT_TEXTURE = new ResourcesLocation("texture/default.png");
 
-    private Map<FileLocation, TextureLoader> textureMap;
+    private Map<Location, TextureLoader> textureMap;
 
     /**
      * Constructs a TextureCache instance and initializes the cache with the default texture.
@@ -36,12 +36,12 @@ public class TextureCache {
     /**
      * Creates a cache entry for the specified texture path.
      *
-     * @param texturePath the path to the texture resource
+     * @param path the path to the texture resource
      */
-    public void createCache(FileLocation texturePath) {
-        textureMap.put(texturePath, new TextureLoader(texturePath, ImageLoaderType.STBImage));
+    public void createCache(Location path) {
+        textureMap.put(path, new TextureLoader(path, ImageLoaderType.STBImage));
 
-        LogGenerator logGenerator = new LogGenerator("TextureCache Debug Message", "Source: TextureCache", "Type: Cache Creation", "ID: " + texturePath.hashCode(), "Severity: Info", "Message: Create texture cache: " + texturePath.getPath());
+        LogGenerator logGenerator = new LogGenerator("TextureCache Debug Message", "Source: TextureCache", "Type: Cache Creation", "ID: " + path.hashCode(), "Severity: Info", "Message: Create texture cache: " + path.getPath());
 
         DebugLog.debug(getClass(), logGenerator.createLog());
     }
@@ -50,13 +50,13 @@ public class TextureCache {
      * Retrieves the texture loader for the specified texture path.
      * If the texture path is null or not found, the default texture loader is returned.
      *
-     * @param texturePath the path to the texture resource
+     * @param path the path to the texture resource
      * @return the texture loader for the specified path, or the default texture loader if not found
      */
-    public TextureLoader getTexture(FileLocation texturePath) {
+    public TextureLoader getTexture(Location path) {
         TextureLoader texture = null;
-        if (texturePath != null) {
-            texture = textureMap.get(texturePath);
+        if (path != null) {
+            texture = textureMap.get(path);
         }
         if (texture == null) {
             texture = textureMap.get(DEFAULT_TEXTURE);
@@ -69,7 +69,7 @@ public class TextureCache {
      *
      * @return the texture map
      */
-    public Map<FileLocation, TextureLoader> getTextureMap() {
+    public Map<Location, TextureLoader> getTextureMap() {
         return textureMap;
     }
 
@@ -78,7 +78,7 @@ public class TextureCache {
      *
      * @param textureMap the new texture map
      */
-    public void setTextureMap(Map<FileLocation, TextureLoader> textureMap) {
+    public void setTextureMap(Map<Location, TextureLoader> textureMap) {
         this.textureMap = textureMap;
     }
 }

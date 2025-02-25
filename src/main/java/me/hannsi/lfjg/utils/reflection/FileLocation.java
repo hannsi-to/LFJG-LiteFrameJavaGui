@@ -8,7 +8,7 @@ import java.util.Objects;
 /**
  * Class representing a file location and providing utility methods to interact with the file.
  */
-public class FileLocation {
+public class FileLocation extends Location {
     public String path;
 
     /**
@@ -17,24 +17,8 @@ public class FileLocation {
      * @param path the path to the file
      */
     public FileLocation(String path) {
-        this.path = path;
-    }
+        super(path, false, true);
 
-    /**
-     * Gets the path to the file.
-     *
-     * @return the file path
-     */
-    public String getPath() {
-        return path;
-    }
-
-    /**
-     * Sets the path to the file.
-     *
-     * @param path the new file path
-     */
-    public void setPath(String path) {
         this.path = path;
     }
 
@@ -54,9 +38,5 @@ public class FileLocation {
      */
     public byte[] getBytes() {
         return ByteUtil.convertInputStreamToByteArray(Objects.requireNonNull(getInputStream()));
-    }
-
-    public void cleanup() {
-        this.path = "";
     }
 }

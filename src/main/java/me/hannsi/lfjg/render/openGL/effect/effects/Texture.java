@@ -4,7 +4,7 @@ import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.utils.graphics.image.TextureLoader;
-import me.hannsi.lfjg.utils.reflection.FileLocation;
+import me.hannsi.lfjg.utils.reflection.Location;
 import org.lwjgl.opengl.GL30;
 
 /**
@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL30;
  */
 public class Texture extends EffectBase {
     private TextureCache textureCache;
-    private FileLocation imagePath;
+    private Location path;
     private TextureLoader textureLoader;
     private int textureId;
 
@@ -20,14 +20,14 @@ public class Texture extends EffectBase {
      * Constructs a new Texture effect with the specified parameters.
      *
      * @param textureCache the texture cache to be used
-     * @param imagePath    the location of the resources
+     * @param path         the location of the resources
      */
-    public Texture(TextureCache textureCache, FileLocation imagePath) {
-        super(3, "Texture", (Class<GLObject>) null);
+    public Texture(TextureCache textureCache, Location path) {
+        super(3, "Texture");
 
         this.textureCache = textureCache;
-        this.imagePath = imagePath;
-        this.textureLoader = textureCache.getTexture(imagePath);
+        this.path = path;
+        this.textureLoader = textureCache.getTexture(path);
     }
 
     /**
@@ -139,12 +139,12 @@ public class Texture extends EffectBase {
         this.textureCache = textureCache;
     }
 
-    public FileLocation getFileLocation() {
-        return imagePath;
+    public Location getFileLocation() {
+        return path;
     }
 
-    public void setImagePath(FileLocation imagePath) {
-        this.imagePath = imagePath;
+    public void setPath(Location path) {
+        this.path = path;
     }
 
     /**
