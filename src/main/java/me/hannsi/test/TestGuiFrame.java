@@ -12,10 +12,7 @@ import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.render.openGL.animation.system.AnimationCache;
-import me.hannsi.lfjg.render.openGL.effect.effects.BoxBlur;
-import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
-import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
-import me.hannsi.lfjg.render.openGL.effect.effects.Translate;
+import me.hannsi.lfjg.render.openGL.effect.effects.*;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.font.GLFont;
 import me.hannsi.lfjg.render.openGL.renderers.model.Object3DCacheRender;
@@ -25,14 +22,13 @@ import me.hannsi.lfjg.render.openGL.system.font.CFont;
 import me.hannsi.lfjg.render.openGL.system.font.FontCache;
 import me.hannsi.lfjg.render.openGL.system.font.UnicodeRange;
 import me.hannsi.lfjg.render.openGL.system.model.model.Entity;
-import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
-import me.hannsi.lfjg.render.openGL.system.rendering.SplitFrameBuffer;
 import me.hannsi.lfjg.render.openGL.system.user.Camera;
 import me.hannsi.lfjg.render.openGL.system.user.MouseInfo;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.graphics.image.ImageCapture;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
+import me.hannsi.lfjg.utils.math.MathHelper;
 import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.math.TextFormat;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
@@ -52,9 +48,12 @@ public class TestGuiFrame implements LFJGFrame {
     GLTriangle glTriangle;
     GLObjectCache glObjectCache;
     TextureCache textureCache;
+
     EffectCache gl1EffectCache;
     EffectCache glFontEffectCache;
     EffectCache glTriangleEffectCache;
+    EffectCache gl1SplitObjectEffectCache;
+
     AnimationCache gl1AnimationCache;
     FontCache fontCache;
 
@@ -164,12 +163,15 @@ public class TestGuiFrame implements LFJGFrame {
         textureCache.createCache(image);
 
         gl1EffectCache = new EffectCache();
+        gl1SplitObjectEffectCache = new EffectCache();
         glFontEffectCache = new EffectCache();
         glTriangleEffectCache = new EffectCache();
 
-        gl1EffectCache.createCache("Texture1", new Texture(textureCache, image), gl1);
-        gl1EffectCache.createCache("DrawObject1", new DrawObject(), gl1);
-        gl1EffectCache.createCache("BoxBlur1", new BoxBlur(10, 10), gl1);
+        gl1SplitObjectEffectCache.createCache("Rotate1", new Rotate(0, 0, MathHelper.toRadians(45), true));
+
+        gl1EffectCache.createCache("Texture1", new Texture(textureCache, image));
+        gl1EffectCache.createCache("DrawObject1", new DrawObject());
+        gl1EffectCache.createCache("SplitObject1", new SplitObject(5, 5, 0, 0, gl1SplitObjectEffectCache));
 //        gl1EffectCache.createCache(new Gradation(resolution, resolution.x / 2, resolution.y / 2, (float) Math.toRadians(90), 0.1f, Gradation.ShapeMode.Rectangle, BlendType.Multiply, new Color(0, 0, 0, 255), new Color(255, 255, 255, 255), 1f), gl1);
 //        gl1EffectCache.createCache(new Monochrome(resolution, 1f, new Color(255, 0, 255), true), gl1);
 //        gl1EffectCache.createCache(new ChromaticAberration(resolution, 0.002f, 90, 5f, ChromaticAberration.AberrationType.RedBlueB), gl1);
@@ -190,10 +192,15 @@ public class TestGuiFrame implements LFJGFrame {
 //        gl1EffectCache.createCache(new ColorCorrection(resolution, 0.5f, 0, 0, 0), gl1);
 //        gl1EffectCache.createCache(new Clipping2DRect(resolution, 0, 0, 500, 500), gl1);
 
-        glFontEffectCache.createCache("DrawObject1", new DrawObject(), glFont);
-        glFontEffectCache.createCache("Translate1", new Translate(200, 0), glFont);
+        glFontEffectCache.createCache("DrawObject1", new DrawObject());
+        glFontEffectCache.createCache("Translate1", new Translate(200, 0));
 
-        glTriangleEffectCache.createCache("DrawObject1", new DrawObject(), glTriangle);
+        glTriangleEffectCache.createCache("DrawObject1", new DrawObject());
+
+        gl1EffectCache.create(gl1);
+        gl1SplitObjectEffectCache.create(gl1);
+        glFontEffectCache.create(glFont);
+        glTriangleEffectCache.create(glTriangle);
 
         gl1.setEffectCache(gl1EffectCache);
         glFont.setEffectCache(glFontEffectCache);
@@ -231,24 +238,27 @@ public class TestGuiFrame implements LFJGFrame {
         Translate translate = (Translate) glFontEffectCache.getEffectBase("Translate1");
         translate.setX(translate.getX() + 0.1f);
 
+//        SplitObject splitObject = (SplitObject) gl1EffectCache.getEffectBase("SplitObject1");
+//        splitObject.setOffsetY(splitObject.getOffsetY() + 1);
+
         glObjectCache.draw();
 
-        if (first <= 10) {
-            imageCapture.saveImage("ScreenShot");
-
-            SplitFrameBuffer splitFrameBuffer = new SplitFrameBuffer(glObjectCache.getGLObject(gl1.getObjectId()).getFrameBuffer(), 5, 5);
-            splitFrameBuffer.createSmallFrameBuffers();
-            splitFrameBuffer.blitToSmallFrameBuffers();
-
-            FrameBuffer sFb;
-            int index = 0;
-            while ((sFb = splitFrameBuffer.getNextFrameBuffer()) != null) {
-                imageCapture.saveImage(sFb, index + "");
-                index++;
-            }
-
-            first++;
-        }
+//        if (first <= 10) {
+//            imageCapture.saveImage("ScreenShot");
+//
+//            SplitFrameBuffer splitFrameBuffer = new SplitFrameBuffer(glObjectCache.getGLObject(gl1.getObjectId()).getFrameBuffer(), 5, 5);
+//            splitFrameBuffer.createSmallFrameBuffers();
+//            splitFrameBuffer.blitToSmallFrameBuffers();
+//
+//            FrameBuffer sFb;
+//            int index = 0;
+//            while ((sFb = splitFrameBuffer.getNextFrameBuffer()) != null) {
+//                imageCapture.saveImage(sFb, index + "");
+//                index++;
+//            }
+//
+//            first++;
+//        }
 
 //        if (!videoFrameExtractor.getVideoCache().getFrames().isEmpty()) {
 //            VideoCache.Frame frame = videoFrameExtractor.frame();

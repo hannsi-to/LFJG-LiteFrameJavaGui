@@ -12,7 +12,7 @@ public class DrawObject extends EffectBase {
      * Constructs a new DrawObject effect with the specified resolution.
      */
     public DrawObject() {
-        super(Integer.MAX_VALUE, "DrawObject", (Class<GLObject>) null);
+        super(Integer.MAX_VALUE, "DrawObject");
     }
 
     /**

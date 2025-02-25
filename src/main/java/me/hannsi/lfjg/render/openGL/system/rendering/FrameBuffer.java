@@ -24,10 +24,10 @@ public class FrameBuffer {
     private final int textureId;
     private final int renderBufferId;
     private final VAORendering vaoRendering;
-    private final float x;
-    private final float y;
-    private final float width;
-    private final float height;
+    private float x;
+    private float y;
+    private float width;
+    private float height;
     private Mesh mesh;
     private ShaderProgram shaderProgramFBO;
     private ResourcesLocation vertexShaderFBO;
@@ -86,7 +86,7 @@ public class FrameBuffer {
 
         vaoRendering = new VAORendering();
 
-        float[] positions = new float[]{x, y, width, y, width, height, x, height};
+        float[] positions = new float[]{x, y, x + width, y, x + width, y + height, x, y + height};
 
         float[] uvs = new float[]{0, 0, 1, 0, 1, 1, 0, 1};
 
@@ -473,15 +473,31 @@ public class FrameBuffer {
         return x;
     }
 
+    public void setX(float x) {
+        this.x = x;
+    }
+
     public float getY() {
         return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
     }
 
     public float getWidth() {
         return width;
     }
 
+    public void setWidth(float width) {
+        this.width = width;
+    }
+
     public float getHeight() {
         return height;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
     }
 }

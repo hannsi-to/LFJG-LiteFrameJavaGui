@@ -128,6 +128,59 @@ public class GLPolygon extends GLObject {
         setFragmentShader(new ResourcesLocation("shader/scene/object/FragmentShader.fsh"));
         setMesh(mesh);
 
+        float[] bounds = getBounds();
+        setX(bounds[0]);
+        setY(bounds[1]);
+        setWidth(bounds[2] - bounds[0]);
+        setHeight(bounds[3] - bounds[1]);
+
         create();
+    }
+
+    private float[] getBounds() {
+        if (vertex == null || vertex.length < 2) {
+            throw new IllegalArgumentException("Vertex array is null or invalid.");
+        }
+
+        float minX = vertex[0];
+        float maxX = vertex[0];
+        float minY = vertex[1];
+        float maxY = vertex[1];
+
+        for (int i = 2; i < vertex.length; i += 2) {
+            float x = vertex[i];
+            float y = vertex[i + 1];
+
+            if (x < minX) minX = x;
+            if (x > maxX) maxX = x;
+            if (y < minY) minY = y;
+            if (y > maxY) maxY = y;
+        }
+
+        return new float[]{minX, minY, maxX, maxY};
+    }
+
+    public float[] getVertex() {
+        return vertex;
+    }
+
+    public void setVertex(float[] vertex) {
+        this.vertex = vertex;
+    }
+
+    public float[] getColor() {
+        return color;
+    }
+
+    public void setColor(float[] color) {
+        this.color = color;
+    }
+
+    public float[] getTexture() {
+        return texture;
+    }
+
+    public void setTexture(float[] texture) {
+        this.texture = texture;
     }
 }

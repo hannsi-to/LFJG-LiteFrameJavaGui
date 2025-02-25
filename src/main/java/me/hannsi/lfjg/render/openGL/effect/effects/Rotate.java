@@ -10,6 +10,7 @@ public class Rotate extends EffectBase {
     private float x;
     private float y;
     private float z;
+    private boolean autoCenter;
     private float cx;
     private float cy;
     private float cz;
@@ -25,6 +26,10 @@ public class Rotate extends EffectBase {
         this(x, y, z, 0, 0, 0);
     }
 
+    public Rotate(float x, float y, float z, boolean autoCenter) {
+        this(x, y, z, 0, 0, 0, autoCenter);
+    }
+
     /**
      * Constructs a new Rotate effect with the specified parameters.
      *
@@ -34,6 +39,10 @@ public class Rotate extends EffectBase {
      */
     public Rotate(double x, double y, double z) {
         this((float) x, (float) y, (float) z, 0, 0, 0);
+    }
+
+    public Rotate(double x, double y, double z, boolean autoCenter) {
+        this((float) x, (float) y, (float) z, 0, 0, 0, autoCenter);
     }
 
     /**
@@ -72,12 +81,13 @@ public class Rotate extends EffectBase {
      * @param cy the Y coordinate of the rotation center
      * @param cz the Z coordinate of the rotation center
      */
-    public Rotate(float x, float y, float z, float cx, float cy, float cz) {
+    public Rotate(float x, float y, float z, float cx, float cy, float cz, boolean autoCenter) {
         super(1, "Rotate", (Class<GLObject>) null);
 
         this.x = x;
         this.y = y;
         this.z = z;
+        this.autoCenter = autoCenter;
         this.cx = cx;
         this.cy = cy;
         this.cz = cz;
@@ -94,7 +104,7 @@ public class Rotate extends EffectBase {
      * @param cz the Z coordinate of the rotation center
      */
     public Rotate(double x, double y, double z, double cx, double cy, double cz) {
-        this((float) x, (float) y, (float) z, (float) cx, (float) cy, (float) cz);
+        this((float) x, (float) y, (float) z, (float) cx, (float) cy, (float) cz, false);
     }
 
     /**
@@ -104,8 +114,6 @@ public class Rotate extends EffectBase {
      */
     @Override
     public void pop(GLObject baseGLObject) {
-        baseGLObject.setModelMatrix(baseGLObject.getModelMatrix().translate(cx, cy, cz).rotateXYZ(-x, -y, -z).translate(-cx, -cy, -cz));
-
         super.pop(baseGLObject);
     }
 
@@ -116,8 +124,6 @@ public class Rotate extends EffectBase {
      */
     @Override
     public void push(GLObject baseGLObject) {
-        baseGLObject.setModelMatrix(baseGLObject.getModelMatrix().translate(cx, cy, cz).rotateXYZ(x, y, z).translate(-cx, -cy, -cz));
-
         super.push(baseGLObject);
     }
 
@@ -152,7 +158,16 @@ public class Rotate extends EffectBase {
      */
     @Override
     public void frameBuffer(GLObject baseGLObject) {
+        if (autoCenter) {
+            float centerOffsetX = getFrameBuffer().getWidth() / 2f;
+            float centerOffsetY = getFrameBuffer().getHeight() / 2f;
+            cx = getFrameBuffer().getX() + centerOffsetX;
+            cy = getFrameBuffer().getY() + centerOffsetY;
+        }
+
+        getFrameBuffer().getModelMatrix().translate(cx, cy, cz).rotateXYZ(x, y, z).translate(-cx, -cy, -cz);
         getFrameBuffer().drawFrameBuffer();
+        getFrameBuffer().getModelMatrix().translate(cx, cy, cz).rotateXYZ(-x, -y, -z).translate(-cx, -cy, -cz);
 
         super.frameBuffer(baseGLObject);
     }
@@ -273,5 +288,13 @@ public class Rotate extends EffectBase {
      */
     public void setCz(float cz) {
         this.cz = cz;
+    }
+
+    public boolean isAutoCenter() {
+        return autoCenter;
+    }
+
+    public void setAutoCenter(boolean autoCenter) {
+        this.autoCenter = autoCenter;
     }
 }

@@ -45,6 +45,11 @@ public class GLObject implements Cloneable {
     private float lineWidth;
     private float pointSize;
 
+    private float x;
+    private float y;
+    private float width;
+    private float height;
+
     /**
      * Constructs a new GLObject with the specified name.
      *
@@ -538,5 +543,37 @@ public class GLObject implements Cloneable {
 
     public void setAnimationCache(AnimationCache animationCache) {
         this.animationCache = animationCache;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public void setWidth(float width) {
+        this.width = width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
     }
 }

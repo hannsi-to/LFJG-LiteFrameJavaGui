@@ -4,6 +4,7 @@ import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.render.openGL.system.Id;
+import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
 
 import java.util.*;
 
@@ -56,6 +57,21 @@ public class EffectCache {
         return reversedMap;
     }
 
+    public void create(GLObject glObject) {
+        for (Map.Entry<EffectBase, Identifier> effectBase : effectBases.entrySet()) {
+            effectBase.getKey().create(glObject);
+        }
+    }
+
+    public void updateFrameBufferSize(FrameBuffer frameBuffer) {
+        for (Map.Entry<EffectBase, Identifier> effectBase : effectBases.entrySet()) {
+            effectBase.getKey().getFrameBuffer().setX(frameBuffer.getX());
+            effectBase.getKey().getFrameBuffer().setY(frameBuffer.getY());
+            effectBase.getKey().getFrameBuffer().setWidth(frameBuffer.getWidth());
+            effectBase.getKey().getFrameBuffer().setHeight(frameBuffer.getHeight());
+        }
+    }
+
     /**
      * Creates a cache for the specified effect and GL object.
      *
@@ -66,6 +82,26 @@ public class EffectCache {
 
         LogGenerator logGenerator = new LogGenerator("EffectCache Debug Message", "Source: EffectCache", "Type: Cache Creation", "ID: " + effectBase.getId(), "Severity: Info", "Message: Create effect cache: " + effectBase.getName());
 
+        DebugLog.debug(getClass(), logGenerator.createLog());
+    }
+
+    public void createCache(String name, EffectBase effectBase, int index) {
+        LinkedHashMap<EffectBase, Identifier> newEffectCache = new LinkedHashMap<>();
+
+        int i = 0;
+        for (Map.Entry<EffectBase, Identifier> effectBaseIdentifierEntry : effectBases.entrySet()) {
+            if (i == index) {
+                newEffectCache.put(effectBase, new Identifier(name, latestEffectCacheId++));
+            }
+
+            newEffectCache.put(effectBaseIdentifierEntry.getKey(), effectBaseIdentifierEntry.getValue());
+
+            i++;
+        }
+
+        this.effectBases = newEffectCache;
+
+        LogGenerator logGenerator = new LogGenerator("EffectCache Debug Message", "Source: EffectCache", "Type: Cache Creation", "ID: " + effectBase.getId(), "Severity: Info", "Message: Create effect cache: " + effectBase.getName());
         DebugLog.debug(getClass(), logGenerator.createLog());
     }
 

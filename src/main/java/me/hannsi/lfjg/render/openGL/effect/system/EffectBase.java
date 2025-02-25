@@ -8,7 +8,9 @@ import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
  * Base class for effects in OpenGL.
  */
 public class EffectBase {
-    private final FrameBuffer frameBuffer;
+    private final ResourcesLocation vertexPath;
+    private final ResourcesLocation fragmentPath;
+    private FrameBuffer frameBuffer;
     private int id;
     private String name;
     private Class<GLObject>[] ignoreGLObject;
@@ -27,19 +29,8 @@ public class EffectBase {
         this.id = id;
         this.name = name;
         this.ignoreGLObject = ignoreGLObject;
-
-        frameBuffer = new FrameBuffer();
-
-        if (vertexPath != null) {
-            frameBuffer.setVertexShaderFBO(vertexPath);
-        }
-
-        if (fragmentPath != null) {
-            frameBuffer.setFragmentShaderFBO(fragmentPath);
-        }
-
-        frameBuffer.createFrameBuffer();
-        frameBuffer.createShaderProgram();
+        this.vertexPath = vertexPath;
+        this.fragmentPath = fragmentPath;
     }
 
     /**
@@ -78,6 +69,21 @@ public class EffectBase {
     @SafeVarargs
     public EffectBase(int id, String name, Class<GLObject>... ignoreGLObject) {
         this(null, null, id, name, ignoreGLObject);
+    }
+
+    public void create(GLObject glObject) {
+        frameBuffer = new FrameBuffer(glObject.getX(), glObject.getY(), glObject.getWidth(), glObject.getHeight());
+
+        if (vertexPath != null) {
+            frameBuffer.setVertexShaderFBO(vertexPath);
+        }
+
+        if (fragmentPath != null) {
+            frameBuffer.setFragmentShaderFBO(fragmentPath);
+        }
+
+        frameBuffer.createFrameBuffer();
+        frameBuffer.createShaderProgram();
     }
 
     public void cleanup() {
@@ -210,5 +216,17 @@ public class EffectBase {
      */
     public FrameBuffer getFrameBuffer() {
         return frameBuffer;
+    }
+
+    public ResourcesLocation getVertexPath() {
+        return vertexPath;
+    }
+
+    public ResourcesLocation getFragmentPath() {
+        return fragmentPath;
+    }
+
+    public void setFrameBuffer(FrameBuffer frameBuffer) {
+        this.frameBuffer = frameBuffer;
     }
 }

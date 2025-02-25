@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.render.openGL.effect.effects;
 
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
+import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.openGL.system.rendering.SplitFrameBuffer;
@@ -10,15 +11,24 @@ public class SplitObject extends EffectBase {
     private int cols;
     private int offsetX;
     private int offsetY;
+    private final EffectCache effectCache;
     private SplitFrameBuffer splitFrameBuffer;
 
     public SplitObject(int rows, int cols, int offsetX, int offsetY) {
+        this(rows, cols, offsetX, offsetY, null);
+    }
+
+    public SplitObject(int rows, int cols, int offsetX, int offsetY, EffectCache effectCache) {
         super(26, "SplitObject");
 
         this.cols = cols;
         this.rows = rows;
         this.offsetX = offsetX;
         this.offsetY = offsetY;
+        this.effectCache = effectCache;
+        if (this.effectCache != null) {
+            this.effectCache.createCache("DrawFrameBuffer1", new DrawFrameBuffer(null), 0);
+        }
     }
 
     /**
@@ -63,9 +73,17 @@ public class SplitObject extends EffectBase {
             for (int x = 0; x < cols; x++) {
                 FrameBuffer smallFrameBuffer = smallFrameBuffers[y][x];
 
-                smallFrameBuffer.getModelMatrix().translate(ox, oy, 0);
-                smallFrameBuffer.drawFrameBuffer();
-                smallFrameBuffer.getModelMatrix().translate(-ox, -oy, 0);
+                if (effectCache == null) {
+                    smallFrameBuffer.getModelMatrix().translate(ox, oy, 0);
+                    smallFrameBuffer.drawFrameBuffer();
+                    smallFrameBuffer.getModelMatrix().translate(-ox, -oy, 0);
+                } else {
+                    effectCache.updateFrameBufferSize(smallFrameBuffer);
+
+                    DrawFrameBuffer drawFrameBuffer = (DrawFrameBuffer) effectCache.getEffectBase("DrawFrameBuffer1");
+                    drawFrameBuffer.setFrameBuffer(smallFrameBuffer);
+                    effectCache.frameBuffer(baseGLObject);
+                }
 
                 ox += offsetX;
             }
@@ -125,5 +143,9 @@ public class SplitObject extends EffectBase {
 
     public void setSplitFrameBuffer(SplitFrameBuffer splitFrameBuffer) {
         this.splitFrameBuffer = splitFrameBuffer;
+    }
+
+    public EffectCache getEffectCache() {
+        return effectCache;
     }
 }

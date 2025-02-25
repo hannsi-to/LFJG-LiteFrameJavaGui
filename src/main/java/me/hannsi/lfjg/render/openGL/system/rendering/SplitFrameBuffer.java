@@ -11,11 +11,11 @@ import static org.lwjgl.opengl.GL30.glBlitFramebuffer;
  * Represents a split frame buffer in the OpenGL rendering system.
  */
 public class SplitFrameBuffer {
+    private final int cols;
+    private final int rows;
     private FrameBuffer mainFrameBuffer;
     private FrameBuffer[][] smallFrameBuffers;
     private Vector2f smallResolution;
-    private final int cols;
-    private final int rows;
     private int offsetX;
     private int offsetY;
     private int indexX;
@@ -66,7 +66,12 @@ public class SplitFrameBuffer {
     public void createSmallFrameBuffers() {
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
-                FrameBuffer frameBuffer = new FrameBuffer(0, 0, LFJGContext.resolution.x(), LFJGContext.resolution.y());
+                int srcX = (int) (x * smallResolution.x());
+                int srcY = (int) (y * smallResolution.y());
+                int srcWidth = (int) (smallResolution.x());
+                int srcHeight = (int) (smallResolution.y());
+
+                FrameBuffer frameBuffer = new FrameBuffer(srcX, srcY, srcWidth, srcHeight);
                 frameBuffer.createFrameBuffer();
                 frameBuffer.createShaderProgram();
 
@@ -81,8 +86,6 @@ public class SplitFrameBuffer {
     public void blitToSmallFrameBuffers() {
         mainFrameBuffer.bindReadFrameBuffer();
 
-        int ox = 0;
-        int oy = 0;
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
                 smallFrameBuffers[y][x].bindDrawFrameBuffer();
@@ -92,14 +95,15 @@ public class SplitFrameBuffer {
                 int srcX1 = (int) (srcX0 + smallResolution.x());
                 int srcY1 = (int) (srcY0 + smallResolution.y());
 
-                glBlitFramebuffer(srcX0, srcY0, srcX1, srcY1, srcX0 + ox, srcY0 + oy, srcX1 + ox, srcY1 + oy, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+                int distX0 = 0;
+                int distY0 = 0;
+                int distX1 = (int) (rows * smallResolution.x());
+                int distY1 = (int) (cols * smallResolution.y());
+
+                glBlitFramebuffer(srcX0, srcY0, srcX1, srcY1, distX0, distY0, distX1, distY1, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
                 smallFrameBuffers[y][x].unbindDrawFrameBuffer();
-                ox += offsetX;
             }
-
-            ox = 0;
-            oy += offsetY;
         }
 
         mainFrameBuffer.unbindRenderBuffer();

@@ -63,7 +63,6 @@ public class Translate extends EffectBase {
      */
     @Override
     public void pop(GLObject baseGLObject) {
-        baseGLObject.setModelMatrix(baseGLObject.getModelMatrix().translate(-x, -y, -z));
         super.pop(baseGLObject);
     }
 
@@ -74,7 +73,6 @@ public class Translate extends EffectBase {
      */
     @Override
     public void push(GLObject baseGLObject) {
-        baseGLObject.setModelMatrix(baseGLObject.getModelMatrix().translate(x, y, z));
         super.push(baseGLObject);
     }
 
@@ -107,7 +105,9 @@ public class Translate extends EffectBase {
      */
     @Override
     public void frameBuffer(GLObject baseGLObject) {
+        getFrameBuffer().getModelMatrix().translate(x, y, z);
         getFrameBuffer().drawFrameBuffer();
+        getFrameBuffer().getModelMatrix().translate(-x, -y, -z);
         super.frameBuffer(baseGLObject);
     }
 
