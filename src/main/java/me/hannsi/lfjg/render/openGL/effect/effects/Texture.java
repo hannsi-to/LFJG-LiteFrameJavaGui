@@ -5,6 +5,7 @@ import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.utils.graphics.image.TextureLoader;
 import me.hannsi.lfjg.utils.reflection.Location;
+import me.hannsi.lfjg.utils.type.types.BlendType;
 import org.lwjgl.opengl.GL30;
 
 /**
@@ -13,6 +14,7 @@ import org.lwjgl.opengl.GL30;
 public class Texture extends EffectBase {
     private TextureCache textureCache;
     private Location path;
+    private BlendType blendType;
     private TextureLoader textureLoader;
     private int textureId;
 
@@ -22,11 +24,12 @@ public class Texture extends EffectBase {
      * @param textureCache the texture cache to be used
      * @param path         the location of the resources
      */
-    public Texture(TextureCache textureCache, Location path) {
+    public Texture(TextureCache textureCache, Location path, BlendType blendType) {
         super(3, "Texture");
 
         this.textureCache = textureCache;
         this.path = path;
+        this.blendType = blendType;
         this.textureLoader = textureCache.getTexture(path);
     }
 
@@ -118,6 +121,8 @@ public class Texture extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
+        getFrameBuffer().getShaderProgramFBO().setUniform("blendMode", blendType.getId());
+
         super.setUniform(baseGLObject);
     }
 
@@ -143,10 +148,6 @@ public class Texture extends EffectBase {
         return path;
     }
 
-    public void setPath(Location path) {
-        this.path = path;
-    }
-
     /**
      * Gets the texture loader.
      *
@@ -163,5 +164,29 @@ public class Texture extends EffectBase {
      */
     public void setTextureLoader(TextureLoader textureLoader) {
         this.textureLoader = textureLoader;
+    }
+
+    public Location getPath() {
+        return path;
+    }
+
+    public void setPath(Location path) {
+        this.path = path;
+    }
+
+    public BlendType getBlendType() {
+        return blendType;
+    }
+
+    public void setBlendType(BlendType blendType) {
+        this.blendType = blendType;
+    }
+
+    public int getTextureId() {
+        return textureId;
+    }
+
+    public void setTextureId(int textureId) {
+        this.textureId = textureId;
     }
 }

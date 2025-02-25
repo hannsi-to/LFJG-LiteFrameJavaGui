@@ -40,6 +40,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.openal.AL11;
 
 import static me.hannsi.lfjg.frame.LFJGContext.frame;
+import static me.hannsi.lfjg.frame.LFJGContext.resolution;
 
 public class TestGuiFrame implements LFJGFrame {
     GLRect gl1;
@@ -95,7 +96,7 @@ public class TestGuiFrame implements LFJGFrame {
 //        threadCache.run(thread.threadId());
 
         LFJGContext.projection = new Projection(ProjectionType.OrthographicProjection, frame.getWindowWidth(), frame.getWindowHeight());
-        LFJGContext.resolution = new Vector2f(frame.getWindowWidth() / frame.getContentScaleX(), frame.getWindowHeight() / frame.getContentScaleY());
+        resolution = new Vector2f(frame.getWindowWidth() / frame.getContentScaleX(), frame.getWindowHeight() / frame.getContentScaleY());
 
         imageCapture = new ImageCapture(new FileLocation("C:/Users/hanns/idea-project/LFJG-LiteFrameJavaGui/log/png"));
 
@@ -147,14 +148,15 @@ public class TestGuiFrame implements LFJGFrame {
 
         gl1 = new GLRect("test1");
         gl1.uv(0, 1, 1, 0);
-        gl1.rectWH(0, 0, frame.getWindowWidth(), frame.getWindowHeight(), Color.of(0, 0, 0, 255));
+        gl1.rectWH(0, 0, frame.getWindowWidth(), frame.getWindowHeight(), Color.of(0, 0, 0, 0));
 
+        int alpha = 100;
         glFont = new GLFont("Font");
         glFont.setFont(fontCache, font, 64);
-        glFont.font(TextFormat.SPASE_X + "{100}" + "字間を確認" + TextFormat.RESET + "字間を確認" + TextFormat.SPASE_Y + "{100}" + TextFormat.NEWLINE + TextFormat.RESET_POINT_X + TextFormat.RED + "Ka" + TextFormat.BOLD + "zu" + TextFormat.ITALIC + "bon" + "です!" + TextFormat.OBFUSCATED + "test sdaasd aaaa", 0, 200, 1f, Color.of(255, 255, 255, 255));
+        glFont.font(TextFormat.SPASE_X + "{100}" + "字間を確認" + TextFormat.RESET + "字間を確認" + TextFormat.SPASE_Y + "{100}" + TextFormat.NEWLINE + TextFormat.RESET_POINT_X + TextFormat.RED + "Ka" + TextFormat.BOLD + "zu" + TextFormat.ITALIC + "bon" + "です!" + TextFormat.OBFUSCATED + "test sdaasd aaaa", 0, 200, 1f, Color.of(255, 255, 255, alpha));
 
         glTriangle = new GLTriangle("test3");
-        glTriangle.triangleOutLine(0, 0, 100, 0, 50, 100, 1f, Color.of(255, 255, 255, 255), Color.of(255, 255, 0, 255), Color.of(0, 255, 255, 255));
+        glTriangle.triangle(0, 0, 500, 0, 250, 500, Color.of(255, 255, 255, alpha), Color.of(255, 255, 0, alpha), Color.of(255, 255, 255, alpha));
     }
 
     public void effectCacheInit() {
@@ -169,10 +171,10 @@ public class TestGuiFrame implements LFJGFrame {
 
         gl1SplitObjectEffectCache.createCache("Rotate1", new Rotate(0, 0, MathHelper.toRadians(0), true));
 
-        gl1EffectCache.createCache("Texture1", new Texture(textureCache, image));
+        gl1EffectCache.createCache("Texture1", new Texture(textureCache, image, BlendType.Normal));
         gl1EffectCache.createCache("DrawObject1", new DrawObject());
         gl1EffectCache.createCache("SplitObject1", new SplitObject(4, 5, 5, 5, gl1SplitObjectEffectCache));
-//        gl1EffectCache.createCache(new Gradation(resolution, resolution.x / 2, resolution.y / 2, (float) Math.toRadians(90), 0.1f, Gradation.ShapeMode.Rectangle, BlendType.Multiply, new Color(0, 0, 0, 255), new Color(255, 255, 255, 255), 1f), gl1);
+//        gl1EffectCache.createCache("Gradation1",new Gradation(resolution.x / 2, resolution.y / 2, (float) Math.toRadians(90), 0.2f, Gradation.ShapeMode.Rectangle, BlendType.Screen, new Color(50, 100, 200, 100), new Color(255, 255, 255, 255), 1f));
 //        gl1EffectCache.createCache(new Monochrome(resolution, 1f, new Color(255, 0, 255), true), gl1);
 //        gl1EffectCache.createCache(new ChromaticAberration(resolution, 0.002f, 90, 5f, ChromaticAberration.AberrationType.RedBlueB), gl1);
 //        gl1EffectCache.createCache(new Inversion(resolution, false, false, false, true, false), gl1);
@@ -202,9 +204,13 @@ public class TestGuiFrame implements LFJGFrame {
         glFontEffectCache.create(glFont);
         glTriangleEffectCache.create(glTriangle);
 
+        BlendType blendType = BlendType.PremultipliedAlpha;
+
         gl1.setEffectCache(gl1EffectCache);
         glFont.setEffectCache(glFontEffectCache);
+        glFont.setBlendType(blendType);
         glTriangle.setEffectCache(glTriangleEffectCache);
+        glFont.setBlendType(blendType);
     }
 
     public void animationCacheInit() {
@@ -235,8 +241,8 @@ public class TestGuiFrame implements LFJGFrame {
         soundCache.getSoundSource("test").setGain(0.05f);
         soundCache.playSoundSource("test");
 
-        Translate translate = (Translate) glFontEffectCache.getEffectBase("Translate1");
-        translate.setX(translate.getX() + 0.1f);
+//        Translate translate = (Translate) glFontEffectCache.getEffectBase("Translate1");
+//        translate.setX(translate.getX() + 0.1f);
 
 //        SplitObject splitObject = (SplitObject) gl1EffectCache.getEffectBase("SplitObject1");
 //        splitObject.setOffsetY(splitObject.getOffsetY() + 1);

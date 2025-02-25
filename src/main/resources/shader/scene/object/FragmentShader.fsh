@@ -12,8 +12,12 @@ uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
 
 uniform sampler2D textureSampler;
+uniform int blendMode;
+
+#include "shader/frameBuffer/util/Blend.glsl"
 
 void main()
 {
-    fragColor = texture(textureSampler, outTexture) + outColor;
+    vec4 texColor = texture(textureSampler, outTexture);
+    fragColor = blend(texColor, outColor, blendMode);
 }

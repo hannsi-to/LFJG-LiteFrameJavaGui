@@ -15,8 +15,6 @@ import org.lwjgl.opengl.GL30;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.lwjgl.opengl.GL11.*;
-
 /**
  * Class representing a font renderer in OpenGL.
  */
@@ -131,13 +129,10 @@ public class GLFont extends GLRect {
     @Override
     public void draw() {
         frameBuffer.bindFrameBuffer();
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         batch.addText(text, x, y, scale, color);
         batch.flushBatch();
 
-        glDisable(GL_BLEND);
         frameBuffer.unbindFrameBuffer();
 
         getGlUtil().addGLTarget(GL30.GL_TEXTURE_2D);

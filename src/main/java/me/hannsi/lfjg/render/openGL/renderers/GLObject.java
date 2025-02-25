@@ -92,6 +92,7 @@ public class GLObject implements Cloneable {
         viewMatrix = null;
         vaoRendering.cleanup();
         glUtil.cleanup();
+        blendType = null;
     }
 
     /**
@@ -113,6 +114,7 @@ public class GLObject implements Cloneable {
         viewMatrix = new Matrix4f();
 
         glUtil = new GLUtil();
+        blendType = BlendType.Normal;
     }
 
     /**
@@ -146,7 +148,8 @@ public class GLObject implements Cloneable {
 
         glUtil.addGLTarget(GL30.GL_BLEND);
         glUtil.addGLTarget(GL30.GL_DEPTH_TEST, true);
-        GL30.glBlendFunc(GL30.GL_SRC_ALPHA, GL30.GL_ONE_MINUS_SRC_ALPHA);
+        GL30.glBlendFunc(blendType.getSfactor(), blendType.getDfactor());
+        GL30.glBlendEquation(blendType.getEquation());
         glUtil.enableTargets();
 
         vaoRendering.draw(this);
@@ -209,13 +212,6 @@ public class GLObject implements Cloneable {
      */
     public EffectBase getEffectBase(int index) {
         return effectCache.getEffectBase(index);
-    }
-
-    /**
-     * Sets the effect base for the GLObject.
-     */
-    public void setEffectBase() {
-        // Implementation needed
     }
 
     /**
