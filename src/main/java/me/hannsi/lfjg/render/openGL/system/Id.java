@@ -19,4 +19,6 @@ public class Id {
      * The latest ID assigned to an OpenGL object.
      */
     public static long glLatestObjectId = initialGLObjectId;
+    public static long latestEffectCacheId = initialEffectCacheId;
+    public static long latestAnimationCacheId = initialAnimationCacheId;
 }
