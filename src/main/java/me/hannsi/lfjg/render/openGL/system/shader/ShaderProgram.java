@@ -278,6 +278,52 @@ public class ShaderProgram {
         glUniform4f(uniformId, color.getRedF(), color.getGreenF(), color.getBlueF(), color.getAlphaF());
     }
 
+    public void setUniform(String name, Object... values) {
+        if (values.length == 1) {
+            if (values[0] instanceof Boolean) {
+                setUniform(name, (boolean) values[0]);
+            } else if (values[0] instanceof Matrix4f) {
+                setUniform(name, (Matrix4f) values[0]);
+            } else if (values[0] instanceof FloatBuffer) {
+                setUniform(name, (FloatBuffer) values[0]);
+            } else if (values[0] instanceof Float) {
+                setUniform(name, (float) values[0]);
+            } else if (values[0] instanceof Vector2f) {
+                setUniform(name, (Vector2f) values[0]);
+            } else if (values[0] instanceof Vector3f) {
+                setUniform(name, (Vector3f) values[0]);
+            } else if (values[0] instanceof Integer) {
+                setUniform(name, (int) values[0]);
+            } else if (values[0] instanceof Vector4f) {
+                setUniform(name, (Vector4f) values[0]);
+            } else if (values[0] instanceof Color) {
+                setUniform(name, (Color) values[0]);
+            } else {
+                throw new RuntimeException(values[0].getClass().getName() + " type is not supported.");
+            }
+        } else if (values.length == 2) {
+            if (values[0] instanceof Float && values[1] instanceof Float) {
+                setUniform(name, (float) values[0], (float) values[1]);
+            } else {
+                throw new RuntimeException(values[0].getClass().getName() + ", " + values[1].getClass().getName() + " types are not supported.");
+            }
+        } else if (values.length == 3) {
+            if (values[0] instanceof Float && values[1] instanceof Float && values[2] instanceof Float) {
+                setUniform(name, (float) values[0], (float) values[1], (float) values[2]);
+            } else {
+                throw new RuntimeException(values[0].getClass().getName() + ", " + values[1].getClass().getName() + ", " + values[2].getClass().getName() + " types are not supported.");
+            }
+        } else if (values.length == 4) {
+            if (values[0] instanceof Float && values[1] instanceof Float && values[2] instanceof Float && values[3] instanceof Float) {
+                setUniform(name, (float) values[0], (float) values[1], (float) values[2], (float) values[3]);
+            } else {
+                throw new RuntimeException(values[0].getClass().getName() + ", " + values[1].getClass().getName() + ", " + values[2].getClass().getName() + ", " + values[3].getClass().getName() + " types are not supported.");
+            }
+        } else {
+            throw new RuntimeException("Number of arguments is not supported.");
+        }
+    }
+
     /**
      * Binds the shader program for use.
      */
