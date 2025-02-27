@@ -7,11 +7,11 @@ import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.openGL.system.rendering.SplitFrameBuffer;
 
 public class SplitObject extends EffectBase {
+    private final EffectCache effectCache;
     private int rows;
     private int cols;
     private int offsetX;
     private int offsetY;
-    private final EffectCache effectCache;
     private SplitFrameBuffer splitFrameBuffer;
 
     public SplitObject(int rows, int cols, int offsetX, int offsetY) {
@@ -63,8 +63,10 @@ public class SplitObject extends EffectBase {
         if (splitFrameBuffer == null) {
             splitFrameBuffer = new SplitFrameBuffer(getFrameBuffer(), cols, rows, offsetX, offsetY);
             splitFrameBuffer.createSmallFrameBuffers();
-            splitFrameBuffer.blitToSmallFrameBuffers();
         }
+
+        splitFrameBuffer.setMainFrameBuffer(getFrameBuffer());
+        splitFrameBuffer.blitToSmallFrameBuffers();
 
         FrameBuffer[][] smallFrameBuffers = splitFrameBuffer.getSmallFrameBuffers();
         int ox = 0;
