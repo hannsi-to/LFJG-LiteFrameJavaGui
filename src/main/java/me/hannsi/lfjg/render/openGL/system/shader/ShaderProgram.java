@@ -6,7 +6,7 @@ import me.hannsi.lfjg.debug.exceptions.shader.CreatingShaderException;
 import me.hannsi.lfjg.debug.exceptions.shader.CreatingShaderProgramException;
 import me.hannsi.lfjg.debug.exceptions.shader.LinkingShaderException;
 import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.FileLocation;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -57,10 +57,10 @@ public class ShaderProgram {
     /**
      * Creates a vertex shader from the specified resource location.
      *
-     * @param resourcesLocation the location of the vertex shader resource
+     * @param fileLocation the location of the vertex shader resource
      */
-    public void createVertexShader(ResourcesLocation resourcesLocation) {
-        GLSLCode glslCode = new GLSLCode(resourcesLocation);
+    public void createVertexShader(FileLocation fileLocation) {
+        GLSLCode glslCode = new GLSLCode(fileLocation);
         String shaderCode = glslCode.createCode();
 
         vertexShaderId = createShader(shaderCode, GL_VERTEX_SHADER);
@@ -69,10 +69,10 @@ public class ShaderProgram {
     /**
      * Creates a fragment shader from the specified resource location.
      *
-     * @param resourcesLocation the location of the fragment shader resource
+     * @param fileLocation the location of the fragment shader resource
      */
-    public void createFragmentShader(ResourcesLocation resourcesLocation) {
-        GLSLCode glslCode = new GLSLCode(resourcesLocation);
+    public void createFragmentShader(FileLocation fileLocation) {
+        GLSLCode glslCode = new GLSLCode(fileLocation);
         String shaderCode = glslCode.createCode();
 
         fragmentShaderId = createShader(shaderCode, GL_FRAGMENT_SHADER);

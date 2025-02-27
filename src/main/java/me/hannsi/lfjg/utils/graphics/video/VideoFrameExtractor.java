@@ -8,18 +8,18 @@ import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.time.TimeCalculator;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.Java2DFrameConverter;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.nio.ShortBuffer;
 
 /**
  * Class for extracting video frames and audio data from a video file.
  */
 public class VideoFrameExtractor {
     private final ResourcesLocation videoFileLocation;
-    private final int threadCount = 4;
+    private final int threadCount = 100;
     private Frame frame;
     private FFmpegFrameGrabber fFmpegFrameGrabber;
     private Java2DFrameConverter java2DFrameConverter;
@@ -48,7 +48,6 @@ public class VideoFrameExtractor {
             try (FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(videoFileLocation.getPath()); Java2DFrameConverter converter = new Java2DFrameConverter()) {
                 grabber.setOption("threads", String.valueOf(threadCount));
                 grabber.setOption("avioflags", "direct");
-                grabber.setFrameRate(grabber.getFrameRate());
 
                 try {
                     grabber.start();
@@ -58,25 +57,16 @@ public class VideoFrameExtractor {
                     double totalDuration = grabber.getLengthInTime() / 1000000.0;
 
                     while ((frame = grabber.grab()) != null) {
-                        while (videoCache.getFrames().size() > 120) {
-                        }
+//                        while (videoCache.getFrames().size() > grabber.getFrameRate() * 4) {
+//                        }
 
                         BufferedImage image = converter.convert(frame);
-                        ShortBuffer samplesBuffer = null;
-                        int sampleRate = -1;
-                        int channels = -1;
-
-                        if ((frame = grabber.grabSamples()) != null) {
-                            samplesBuffer = (ShortBuffer) frame.samples[0];
-                            sampleRate = grabber.getSampleRate();
-                            channels = grabber.getAudioChannels();
-                        }
 
                         if (image == null) {
                             continue;
                         }
 
-                        videoCache.createCache(new FrameData(image), new AudioData(samplesBuffer, sampleRate, channels));
+                        videoCache.createCache(new FrameData(image), null);
 
                         frameCount++;
 
@@ -114,25 +104,32 @@ public class VideoFrameExtractor {
      *
      * @return the next frame data
      */
-    public FrameData frame() {
+    public VideoCache.Frame frame() {
         if (videoCache.getFrames().isEmpty()) {
             return null;
         }
 
-        if (finished) {
+        if (finished && videoCache.getFrames().isEmpty()) {
             cleanup();
             return null;
         }
 
-        FrameData frameData = videoCache.getFrames().get(0).getFrameData();
+        VideoCache.Frame frame = videoCache.getFrames().get(0);
         videoCache.getFrames().remove(0);
 
-        return frameData;
+        return frame;
     }
 
     public void cleanup() {
-        videoCache.cleanup();
-        videoFileLocation.cleanup();
+        try {
+            videoCache.cleanup();
+            videoFileLocation.cleanup();
+            frame.close();
+            fFmpegFrameGrabber.close();
+            java2DFrameConverter.close();
+        } catch (FrameGrabber.Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

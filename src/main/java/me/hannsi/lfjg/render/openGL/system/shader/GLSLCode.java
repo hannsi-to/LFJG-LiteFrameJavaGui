@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.render.openGL.system.shader;
 
 import me.hannsi.lfjg.utils.buffer.ByteUtil;
+import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 
 import java.util.regex.Matcher;
@@ -11,21 +12,21 @@ import java.util.regex.Pattern;
  * This class handles the inclusion of other shader files within a shader code.
  */
 public class GLSLCode {
-    private final ResourcesLocation resourcesLocation;
+    private final FileLocation fileLocation;
     private boolean checkInclude;
 
     /**
      * Constructs a new GLSLCode instance with the specified resource location.
      *
-     * @param resourcesLocation the location of the shader resource
+     * @param fileLocation the location of the shader resource
      */
-    public GLSLCode(ResourcesLocation resourcesLocation) {
-        this.resourcesLocation = resourcesLocation;
+    public GLSLCode(FileLocation fileLocation) {
+        this.fileLocation = fileLocation;
         checkInclude = true;
     }
 
     public void cleanup() {
-        resourcesLocation.cleanup();
+        fileLocation.cleanup();
     }
 
     /**
@@ -61,7 +62,7 @@ public class GLSLCode {
      * @return the final shader code
      */
     public String createCode() {
-        String shaderCode = ByteUtil.readInputStreamToString(resourcesLocation.getInputStream());
+        String shaderCode = ByteUtil.readInputStreamToString(fileLocation.getInputStream());
         shaderCode = processIncludes(shaderCode);
 
         return shaderCode;
@@ -72,7 +73,7 @@ public class GLSLCode {
      *
      * @return the resource location of the shader
      */
-    public ResourcesLocation getResourcesLocation() {
-        return resourcesLocation;
+    public FileLocation getFileLocation() {
+        return fileLocation;
     }
 }

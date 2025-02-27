@@ -12,7 +12,7 @@ import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.openGL.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
 import me.hannsi.lfjg.utils.graphics.GLUtil;
-import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.type.types.BlendType;
 import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.joml.Matrix4f;
@@ -31,8 +31,8 @@ public class GLObject implements Cloneable {
     private FrameBuffer frameBuffer;
 
     private ShaderProgram shaderProgram;
-    private ResourcesLocation vertexShader;
-    private ResourcesLocation fragmentShader;
+    private FileLocation vertexShader;
+    private FileLocation fragmentShader;
 
     private Matrix4f modelMatrix;
     private Matrix4f viewMatrix;
@@ -305,7 +305,7 @@ public class GLObject implements Cloneable {
      *
      * @return the vertex shader location of the GLObject
      */
-    public ResourcesLocation getVertexShader() {
+    public FileLocation getVertexShader() {
         return vertexShader;
     }
 
@@ -315,7 +315,7 @@ public class GLObject implements Cloneable {
      * @param vertexShader the vertex shader location to set
      * @return the GLObject instance
      */
-    public GLObject setVertexShader(ResourcesLocation vertexShader) {
+    public GLObject setVertexShader(FileLocation vertexShader) {
         this.vertexShader = vertexShader;
 
         return this;
@@ -326,7 +326,7 @@ public class GLObject implements Cloneable {
      *
      * @return the fragment shader location of the GLObject
      */
-    public ResourcesLocation getFragmentShader() {
+    public FileLocation getFragmentShader() {
         return fragmentShader;
     }
 
@@ -336,7 +336,7 @@ public class GLObject implements Cloneable {
      * @param fragmentShader the fragment shader location to set
      * @return the GLObject instance
      */
-    public GLObject setFragmentShader(ResourcesLocation fragmentShader) {
+    public GLObject setFragmentShader(FileLocation fragmentShader) {
         this.fragmentShader = fragmentShader;
 
         return this;

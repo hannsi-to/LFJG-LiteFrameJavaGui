@@ -18,6 +18,7 @@ import me.hannsi.lfjg.render.openGL.renderers.font.GLFont;
 import me.hannsi.lfjg.render.openGL.renderers.model.Object3DCacheRender;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLTriangle;
+import me.hannsi.lfjg.render.openGL.renderers.shader.GLShader;
 import me.hannsi.lfjg.render.openGL.system.font.CFont;
 import me.hannsi.lfjg.render.openGL.system.font.FontCache;
 import me.hannsi.lfjg.render.openGL.system.font.UnicodeRange;
@@ -47,6 +48,7 @@ public class TestGuiFrame implements LFJGFrame {
     GLFont glFont;
     GLRect gl2;
     GLTriangle glTriangle;
+    GLShader glShader;
     GLObjectCache glObjectCache;
     TextureCache textureCache;
 
@@ -54,6 +56,8 @@ public class TestGuiFrame implements LFJGFrame {
     EffectCache glFontEffectCache;
     EffectCache glTriangleEffectCache;
     EffectCache gl1SplitObjectEffectCache;
+    EffectCache glShaderEffectCache;
+    EffectCache glShaderSplitObjectEffectCache;
 
     AnimationCache gl1AnimationCache;
     FontCache fontCache;
@@ -111,6 +115,7 @@ public class TestGuiFrame implements LFJGFrame {
         glObjectCache.createCache(gl1);
         glObjectCache.createCache(glFont);
         glObjectCache.createCache(glTriangle);
+        glObjectCache.createCache(glShader);
 
         soundCacheInit();
         effectCacheInit();
@@ -157,6 +162,9 @@ public class TestGuiFrame implements LFJGFrame {
 
         glTriangle = new GLTriangle("test3");
         glTriangle.triangle(0, 0, 500, 0, 250, 500, Color.of(255, 255, 255, alpha), Color.of(255, 255, 0, alpha), Color.of(255, 255, 255, alpha));
+
+        glShader = new GLShader("Shader1");
+        glShader.shader(new ResourcesLocation("shader/test/test.fsh"), 0, 0, frame.getWindowWidth(), frame.getWindowHeight());
     }
 
     public void effectCacheInit() {
@@ -168,6 +176,8 @@ public class TestGuiFrame implements LFJGFrame {
         gl1SplitObjectEffectCache = new EffectCache();
         glFontEffectCache = new EffectCache();
         glTriangleEffectCache = new EffectCache();
+        glShaderEffectCache = new EffectCache();
+        glShaderSplitObjectEffectCache = new EffectCache();
 
         gl1SplitObjectEffectCache.createCache("Rotate1", new Rotate(0, 0, MathHelper.toRadians(0), true));
 
@@ -199,18 +209,22 @@ public class TestGuiFrame implements LFJGFrame {
 
         glTriangleEffectCache.createCache("DrawObject1", new DrawObject());
 
+        glShaderSplitObjectEffectCache.createCache("Rotate1", new Rotate(0, 0, MathHelper.toRadians(0), true));
+
+        glShaderEffectCache.createCache("DrawObject1", new DrawObject());
+        glShaderEffectCache.createCache("SplitObject1", new SplitObject(20, 20, 5, 5, glShaderSplitObjectEffectCache));
+
         gl1EffectCache.create(gl1);
         gl1SplitObjectEffectCache.create(gl1);
         glFontEffectCache.create(glFont);
         glTriangleEffectCache.create(glTriangle);
-
-        BlendType blendType = BlendType.PremultipliedAlpha;
+        glShaderEffectCache.create(glShader);
+        glShaderSplitObjectEffectCache.create(glShader);
 
         gl1.setEffectCache(gl1EffectCache);
         glFont.setEffectCache(glFontEffectCache);
-        glFont.setBlendType(blendType);
         glTriangle.setEffectCache(glTriangleEffectCache);
-        glFont.setBlendType(blendType);
+        glShader.setEffectCache(glShaderEffectCache);
     }
 
     public void animationCacheInit() {
@@ -244,8 +258,8 @@ public class TestGuiFrame implements LFJGFrame {
 //        Translate translate = (Translate) glFontEffectCache.getEffectBase("Translate1");
 //        translate.setX(translate.getX() + 0.1f);
 
-//        SplitObject splitObject = (SplitObject) gl1EffectCache.getEffectBase("SplitObject1");
-//        splitObject.setOffsetY(splitObject.getOffsetY() + 1);
+        Rotate rotate = (Rotate) glShaderSplitObjectEffectCache.getEffectBase("Rotate1");
+        rotate.setZ(rotate.getZ() + 0.01f);
 
         glObjectCache.draw();
 

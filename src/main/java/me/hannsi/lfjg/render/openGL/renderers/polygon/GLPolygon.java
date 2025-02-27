@@ -3,6 +3,7 @@ package me.hannsi.lfjg.render.openGL.renderers.polygon;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.render.openGL.system.Mesh;
 import me.hannsi.lfjg.utils.graphics.color.Color;
+import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.joml.Vector2f;
@@ -122,10 +123,18 @@ public class GLPolygon extends GLObject {
      * Renders the polygon.
      */
     public void rendering() {
+        rendering(new ResourcesLocation("shader/scene/object/VertexShader.vsh"), new ResourcesLocation("shader/scene/object/FragmentShader.fsh"));
+    }
+
+    public void rendering(boolean isFragmentShaderPath, FileLocation fileLocation) {
+        rendering(isFragmentShaderPath ? new ResourcesLocation("shader/scene/object/VertexShader.vsh") : fileLocation, isFragmentShaderPath ? fileLocation : new ResourcesLocation("shader/scene/object/FragmentShader.fsh"));
+    }
+
+    public void rendering(FileLocation vertexShaderPath, FileLocation fragmentShaderPath) {
         Mesh mesh = new Mesh(ProjectionType.OrthographicProjection, vertex, color, texture);
 
-        setVertexShader(new ResourcesLocation("shader/scene/object/VertexShader.vsh"));
-        setFragmentShader(new ResourcesLocation("shader/scene/object/FragmentShader.fsh"));
+        setVertexShader(vertexShaderPath);
+        setFragmentShader(fragmentShaderPath);
         setMesh(mesh);
 
         float[] bounds = getBounds();

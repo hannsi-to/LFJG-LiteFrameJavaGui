@@ -84,6 +84,8 @@ public class SplitObject extends EffectBase {
 
                     DrawFrameBuffer drawFrameBuffer = (DrawFrameBuffer) effectCache.getEffectBase("DrawFrameBuffer1");
                     drawFrameBuffer.setFrameBuffer(smallFrameBuffer);
+                    drawFrameBuffer.setTranslateX(ox);
+                    drawFrameBuffer.setTranslateY(oy);
                     effectCache.frameBuffer(baseGLObject);
                 }
 
