@@ -7,10 +7,7 @@ import me.hannsi.lfjg.debug.exceptions.shader.CreatingShaderProgramException;
 import me.hannsi.lfjg.debug.exceptions.shader.LinkingShaderException;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
-import org.joml.Matrix4f;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
+import org.joml.*;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.FloatBuffer;
@@ -239,6 +236,42 @@ public class ShaderProgram {
         glUniform1i(uniformId, value);
     }
 
+    public void setUniform2i(String name, int value1, int value2) {
+        int uniformId = glGetUniformLocation(programId, name);
+
+        glUniform2i(uniformId, value1, value2);
+    }
+
+    public void setUniform3i(String name, int value1, int value2, int value3) {
+        int uniformId = glGetUniformLocation(programId, name);
+
+        glUniform3i(uniformId, value1, value2, value3);
+    }
+
+    public void setUniform4i(String name, int value1, int value2, int value3, int value4) {
+        int uniformId = glGetUniformLocation(programId, name);
+
+        glUniform4i(uniformId, value1, value2, value3, value4);
+    }
+
+    public void setUniform(String name, Vector2i value) {
+        int uniformId = glGetUniformLocation(programId, name);
+
+        glUniform2i(uniformId, value.x, value.y);
+    }
+
+    public void setUniform(String name, Vector3i value) {
+        int uniformId = glGetUniformLocation(programId, name);
+
+        glUniform3i(uniformId, value.x, value.y, value.z);
+    }
+
+    public void setUniform(String name, Vector4i value) {
+        int uniformId = glGetUniformLocation(programId, name);
+
+        glUniform4i(uniformId, value.x, value.y, value.z, value.w);
+    }
+
     /**
      * Sets a Vector4f uniform in the shader program.
      *
@@ -292,10 +325,16 @@ public class ShaderProgram {
                 setUniform(name, (Vector2f) values[0]);
             } else if (values[0] instanceof Vector3f) {
                 setUniform(name, (Vector3f) values[0]);
-            } else if (values[0] instanceof Integer) {
-                setUniform(name, (int) values[0]);
             } else if (values[0] instanceof Vector4f) {
                 setUniform(name, (Vector4f) values[0]);
+            } else if (values[0] instanceof Integer) {
+                setUniform1i(name, (int) values[0]);
+            } else if (values[0] instanceof Vector2i) {
+                setUniform(name, (Vector2i) values[0]);
+            } else if (values[0] instanceof Vector3i) {
+                setUniform(name, (Vector3i) values[0]);
+            } else if (values[0] instanceof Vector4i) {
+                setUniform(name, (Vector4i) values[0]);
             } else if (values[0] instanceof Color) {
                 setUniform(name, (Color) values[0]);
             } else {
@@ -304,18 +343,25 @@ public class ShaderProgram {
         } else if (values.length == 2) {
             if (values[0] instanceof Float && values[1] instanceof Float) {
                 setUniform(name, (float) values[0], (float) values[1]);
+            } else if (values[0] instanceof Integer && values[1] instanceof Integer) {
+                setUniform2i(name, (int) values[0], (int) values[1]);
             } else {
                 throw new RuntimeException(values[0].getClass().getName() + ", " + values[1].getClass().getName() + " types are not supported.");
             }
+
         } else if (values.length == 3) {
             if (values[0] instanceof Float && values[1] instanceof Float && values[2] instanceof Float) {
                 setUniform(name, (float) values[0], (float) values[1], (float) values[2]);
+            } else if (values[0] instanceof Integer && values[1] instanceof Integer && values[2] instanceof Integer) {
+                setUniform3i(name, (int) values[0], (int) values[1], (int) values[2]);
             } else {
                 throw new RuntimeException(values[0].getClass().getName() + ", " + values[1].getClass().getName() + ", " + values[2].getClass().getName() + " types are not supported.");
             }
         } else if (values.length == 4) {
             if (values[0] instanceof Float && values[1] instanceof Float && values[2] instanceof Float && values[3] instanceof Float) {
                 setUniform(name, (float) values[0], (float) values[1], (float) values[2], (float) values[3]);
+            } else if (values[0] instanceof Integer && values[1] instanceof Integer && values[2] instanceof Integer && values[3] instanceof Integer) {
+                setUniform4i(name, (int) values[0], (int) values[1], (int) values[2], (int) values[3]);
             } else {
                 throw new RuntimeException(values[0].getClass().getName() + ", " + values[1].getClass().getName() + ", " + values[2].getClass().getName() + ", " + values[3].getClass().getName() + " types are not supported.");
             }
