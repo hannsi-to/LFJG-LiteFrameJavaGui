@@ -8,24 +8,14 @@ import me.hannsi.lfjg.render.openGL.system.Id;
 import java.util.LinkedHashMap;
 
 public class AnimationCache {
-    public static long latestAnimationCacheId;
     private LinkedHashMap<AnimationBase, Long> animationBases;
 
     public AnimationCache() {
         this.animationBases = new LinkedHashMap<>();
-        latestAnimationCacheId = Id.initialAnimationCacheId;
-    }
-
-    public static long getLatestAnimationCacheId() {
-        return latestAnimationCacheId;
-    }
-
-    public static void setLatestAnimationCacheId(long latestAnimationCacheId) {
-        AnimationCache.latestAnimationCacheId = latestAnimationCacheId;
     }
 
     public void createCache(AnimationBase animationBase) {
-        this.animationBases.put(animationBase, latestAnimationCacheId++);
+        this.animationBases.put(animationBase, Id.latestAnimationCacheId++);
 
         LogGenerator logGenerator = new LogGenerator("AnimationCache Debug Message", "Source: AnimationCache", "Type: Cache Creation", "ID: " + animationBase.getId(), "Severity: Info", "Message: Create animation cache: " + animationBase.getName());
         DebugLog.debug(getClass(), logGenerator.createLog());

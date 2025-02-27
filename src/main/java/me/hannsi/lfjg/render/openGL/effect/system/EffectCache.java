@@ -12,7 +12,6 @@ import java.util.*;
  * Class representing a cache for OpenGL effects.
  */
 public class EffectCache {
-    public static long latestEffectCacheId;
     private LinkedHashMap<EffectBase, Identifier> effectBases;
 
     /**
@@ -20,7 +19,6 @@ public class EffectCache {
      */
     public EffectCache() {
         this.effectBases = new LinkedHashMap<>();
-        latestEffectCacheId = Id.initialEffectCacheId;
     }
 
     /**
@@ -78,7 +76,7 @@ public class EffectCache {
      * @param effectBase the effect to cache
      */
     public void createCache(String name, EffectBase effectBase) {
-        this.effectBases.put(effectBase, new Identifier(name, latestEffectCacheId++));
+        this.effectBases.put(effectBase, new Identifier(name, Id.latestEffectCacheId++));
 
         LogGenerator logGenerator = new LogGenerator("EffectCache Debug Message", "Source: EffectCache", "Type: Cache Creation", "ID: " + effectBase.getId(), "Severity: Info", "Message: Create effect cache: " + effectBase.getName());
 
@@ -91,7 +89,7 @@ public class EffectCache {
         int i = 0;
         for (Map.Entry<EffectBase, Identifier> effectBaseIdentifierEntry : effectBases.entrySet()) {
             if (i == index) {
-                newEffectCache.put(effectBase, new Identifier(name, latestEffectCacheId++));
+                newEffectCache.put(effectBase, new Identifier(name, Id.latestEffectCacheId++));
             }
 
             newEffectCache.put(effectBaseIdentifierEntry.getKey(), effectBaseIdentifierEntry.getValue());
