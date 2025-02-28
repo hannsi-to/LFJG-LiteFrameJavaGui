@@ -167,7 +167,6 @@ public class Rotate extends EffectBase {
 
         getFrameBuffer().getModelMatrix().translate(cx, cy, cz).rotateXYZ(x, y, z).translate(-cx, -cy, -cz);
         getFrameBuffer().drawFrameBuffer();
-        getFrameBuffer().getModelMatrix().translate(cx, cy, cz).rotateXYZ(-x, -y, -z).translate(-cx, -cy, -cz);
 
         super.frameBuffer(baseGLObject);
     }

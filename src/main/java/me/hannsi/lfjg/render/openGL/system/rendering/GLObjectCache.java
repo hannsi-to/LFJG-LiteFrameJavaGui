@@ -80,6 +80,15 @@ public class GLObjectCache {
         return null;
     }
 
+    public GLObject getGLObject(String name) {
+        for (GLObject glObject : glObjects) {
+            if (glObject.getName().equals(name)) {
+                return glObject;
+            }
+        }
+        return null;
+    }
+
     /**
      * Gets the list of cached GLObjects.
      *

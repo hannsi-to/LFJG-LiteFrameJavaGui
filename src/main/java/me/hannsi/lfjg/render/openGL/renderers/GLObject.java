@@ -18,6 +18,8 @@ import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL30;
 
+import java.util.Map;
+
 /**
  * Represents an OpenGL object with various properties and methods for rendering.
  */
@@ -121,6 +123,10 @@ public class GLObject implements Cloneable {
      * Draws the GLObject using the specified resolution and projection.
      */
     public void draw() {
+        draw(true);
+    }
+
+    public void draw(boolean autoUpdateMatrix) {
         frameBuffer.bindFrameBuffer();
         GL30.glPushMatrix();
 
@@ -172,9 +178,20 @@ public class GLObject implements Cloneable {
             frameBuffer.drawFrameBuffer();
         }
 
+        if (autoUpdateMatrix) {
+            updateMatrix();
+        }
+
         if (animationCache != null) {
             animationCache.loop(this);
         }
+    }
+
+    public void updateMatrix() {
+        for (Map.Entry<EffectBase, EffectCache.Identifier> effectBaseIdentifierEntry : effectCache.getEffectBases().entrySet()) {
+            effectBaseIdentifierEntry.getKey().getFrameBuffer().setModelMatrix(new Matrix4f());
+        }
+        frameBuffer.setModelMatrix(new Matrix4f());
     }
 
     public GLObject copy(String objectName) {

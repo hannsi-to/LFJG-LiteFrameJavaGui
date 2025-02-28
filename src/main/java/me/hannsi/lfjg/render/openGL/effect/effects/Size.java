@@ -7,10 +7,10 @@ import me.hannsi.lfjg.render.openGL.renderers.GLObject;
  * Class representing a Size effect in OpenGL.
  */
 public class Size extends EffectBase {
+    private final boolean autoCenter;
     private float x;
     private float y;
     private float z;
-    private final boolean autoCenter;
     private float cx;
     private float cy;
     private float cz;
@@ -192,8 +192,6 @@ public class Size extends EffectBase {
 
         getFrameBuffer().getModelMatrix().translate(cx, cy, cz).scale(x, y, z).translate(cx, -cy, -cz);
         getFrameBuffer().drawFrameBuffer();
-        getFrameBuffer().getModelMatrix().translate(cx, cy, cz).scale(1 / x, 1 / y, 1 / z).translate(cx, -cy, -cz);
-
         super.frameBuffer(baseGLObject);
     }
 

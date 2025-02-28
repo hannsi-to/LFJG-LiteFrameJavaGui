@@ -188,8 +188,6 @@ public class FrameBuffer {
 
         GL30.glBlendFunc(GL30.GL_SRC_ALPHA, GL30.GL_ONE_MINUS_SRC_ALPHA);
 
-        bindTexture(textureUnit);
-
         if (uesStencil) {
             GL30.glClear(GL30.GL_STENCIL_BUFFER_BIT);
             GL30.glStencilFunc(GL30.GL_ALWAYS, 1, 0xff);
@@ -202,8 +200,8 @@ public class FrameBuffer {
             GL30.glStencilOp(GL30.GL_KEEP, GL30.GL_KEEP, GL30.GL_KEEP);
         }
 
+        bindTexture(textureUnit);
         vaoRendering.draw(mesh);
-
         unbindTexture(textureUnit);
 
         glUtil.disableTargets();

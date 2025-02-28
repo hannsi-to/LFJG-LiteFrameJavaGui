@@ -155,7 +155,7 @@ public class TestGuiFrame implements LFJGFrame {
         gl1.uv(0, 1, 1, 0);
         gl1.rectWH(0, 0, frame.getWindowWidth(), frame.getWindowHeight(), Color.of(0, 0, 0, 0));
 
-        int alpha = 100;
+        int alpha = 255;
         glFont = new GLFont("Font");
         glFont.setFont(fontCache, font, 64);
         glFont.font(TextFormat.SPASE_X + "{100}" + "字間を確認" + TextFormat.RESET + "字間を確認" + TextFormat.SPASE_Y + "{100}" + TextFormat.NEWLINE + TextFormat.RESET_POINT_X + TextFormat.RED + "Ka" + TextFormat.BOLD + "zu" + TextFormat.ITALIC + "bon" + "です!" + TextFormat.OBFUSCATED + "test sdaasd aaaa", 0, 200, 1f, Color.of(255, 255, 255, alpha));
@@ -183,7 +183,7 @@ public class TestGuiFrame implements LFJGFrame {
 
         gl1EffectCache.createCache("Texture1", new Texture(textureCache, image, BlendType.Normal));
         gl1EffectCache.createCache("DrawObject1", new DrawObject());
-        gl1EffectCache.createCache("SplitObject1", new SplitObject(4, 5, 5, 5, gl1SplitObjectEffectCache));
+//        gl1EffectCache.createCache("SplitObject1", new SplitObject(4, 5, 5, 5, gl1SplitObjectEffectCache));
 //        gl1EffectCache.createCache("Gradation1",new Gradation(resolution.x / 2, resolution.y / 2, (float) Math.toRadians(90), 0.2f, Gradation.ShapeMode.Rectangle, BlendType.Screen, new Color(50, 100, 200, 100), new Color(255, 255, 255, 255), 1f));
 //        gl1EffectCache.createCache(new Monochrome(resolution, 1f, new Color(255, 0, 255), true), gl1);
 //        gl1EffectCache.createCache(new ChromaticAberration(resolution, 0.002f, 90, 5f, ChromaticAberration.AberrationType.RedBlueB), gl1);
@@ -212,7 +212,8 @@ public class TestGuiFrame implements LFJGFrame {
         glShaderSplitObjectEffectCache.createCache("Rotate1", new Rotate(0, 0, MathHelper.toRadians(0), true));
 
         glShaderEffectCache.createCache("DrawObject1", new DrawObject());
-        glShaderEffectCache.createCache("SplitObject1", new SplitObject(20, 20, 5, 5, glShaderSplitObjectEffectCache));
+        glShaderEffectCache.createCache("ObjectClipping1", new ObjectClipping(glObjectCache, "test3", true));
+//        glShaderEffectCache.createCache("SplitObject1", new SplitObject(20, 20, 5, 5, glShaderSplitObjectEffectCache));
 
         gl1EffectCache.create(gl1);
         gl1SplitObjectEffectCache.create(gl1);
@@ -221,10 +222,10 @@ public class TestGuiFrame implements LFJGFrame {
         glShaderEffectCache.create(glShader);
         glShaderSplitObjectEffectCache.create(glShader);
 
+        glShader.setEffectCache(glShaderEffectCache);
         gl1.setEffectCache(gl1EffectCache);
         glFont.setEffectCache(glFontEffectCache);
         glTriangle.setEffectCache(glTriangleEffectCache);
-        glShader.setEffectCache(glShaderEffectCache);
     }
 
     public void animationCacheInit() {
