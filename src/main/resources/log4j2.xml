@@ -17,10 +17,10 @@
         <RollingFile name="logfile001" append="true" fileName="${logfile}"
                      filePattern="${logfile-archive}">
             <PatternLayout>
-                <pattern>${format2}</pattern>
+                <pattern>${format1}</pattern>
             </PatternLayout>
             <Policies>
-                <SizeBasedTriggeringPolicy size="1KB"/>
+                <SizeBasedTriggeringPolicy size="1GB"/>
             </Policies>
             <DefaultRolloverStrategy max="3"/>
         </RollingFile>
