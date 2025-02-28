@@ -43,9 +43,28 @@ public class GLObjectCache {
      * Draws all cached GLObjects with the specified resolution and projection.
      */
     public void draw() {
+        draw((String) null);
+    }
+
+    public void draw(String... ignoreGLObjectNames) {
         frameBuffer.bindFrameBuffer();
 
         for (GLObject glObject : glObjects) {
+            if (ignoreGLObjectNames != null) {
+                boolean ignore = false;
+
+                for (String ignoreGLObjectName : ignoreGLObjectNames) {
+                    if (glObject.getName().equals(ignoreGLObjectName)) {
+                        ignore = true;
+                        break;
+                    }
+                }
+
+                if (ignore) {
+                    continue;
+                }
+            }
+
             glObject.draw();
         }
 

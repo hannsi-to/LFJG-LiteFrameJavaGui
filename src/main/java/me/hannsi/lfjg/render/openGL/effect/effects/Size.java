@@ -192,6 +192,7 @@ public class Size extends EffectBase {
 
         getFrameBuffer().getModelMatrix().translate(cx, cy, cz).scale(x, y, z).translate(cx, -cy, -cz);
         getFrameBuffer().drawFrameBuffer();
+        getFrameBuffer().getModelMatrix().translate(cx, cy, cz).scale(-x, -y, -z).translate(cx, -cy, -cz);
         super.frameBuffer(baseGLObject);
     }
 

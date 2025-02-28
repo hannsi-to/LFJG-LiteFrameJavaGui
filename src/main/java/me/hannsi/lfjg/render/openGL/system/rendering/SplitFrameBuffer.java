@@ -37,7 +37,7 @@ public class SplitFrameBuffer {
         this.indexX = 0;
         this.indexY = 0;
         this.smallFrameBuffers = new FrameBuffer[rows][cols];
-        this.smallResolution = new Vector2f(LFJGContext.resolution.x() / cols, LFJGContext.resolution.y() / rows);
+        this.smallResolution = new Vector2f(mainFrameBuffer.getWidth() / cols, mainFrameBuffer.getHeight() / rows);
     }
 
     public SplitFrameBuffer(FrameBuffer mainFrameBuffer, int cols, int rows) {

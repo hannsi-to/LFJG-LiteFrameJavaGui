@@ -257,7 +257,7 @@ public class FrameBuffer {
      * Binds the frame buffer.
      */
     public void bindFrameBuffer() {
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBufferId);
+        bindFrameBufferNoClear();
         GL30.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT | GL30.GL_STENCIL_BUFFER_BIT);
     }

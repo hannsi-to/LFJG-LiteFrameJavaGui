@@ -262,7 +262,7 @@ public class TestGuiFrame implements LFJGFrame {
         Rotate rotate = (Rotate) glShaderSplitObjectEffectCache.getEffectBase("Rotate1");
         rotate.setZ(rotate.getZ() + 0.01f);
 
-        glObjectCache.draw();
+        glObjectCache.draw("test3");
 
 //        if (first <= 10) {
 //            imageCapture.saveImage("ScreenShot");

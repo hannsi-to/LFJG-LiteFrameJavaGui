@@ -107,6 +107,7 @@ public class Translate extends EffectBase {
     public void frameBuffer(GLObject baseGLObject) {
         getFrameBuffer().getModelMatrix().translate(x, y, z);
         getFrameBuffer().drawFrameBuffer();
+        getFrameBuffer().getModelMatrix().translate(-x, -y, -z);
         super.frameBuffer(baseGLObject);
     }
 

@@ -13,12 +13,17 @@ import java.util.*;
  */
 public class EffectCache {
     private LinkedHashMap<EffectBase, Identifier> effectBases;
+    private FrameBuffer endFrameBuffer;
 
     /**
      * Constructs a new EffectCache.
      */
     public EffectCache() {
         this.effectBases = new LinkedHashMap<>();
+
+        this.endFrameBuffer = new FrameBuffer();
+        this.endFrameBuffer.createFrameBuffer();
+        this.endFrameBuffer.createShaderProgram();
     }
 
     /**
@@ -183,7 +188,10 @@ public class EffectCache {
             effectBase.getFrameBuffer().getShaderProgramFBO().bind();
             effectBase.setUniform(glObject);
             effectBase.getFrameBuffer().getShaderProgramFBO().unbind();
+
+            endFrameBuffer.bindFrameBuffer();
             effectBase.frameBuffer(glObject);
+            endFrameBuffer.unbindFrameBuffer();
         }
         if (index != maxSize || effectBase.getName().equals("FrameBufferContents")) {
             Map.Entry<EffectBase, Identifier> nextEffectBase = getLinkedHashMapEntry(effectBases, index + 1);
@@ -221,6 +229,7 @@ public class EffectCache {
     public void cleanup() {
         effectBases.forEach((effectBase, id) -> effectBase.cleanup());
         effectBases.clear();
+        endFrameBuffer.cleanup();
     }
 
     /**
@@ -239,6 +248,14 @@ public class EffectCache {
      */
     public void setEffectBases(LinkedHashMap<EffectBase, Identifier> effectBases) {
         this.effectBases = effectBases;
+    }
+
+    public FrameBuffer getEndFrameBuffer() {
+        return endFrameBuffer;
+    }
+
+    public void setEndFrameBuffer(FrameBuffer endFrameBuffer) {
+        this.endFrameBuffer = endFrameBuffer;
     }
 
     public record Identifier(String name, long id) {

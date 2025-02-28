@@ -18,8 +18,6 @@ import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL30;
 
-import java.util.Map;
-
 /**
  * Represents an OpenGL object with various properties and methods for rendering.
  */
@@ -89,7 +87,6 @@ public class GLObject implements Cloneable {
         frameBuffer.cleanup();
         shaderProgram.cleanup();
         vertexShader.cleanup();
-        frameBuffer.cleanup();
         modelMatrix = null;
         viewMatrix = null;
         vaoRendering.cleanup();
@@ -126,7 +123,7 @@ public class GLObject implements Cloneable {
         draw(true);
     }
 
-    public void draw(boolean autoUpdateMatrix) {
+    public void draw(boolean autoDraw) {
         frameBuffer.bindFrameBuffer();
         GL30.glPushMatrix();
 
@@ -174,24 +171,23 @@ public class GLObject implements Cloneable {
 
         if (effectCache != null) {
             effectCache.frameBuffer(this);
-        } else {
-            frameBuffer.drawFrameBuffer();
-        }
-
-        if (autoUpdateMatrix) {
-            updateMatrix();
         }
 
         if (animationCache != null) {
             animationCache.loop(this);
         }
+
+        if (autoDraw) {
+            drawFrameBuffer();
+        }
     }
 
-    public void updateMatrix() {
-        for (Map.Entry<EffectBase, EffectCache.Identifier> effectBaseIdentifierEntry : effectCache.getEffectBases().entrySet()) {
-            effectBaseIdentifierEntry.getKey().getFrameBuffer().setModelMatrix(new Matrix4f());
+    public void drawFrameBuffer() {
+        if (effectCache != null) {
+            effectCache.getEndFrameBuffer().drawFrameBuffer();
+        } else {
+            frameBuffer.drawFrameBuffer();
         }
-        frameBuffer.setModelMatrix(new Matrix4f());
     }
 
     public GLObject copy(String objectName) {
