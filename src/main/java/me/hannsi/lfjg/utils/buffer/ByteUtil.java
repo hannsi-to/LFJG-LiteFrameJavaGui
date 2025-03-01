@@ -1,7 +1,19 @@
 package me.hannsi.lfjg.utils.buffer;
 
+import me.hannsi.lfjg.utils.math.MathHelper;
+import me.hannsi.lfjg.utils.reflection.FileLocation;
+import me.hannsi.lfjg.utils.reflection.URLLocation;
+
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
+import java.util.zip.GZIPInputStream;
+
+import static org.lwjgl.system.MemoryUtil.*;
 
 /**
  * Utility class for byte operations.
@@ -91,5 +103,82 @@ public class ByteUtil {
         }
 
         return out.toString(StandardCharsets.UTF_8);
+    }
+
+    public static ByteBuffer svgToByteBuffer(FileLocation fileLocation) {
+        ByteBuffer buffer = memAlloc(128 * 1024);
+        try (FileInputStream fis = new FileInputStream(fileLocation.getPath())) {
+            boolean isGzip = fileLocation.getPath().endsWith(".gz");
+
+            InputStream is = fis;
+            if (isGzip) {
+                is = new GZIPInputStream(is);
+            }
+
+            try (ReadableByteChannel rbc = Channels.newChannel(is)) {
+                while (true) {
+                    int bytesRead = rbc.read(buffer);
+                    if (bytesRead == -1) {
+                        break;
+                    }
+
+                    if (buffer.remaining() == 0) {
+                        buffer = memRealloc(buffer, (buffer.capacity() * 3) >> 1);
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            memFree(buffer);
+            throw new RuntimeException(e);
+        }
+
+        buffer.put((byte) 0);
+        buffer.flip();
+
+        return buffer;
+    }
+
+    public static ByteBuffer downloadSVG(URLLocation spec) {
+        ByteBuffer buffer = memAlloc(128 * 1024);
+        try {
+            URL url = spec.getURL();
+
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestProperty("Accept-Encoding", "gzip");
+            InputStream is = con.getInputStream();
+            if ("gzip".equals(con.getContentEncoding())) {
+                is = new GZIPInputStream(is);
+            }
+
+            try (ReadableByteChannel rbc = Channels.newChannel(is)) {
+                int c;
+                while ((c = rbc.read(buffer)) != -1) {
+                    if (c == 0) {
+                        buffer = memRealloc(buffer, (buffer.capacity() * 3) >> 1);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            memFree(buffer);
+            throw new RuntimeException(e);
+        }
+        buffer.put((byte) 0);
+        buffer.flip();
+
+        return buffer;
+    }
+
+    public static void premultiplyAlpha(ByteBuffer image, int w, int h, int stride) {
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
+                int i = y * stride + x * 4;
+
+                float alpha = (image.get(i + 3) & 0xFF) / 255.0f;
+                image.put(i, (byte) MathHelper.round(((image.get(i) & 0xFF) * alpha)));
+                image.put(i + 1, (byte) MathHelper.round(((image.get(i + 1) & 0xFF) * alpha)));
+                image.put(i + 2, (byte) MathHelper.round(((image.get(i + 2) & 0xFF) * alpha)));
+            }
+        }
     }
 }

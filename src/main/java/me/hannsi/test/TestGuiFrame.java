@@ -19,6 +19,7 @@ import me.hannsi.lfjg.render.openGL.renderers.model.Object3DCacheRender;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLTriangle;
 import me.hannsi.lfjg.render.openGL.renderers.shader.GLShader;
+import me.hannsi.lfjg.render.openGL.renderers.svg.GLSVG;
 import me.hannsi.lfjg.render.openGL.system.font.CFont;
 import me.hannsi.lfjg.render.openGL.system.font.FontCache;
 import me.hannsi.lfjg.render.openGL.system.font.UnicodeRange;
@@ -34,6 +35,7 @@ import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.math.TextFormat;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.URLLocation;
 import me.hannsi.lfjg.utils.type.types.*;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -49,6 +51,7 @@ public class TestGuiFrame implements LFJGFrame {
     GLRect gl2;
     GLTriangle glTriangle;
     GLShader glShader;
+    GLSVG glSVG;
     GLObjectCache glObjectCache;
     TextureCache textureCache;
 
@@ -116,6 +119,7 @@ public class TestGuiFrame implements LFJGFrame {
         glObjectCache.createCache(glFont);
         glObjectCache.createCache(glTriangle);
         glObjectCache.createCache(glShader);
+        glObjectCache.createCache(glSVG);
 
         soundCacheInit();
         effectCacheInit();
@@ -165,6 +169,10 @@ public class TestGuiFrame implements LFJGFrame {
 
         glShader = new GLShader("Shader1");
         glShader.shader(new ResourcesLocation("shader/test/test.fsh"), 0, 0, frame.getWindowWidth(), frame.getWindowHeight());
+
+        glSVG = new GLSVG("SVG1");
+        glSVG.svg(new ResourcesLocation("svg/delete.svg"), 100, 100, 5,5);
+        glSVG.setBlendType(BlendType.Normal);
     }
 
     public void effectCacheInit() {
@@ -261,6 +269,8 @@ public class TestGuiFrame implements LFJGFrame {
 
         Rotate rotate = (Rotate) glShaderSplitObjectEffectCache.getEffectBase("Rotate1");
         rotate.setZ(rotate.getZ() + 0.01f);
+
+        ((GLFont) glObjectCache.getGLObject(glFont.getObjectId())).setText(frame.getFps() + "");
 
         glObjectCache.draw("test3");
 
@@ -379,9 +389,9 @@ public class TestGuiFrame implements LFJGFrame {
 
     @Override
     public void setFrameSetting() {
-        frame.setFrameSettingValue(RefreshRateSetting.class, 120);
+        frame.setFrameSettingValue(RefreshRateSetting.class, GLFW.GLFW_DONT_CARE);
         frame.setFrameSettingValue(MonitorSetting.class, MonitorType.Window);
-        frame.setFrameSettingValue(VSyncSetting.class, VSyncType.VSyncOn);
+        frame.setFrameSettingValue(VSyncSetting.class, VSyncType.VSyncOff);
         frame.setFrameSettingValue(FloatingSetting.class, false);
         frame.setFrameSettingValue(IconSetting.class, new ResourcesLocation("salad_x32.png"));
         frame.setFrameSettingValue(AntiAliasingSetting.class, AntiAliasingType.OFF);
