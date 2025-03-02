@@ -11,6 +11,7 @@ import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
+import me.hannsi.lfjg.render.openGL.animation.animations.Bounce;
 import me.hannsi.lfjg.render.openGL.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.openGL.effect.effects.*;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
@@ -35,7 +36,6 @@ import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.math.TextFormat;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import me.hannsi.lfjg.utils.reflection.URLLocation;
 import me.hannsi.lfjg.utils.type.types.*;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -61,6 +61,7 @@ public class TestGuiFrame implements LFJGFrame {
     EffectCache gl1SplitObjectEffectCache;
     EffectCache glShaderEffectCache;
     EffectCache glShaderSplitObjectEffectCache;
+    EffectCache glSVGEffectCache;
 
     AnimationCache gl1AnimationCache;
     FontCache fontCache;
@@ -114,11 +115,10 @@ public class TestGuiFrame implements LFJGFrame {
         objectInit();
 
         glObjectCache = new GLObjectCache();
-//        glObjectCache.createCache(gl2);
-        glObjectCache.createCache(gl1);
-        glObjectCache.createCache(glFont);
-        glObjectCache.createCache(glTriangle);
-        glObjectCache.createCache(glShader);
+//        glObjectCache.createCache(gl1);
+//        glObjectCache.createCache(glFont);
+//        glObjectCache.createCache(glTriangle);
+//        glObjectCache.createCache(glShader);
         glObjectCache.createCache(glSVG);
 
         soundCacheInit();
@@ -171,7 +171,7 @@ public class TestGuiFrame implements LFJGFrame {
         glShader.shader(new ResourcesLocation("shader/test/test.fsh"), 0, 0, frame.getWindowWidth(), frame.getWindowHeight());
 
         glSVG = new GLSVG("SVG1");
-        glSVG.svg(new ResourcesLocation("svg/delete.svg"), 100, 100, 5,5);
+        glSVG.svg(new ResourcesLocation("svg/delete.svg"), 100, 100, 5, 5);
         glSVG.setBlendType(BlendType.Normal);
     }
 
@@ -186,6 +186,7 @@ public class TestGuiFrame implements LFJGFrame {
         glTriangleEffectCache = new EffectCache();
         glShaderEffectCache = new EffectCache();
         glShaderSplitObjectEffectCache = new EffectCache();
+        glSVGEffectCache = new EffectCache();
 
         gl1SplitObjectEffectCache.createCache("Rotate1", new Rotate(0, 0, MathHelper.toRadians(0), true));
 
@@ -223,23 +224,28 @@ public class TestGuiFrame implements LFJGFrame {
         glShaderEffectCache.createCache("ObjectClipping1", new ObjectClipping(glObjectCache, "test3", true));
 //        glShaderEffectCache.createCache("SplitObject1", new SplitObject(20, 20, 5, 5, glShaderSplitObjectEffectCache));
 
+        glSVGEffectCache.createCache("DrawObject1", new DrawObject());
+        glSVGEffectCache.createCache("ColorChanger1", new ColorChanger(Color.of(227, 227, 227), Color.RED));
+
         gl1EffectCache.create(gl1);
         gl1SplitObjectEffectCache.create(gl1);
         glFontEffectCache.create(glFont);
         glTriangleEffectCache.create(glTriangle);
         glShaderEffectCache.create(glShader);
         glShaderSplitObjectEffectCache.create(glShader);
+        glSVGEffectCache.create(glSVG);
 
         glShader.setEffectCache(glShaderEffectCache);
         gl1.setEffectCache(gl1EffectCache);
         glFont.setEffectCache(glFontEffectCache);
         glTriangle.setEffectCache(glTriangleEffectCache);
+        glSVG.setEffectCache(glSVGEffectCache);
     }
 
     public void animationCacheInit() {
         gl1AnimationCache = new AnimationCache();
 
-//        gl1AnimationCache.createCache(new Bounce(0, 500, 100f, 45));
+        gl1AnimationCache.createCache(new Bounce(0, 500, 100f, 45));
 //        gl1AnimationCache.createCache(new Trembling(0, 1000, 90, resolution.x / 2, resolution.y / 2));
 
         gl1.setAnimationCache(gl1AnimationCache);
@@ -264,13 +270,8 @@ public class TestGuiFrame implements LFJGFrame {
         soundCache.getSoundSource("test").setGain(0.05f);
         soundCache.playSoundSource("test");
 
-//        Translate translate = (Translate) glFontEffectCache.getEffectBase("Translate1");
-//        translate.setX(translate.getX() + 0.1f);
-
-        Rotate rotate = (Rotate) glShaderSplitObjectEffectCache.getEffectBase("Rotate1");
-        rotate.setZ(rotate.getZ() + 0.01f);
-
-        ((GLFont) glObjectCache.getGLObject(glFont.getObjectId())).setText(frame.getFps() + "");
+//        Rotate rotate = (Rotate) glShaderSplitObjectEffectCache.getEffectBase("Rotate1");
+//        rotate.setZ(rotate.getZ() + 0.01f);
 
         glObjectCache.draw("test3");
 
