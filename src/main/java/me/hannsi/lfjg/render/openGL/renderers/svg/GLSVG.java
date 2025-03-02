@@ -1,6 +1,8 @@
 package me.hannsi.lfjg.render.openGL.renderers.svg;
 
+import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
+import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.utils.buffer.ByteUtil;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.math.MathHelper;
@@ -20,6 +22,8 @@ import static org.lwjgl.stb.STBImageResize.stbir_resize_uint8_srgb;
 import static org.lwjgl.system.MemoryUtil.*;
 
 public class GLSVG extends GLRect {
+    private FrameBuffer frameBuffer;
+    private SVGRenderer svgRenderer;
     private int texture;
 
     /**
@@ -49,8 +53,16 @@ public class GLSVG extends GLRect {
 
         createTexture(svg, svgWidth, svgHeight, scaleX, scaleY);
 
-        uv(0, 1, 1, 0);
-        rectWH(x, y, svgWidth * scaleX, svgHeight * scaleY, Color.of(0, 0, 0, 0), Color.of(0, 0, 0, 0), Color.of(0, 0, 0, 0), Color.of(0, 0, 0, 0));
+        frameBuffer = new FrameBuffer();
+        frameBuffer.createFrameBuffer();
+        frameBuffer.createShaderProgram();
+
+        svgRenderer = new SVGRenderer();
+        svgRenderer.addVertex(x, y, svgWidth * scaleX, svgHeight * scaleY);
+        svgRenderer.init();
+
+        uv(0, 0, 1, 1);
+        rectWH(0, 0, LFJGContext.resolution.x(), LFJGContext.resolution.y(), new Color(0, 0, 0, 0));
     }
 
     public void svg(ByteBuffer svgData, double x, double y, double scaleX, double scaleY) {
@@ -79,9 +91,15 @@ public class GLSVG extends GLRect {
 
     @Override
     public void draw() {
+        frameBuffer.bindFrameBuffer();
+
+        svgRenderer.flush(texture, 0);
+
+        frameBuffer.unbindFrameBuffer();
+
         getGlUtil().addGLTarget(GL30.GL_TEXTURE_2D);
         GL30.glActiveTexture(GL30.GL_TEXTURE0);
-        GL30.glBindTexture(GL30.GL_TEXTURE_2D, texture);
+        GL30.glBindTexture(GL30.GL_TEXTURE_2D, frameBuffer.getTextureId());
         super.draw();
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
     }
@@ -110,7 +128,7 @@ public class GLSVG extends GLRect {
 
         ByteUtil.premultiplyAlpha(image, width, height, width * 4);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 
         ByteBuffer input_pixels = image;
         int input_w = width;
@@ -127,7 +145,7 @@ public class GLSVG extends GLRect {
 
             memFree(input_pixels);
 
-            glTexImage2D(GL_TEXTURE_2D, ++mipmapLevel, GL_RGBA, output_w, output_h, 0, GL_RGBA, GL_UNSIGNED_BYTE, output_pixels);
+            glTexImage2D(GL_TEXTURE_2D, ++mipmapLevel, GL_RGBA8, output_w, output_h, 0, GL_RGBA, GL_UNSIGNED_BYTE, output_pixels);
 
             input_pixels = output_pixels;
             input_w = output_w;
@@ -141,5 +159,13 @@ public class GLSVG extends GLRect {
         glDeleteTextures(texture);
 
         super.cleanup();
+    }
+
+    public SVGRenderer getSvgRenderer() {
+        return svgRenderer;
+    }
+
+    public void setSvgRenderer(SVGRenderer svgRenderer) {
+        this.svgRenderer = svgRenderer;
     }
 }
