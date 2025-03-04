@@ -3,6 +3,7 @@ package me.hannsi.lfjg.frame.setting.settings;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
+import me.hannsi.lfjg.utils.graphics.GLFWUtil;
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -26,7 +27,7 @@ public class ResizableSetting extends FrameSettingBase<Boolean> {
      */
     @Override
     public void updateSetting() {
-        GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, getValue() ? GLFW.GLFW_TRUE : GLFW.GLFW_FALSE);
+        GLFWUtil.setWindowResizable(getValue());
 
         super.updateSetting();
     }

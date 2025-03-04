@@ -182,14 +182,10 @@ public class ColorUtil {
      * @return true if all components are within the valid range, false otherwise
      */
     public static boolean checkColorRange(int checkRed, int checkGreen, int checkBlue, int checkAlpha) {
-        List<Integer> checkColors = new ArrayList<>();
-        checkColors.add(checkRed);
-        checkColors.add(checkGreen);
-        checkColors.add(checkBlue);
-        checkColors.add(checkAlpha);
+        int[] checkColors = new int[]{checkRed,checkGreen,checkBlue,checkAlpha};
 
-        for (Integer integer : checkColors) {
-            return isWithinRange(integer, 0, 255);
+        for (int check : checkColors) {
+            return isWithinRange(check, 0, 255);
         }
 
         return true;

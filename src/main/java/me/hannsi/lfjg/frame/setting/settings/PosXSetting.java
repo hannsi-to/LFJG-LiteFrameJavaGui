@@ -3,6 +3,7 @@ package me.hannsi.lfjg.frame.setting.settings;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
+import me.hannsi.lfjg.utils.graphics.GLFWUtil;
 import me.hannsi.lfjg.utils.type.types.MonitorType;
 import org.lwjgl.glfw.GLFW;
 
@@ -30,9 +31,9 @@ public class PosXSetting extends FrameSettingBase<Integer> {
     public void updateSetting() {
         if (getFrame().getWindowID() != -1L) {
             if (getFrame().getFrameSettingBase(MonitorSetting.class).getValue() == MonitorType.Borderless) {
-                GLFW.glfwSetWindowPos(getFrame().getWindowID(), 0, getFrame().getFrameSettingValue(PosYSetting.class));
+                GLFWUtil.setWindowPosition(getFrame().getWindowID(), 0, getFrame().getFrameSettingValue(PosYSetting.class));
             } else {
-                GLFW.glfwSetWindowPos(getFrame().getWindowID(), getValue(), getFrame().getFrameSettingValue(PosYSetting.class));
+                GLFWUtil.setWindowPosition(getFrame().getWindowID(), getValue(), getFrame().getFrameSettingValue(PosYSetting.class));
             }
         }
 

@@ -5,11 +5,10 @@ import me.hannsi.lfjg.frame.Frame;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * Utility class for reflection-based operations.
@@ -38,7 +37,7 @@ public class ClassUtil {
      * @return an instance of the specified class
      * @throws RuntimeException if the class cannot be instantiated
      */
-    public static <T> T createInstance(Frame frame, Class<T> clazz, Object... args) {
+    public static <T> T createInstance(Class<T> clazz, Object... args) {
         T instance;
         List<Class<?>> parameterTypes = new ArrayList<>();
 
@@ -50,19 +49,71 @@ public class ClassUtil {
             Constructor<T> constructor = clazz.getDeclaredConstructor(parameterTypes.toArray(new Class<?>[0]));
             instance = constructor.newInstance(args);
         } catch (InstantiationException e) {
-            DebugLog.error(ClassUtil.class, "Could not instantiate class: " + clazz.getName() + "\n" + e);
             throw new RuntimeException("Could not instantiate class: " + clazz.getName(), e);
         } catch (IllegalAccessException e) {
-            DebugLog.error(ClassUtil.class, "Illegal access to constructor: " + clazz.getName() + "\n" + e);
             throw new RuntimeException("Illegal access to constructor: " + clazz.getName(), e);
         } catch (InvocationTargetException e) {
-            DebugLog.error(ClassUtil.class, "Constructor threw an exception: " + clazz.getName() + "\n" + e);
             throw new RuntimeException("Constructor threw an exception: " + clazz.getName(), e);
         } catch (NoSuchMethodException e) {
-            DebugLog.error(ClassUtil.class, "No matching constructor found: " + clazz.getName() + "\n" + e);
             throw new RuntimeException("No matching constructor found: " + clazz.getName(), e);
         }
 
         return instance;
     }
+
+    public static Set<Class<?>> getAllClassesFromPackage(String packagePath) {
+        return new HashSet<>(new Reflections(packagePath).getSubTypesOf(Object.class));
+    }
+
+    public static <T> Constructor<T> getConstructor(Class<T> clazz, Class<?>... parameterTypes) throws NoSuchMethodException {
+        return clazz.getDeclaredConstructor(parameterTypes);
+    }
+
+    public static <T> T createInstanceWithoutArgs(Class<T> clazz) {
+        try {
+            Constructor<T> constructor = clazz.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            return constructor.newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new RuntimeException("Could not instantiate class: " + clazz.getName(), e);
+        }
+    }
+
+    public static Object invokeMethod(Object instance, String methodName, Object... args) {
+        try {
+            Class<?> clazz = instance.getClass();
+            Method method = clazz.getDeclaredMethod(methodName, getParameterTypes(args));
+            method.setAccessible(true);
+            return method.invoke(instance, args);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException("Could not invoke method: " + methodName + " on class: " + instance.getClass().getName(), e);
+        }
+    }
+
+    private static Class<?>[] getParameterTypes(Object... args) {
+        return Arrays.stream(args)
+                .map(arg -> arg != null ? arg.getClass() : Object.class)
+                .toArray(Class<?>[]::new);
+    }
+
+    public static Object getFieldValue(Object instance, String fieldName) {
+        try {
+            Field field = instance.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            return field.get(instance);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("Could not access field: " + fieldName + " on class: " + instance.getClass().getName(), e);
+        }
+    }
+
+    public static void setFieldValue(Object instance, String fieldName, Object value) {
+        try {
+            Field field = instance.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            field.set(instance, value);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("Could not set field: " + fieldName + " on class: " + instance.getClass().getName(), e);
+        }
+    }
 }
+

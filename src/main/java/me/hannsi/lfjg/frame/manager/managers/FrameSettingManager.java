@@ -39,7 +39,7 @@ public class FrameSettingManager extends Manager {
      */
     public void updateFrameSettings(boolean windowHint) {
         StringBuilder sb = new StringBuilder().append("\n\nFrameSettings Updating...\n\n");
-        long tookTime = TimeCalculator.calculate(() -> {
+        long tookTime = TimeCalculator.calculateMillis(() -> {
             for (FrameSettingBase<?> frameSettingBase : frameSettings) {
                 boolean shouldUpdate = (windowHint && frameSettingBase.isWindowHint()) || (!windowHint && !frameSettingBase.isWindowHint());
 
@@ -88,10 +88,10 @@ public class FrameSettingManager extends Manager {
         }));
 
         StringBuilder sb = new StringBuilder().append("\n\nFrameSettings loading...\n");
-        long tookTime = TimeCalculator.calculate(() -> {
+        long tookTime = TimeCalculator.calculateMillis(() -> {
             int count = 0;
             for (Class<? extends FrameSettingBase<?>> subType : sortedClasses) {
-                FrameSettingBase<?> frameSettingBase = ClassUtil.createInstance(getFrame(), subType, getFrame());
+                FrameSettingBase<?> frameSettingBase = ClassUtil.createInstance(subType, getFrame());
 
                 if (frameSettingBase != null) {
                     register(frameSettingBase);

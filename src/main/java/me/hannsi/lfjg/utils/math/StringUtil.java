@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 /**
  * Utility class for various string operations.
@@ -334,5 +335,121 @@ public class StringUtil {
         Random random = new Random();
         int index = random.nextInt(input.length());
         return input.charAt(index);
+    }
+
+    public static String reverseString(String str) {
+        return new StringBuilder(str).reverse().toString();
+    }
+
+    public static boolean isNumeric(String str) {
+        return str.matches("\\d+");
+    }
+
+    public static String capitalize(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
+
+    public static String toCamelCase(String str) {
+        String[] words = str.split("[ _]");
+        StringBuilder result = new StringBuilder(words[0].toLowerCase());
+        for (int i = 1; i < words.length; i++) {
+            result.append(capitalize(words[i].toLowerCase()));
+        }
+
+        return result.toString();
+    }
+
+    public static String toSnakeCase(String str) {
+        return str.replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase();
+    }
+
+    public static int countOccurrences(String str, char ch) {
+        int count = 0;
+        for (char c : str.toCharArray()) {
+            if (c == ch) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    public static String removeWhitespace(String str) {
+        return str.replaceAll("\\s+", "");
+    }
+
+    public static boolean isEmptyOrNull(String str) {
+        return str == null || str.isEmpty();
+    }
+
+    public static String toTitleCase(String str) {
+        String[] words = str.split("\\s+");
+        StringBuilder result = new StringBuilder();
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                result.append(capitalize(word)).append(" ");
+            }
+        }
+
+        return result.toString().trim();
+    }
+
+    public static int countSubstring(String str, String sub) {
+        if (isEmptyOrNull(str) || isEmptyOrNull(sub)) {
+            return 0;
+        }
+
+        int count = 0;
+        int index = 0;
+        while ((index = str.indexOf(sub, index)) != -1) {
+            count++;
+            index += sub.length();
+        }
+
+        return count;
+    }
+
+    public static String reverseStringRecursive(String str) {
+        if (str == null || str.length() <= 1) {
+            return str;
+        }
+
+        return reverseStringRecursive(str.substring(1)) + str.charAt(0);
+    }
+
+    public static String repeatString(String str, int times) {
+        return str.repeat(Math.max(0, times));
+    }
+
+    public static String replaceAll(String str, char oldChar, char newChar) {
+        return str.replace(oldChar, newChar);
+    }
+
+    public static String trimStart(String str) {
+        return str.replaceAll("^\\s+", "");
+    }
+
+    public static String trimEnd(String str) {
+        return str.replaceAll("\\s+$", "");
+    }
+
+    public static boolean startsWithIgnoreCase(String str, String prefix) {
+        return str.toLowerCase().startsWith(prefix.toLowerCase());
+    }
+
+    public static boolean endsWithIgnoreCase(String str, String suffix) {
+        return str.toLowerCase().endsWith(suffix.toLowerCase());
+    }
+
+    public static List<String> splitToList(String str, String delimiter) {
+        return Arrays.asList(str.split(Pattern.quote(delimiter)));
+    }
+
+    public static boolean equalsIgnoreCase(String str1, String str2) {
+        return str1.equalsIgnoreCase(str2);
     }
 }

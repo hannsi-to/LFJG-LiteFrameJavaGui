@@ -3,6 +3,7 @@ package me.hannsi.lfjg.frame.setting.settings;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
+import me.hannsi.lfjg.utils.graphics.GLFWUtil;
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -27,7 +28,7 @@ public class TitleSetting extends FrameSettingBase<String> {
     @Override
     public void updateSetting() {
         if (getFrame().getWindowID() != -1L) {
-            GLFW.glfwSetWindowTitle(getFrame().getWindowID(), getValue());
+            GLFWUtil.setWindowTitle(getFrame().getWindowID(), getValue());
         }
     }
 }

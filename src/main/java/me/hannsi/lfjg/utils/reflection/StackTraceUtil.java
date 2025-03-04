@@ -57,4 +57,28 @@ public class StackTraceUtil {
     private static boolean isLibraryClass(String className) {
         return className.startsWith("java.") || className.startsWith("sun.") || className.startsWith("com.sun.") || className.startsWith("jdk.");
     }
+
+    private static boolean isUserClass(String className) {
+        return !isLibraryClass(className);
+    }
+
+    public static String getCurrentThreadStackTrace(String... ignoreMethod) {
+        return getStackTrace(Thread.currentThread().getName(), ignoreMethod);
+    }
+
+    public static String getStackTraceForThread(Thread thread, String... ignoreMethod) {
+        return getStackTrace(thread.getName(), ignoreMethod);
+    }
+
+    public static String getAllThreadStackTraces(String... ignoreMethod) {
+        Map<Thread, StackTraceElement[]> allStackTraces = Thread.getAllStackTraces();
+        StringBuilder stackTraceStr = new StringBuilder();
+
+        for (Map.Entry<Thread, StackTraceElement[]> entry : allStackTraces.entrySet()) {
+            stackTraceStr.append("Thread: ").append(entry.getKey().getName()).append("\n");
+            stackTraceStr.append(getStackTrace(entry.getKey().getName(), ignoreMethod)).append("\n");
+        }
+
+        return stackTraceStr.toString();
+    }
 }

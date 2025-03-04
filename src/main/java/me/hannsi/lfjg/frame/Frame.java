@@ -128,7 +128,7 @@ public class Frame implements IFrame {
      */
     private void registerManagers() {
         DebugLog.debug(getClass(), "Managers loading...\n");
-        long tookTime = TimeCalculator.calculate(() -> {
+        long tookTime = TimeCalculator.calculateMillis(() -> {
             this.frameSettingManager = new FrameSettingManager(this);
         });
         DebugLog.debug(getClass(), ANSIFormat.GREEN + "Managers took " + tookTime + "ms to load!\n");

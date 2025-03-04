@@ -1,5 +1,6 @@
-package me.hannsi.lfjg.utils.graphics.color;
+package me.hannsi.lfjg.utils.type.types;
 
+import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
 
 // Reference: https://x.com/n_seitan

@@ -10,15 +10,15 @@ import org.lwjgl.glfw.GLFW;
  * Represents a setting for enabling or disabling the transparent framebuffer property of a frame.
  */
 @ReflectionsLevel(level = 15)
-public class TransparentFramebufferSetting extends FrameSettingBase<Boolean> {
+public class TransparentFrameBufferSetting extends FrameSettingBase<Boolean> {
 
     /**
      * Constructs a new TransparentFramebufferSetting with the specified frame.
      *
      * @param frame the frame to associate with this setting
      */
-    public TransparentFramebufferSetting(Frame frame) {
-        super(frame, "TransparentFramebufferSetting", 15, false, true);
+    public TransparentFrameBufferSetting(Frame frame) {
+        super(frame, "TransparentFrameBufferSetting", 15, false, true);
     }
 
     /**

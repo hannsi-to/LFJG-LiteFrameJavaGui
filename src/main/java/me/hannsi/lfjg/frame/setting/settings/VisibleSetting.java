@@ -3,7 +3,7 @@ package me.hannsi.lfjg.frame.setting.settings;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
-import org.lwjgl.glfw.GLFW;
+import me.hannsi.lfjg.utils.graphics.GLFWUtil;
 
 /**
  * Represents a setting for the visibility of a frame.
@@ -26,7 +26,7 @@ public class VisibleSetting extends FrameSettingBase<Boolean> {
      */
     @Override
     public void updateSetting() {
-        GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, getValue() ? GLFW.GLFW_TRUE : GLFW.GLFW_FALSE);
+        GLFWUtil.setWindowVisible(getValue());
         super.updateSetting();
     }
 }
