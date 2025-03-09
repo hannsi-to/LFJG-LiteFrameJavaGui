@@ -58,6 +58,7 @@ public class GLFWCallback implements IFrame {
         GLFW.glfwSetKeyCallback(frame.getWindowID(), new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {
+                eventManager.call(new KeyCallbackEvent(window, key, scancode, action, mods));
                 if (action == GLFW.GLFW_PRESS) {
                     eventManager.call(new KeyPressEvent(key, scancode, mods, window));
                 } else if (action == GLFW.GLFW_RELEASE) {

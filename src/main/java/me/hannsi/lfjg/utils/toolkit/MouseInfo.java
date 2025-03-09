@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.openGL.system.user;
+package me.hannsi.lfjg.utils.toolkit;
 
 import org.joml.Vector2f;
 
@@ -10,7 +10,7 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public class MouseInfo {
     private Vector2f currentPos;
-    private Vector2f displVec;
+    private Vector2f displaySize;
     private boolean inWindow;
     private boolean leftButtonPressed;
     private Vector2f previousPos;
@@ -22,7 +22,7 @@ public class MouseInfo {
     public MouseInfo() {
         previousPos = new Vector2f(-1, -1);
         currentPos = new Vector2f();
-        displVec = new Vector2f();
+        displaySize = new Vector2f();
         leftButtonPressed = false;
         rightButtonPressed = false;
         inWindow = false;
@@ -30,7 +30,7 @@ public class MouseInfo {
 
     public void cleanup() {
         currentPos = null;
-        displVec = null;
+        displaySize = null;
         previousPos = null;
     }
 
@@ -88,35 +88,35 @@ public class MouseInfo {
      *
      * @return the displacement vector
      */
-    public Vector2f getDisplVec() {
-        return displVec;
+    public Vector2f getDisplaySize() {
+        return displaySize;
     }
 
     /**
      * Sets the displacement vector.
      *
-     * @param displVec the new displacement vector
+     * @param displaySize the new displacement vector
      */
-    public void setDisplVec(Vector2f displVec) {
-        this.displVec = displVec;
+    public void setDisplaySize(Vector2f displaySize) {
+        this.displaySize = displaySize;
     }
 
     /**
      * Processes the mouse input to calculate the displacement vector.
      */
     public void input() {
-        displVec.x = 0;
-        displVec.y = 0;
+        displaySize.x = 0;
+        displaySize.y = 0;
         if (previousPos.x > 0 && previousPos.y > 0 && inWindow) {
             double deltax = currentPos.x - previousPos.x;
             double deltay = currentPos.y - previousPos.y;
             boolean rotateX = deltax != 0;
             boolean rotateY = deltay != 0;
             if (rotateX) {
-                displVec.y = (float) deltax;
+                displaySize.y = (float) deltax;
             }
             if (rotateY) {
-                displVec.x = (float) deltay;
+                displaySize.x = (float) deltay;
             }
         }
         previousPos.x = currentPos.x;

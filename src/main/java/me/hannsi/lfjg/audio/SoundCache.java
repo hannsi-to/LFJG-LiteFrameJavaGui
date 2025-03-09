@@ -2,7 +2,7 @@ package me.hannsi.lfjg.audio;
 
 import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
-import me.hannsi.lfjg.render.openGL.system.user.Camera;
+import me.hannsi.lfjg.utils.toolkit.Camera;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.openal.AL;

@@ -26,8 +26,9 @@ import me.hannsi.lfjg.render.openGL.system.font.FontCache;
 import me.hannsi.lfjg.render.openGL.system.font.UnicodeRange;
 import me.hannsi.lfjg.render.openGL.system.model.model.Entity;
 import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
-import me.hannsi.lfjg.render.openGL.system.user.Camera;
-import me.hannsi.lfjg.render.openGL.system.user.MouseInfo;
+import me.hannsi.lfjg.utils.toolkit.Camera;
+import me.hannsi.lfjg.utils.toolkit.KeyboardInfo;
+import me.hannsi.lfjg.utils.toolkit.MouseInfo;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.graphics.image.ImageCapture;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
@@ -78,6 +79,7 @@ public class TestGuiFrame implements LFJGFrame {
     int pboId = -1;
 
     MouseInfo mouseInfo;
+    KeyboardInfo keyboardInfo;
     Camera camera;
     float rotation;
 
@@ -126,6 +128,7 @@ public class TestGuiFrame implements LFJGFrame {
         animationCacheInit();
 
         mouseInfo = new MouseInfo();
+        keyboardInfo = new KeyboardInfo();
         camera = new Camera();
 
 //        object3DCacheRender = new Object3DCacheRender();
@@ -364,7 +367,7 @@ public class TestGuiFrame implements LFJGFrame {
         float MOUSE_SENSITIVITY = 0.1f;
 
         if (mouseInfo.isRightButtonPressed()) {
-            Vector2f displVec = mouseInfo.getDisplVec();
+            Vector2f displVec = mouseInfo.getDisplaySize();
             camera.addRotation((float) Math.toRadians(-displVec.x * MOUSE_SENSITIVITY), (float) Math.toRadians(-displVec.y * MOUSE_SENSITIVITY));
         }
 
@@ -407,6 +410,11 @@ public class TestGuiFrame implements LFJGFrame {
     @EventHandler
     public void mouseButtonCallbackEvent(MouseButtonCallbackEvent event) {
         mouseInfo.updateMouseButton(event.getButton(), event.getAction());
+    }
+
+    @EventHandler
+    public void keyCallbackEvent(KeyCallbackEvent event){
+        keyboardInfo.updateKeyState(event.getKey(), event.getAction());
     }
 
     @EventHandler
