@@ -247,7 +247,7 @@ public class Frame implements IFrame {
     }
 
     public void updateLFJGLContext() {
-        LFJGContext.resolution = new Vector2f(getWindowWidth() / getContentScaleX(), getWindowHeight() / getContentScaleY());
+        LFJGContext.resolution = new Vector2f(getWindowWidth(), getWindowHeight());
         LFJGContext.projection = new Projection(ProjectionType.OrthographicProjection, getWindowWidth(), getWindowHeight());
     }
 

@@ -2870,4 +2870,27 @@ public class MathHelper {
         float imaginary = (imaginary1 * real2 - real1 * imaginary2) / denominator;
         return new float[]{real, imaginary};
     }
+
+    public static float crossProduct(Vector2f a, Vector2f b) {
+        return a.x() * b.y() - a.y() * b.x();
+    }
+
+    public static Vector2f getLineIntersection(Vector2f a1, Vector2f a2, Vector2f b1, Vector2f b2) {
+        Vector2f r = new Vector2f(a2).sub(a1);
+        Vector2f s = new Vector2f(b2).sub(b1);
+        float crossRS = crossProduct(r, s);
+
+        if (crossRS == 0) {
+            return null;
+        }
+
+        Vector2f ba = new Vector2f(b1).sub(a1);
+        float t = crossProduct(ba, s) / crossRS;
+        float u = crossProduct(ba, r) / crossRS;
+
+        if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
+            return new Vector2f(a1).add(r.mul(t));
+        }
+        return null;
+    }
 }

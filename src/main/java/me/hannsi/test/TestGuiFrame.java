@@ -11,6 +11,7 @@ import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
+import me.hannsi.lfjg.physics.PhysicsWorld;
 import me.hannsi.lfjg.render.openGL.animation.animations.Bounce;
 import me.hannsi.lfjg.render.openGL.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.openGL.effect.effects.*;
@@ -26,9 +27,6 @@ import me.hannsi.lfjg.render.openGL.system.font.FontCache;
 import me.hannsi.lfjg.render.openGL.system.font.UnicodeRange;
 import me.hannsi.lfjg.render.openGL.system.model.model.Entity;
 import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
-import me.hannsi.lfjg.utils.toolkit.Camera;
-import me.hannsi.lfjg.utils.toolkit.KeyboardInfo;
-import me.hannsi.lfjg.utils.toolkit.MouseInfo;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.graphics.image.ImageCapture;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
@@ -37,6 +35,9 @@ import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.math.TextFormat;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.toolkit.Camera;
+import me.hannsi.lfjg.utils.toolkit.KeyboardInfo;
+import me.hannsi.lfjg.utils.toolkit.MouseInfo;
 import me.hannsi.lfjg.utils.type.types.*;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -86,6 +87,8 @@ public class TestGuiFrame implements LFJGFrame {
     Object3DCacheRender object3DCacheRender;
     Entity cubeEntity;
 
+    PhysicsWorld physicsWorld;
+
     public static void main(String[] args) {
         new TestGuiFrame().setFrame();
     }
@@ -106,7 +109,7 @@ public class TestGuiFrame implements LFJGFrame {
 //        threadCache.run(thread.threadId());
 
         LFJGContext.projection = new Projection(ProjectionType.OrthographicProjection, frame.getWindowWidth(), frame.getWindowHeight());
-        resolution = new Vector2f(frame.getWindowWidth() / frame.getContentScaleX(), frame.getWindowHeight() / frame.getContentScaleY());
+        resolution = new Vector2f(frame.getWindowWidth(), frame.getWindowHeight());
 
         imageCapture = new ImageCapture(new FileLocation("C:/Users/hanns/idea-project/LFJG-LiteFrameJavaGui/log/png"));
 
@@ -130,6 +133,8 @@ public class TestGuiFrame implements LFJGFrame {
         mouseInfo = new MouseInfo();
         keyboardInfo = new KeyboardInfo();
         camera = new Camera();
+
+        physicsWorld = new PhysicsWorld();
 
 //        object3DCacheRender = new Object3DCacheRender();
 //
@@ -270,6 +275,8 @@ public class TestGuiFrame implements LFJGFrame {
 
     @Override
     public void drawFrame() {
+        physicsWorld.simulate();
+
         soundCache.getSoundSource("test").setGain(0.05f);
         soundCache.playSoundSource("test");
 
@@ -413,7 +420,7 @@ public class TestGuiFrame implements LFJGFrame {
     }
 
     @EventHandler
-    public void keyCallbackEvent(KeyCallbackEvent event){
+    public void keyCallbackEvent(KeyCallbackEvent event) {
         keyboardInfo.updateKeyState(event.getKey(), event.getAction());
     }
 
