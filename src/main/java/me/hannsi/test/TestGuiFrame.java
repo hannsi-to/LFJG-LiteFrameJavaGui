@@ -38,7 +38,6 @@ import me.hannsi.lfjg.utils.toolkit.Camera;
 import me.hannsi.lfjg.utils.toolkit.KeyboardInfo;
 import me.hannsi.lfjg.utils.toolkit.MouseInfo;
 import me.hannsi.lfjg.utils.type.types.*;
-import org.jbox2d.callbacks.DebugDraw;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
@@ -87,8 +86,6 @@ public class TestGuiFrame implements LFJGFrame {
 
     Object3DCacheRender object3DCacheRender;
     Entity cubeEntity;
-
-    DebugDraw debugDraw;
 
     public static void main(String[] args) {
         new TestGuiFrame().setFrame();
