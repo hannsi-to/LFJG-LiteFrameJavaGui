@@ -15,6 +15,10 @@ project.ext.steamworks4jserverVersion = "1.9.0"
 project.ext.jomlprimitivesVersion = "1.10.0"
 project.ext.lwjglNatives = "natives-windows"
 
+int javaVersion = 19
+int sourceCompatibility = javaVersion
+int targetCompatibility = javaVersion
+
 repositories {
     mavenCentral()
 }
@@ -71,11 +75,21 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 compileTestJava {
-    ajc {
-        options {
-            aspectpath.setFrom configurations.aspect
-            compilerArgs = ["-Xlint:ignore", "-Xajruntimetarget:1.5"]
-        }
+    doLast {
+        ant.taskdef(
+                resource: 'org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties',
+                classpath: configurations.aspectj.asPath
+        )
+
+        ant.iajc(
+                source: sourceCompatibility,
+                target: targetCompatibility,
+                aspectpath: configurations.aspect.asPath,
+                classpath: configurations.aspectj.asPath,
+                fork: 'true',
+                destDir: sourceSets.test.output.classesDirs.asPath,
+                compilerArgs: ["-Xlint:ignore", "-Xajruntimetarget:1.8"]
+        )
     }
 }
 
@@ -89,12 +103,9 @@ jar {
     }
 }
 
-sourceCompatibility = JavaVersion.VERSION_19
-targetCompatibility = JavaVersion.VERSION_19
-
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(19)
+        languageVersion = JavaLanguageVersion.of(javaVersion)
     }
 }
 
