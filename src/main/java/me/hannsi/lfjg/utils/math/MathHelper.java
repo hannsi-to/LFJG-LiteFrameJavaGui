@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.utils.math;
 
 import org.joml.Math;
+import org.joml.Vector2d;
 import org.joml.Vector2f;
 
 import java.util.Arrays;
@@ -2871,26 +2872,60 @@ public class MathHelper {
         return new float[]{real, imaginary};
     }
 
-    public static float crossProduct(Vector2f a, Vector2f b) {
-        return a.x() * b.y() - a.y() * b.x();
+    public static Vector2d calculateCentroid(Vector2d[] positions) {
+        int n = positions.length;
+        if (n < 3) {
+            throw new IllegalArgumentException("Polygon must have at least 3 vertices.");
+        }
+
+        double signedArea = 0.0;
+        double centroidX = 0.0;
+        double centroidY = 0.0;
+
+        for (int i = 0; i < n; i++) {
+            int next = (i + 1) % n;
+            double x0 = positions[i].x();
+            double y0 = positions[i].y();
+            double x1 = positions[next].x();
+            double y1 = positions[next].y();
+
+            double cross = x0 * y1 - x1 * y0;
+            signedArea += cross;
+            centroidX += (x0 + x1) * cross;
+            centroidY += (y0 + y1) * cross;
+        }
+
+        signedArea *= 0.5;
+        if (abs(signedArea) < 1e-10) {
+            throw new IllegalArgumentException("Not a valid polygon.");
+        }
+
+        centroidX /= (6 * signedArea);
+        centroidY /= (6 * signedArea);
+
+        return new Vector2d(centroidX, centroidY);
     }
 
-    public static Vector2f getLineIntersection(Vector2f a1, Vector2f a2, Vector2f b1, Vector2f b2) {
-        Vector2f r = new Vector2f(a2).sub(a1);
-        Vector2f s = new Vector2f(b2).sub(b1);
-        float crossRS = crossProduct(r, s);
-
-        if (crossRS == 0) {
-            return null;
+    public static Vector2d calculateCentroid(float[] positions) {
+        Vector2d[] positions2D = new Vector2d[positions.length / 2];
+        int index = 0;
+        for (int i = 0; i < positions.length; i += 2) {
+            positions2D[index] = new Vector2d(positions[i], positions[i + 1]);
+            index++;
         }
 
-        Vector2f ba = new Vector2f(b1).sub(a1);
-        float t = crossProduct(ba, s) / crossRS;
-        float u = crossProduct(ba, r) / crossRS;
+        return calculateCentroid(positions2D);
+    }
 
-        if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
-            return new Vector2f(a1).add(r.mul(t));
-        }
-        return null;
+    public static Vector2d midpoint(Vector2d a, Vector2d b) {
+        double midX = (a.x() + b.x()) / 2.0;
+        double midY = (a.y() + b.y()) / 2.0;
+        return new Vector2d(midX, midY);
+    }
+
+    public static Vector2f midpoint(Vector2f a, Vector2f b) {
+        float midX = (a.x() + b.x()) / 2.0f;
+        float midY = (a.y() + b.y()) / 2.0f;
+        return new Vector2f(midX, midY);
     }
 }

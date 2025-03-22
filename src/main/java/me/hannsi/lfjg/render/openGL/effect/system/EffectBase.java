@@ -218,15 +218,15 @@ public class EffectBase {
         return frameBuffer;
     }
 
+    public void setFrameBuffer(FrameBuffer frameBuffer) {
+        this.frameBuffer = frameBuffer;
+    }
+
     public ResourcesLocation getVertexPath() {
         return vertexPath;
     }
 
     public ResourcesLocation getFragmentPath() {
         return fragmentPath;
-    }
-
-    public void setFrameBuffer(FrameBuffer frameBuffer) {
-        this.frameBuffer = frameBuffer;
     }
 }

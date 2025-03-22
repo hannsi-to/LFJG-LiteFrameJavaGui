@@ -11,7 +11,6 @@ import me.hannsi.lfjg.frame.IFrame;
 import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
-import me.hannsi.lfjg.physics.PhysicsWorld;
 import me.hannsi.lfjg.render.openGL.animation.animations.Bounce;
 import me.hannsi.lfjg.render.openGL.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.openGL.effect.effects.*;
@@ -39,6 +38,7 @@ import me.hannsi.lfjg.utils.toolkit.Camera;
 import me.hannsi.lfjg.utils.toolkit.KeyboardInfo;
 import me.hannsi.lfjg.utils.toolkit.MouseInfo;
 import me.hannsi.lfjg.utils.type.types.*;
+import org.jbox2d.callbacks.DebugDraw;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
@@ -48,6 +48,7 @@ import static me.hannsi.lfjg.frame.LFJGContext.frame;
 import static me.hannsi.lfjg.frame.LFJGContext.resolution;
 
 public class TestGuiFrame implements LFJGFrame {
+    GLRect glGround;
     GLRect gl1;
     GLFont glFont;
     GLRect gl2;
@@ -87,7 +88,7 @@ public class TestGuiFrame implements LFJGFrame {
     Object3DCacheRender object3DCacheRender;
     Entity cubeEntity;
 
-    PhysicsWorld physicsWorld;
+    DebugDraw debugDraw;
 
     public static void main(String[] args) {
         new TestGuiFrame().setFrame();
@@ -120,11 +121,12 @@ public class TestGuiFrame implements LFJGFrame {
         objectInit();
 
         glObjectCache = new GLObjectCache();
-//        glObjectCache.createCache(gl1);
+        glObjectCache.createCache(gl1);
+        glObjectCache.createCache(glGround);
 //        glObjectCache.createCache(glFont);
 //        glObjectCache.createCache(glTriangle);
 //        glObjectCache.createCache(glShader);
-        glObjectCache.createCache(glSVG);
+//        glObjectCache.createCache(glSVG);
 
         soundCacheInit();
         effectCacheInit();
@@ -133,8 +135,6 @@ public class TestGuiFrame implements LFJGFrame {
         mouseInfo = new MouseInfo();
         keyboardInfo = new KeyboardInfo();
         camera = new Camera();
-
-        physicsWorld = new PhysicsWorld();
 
 //        object3DCacheRender = new Object3DCacheRender();
 //
@@ -164,8 +164,11 @@ public class TestGuiFrame implements LFJGFrame {
         fontCache.createCache(font, 64);
 
         gl1 = new GLRect("test1");
-        gl1.uv(0, 1, 1, 0);
-        gl1.rectWH(0, 0, frame.getWindowWidth(), frame.getWindowHeight(), Color.of(0, 0, 0, 0));
+//        gl1.uv(0, 1, 1, 0);
+        gl1.rectWH(500, 900, 100, 100, Color.of(255, 255, 255, 255));
+
+        glGround = new GLRect("Ground");
+        glGround.rect(0, 0, resolution.x, 1, Color.of(255, 255, 255, 255));
 
         int alpha = 255;
         glFont = new GLFont("Font");
@@ -235,8 +238,8 @@ public class TestGuiFrame implements LFJGFrame {
         glSVGEffectCache.createCache("DrawObject1", new DrawObject());
         glSVGEffectCache.createCache("ColorChanger1", new ColorChanger(Color.of(227, 227, 227), Color.RED));
 
-        gl1EffectCache.create(gl1);
-        gl1SplitObjectEffectCache.create(gl1);
+//        gl1EffectCache.create(gl1);
+//        gl1SplitObjectEffectCache.create(gl1);
         glFontEffectCache.create(glFont);
         glTriangleEffectCache.create(glTriangle);
         glShaderEffectCache.create(glShader);
@@ -244,7 +247,7 @@ public class TestGuiFrame implements LFJGFrame {
         glSVGEffectCache.create(glSVG);
 
         glShader.setEffectCache(glShaderEffectCache);
-        gl1.setEffectCache(gl1EffectCache);
+//        gl1.setEffectCache(gl1EffectCache);
         glFont.setEffectCache(glFontEffectCache);
         glTriangle.setEffectCache(glTriangleEffectCache);
         glSVG.setEffectCache(glSVGEffectCache);
@@ -256,8 +259,8 @@ public class TestGuiFrame implements LFJGFrame {
         gl1AnimationCache.createCache(new Bounce(0, 500, 100f, 45));
 //        gl1AnimationCache.createCache(new Trembling(0, 1000, 90, resolution.x / 2, resolution.y / 2));
 
-        gl1.setAnimationCache(gl1AnimationCache);
-        gl1AnimationCache.start(gl1);
+//        gl1.setAnimationCache(gl1AnimationCache);
+//        gl1AnimationCache.start(gl1);
     }
 
     public void soundCacheInit() {
@@ -275,8 +278,6 @@ public class TestGuiFrame implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-        physicsWorld.simulate();
-
         soundCache.getSoundSource("test").setGain(0.05f);
         soundCache.playSoundSource("test");
 

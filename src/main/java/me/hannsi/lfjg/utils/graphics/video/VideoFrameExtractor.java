@@ -42,7 +42,7 @@ public class VideoFrameExtractor {
      */
     public void createVideoCache() {
         DebugLog.debug(getClass(), "Start extract video frame: " + videoFileLocation.getPath());
-        long tookTime = TimeCalculator.calculate(() -> {
+        long tookTime = TimeCalculator.calculateMillis(() -> {
             this.finished = false;
 
             try (FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(videoFileLocation.getPath()); Java2DFrameConverter converter = new Java2DFrameConverter()) {

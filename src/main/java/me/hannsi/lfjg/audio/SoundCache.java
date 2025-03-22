@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.audio;
 
-import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.DebugLevel;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.utils.toolkit.Camera;
 import org.joml.Matrix4f;
@@ -91,7 +91,7 @@ public class SoundCache {
 
         LogGenerator logGenerator = new LogGenerator("SoundCache Debug Message", "Source: SoundCache", "Type: Cache Creation", "Name: " + name, "Severity: Info", "Message: Create sound cache");
 
-        DebugLog.debug(getClass(), logGenerator.createLog());
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     /**

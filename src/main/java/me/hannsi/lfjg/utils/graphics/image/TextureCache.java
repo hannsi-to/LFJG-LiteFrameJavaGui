@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.utils.graphics.image;
 
-import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.DebugLevel;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.utils.reflection.Location;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
@@ -42,8 +42,7 @@ public class TextureCache {
         textureMap.put(path, new TextureLoader(path, ImageLoaderType.STBImage));
 
         LogGenerator logGenerator = new LogGenerator("TextureCache Debug Message", "Source: TextureCache", "Type: Cache Creation", "ID: " + path.hashCode(), "Severity: Info", "Message: Create texture cache: " + path.getPath());
-
-        DebugLog.debug(getClass(), logGenerator.createLog());
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     /**

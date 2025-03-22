@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.render.openGL.system.model;
 
-import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.DebugLevel;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.render.openGL.system.model.lights.Lights;
 import me.hannsi.lfjg.render.openGL.system.model.model.Entity;
@@ -44,8 +44,7 @@ public class Object3DCache {
         modelMap.put(model.getId(), model);
 
         LogGenerator logGenerator = new LogGenerator("Object3DCache Debug Message", "Source: Object3DCache", "Type: Cache Creation", "ID: " + model.getId(), "Severity: Info", "Message: Create 3D Object cache");
-
-        DebugLog.debug(getClass(), logGenerator.createLog());
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     /**

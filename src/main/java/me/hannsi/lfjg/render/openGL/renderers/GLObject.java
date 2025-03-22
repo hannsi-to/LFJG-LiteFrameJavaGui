@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.render.openGL.renderers;
 
-import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.DebugLevel;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.animation.system.AnimationCache;
@@ -199,12 +199,10 @@ public class GLObject implements Cloneable {
             glObject.setObjectId(++copyId);
 
             LogGenerator logGenerator = new LogGenerator("GLObject Debug Message", "Source: GLObject", "Type: Copy", "ID: " + glObject.getObjectId(), "Severity: Info", "Message: Create object copy: " + glObject.getName());
-
-            DebugLog.info(getClass(), logGenerator.createLog());
+            logGenerator.logging(DebugLevel.INFO);
         } catch (Exception e) {
             LogGenerator logGenerator = new LogGenerator("GLObject Debug Message", "Source: GLObject", "Type: Copy", "ID: " + this.getObjectId(), "Severity: Error", "Message: Failed to create object copy: " + this.getName());
-
-            DebugLog.error(getClass(), logGenerator.createLog());
+            logGenerator.logging(DebugLevel.ERROR);
 
             throw new RuntimeException(e);
         }

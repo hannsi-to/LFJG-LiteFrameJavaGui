@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.frame.openAL;
 
-import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.DebugLevel;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.frame.setting.settings.OpenALDebugSetting;
 import me.hannsi.lfjg.utils.reflection.StackTraceUtil;
@@ -27,8 +27,7 @@ public class OpenALCDebug {
             String stackTrace = StackTraceUtil.getStackTrace(frame.getThreadName(), "getStackTrace", "getOpenALCError", ignoreMethod);
 
             LogGenerator logGenerator = new LogGenerator(" OpenALC Debug Message", "Type: Error", "ID: " + error, "Severity: High", "Message: " + errorMessage, "Stack Trace: \n" + stackTrace);
-
-            DebugLog.error(OpenALCDebug.class, logGenerator.createLog());
+            logGenerator.logging(DebugLevel.ERROR);
         }
     }
 

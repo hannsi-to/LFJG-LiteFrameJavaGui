@@ -76,7 +76,6 @@ public class FrameData {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, frameImage.getWidth(), frameImage.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
 
         glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pboId);
-
         glBufferData(GL_PIXEL_UNPACK_BUFFER, (long) frameImage.getWidth() * frameImage.getHeight() * 4, GL_STREAM_DRAW);
 
         ByteBuffer buffer = glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
@@ -90,8 +89,6 @@ public class FrameData {
         glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
         glBindTexture(GL_TEXTURE_2D, 0);
-
-        bufferedImage.clear();
     }
 
     /**

@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.render.openGL.animation.system;
 
-import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.DebugLevel;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.render.openGL.system.Id;
@@ -18,7 +18,7 @@ public class AnimationCache {
         this.animationBases.put(animationBase, Id.latestAnimationCacheId++);
 
         LogGenerator logGenerator = new LogGenerator("AnimationCache Debug Message", "Source: AnimationCache", "Type: Cache Creation", "ID: " + animationBase.getId(), "Severity: Info", "Message: Create animation cache: " + animationBase.getName());
-        DebugLog.debug(getClass(), logGenerator.createLog());
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     public void start(GLObject glObject) {

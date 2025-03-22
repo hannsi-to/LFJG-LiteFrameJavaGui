@@ -22,7 +22,7 @@ public class ColorCorrection extends EffectBase {
      * @param hue        the hue level
      */
     public ColorCorrection(float brightness, float contrast, float saturation, float hue) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/ColorCorrection.fsh"), true, 4, "ColorCorrection", (Class<GLObject>) null);
+        super(new ResourcesLocation("shader/frameBuffer/filter/ColorCorrection.fsh"), true, 4, "ColorCorrection");
 
         this.brightness = brightness;
         this.contrast = contrast;

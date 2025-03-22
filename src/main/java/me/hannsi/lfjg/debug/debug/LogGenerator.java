@@ -47,6 +47,24 @@ public class LogGenerator {
         return log.toString();
     }
 
+    public void logging(DebugLevel debugLevel) {
+        switch (debugLevel) {
+            case DEBUG -> {
+                DebugLog.debug(LogGenerator.class, createLog());
+            }
+            case INFO -> {
+                DebugLog.info(LogGenerator.class, createLog());
+            }
+            case WARNING -> {
+                DebugLog.warning(LogGenerator.class, createLog());
+            }
+            case ERROR -> {
+                DebugLog.error(LogGenerator.class, createLog());
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + debugLevel);
+        }
+    }
+
     /**
      * Retrieves the bar count used for formatting the log message.
      *

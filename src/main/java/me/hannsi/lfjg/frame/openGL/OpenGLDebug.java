@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.frame.openGL;
 
+import me.hannsi.lfjg.debug.debug.DebugLevel;
 import me.hannsi.lfjg.debug.debug.DebugLog;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.frame.Frame;
@@ -16,7 +17,6 @@ import static org.lwjgl.system.MemoryUtil.memUTF8;
  * Provides debugging utilities for OpenGL.
  */
 public class OpenGLDebug {
-
     /**
      * Enables OpenGL debug output and sets up a callback to handle debug messages.
      *
@@ -53,13 +53,13 @@ public class OpenGLDebug {
                             LogGenerator logGenerator = new LogGenerator("OpenGL Debug Message", "Source: " + sourceString, "Type: " + typeString, "ID: " + id, "Severity: " + severityString, "Message: " + errorMessage, "Stack Trace: \n" + stackTrace);
 
                             if (type == GL43.GL_DEBUG_TYPE_ERROR || severity == GL43.GL_DEBUG_SEVERITY_HIGH) {
-                                DebugLog.error(getClass(), logGenerator.createLog());
+                                logGenerator.logging(DebugLevel.ERROR);
                             } else if (severity == GL43.GL_DEBUG_SEVERITY_MEDIUM) {
-                                DebugLog.warning(getClass(), logGenerator.createLog());
+                                logGenerator.logging(DebugLevel.WARNING);
                             } else if (severity == GL43.GL_DEBUG_SEVERITY_LOW) {
-                                DebugLog.info(getClass(), logGenerator.createLog());
+                                logGenerator.logging(DebugLevel.INFO);
                             } else {
-                                DebugLog.debug(getClass(), logGenerator.createLog());
+                                logGenerator.logging(DebugLevel.DEBUG);
                             }
                         }
                     }

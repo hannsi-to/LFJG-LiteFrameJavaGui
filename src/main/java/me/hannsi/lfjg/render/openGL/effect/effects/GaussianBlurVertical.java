@@ -22,7 +22,7 @@ public class GaussianBlurVertical extends EffectBase {
      * @param radiusY the radius of the blur in the y-direction
      */
     public GaussianBlurVertical(float radiusY) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/GaussianBlur.fsh"), true, 6, "GaussianBlurVertical", (Class<GLObject>) null);
+        super(new ResourcesLocation("shader/frameBuffer/filter/GaussianBlur.fsh"), true, 6, "GaussianBlurVertical");
 
         this.radiusY = radiusY;
     }

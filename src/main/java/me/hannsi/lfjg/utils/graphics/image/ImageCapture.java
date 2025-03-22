@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.utils.graphics.image;
 
-import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.DebugLevel;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
@@ -96,7 +96,7 @@ public class ImageCapture {
             }
         }
 
-        DebugLog.info(getClass(), logGenerator.createLog());
+        logGenerator.logging(DebugLevel.INFO);
     }
 
     private LogGenerator writeJavaCV(String path, ByteBuffer flippedBuffer, int channels) {

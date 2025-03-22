@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.render.openGL.renderers.font;
 
-import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.DebugLevel;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
@@ -99,7 +99,7 @@ public class GLFont extends GLRect {
         if (!unknownCharacters.isEmpty()) {
             unknownCharacters.setLength(unknownCharacters.length() - 2);
             LogGenerator logGenerator = new LogGenerator("Unknown characters", "Source: " + "GLFont", "Severity: Waring", unknownCharacters.toString());
-            DebugLog.warning(getClass(), logGenerator.createLog());
+            logGenerator.logging(DebugLevel.WARNING);
         }
 
         frameBuffer = new FrameBuffer();

@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.render.openGL.system.rendering;
 
-import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.DebugLevel;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 
@@ -35,8 +35,7 @@ public class GLObjectCache {
         glObjects.add(glObject);
 
         LogGenerator logGenerator = new LogGenerator("GLObjectCache Debug Message", "Source: GLObjectCache", "Type: Cache Creation", "ID: " + glObject.getObjectId(), "Severity: Info", "Message: Create object cache: " + glObject.getName());
-
-        DebugLog.debug(getClass(), logGenerator.createLog());
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     /**

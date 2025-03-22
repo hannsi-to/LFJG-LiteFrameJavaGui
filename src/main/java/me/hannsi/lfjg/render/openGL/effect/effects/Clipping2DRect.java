@@ -26,7 +26,7 @@ public class Clipping2DRect extends EffectBase {
      * @param invert whether to invert the clipping region
      */
     public Clipping2DRect(float x1, float y1, float x2, float y2, boolean invert) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/Clipping2D.fsh"), true, 5, "Clipping2DRect", (Class<GLObject>) null);
+        super(new ResourcesLocation("shader/frameBuffer/filter/Clipping2D.fsh"), true, 5, "Clipping2DRect");
 
         this.x1 = x1;
         this.y1 = y1;
@@ -57,7 +57,7 @@ public class Clipping2DRect extends EffectBase {
      * @param invert whether to invert the clipping region
      */
     public Clipping2DRect(double x1, double y1, double x2, double y2, boolean invert) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/Clipping2D.fsh"), true, 5, "Clipping2DRect", (Class<GLObject>) null);
+        super(new ResourcesLocation("shader/frameBuffer/filter/Clipping2D.fsh"), true, 5, "Clipping2DRect");
 
         this.x1 = (float) x1;
         this.y1 = (float) y1;
