@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.audio;
 
+import me.hannsi.lfjg.debug.debug.DebugLevel;
+import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.type.types.SoundLoaderType;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
@@ -72,6 +74,9 @@ public class SoundBuffer {
         if (pcm != null) {
             MemoryUtil.memFree(pcm);
         }
+
+        LogGenerator logGenerator = new LogGenerator("SoundBuffer", "Source: SoundBuffer", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: SoundBuffer cleanup is complete.");
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     /**

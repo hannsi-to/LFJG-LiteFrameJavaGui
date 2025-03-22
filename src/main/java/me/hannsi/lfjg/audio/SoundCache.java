@@ -90,7 +90,6 @@ public class SoundCache {
         addSoundSource(name, soundSource);
 
         LogGenerator logGenerator = new LogGenerator("SoundCache Debug Message", "Source: SoundCache", "Type: Cache Creation", "Name: " + name, "Severity: Info", "Message: Create sound cache");
-
         logGenerator.logging(DebugLevel.DEBUG);
     }
 
@@ -108,6 +107,9 @@ public class SoundCache {
         if (openALDevice != NULL) {
             alcCloseDevice(openALDevice);
         }
+
+        LogGenerator logGenerator = new LogGenerator("SoundCache", "Source: SoundCache", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: SoundCache cleanup is complete.");
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     /**

@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.openGL.system.rendering;
 
+import me.hannsi.lfjg.debug.debug.DebugLevel;
+import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.debug.exceptions.frameBuffer.CompleteFrameBufferException;
 import me.hannsi.lfjg.debug.exceptions.frameBuffer.CreatingFrameBufferException;
 import me.hannsi.lfjg.debug.exceptions.render.CreatingRenderBufferException;
@@ -112,6 +114,9 @@ public class FrameBuffer {
 
         modelMatrix = null;
         viewMatrix = null;
+
+        LogGenerator logGenerator = new LogGenerator("FrameBuffer", "Source: FrameBuffer", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: FrameBuffer cleanup is complete.");
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     /**

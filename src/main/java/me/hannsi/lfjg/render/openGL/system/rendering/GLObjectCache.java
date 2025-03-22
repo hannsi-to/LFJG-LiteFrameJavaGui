@@ -81,6 +81,9 @@ public class GLObjectCache {
 
         glObjects.clear();
         frameBuffer.cleanup();
+
+        LogGenerator logGenerator = new LogGenerator("GLObjectCache", "Source: GLObjectCache", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: GLObjectCache cleanup is complete.");
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     /**

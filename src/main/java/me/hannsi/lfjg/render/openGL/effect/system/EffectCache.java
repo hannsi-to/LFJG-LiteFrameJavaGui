@@ -229,6 +229,9 @@ public class EffectCache {
         effectBases.forEach((effectBase, id) -> effectBase.cleanup());
         effectBases.clear();
         endFrameBuffer.cleanup();
+
+        LogGenerator logGenerator = new LogGenerator("EffectCache", "Source: EffectCache", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: EffectCache cleanup is complete.");
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     /**

@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.openGL.system.shader;
 
+import me.hannsi.lfjg.debug.debug.DebugLevel;
+import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.utils.buffer.ByteUtil;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
@@ -27,6 +29,9 @@ public class GLSLCode {
 
     public void cleanup() {
         fileLocation.cleanup();
+
+        LogGenerator logGenerator = new LogGenerator("GLSLCode", "Source: GLSLCode", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: GLSLCode cleanup is complete.");
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     /**

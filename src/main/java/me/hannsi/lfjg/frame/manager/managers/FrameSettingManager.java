@@ -1,6 +1,8 @@
 package me.hannsi.lfjg.frame.manager.managers;
 
+import me.hannsi.lfjg.debug.debug.DebugLevel;
 import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.manager.Manager;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
@@ -112,6 +114,9 @@ public class FrameSettingManager extends Manager {
 
     public void cleanup() {
         frameSettings.clear();
+
+        LogGenerator logGenerator = new LogGenerator("FrameSettingManager", "Source: FrameSettingManager","Type: Cleanup","ID: " + this.hashCode(),"Severity: Debug","Message: FrameSettingManager cleanup is complete.");
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     /**

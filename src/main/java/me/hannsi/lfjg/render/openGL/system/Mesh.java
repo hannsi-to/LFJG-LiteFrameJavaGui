@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.openGL.system;
 
+import me.hannsi.lfjg.debug.debug.DebugLevel;
+import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryUtil;
@@ -250,6 +252,9 @@ public class Mesh {
         vboIdList.forEach(GL30::glDeleteBuffers);
         glDeleteVertexArrays(vaoId);
         vboIdList.clear();
+
+        LogGenerator logGenerator = new LogGenerator("Mesh", "Source: Mesh", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: Mesh cleanup is complete.");
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     /**

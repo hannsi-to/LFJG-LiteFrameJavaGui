@@ -1,5 +1,10 @@
 package me.hannsi.lfjg.audio;
 
+import me.hannsi.lfjg.debug.debug.DebugLevel;
+import me.hannsi.lfjg.debug.debug.LogGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -14,6 +19,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  */
 public class AudioDevices {
     public static final ByteBuffer DEFAULT = null;
+    private static final Logger log = LoggerFactory.getLogger(AudioDevices.class);
     private Map<String, ByteBuffer> deviceMap;
 
     /**
@@ -36,6 +42,9 @@ public class AudioDevices {
 
     public void cleanup() {
         deviceMap.clear();
+
+        LogGenerator logGenerator = new LogGenerator("AudioDevices", "Source: AudioDevices", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: Audio device cleanup is complete.");
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     /**

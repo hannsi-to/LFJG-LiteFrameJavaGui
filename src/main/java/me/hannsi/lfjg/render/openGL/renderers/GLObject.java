@@ -92,6 +92,9 @@ public class GLObject implements Cloneable {
         vaoRendering.cleanup();
         glUtil.cleanup();
         blendType = null;
+
+        LogGenerator logGenerator = new LogGenerator(name, "Source: GLObject", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: GLObject cleanup is complete.");
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     /**

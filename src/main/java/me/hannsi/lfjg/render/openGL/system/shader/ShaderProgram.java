@@ -1,6 +1,8 @@
 package me.hannsi.lfjg.render.openGL.system.shader;
 
+import me.hannsi.lfjg.debug.debug.DebugLevel;
 import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.debug.exceptions.shader.CompilingShaderException;
 import me.hannsi.lfjg.debug.exceptions.shader.CreatingShaderException;
 import me.hannsi.lfjg.debug.exceptions.shader.CreatingShaderProgramException;
@@ -18,11 +20,8 @@ import static org.lwjgl.opengl.GL20.*;
  * Represents a shader program in the OpenGL rendering system.
  */
 public class ShaderProgram {
-
     private final int programId;
-
     private int vertexShaderId;
-
     private int fragmentShaderId;
 
     /**
@@ -49,6 +48,9 @@ public class ShaderProgram {
         if (programId != 0) {
             glDeleteProgram(programId);
         }
+
+        LogGenerator logGenerator = new LogGenerator("ShaderProgram", "Source: ShaderProgram", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: ShaderProgram cleanup is complete.");
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     /**

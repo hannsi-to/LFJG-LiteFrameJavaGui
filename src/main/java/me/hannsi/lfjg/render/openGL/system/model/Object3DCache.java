@@ -54,6 +54,9 @@ public class Object3DCache {
         lights.cleanup();
         textureModelCache.cleanup();
         modelMap.values().forEach(Model::cleanup);
+
+        LogGenerator logGenerator = new LogGenerator("Object3DCache", "Source: Object3DCache","Type: Cleanup","ID: " + this.hashCode(),"Severity: Debug","Message: Object3DCache cleanup is complete.");
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     /**

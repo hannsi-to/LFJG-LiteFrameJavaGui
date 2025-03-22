@@ -1,5 +1,8 @@
 package me.hannsi.lfjg.render.openGL.system.model.model;
 
+import me.hannsi.lfjg.debug.debug.DebugLevel;
+import me.hannsi.lfjg.debug.debug.LogGenerator;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +34,9 @@ public class Model {
         materialList.forEach(Material::cleanup);
         entitiesList.clear();
         materialList.clear();
+
+        LogGenerator logGenerator = new LogGenerator(id, "Source: Model", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: Model cleanup is complete.");
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     /**

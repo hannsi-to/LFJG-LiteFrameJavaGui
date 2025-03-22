@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.openGL.system.model.model;
 
+import me.hannsi.lfjg.debug.debug.DebugLevel;
+import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.render.openGL.system.Mesh;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
 import org.joml.Vector4f;
@@ -39,6 +41,9 @@ public class Material {
         meshList.forEach(Mesh::cleanup);
         specularColor = null;
         texturePath.cleanup();
+
+        LogGenerator logGenerator = new LogGenerator("Material", "Source: Material", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: Material cleanup is complete.");
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     /**

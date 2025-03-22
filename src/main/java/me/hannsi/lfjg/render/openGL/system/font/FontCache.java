@@ -69,6 +69,9 @@ public class FontCache {
         });
 
         fontMap.clear();
+
+        LogGenerator logGenerator = new LogGenerator("FontCache", "Source: FontCache", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: FontCache cleanup is complete.");
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     /**

@@ -1,6 +1,8 @@
 package me.hannsi.lfjg.render.openGL.system.font;
 
+import me.hannsi.lfjg.debug.debug.DebugLevel;
 import me.hannsi.lfjg.debug.debug.DebugLog;
+import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.lwjgl.BufferUtils;
@@ -74,6 +76,9 @@ public class CFont {
         filepath.cleanup();
         font = null;
         characterMap.clear();
+
+        LogGenerator logGenerator = new LogGenerator("CFont", "Source: CFont", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: CFont cleanup is complete.");
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     /**

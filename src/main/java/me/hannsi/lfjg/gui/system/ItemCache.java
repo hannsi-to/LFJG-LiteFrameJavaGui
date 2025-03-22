@@ -32,5 +32,8 @@ public class ItemCache {
         }
 
         itemCache = null;
+
+        LogGenerator logGenerator = new LogGenerator("ItemCache", "Source: ItemCache", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: ItemCache cleanup is complete.");
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 }

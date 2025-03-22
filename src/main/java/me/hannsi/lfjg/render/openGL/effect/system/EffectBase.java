@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.openGL.effect.system;
 
+import me.hannsi.lfjg.debug.debug.DebugLevel;
+import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
@@ -10,9 +12,9 @@ import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 public class EffectBase {
     private final ResourcesLocation vertexPath;
     private final ResourcesLocation fragmentPath;
+    private final String name;
     private FrameBuffer frameBuffer;
     private int id;
-    private String name;
     private Class<GLObject>[] ignoreGLObject;
 
     /**
@@ -88,8 +90,10 @@ public class EffectBase {
 
     public void cleanup() {
         frameBuffer.cleanup();
-        name = "";
         ignoreGLObject = null;
+
+        LogGenerator logGenerator = new LogGenerator(name, "Source: EffectBase", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: EffectBase cleanup is complete.");
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     /**
@@ -180,15 +184,6 @@ public class EffectBase {
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * Sets the name of the effect.
-     *
-     * @param name the name of the effect
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**

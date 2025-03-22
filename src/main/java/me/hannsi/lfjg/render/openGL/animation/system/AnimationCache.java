@@ -46,6 +46,9 @@ public class AnimationCache {
         });
 
         animationBases.clear();
+
+        LogGenerator logGenerator = new LogGenerator("AnimationCache", "Source: AnimationCache", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: AnimationCache cleanup is complete.");
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     public LinkedHashMap<AnimationBase, Long> getAnimationBases() {

@@ -1,9 +1,11 @@
 package me.hannsi.lfjg.render.openGL.animation.system;
 
+import me.hannsi.lfjg.debug.debug.DebugLevel;
+import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 
 public class AnimationBase {
-    private String name;
+    private final String name;
     private int id;
     private boolean isLooping;
     private long initTime;
@@ -58,20 +60,19 @@ public class AnimationBase {
     }
 
     public void cleanup() {
-        name = "";
         isLooping = false;
         initTime = 0;
         currentTime = 0;
         pauseTime = 0;
+
+        LogGenerator logGenerator = new LogGenerator(name, "Source: AnimationBase", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: AnimationBase cleanup is complete.");
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public int getId() {
         return id;

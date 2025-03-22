@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.openGL.system.rendering;
 
+import me.hannsi.lfjg.debug.debug.DebugLevel;
+import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.frame.LFJGContext;
 import org.joml.Vector2f;
 
@@ -58,6 +60,9 @@ public class SplitFrameBuffer {
 
         smallFrameBuffers = null;
         smallResolution = null;
+
+        LogGenerator logGenerator = new LogGenerator("SplitFrameBuffer", "Source: SplitFrameBuffer", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: SplitFrameBuffer cleanup is complete.");
+        logGenerator.logging(DebugLevel.DEBUG);
     }
 
     /**
