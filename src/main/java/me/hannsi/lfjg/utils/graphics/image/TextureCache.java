@@ -3,7 +3,6 @@ package me.hannsi.lfjg.utils.graphics.image;
 import me.hannsi.lfjg.debug.debug.DebugLevel;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.utils.reflection.Location;
-import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.ImageLoaderType;
 
 import java.util.HashMap;
@@ -13,8 +12,6 @@ import java.util.Map;
  * Class for managing a cache of textures.
  */
 public class TextureCache {
-    public static final ResourcesLocation DEFAULT_TEXTURE = new ResourcesLocation("texture/default.png");
-
     private Map<Location, TextureLoader> textureMap;
 
     /**
@@ -22,7 +19,6 @@ public class TextureCache {
      */
     public TextureCache() {
         this.textureMap = new HashMap<>();
-        createCache(DEFAULT_TEXTURE);
     }
 
     /**
@@ -57,9 +53,7 @@ public class TextureCache {
         if (path != null) {
             texture = textureMap.get(path);
         }
-        if (texture == null) {
-            texture = textureMap.get(DEFAULT_TEXTURE);
-        }
+
         return texture;
     }
 

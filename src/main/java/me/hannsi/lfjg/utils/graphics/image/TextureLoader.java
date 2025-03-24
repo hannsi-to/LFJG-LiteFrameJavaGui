@@ -116,7 +116,7 @@ public class TextureLoader {
 
                         ByteBuffer image = STBImage.stbi_load(texturePath.getPath(), width, height, channels, 4);
                         if (image == null) {
-                            throw new RuntimeException("Failed to load icon image: " + texturePath.getPath());
+                            throw new RuntimeException("Failed to load image: " + texturePath.getPath());
                         }
 
                         generateTexture(width.get(0), height.get(0), image);

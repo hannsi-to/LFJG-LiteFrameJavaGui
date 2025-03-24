@@ -70,7 +70,7 @@ public class GLObject implements Cloneable {
         this.drawType = null;
         this.mesh = null;
         this.frameBuffer = null;
-        this.objectId = ++Id.glLatestObjectId;
+        this.objectId = ++Id.latestGLObjectId;
     }
 
     /**

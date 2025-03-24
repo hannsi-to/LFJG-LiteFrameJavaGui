@@ -12,7 +12,5 @@ public class CreatingTextureException extends RuntimeException {
      */
     public CreatingTextureException(String message) {
         super(message);
-        System.err.println(message);
-        System.exit(1);
     }
 }
