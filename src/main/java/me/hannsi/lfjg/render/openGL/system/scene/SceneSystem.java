@@ -60,6 +60,7 @@ public class SceneSystem {
         }
 
         currentScene.getiScene().init();
+        currentScene.setInitialize(true);
     }
 
     public void drawFrameScenes() {
