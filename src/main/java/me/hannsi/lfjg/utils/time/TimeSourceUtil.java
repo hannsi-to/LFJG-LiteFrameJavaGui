@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.utils.time;
 
-import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.frame.setting.settings.TimeSourceSetting;
 import me.hannsi.lfjg.utils.type.types.TimeSourceType;
 import org.lwjgl.glfw.GLFW;
 
@@ -98,8 +96,8 @@ public class TimeSourceUtil {
      * @return the current time in milliseconds
      * @throws IllegalStateException if the time source setting is unexpected
      */
-    public static long getTimeMills(Frame frame) {
-        switch ((TimeSourceType) frame.getFrameSettingBase(TimeSourceSetting.class).getValue()) {
+    public static long getTimeMills(TimeSourceType timeSourceType) {
+        switch (timeSourceType) {
             case GLFWTime -> {
                 return getGLFWTimeMills();
             }
@@ -109,8 +107,7 @@ public class TimeSourceUtil {
             case NanoTime -> {
                 return getNanoTimeMills();
             }
-            default ->
-                    throw new IllegalStateException("Unexpected value: " + frame.getFrameSettingBase(TimeSourceSetting.class).getValue());
+            default -> throw new IllegalStateException("Unexpected value: " + timeSourceType);
         }
     }
 
@@ -121,8 +118,8 @@ public class TimeSourceUtil {
      * @return the current time in seconds
      * @throws IllegalStateException if the time source setting is unexpected
      */
-    public static double getTime(Frame frame) {
-        switch ((TimeSourceType) frame.getFrameSettingBase(TimeSourceSetting.class).getValue()) {
+    public static double getTime(TimeSourceType timeSourceType) {
+        switch (timeSourceType) {
             case GLFWTime -> {
                 return getGLFWTime();
             }
@@ -132,8 +129,7 @@ public class TimeSourceUtil {
             case NanoTime -> {
                 return getNanoTime();
             }
-            default ->
-                    throw new IllegalStateException("Unexpected value: " + frame.getFrameSettingBase(TimeSourceSetting.class).getValue());
+            default -> throw new IllegalStateException("Unexpected value: " + timeSourceType);
         }
     }
 
@@ -144,8 +140,8 @@ public class TimeSourceUtil {
      * @return the current time in nanoseconds
      * @throws IllegalStateException if the time source setting is unexpected
      */
-    public static long getNanoTime(Frame frame) {
-        switch ((TimeSourceType) frame.getFrameSettingBase(TimeSourceSetting.class).getValue()) {
+    public static long getNanoTime(TimeSourceType timeSourceType) {
+        switch (timeSourceType) {
             case GLFWTime -> {
                 return getGLFWTimeNano();
             }
@@ -155,8 +151,7 @@ public class TimeSourceUtil {
             case NanoTime -> {
                 return getNanoTimeNano();
             }
-            default ->
-                    throw new IllegalStateException("Unexpected value: " + frame.getFrameSettingBase(TimeSourceSetting.class).getValue());
+            default -> throw new IllegalStateException("Unexpected value: " + timeSourceType);
         }
     }
 }

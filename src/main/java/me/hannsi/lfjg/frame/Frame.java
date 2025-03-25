@@ -175,18 +175,18 @@ public class Frame implements IFrame {
      * The main loop of the frame, responsible for rendering and handling events.
      */
     private void mainLoop() {
-        long lastTime2 = TimeSourceUtil.getNanoTime(this);
+        long lastTime2 = TimeSourceUtil.getNanoTime(getFrameSettingValue(TimeSourceSetting.class));
         double deltaTime2 = 0;
         double targetTime = 1_000_000_000.0 / (int) getFrameSettingValue(RefreshRateSetting.class);
         int frames2 = 0;
-        long fpsLsatTime = TimeSourceUtil.getNanoTime(this);
+        long fpsLsatTime = TimeSourceUtil.getNanoTime(getFrameSettingValue(TimeSourceSetting.class));
 
-        startTime = TimeSourceUtil.getTimeMills(this);
+        startTime = TimeSourceUtil.getTimeMills(getFrameSettingValue(TimeSourceSetting.class));
 
         while (!GLFW.glfwWindowShouldClose(windowID)) {
-            currentTime = TimeSourceUtil.getTimeMills(this);
+            currentTime = TimeSourceUtil.getTimeMills(getFrameSettingValue(TimeSourceSetting.class));
 
-            long currentTime2 = TimeSourceUtil.getNanoTime(this);
+            long currentTime2 = TimeSourceUtil.getNanoTime(getFrameSettingValue(TimeSourceSetting.class));
             deltaTime2 += currentTime2 - lastTime2;
             lastTime2 = currentTime2;
 
@@ -222,14 +222,14 @@ public class Frame implements IFrame {
                 }
             }
 
-            lastTime = TimeSourceUtil.getTimeMills(this);
+            lastTime = TimeSourceUtil.getTimeMills(getFrameSettingValue(TimeSourceSetting.class));
 
             if (shouldCleanup) {
                 stopFrame();
             }
         }
 
-        finishTime = TimeSourceUtil.getTimeMills(this);
+        finishTime = TimeSourceUtil.getTimeMills(getFrameSettingValue(TimeSourceSetting.class));
 
         finished();
     }
