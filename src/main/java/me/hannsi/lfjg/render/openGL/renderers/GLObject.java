@@ -50,6 +50,17 @@ public class GLObject implements Cloneable {
     private float width;
     private float height;
 
+    private float centerX;
+    private float centerY;
+
+    private float angleX;
+    private float angleY;
+    private float angleZ;
+
+    private float scaleX;
+    private float scaleY;
+    private float scaleZ;
+
     /**
      * Constructs a new GLObject with the specified name.
      *
@@ -211,6 +222,32 @@ public class GLObject implements Cloneable {
         }
 
         return glObject;
+    }
+
+    public GLObject translate(float x, float y, float z) {
+        centerX += x;
+        centerY += y;
+        modelMatrix.translate(x, y, z);
+
+        return this;
+    }
+
+    public GLObject rotateXYZ(float angleX, float angleY, float angleZ) {
+        this.angleX += angleX;
+        this.angleY += angleY;
+        this.angleZ += angleZ;
+        modelMatrix.rotateXYZ(angleX, angleY, angleZ);
+
+        return this;
+    }
+
+    public GLObject scale(float scaleX, float scaleY, float scaleZ) {
+        this.scaleX = scaleX;
+        this.scaleY = scaleY;
+        this.scaleZ = scaleZ;
+        modelMatrix.scale(scaleX, scaleY, scaleZ);
+
+        return this;
     }
 
     @Override
@@ -585,5 +622,69 @@ public class GLObject implements Cloneable {
 
     public void setHeight(float height) {
         this.height = height;
+    }
+
+    public float getCenterX() {
+        return centerX;
+    }
+
+    public void setCenterX(float centerX) {
+        this.centerX = centerX;
+    }
+
+    public float getCenterY() {
+        return centerY;
+    }
+
+    public void setCenterY(float centerY) {
+        this.centerY = centerY;
+    }
+
+    public float getAngleX() {
+        return angleX;
+    }
+
+    public void setAngleX(float angleX) {
+        this.angleX = angleX;
+    }
+
+    public float getAngleY() {
+        return angleY;
+    }
+
+    public void setAngleY(float angleY) {
+        this.angleY = angleY;
+    }
+
+    public float getAngleZ() {
+        return angleZ;
+    }
+
+    public void setAngleZ(float angleZ) {
+        this.angleZ = angleZ;
+    }
+
+    public float getScaleX() {
+        return scaleX;
+    }
+
+    public void setScaleX(float scaleX) {
+        this.scaleX = scaleX;
+    }
+
+    public float getScaleY() {
+        return scaleY;
+    }
+
+    public void setScaleY(float scaleY) {
+        this.scaleY = scaleY;
+    }
+
+    public float getScaleZ() {
+        return scaleZ;
+    }
+
+    public void setScaleZ(float scaleZ) {
+        this.scaleZ = scaleZ;
     }
 }

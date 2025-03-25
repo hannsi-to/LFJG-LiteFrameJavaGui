@@ -25,8 +25,6 @@ public class TestGuiFrame implements LFJGFrame {
     KeyboardInfo keyboardInfo;
     Camera camera;
 
-    int counter;
-
     public static void main(String[] args) {
         new TestGuiFrame().setFrame();
     }
@@ -55,15 +53,6 @@ public class TestGuiFrame implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-        if (counter > 5000 && counter < 10000) {
-            sceneSystem.changeScene("TestScene1");
-            counter = 20000;
-        } else {
-            if (counter != 20000) {
-                counter++;
-            }
-        }
-
         sceneSystem.drawFrameScenes();
 
         float move = 0.01f;

@@ -7,6 +7,9 @@ import me.hannsi.lfjg.render.openGL.renderers.GLObject;
  * Class representing a Translate effect in OpenGL.
  */
 public class Translate extends EffectBase {
+    protected float latestX;
+    protected float latestY;
+    protected float latestZ;
     private float x;
     private float y;
     private float z;
@@ -63,7 +66,10 @@ public class Translate extends EffectBase {
      */
     @Override
     public void pop(GLObject baseGLObject) {
-        getFrameBuffer().getModelMatrix().translate(-x, -y, -z);
+        latestX = x;
+        latestY = y;
+        latestZ = z;
+
         super.pop(baseGLObject);
     }
 
@@ -74,7 +80,7 @@ public class Translate extends EffectBase {
      */
     @Override
     public void push(GLObject baseGLObject) {
-        getFrameBuffer().getModelMatrix().translate(x, y, z);
+        baseGLObject.translate(-latestX, -latestY, -latestZ).translate(x, y, z);
         super.push(baseGLObject);
     }
 

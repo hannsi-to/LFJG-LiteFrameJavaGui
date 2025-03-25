@@ -2906,11 +2906,56 @@ public class MathHelper {
         return new Vector2d(centroidX, centroidY);
     }
 
-    public static Vector2d calculateCentroid(float[] positions) {
+    public static Vector2d calculateCentroid(double[] positions) {
         Vector2d[] positions2D = new Vector2d[positions.length / 2];
         int index = 0;
         for (int i = 0; i < positions.length; i += 2) {
             positions2D[index] = new Vector2d(positions[i], positions[i + 1]);
+            index++;
+        }
+
+        return calculateCentroid(positions2D);
+    }
+
+    public static Vector2f calculateCentroid(Vector2f[] positions) {
+        int n = positions.length;
+        if (n < 3) {
+            throw new IllegalArgumentException("Polygon must have at least 3 vertices.");
+        }
+
+        float signedArea = 0.0f;
+        float centroidX = 0.0f;
+        float centroidY = 0.0f;
+
+        for (int i = 0; i < n; i++) {
+            int next = (i + 1) % n;
+            float x0 = positions[i].x();
+            float y0 = positions[i].y();
+            float x1 = positions[next].x();
+            float y1 = positions[next].y();
+
+            float cross = x0 * y1 - x1 * y0;
+            signedArea += cross;
+            centroidX += (x0 + x1) * cross;
+            centroidY += (y0 + y1) * cross;
+        }
+
+        signedArea *= 0.5f;
+        if (abs(signedArea) < 1e-10f) {
+            throw new IllegalArgumentException("Not a valid polygon.");
+        }
+
+        centroidX /= (6f * signedArea);
+        centroidY /= (6f * signedArea);
+
+        return new Vector2f(centroidX, centroidY);
+    }
+
+    public static Vector2f calculateCentroid(float[] positions) {
+        Vector2f[] positions2D = new Vector2f[positions.length / 2];
+        int index = 0;
+        for (int i = 0; i < positions.length; i += 2) {
+            positions2D[index] = new Vector2f(positions[i], positions[i + 1]);
             index++;
         }
 

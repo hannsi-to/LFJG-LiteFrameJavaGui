@@ -6,8 +6,11 @@ import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 /**
  * Class representing a Size effect in OpenGL.
  */
-public class Size extends EffectBase {
+public class Scale extends EffectBase {
     private final boolean autoCenter;
+    protected float latestX;
+    protected float latestY;
+    protected float latestZ;
     private float x;
     private float y;
     private float z;
@@ -25,8 +28,8 @@ public class Size extends EffectBase {
      * @param cy the Y coordinate of the scaling center
      * @param cz the Z coordinate of the scaling center
      */
-    public Size(float x, float y, float z, float cx, float cy, float cz, boolean autoCenter) {
-        super(0, "Size", (Class<GLObject>) null);
+    public Scale(float x, float y, float z, float cx, float cy, float cz, boolean autoCenter) {
+        super(0, "Scale", (Class<GLObject>) null);
         this.x = x;
         this.y = y;
         this.z = z;
@@ -34,6 +37,10 @@ public class Size extends EffectBase {
         this.cx = cx;
         this.cy = cy;
         this.cz = cz;
+
+        this.latestX = 1;
+        this.latestY = 1;
+        this.latestZ = 1;
     }
 
     /**
@@ -46,7 +53,7 @@ public class Size extends EffectBase {
      * @param cy the Y coordinate of the scaling center
      * @param cz the Z coordinate of the scaling center
      */
-    public Size(double x, double y, double z, double cx, double cy, double cz) {
+    public Scale(double x, double y, double z, double cx, double cy, double cz) {
         this((float) x, (float) y, (float) z, (float) cx, (float) cy, (float) cz, false);
     }
 
@@ -56,11 +63,11 @@ public class Size extends EffectBase {
      * @param x the scaling factor along the X axis
      * @param y the scaling factor along the Y axis
      */
-    public Size(float x, float y) {
+    public Scale(float x, float y) {
         this(x, y, 1.0f);
     }
 
-    public Size(float x, float y, boolean autoCenter) {
+    public Scale(float x, float y, boolean autoCenter) {
         this(x, y, 1.0f, autoCenter);
     }
 
@@ -70,11 +77,11 @@ public class Size extends EffectBase {
      * @param x the scaling factor along the X axis
      * @param y the scaling factor along the Y axis
      */
-    public Size(double x, double y) {
+    public Scale(double x, double y) {
         this((float) x, (float) y, 1.0f);
     }
 
-    public Size(double x, double y, boolean autoCenter) {
+    public Scale(double x, double y, boolean autoCenter) {
         this((float) x, (float) y, 1.0f, autoCenter);
     }
 
@@ -85,11 +92,11 @@ public class Size extends EffectBase {
      * @param y the scaling factor along the Y axis
      * @param z the scaling factor along the Z axis
      */
-    public Size(float x, float y, float z) {
+    public Scale(float x, float y, float z) {
         this(x, y, z, 0, 0, 0);
     }
 
-    public Size(float x, float y, float z, boolean autoCenter) {
+    public Scale(float x, float y, float z, boolean autoCenter) {
         this(x, y, z, 0, 0, 0, autoCenter);
     }
 
@@ -100,11 +107,11 @@ public class Size extends EffectBase {
      * @param y the scaling factor along the Y axis
      * @param z the scaling factor along the Z axis
      */
-    public Size(double x, double y, double z) {
+    public Scale(double x, double y, double z) {
         this(x, y, z, 0, 0, 0);
     }
 
-    public Size(double x, double y, double z, boolean autoCenter) {
+    public Scale(double x, double y, double z, boolean autoCenter) {
         this((float) x, (float) y, (float) z, 0, 0, 0, autoCenter);
     }
 
@@ -116,7 +123,7 @@ public class Size extends EffectBase {
      * @param cx the X coordinate of the scaling center
      * @param cy the Y coordinate of the scaling center
      */
-    public Size(float x, float y, float cx, float cy) {
+    public Scale(float x, float y, float cx, float cy) {
         this(x, y, 1.0f, cx, cy, 0);
     }
 
@@ -128,7 +135,7 @@ public class Size extends EffectBase {
      * @param cx the X coordinate of the scaling center
      * @param cy the Y coordinate of the scaling center
      */
-    public Size(double x, double y, double cx, double cy) {
+    public Scale(double x, double y, double cx, double cy) {
         this(x, y, 1.0f, cx, cy, 0);
     }
 
@@ -139,6 +146,10 @@ public class Size extends EffectBase {
      */
     @Override
     public void pop(GLObject baseGLObject) {
+        latestX = x;
+        latestY = y;
+        latestZ = z;
+
         super.pop(baseGLObject);
     }
 
@@ -149,6 +160,13 @@ public class Size extends EffectBase {
      */
     @Override
     public void push(GLObject baseGLObject) {
+        if (autoCenter) {
+            cx = baseGLObject.getCenterX();
+            cy = baseGLObject.getCenterY();
+        }
+
+        baseGLObject.translate(cx, cy, cz).scale(1 / latestX, 1 / latestY, 1 / latestZ).scale(x, y, z).translate(-cx, -cy, -cz);
+
         super.push(baseGLObject);
     }
 
@@ -183,16 +201,7 @@ public class Size extends EffectBase {
      */
     @Override
     public void frameBuffer(GLObject baseGLObject) {
-        if (autoCenter) {
-            float centerOffsetX = getFrameBuffer().getWidth() / 2f;
-            float centerOffsetY = getFrameBuffer().getHeight() / 2f;
-            cx = getFrameBuffer().getX() + centerOffsetX;
-            cy = getFrameBuffer().getY() + centerOffsetY;
-        }
-
-        getFrameBuffer().getModelMatrix().translate(cx, cy, cz).scale(x, y, z).translate(cx, -cy, -cz);
         getFrameBuffer().drawFrameBuffer();
-        getFrameBuffer().getModelMatrix().translate(cx, cy, cz).scale(-x, -y, -z).translate(cx, -cy, -cz);
         super.frameBuffer(baseGLObject);
     }
 

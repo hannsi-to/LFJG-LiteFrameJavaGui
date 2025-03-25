@@ -7,6 +7,9 @@ import me.hannsi.lfjg.render.openGL.renderers.GLObject;
  * Class representing a Rotate effect in OpenGL.
  */
 public class Rotate extends EffectBase {
+    protected float latestX;
+    protected float latestY;
+    protected float latestZ;
     private float x;
     private float y;
     private float z;
@@ -114,6 +117,10 @@ public class Rotate extends EffectBase {
      */
     @Override
     public void pop(GLObject baseGLObject) {
+        latestX = x;
+        latestY = y;
+        latestZ = z;
+
         super.pop(baseGLObject);
     }
 
@@ -124,6 +131,13 @@ public class Rotate extends EffectBase {
      */
     @Override
     public void push(GLObject baseGLObject) {
+        if (autoCenter) {
+            cx = baseGLObject.getCenterX();
+            cy = baseGLObject.getCenterY();
+        }
+
+        baseGLObject.translate(cx, cy, cz).rotateXYZ(-latestX, -latestY, -latestZ).rotateXYZ(x, y, z).translate(-cx, -cy, -cz);
+
         super.push(baseGLObject);
     }
 
@@ -135,7 +149,6 @@ public class Rotate extends EffectBase {
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();
-
         super.frameBufferPush(baseGLObject);
     }
 
@@ -147,7 +160,6 @@ public class Rotate extends EffectBase {
     @Override
     public void frameBufferPop(GLObject baseGLObject) {
         getFrameBuffer().unbindFrameBuffer();
-
         super.frameBufferPop(baseGLObject);
     }
 
@@ -158,17 +170,7 @@ public class Rotate extends EffectBase {
      */
     @Override
     public void frameBuffer(GLObject baseGLObject) {
-        if (autoCenter) {
-            float centerOffsetX = getFrameBuffer().getWidth() / 2f;
-            float centerOffsetY = getFrameBuffer().getHeight() / 2f;
-            cx = getFrameBuffer().getX() + centerOffsetX;
-            cy = getFrameBuffer().getY() + centerOffsetY;
-        }
-
-        getFrameBuffer().getModelMatrix().translate(cx, cy, cz).rotateXYZ(x, y, z).translate(-cx, -cy, -cz);
         getFrameBuffer().drawFrameBuffer();
-        getFrameBuffer().getModelMatrix().translate(cx, cy, cz).rotateXYZ(-x, -y, -z).translate(-cx, -cy, -cz);
-
         super.frameBuffer(baseGLObject);
     }
 

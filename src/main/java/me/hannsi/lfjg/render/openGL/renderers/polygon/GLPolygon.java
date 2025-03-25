@@ -143,6 +143,18 @@ public class GLPolygon extends GLObject {
         setWidth(bounds[2] - bounds[0]);
         setHeight(bounds[3] - bounds[1]);
 
+        Vector2f center = new Vector2f(bounds[0] + bounds[2] / 2f, bounds[1] + bounds[3] / 2f);
+        setCenterX(center.x());
+        setCenterY(center.y());
+
+        setAngleX(0);
+        setAngleY(0);
+        setAngleZ(0);
+
+        setScaleX(1);
+        setScaleY(1);
+        setScaleZ(1);
+
         create();
     }
 
@@ -160,10 +172,18 @@ public class GLPolygon extends GLObject {
             float x = vertex[i];
             float y = vertex[i + 1];
 
-            if (x < minX) minX = x;
-            if (x > maxX) maxX = x;
-            if (y < minY) minY = y;
-            if (y > maxY) maxY = y;
+            if (x < minX) {
+                minX = x;
+            }
+            if (x > maxX) {
+                maxX = x;
+            }
+            if (y < minY) {
+                minY = y;
+            }
+            if (y > maxY) {
+                maxY = y;
+            }
         }
 
         return new float[]{minX, minY, maxX, maxY};
