@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.openGL.system;
+package me.hannsi.lfjg.render.openGL.system.scene;
 
 public interface IScene {
     void init();

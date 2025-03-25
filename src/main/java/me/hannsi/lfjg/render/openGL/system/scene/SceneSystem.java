@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.openGL.system;
+package me.hannsi.lfjg.render.openGL.system.scene;
 
 import me.hannsi.lfjg.debug.debug.DebugLevel;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
