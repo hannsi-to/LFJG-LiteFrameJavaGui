@@ -1,9 +1,7 @@
 package me.hannsi.test;
 
 import me.hannsi.lfjg.frame.LFJGContext;
-import me.hannsi.lfjg.render.openGL.effect.effects.DrawObject;
-import me.hannsi.lfjg.render.openGL.effect.effects.Rotate;
-import me.hannsi.lfjg.render.openGL.effect.effects.Texture;
+import me.hannsi.lfjg.render.openGL.effect.effects.*;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.system.scene.IScene;
@@ -38,8 +36,8 @@ public class TestScene2 implements IScene {
         glRect1EffectCache = new EffectCache();
         glRect1EffectCache.createCache("Texture1", new Texture(textureCache, image1, BlendType.Normal));
         glRect1EffectCache.createCache("DrawObject1", new DrawObject());
-//        glRect1EffectCache.createCache("Translate1",new Translate(100,100,0));
-//        glRect1EffectCache.createCache("Scale1",new Scale(0.5,1,1,true));
+        glRect1EffectCache.createCache("Translate1",new Translate(100,100,0));
+        glRect1EffectCache.createCache("Scale1",new Scale(0.5,1,1,true));
         glRect1EffectCache.createCache("Rotate1", new Rotate(0, 0, Math.toRadians(45), true));
         glRect1EffectCache.create(glRect1);
         glRect1.setEffectCache(glRect1EffectCache);
