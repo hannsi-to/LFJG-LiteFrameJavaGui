@@ -6,7 +6,9 @@ import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.render.openGL.system.Mesh;
 import org.lwjgl.opengl.GL30;
 
-import static org.lwjgl.opengl.GL11.glDrawArrays;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 /**
@@ -19,22 +21,7 @@ public class VAORendering {
      * @param glObject the GLObject to draw
      */
     public void draw(GLObject glObject) {
-        glBindVertexArray(glObject.getMesh().getVaoId());
-
-        int count;
-        switch (glObject.getMesh().getProjectionType()) {
-            case OrthographicProjection -> {
-                count = glObject.getMesh().getPositions().length / 2;
-            }
-            case PerspectiveProjection -> {
-                count = glObject.getMesh().getPositions().length / 3;
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + glObject.getMesh().getProjectionType());
-        }
-
-        glDrawArrays(glObject.getDrawType().getId(), 0, count);
-
-        glBindVertexArray(0);
+        drawMesh(glObject.getMesh(), glObject.getDrawType().getId());
     }
 
     /**
@@ -43,29 +30,32 @@ public class VAORendering {
      * @param mesh the Mesh to draw
      */
     public void draw(Mesh mesh) {
+        drawMesh(mesh, GL30.GL_POLYGON);
+    }
+
+    public void drawMesh(Mesh mesh, int drawType) {
         glBindVertexArray(mesh.getVaoId());
-
-        int count;
-        switch (mesh.getProjectionType()) {
-            case OrthographicProjection -> {
-                count = mesh.getPositions().length / 2;
+        try {
+            if (mesh.isUesEBO()) {
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.getEboId());
+                glDrawElements(drawType, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+            } else {
+                int count = switch (mesh.getProjectionType()) {
+                    case OrthographicProjection -> mesh.getPositions().length / 2;
+                    case PerspectiveProjection -> mesh.getPositions().length / 3;
+                };
+                glDrawArrays(drawType, 0, count);
             }
-            case PerspectiveProjection -> {
-                count = mesh.getPositions().length / 3;
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + mesh.getProjectionType());
+        } finally {
+            glBindVertexArray(0);
         }
-
-        glDrawArrays(GL30.GL_POLYGON, 0, count);
-
-        glBindVertexArray(0);
     }
 
     /**
      * Cleans up the resources associated with the current GLObject.
      */
     public void cleanup() {
-        LogGenerator logGenerator = new LogGenerator("VAORendering", "Source: VAORendering", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: VAORendering cleanup is complete.");
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator("VAORendering", "Source: VAORendering", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: VAORendering cleanup is complete.").logging(DebugLevel.DEBUG);
     }
 }

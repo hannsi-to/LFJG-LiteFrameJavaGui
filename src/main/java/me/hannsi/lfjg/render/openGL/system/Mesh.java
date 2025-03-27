@@ -8,8 +8,7 @@ import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.lwjgl.opengl.GL30.*;
 
@@ -18,14 +17,18 @@ import static org.lwjgl.opengl.GL30.*;
  * Handles the creation and management of vertex buffer objects (VBOs) and vertex array objects (VAOs).
  */
 public class Mesh {
-    private static final ProjectionType DEFAULT_PROJECTION_TYPE = ProjectionType.OrthographicProjection;
+    public static ProjectionType DEFAULT_PROJECTION_TYPE = ProjectionType.OrthographicProjection;
+    public static boolean DEFAULT_UES_EBO = true;
+
     private final float[] positions;
     private final float[] colors;
     private final float[] texture;
     private final ProjectionType projectionType;
+    private final boolean uesEBO;
     private final int vaoId;
     private final List<Integer> vboIdList;
     private int numVertices;
+    private int eboId;
 
     /**
      * Constructs a new Mesh instance with the specified positions and colors.
@@ -67,119 +70,47 @@ public class Mesh {
      * @param texture        the texture coordinates
      */
     public Mesh(ProjectionType projectionType, float[] positions, float[] colors, float[] texture) {
+        this(projectionType, positions, colors, texture, DEFAULT_UES_EBO);
+    }
+
+    public Mesh(ProjectionType projectionType, float[] positions, float[] colors, float[] texture, boolean uesEBO) {
         this.projectionType = projectionType;
         this.positions = positions;
         this.colors = colors;
         this.texture = texture;
+        this.uesEBO = uesEBO;
 
         vboIdList = new ArrayList<>();
 
         vaoId = glGenVertexArrays();
         glBindVertexArray(vaoId);
 
-        int vboId = glGenBuffers();
-        vboIdList.add(vboId);
-        FloatBuffer positionsBuffer = MemoryUtil.memAllocFloat(positions.length);
-        positionsBuffer.put(0, positions);
-        glBindBuffer(GL_ARRAY_BUFFER, vboId);
-        glBufferData(GL_ARRAY_BUFFER, positionsBuffer, GL_STATIC_DRAW);
-        glEnableVertexAttribArray(0);
-
-        int size;
-        switch (projectionType) {
-            case OrthographicProjection -> {
-                size = 2;
+        if (!uesEBO) {
+            int size;
+            switch (projectionType) {
+                case OrthographicProjection -> {
+                    size = 2;
+                }
+                case PerspectiveProjection -> {
+                    size = 3;
+                }
+                default -> throw new IllegalStateException("Unexpected value: " + projectionType);
             }
-            case PerspectiveProjection -> {
-                size = 3;
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + projectionType);
+            createVBO(positions, 0, size);
+        } else {
+            createVBOEBOFromPositions();
         }
 
-        glVertexAttribPointer(0, size, GL_FLOAT, false, 0, 0);
-
         if (colors != null) {
-            vboId = glGenBuffers();
-            vboIdList.add(vboId);
-            FloatBuffer colorsBuffer = MemoryUtil.memAllocFloat(colors.length);
-            colorsBuffer.put(0, colors);
-            glBindBuffer(GL_ARRAY_BUFFER, vboId);
-            glBufferData(GL_ARRAY_BUFFER, colorsBuffer, GL_STATIC_DRAW);
-            glEnableVertexAttribArray(1);
-            glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, 0);
-
-            MemoryUtil.memFree(colorsBuffer);
+            createVBO(colors, 1, 4);
         }
 
         if (texture != null) {
-            vboId = glGenBuffers();
-            vboIdList.add(vboId);
-            FloatBuffer textCoordsBuffer = MemoryUtil.memAllocFloat(texture.length);
-            textCoordsBuffer.put(0, texture);
-            glBindBuffer(GL_ARRAY_BUFFER, vboId);
-            glBufferData(GL_ARRAY_BUFFER, textCoordsBuffer, GL_STATIC_DRAW);
-            glEnableVertexAttribArray(2);
-            glVertexAttribPointer(2, 2, GL_FLOAT, false, 0, 0);
-
-            MemoryUtil.memFree(textCoordsBuffer);
+            createVBO(texture, 2, 2);
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
-
-        MemoryUtil.memFree(positionsBuffer);
-    }
-
-    /**
-     * Constructs a new Mesh instance with the specified positions, texture coordinates, and indices.
-     *
-     * @param positions  the vertex positions
-     * @param textCoords the texture coordinates
-     * @param indices    the indices
-     */
-    public Mesh(float[] positions, float[] textCoords, int[] indices) {
-        this.positions = positions;
-        this.texture = textCoords;
-        this.projectionType = ProjectionType.PerspectiveProjection;
-        this.colors = null;
-
-        numVertices = indices.length;
-        vboIdList = new ArrayList<>();
-
-        vaoId = glGenVertexArrays();
-        glBindVertexArray(vaoId);
-
-        int vboId = glGenBuffers();
-        vboIdList.add(vboId);
-        FloatBuffer positionsBuffer = MemoryUtil.memAllocFloat(positions.length);
-        positionsBuffer.put(0, positions);
-        glBindBuffer(GL_ARRAY_BUFFER, vboId);
-        glBufferData(GL_ARRAY_BUFFER, positionsBuffer, GL_STATIC_DRAW);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
-
-        vboId = glGenBuffers();
-        vboIdList.add(vboId);
-        FloatBuffer textCoordsBuffer = MemoryUtil.memAllocFloat(textCoords.length);
-        textCoordsBuffer.put(0, textCoords);
-        glBindBuffer(GL_ARRAY_BUFFER, vboId);
-        glBufferData(GL_ARRAY_BUFFER, textCoordsBuffer, GL_STATIC_DRAW);
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0);
-
-        vboId = glGenBuffers();
-        vboIdList.add(vboId);
-        IntBuffer indicesBuffer = MemoryUtil.memAllocInt(indices.length);
-        indicesBuffer.put(0, indices);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboId);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
-
-        MemoryUtil.memFree(positionsBuffer);
-        MemoryUtil.memFree(textCoordsBuffer);
-        MemoryUtil.memFree(indicesBuffer);
     }
 
     /**
@@ -195,6 +126,7 @@ public class Mesh {
         this.texture = textCoords;
         this.projectionType = ProjectionType.PerspectiveProjection;
         this.colors = null;
+        this.uesEBO = true;
 
         numVertices = indices.length;
         vboIdList = new ArrayList<>();
@@ -202,47 +134,68 @@ public class Mesh {
         vaoId = glGenVertexArrays();
         glBindVertexArray(vaoId);
 
-        int vboId = glGenBuffers();
-        vboIdList.add(vboId);
-        FloatBuffer positionsBuffer = MemoryUtil.memCallocFloat(positions.length);
-        positionsBuffer.put(0, positions);
-        glBindBuffer(GL_ARRAY_BUFFER, vboId);
-        glBufferData(GL_ARRAY_BUFFER, positionsBuffer, GL_STATIC_DRAW);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+        createVBO(positions, 0, 3);
+        createVBO(normals, 1, 3);
+        createVBO(textCoords, 2, 2);
 
-        vboId = glGenBuffers();
-        vboIdList.add(vboId);
-        FloatBuffer normalsBuffer = MemoryUtil.memCallocFloat(normals.length);
-        normalsBuffer.put(0, normals);
-        glBindBuffer(GL_ARRAY_BUFFER, vboId);
-        glBufferData(GL_ARRAY_BUFFER, normalsBuffer, GL_STATIC_DRAW);
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
-
-        vboId = glGenBuffers();
-        vboIdList.add(vboId);
-        FloatBuffer textCoordsBuffer = MemoryUtil.memCallocFloat(textCoords.length);
-        textCoordsBuffer.put(0, textCoords);
-        glBindBuffer(GL_ARRAY_BUFFER, vboId);
-        glBufferData(GL_ARRAY_BUFFER, textCoordsBuffer, GL_STATIC_DRAW);
-        glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 2, GL_FLOAT, false, 0, 0);
-
-        vboId = glGenBuffers();
-        vboIdList.add(vboId);
-        IntBuffer indicesBuffer = MemoryUtil.memCallocInt(indices.length);
-        indicesBuffer.put(0, indices);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboId);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
+        createEBO(indices);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
+    }
 
-        MemoryUtil.memFree(positionsBuffer);
-        MemoryUtil.memFree(normalsBuffer);
-        MemoryUtil.memFree(textCoordsBuffer);
-        MemoryUtil.memFree(indicesBuffer);
+    private void createVBOEBOFromPositions() {
+        Map<String, Integer> uniqueVertices = new HashMap<>();
+        List<Integer> indices = new ArrayList<>();
+        List<Float> uniquePositions = new ArrayList<>();
+        int index = 0;
+        int stride = (projectionType == ProjectionType.OrthographicProjection) ? 2 : 3;
+
+        for (int i = 0; i < positions.length; i += stride) {
+            String key = Arrays.toString(Arrays.copyOfRange(positions, i, i + stride));
+            if (uniqueVertices.containsKey(key)) {
+                indices.add(uniqueVertices.get(key));
+            } else {
+                uniqueVertices.put(key, index);
+                indices.add(index);
+                for (int j = 0; j < stride; j++) {
+                    uniquePositions.add(positions[i + j]);
+                }
+                index++;
+            }
+        }
+
+        float[] newPositions = new float[uniquePositions.size()];
+        for (int i = 0; i < uniquePositions.size(); i++) {
+            newPositions[i] = uniquePositions.get(i);
+        }
+
+        int[] indicesArray = indices.stream().mapToInt(i -> i).toArray();
+        createVBO(newPositions, 0, stride);
+        createEBO(indicesArray);
+        numVertices = indicesArray.length;
+    }
+
+    public void createEBO(int[] indices) {
+        eboId = glGenBuffers();
+        IntBuffer indicesBuffer = MemoryUtil.memCallocInt(indices.length);
+        indicesBuffer.put(0, indices);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboId);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    }
+
+    public void createVBO(float[] values, int index, int size) {
+        int vboId = glGenBuffers();
+        vboIdList.add(vboId);
+        FloatBuffer valuesBuffer = MemoryUtil.memCallocFloat(values.length);
+        valuesBuffer.put(0, values);
+        glBindBuffer(GL_ARRAY_BUFFER, vboId);
+        glBufferData(GL_ARRAY_BUFFER, valuesBuffer, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(index);
+        glVertexAttribPointer(index, size, GL_FLOAT, false, 0, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        MemoryUtil.memFree(valuesBuffer);
     }
 
     /**
@@ -318,5 +271,13 @@ public class Mesh {
      */
     public int getNumVertices() {
         return numVertices;
+    }
+
+    public boolean isUesEBO() {
+        return uesEBO;
+    }
+
+    public int getEboId() {
+        return eboId;
     }
 }

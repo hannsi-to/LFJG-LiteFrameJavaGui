@@ -98,11 +98,8 @@ public class GLObject implements Cloneable {
         frameBuffer.cleanup();
         shaderProgram.cleanup();
         vertexShader.cleanup();
-        modelMatrix = null;
-        viewMatrix = null;
         vaoRendering.cleanup();
         glUtil.cleanup();
-        blendType = null;
 
         LogGenerator logGenerator = new LogGenerator(name, "Source: GLObject", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: GLObject cleanup is complete.");
         logGenerator.logging(DebugLevel.DEBUG);
@@ -127,6 +124,9 @@ public class GLObject implements Cloneable {
         viewMatrix = new Matrix4f();
 
         glUtil = new GLUtil();
+        glUtil.addGLTarget(GL30.GL_BLEND);
+        glUtil.addGLTarget(GL30.GL_DEPTH_TEST, true);
+
         blendType = BlendType.Normal;
     }
 
@@ -139,9 +139,6 @@ public class GLObject implements Cloneable {
 
     public void draw(boolean autoDraw) {
         frameBuffer.bindFrameBuffer();
-        GL30.glPushMatrix();
-
-        shaderProgram.bind();
 
         if (lineWidth != -1f) {
             GL30.glLineWidth(lineWidth);
@@ -154,6 +151,8 @@ public class GLObject implements Cloneable {
             effectCache.push(this);
         }
 
+        shaderProgram.bind();
+
         shaderProgram.setUniform("projectionMatrix", LFJGContext.projection.getProjMatrix());
         shaderProgram.setUniform("modelMatrix", modelMatrix);
         shaderProgram.setUniform("viewMatrix", viewMatrix);
@@ -163,8 +162,6 @@ public class GLObject implements Cloneable {
             shaderProgram.setUniform1i("textureSampler", 0);
         }
 
-        glUtil.addGLTarget(GL30.GL_BLEND);
-        glUtil.addGLTarget(GL30.GL_DEPTH_TEST, true);
         GL30.glBlendFunc(blendType.getSfactor(), blendType.getDfactor());
         GL30.glBlendEquation(blendType.getEquation());
         glUtil.enableTargets();
@@ -172,15 +169,13 @@ public class GLObject implements Cloneable {
         vaoRendering.draw(this);
 
         glUtil.disableTargets();
-        glUtil.cleanup();
+
+        shaderProgram.unbind();
 
         if (effectCache != null) {
             effectCache.pop(this);
         }
 
-        shaderProgram.unbind();
-
-        GL30.glPopMatrix();
         frameBuffer.unbindFrameBuffer();
 
         if (effectCache != null) {
@@ -209,8 +204,7 @@ public class GLObject implements Cloneable {
         try {
             glObject = (GLObject) clone();
             glObject.setName(objectName);
-            long copyId = this.getObjectId();
-            glObject.setObjectId(++copyId);
+            glObject.setObjectId(++Id.latestGLObjectId);
 
             LogGenerator logGenerator = new LogGenerator("GLObject Debug Message", "Source: GLObject", "Type: Copy", "ID: " + glObject.getObjectId(), "Severity: Info", "Message: Create object copy: " + glObject.getName());
             logGenerator.logging(DebugLevel.INFO);
@@ -263,15 +257,6 @@ public class GLObject implements Cloneable {
      */
     public EffectBase getEffectBase(int index) {
         return effectCache.getEffectBase(index);
-    }
-
-    /**
-     * Adds a GL target to the GLObject.
-     *
-     * @param target the GL target to add
-     */
-    public void addGLTarget(int target) {
-        glUtil.addGLTarget(target);
     }
 
     /**
