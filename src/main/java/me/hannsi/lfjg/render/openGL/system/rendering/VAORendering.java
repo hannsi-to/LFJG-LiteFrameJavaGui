@@ -10,6 +10,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL40.*;
 
 /**
  * Handles rendering of VAOs (Vertex Array Objects) in the OpenGL rendering system.
@@ -27,7 +28,7 @@ public class VAORendering {
     /**
      * Draws the specified Mesh using its associated VAO.
      *
-     * @param mesh the Mesh to draw
+     * @param mesh the Mesh to draw;
      */
     public void draw(Mesh mesh) {
         drawMesh(mesh, GL30.GL_POLYGON);
@@ -36,16 +37,30 @@ public class VAORendering {
     public void drawMesh(Mesh mesh, int drawType) {
         glBindVertexArray(mesh.getVaoId());
         try {
-            if (mesh.isUesEBO()) {
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.getEboId());
-                glDrawElements(drawType, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+            if (mesh.isUseIndirect()) {
+                if (mesh.isUseEBO()) {
+                    glBindBuffer(GL_DRAW_INDIRECT_BUFFER, mesh.getIndirectBufferId());
+                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.getEboId());
+                    glDrawElementsIndirect(drawType, GL_UNSIGNED_INT, 0);
+                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+                    glBindBuffer(GL_DRAW_INDIRECT_BUFFER, 0);
+                } else {
+                    glBindBuffer(GL_DRAW_INDIRECT_BUFFER, mesh.getIndirectBufferId());
+                    glDrawArraysIndirect(drawType, 0);
+                    glBindBuffer(GL_DRAW_INDIRECT_BUFFER, 0);
+                }
             } else {
-                int count = switch (mesh.getProjectionType()) {
-                    case OrthographicProjection -> mesh.getPositions().length / 2;
-                    case PerspectiveProjection -> mesh.getPositions().length / 3;
-                };
-                glDrawArrays(drawType, 0, count);
+                if (mesh.isUseEBO()) {
+                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.getEboId());
+                    glDrawElements(drawType, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
+                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+                } else {
+                    int count = switch (mesh.getProjectionType()) {
+                        case OrthographicProjection -> mesh.getPositions().length / 2;
+                        case PerspectiveProjection -> mesh.getPositions().length / 3;
+                    };
+                    glDrawArrays(drawType, 0, count);
+                }
             }
         } finally {
             glBindVertexArray(0);

@@ -3,6 +3,7 @@ package me.hannsi.lfjg.render.openGL.system;
 import me.hannsi.lfjg.debug.debug.DebugLevel;
 import me.hannsi.lfjg.debug.debug.LogGenerator;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryUtil;
 
@@ -11,6 +12,7 @@ import java.nio.IntBuffer;
 import java.util.*;
 
 import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 
 /**
  * Represents a mesh in the OpenGL rendering system.
@@ -18,17 +20,20 @@ import static org.lwjgl.opengl.GL30.*;
  */
 public class Mesh {
     public static ProjectionType DEFAULT_PROJECTION_TYPE = ProjectionType.OrthographicProjection;
-    public static boolean DEFAULT_UES_EBO = true;
+    public static boolean DEFAULT_USE_EBO = true;
+    public static boolean DEFAULT_USE_INDIRECT = true;
 
     private final float[] positions;
     private final float[] colors;
     private final float[] texture;
     private final ProjectionType projectionType;
-    private final boolean uesEBO;
+    private final boolean useEBO;
+    private final boolean useIndirect;
     private final int vaoId;
-    private final List<Integer> vboIdList;
+    private final List<Integer> bufferIdList;
     private int numVertices;
     private int eboId;
+    private int indirectBufferId;
 
     /**
      * Constructs a new Mesh instance with the specified positions and colors.
@@ -70,33 +75,28 @@ public class Mesh {
      * @param texture        the texture coordinates
      */
     public Mesh(ProjectionType projectionType, float[] positions, float[] colors, float[] texture) {
-        this(projectionType, positions, colors, texture, DEFAULT_UES_EBO);
+        this(projectionType, positions, colors, texture, DEFAULT_USE_EBO);
     }
 
-    public Mesh(ProjectionType projectionType, float[] positions, float[] colors, float[] texture, boolean uesEBO) {
+    public Mesh(ProjectionType projectionType, float[] positions, float[] colors, float[] texture, boolean useEBO) {
+        this(projectionType, positions, colors, texture, useEBO, DEFAULT_USE_INDIRECT);
+    }
+
+    public Mesh(ProjectionType projectionType, float[] positions, float[] colors, float[] texture, boolean useEBO, boolean useIndirect) {
         this.projectionType = projectionType;
         this.positions = positions;
         this.colors = colors;
         this.texture = texture;
-        this.uesEBO = uesEBO;
+        this.useEBO = useEBO;
+        this.useIndirect = useIndirect;
 
-        vboIdList = new ArrayList<>();
+        bufferIdList = new ArrayList<>();
 
         vaoId = glGenVertexArrays();
         glBindVertexArray(vaoId);
 
-        if (!uesEBO) {
-            int size;
-            switch (projectionType) {
-                case OrthographicProjection -> {
-                    size = 2;
-                }
-                case PerspectiveProjection -> {
-                    size = 3;
-                }
-                default -> throw new IllegalStateException("Unexpected value: " + projectionType);
-            }
-            createVBO(positions, 0, size);
+        if (!useEBO) {
+            createVBO(positions, 0, getSize());
         } else {
             createVBOEBOFromPositions();
         }
@@ -107,6 +107,10 @@ public class Mesh {
 
         if (texture != null) {
             createVBO(texture, 2, 2);
+        }
+
+        if (useIndirect) {
+            createIndirectBuffer();
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -126,10 +130,11 @@ public class Mesh {
         this.texture = textCoords;
         this.projectionType = ProjectionType.PerspectiveProjection;
         this.colors = null;
-        this.uesEBO = true;
+        this.useEBO = true;
+        this.useIndirect = DEFAULT_USE_INDIRECT;
 
         numVertices = indices.length;
-        vboIdList = new ArrayList<>();
+        bufferIdList = new ArrayList<>();
 
         vaoId = glGenVertexArrays();
         glBindVertexArray(vaoId);
@@ -140,8 +145,54 @@ public class Mesh {
 
         createEBO(indices);
 
+        if (useIndirect) {
+            createIndirectBuffer();
+        }
+
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
+    }
+
+    private int getSize() {
+        int size;
+        switch (projectionType) {
+            case OrthographicProjection -> {
+                size = 2;
+            }
+            case PerspectiveProjection -> {
+                size = 3;
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + projectionType);
+        }
+
+        return size;
+    }
+
+    private void createIndirectBuffer() {
+        IntBuffer drawCommand;
+        if (useEBO) {
+            drawCommand = BufferUtils.createIntBuffer(5);
+            drawCommand.put(numVertices);
+            drawCommand.put(1);
+            drawCommand.put(0);
+        } else {
+            int size = getSize();
+            int count = positions.length / size;
+
+            drawCommand = BufferUtils.createIntBuffer(4);
+            drawCommand.put(count);
+            drawCommand.put(1);
+        }
+        drawCommand.put(0);
+        drawCommand.put(0);
+        drawCommand.flip();
+
+        indirectBufferId = glGenBuffers();
+        bufferIdList.add(indirectBufferId);
+
+        glBindBuffer(GL_DRAW_INDIRECT_BUFFER, indirectBufferId);
+        glBufferData(GL_DRAW_INDIRECT_BUFFER, drawCommand, GL_STATIC_DRAW);
+        glBindBuffer(GL_DRAW_INDIRECT_BUFFER, 0);
     }
 
     private void createVBOEBOFromPositions() {
@@ -149,7 +200,7 @@ public class Mesh {
         List<Integer> indices = new ArrayList<>();
         List<Float> uniquePositions = new ArrayList<>();
         int index = 0;
-        int stride = (projectionType == ProjectionType.OrthographicProjection) ? 2 : 3;
+        int stride = getSize();
 
         for (int i = 0; i < positions.length; i += stride) {
             String key = Arrays.toString(Arrays.copyOfRange(positions, i, i + stride));
@@ -178,6 +229,7 @@ public class Mesh {
 
     public void createEBO(int[] indices) {
         eboId = glGenBuffers();
+        bufferIdList.add(eboId);
         IntBuffer indicesBuffer = MemoryUtil.memCallocInt(indices.length);
         indicesBuffer.put(0, indices);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboId);
@@ -187,7 +239,7 @@ public class Mesh {
 
     public void createVBO(float[] values, int index, int size) {
         int vboId = glGenBuffers();
-        vboIdList.add(vboId);
+        bufferIdList.add(vboId);
         FloatBuffer valuesBuffer = MemoryUtil.memCallocFloat(values.length);
         valuesBuffer.put(0, values);
         glBindBuffer(GL_ARRAY_BUFFER, vboId);
@@ -202,9 +254,9 @@ public class Mesh {
      * Cleans up the mesh by deleting the VBOs and VAO.
      */
     public void cleanup() {
-        vboIdList.forEach(GL30::glDeleteBuffers);
+        bufferIdList.forEach(GL30::glDeleteBuffers);
         glDeleteVertexArrays(vaoId);
-        vboIdList.clear();
+        bufferIdList.clear();
 
         LogGenerator logGenerator = new LogGenerator("Mesh", "Source: Mesh", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: Mesh cleanup is complete.");
         logGenerator.logging(DebugLevel.DEBUG);
@@ -233,8 +285,8 @@ public class Mesh {
      *
      * @return the list of VBO IDs
      */
-    public List<Integer> getVboIdList() {
-        return vboIdList;
+    public List<Integer> getBufferIdList() {
+        return bufferIdList;
     }
 
     /**
@@ -273,11 +325,19 @@ public class Mesh {
         return numVertices;
     }
 
-    public boolean isUesEBO() {
-        return uesEBO;
+    public boolean isUseEBO() {
+        return useEBO;
     }
 
     public int getEboId() {
         return eboId;
+    }
+
+    public boolean isUseIndirect() {
+        return useIndirect;
+    }
+
+    public int getIndirectBufferId() {
+        return indirectBufferId;
     }
 }
