@@ -1,0 +1,21 @@
+package me.hannsi.lfjg.event.events.monitor.window;
+
+import me.hannsi.lfjg.event.system.Event;
+
+public class WindowMaximizeEvent extends Event {
+    private final long window;
+    private final boolean maximized;
+
+    public WindowMaximizeEvent(long window, boolean maximized) {
+        this.window = window;
+        this.maximized = maximized;
+    }
+
+    public long getWindow() {
+        return window;
+    }
+
+    public boolean isMaximized() {
+        return maximized;
+    }
+}

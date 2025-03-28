@@ -43,8 +43,7 @@ public class Object3DCache {
         model.getEntitiesList().add(entity);
         modelMap.put(model.getId(), model);
 
-        LogGenerator logGenerator = new LogGenerator("Object3DCache Debug Message", "Source: Object3DCache", "Type: Cache Creation", "ID: " + model.getId(), "Severity: Info", "Message: Create 3D Object cache");
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator("Object3DCache Debug Message", "Source: Object3DCache", "Type: Cache Creation", "ID: " + model.getId(), "Severity: Info", "Message: Create 3D Object cache").logging(DebugLevel.DEBUG);
     }
 
     /**
@@ -55,8 +54,7 @@ public class Object3DCache {
         textureModelCache.cleanup();
         modelMap.values().forEach(Model::cleanup);
 
-        LogGenerator logGenerator = new LogGenerator("Object3DCache", "Source: Object3DCache","Type: Cleanup","ID: " + this.hashCode(),"Severity: Debug","Message: Object3DCache cleanup is complete.");
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator("Object3DCache", "Source: Object3DCache", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: Object3DCache cleanup is complete.").logging(DebugLevel.DEBUG);
     }
 
     /**

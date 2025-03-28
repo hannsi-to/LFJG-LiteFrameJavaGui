@@ -100,7 +100,6 @@ public class TestGuiFrame implements LFJGFrame {
         frame.setFrameSettingValue(FloatingSetting.class, false);
         frame.setFrameSettingValue(IconSetting.class, new ResourcesLocation("salad_x32.png"));
         frame.setFrameSettingValue(AntiAliasingSetting.class, AntiAliasingType.OFF);
-        frame.setFrameSettingValue(CheckSeveritiesSetting.class, SeverityType.High);
     }
 
     @EventHandler
@@ -114,7 +113,7 @@ public class TestGuiFrame implements LFJGFrame {
     }
 
     @EventHandler
-    public void keyCallbackEvent(KeyCallbackEvent event) {
+    public void keyCallbackEvent(KeyEvent event) {
         keyboardInfo.updateKeyState(event.getKey(), event.getAction());
     }
 

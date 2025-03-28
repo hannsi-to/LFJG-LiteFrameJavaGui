@@ -22,6 +22,7 @@ public class Mesh {
     public static ProjectionType DEFAULT_PROJECTION_TYPE = ProjectionType.OrthographicProjection;
     public static boolean DEFAULT_USE_EBO = true;
     public static boolean DEFAULT_USE_INDIRECT = true;
+    public static int DEFAULT_USAGE_HINT = GL_STATIC_DRAW;
 
     private final float[] positions;
     private final float[] colors;
@@ -34,6 +35,7 @@ public class Mesh {
     private int numVertices;
     private int eboId;
     private int indirectBufferId;
+    private final int usageHint = DEFAULT_USAGE_HINT;
 
     /**
      * Constructs a new Mesh instance with the specified positions and colors.
@@ -191,7 +193,7 @@ public class Mesh {
         bufferIdList.add(indirectBufferId);
 
         glBindBuffer(GL_DRAW_INDIRECT_BUFFER, indirectBufferId);
-        glBufferData(GL_DRAW_INDIRECT_BUFFER, drawCommand, GL_STATIC_DRAW);
+        glBufferData(GL_DRAW_INDIRECT_BUFFER, drawCommand, usageHint);
         glBindBuffer(GL_DRAW_INDIRECT_BUFFER, 0);
     }
 
@@ -233,7 +235,7 @@ public class Mesh {
         IntBuffer indicesBuffer = MemoryUtil.memCallocInt(indices.length);
         indicesBuffer.put(0, indices);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboId);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, usageHint);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
@@ -243,7 +245,7 @@ public class Mesh {
         FloatBuffer valuesBuffer = MemoryUtil.memCallocFloat(values.length);
         valuesBuffer.put(0, values);
         glBindBuffer(GL_ARRAY_BUFFER, vboId);
-        glBufferData(GL_ARRAY_BUFFER, valuesBuffer, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, valuesBuffer, usageHint);
         glEnableVertexAttribArray(index);
         glVertexAttribPointer(index, size, GL_FLOAT, false, 0, 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -339,5 +341,9 @@ public class Mesh {
 
     public int getIndirectBufferId() {
         return indirectBufferId;
+    }
+
+    public int getUsageHint() {
+        return usageHint;
     }
 }
