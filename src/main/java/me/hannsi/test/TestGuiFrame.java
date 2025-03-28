@@ -42,7 +42,7 @@ public class TestGuiFrame implements LFJGFrame {
 
         sceneSystem = new SceneSystem();
         sceneSystem.addScene(new TestScene1().getScene());
-        sceneSystem.addScene(new TestScene2().getScene());
+        sceneSystem.addScene(new TestScene2(frame).getScene());
         sceneSystem.setCurrentScene("TestScene2");
         sceneSystem.initScenes();
 

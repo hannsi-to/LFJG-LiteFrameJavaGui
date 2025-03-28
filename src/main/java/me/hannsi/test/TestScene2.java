@@ -1,56 +1,50 @@
 package me.hannsi.test;
 
+import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.LFJGContext;
-import me.hannsi.lfjg.render.openGL.effect.effects.*;
-import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;
+import me.hannsi.lfjg.physic.PhysicObject;
+import me.hannsi.lfjg.physic.PhysicWorld;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.system.scene.IScene;
 import me.hannsi.lfjg.render.openGL.system.scene.Scene;
 import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.graphics.image.TextureCache;
-import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
-import me.hannsi.lfjg.utils.type.types.BlendType;
 
 public class TestScene2 implements IScene {
     public Scene scene;
+    public Frame frame;
 
-    TextureCache textureCache;
+    PhysicWorld physicWorld;
 
     GLRect glRect1;
-    EffectCache glRect1EffectCache;
+    PhysicObject physicObjectRect1;
 
-    public TestScene2() {
+    public TestScene2(Frame frame) {
         this.scene = new Scene("TestScene2", this);
+        this.frame = frame;
     }
 
     @Override
     public void init() {
         glRect1 = new GLRect("GLRect1");
-        glRect1.uv(0, 1, 1, 0);
-        glRect1.rect(0, 0, LFJGContext.resolution.x(), LFJGContext.resolution.y(), new Color(0, 0, 0, 0));
+        glRect1.rectWH(LFJGContext.resolution.x() / 2f, LFJGContext.resolution.y(), 50, 50, new Color(255, 255, 255, 255));
 
-        textureCache = new TextureCache();
-        ResourcesLocation image1 = new ResourcesLocation("texture/test/test_image_3840x2160.jpg");
-        textureCache.createCache(image1);
+        physicWorld = new PhysicWorld();
 
-        glRect1EffectCache = new EffectCache();
-        glRect1EffectCache.createCache("Texture1", new Texture(textureCache, image1, BlendType.Normal));
-        glRect1EffectCache.createCache("DrawObject1", new DrawObject());
-        glRect1EffectCache.createCache("Translate1",new Translate(100,100,0));
-        glRect1EffectCache.createCache("Scale1",new Scale(0.5,1,1,true));
-        glRect1EffectCache.createCache("Rotate1", new Rotate(0, 0, Math.toRadians(45), true));
-        glRect1EffectCache.create(glRect1);
-        glRect1.setEffectCache(glRect1EffectCache);
+        physicObjectRect1 = new PhysicObject();
+        physicObjectRect1.linkGLObject(glRect1);
+
+        physicWorld.createPhysicObject(physicObjectRect1);
     }
 
     @Override
     public void drawFrame() {
+        physicWorld.simulation(frame.getFps());
+
         glRect1.draw();
     }
 
     @Override
     public void stopFrame() {
-        textureCache.cleanup();
         glRect1.cleanup();
     }
 
