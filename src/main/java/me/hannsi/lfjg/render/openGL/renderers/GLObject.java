@@ -18,6 +18,9 @@ import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL30;
 
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL14C.glBlendEquation;
+
 /**
  * Represents an OpenGL object with various properties and methods for rendering.
  */
@@ -101,8 +104,7 @@ public class GLObject implements Cloneable {
         vaoRendering.cleanup();
         glUtil.cleanup();
 
-        LogGenerator logGenerator = new LogGenerator(name, "Source: GLObject", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: GLObject cleanup is complete.");
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(name, "Source: GLObject", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: GLObject cleanup is complete.").logging(DebugLevel.DEBUG);
     }
 
     /**
@@ -141,10 +143,10 @@ public class GLObject implements Cloneable {
         frameBuffer.bindFrameBuffer();
 
         if (lineWidth != -1f) {
-            GL30.glLineWidth(lineWidth);
+            glLineWidth(lineWidth);
         }
         if (pointSize != -1f) {
-            GL30.glPointSize(pointSize);
+            glPointSize(pointSize);
         }
 
         if (effectCache != null) {
@@ -162,8 +164,8 @@ public class GLObject implements Cloneable {
             shaderProgram.setUniform1i("textureSampler", 0);
         }
 
-        GL30.glBlendFunc(blendType.getSfactor(), blendType.getDfactor());
-        GL30.glBlendEquation(blendType.getEquation());
+        glBlendFunc(blendType.getSfactor(), blendType.getDfactor());
+        glBlendEquation(blendType.getEquation());
         glUtil.enableTargets();
 
         vaoRendering.draw(this);
@@ -206,12 +208,9 @@ public class GLObject implements Cloneable {
             glObject.setName(objectName);
             glObject.setObjectId(++Id.latestGLObjectId);
 
-            LogGenerator logGenerator = new LogGenerator("GLObject Debug Message", "Source: GLObject", "Type: Copy", "ID: " + glObject.getObjectId(), "Severity: Info", "Message: Create object copy: " + glObject.getName());
-            logGenerator.logging(DebugLevel.INFO);
+            new LogGenerator("GLObject Debug Message", "Source: GLObject", "Type: Copy", "ID: " + glObject.getObjectId(), "Severity: Info", "Message: Create object copy: " + glObject.getName()).logging(DebugLevel.INFO);
         } catch (Exception e) {
-            LogGenerator logGenerator = new LogGenerator("GLObject Debug Message", "Source: GLObject", "Type: Copy", "ID: " + this.getObjectId(), "Severity: Error", "Message: Failed to create object copy: " + this.getName());
-            logGenerator.logging(DebugLevel.ERROR);
-
+            new LogGenerator("GLObject Debug Message", "Source: GLObject", "Type: Copy", "ID: " + this.getObjectId(), "Severity: Error", "Message: Failed to create object copy: " + this.getName()).logging(DebugLevel.ERROR);
             throw new RuntimeException(e);
         }
 

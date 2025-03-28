@@ -2,14 +2,14 @@ package me.hannsi.lfjg.event.events.user;
 
 import me.hannsi.lfjg.event.system.Event;
 
-public class KeyCallbackEvent extends Event {
+public class KeyEvent extends Event {
     private final long window;
     private final int key;
     private final int scancode;
     private final int action;
     private final int mods;
 
-    public KeyCallbackEvent(long window, int key, int scancode, int action, int mods) {
+    public KeyEvent(long window, int key, int scancode, int action, int mods) {
         this.window = window;
         this.key = key;
         this.scancode = scancode;
