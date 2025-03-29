@@ -143,7 +143,7 @@ public class GLPolygon extends GLObject {
         setWidth(bounds[2] - bounds[0]);
         setHeight(bounds[3] - bounds[1]);
 
-        Vector2f center = new Vector2f(bounds[0] + bounds[2] / 2f, bounds[1] + bounds[3] / 2f);
+        Vector2f center = new Vector2f(bounds[0] + getWidth() / 2f, bounds[1] + getHeight() / 2f);
         setCenterX(center.x());
         setCenterY(center.y());
 
