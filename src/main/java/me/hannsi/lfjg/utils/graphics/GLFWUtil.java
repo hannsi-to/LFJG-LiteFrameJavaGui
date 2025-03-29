@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.utils.graphics;
 
-import me.hannsi.lfjg.frame.Frame;
+import me.hannsi.lfjg.frame.frame.Frame;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.MonitorType;
 import org.joml.Vector2f;

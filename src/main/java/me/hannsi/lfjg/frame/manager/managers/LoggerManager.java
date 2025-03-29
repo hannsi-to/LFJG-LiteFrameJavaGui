@@ -1,12 +1,12 @@
 package me.hannsi.lfjg.frame.manager.managers;
 
-import me.hannsi.lfjg.debug.debug.DebugLevel;
-import me.hannsi.lfjg.debug.debug.DebugLog;
-import me.hannsi.lfjg.debug.debug.DebugType;
-import me.hannsi.lfjg.event.events.system.LoggingEvent;
-import me.hannsi.lfjg.event.system.EventHandler;
-import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.frame.IFrame;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
+import me.hannsi.lfjg.debug.debug.system.DebugLog;
+import me.hannsi.lfjg.debug.debug.system.DebugType;
+import me.hannsi.lfjg.frame.event.events.system.LoggingEvent;
+import me.hannsi.lfjg.frame.event.system.EventHandler;
+import me.hannsi.lfjg.frame.frame.Frame;
+import me.hannsi.lfjg.frame.frame.IFrame;
 import me.hannsi.lfjg.utils.math.ANSIFormat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

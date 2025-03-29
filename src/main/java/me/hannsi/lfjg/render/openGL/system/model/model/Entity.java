@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.openGL.system.model.model;
 
-import me.hannsi.lfjg.debug.debug.DebugLevel;
-import me.hannsi.lfjg.debug.debug.LogGenerator;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
+import me.hannsi.lfjg.debug.debug.log.LogGenerator;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;

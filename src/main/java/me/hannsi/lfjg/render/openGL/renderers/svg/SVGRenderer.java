@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.render.openGL.renderers.svg;
 
-import me.hannsi.lfjg.frame.LFJGContext;
+import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.system.Mesh;
 import me.hannsi.lfjg.render.openGL.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;

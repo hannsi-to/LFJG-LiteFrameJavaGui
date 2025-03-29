@@ -1,11 +1,11 @@
 package me.hannsi.test;
 
-import me.hannsi.lfjg.event.events.user.*;
-import me.hannsi.lfjg.event.system.EventHandler;
-import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.frame.IFrame;
-import me.hannsi.lfjg.frame.LFJGContext;
-import me.hannsi.lfjg.frame.LFJGFrame;
+import me.hannsi.lfjg.frame.event.events.user.*;
+import me.hannsi.lfjg.frame.event.system.EventHandler;
+import me.hannsi.lfjg.frame.frame.Frame;
+import me.hannsi.lfjg.frame.frame.IFrame;
+import me.hannsi.lfjg.frame.frame.LFJGContext;
+import me.hannsi.lfjg.frame.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.render.openGL.system.scene.SceneSystem;
 import me.hannsi.lfjg.utils.math.Projection;
@@ -17,7 +17,7 @@ import me.hannsi.lfjg.utils.type.types.*;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
-import static me.hannsi.lfjg.frame.LFJGContext.frame;
+import static me.hannsi.lfjg.frame.frame.LFJGContext.frame;
 
 public class TestGuiFrame implements LFJGFrame {
     SceneSystem sceneSystem;

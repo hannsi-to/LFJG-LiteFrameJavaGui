@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.render.openGL.renderers.svg;
 
-import me.hannsi.lfjg.frame.LFJGContext;
+import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.utils.buffer.ByteUtil;

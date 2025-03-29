@@ -1,8 +1,8 @@
 package me.hannsi.lfjg.render.openGL.system.shader;
 
-import me.hannsi.lfjg.debug.debug.DebugLevel;
-import me.hannsi.lfjg.debug.debug.DebugLog;
-import me.hannsi.lfjg.debug.debug.LogGenerator;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
+import me.hannsi.lfjg.debug.debug.system.DebugLog;
+import me.hannsi.lfjg.debug.debug.log.LogGenerator;
 import me.hannsi.lfjg.debug.exceptions.shader.CompilingShaderException;
 import me.hannsi.lfjg.debug.exceptions.shader.CreatingShaderException;
 import me.hannsi.lfjg.debug.exceptions.shader.CreatingShaderProgramException;

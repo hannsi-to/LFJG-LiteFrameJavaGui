@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.openGL.system;
 
-import me.hannsi.lfjg.debug.debug.DebugLevel;
-import me.hannsi.lfjg.debug.debug.LogGenerator;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
+import me.hannsi.lfjg.debug.debug.log.LogGenerator;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL30;

@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.audio;
 
-import me.hannsi.lfjg.debug.debug.DebugLevel;
-import me.hannsi.lfjg.debug.debug.LogGenerator;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
+import me.hannsi.lfjg.debug.debug.log.LogGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

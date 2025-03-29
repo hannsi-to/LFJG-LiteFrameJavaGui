@@ -1,9 +1,9 @@
 package me.hannsi.lfjg.frame.manager.managers;
 
-import me.hannsi.lfjg.debug.debug.DebugLevel;
-import me.hannsi.lfjg.debug.debug.DebugLog;
-import me.hannsi.lfjg.debug.debug.LogGenerator;
-import me.hannsi.lfjg.frame.Frame;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
+import me.hannsi.lfjg.debug.debug.system.DebugLog;
+import me.hannsi.lfjg.debug.debug.log.LogGenerator;
+import me.hannsi.lfjg.frame.frame.Frame;
 import me.hannsi.lfjg.frame.manager.Manager;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;

@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.render.openGL.renderers.font;
 
-import me.hannsi.lfjg.frame.LFJGContext;
+import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.system.font.CFont;
 import me.hannsi.lfjg.render.openGL.system.font.CharInfo;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;

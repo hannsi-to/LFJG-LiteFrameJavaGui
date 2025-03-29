@@ -1,9 +1,9 @@
 package me.hannsi.lfjg.frame.manager.managers;
 
-import me.hannsi.lfjg.debug.debug.DebugLevel;
-import me.hannsi.lfjg.debug.debug.LogGenerator;
-import me.hannsi.lfjg.event.system.Event;
-import me.hannsi.lfjg.event.system.EventHandler;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
+import me.hannsi.lfjg.debug.debug.log.LogGenerator;
+import me.hannsi.lfjg.frame.event.system.Event;
+import me.hannsi.lfjg.frame.event.system.EventHandler;
 
 import java.util.Arrays;
 import java.util.concurrent.CopyOnWriteArrayList;

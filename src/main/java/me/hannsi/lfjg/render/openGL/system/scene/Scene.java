@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.openGL.system.scene;
 
-import me.hannsi.lfjg.debug.debug.DebugLevel;
-import me.hannsi.lfjg.debug.debug.LogGenerator;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
+import me.hannsi.lfjg.debug.debug.log.LogGenerator;
 import me.hannsi.lfjg.render.openGL.system.Id;
 
 public class Scene {

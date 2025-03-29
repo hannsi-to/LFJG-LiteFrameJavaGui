@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.openGL.system.shader;
 
-import me.hannsi.lfjg.debug.debug.DebugLevel;
-import me.hannsi.lfjg.debug.debug.LogGenerator;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
+import me.hannsi.lfjg.debug.debug.log.LogGenerator;
 import me.hannsi.lfjg.utils.buffer.ByteUtil;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;

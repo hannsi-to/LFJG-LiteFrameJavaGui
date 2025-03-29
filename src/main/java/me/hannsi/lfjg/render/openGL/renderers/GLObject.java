@@ -1,8 +1,8 @@
 package me.hannsi.lfjg.render.openGL.renderers;
 
-import me.hannsi.lfjg.debug.debug.DebugLevel;
-import me.hannsi.lfjg.debug.debug.LogGenerator;
-import me.hannsi.lfjg.frame.LFJGContext;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
+import me.hannsi.lfjg.debug.debug.log.LogGenerator;
+import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectCache;

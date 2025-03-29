@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.render.openGL.effect.effects;
 
-import me.hannsi.lfjg.frame.LFJGContext;
+import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.effect.system.EffectBase;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.utils.math.MathHelper;

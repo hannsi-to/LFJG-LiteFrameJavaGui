@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.utils.graphics.image;
 
-import me.hannsi.lfjg.debug.debug.DebugLevel;
-import me.hannsi.lfjg.debug.debug.LogGenerator;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
+import me.hannsi.lfjg.debug.debug.log.LogGenerator;
 import me.hannsi.lfjg.utils.reflection.Location;
 import me.hannsi.lfjg.utils.type.types.ImageLoaderType;
 

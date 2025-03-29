@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.utils.reflection;
 
-import me.hannsi.lfjg.debug.debug.DebugLog;
-import me.hannsi.lfjg.frame.Frame;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Constructor;

@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.frame.manager;
 
-import me.hannsi.lfjg.frame.Frame;
+import me.hannsi.lfjg.frame.frame.Frame;
 
 /**
  * The Manager class is responsible for managing various aspects of the frame.

@@ -33,8 +33,8 @@ import me.hannsi.lfjg.utils.type.types.SoundLoaderType;
 import org.joml.Vector3f;
 import org.lwjgl.openal.AL11;
 
-import static me.hannsi.lfjg.frame.LFJGContext.frame;
-import static me.hannsi.lfjg.frame.LFJGContext.resolution;
+import static me.hannsi.lfjg.frame.frame.LFJGContext.frame;
+import static me.hannsi.lfjg.frame.frame.LFJGContext.resolution;
 
 public class TestScene1 implements IScene {
     public Scene scene;

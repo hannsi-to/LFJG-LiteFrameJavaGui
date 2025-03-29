@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.audio;
 
-import me.hannsi.lfjg.debug.debug.DebugLevel;
-import me.hannsi.lfjg.debug.debug.LogGenerator;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
+import me.hannsi.lfjg.debug.debug.log.LogGenerator;
 import me.hannsi.lfjg.utils.toolkit.Camera;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static me.hannsi.lfjg.frame.LFJGContext.openALDevice;
+import static me.hannsi.lfjg.frame.frame.LFJGContext.openALDevice;
 import static org.lwjgl.openal.AL10.alDistanceModel;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.system.MemoryUtil.NULL;

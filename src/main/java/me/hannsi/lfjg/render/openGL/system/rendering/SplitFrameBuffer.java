@@ -1,8 +1,8 @@
 package me.hannsi.lfjg.render.openGL.system.rendering;
 
-import me.hannsi.lfjg.debug.debug.DebugLevel;
-import me.hannsi.lfjg.debug.debug.LogGenerator;
-import me.hannsi.lfjg.frame.LFJGContext;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
+import me.hannsi.lfjg.debug.debug.log.LogGenerator;
+import me.hannsi.lfjg.frame.frame.LFJGContext;
 import org.joml.Vector2f;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
