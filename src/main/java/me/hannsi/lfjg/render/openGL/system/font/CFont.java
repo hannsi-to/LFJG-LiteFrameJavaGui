@@ -2,7 +2,7 @@ package me.hannsi.lfjg.render.openGL.system.font;
 
 import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.debug.debug.system.DebugLog;
-import me.hannsi.lfjg.debug.debug.log.LogGenerator;
+import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import org.lwjgl.BufferUtils;

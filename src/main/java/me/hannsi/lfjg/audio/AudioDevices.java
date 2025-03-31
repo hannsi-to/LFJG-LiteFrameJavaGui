@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.audio;
 
-import me.hannsi.lfjg.debug.debug.log.LogGenerator;
+import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 
 import java.nio.ByteBuffer;

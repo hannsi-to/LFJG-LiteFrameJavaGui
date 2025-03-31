@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.audio;
 
 import me.hannsi.lfjg.debug.debug.system.DebugLevel;
-import me.hannsi.lfjg.debug.debug.log.LogGenerator;
+import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 import org.joml.Vector3f;
 
 import static org.lwjgl.openal.AL10.*;

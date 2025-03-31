@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.frame.glfw;
 
-import me.hannsi.lfjg.debug.debug.log.openGL.OpenGLDebug;
+import me.hannsi.lfjg.debug.debug.logger.openGL.OpenGLDebug;
 import me.hannsi.lfjg.frame.event.events.monitor.MonitorEvent;
 import me.hannsi.lfjg.frame.event.events.monitor.window.*;
 import me.hannsi.lfjg.frame.event.events.user.*;

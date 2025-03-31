@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.openGL.gui.system;
 
 import me.hannsi.lfjg.debug.debug.system.DebugLevel;
-import me.hannsi.lfjg.debug.debug.log.LogGenerator;
+import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;

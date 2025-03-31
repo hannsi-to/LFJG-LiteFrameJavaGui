@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.openGL.system.rendering;
 
 import me.hannsi.lfjg.debug.debug.system.DebugLevel;
-import me.hannsi.lfjg.debug.debug.log.LogGenerator;
+import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import org.joml.Vector2f;
 

@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.openGL.effect.system;
 
 import me.hannsi.lfjg.debug.debug.system.DebugLevel;
-import me.hannsi.lfjg.debug.debug.log.LogGenerator;
+import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.render.openGL.system.Id;
 import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;

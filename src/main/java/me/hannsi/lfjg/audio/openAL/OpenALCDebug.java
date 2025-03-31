@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.audio.openAL;
 
 import me.hannsi.lfjg.debug.debug.system.DebugLevel;
-import me.hannsi.lfjg.debug.debug.log.LogGenerator;
+import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 import me.hannsi.lfjg.frame.setting.settings.OpenALDebugSetting;
 import me.hannsi.lfjg.utils.reflection.StackTraceUtil;
 import org.lwjgl.openal.ALC10;

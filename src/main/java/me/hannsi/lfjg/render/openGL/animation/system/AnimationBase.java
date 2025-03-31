@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.openGL.animation.system;
 
 import me.hannsi.lfjg.debug.debug.system.DebugLevel;
-import me.hannsi.lfjg.debug.debug.log.LogGenerator;
+import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 
 public class AnimationBase {

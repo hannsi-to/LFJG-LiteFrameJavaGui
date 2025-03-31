@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.utils.toolkit;
 
 import me.hannsi.lfjg.debug.debug.system.DebugLevel;
-import me.hannsi.lfjg.debug.debug.log.LogGenerator;
+import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 
 import java.util.HashMap;
 

@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.openGL.system.model;
 
 import me.hannsi.lfjg.debug.debug.system.DebugLevel;
-import me.hannsi.lfjg.debug.debug.log.LogGenerator;
+import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 import me.hannsi.lfjg.render.openGL.system.model.lights.Lights;
 import me.hannsi.lfjg.render.openGL.system.model.model.Entity;
 import me.hannsi.lfjg.render.openGL.system.model.model.Model;

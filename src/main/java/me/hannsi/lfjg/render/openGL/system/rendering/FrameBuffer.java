@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.openGL.system.rendering;
 
 import me.hannsi.lfjg.debug.debug.system.DebugLevel;
-import me.hannsi.lfjg.debug.debug.log.LogGenerator;
+import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 import me.hannsi.lfjg.debug.exceptions.frameBuffer.CompleteFrameBufferException;
 import me.hannsi.lfjg.debug.exceptions.frameBuffer.CreatingFrameBufferException;
 import me.hannsi.lfjg.debug.exceptions.render.CreatingRenderBufferException;
