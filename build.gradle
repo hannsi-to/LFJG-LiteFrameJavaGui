@@ -24,7 +24,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.sun.jna:jna:3.0.9'
+    implementation "net.java.dev.jna:jna:5.13.0"
+    implementation "net.java.dev.jna:jna-platform:5.13.0"
 
     implementation "org.aspectj:aspectjrt:1.9.22"
     implementation "org.aspectj:aspectjweaver:1.9.22"
@@ -78,20 +79,16 @@ tasks.withType(JavaCompile).configureEach {
 
 compileTestJava {
     doLast {
-        ant.taskdef(
-                resource: 'org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties',
-                classpath: configurations.aspectj.asPath
-        )
+        ant.taskdef(resource: 'org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties',
+                classpath: configurations.aspectj.asPath)
 
-        ant.iajc(
-                source: sourceCompatibility,
+        ant.iajc(source: sourceCompatibility,
                 target: targetCompatibility,
                 aspectpath: configurations.aspect.asPath,
                 classpath: configurations.aspectj.asPath,
                 fork: 'true',
                 destDir: sourceSets.test.output.classesDirs.asPath,
-                compilerArgs: ["-Xlint:ignore", "-Xajruntimetarget:1.8"]
-        )
+                compilerArgs: ["-Xlint:ignore", "-Xajruntimetarget:1.8"])
     }
 }
 

@@ -1,9 +1,13 @@
 package me.hannsi.test;
 
+import com.sun.jna.Memory;
+import com.sun.jna.Pointer;
+import com.sun.jna.WString;
 import me.hannsi.lfjg.frame.frame.Frame;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.frame.setting.settings.TimeSourceSetting;
-import me.hannsi.lfjg.nativeAccess.User32;
+import me.hannsi.lfjg.nativeAccess.Comdlg32;
+import me.hannsi.lfjg.nativeAccess.structure.OPENFILENAME;
 import me.hannsi.lfjg.physic.PhysicObject;
 import me.hannsi.lfjg.physic.PhysicWorld;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
@@ -49,13 +53,28 @@ public class TestScene2 implements IScene {
 
         physicWorld.createPhysicObject(physicObjectGround1);
         physicWorld.createPhysicObject(physicObjectRect1);
+
+        OPENFILENAME ofn = new OPENFILENAME();
+        final int lenFilenameBufferInChars = 1024;
+        Memory buf = new Memory((long) lenFilenameBufferInChars * 2);
+        ofn.lStructSize = ofn.size();
+        ofn.hwndOwner = Pointer.createConstant(frame.getWin32Window());
+        ofn.lpstrFilter = new WString("テキストファイル\0*.txt\0\0");
+        ofn.lpstrFile = buf;
+        ofn.nMaxFile = lenFilenameBufferInChars;
+        ofn.lpstrTitle = new WString("ファイルを選択してください");
+        ofn.Flags = 0x00001000;
+        boolean ret = Comdlg32.getOpenFileNameW(ofn);
+        if (ret) {
+            String filename = buf.getWideString(0);
+            System.out.println("選択されたファイル: " + filename);
+        } else {
+            System.out.println("キャンセルされました");
+        }
     }
 
     @Override
     public void drawFrame() {
-        User32.messageBox(frame.getWin32Window(), "Hello World", "Test", User32.MB_OK);
-        User32.messageBeep(User32.MB_ICONINFORMATION);
-
         physicWorld.simulation(frame.getFrameSettingValue(TimeSourceSetting.class));
 
         physicObjectRect1.applyForce(new Vector2f(3f, 0));
