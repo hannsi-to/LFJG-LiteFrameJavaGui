@@ -1,11 +1,12 @@
-package me.hannsi.lfjg.frame.callback;
+package me.hannsi.lfjg.frame.glfw;
 
+import me.hannsi.lfjg.debug.debug.log.openGL.OpenGLDebug;
 import me.hannsi.lfjg.frame.event.events.monitor.MonitorEvent;
 import me.hannsi.lfjg.frame.event.events.monitor.window.*;
 import me.hannsi.lfjg.frame.event.events.user.*;
-import me.hannsi.lfjg.debug.debug.log.openGL.OpenGLDebug;
 import me.hannsi.lfjg.frame.frame.Frame;
 import me.hannsi.lfjg.frame.frame.IFrame;
+import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
 import me.hannsi.lfjg.frame.setting.settings.OpenGLDebugSetting;
 import org.lwjgl.glfw.*;
 
@@ -200,7 +201,7 @@ public class GLFWCallback implements IFrame {
         glfwSetJoystickCallback(joystickCallback);
 
         if (frame.getFrameSettingValue(OpenGLDebugSetting.class)) {
-            OpenGLDebug.getOpenGLDebug(frame);
+            OpenGLDebug.getOpenGLDebug(frame.getThreadName(), frame.getFrameSettingValue(CheckSeveritiesSetting.class));
         }
     }
 }

@@ -3,6 +3,7 @@ package me.hannsi.test;
 import me.hannsi.lfjg.frame.frame.Frame;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.frame.setting.settings.TimeSourceSetting;
+import me.hannsi.lfjg.nativeAccess.User32;
 import me.hannsi.lfjg.physic.PhysicObject;
 import me.hannsi.lfjg.physic.PhysicWorld;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
@@ -31,7 +32,7 @@ public class TestScene2 implements IScene {
     @Override
     public void init() {
         glGround1 = new GLRect("GLGround1");
-        glGround1.rect(0, 0, LFJGContext.resolution.x(), 5, new Color(255,255,255, 255));
+        glGround1.rect(0, 0, LFJGContext.resolution.x(), 5, new Color(255, 255, 255, 255));
 
         glRect1 = new GLRect("GLRect1");
         glRect1.rectWH(LFJGContext.resolution.x() / 2f, LFJGContext.resolution.y(), 50, 50, new Color(255, 255, 255, 255));
@@ -52,9 +53,12 @@ public class TestScene2 implements IScene {
 
     @Override
     public void drawFrame() {
+        User32.messageBox(frame.getWin32Window(), "Hello World", "Test", User32.MB_OK);
+        User32.messageBeep(User32.MB_ICONINFORMATION);
+
         physicWorld.simulation(frame.getFrameSettingValue(TimeSourceSetting.class));
 
-        physicObjectRect1.applyForce(new Vector2f(3f,0));
+        physicObjectRect1.applyForce(new Vector2f(3f, 0));
         glGround1.draw();
         glRect1.draw();
     }

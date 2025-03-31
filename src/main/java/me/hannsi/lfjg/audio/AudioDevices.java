@@ -1,9 +1,7 @@
 package me.hannsi.lfjg.audio;
 
-import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.debug.debug.log.LogGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -19,7 +17,6 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  */
 public class AudioDevices {
     public static final ByteBuffer DEFAULT = null;
-    private static final Logger log = LoggerFactory.getLogger(AudioDevices.class);
     private Map<String, ByteBuffer> deviceMap;
 
     /**

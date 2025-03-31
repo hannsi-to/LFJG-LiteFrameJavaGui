@@ -4,8 +4,8 @@ import me.hannsi.lfjg.debug.debug.system.DebugLog;
 import me.hannsi.lfjg.frame.event.events.render.DrawFrameWithNanoVGEvent;
 import me.hannsi.lfjg.frame.event.events.render.DrawFrameWithOpenGLEvent;
 import me.hannsi.lfjg.frame.event.system.EventHandler;
-import me.hannsi.lfjg.debug.debug.log.glfw.GLFWDebug;
-import me.hannsi.lfjg.frame.callback.GLFWCallback;
+import me.hannsi.lfjg.frame.glfw.GLFWCallback;
+import me.hannsi.lfjg.frame.glfw.GLFWDebug;
 import me.hannsi.lfjg.frame.manager.managers.FrameSettingManager;
 import me.hannsi.lfjg.frame.manager.managers.LoggerManager;
 import me.hannsi.lfjg.frame.setting.settings.*;
@@ -26,6 +26,7 @@ import org.joml.Vector2i;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWNativeWin32;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGL3;
 import org.lwjgl.opengl.GL;
@@ -362,6 +363,10 @@ public class Frame implements IFrame {
 
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         GL11.glLoadIdentity();
+    }
+
+    public long getWin32Window() {
+        return GLFWNativeWin32.glfwGetWin32Window(windowID);
     }
 
     /**
