@@ -1,8 +1,8 @@
 package me.hannsi.lfjg.debug.debug.logger.openGL;
 
+import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.debug.debug.system.DebugLog;
-import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 import me.hannsi.lfjg.utils.reflection.StackTraceUtil;
 import me.hannsi.lfjg.utils.type.types.SeverityType;
 import org.lwjgl.opengl.GL;
@@ -15,11 +15,6 @@ import static org.lwjgl.system.MemoryUtil.memUTF8;
  * Provides debugging utilities for OpenGL.
  */
 public class OpenGLDebug {
-    /**
-     * Enables OpenGL debug output and sets up a callback to handle debug messages.
-     *
-     * @param frame the frame to use for retrieving settings
-     */
     public static void getOpenGLDebug(String mainThreadName, SeverityType[] severityTypes) {
         if (GL.getCapabilities().OpenGL43) {
             GL43.glEnable(GL43.GL_DEBUG_OUTPUT);

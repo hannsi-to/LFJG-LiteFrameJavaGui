@@ -11,5 +11,9 @@ public interface IComdlg32 extends StdCallLibrary {
 
     boolean GetOpenFileNameW(OPENFILENAME ofn);
 
+    boolean GetSaveFileNameA(OPENFILENAME ofn);
+
+    boolean GetSaveFileNameW(OPENFILENAME ofn);
+
     int CommDlgExtendedError();
 }

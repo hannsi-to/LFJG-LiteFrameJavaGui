@@ -59,14 +59,14 @@ public class TestScene2 implements IScene {
         ofn.lStructSize = ofn.size();
         ofn.hwndOwner = Pointer.createConstant(frame.getWin32Window());
 //        ofn.lpstrFilter = new WString("テキストファイル (*.txt)\0*.txt\0画像ファイル (*.png, *.jpg)\0*.png;*.jpg\0すべてのファイル (*.*)\0*.*\0");
-//        ofn.lpstrFile = buf;
-//        ofn.nMaxFile = lenFilenameBufferInChars;
+        ofn.lpstrFile = buf;
+        ofn.nMaxFile = lenFilenameBufferInChars;
 //        ofn.lpstrTitle = new WString("ファイルを選択してください");
-        boolean ret = Comdlg32.getOpenFileNameW(ofn);
+        boolean ret = Comdlg32.getSaveFileNameW(ofn);
         System.out.println(Comdlg32.getCommDlgExtendedError(Comdlg32.commDlgExtendedError()));
         if (ret) {
             String filename = buf.getWideString(0);
-            System.out.println("選択されたファイル: " + filename);
+            System.out.println(filename);
         } else {
             System.out.println("キャンセルされました");
         }

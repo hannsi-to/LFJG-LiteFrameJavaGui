@@ -47,6 +47,14 @@ public class Comdlg32 {
         return IComdlg32.INSTANCE.GetOpenFileNameW(ofn);
     }
 
+    public static boolean getSaveFileNameA(OPENFILENAME ofn) {
+        return IComdlg32.INSTANCE.GetSaveFileNameA(ofn);
+    }
+
+    public static boolean getSaveFileNameW(OPENFILENAME ofn) {
+        return IComdlg32.INSTANCE.GetSaveFileNameW(ofn);
+    }
+
     public static int commDlgExtendedError() {
         return IComdlg32.INSTANCE.CommDlgExtendedError();
     }
