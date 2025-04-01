@@ -2,7 +2,6 @@ package me.hannsi.test;
 
 import com.sun.jna.Memory;
 import com.sun.jna.Pointer;
-import com.sun.jna.WString;
 import me.hannsi.lfjg.frame.frame.Frame;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.frame.setting.settings.TimeSourceSetting;
@@ -59,12 +58,12 @@ public class TestScene2 implements IScene {
         Memory buf = new Memory((long) lenFilenameBufferInChars * 2);
         ofn.lStructSize = ofn.size();
         ofn.hwndOwner = Pointer.createConstant(frame.getWin32Window());
-        ofn.lpstrFilter = new WString("テキストファイル\0*.txt\0\0");
-        ofn.lpstrFile = buf;
-        ofn.nMaxFile = lenFilenameBufferInChars;
-        ofn.lpstrTitle = new WString("ファイルを選択してください");
-        ofn.Flags = 0x00001000;
+//        ofn.lpstrFilter = new WString("テキストファイル (*.txt)\0*.txt\0画像ファイル (*.png, *.jpg)\0*.png;*.jpg\0すべてのファイル (*.*)\0*.*\0");
+//        ofn.lpstrFile = buf;
+//        ofn.nMaxFile = lenFilenameBufferInChars;
+//        ofn.lpstrTitle = new WString("ファイルを選択してください");
         boolean ret = Comdlg32.getOpenFileNameW(ofn);
+        System.out.println(Comdlg32.getCommDlgExtendedError(Comdlg32.commDlgExtendedError()));
         if (ret) {
             String filename = buf.getWideString(0);
             System.out.println("選択されたファイル: " + filename);
