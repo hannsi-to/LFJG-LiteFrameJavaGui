@@ -43,7 +43,8 @@ public class TestGuiFrame implements LFJGFrame {
         sceneSystem = new SceneSystem();
         sceneSystem.addScene(new TestScene1().getScene());
         sceneSystem.addScene(new TestScene2(frame).getScene());
-        sceneSystem.setCurrentScene("TestScene2");
+        sceneSystem.addScene(new TestScene3(frame).getScene());
+        sceneSystem.setCurrentScene("TestScene3");
         sceneSystem.initScenes();
 
         mouseInfo = new MouseInfo();

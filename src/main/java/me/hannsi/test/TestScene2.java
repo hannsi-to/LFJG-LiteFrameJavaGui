@@ -52,24 +52,6 @@ public class TestScene2 implements IScene {
 
         physicWorld.createPhysicObject(physicObjectGround1);
         physicWorld.createPhysicObject(physicObjectRect1);
-
-        OPENFILENAME ofn = new OPENFILENAME();
-        final int lenFilenameBufferInChars = 1024;
-        Memory buf = new Memory((long) lenFilenameBufferInChars * 2);
-        ofn.lStructSize = ofn.size();
-        ofn.hwndOwner = Pointer.createConstant(frame.getWin32Window());
-//        ofn.lpstrFilter = new WString("テキストファイル (*.txt)\0*.txt\0画像ファイル (*.png, *.jpg)\0*.png;*.jpg\0すべてのファイル (*.*)\0*.*\0");
-        ofn.lpstrFile = buf;
-        ofn.nMaxFile = lenFilenameBufferInChars;
-//        ofn.lpstrTitle = new WString("ファイルを選択してください");
-        boolean ret = Comdlg32.getSaveFileNameW(ofn);
-        System.out.println(Comdlg32.getCommDlgExtendedError(Comdlg32.commDlgExtendedError()));
-        if (ret) {
-            String filename = buf.getWideString(0);
-            System.out.println(filename);
-        } else {
-            System.out.println("キャンセルされました");
-        }
     }
 
     @Override
