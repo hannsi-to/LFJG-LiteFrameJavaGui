@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.openGL.renderers.font;
 
-import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.system.font.CFont;

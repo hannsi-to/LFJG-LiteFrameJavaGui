@@ -13,7 +13,10 @@ import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
 import me.hannsi.lfjg.utils.toolkit.Camera;
 import me.hannsi.lfjg.utils.toolkit.KeyboardInfo;
 import me.hannsi.lfjg.utils.toolkit.MouseInfo;
-import me.hannsi.lfjg.utils.type.types.*;
+import me.hannsi.lfjg.utils.type.types.AntiAliasingType;
+import me.hannsi.lfjg.utils.type.types.MonitorType;
+import me.hannsi.lfjg.utils.type.types.ProjectionType;
+import me.hannsi.lfjg.utils.type.types.VSyncType;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
@@ -44,7 +47,7 @@ public class TestGuiFrame implements LFJGFrame {
         sceneSystem.addScene(new TestScene1().getScene());
         sceneSystem.addScene(new TestScene2(frame).getScene());
         sceneSystem.addScene(new TestScene3(frame).getScene());
-        sceneSystem.setCurrentScene("TestScene3");
+        sceneSystem.setCurrentScene("TestScene2");
         sceneSystem.initScenes();
 
         mouseInfo = new MouseInfo();
@@ -96,7 +99,7 @@ public class TestGuiFrame implements LFJGFrame {
     @Override
     public void setFrameSetting() {
         frame.setFrameSettingValue(RefreshRateSetting.class, GLFW.GLFW_DONT_CARE);
-        frame.setFrameSettingValue(MonitorSetting.class, MonitorType.Window);
+        frame.setFrameSettingValue(MonitorSetting.class, MonitorType.FullScreen);
         frame.setFrameSettingValue(VSyncSetting.class, VSyncType.VSyncOff);
         frame.setFrameSettingValue(FloatingSetting.class, false);
         frame.setFrameSettingValue(IconSetting.class, new ResourcesLocation("salad_x32.png"));
