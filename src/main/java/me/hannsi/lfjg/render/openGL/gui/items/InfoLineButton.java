@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.openGL.gui;
+package me.hannsi.lfjg.render.openGL.gui.items;
 
 import me.hannsi.lfjg.utils.type.types.InfoType;
 import me.hannsi.lfjg.utils.type.types.InfoTypeButton;
@@ -10,12 +10,13 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
+@Item
 public @interface InfoLineButton {
     String name();
 
-    String description();
+    String description() default "";
 
-    InfoType infoType();
+    InfoType infoType() default InfoType.Info;
 
-    InfoTypeButton type();
+    InfoTypeButton type() default InfoTypeButton.Normal;
 }

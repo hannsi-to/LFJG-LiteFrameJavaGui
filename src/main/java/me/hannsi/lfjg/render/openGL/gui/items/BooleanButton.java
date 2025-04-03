@@ -1,6 +1,6 @@
-package me.hannsi.lfjg.render.openGL.gui;
+package me.hannsi.lfjg.render.openGL.gui.items;
 
-import me.hannsi.lfjg.utils.type.types.SelectorButtonType;
+import me.hannsi.lfjg.utils.type.types.BooleanButtonType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,12 +9,11 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface SelectorButton {
+@Item
+public @interface BooleanButton {
     String name();
 
-    String description();
+    String description() default "";
 
-    String[] optionList();
-
-    SelectorButtonType type();
+    BooleanButtonType type() default BooleanButtonType.Switch;
 }

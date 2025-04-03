@@ -1,6 +1,6 @@
-package me.hannsi.lfjg.render.openGL.gui;
+package me.hannsi.lfjg.render.openGL.gui.items;
 
-import me.hannsi.lfjg.utils.type.types.KeyBindButtonType;
+import me.hannsi.lfjg.utils.type.types.ColorButtonType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,10 +9,11 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface KeyBindButton {
+@Item
+public @interface ColorButton {
     String name();
 
-    String description();
+    String description() default "";
 
-    KeyBindButtonType type();
+    ColorButtonType type() default ColorButtonType.Normal;
 }

@@ -1,6 +1,6 @@
-package me.hannsi.lfjg.render.openGL.gui;
+package me.hannsi.lfjg.render.openGL.gui.items;
 
-import me.hannsi.lfjg.utils.type.types.NumberButtonType;
+import me.hannsi.lfjg.utils.type.types.KeyBindButtonType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,16 +9,11 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface NumberButton {
+@Item
+public @interface KeyBindButton {
     String name();
 
-    String description();
+    String description() default "";
 
-    float min();
-
-    float max();
-
-    float step();
-
-    NumberButtonType type();
+    KeyBindButtonType type() default KeyBindButtonType.Normal;
 }
