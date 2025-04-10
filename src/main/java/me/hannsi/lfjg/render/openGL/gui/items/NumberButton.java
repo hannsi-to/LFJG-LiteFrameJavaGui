@@ -19,7 +19,7 @@ public @interface NumberButton {
 
     float max();
 
-    float step() default 1.0f;
+    float step();
 
     NumberButtonType type() default NumberButtonType.Slider;
 }

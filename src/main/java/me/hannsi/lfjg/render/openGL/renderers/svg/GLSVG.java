@@ -3,11 +3,11 @@ package me.hannsi.lfjg.render.openGL.renderers.svg;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
-import me.hannsi.lfjg.utils.buffer.ByteUtil;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.math.MathHelper;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.reflection.URLLocation;
+import me.hannsi.lfjg.utils.toolkit.IOUtil;
 import org.lwjgl.nanovg.NSVGImage;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
@@ -70,7 +70,7 @@ public class GLSVG extends GLRect {
     }
 
     public void svg(FileLocation fileLocation, float x, float y, float scaleX, float scaleY) {
-        ByteBuffer svgData = ByteUtil.svgToByteBuffer(fileLocation);
+        ByteBuffer svgData = IOUtil.svgToByteBuffer(fileLocation);
 
         svg(svgData, x, y, scaleX, scaleY);
     }
@@ -80,7 +80,7 @@ public class GLSVG extends GLRect {
     }
 
     public void svg(URLLocation urlLocation, float x, float y, float scaleX, float scaleY) {
-        ByteBuffer svgData = ByteUtil.downloadSVG(urlLocation);
+        ByteBuffer svgData = IOUtil.downloadSVG(urlLocation);
 
         svg(svgData, x, y, scaleX, scaleY);
     }
@@ -126,7 +126,7 @@ public class GLSVG extends GLRect {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-        ByteUtil.premultiplyAlpha(image, width, height, width * 4);
+        IOUtil.premultiplyAlpha(image, width, height, width * 4);
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 

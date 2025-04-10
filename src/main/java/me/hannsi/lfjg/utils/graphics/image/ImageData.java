@@ -1,8 +1,8 @@
 package me.hannsi.lfjg.utils.graphics.image;
 
 import me.hannsi.lfjg.debug.debug.system.DebugLog;
-import me.hannsi.lfjg.utils.buffer.BufferUtil;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.toolkit.IOUtil;
 import org.bytedeco.opencv.global.opencv_imgcodecs;
 import org.bytedeco.opencv.global.opencv_imgproc;
 import org.bytedeco.opencv.opencv_core.Mat;
@@ -37,7 +37,7 @@ public class ImageData {
         mat = new Mat();
 
         cvtColor(bgrMat, mat, opencv_imgproc.COLOR_BGR2RGBA);
-        this.byteBuffer = BufferUtil.matToByteBufferRGBA(mat);
+        this.byteBuffer = IOUtil.matToByteBufferRGBA(mat);
     }
 
     public void cleanup() {

@@ -2,10 +2,10 @@ package me.hannsi.lfjg.utils.graphics.image;
 
 import me.hannsi.lfjg.debug.debug.system.DebugLog;
 import me.hannsi.lfjg.debug.exceptions.texture.CreatingTextureException;
-import me.hannsi.lfjg.utils.buffer.BufferUtil;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.reflection.Location;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.toolkit.IOUtil;
 import me.hannsi.lfjg.utils.type.types.ImageLoaderType;
 import org.bytedeco.opencv.global.opencv_imgcodecs;
 import org.bytedeco.opencv.global.opencv_imgproc;
@@ -135,7 +135,7 @@ public class TextureLoader {
                     Mat mat = new Mat();
                     cvtColor(bgrMat, mat, opencv_imgproc.COLOR_BGR2RGBA);
 
-                    generateTexture(mat.cols(), mat.rows(), BufferUtil.matToByteBufferRGBA(mat));
+                    generateTexture(mat.cols(), mat.rows(), IOUtil.matToByteBufferRGBA(mat));
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + imageLoaderType);
             }

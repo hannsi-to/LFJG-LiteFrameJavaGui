@@ -1,19 +1,20 @@
 package me.hannsi.lfjg.render.nanoVG.renderers.font;
 
-import me.hannsi.lfjg.render.nanoVG.system.NanoVGUtil;
 import me.hannsi.lfjg.render.nanoVG.renderers.polygon.NanoVGLine;
+import me.hannsi.lfjg.render.nanoVG.system.NanoVGUtil;
 import me.hannsi.lfjg.render.nanoVG.system.font.AlignExtractor;
 import me.hannsi.lfjg.render.nanoVG.system.font.ChatFormatting;
 import me.hannsi.lfjg.render.nanoVG.system.font.Font;
 import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.math.StringUtil;
+import me.hannsi.lfjg.utils.toolkit.StringUtil;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NanoVG;
 
 import java.util.List;
 
 /**
- * Represents a font renderer using NanoVG.
+ * Represents a font
+ * renderer using NanoVG.
  */
 public class NanoVGFont {
     public long nvg;
@@ -54,10 +55,10 @@ public class NanoVGFont {
     /**
      * Sets the size and alignment for rendering.
      *
-     * @param x the x-coordinate
-     * @param y the y-coordinate
+     * @param x        the x-coordinate
+     * @param y        the y-coordinate
      * @param fontSize the font size
-     * @param align the alignment
+     * @param align    the alignment
      */
     public void setSize(float x, float y, float fontSize, int align) {
         this.x = x;
@@ -69,7 +70,7 @@ public class NanoVGFont {
     /**
      * Sets the base rendering options.
      *
-     * @param base whether to render the base text
+     * @param base      whether to render the base text
      * @param baseColor the color of the base text
      */
     public void setBase(boolean base, Color baseColor) {
@@ -80,8 +81,8 @@ public class NanoVGFont {
     /**
      * Sets the blur effect for the font rendering.
      *
-     * @param blur whether to apply the blur effect
-     * @param blurSize the size of the blur effect
+     * @param blur      whether to apply the blur effect
+     * @param blurSize  the size of the blur effect
      * @param blurColor the color of the blur effect
      */
     public void setBlur(boolean blur, float blurSize, Color blurColor) {
@@ -108,9 +109,9 @@ public class NanoVGFont {
     /**
      * Draws the text with chat formatting options such as bold, italic, underline, and strikethrough.
      *
-     * @param text the text to render
-     * @param x the x-coordinate
-     * @param y the y-coordinate
+     * @param text  the text to render
+     * @param x     the x-coordinate
+     * @param y     the y-coordinate
      * @param color the color of the text
      * @param align the alignment of the text
      */
@@ -281,12 +282,12 @@ public class NanoVGFont {
     /**
      * Draws the text using NanoVG with the specified settings.
      *
-     * @param text the text to render
-     * @param x the x-coordinate
-     * @param y the y-coordinate
-     * @param color the color of the text
-     * @param align the alignment of the text
-     * @param italic the italic angle
+     * @param text     the text to render
+     * @param x        the x-coordinate
+     * @param y        the y-coordinate
+     * @param color    the color of the text
+     * @param align    the alignment of the text
+     * @param italic   the italic angle
      * @param plusSize the additional size for bold text
      */
     private void drawNanoVGText(String text, float x, float y, Color color, int align, float italic, float plusSize) {

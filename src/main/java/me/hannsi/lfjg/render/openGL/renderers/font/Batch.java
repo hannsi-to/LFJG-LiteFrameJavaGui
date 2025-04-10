@@ -5,9 +5,9 @@ import me.hannsi.lfjg.render.openGL.system.font.CFont;
 import me.hannsi.lfjg.render.openGL.system.font.CharInfo;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
 import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.math.StringUtil;
-import me.hannsi.lfjg.utils.math.TextFormat;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.toolkit.StringUtil;
+import me.hannsi.lfjg.utils.toolkit.TextFormat;
 import org.lwjgl.opengl.GL15;
 
 import static org.lwjgl.opengl.GL15.*;

@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.utils.reflection;
 
-import me.hannsi.lfjg.utils.buffer.ByteUtil;
+import me.hannsi.lfjg.utils.toolkit.IOUtil;
 
 import java.io.InputStream;
 import java.util.Objects;
@@ -28,7 +28,7 @@ public class FileLocation extends Location {
      * @return the InputStream for the file
      */
     public InputStream getInputStream() {
-        return ByteUtil.convertStringPathToInputStream(path);
+        return IOUtil.convertStringPathToInputStream(path);
     }
 
     /**
@@ -37,6 +37,6 @@ public class FileLocation extends Location {
      * @return the byte array of the file
      */
     public byte[] getBytes() {
-        return ByteUtil.convertInputStreamToByteArray(Objects.requireNonNull(getInputStream()));
+        return IOUtil.convertInputStreamToByteArray(Objects.requireNonNull(getInputStream()));
     }
 }

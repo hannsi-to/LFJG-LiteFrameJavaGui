@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.utils.math;
+package me.hannsi.lfjg.utils.toolkit;
 
 import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class StringUtil {
      * Gets the first N characters of a string.
      *
      * @param str the input string
-     * @param n the number of characters to get
+     * @param n   the number of characters to get
      * @return the first N characters of the string, or an empty string if the input is null or invalid
      */
     public static String getFirstNCharacters(String str, int n) {
@@ -29,7 +29,7 @@ public class StringUtil {
     /**
      * Links a list of strings with a specified space.
      *
-     * @param list the array of strings to link
+     * @param list  the array of strings to link
      * @param space the space to add between each string
      * @return the linked string
      */
@@ -100,7 +100,7 @@ public class StringUtil {
     /**
      * Splits a string by a specified regex and returns the result as a list.
      *
-     * @param str the input string
+     * @param str   the input string
      * @param regex the regex to split by
      * @return the list of split strings
      */
@@ -111,7 +111,7 @@ public class StringUtil {
     /**
      * Splits a string by a specified regex.
      *
-     * @param str the input string
+     * @param str   the input string
      * @param regex the regex to split by
      * @return the array of split strings
      */
@@ -122,9 +122,9 @@ public class StringUtil {
     /**
      * Extracts a substring between two delimiters.
      *
-     * @param input the input string
+     * @param input          the input string
      * @param startDelimiter the start delimiter
-     * @param endDelimiter the end delimiter
+     * @param endDelimiter   the end delimiter
      * @return the extracted substring, or an empty string if delimiters are not found
      */
     public static String extractString(String input, String startDelimiter, String endDelimiter) {
@@ -156,7 +156,7 @@ public class StringUtil {
      * Adds a specified string to the end of each string in an array and returns the result as a list.
      *
      * @param strings the array of strings
-     * @param addStr the string to add
+     * @param addStr  the string to add
      * @return the list of modified strings
      */
     public static List<String> addEndCharInList(String[] strings, String addStr) {
@@ -173,7 +173,7 @@ public class StringUtil {
      * Adds a specified character to the end of each string in an array and returns the result as a list.
      *
      * @param strings the array of strings
-     * @param addStr the character to add
+     * @param addStr  the character to add
      * @return the list of modified strings
      */
     public static List<String> addEndCharInList(String[] strings, char addStr) {
@@ -184,7 +184,7 @@ public class StringUtil {
      * Adds a specified string to the start of each string in an array and returns the result as a list.
      *
      * @param strings the array of strings
-     * @param addStr the string to add
+     * @param addStr  the string to add
      * @return the list of modified strings
      */
     public static List<String> addStartCharInList(String[] strings, String addStr) {
@@ -201,7 +201,7 @@ public class StringUtil {
      * Adds a specified character to the start of each string in an array and returns the result as a list.
      *
      * @param strings the array of strings
-     * @param addStr the character to add
+     * @param addStr  the character to add
      * @return the list of modified strings
      */
     public static List<String> addStartCharInList(String[] strings, char addStr) {
@@ -211,7 +211,7 @@ public class StringUtil {
     /**
      * Adds a specified string to the end of a string.
      *
-     * @param str the input string
+     * @param str    the input string
      * @param addStr the string to add
      * @return the modified string
      */
@@ -222,7 +222,7 @@ public class StringUtil {
     /**
      * Adds a specified character to the end of a string.
      *
-     * @param str the input string
+     * @param str    the input string
      * @param addStr the character to add
      * @return the modified string
      */
@@ -233,7 +233,7 @@ public class StringUtil {
     /**
      * Adds a specified string to the start of a string.
      *
-     * @param str the input string
+     * @param str    the input string
      * @param addStr the string to add
      * @return the modified string
      */
@@ -244,7 +244,7 @@ public class StringUtil {
     /**
      * Adds a specified character to the start of a string.
      *
-     * @param str the input string
+     * @param str    the input string
      * @param addStr the character to add
      * @return the modified string
      */
@@ -255,7 +255,7 @@ public class StringUtil {
     /**
      * Fills a string with a specified text if it is empty.
      *
-     * @param str the input string
+     * @param str      the input string
      * @param fillText the text to fill
      * @return the filled string
      */
@@ -270,7 +270,7 @@ public class StringUtil {
     /**
      * Fills a string with a specified integer if it is empty.
      *
-     * @param str the input string
+     * @param str      the input string
      * @param fillText the integer to fill
      * @return the filled string
      */
@@ -281,7 +281,7 @@ public class StringUtil {
     /**
      * Fills a string with a specified float if it is empty.
      *
-     * @param str the input string
+     * @param str      the input string
      * @param fillText the float to fill
      * @return the filled string
      */
@@ -292,7 +292,7 @@ public class StringUtil {
     /**
      * Fills a string with a specified double if it is empty.
      *
-     * @param str the input string
+     * @param str      the input string
      * @param fillText the double to fill
      * @return the filled string
      */

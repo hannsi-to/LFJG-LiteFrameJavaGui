@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.nativeAccess;
 
+import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.nativeAccess.structure.OPENFILENAME;
 
 public class Comdlg32 {
@@ -16,7 +18,6 @@ public class Comdlg32 {
     public static final int CDERR_MEMLOCKFAILURE = 0x000A;
     public static final int CDERR_NOHOOK = 0x000B;
     public static final int CDERR_REGISTERMSGFAIL = 0x000C;
-
     public static final int PDERR_SETUPFAILURE = 0x1001;
     public static final int PDERR_PARSEFAILURE = 0x1002;
     public static final int PDERR_RETDEFFAILURE = 0x1003;
@@ -29,15 +30,16 @@ public class Comdlg32 {
     public static final int PDERR_CREATEICFAILURE = 0x100A;
     public static final int PDERR_PRINTERNOTFOUND = 0x100B;
     public static final int PDERR_DEFAULTDIFFERENT = 0x100C;
-
     public static final int CFERR_NOFONTS = 0x2001;
     public static final int CFERR_MAXLESSTHANMIN = 0x2002;
-
     public static final int FNERR_SUBCLASSFAILURE = 0x3001;
     public static final int FNERR_INVALIDFILENAME = 0x3002;
     public static final int FNERR_BUFFERTOOSMALL = 0x3003;
-
     public static final int FRERR_BUFFERLENGTHZERO = 0x4001;
+
+    static {
+        new LogGenerator("Java Native", "Source: Comdlg32", "Type: Native access", "Severity: Info", "Message: Access to native library for Comdlg32.dll").logging(DebugLevel.INFO);
+    }
 
     public static boolean getOpenFileNameA(OPENFILENAME ofn) {
         return IComdlg32.INSTANCE.GetOpenFileNameA(ofn);

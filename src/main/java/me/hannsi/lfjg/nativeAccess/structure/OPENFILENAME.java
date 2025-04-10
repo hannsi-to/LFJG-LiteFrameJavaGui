@@ -3,8 +3,8 @@ package me.hannsi.lfjg.nativeAccess.structure;
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 import com.sun.jna.WString;
-import com.sun.jna.platform.win32.WinDef;
-import com.sun.jna.win32.StdCallLibrary;
+import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 
 import java.util.Arrays;
 import java.util.List;
@@ -62,6 +62,18 @@ public class OPENFILENAME extends Structure {
     public Pointer pvReserved;
     public int dwReserved;
     public int FlagsEx;
+
+    public OPENFILENAME() {
+        this.lStructSize = size();
+
+        new LogGenerator(
+                "Create OPENFILENAME Structure",
+                "Source: OPENFILENAME",
+                "Type: Create structure",
+                "Severity: info",
+                "Message: Create OPENFILENAME structure (lStructureSize=" + lStructSize + ")"
+        ).logging(DebugLevel.INFO);
+    }
 
     @Override
     protected List<String> getFieldOrder() {

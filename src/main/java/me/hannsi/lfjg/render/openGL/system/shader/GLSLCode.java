@@ -1,10 +1,10 @@
 package me.hannsi.lfjg.render.openGL.system.shader;
 
-import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
-import me.hannsi.lfjg.utils.buffer.ByteUtil;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.utils.reflection.FileLocation;
 import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.toolkit.IOUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,7 +50,7 @@ public class GLSLCode {
             checkInclude = true;
 
             String includeFilePath = matcher.group(1);
-            String includeCode = ByteUtil.readInputStreamToString(new ResourcesLocation(includeFilePath).getInputStream());
+            String includeCode = IOUtil.readInputStreamToString(new ResourcesLocation(includeFilePath).getInputStream());
             shaderCode = shaderCode.replace(matcher.group(0), includeCode);
         }
 
@@ -67,7 +67,7 @@ public class GLSLCode {
      * @return the final shader code
      */
     public String createCode() {
-        String shaderCode = ByteUtil.readInputStreamToString(fileLocation.getInputStream());
+        String shaderCode = IOUtil.readInputStreamToString(fileLocation.getInputStream());
         shaderCode = processIncludes(shaderCode);
 
         return shaderCode;

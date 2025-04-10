@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.utils.math;
+package me.hannsi.lfjg.utils.toolkit;
 
 import me.hannsi.lfjg.utils.graphics.color.Color;
 
@@ -50,15 +50,15 @@ public class TextFormat {
     public static final String ITALIC = PREFIX_CODE + "k";
     public static final String RESET = PREFIX_CODE + "r";
     public static final String NEWLINE = PREFIX_CODE + "l";
-    public static final String SPASE_X =  PREFIX_CODE + "m";
-    public static final String SPASE_Y =  PREFIX_CODE + "n";
+    public static final String SPASE_X = PREFIX_CODE + "m";
+    public static final String SPASE_Y = PREFIX_CODE + "n";
     public static final String RESET_POINT_X = PREFIX_CODE + "o";
     public static final String RESET_POINT_Y = PREFIX_CODE + "p";
 
     /**
      * Gets the color associated with a text format code.
      *
-     * @param format the text format code
+     * @param format       the text format code
      * @param defaultColor the default color to return if the format code is not recognized
      * @return the color associated with the format code, or the default color if the format code is not recognized
      */
