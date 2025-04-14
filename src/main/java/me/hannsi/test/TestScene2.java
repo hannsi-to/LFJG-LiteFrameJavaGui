@@ -1,13 +1,15 @@
 package me.hannsi.test;
 
+import com.sun.jna.Memory;
+import com.sun.jna.Pointer;
 import me.hannsi.lfjg.frame.frame.Frame;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.frame.setting.settings.TimeSourceSetting;
+import me.hannsi.lfjg.nativeAccess.Comdlg32;
+import me.hannsi.lfjg.nativeAccess.structure.OPENFILENAME;
 import me.hannsi.lfjg.physic.PhysicObject;
 import me.hannsi.lfjg.physic.PhysicWorld;
-import me.hannsi.lfjg.render.openGL.renderers.font.GLFont;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
-import me.hannsi.lfjg.render.openGL.system.font.FontCache;
 import me.hannsi.lfjg.render.openGL.system.scene.IScene;
 import me.hannsi.lfjg.render.openGL.system.scene.Scene;
 import me.hannsi.lfjg.utils.graphics.color.Color;
@@ -25,10 +27,6 @@ public class TestScene2 implements IScene {
     GLRect glRect1;
     PhysicObject physicObjectRect1;
 
-    GLFont glFont1;
-
-    FontCache fontCache;
-
     public TestScene2(Frame frame) {
         this.scene = new Scene("TestScene2", this);
         this.frame = frame;
@@ -36,18 +34,11 @@ public class TestScene2 implements IScene {
 
     @Override
     public void init() {
-        fontCache = new FontCache();
-        fontCache.createCache(FontCache.DEFAULT_TEXTURE, 64);
-
         glGround1 = new GLRect("GLGround1");
         glGround1.rect(0, 0, LFJGContext.resolution.x(), 5, new Color(255, 255, 255, 255));
 
         glRect1 = new GLRect("GLRect1");
-        glRect1.rectWH(0, 0, 1000, 500, new Color(255, 255, 255, 255));
-
-        glFont1 = new GLFont("GLFont1");
-        glFont1.setFont(fontCache, FontCache.DEFAULT_TEXTURE, 64);
-        glFont1.font("AAAASSSASAS", 1000, 500, 1f, Color.of(255, 255, 255, 255));
+        glRect1.rectWH(LFJGContext.resolution.x() / 2f, LFJGContext.resolution.y(), 50, 50, new Color(255, 255, 255, 255));
 
         physicWorld = new PhysicWorld();
 
@@ -61,6 +52,24 @@ public class TestScene2 implements IScene {
 
         physicWorld.createPhysicObject(physicObjectGround1);
         physicWorld.createPhysicObject(physicObjectRect1);
+
+        OPENFILENAME ofn = new OPENFILENAME();
+        final int lenFilenameBufferInChars = 1024;
+        Memory buf = new Memory((long) lenFilenameBufferInChars * 2);
+        ofn.lStructSize = ofn.size();
+        ofn.hwndOwner = Pointer.createConstant(frame.getWin32Window());
+//        ofn.lpstrFilter = new WString("テキストファイル (*.txt)\0*.txt\0画像ファイル (*.png, *.jpg)\0*.png;*.jpg\0すべてのファイル (*.*)\0*.*\0");
+        ofn.lpstrFile = buf;
+        ofn.nMaxFile = lenFilenameBufferInChars;
+//        ofn.lpstrTitle = new WString("ファイルを選択してください");
+        boolean ret = Comdlg32.getSaveFileNameW(ofn);
+        System.out.println(Comdlg32.getCommDlgExtendedError(Comdlg32.commDlgExtendedError()));
+        if (ret) {
+            String filename = buf.getWideString(0);
+            System.out.println(filename);
+        } else {
+            System.out.println("キャンセルされました");
+        }
     }
 
     @Override
@@ -70,7 +79,6 @@ public class TestScene2 implements IScene {
         physicObjectRect1.applyForce(new Vector2f(3f, 0));
         glGround1.draw();
         glRect1.draw();
-        glFont1.draw();
     }
 
     @Override

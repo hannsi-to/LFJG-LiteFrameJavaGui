@@ -1,11 +1,11 @@
 package me.hannsi.lfjg.frame.frame;
 
+import me.hannsi.lfjg.debug.debug.logger.openGL.GLFWDebug;
 import me.hannsi.lfjg.debug.debug.system.DebugLog;
 import me.hannsi.lfjg.frame.event.events.render.DrawFrameWithNanoVGEvent;
 import me.hannsi.lfjg.frame.event.events.render.DrawFrameWithOpenGLEvent;
 import me.hannsi.lfjg.frame.event.system.EventHandler;
 import me.hannsi.lfjg.frame.glfw.GLFWCallback;
-import me.hannsi.lfjg.frame.glfw.GLFWDebug;
 import me.hannsi.lfjg.frame.manager.managers.FrameSettingManager;
 import me.hannsi.lfjg.frame.manager.managers.LoggerManager;
 import me.hannsi.lfjg.frame.setting.settings.*;
