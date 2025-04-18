@@ -7,9 +7,7 @@ import me.hannsi.lfjg.physic.PhysicObject;
 import me.hannsi.lfjg.physic.PhysicWorld;
 import me.hannsi.lfjg.render.openGL.renderers.font.GLFont;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
-import me.hannsi.lfjg.render.openGL.system.font.CFont;
 import me.hannsi.lfjg.render.openGL.system.font.FontCache;
-import me.hannsi.lfjg.render.openGL.system.font.UnicodeRange;
 import me.hannsi.lfjg.render.openGL.system.scene.IScene;
 import me.hannsi.lfjg.render.openGL.system.scene.Scene;
 import me.hannsi.lfjg.utils.graphics.color.Color;
@@ -38,9 +36,6 @@ public class TestScene2 implements IScene {
 
     @Override
     public void init() {
-        CFont.addUnicodeRange(UnicodeRange.HIRAGANA_START, UnicodeRange.HIRAGANA_END);
-        CFont.addUnicodeRange(UnicodeRange.HIRAGANA_START, UnicodeRange.KATAKANA_END);
-
         fontCache = new FontCache();
         fontCache.createCache(FontCache.DEFAULT_TEXTURE, 64);
 
@@ -52,7 +47,7 @@ public class TestScene2 implements IScene {
 
         glFont1 = new GLFont("GLFont1");
         glFont1.setFont(fontCache, FontCache.DEFAULT_TEXTURE, 64);
-        glFont1.font("きりのはオンナたらし", 1000, 500, 1f, Color.of(255, 255, 255, 255));
+        glFont1.font("AAAASSSASAS", 1000, 500, 1f, Color.of(255, 255, 255, 255));
 
         physicWorld = new PhysicWorld();
 

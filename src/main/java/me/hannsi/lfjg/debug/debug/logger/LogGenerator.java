@@ -51,18 +51,10 @@ public class LogGenerator {
 
     public void logging(DebugLevel debugLevel) {
         switch (debugLevel) {
-            case DEBUG -> {
-                DebugLog.debug(LogGenerator.class, createLog());
-            }
-            case INFO -> {
-                DebugLog.info(LogGenerator.class, createLog());
-            }
-            case WARNING -> {
-                DebugLog.warning(LogGenerator.class, createLog());
-            }
-            case ERROR -> {
-                DebugLog.error(LogGenerator.class, createLog());
-            }
+            case DEBUG -> DebugLog.debug(LogGenerator.class, createLog());
+            case INFO -> DebugLog.info(LogGenerator.class, createLog());
+            case WARNING -> DebugLog.warning(LogGenerator.class, createLog());
+            case ERROR -> DebugLog.error(LogGenerator.class, createLog());
             default -> throw new IllegalStateException("Unexpected value: " + debugLevel);
         }
     }
