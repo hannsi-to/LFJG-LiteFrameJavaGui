@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.nativeAccess;
+package me.hannsi.lfjg.utils.reflection.nativeAccess;
 
 import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 import me.hannsi.lfjg.debug.debug.system.DebugLevel;

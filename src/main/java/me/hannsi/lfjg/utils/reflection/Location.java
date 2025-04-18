@@ -11,6 +11,11 @@ public class Location {
         this.isPath = isPath;
     }
 
+    @Override
+    public String toString() {
+        return path;
+    }
+
     public void cleanup() {
         this.path = "";
     }

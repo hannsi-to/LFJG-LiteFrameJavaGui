@@ -1,16 +1,18 @@
 package me.hannsi.lfjg.frame.manager.managers;
 
+import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.debug.debug.system.DebugLog;
-import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 import me.hannsi.lfjg.frame.frame.Frame;
 import me.hannsi.lfjg.frame.manager.Manager;
+import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
 import me.hannsi.lfjg.utils.math.ANSIFormat;
 import me.hannsi.lfjg.utils.reflection.ClassUtil;
 import me.hannsi.lfjg.utils.reflection.PackagePath;
 import me.hannsi.lfjg.utils.time.TimeCalculator;
+import me.hannsi.lfjg.utils.type.types.SeverityType;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -47,7 +49,21 @@ public class FrameSettingManager extends Manager {
 
                 if (shouldUpdate) {
                     frameSettingBase.updateSetting();
-                    sb.append("\t[Updated FrameSetting] ").append(frameSettingBase.getName()).append(": ").append(frameSettingBase.getValue()).append("\n");
+                    StringBuilder value = new StringBuilder();
+                    if (frameSettingBase instanceof CheckSeveritiesSetting) {
+                        SeverityType[] values = ((CheckSeveritiesSetting) frameSettingBase).getValue();
+                        int index = 0;
+                        for (SeverityType severityType : values) {
+                            if (index != 0) {
+                                value.append(", ");
+                            }
+                            value.append(severityType);
+                            index++;
+                        }
+                    } else {
+                        value.append(frameSettingBase.getValue());
+                    }
+                    sb.append("\t[Updated FrameSetting] ").append(frameSettingBase.getName()).append(": ").append(value).append("\n");
                 }
             }
         });
@@ -115,7 +131,7 @@ public class FrameSettingManager extends Manager {
     public void cleanup() {
         frameSettings.clear();
 
-        LogGenerator logGenerator = new LogGenerator("FrameSettingManager", "Source: FrameSettingManager","Type: Cleanup","ID: " + this.hashCode(),"Severity: Debug","Message: FrameSettingManager cleanup is complete.");
+        LogGenerator logGenerator = new LogGenerator("FrameSettingManager", "Source: FrameSettingManager", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: FrameSettingManager cleanup is complete.");
         logGenerator.logging(DebugLevel.DEBUG);
     }
 

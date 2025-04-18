@@ -1,8 +1,8 @@
-package me.hannsi.lfjg.nativeAccess;
+package me.hannsi.lfjg.utils.reflection.nativeAccess;
 
 import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 import me.hannsi.lfjg.debug.debug.system.DebugLevel;
-import me.hannsi.lfjg.nativeAccess.structure.OPENFILENAME;
+import me.hannsi.lfjg.utils.reflection.nativeAccess.structure.OPENFILENAME;
 
 public class Comdlg32 {
     public static final int CDERR_DIALOGFAILURE = 0xFFFF;

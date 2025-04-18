@@ -11,6 +11,9 @@ import me.hannsi.lfjg.utils.math.ANSIFormat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
  * Manages logging for the application.
  */
@@ -25,6 +28,23 @@ public class LoggerManager {
         this.logger = LogManager.getLogger(Frame.class);
     }
 
+    private static String getDescription(DebugLog debugLog) {
+        String description = "";
+        DebugType debugType = debugLog.getDebugType();
+        Exception exception = debugLog.getException();
+        String debugText = debugLog.getDebugText();
+
+        if (debugType == DebugType.EXCEPTION) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            exception.printStackTrace(pw);
+            description = "\n" + sw;
+        } else if (debugType == DebugType.TEXT) {
+            description = debugText;
+        }
+        return description;
+    }
+
     /**
      * Handles logging events.
      *
@@ -35,16 +55,7 @@ public class LoggerManager {
         DebugLog debugLog = loggingEvent.getDebugLog();
         DebugLevel debugLevel = debugLog.getDebugLevel();
         String level = debugLevel.getDisplay();
-        String description = "";
-        DebugType debugType = debugLog.getDebugType();
-        Exception exception = debugLog.getException();
-        String debugText = debugLog.getDebugText();
-
-        if (debugType == DebugType.EXCEPTION) {
-            description = exception.getMessage();
-        } else if (debugType == DebugType.TEXT) {
-            description = debugText;
-        }
+        String description = getDescription(debugLog);
 
         switch (debugLevel) {
             case DEBUG:

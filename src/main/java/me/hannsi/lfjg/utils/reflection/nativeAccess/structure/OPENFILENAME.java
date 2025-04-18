@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.nativeAccess.structure;
+package me.hannsi.lfjg.utils.reflection.nativeAccess.structure;
 
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;

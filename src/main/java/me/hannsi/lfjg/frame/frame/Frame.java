@@ -14,6 +14,7 @@ import me.hannsi.lfjg.render.nanoVG.system.NanoVGUtil;
 import me.hannsi.lfjg.utils.graphics.GLFWUtil;
 import me.hannsi.lfjg.utils.math.ANSIFormat;
 import me.hannsi.lfjg.utils.math.Projection;
+import me.hannsi.lfjg.utils.reflection.nativeAccess.User32;
 import me.hannsi.lfjg.utils.time.TimeCalculator;
 import me.hannsi.lfjg.utils.time.TimeSourceUtil;
 import me.hannsi.lfjg.utils.toolkit.RuntimeUtil;
@@ -68,7 +69,6 @@ public class Frame implements IFrame {
             GLFW.glfwPostEmptyEvent();
         }));
 
-        this.threadName = threadName;
         new Thread(this::createFrame, threadName).start();
     }
 
@@ -76,23 +76,34 @@ public class Frame implements IFrame {
      * Creates the frame, initializes GLFW, sets up rendering, and starts the main loop.
      */
     public void createFrame() {
-        registerManagers();
+        try {
+            registerManagers();
 
-        lfjgFrame.setFrameSetting();
+            lfjgFrame.setFrameSetting();
 
-        initGLFW();
-        initRendering();
-        updateViewport();
+            initGLFW();
+            initRendering();
+            updateViewport();
 
-        frameSettingManager.updateFrameSettings(false);
+            frameSettingManager.updateFrameSettings(false);
 
-        GLFWCallback glfwCallback = new GLFWCallback(this);
-        glfwCallback.glfwInvoke();
+            GLFWCallback glfwCallback = new GLFWCallback(this);
+            glfwCallback.glfwInvoke();
 
-        lfjgFrame.init();
-        eventManager.register(this);
+            lfjgFrame.init();
+            eventManager.register(this);
 
-        mainLoop();
+            mainLoop();
+        } catch (Exception e) {
+            User32.messageBox(
+                    getWin32Window(),
+                    e.getMessage(),
+                    e.getClass().getName(),
+                    User32.MB_ICONERROR | User32.MB_OK
+            );
+
+            DebugLog.error(getClass(), e);
+        }
     }
 
     /**
@@ -219,7 +230,7 @@ public class Frame implements IFrame {
                 try {
                     Thread.sleep((long) sleepTime);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    DebugLog.error(getClass(), e);
                 }
             }
 

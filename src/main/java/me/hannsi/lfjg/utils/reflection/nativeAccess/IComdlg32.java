@@ -1,8 +1,8 @@
-package me.hannsi.lfjg.nativeAccess;
+package me.hannsi.lfjg.utils.reflection.nativeAccess;
 
 import com.sun.jna.Native;
 import com.sun.jna.win32.StdCallLibrary;
-import me.hannsi.lfjg.nativeAccess.structure.OPENFILENAME;
+import me.hannsi.lfjg.utils.reflection.nativeAccess.structure.OPENFILENAME;
 
 public interface IComdlg32 extends StdCallLibrary {
     IComdlg32 INSTANCE = Native.load("comdlg32", IComdlg32.class);

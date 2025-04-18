@@ -15,7 +15,6 @@ public class TestScene3 implements IScene {
 
     @Override
     public void init() {
-
     }
 
     @Override

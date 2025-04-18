@@ -1,10 +1,11 @@
 package me.hannsi.lfjg.frame.manager.managers;
 
-import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.frame.event.system.Event;
 import me.hannsi.lfjg.frame.event.system.EventHandler;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -59,12 +60,12 @@ public class EventManager {
         for (Object handler : handlers) {
             Class<?> clazz = handler.getClass();
             Arrays.stream(clazz.getDeclaredMethods()).filter(method -> method.isAnnotationPresent(EventHandler.class)).filter(method -> method.getParameters().length == 1 && method.getParameters()[0].getType().isAssignableFrom(source.getClass())).forEach(method -> {
-                try {
-                    if (!source.isCanceled()) {
+                if (!source.isCanceled()) {
+                    try {
                         method.invoke(handler, source);
+                    } catch (IllegalAccessException | InvocationTargetException ignore) {
+
                     }
-                } catch (Throwable e) {
-                    throw new RuntimeException(e);
                 }
             });
         }

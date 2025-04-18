@@ -1,33 +1,30 @@
 package me.hannsi.lfjg.render.openGL.gui;
 
-import me.hannsi.lfjg.render.openGL.gui.items.Item;
+import me.hannsi.lfjg.render.openGL.gui.item.Item;
+import me.hannsi.lfjg.utils.toolkit.MouseInfo;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Gui {
-    private final List<Field> itemFields;
+    private List<Item> items;
 
     public Gui() {
-        itemFields = new ArrayList<>();
     }
 
-    public void registerItem(Class<?> clazz) {
-        Arrays.stream(clazz.getDeclaredFields()).forEach(field -> {
-            boolean isItemField = false;
-            for (Annotation annotation : field.getAnnotations()) {
-                if (annotation instanceof Item) {
-                    isItemField = true;
-                    break;
-                }
-            }
+    public Gui builder() {
+        items = new ArrayList<>();
+        return this;
+    }
 
-            if (isItemField) {
-                itemFields.add(field);
-            }
-        });
+    public Gui addItem(Item item) {
+        items.add(item);
+        return this;
+    }
+
+    public void renderItems(MouseInfo mouseInfo) {
+        for (Item item : items) {
+            item.render(mouseInfo.getCurrentPos());
+        }
     }
 }

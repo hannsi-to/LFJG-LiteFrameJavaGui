@@ -1,10 +1,10 @@
-package me.hannsi.lfjg.nativeAccess;
+package me.hannsi.lfjg.utils.reflection.nativeAccess;
 
 import com.sun.jna.Native;
 import com.sun.jna.win32.StdCallLibrary;
 
 public interface IUser32 extends StdCallLibrary {
-    IUser32 INSTANCE = (IUser32) Native.loadLibrary("user32", IUser32.class);
+    IUser32 INSTANCE = Native.loadLibrary("user32", IUser32.class);
 
     int MessageBoxA(int hWnd, String text, String caption, int type);
 
