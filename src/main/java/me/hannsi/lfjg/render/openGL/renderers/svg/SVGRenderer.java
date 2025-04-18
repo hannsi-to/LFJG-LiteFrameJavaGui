@@ -5,17 +5,17 @@ import me.hannsi.lfjg.render.openGL.system.Mesh;
 import me.hannsi.lfjg.render.openGL.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
 import me.hannsi.lfjg.utils.graphics.GLUtil;
-import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL30;
 
 public class SVGRenderer {
     private final VAORendering vaoRendering;
-    private Mesh mesh;
     private final ShaderProgram shaderProgramFBO;
     private final ResourcesLocation vertexShaderFBO;
     private final ResourcesLocation fragmentShaderFBO;
+    private Mesh mesh;
 
     public SVGRenderer() {
         vaoRendering = new VAORendering();

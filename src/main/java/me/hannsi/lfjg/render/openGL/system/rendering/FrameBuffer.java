@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.openGL.system.rendering;
 
-import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.debug.exceptions.frameBuffer.CompleteFrameBufferException;
 import me.hannsi.lfjg.debug.exceptions.frameBuffer.CreatingFrameBufferException;
 import me.hannsi.lfjg.debug.exceptions.render.CreatingRenderBufferException;
@@ -11,7 +11,7 @@ import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.render.openGL.system.Mesh;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
 import me.hannsi.lfjg.utils.graphics.GLUtil;
-import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL30;

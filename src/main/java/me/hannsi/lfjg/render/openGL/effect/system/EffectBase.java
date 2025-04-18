@@ -1,10 +1,10 @@
 package me.hannsi.lfjg.render.openGL.effect.system;
 
-import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
-import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 
 /**
  * Base class for effects in OpenGL.

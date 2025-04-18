@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.utils.graphics;
 
 import me.hannsi.lfjg.frame.frame.Frame;
-import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.MonitorType;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
@@ -46,7 +46,7 @@ public class GLFWUtil {
     /**
      * Sets a GLFW window hint with a boolean value.
      *
-     * @param hint the hint to set
+     * @param hint  the hint to set
      * @param value the boolean value of the hint
      */
     public static void windowHintBoolean(int hint, boolean value) {
@@ -56,7 +56,7 @@ public class GLFWUtil {
     /**
      * Sets a GLFW window hint with an integer value.
      *
-     * @param hint the hint to set
+     * @param hint  the hint to set
      * @param value the integer value of the hint
      */
     public static void windowHintValue(int hint, int value) {
@@ -66,7 +66,7 @@ public class GLFWUtil {
     /**
      * Sets the window icon using a resource location.
      *
-     * @param windowID the ID of the window
+     * @param windowID          the ID of the window
      * @param resourcesLocation the location of the icon resource
      */
     public static void setWindowIcon(long windowID, ResourcesLocation resourcesLocation) {
@@ -76,7 +76,7 @@ public class GLFWUtil {
     /**
      * Sets the window icon using a GLFWImage buffer.
      *
-     * @param windowID the ID of the window
+     * @param windowID   the ID of the window
      * @param iconBuffer the GLFWImage buffer containing the icon
      */
     public static void setWindowIcon(long windowID, GLFWImage.Buffer iconBuffer) {

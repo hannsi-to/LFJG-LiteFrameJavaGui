@@ -1,14 +1,14 @@
 package me.hannsi.lfjg.render.openGL.system.shader;
 
+import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.debug.debug.system.DebugLog;
-import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 import me.hannsi.lfjg.debug.exceptions.shader.CompilingShaderException;
 import me.hannsi.lfjg.debug.exceptions.shader.CreatingShaderException;
 import me.hannsi.lfjg.debug.exceptions.shader.CreatingShaderProgramException;
 import me.hannsi.lfjg.debug.exceptions.shader.LinkingShaderException;
 import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.reflection.FileLocation;
+import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import org.joml.*;
 import org.lwjgl.system.MemoryStack;
 

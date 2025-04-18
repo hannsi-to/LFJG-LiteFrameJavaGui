@@ -4,7 +4,7 @@ import me.hannsi.lfjg.frame.frame.Frame;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
 import me.hannsi.lfjg.utils.graphics.GLFWUtil;
-import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import org.lwjgl.glfw.GLFW;
 
 /**

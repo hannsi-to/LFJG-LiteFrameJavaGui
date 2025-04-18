@@ -1,8 +1,8 @@
 package me.hannsi.lfjg.render.openGL.system.model.texture;
 
-import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
-import me.hannsi.lfjg.utils.reflection.FileLocation;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
+import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.ByteBuffer;

@@ -2,9 +2,9 @@ package me.hannsi.lfjg.utils.graphics.image;
 
 import me.hannsi.lfjg.debug.debug.system.DebugLog;
 import me.hannsi.lfjg.debug.exceptions.texture.CreatingTextureException;
-import me.hannsi.lfjg.utils.reflection.FileLocation;
-import me.hannsi.lfjg.utils.reflection.Location;
-import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.FileLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
+import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import me.hannsi.lfjg.utils.toolkit.IOUtil;
 import me.hannsi.lfjg.utils.type.types.ImageLoaderType;
 import org.bytedeco.opencv.global.opencv_imgcodecs;

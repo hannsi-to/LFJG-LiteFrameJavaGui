@@ -17,8 +17,8 @@ public class ClassUtil {
      * Retrieves a set of classes from a specified package that are subclasses of a given class.
      *
      * @param packagePath the package path to search for classes
-     * @param clazz the superclass to match subclasses against
-     * @param <T> the type of the superclass
+     * @param clazz       the superclass to match subclasses against
+     * @param <T>         the type of the superclass
      * @return a set of classes that are subclasses of the specified class
      */
     public static <T> Set<Class<? extends T>> getClassesFormPackage(String packagePath, Class<T> clazz) {
@@ -28,10 +28,9 @@ public class ClassUtil {
     /**
      * Creates an instance of a specified class using the provided arguments.
      *
-     * @param frame the frame context
      * @param clazz the class to instantiate
-     * @param args the arguments to pass to the constructor
-     * @param <T> the type of the class
+     * @param args  the arguments to pass to the constructor
+     * @param <T>   the type of the class
      * @return an instance of the specified class
      * @throws RuntimeException if the class cannot be instantiated
      */
@@ -72,7 +71,8 @@ public class ClassUtil {
             Constructor<T> constructor = clazz.getDeclaredConstructor();
             constructor.setAccessible(true);
             return constructor.newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
             throw new RuntimeException("Could not instantiate class: " + clazz.getName(), e);
         }
     }

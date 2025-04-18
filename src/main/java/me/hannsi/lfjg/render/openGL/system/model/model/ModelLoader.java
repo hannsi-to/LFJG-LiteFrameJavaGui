@@ -2,7 +2,7 @@ package me.hannsi.lfjg.render.openGL.system.model.model;
 
 import me.hannsi.lfjg.render.openGL.system.Mesh;
 import me.hannsi.lfjg.render.openGL.system.model.texture.TextureModelCache;
-import me.hannsi.lfjg.utils.reflection.FileLocation;
+import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import org.joml.Vector4f;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.*;
@@ -26,8 +26,8 @@ public class ModelLoader {
     /**
      * Loads a model with the specified ID and path, using the given texture cache and default processing flags.
      *
-     * @param modelId the unique identifier of the model
-     * @param modelPath the file location of the model
+     * @param modelId      the unique identifier of the model
+     * @param modelPath    the file location of the model
      * @param textureCache the texture cache to use
      * @return the loaded model
      */
@@ -38,10 +38,10 @@ public class ModelLoader {
     /**
      * Loads a model with the specified ID, path, texture cache, and processing flags.
      *
-     * @param modelId the unique identifier of the model
-     * @param modelPath the file location of the model
+     * @param modelId      the unique identifier of the model
+     * @param modelPath    the file location of the model
      * @param textureCache the texture cache to use
-     * @param flags the processing flags to use
+     * @param flags        the processing flags to use
      * @return the loaded model
      */
     public static Model loadModel(String modelId, FileLocation modelPath, TextureModelCache textureCache, int flags) {
@@ -112,8 +112,8 @@ public class ModelLoader {
     /**
      * Processes the material of the given Assimp material.
      *
-     * @param aiMaterial the Assimp material to process
-     * @param modelDir the directory of the model
+     * @param aiMaterial   the Assimp material to process
+     * @param modelDir     the directory of the model
      * @param textureCache the texture cache to use
      * @return the processed material
      */

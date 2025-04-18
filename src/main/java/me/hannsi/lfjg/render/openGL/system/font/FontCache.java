@@ -1,9 +1,9 @@
 package me.hannsi.lfjg.render.openGL.system.font;
 
-import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
-import me.hannsi.lfjg.utils.reflection.FileLocation;
-import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
+import me.hannsi.lfjg.utils.reflection.location.FileLocation;
+import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 
 import java.util.HashMap;
 import java.util.Map;

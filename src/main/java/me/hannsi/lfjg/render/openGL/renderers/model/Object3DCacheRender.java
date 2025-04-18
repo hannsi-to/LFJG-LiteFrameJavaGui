@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.openGL.renderers.model;
 
-import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.render.openGL.system.Mesh;
 import me.hannsi.lfjg.render.openGL.system.model.Object3DCache;
 import me.hannsi.lfjg.render.openGL.system.model.lights.*;
@@ -12,7 +12,7 @@ import me.hannsi.lfjg.render.openGL.system.model.texture.TextureModel;
 import me.hannsi.lfjg.render.openGL.system.model.texture.TextureModelCache;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
 import me.hannsi.lfjg.utils.graphics.GLUtil;
-import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import me.hannsi.lfjg.utils.toolkit.Camera;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;

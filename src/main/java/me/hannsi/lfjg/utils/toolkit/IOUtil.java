@@ -1,8 +1,8 @@
 package me.hannsi.lfjg.utils.toolkit;
 
 import me.hannsi.lfjg.utils.math.MathHelper;
-import me.hannsi.lfjg.utils.reflection.FileLocation;
-import me.hannsi.lfjg.utils.reflection.URLLocation;
+import me.hannsi.lfjg.utils.reflection.location.FileLocation;
+import me.hannsi.lfjg.utils.reflection.location.URLLocation;
 import org.bytedeco.opencv.opencv_core.Mat;
 
 import java.io.*;

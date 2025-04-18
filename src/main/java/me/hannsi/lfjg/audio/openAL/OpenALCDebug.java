@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.audio.openAL;
 
-import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.frame.setting.settings.OpenALDebugSetting;
 import me.hannsi.lfjg.utils.reflection.StackTraceUtil;
 import org.lwjgl.openal.ALC10;
@@ -24,7 +24,7 @@ public class OpenALCDebug {
             }
 
             String errorMessage = getALCErrorString(error);
-            String stackTrace = StackTraceUtil.getStackTrace(frame.getThreadName(), "getStackTrace", "getOpenALCError", ignoreMethod);
+            String stackTrace = StackTraceUtil.getStackTraceWithInsert(frame.getThreadName(), "\n\n", "getStackTrace", "getOpenALCError", ignoreMethod);
 
             LogGenerator logGenerator = new LogGenerator(" OpenALC Debug Message", "Type: Error", "ID: " + error, "Severity: High", "Message: " + errorMessage, "Stack Trace: \n" + stackTrace);
             logGenerator.logging(DebugLevel.ERROR);

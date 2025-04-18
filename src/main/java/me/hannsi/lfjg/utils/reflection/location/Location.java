@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.utils.reflection;
+package me.hannsi.lfjg.utils.reflection.location;
 
 public class Location {
     public String path;

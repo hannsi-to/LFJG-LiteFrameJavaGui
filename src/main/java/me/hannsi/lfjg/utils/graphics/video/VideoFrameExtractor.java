@@ -2,8 +2,8 @@ package me.hannsi.lfjg.utils.graphics.video;
 
 import me.hannsi.lfjg.debug.debug.system.DebugLog;
 import me.hannsi.lfjg.utils.math.ANSIFormat;
-import me.hannsi.lfjg.utils.reflection.FileLocation;
-import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.FileLocation;
+import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import me.hannsi.lfjg.utils.time.TimeCalculator;
 import me.hannsi.lfjg.utils.toolkit.StringUtil;
 import org.bytedeco.javacv.FFmpegFrameGrabber;

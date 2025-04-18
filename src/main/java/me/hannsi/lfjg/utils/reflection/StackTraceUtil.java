@@ -4,6 +4,10 @@ import java.util.Map;
 
 public class StackTraceUtil {
     public static String getStackTrace(String mainThreadName, String... ignoreMethod) {
+        return getStackTraceWithInsert(mainThreadName, "", ignoreMethod);
+    }
+
+    public static String getStackTraceWithInsert(String mainThreadName, String insert, String... ignoreMethod) {
         Map<Thread, StackTraceElement[]> allStackTraces = Thread.getAllStackTraces();
         StringBuilder stackTraceStr = new StringBuilder();
 
@@ -40,9 +44,9 @@ public class StackTraceUtil {
                 }
 
                 if (index == 0) {
-                    stackTraceStr.append("\t\t");
+                    stackTraceStr.append(insert);
                 } else {
-                    stackTraceStr.append("\t\t\t");
+                    stackTraceStr.append(insert).append("\t");
                 }
                 stackTraceStr.append(element).append("\n");
 

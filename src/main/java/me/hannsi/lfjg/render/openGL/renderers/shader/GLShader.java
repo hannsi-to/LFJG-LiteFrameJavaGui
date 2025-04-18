@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.openGL.renderers.shader;
 
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLPolygon;
-import me.hannsi.lfjg.utils.reflection.FileLocation;
+import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.joml.Vector2f;
 

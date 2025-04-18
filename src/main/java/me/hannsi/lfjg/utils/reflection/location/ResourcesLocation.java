@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.utils.reflection;
+package me.hannsi.lfjg.utils.reflection.location;
 
 import java.net.URI;
 import java.net.URISyntaxException;

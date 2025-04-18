@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.render.nanoVG.system.font;
 
-import me.hannsi.lfjg.utils.reflection.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import org.lwjgl.nanovg.NanoVG;
 
 import java.io.ByteArrayOutputStream;
@@ -21,8 +21,8 @@ public class Font {
     /**
      * Constructs a new Font with the specified NanoVG context, name, and resource location.
      *
-     * @param nvg the NanoVG context
-     * @param name the name of the font
+     * @param nvg               the NanoVG context
+     * @param name              the name of the font
      * @param resourcesLocation the location of the font resource
      */
     public Font(long nvg, String name, ResourcesLocation resourcesLocation) {
