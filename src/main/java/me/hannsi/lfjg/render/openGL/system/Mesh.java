@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.openGL.system;
 
-import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL30;
@@ -35,7 +35,7 @@ public class Mesh {
     private int numVertices;
     private int eboId;
     private int indirectBufferId;
-    private final int usageHint = DEFAULT_USAGE_HINT;
+    private int usageHint = DEFAULT_USAGE_HINT;
 
     /**
      * Constructs a new Mesh instance with the specified positions and colors.
@@ -345,5 +345,9 @@ public class Mesh {
 
     public int getUsageHint() {
         return usageHint;
+    }
+
+    public void setUsageHint(int usageHint) {
+        this.usageHint = usageHint;
     }
 }

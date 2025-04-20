@@ -7,4 +7,5 @@ public class LFJGContext {
     public static Frame frame;
     public static Vector2f resolution;
     public static Projection projection;
+    public static long nanoVGContext;
 }

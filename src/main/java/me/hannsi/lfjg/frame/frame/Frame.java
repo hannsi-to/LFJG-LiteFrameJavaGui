@@ -10,11 +10,9 @@ import me.hannsi.lfjg.frame.manager.managers.FrameSettingManager;
 import me.hannsi.lfjg.frame.manager.managers.LoggerManager;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
-import me.hannsi.lfjg.render.nanoVG.system.NanoVGUtil;
 import me.hannsi.lfjg.utils.graphics.GLFWUtil;
 import me.hannsi.lfjg.utils.math.ANSIFormat;
 import me.hannsi.lfjg.utils.math.Projection;
-import me.hannsi.lfjg.utils.reflection.nativeAccess.User32;
 import me.hannsi.lfjg.utils.time.TimeCalculator;
 import me.hannsi.lfjg.utils.time.TimeSourceUtil;
 import me.hannsi.lfjg.utils.toolkit.RuntimeUtil;
@@ -28,7 +26,6 @@ import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWNativeWin32;
-import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGL3;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
@@ -53,7 +50,6 @@ public class Frame implements IFrame {
     private long lastTime;
     private long startTime;
     private long finishTime;
-    private long nvg;
 
     /**
      * Constructs a Frame object with the specified LFJGFrame and thread name.
@@ -69,6 +65,7 @@ public class Frame implements IFrame {
             GLFW.glfwPostEmptyEvent();
         }));
 
+        this.threadName = threadName;
         new Thread(this::createFrame, threadName).start();
     }
 
@@ -76,34 +73,23 @@ public class Frame implements IFrame {
      * Creates the frame, initializes GLFW, sets up rendering, and starts the main loop.
      */
     public void createFrame() {
-        try {
-            registerManagers();
+        registerManagers();
 
-            lfjgFrame.setFrameSetting();
+        lfjgFrame.setFrameSetting();
 
-            initGLFW();
-            initRendering();
-            updateViewport();
+        initGLFW();
+        initRendering();
+        updateViewport();
 
-            frameSettingManager.updateFrameSettings(false);
+        frameSettingManager.updateFrameSettings(false);
 
-            GLFWCallback glfwCallback = new GLFWCallback(this);
-            glfwCallback.glfwInvoke();
+        GLFWCallback glfwCallback = new GLFWCallback(this);
+        glfwCallback.glfwInvoke();
 
-            lfjgFrame.init();
-            eventManager.register(this);
+        lfjgFrame.init();
+        eventManager.register(this);
 
-            mainLoop();
-        } catch (Exception e) {
-            User32.messageBox(
-                    getWin32Window(),
-                    e.getMessage(),
-                    e.getClass().getName(),
-                    User32.MB_ICONERROR | User32.MB_OK
-            );
-
-            DebugLog.error(getClass(), e);
-        }
+        mainLoop();
     }
 
     /**
@@ -153,14 +139,12 @@ public class Frame implements IFrame {
         switch ((RenderingType) getFrameSettingValue(RenderingTypeSetting.class)) {
             case OpenGL -> {
                 GL.createCapabilities();
-            }
-            case NanoVG -> {
-                GL.createCapabilities();
-
-                nvg = NanoVGGL3.nvgCreate(NanoVGGL3.NVG_ANTIALIAS);
-                if (nvg == MemoryUtil.NULL) {
+                LFJGContext.nanoVGContext = NanoVGGL3.nvgCreate(NanoVGGL3.NVG_ANTIALIAS);
+                if (LFJGContext.nanoVGContext == MemoryUtil.NULL) {
                     throw new RuntimeException("Failed to create NanoVG context");
                 }
+            }
+            case NanoVG -> {
             }
             case Vulkan -> {
 
@@ -230,7 +214,7 @@ public class Frame implements IFrame {
                 try {
                     Thread.sleep((long) sleepTime);
                 } catch (InterruptedException e) {
-                    DebugLog.error(getClass(), e);
+                    e.printStackTrace();
                 }
             }
 
@@ -268,18 +252,8 @@ public class Frame implements IFrame {
      */
     private void draw() {
         switch ((RenderingType) getFrameSettingValue(RenderingTypeSetting.class)) {
-            case OpenGL -> {
-                eventManager.call(new DrawFrameWithOpenGLEvent());
-            }
+            case OpenGL -> eventManager.call(new DrawFrameWithOpenGLEvent());
             case NanoVG -> {
-                NanoVGUtil.framePush(nvg, ((Number) getFrameSettingValue(WidthSetting.class)).floatValue(), ((Number) getFrameSettingValue(HeightSetting.class)).floatValue(), 1);
-
-                NanoVG.nvgTranslate(nvg, 0, ((Number) getFrameSettingValue(HeightSetting.class)).floatValue());
-                NanoVG.nvgScale(nvg, 1, -1);
-
-                eventManager.call(new DrawFrameWithNanoVGEvent(nvg));
-
-                NanoVGUtil.framePop(nvg);
             }
             case Vulkan -> {
             }
@@ -325,7 +299,7 @@ public class Frame implements IFrame {
             case MSAA -> {
                 GL13.glEnable(GL13.GL_MULTISAMPLE);
             }
-            case OFF -> {
+            case Off -> {
                 GL13.glDisable(GL13.GL_MULTISAMPLE);
             }
         }
@@ -338,11 +312,7 @@ public class Frame implements IFrame {
         Callbacks.glfwFreeCallbacks(windowID);
 
         switch ((RenderingType) getFrameSettingValue(RenderingTypeSetting.class)) {
-            case OpenGL -> {
-            }
-            case NanoVG -> {
-                NanoVGGL3.nvgDelete(nvg);
-            }
+            case OpenGL -> NanoVGGL3.nvgDelete(LFJGContext.nanoVGContext);
             case Vulkan -> {
 
             }
@@ -629,24 +599,6 @@ public class Frame implements IFrame {
      */
     public void setFrameSettingManager(FrameSettingManager frameSettingManager) {
         this.frameSettingManager = frameSettingManager;
-    }
-
-    /**
-     * Retrieves the NanoVG context.
-     *
-     * @return The NanoVG context.
-     */
-    public long getNvg() {
-        return nvg;
-    }
-
-    /**
-     * Sets the NanoVG context.
-     *
-     * @param nvg The NanoVG context to set.
-     */
-    public void setNvg(long nvg) {
-        this.nvg = nvg;
     }
 
     /**

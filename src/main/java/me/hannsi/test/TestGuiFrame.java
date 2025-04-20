@@ -47,7 +47,7 @@ public class TestGuiFrame implements LFJGFrame {
         sceneSystem.addScene(new TestScene1().getScene());
         sceneSystem.addScene(new TestScene2(frame).getScene());
         sceneSystem.addScene(new TestScene3(frame).getScene());
-        sceneSystem.setCurrentScene("TestScene2");
+        sceneSystem.setCurrentScene("TestScene3");
         sceneSystem.initScenes();
 
         mouseInfo = new MouseInfo();
@@ -98,12 +98,12 @@ public class TestGuiFrame implements LFJGFrame {
 
     @Override
     public void setFrameSetting() {
-        frame.setFrameSettingValue(RefreshRateSetting.class, GLFW.GLFW_DONT_CARE);
-        frame.setFrameSettingValue(MonitorSetting.class, MonitorType.FullScreen);
+        frame.setFrameSettingValue(RefreshRateSetting.class, 360);
+        frame.setFrameSettingValue(MonitorSetting.class, MonitorType.Borderless);
         frame.setFrameSettingValue(VSyncSetting.class, VSyncType.VSyncOff);
         frame.setFrameSettingValue(FloatingSetting.class, false);
         frame.setFrameSettingValue(IconSetting.class, new ResourcesLocation("salad_x32.png"));
-        frame.setFrameSettingValue(AntiAliasingSetting.class, AntiAliasingType.OFF);
+        frame.setFrameSettingValue(AntiAliasingSetting.class, AntiAliasingType.Off);
         frame.setFrameSettingValue(WidthSetting.class, 1920);
         frame.setFrameSettingValue(HeightSetting.class, 1080);
     }

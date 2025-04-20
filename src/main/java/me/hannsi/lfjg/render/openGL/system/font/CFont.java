@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import static me.hannsi.lfjg.utils.math.MathHelper.max;
-import static me.hannsi.lfjg.utils.math.MathHelper.sqrt;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
@@ -89,7 +88,7 @@ public class CFont {
     public int getFontHeight() {
         BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         Graphics graphics = image.getGraphics();
-        graphics.setFont(font);
+//        graphics.setFont(font);
         FontMetrics metrics = graphics.getFontMetrics();
 
         int fontHeight = metrics.getHeight();
@@ -108,7 +107,7 @@ public class CFont {
     public int getFontWidth(String text) {
         BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         Graphics graphics = image.getGraphics();
-        graphics.setFont(font);
+//        graphics.setFont(font);
         FontMetrics metrics = graphics.getFontMetrics();
 
         int fontWidth = metrics.stringWidth(text);
@@ -137,8 +136,8 @@ public class CFont {
     private Font registerFont(FileLocation fontFile) {
         try {
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            Font font = Font.createFont(Font.TRUETYPE_FONT, fontFile.getInputStream());
-            ge.registerFont(font);
+//            Font font = Font.createFont(Font.TRUETYPE_FONT, fontFile.getInputStream());
+//            ge.registerFont(font);
             return font;
         } catch (Exception e) {
             DebugLog.error(getClass(), e);
@@ -152,16 +151,16 @@ public class CFont {
     public void generateBitmap() {
         font = registerFont(filepath);
         assert font != null;
-        font = new Font(font.getName(), Font.PLAIN, fontSize);
+//        font = new Font(font.getName(), Font.PLAIN, fontSize);
 
         BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = img.createGraphics();
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setFont(font);
+//        g2d.setFont(font);
         FontMetrics fontMetrics = g2d.getFontMetrics();
 
-        int estimatedWidth = (int) sqrt(font.getNumGlyphs()) * font.getSize() + 1;
+//        int estimatedWidth = (int) sqrt(font.getNumGlyphs()) * font.getSize() + 1;
         width = 0;
         height = fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent();
         lineHeight = fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent();
@@ -170,20 +169,20 @@ public class CFont {
 
         for (int r = 0; r < unicodeRanges.size(); r += 2) {
             for (int i = unicodeRanges.get(r); i <= unicodeRanges.get(r + 1); i++) {
-                if (!font.canDisplay(i)) {
-                    continue;
-                }
+//                if (!font.canDisplay(i)) {
+//                    continue;
+//                }
 
                 CharInfo charInfo = new CharInfo(x, y, fontMetrics.charWidth(i), fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent());
                 characterMap.put(i, charInfo);
                 width = max(x + fontMetrics.charWidth(i), width);
 
                 x += charInfo.getWidth();
-                if (x > estimatedWidth) {
-                    x = 0;
-                    y += (int) (fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent() * 1.4f);
-                    height += (int) (fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent() * 1.4f);
-                }
+//                if (x > estimatedWidth) {
+//                    x = 0;
+//                    y += (int) (fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent() * 1.4f);
+//                    height += (int) (fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent() * 1.4f);
+//                }
             }
         }
 
@@ -194,14 +193,14 @@ public class CFont {
         g2d = img.createGraphics();
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setFont(font);
+//        g2d.setFont(font);
         g2d.setColor(Color.WHITE);
 
         for (int r = 0; r < unicodeRanges.size(); r += 2) {
             for (int i = unicodeRanges.get(r); i <= unicodeRanges.get(r + 1); i++) {
-                if (!font.canDisplay(i)) {
-                    continue;
-                }
+//                if (!font.canDisplay(i)) {
+//                    continue;
+//                }
 
                 CharInfo info = characterMap.get(i);
                 info.calculateTextureCoordinates(width, height);

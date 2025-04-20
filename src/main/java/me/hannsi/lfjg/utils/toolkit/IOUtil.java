@@ -9,9 +9,12 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.zip.GZIPInputStream;
 
 import static org.lwjgl.system.MemoryUtil.*;
@@ -107,6 +110,22 @@ public class IOUtil {
         }
 
         return buffer.toByteArray();
+    }
+
+    public static ByteBuffer toByteBuffer(InputStream input) {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        byte[] buffer = new byte[4096];
+        try {
+            for (int n = 0; n != -1; n = input.read(buffer)) {
+                output.write(buffer, 0, n);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        byte[] bytes = output.toByteArray();
+        ByteBuffer data = ByteBuffer.allocateDirect(bytes.length).order(ByteOrder.nativeOrder()).put(bytes);
+        data.flip();
+        return data;
     }
 
     /**
@@ -209,6 +228,25 @@ public class IOUtil {
                 image.put(i + 1, (byte) MathHelper.round(((image.get(i + 1) & 0xFF) * alpha)));
                 image.put(i + 2, (byte) MathHelper.round(((image.get(i + 2) & 0xFF) * alpha)));
             }
+        }
+    }
+
+    public static ByteBuffer loadResourceToByteBuffer(String path) {
+        try (InputStream is = Files.newInputStream(Paths.get(path))) {
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+            byte[] data = new byte[16384];
+            int nRead;
+            while ((nRead = is.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+
+            ByteBuffer byteBuffer = memAlloc(buffer.size());
+            byteBuffer.put(buffer.toByteArray());
+            byteBuffer.flip();
+            return byteBuffer;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
