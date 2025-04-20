@@ -6,11 +6,11 @@ import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
  * Enumeration representing different types of VSync configurations.
  */
 public enum VSyncType implements IEnumTypeBase {
-    VSyncOff(0, "VSyncOff"),
-    VSyncOn(1, "VSyncOn"),
-    DoubleBufferVSync(2, "DoubleBufferVSync"),
-    TripleBufferVSync(3, "TripleBufferVSync"),
-    AdaptiveVSync(-1, "AdaptiveVSync");
+    V_SYNC_OFF(0, "VSyncOff"),
+    V_SYNC_ON(1, "VSyncOn"),
+    DOUBLE_BUFFER_V_SYNC(2, "DoubleBufferVSync"),
+    TRIPLE_BUFFER_V_SYNC(3, "TripleBufferVSync"),
+    ADAPTIVE_V_SYNC(-1, "AdaptiveVSync");
 
     final int id;
     final String name;

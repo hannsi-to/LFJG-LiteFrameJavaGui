@@ -41,14 +41,14 @@ public class SoundBuffer {
         this.bufferId = alGenBuffers();
 
         switch (soundLoaderType) {
-            case STBVorbis -> {
+            case STB_VORBIS -> {
                 try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
                     pcm = readVorbis(fileLocation.getPath(), info);
 
                     alBufferData(bufferId, info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, pcm, info.sample_rate());
                 }
             }
-            case JavaCV -> {
+            case JAVA_CV -> {
                 try (FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(fileLocation.getPath())) {
                     pcm = readAudio(grabber);
 

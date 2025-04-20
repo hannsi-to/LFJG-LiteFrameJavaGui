@@ -17,7 +17,7 @@ public class CheckSeveritiesSetting extends FrameSettingBase<SeverityType[]> {
      * @param frame the frame to associate with this setting
      */
     public CheckSeveritiesSetting(Frame frame) {
-        super(frame, "CheckSeveritiesSetting", 19, new SeverityType[]{SeverityType.Low, SeverityType.Medium, SeverityType.High});
+        super(frame, "CheckSeveritiesSetting", 19, new SeverityType[]{SeverityType.LOW, SeverityType.MEDIUM, SeverityType.HIGH});
     }
 
     /**

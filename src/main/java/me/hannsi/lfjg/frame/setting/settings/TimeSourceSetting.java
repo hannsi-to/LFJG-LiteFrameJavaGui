@@ -17,7 +17,7 @@ public class TimeSourceSetting extends FrameSettingBase<TimeSourceType> {
      * @param frame the frame to associate with this setting
      */
     public TimeSourceSetting(Frame frame) {
-        super(frame, "TimeSource", 11, TimeSourceType.SystemTime);
+        super(frame, "TimeSource", 11, TimeSourceType.SYSTEM_TIME);
     }
 
     /**

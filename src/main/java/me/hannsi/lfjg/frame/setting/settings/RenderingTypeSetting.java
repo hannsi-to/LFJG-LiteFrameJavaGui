@@ -18,7 +18,7 @@ public class RenderingTypeSetting extends FrameSettingBase<RenderingType> {
      * @param frame the frame to associate with this setting
      */
     public RenderingTypeSetting(Frame frame) {
-        super(frame, "RenderingTypeSetting", 18, RenderingType.OpenGL);
+        super(frame, "RenderingTypeSetting", 18, RenderingType.OPEN_GL);
     }
 
     /**

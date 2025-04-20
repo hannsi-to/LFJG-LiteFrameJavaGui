@@ -3,7 +3,7 @@ package me.hannsi.lfjg.utils.type.types;
 import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
 
 public enum InfoType implements IEnumTypeBase {
-    Info(0, "Info"), Warning(1, "Warning"), Error(2, "Error");
+    INFO(0, "Info"), WARNING(1, "Warning"), ERROR(2, "Error");
 
     final int id;
     final String name;

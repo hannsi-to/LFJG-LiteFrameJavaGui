@@ -65,7 +65,7 @@ public class SVGRenderer {
         float[] positions = new float[]{x, y, x + width, y, x + width, y + height, x, y + height};
         float[] uvs = new float[]{1, 1, 0, 1, 0, 0, 1, 0};
 
-        mesh = new Mesh(ProjectionType.OrthographicProjection, positions, null, uvs);
+        mesh = new Mesh(ProjectionType.ORTHOGRAPHIC_PROJECTION, positions, null, uvs);
     }
 
     public VAORendering getVaoRendering() {

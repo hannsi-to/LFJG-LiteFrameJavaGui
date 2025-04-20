@@ -6,8 +6,8 @@ import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
  * Enumeration representing different types of projection modes.
  */
 public enum ProjectionType implements IEnumTypeBase {
-    OrthographicProjection("OrthographicProjection", 0),
-    PerspectiveProjection("PerspectiveProjection", 1);
+    ORTHOGRAPHIC_PROJECTION("OrthographicProjection", 0),
+    PERSPECTIVE_PROJECTION("PerspectiveProjection", 1);
 
     final int id;
     final String name;

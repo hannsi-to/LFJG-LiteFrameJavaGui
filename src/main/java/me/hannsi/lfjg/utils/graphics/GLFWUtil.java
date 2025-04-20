@@ -157,9 +157,9 @@ public class GLFWUtil {
         long monitor;
 
         switch (monitorType) {
-            case Window -> monitor = MemoryUtil.NULL;
-            case FullScreen -> monitor = GLFW.glfwGetPrimaryMonitor();
-            case Borderless -> {
+            case WINDOW -> monitor = MemoryUtil.NULL;
+            case FULL_SCREEN -> monitor = GLFW.glfwGetPrimaryMonitor();
+            case BORDERLESS -> {
                 GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
                 monitor = MemoryUtil.NULL;
             }

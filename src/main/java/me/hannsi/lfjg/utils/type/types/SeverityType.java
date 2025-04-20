@@ -7,10 +7,10 @@ import org.lwjgl.opengl.GL43;
  * Enumeration representing different types of severity levels for OpenGL debug messages.
  */
 public enum SeverityType implements IEnumTypeBase {
-    Notification("Low", GL43.GL_DEBUG_SEVERITY_NOTIFICATION),
-    Low("Low", GL43.GL_DEBUG_SEVERITY_LOW),
-    Medium("Medium", GL43.GL_DEBUG_SEVERITY_MEDIUM),
-    High("High", GL43.GL_DEBUG_SEVERITY_HIGH);
+    NOTIFICATION("Low", GL43.GL_DEBUG_SEVERITY_NOTIFICATION),
+    LOW("Low", GL43.GL_DEBUG_SEVERITY_LOW),
+    MEDIUM("Medium", GL43.GL_DEBUG_SEVERITY_MEDIUM),
+    HIGH("High", GL43.GL_DEBUG_SEVERITY_HIGH);
 
     final String name;
     final int id;

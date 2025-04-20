@@ -3,7 +3,7 @@ package me.hannsi.lfjg.utils.type.types;
 import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
 
 public enum SelectorButtonType implements IEnumTypeBase {
-    Dropdown(0,"Dropdown");
+    DROPDOWN(0,"Dropdown");
 
     final int id;
     final String name;

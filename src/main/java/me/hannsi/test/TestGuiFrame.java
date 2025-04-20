@@ -40,7 +40,7 @@ public class TestGuiFrame implements LFJGFrame {
     public void init() {
         IFrame.eventManager.register(this);
 
-        LFJGContext.projection = new Projection(ProjectionType.OrthographicProjection, frame.getWindowWidth(), frame.getWindowHeight());
+        LFJGContext.projection = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, frame.getWindowWidth(), frame.getWindowHeight());
         LFJGContext.resolution = new Vector2f(frame.getWindowWidth(), frame.getWindowHeight());
 
         sceneSystem = new SceneSystem();
@@ -99,11 +99,11 @@ public class TestGuiFrame implements LFJGFrame {
     @Override
     public void setFrameSetting() {
         frame.setFrameSettingValue(RefreshRateSetting.class, 360);
-        frame.setFrameSettingValue(MonitorSetting.class, MonitorType.Borderless);
-        frame.setFrameSettingValue(VSyncSetting.class, VSyncType.VSyncOff);
+        frame.setFrameSettingValue(MonitorSetting.class, MonitorType.BORDERLESS);
+        frame.setFrameSettingValue(VSyncSetting.class, VSyncType.V_SYNC_OFF);
         frame.setFrameSettingValue(FloatingSetting.class, false);
         frame.setFrameSettingValue(IconSetting.class, new ResourcesLocation("salad_x32.png"));
-        frame.setFrameSettingValue(AntiAliasingSetting.class, AntiAliasingType.Off);
+        frame.setFrameSettingValue(AntiAliasingSetting.class, AntiAliasingType.OFF);
         frame.setFrameSettingValue(WidthSetting.class, 1920);
         frame.setFrameSettingValue(HeightSetting.class, 1080);
     }

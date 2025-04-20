@@ -3,7 +3,7 @@ package me.hannsi.lfjg.utils.type.types;
 import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
 
 public enum NumberButtonType implements IEnumTypeBase {
-    Slider(0, "Slider"), Steppy(1, "Steppy");
+    SLIDER(0, "Slider"), STEPPY(1, "Steppy");
 
     final int id;
     final String name;

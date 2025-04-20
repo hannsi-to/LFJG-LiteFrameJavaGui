@@ -29,7 +29,7 @@ public class PosYSetting extends FrameSettingBase<Integer> {
     @Override
     public void updateSetting() {
         if (getFrame().getWindowID() != -1L) {
-            if (getFrame().getFrameSettingBase(MonitorSetting.class).getValue() == MonitorType.Borderless) {
+            if (getFrame().getFrameSettingBase(MonitorSetting.class).getValue() == MonitorType.BORDERLESS) {
                 GLFWUtil.setWindowPosition(getFrame().getWindowID(), getFrame().getFrameSettingValue(PosXSetting.class), 0);
             } else {
                 GLFWUtil.setWindowPosition(getFrame().getWindowID(), getFrame().getFrameSettingValue(PosXSetting.class), getValue());

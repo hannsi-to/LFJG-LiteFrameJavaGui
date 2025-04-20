@@ -6,8 +6,8 @@ import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
  * Enumeration representing different types of sound loaders.
  */
 public enum SoundLoaderType implements IEnumTypeBase {
-    STBVorbis("STBVorbis", 0),
-    @Deprecated JavaCV("JavaCV", 1);
+    STB_VORBIS("STBVorbis", 0),
+    @Deprecated JAVA_CV("JavaCV", 1);
 
     final String name;
     final int id;

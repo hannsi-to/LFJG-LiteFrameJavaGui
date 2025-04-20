@@ -6,9 +6,9 @@ import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
  * Enumeration representing different types of monitor modes.
  */
 public enum MonitorType implements IEnumTypeBase {
-    Window(0, "Window"),
-    FullScreen(1, "FullScreen"),
-    Borderless(0, "Borderless");
+    WINDOW(0, "Window"),
+    FULL_SCREEN(1, "FullScreen"),
+    BORDERLESS(0, "Borderless");
 
     final int id;
     final String name;

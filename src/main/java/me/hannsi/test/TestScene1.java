@@ -154,7 +154,7 @@ public class TestScene1 implements IScene {
 
         glSVG = new GLSVG("SVG1");
         glSVG.svg(new ResourcesLocation("svg/delete.svg"), 100, 100, 5, 5);
-        glSVG.setBlendType(BlendType.Normal);
+        glSVG.setBlendType(BlendType.NORMAL);
     }
 
     public void effectCacheInit() {
@@ -172,7 +172,7 @@ public class TestScene1 implements IScene {
 
         gl1SplitObjectEffectCache.createCache("Rotate1", new Rotate(0, 0, MathHelper.toRadians(0), true));
 
-        gl1EffectCache.createCache("Texture1", new Texture(textureCache, image, BlendType.Normal));
+        gl1EffectCache.createCache("Texture1", new Texture(textureCache, image, BlendType.NORMAL));
         gl1EffectCache.createCache("DrawObject1", new DrawObject());
 //        gl1EffectCache.createCache("SplitObject1", new SplitObject(4, 5, 5, 5, gl1SplitObjectEffectCache));
 //        gl1EffectCache.createCache("Gradation1",new Gradation(resolution.x / 2, resolution.y / 2, (float) Math.toRadians(90), 0.2f, Gradation.ShapeMode.Rectangle, BlendType.Screen, new Color(50, 100, 200, 100), new Color(255, 255, 255, 255), 1f));
@@ -239,7 +239,7 @@ public class TestScene1 implements IScene {
         soundCache.setAttenuationModel(AL11.AL_EXPONENT_DISTANCE);
         soundCache.setListener(new SoundListener(new Vector3f(0, 0, 0)));
 
-        soundBuffer = new SoundBuffer(SoundLoaderType.STBVorbis, new ResourcesLocation("sound/test.ogg"));
+        soundBuffer = new SoundBuffer(SoundLoaderType.STB_VORBIS, new ResourcesLocation("sound/test.ogg"));
         SoundSource playerSoundSource = new SoundSource(false, false);
         playerSoundSource.setPosition(new Vector3f(0, 0, 0));
         playerSoundSource.setBuffer(soundBuffer.getBufferId());

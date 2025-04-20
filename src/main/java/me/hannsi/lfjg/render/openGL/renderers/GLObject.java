@@ -129,7 +129,7 @@ public class GLObject implements Cloneable {
         glUtil.addGLTarget(GL30.GL_BLEND);
         glUtil.addGLTarget(GL30.GL_DEPTH_TEST, true);
 
-        blendType = BlendType.Normal;
+        blendType = BlendType.NORMAL;
     }
 
     /**

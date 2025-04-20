@@ -92,7 +92,7 @@ public class FrameBuffer {
 
         float[] uvs = new float[]{0, 0, 1, 0, 1, 1, 0, 1};
 
-        mesh = new Mesh(ProjectionType.OrthographicProjection, positions, null, uvs);
+        mesh = new Mesh(ProjectionType.ORTHOGRAPHIC_PROJECTION, positions, null, uvs);
 
         this.uesStencil = uesStencil;
         this.glObject = glObject;

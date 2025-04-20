@@ -98,13 +98,13 @@ public class TimeSourceUtil {
      */
     public static long getTimeMills(TimeSourceType timeSourceType) {
         switch (timeSourceType) {
-            case GLFWTime -> {
+            case GLFW_TIME -> {
                 return getGLFWTimeMills();
             }
-            case SystemTime -> {
+            case SYSTEM_TIME -> {
                 return getSystemTimeMills();
             }
-            case NanoTime -> {
+            case NANO_TIME -> {
                 return getNanoTimeMills();
             }
             default -> throw new IllegalStateException("Unexpected value: " + timeSourceType);
@@ -120,13 +120,13 @@ public class TimeSourceUtil {
      */
     public static double getTime(TimeSourceType timeSourceType) {
         switch (timeSourceType) {
-            case GLFWTime -> {
+            case GLFW_TIME -> {
                 return getGLFWTime();
             }
-            case SystemTime -> {
+            case SYSTEM_TIME -> {
                 return getSystemTime();
             }
-            case NanoTime -> {
+            case NANO_TIME -> {
                 return getNanoTime();
             }
             default -> throw new IllegalStateException("Unexpected value: " + timeSourceType);
@@ -142,13 +142,13 @@ public class TimeSourceUtil {
      */
     public static long getNanoTime(TimeSourceType timeSourceType) {
         switch (timeSourceType) {
-            case GLFWTime -> {
+            case GLFW_TIME -> {
                 return getGLFWTimeNano();
             }
-            case SystemTime -> {
+            case SYSTEM_TIME -> {
                 return getSystemTimeNano();
             }
-            case NanoTime -> {
+            case NANO_TIME -> {
                 return getNanoTimeNano();
             }
             default -> throw new IllegalStateException("Unexpected value: " + timeSourceType);

@@ -18,7 +18,7 @@ public class VSyncSetting extends FrameSettingBase<VSyncType> {
      * @param frame the frame to associate with this setting
      */
     public VSyncSetting(Frame frame) {
-        super(frame, "VSyncSetting", 7, VSyncType.VSyncOff);
+        super(frame, "VSyncSetting", 7, VSyncType.V_SYNC_OFF);
     }
 
     /**

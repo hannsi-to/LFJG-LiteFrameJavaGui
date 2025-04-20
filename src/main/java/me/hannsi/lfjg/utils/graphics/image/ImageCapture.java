@@ -36,10 +36,10 @@ public class ImageCapture {
 
         this.width = (int) LFJGContext.resolution.x();
         this.height = (int) LFJGContext.resolution.y();
-        this.imageLoaderType = ImageLoaderType.STBImage;
-        this.javaCVImageFormat = JavaCVImageFormat.png;
+        this.imageLoaderType = ImageLoaderType.STB_IMAGE;
+        this.javaCVImageFormat = JavaCVImageFormat.PNG;
         this.colorFormatType = ColorFormatType.RGB;
-        this.stbImageFormat = STBImageFormat.png;
+        this.stbImageFormat = STBImageFormat.PNG;
         this.jpgQuality = 90;
     }
 
@@ -64,10 +64,10 @@ public class ImageCapture {
         }
 
         switch (imageLoaderType) {
-            case STBImage -> {
+            case STB_IMAGE -> {
                 writeSTBImage(path, flippedBuffer);
             }
-            case JavaCV -> {
+            case JAVA_CV -> {
                 writeJavaCV(path, flippedBuffer, colorFormatType.getChannels());
             }
         }
@@ -88,10 +88,10 @@ public class ImageCapture {
 
         LogGenerator logGenerator = null;
         switch (imageLoaderType) {
-            case STBImage -> {
+            case STB_IMAGE -> {
                 logGenerator = writeSTBImage(path, flippedBuffer);
             }
-            case JavaCV -> {
+            case JAVA_CV -> {
                 logGenerator = writeJavaCV(path, flippedBuffer, colorFormatType.getChannels());
             }
         }
@@ -107,10 +107,10 @@ public class ImageCapture {
         boolean success = false;
 
         switch (javaCVImageFormat) {
-            case png, bmp, tga, pbm, pgm, ppm, gif -> {
+            case PNG, BMP, TGA, PBM, PGM, PPM, GIF -> {
                 success = opencv_imgcodecs.imwrite(path, mat);
             }
-            case jpg, jpeg -> {
+            case JPG, JPEG -> {
                 int[] params = new int[]{opencv_imgcodecs.IMWRITE_JPEG_QUALITY, jpgQuality};
                 success = opencv_imgcodecs.imwrite(path, mat, params);
             }
@@ -127,12 +127,12 @@ public class ImageCapture {
         flippedBuffer.flip();
 
         boolean success = switch (stbImageFormat) {
-            case png ->
+            case PNG ->
                     STBImageWrite.stbi_write_png(path, width, height, colorFormatType.getChannels(), flippedBuffer, width * colorFormatType.getChannels());
-            case jpg ->
+            case JPG ->
                     STBImageWrite.stbi_write_jpg(path, width, height, colorFormatType.getChannels(), flippedBuffer, jpgQuality);
-            case bmp -> STBImageWrite.stbi_write_bmp(path, width, height, colorFormatType.getChannels(), flippedBuffer);
-            case tga -> STBImageWrite.stbi_write_tga(path, width, height, colorFormatType.getChannels(), flippedBuffer);
+            case BMP -> STBImageWrite.stbi_write_bmp(path, width, height, colorFormatType.getChannels(), flippedBuffer);
+            case TGA -> STBImageWrite.stbi_write_tga(path, width, height, colorFormatType.getChannels(), flippedBuffer);
         };
 
         if (!success) {

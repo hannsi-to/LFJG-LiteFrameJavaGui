@@ -19,7 +19,7 @@ import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
  * Handles the creation and management of vertex buffer objects (VBOs) and vertex array objects (VAOs).
  */
 public class Mesh {
-    public static ProjectionType DEFAULT_PROJECTION_TYPE = ProjectionType.OrthographicProjection;
+    public static ProjectionType DEFAULT_PROJECTION_TYPE = ProjectionType.ORTHOGRAPHIC_PROJECTION;
     public static boolean DEFAULT_USE_EBO = true;
     public static boolean DEFAULT_USE_INDIRECT = true;
     public static int DEFAULT_USAGE_HINT = GL_STATIC_DRAW;
@@ -130,7 +130,7 @@ public class Mesh {
     public Mesh(float[] positions, float[] normals, float[] textCoords, int[] indices) {
         this.positions = positions;
         this.texture = textCoords;
-        this.projectionType = ProjectionType.PerspectiveProjection;
+        this.projectionType = ProjectionType.PERSPECTIVE_PROJECTION;
         this.colors = null;
         this.useEBO = true;
         this.useIndirect = DEFAULT_USE_INDIRECT;
@@ -158,10 +158,10 @@ public class Mesh {
     private int getSize() {
         int size;
         switch (projectionType) {
-            case OrthographicProjection -> {
+            case ORTHOGRAPHIC_PROJECTION -> {
                 size = 2;
             }
-            case PerspectiveProjection -> {
+            case PERSPECTIVE_PROJECTION -> {
                 size = 3;
             }
             default -> throw new IllegalStateException("Unexpected value: " + projectionType);

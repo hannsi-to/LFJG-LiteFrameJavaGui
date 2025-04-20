@@ -137,19 +137,19 @@ public class Frame implements IFrame {
      */
     private void initRendering() {
         switch ((RenderingType) getFrameSettingValue(RenderingTypeSetting.class)) {
-            case OpenGL -> {
+            case OPEN_GL -> {
                 GL.createCapabilities();
                 LFJGContext.nanoVGContext = NanoVGGL3.nvgCreate(NanoVGGL3.NVG_ANTIALIAS);
                 if (LFJGContext.nanoVGContext == MemoryUtil.NULL) {
                     throw new RuntimeException("Failed to create NanoVG context");
                 }
             }
-            case NanoVG -> {
+            case NANO_VG -> {
             }
-            case Vulkan -> {
+            case VULKAN -> {
 
             }
-            case LibGDX -> {
+            case LIB_GDX -> {
             }
             default ->
                     throw new IllegalStateException("Unexpected value: " + getFrameSettingValue(RenderingTypeSetting.class));
@@ -244,7 +244,7 @@ public class Frame implements IFrame {
 
     public void updateLFJGLContext() {
         LFJGContext.resolution = new Vector2f(getWindowWidth(), getWindowHeight());
-        LFJGContext.projection = new Projection(ProjectionType.OrthographicProjection, getWindowWidth(), getWindowHeight());
+        LFJGContext.projection = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, getWindowWidth(), getWindowHeight());
     }
 
     /**
@@ -252,12 +252,12 @@ public class Frame implements IFrame {
      */
     private void draw() {
         switch ((RenderingType) getFrameSettingValue(RenderingTypeSetting.class)) {
-            case OpenGL -> eventManager.call(new DrawFrameWithOpenGLEvent());
-            case NanoVG -> {
+            case OPEN_GL -> eventManager.call(new DrawFrameWithOpenGLEvent());
+            case NANO_VG -> {
             }
-            case Vulkan -> {
+            case VULKAN -> {
             }
-            case LibGDX -> {
+            case LIB_GDX -> {
             }
             default ->
                     throw new IllegalStateException("Unexpected value: " + getFrameSettingValue(RenderingTypeSetting.class));
@@ -299,7 +299,7 @@ public class Frame implements IFrame {
             case MSAA -> {
                 GL13.glEnable(GL13.GL_MULTISAMPLE);
             }
-            case Off -> {
+            case OFF -> {
                 GL13.glDisable(GL13.GL_MULTISAMPLE);
             }
         }
@@ -312,11 +312,11 @@ public class Frame implements IFrame {
         Callbacks.glfwFreeCallbacks(windowID);
 
         switch ((RenderingType) getFrameSettingValue(RenderingTypeSetting.class)) {
-            case OpenGL -> NanoVGGL3.nvgDelete(LFJGContext.nanoVGContext);
-            case Vulkan -> {
+            case OPEN_GL -> NanoVGGL3.nvgDelete(LFJGContext.nanoVGContext);
+            case VULKAN -> {
 
             }
-            case LibGDX -> {
+            case LIB_GDX -> {
             }
             default ->
                     throw new IllegalStateException("Unexpected value: " + getFrameSettingValue(RenderingTypeSetting.class));

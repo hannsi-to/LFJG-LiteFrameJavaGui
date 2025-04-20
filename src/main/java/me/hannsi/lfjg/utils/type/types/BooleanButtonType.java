@@ -3,7 +3,7 @@ package me.hannsi.lfjg.utils.type.types;
 import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
 
 public enum BooleanButtonType implements IEnumTypeBase {
-    Switch(0, "Switch"), CheckBox(1, "CheckBox");
+    SWITCH(0, "Switch"), CHECK_BOX(1, "CheckBox");
 
     final int id;
     final String name;

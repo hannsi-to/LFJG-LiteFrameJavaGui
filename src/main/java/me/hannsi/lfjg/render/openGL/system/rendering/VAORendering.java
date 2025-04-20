@@ -56,8 +56,8 @@ public class VAORendering {
                     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
                 } else {
                     int count = switch (mesh.getProjectionType()) {
-                        case OrthographicProjection -> mesh.getPositions().length / 2;
-                        case PerspectiveProjection -> mesh.getPositions().length / 3;
+                        case ORTHOGRAPHIC_PROJECTION -> mesh.getPositions().length / 2;
+                        case PERSPECTIVE_PROJECTION -> mesh.getPositions().length / 3;
                     };
                     glDrawArrays(drawType, 0, count);
                 }

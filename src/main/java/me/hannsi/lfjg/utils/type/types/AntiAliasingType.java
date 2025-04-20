@@ -6,7 +6,7 @@ import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
  * Enumeration representing different types of anti-aliasing.
  */
 public enum AntiAliasingType implements IEnumTypeBase {
-    Off(0, "Off"), MSAA(1, "MultiSampleAntiAliasing");
+    OFF(0, "Off"), MSAA(1, "MultiSampleAntiAliasing");
 
     final int id;
     final String name;

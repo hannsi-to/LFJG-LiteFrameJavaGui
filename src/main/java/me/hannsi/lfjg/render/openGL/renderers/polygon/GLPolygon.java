@@ -131,7 +131,7 @@ public class GLPolygon extends GLObject {
     }
 
     public void rendering(FileLocation vertexShaderPath, FileLocation fragmentShaderPath) {
-        Mesh mesh = new Mesh(ProjectionType.OrthographicProjection, vertex, color, texture);
+        Mesh mesh = new Mesh(ProjectionType.ORTHOGRAPHIC_PROJECTION, vertex, color, texture);
 
         setVertexShader(vertexShaderPath);
         setFragmentShader(fragmentShaderPath);

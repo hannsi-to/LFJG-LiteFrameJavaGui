@@ -6,9 +6,9 @@ import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
  * Enumeration representing different types of texture loaders.
  */
 public enum ImageLoaderType implements IEnumTypeBase {
-    STBImage(0, "STBImage"),
+    STB_IMAGE(0, "STBImage"),
     @Deprecated
-    JavaCV(1, "JavaCV");
+    JAVA_CV(1, "JavaCV");
 
     final int id;
     final String name;

@@ -4,7 +4,7 @@ import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
 
 @Deprecated
 public enum JavaCVImageFormat implements IEnumTypeBase {
-    png(0, "png"), jpg(1, "jpg"), jpeg(2, "jpeg"), bmp(3, "bmp"), tga(4, "tga"), pbm(5, "pbm"), pgm(6, "pgm"), ppm(7, "ppm"), gif(8, "gif");
+    PNG(0, "png"), JPG(1, "jpg"), JPEG(2, "jpeg"), BMP(3, "bmp"), TGA(4, "tga"), PBM(5, "pbm"), PGM(6, "pgm"), PPM(7, "ppm"), GIF(8, "gif");
 
     final int id;
     final String name;

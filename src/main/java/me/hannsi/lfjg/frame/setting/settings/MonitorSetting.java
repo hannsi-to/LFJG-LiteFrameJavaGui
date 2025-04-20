@@ -18,7 +18,7 @@ public class MonitorSetting extends FrameSettingBase<MonitorType> {
      * @param frame the frame to associate with this setting
      */
     public MonitorSetting(Frame frame) {
-        super(frame, "MonitorSetting", 5, MonitorType.Window, true);
+        super(frame, "MonitorSetting", 5, MonitorType.WINDOW, true);
     }
 
     /**
@@ -27,10 +27,10 @@ public class MonitorSetting extends FrameSettingBase<MonitorType> {
      */
     @Override
     public void updateSetting() {
-        if (getValue() == MonitorType.FullScreen) {
+        if (getValue() == MonitorType.FULL_SCREEN) {
             GLFW.glfwWindowHint(GLFW.GLFW_AUTO_ICONIFY, GLFW.GLFW_TRUE);
         }
-        if (getValue() == MonitorType.Borderless && getValue() == MonitorType.Window) {
+        if (getValue() == MonitorType.BORDERLESS && getValue() == MonitorType.WINDOW) {
             GLFW.glfwWindowHint(GLFW.GLFW_AUTO_ICONIFY, GLFW.GLFW_FALSE);
         }
     }

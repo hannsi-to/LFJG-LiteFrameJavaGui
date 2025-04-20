@@ -6,9 +6,9 @@ import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
  * Enumeration representing different types of time sources.
  */
 public enum TimeSourceType implements IEnumTypeBase {
-    GLFWTime(0, "GLFWTime"),
-    SystemTime(1, "SystemTime"),
-    NanoTime(2, "NanoTime");
+    GLFW_TIME(0, "GLFWTime"),
+    SYSTEM_TIME(1, "SystemTime"),
+    NANO_TIME(2, "NanoTime");
 
     final int id;
     final String name;

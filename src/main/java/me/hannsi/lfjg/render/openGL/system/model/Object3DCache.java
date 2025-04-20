@@ -29,7 +29,7 @@ public class Object3DCache {
      */
     public Object3DCache(Vector2f resolution) {
         modelMap = new HashMap<>();
-        projection = new Projection(ProjectionType.PerspectiveProjection, Projection.DEFAULT_FOV, (int) resolution.x(), (int) resolution.y(), Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
+        projection = new Projection(ProjectionType.PERSPECTIVE_PROJECTION, Projection.DEFAULT_FOV, (int) resolution.x(), (int) resolution.y(), Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
         textureModelCache = new TextureModelCache();
     }
 

@@ -8,10 +8,10 @@ import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
  */
 @Deprecated
 public enum RenderingType implements IEnumTypeBase {
-    OpenGL(0, "OpenGL"),
-    NanoVG(1, "NanoVG"),
-    Vulkan(2, "Vulkan"),
-    LibGDX(3, "LibGDX");
+    OPEN_GL(0, "OpenGL"),
+    NANO_VG(1, "NanoVG"),
+    VULKAN(2, "Vulkan"),
+    LIB_GDX(3, "LibGDX");
 
     final int id;
     final String name;

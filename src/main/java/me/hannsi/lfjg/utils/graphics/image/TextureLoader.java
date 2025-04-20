@@ -108,7 +108,7 @@ public class TextureLoader {
     private void loadTexture() {
         if (!texturePath.isUrl()) {
             switch (imageLoaderType) {
-                case STBImage -> {
+                case STB_IMAGE -> {
                     try (MemoryStack stack = MemoryStack.stackPush()) {
                         IntBuffer width = stack.mallocInt(1);
                         IntBuffer height = stack.mallocInt(1);
@@ -124,7 +124,7 @@ public class TextureLoader {
                         STBImage.stbi_image_free(image);
                     }
                 }
-                case JavaCV -> {
+                case JAVA_CV -> {
                     Mat bgrMat = opencv_imgcodecs.imdecode(new Mat(((FileLocation) this.texturePath).getBytes()), opencv_imgcodecs.IMREAD_COLOR);
 
                     if (bgrMat.empty()) {

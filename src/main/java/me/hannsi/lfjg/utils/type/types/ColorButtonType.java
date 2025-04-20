@@ -3,7 +3,7 @@ package me.hannsi.lfjg.utils.type.types;
 import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
 
 public enum ColorButtonType implements IEnumTypeBase {
-    Normal(0, "Normal");
+    NORMAL(0, "Normal");
 
     final int id;
     final String name;
