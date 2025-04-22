@@ -33,6 +33,11 @@ public class Font {
         this.byteBuffer = IOUtil.toByteBuffer(inputStream);
     }
 
+    public void cleanup() {
+        byteBuffer.clear();
+        byteBuffer = null;
+    }
+
     public void loadFont() {
         nvgCreateFontMem(name, byteBuffer, false);
     }

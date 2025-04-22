@@ -7,6 +7,8 @@ import me.hannsi.lfjg.render.openGL.system.scene.IScene;
 import me.hannsi.lfjg.render.openGL.system.scene.Scene;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.type.types.AlignType;
+import me.hannsi.lfjg.utils.type.types.TextFormatType;
 
 public class TestScene3 implements IScene {
     public Scene scene;
@@ -25,7 +27,7 @@ public class TestScene3 implements IScene {
         font.loadFont();
 
         glFont = new GLFont("GLFont1");
-        glFont.text(font, "Hello World!!", 0, 0, 64, Color.of(255, 100, 100, 255));
+        glFont.text(font, "Hello" + TextFormatType.STRIKETHROUGH + " World!!", 100, 0, 64, Color.of(255, 100, 100, 255), AlignType.LEFT_BASELINE);
     }
 
     @Override

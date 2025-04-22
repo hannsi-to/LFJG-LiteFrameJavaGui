@@ -18,6 +18,7 @@ public class NanoVGUtil {
         nvgSave();
 
         nvgTranslate(0, projection.getWindowHeight());
+        nvgScale(1, 1);
     }
 
     public static void nvgFramePop() {
@@ -78,6 +79,14 @@ public class NanoVGUtil {
         NanoVG.nvgFontFace(nanoVGContext, font);
     }
 
+    public static float nvgTextBounds(float x, float y, CharSequence string, float[] bounds) {
+        return NanoVG.nvgTextBounds(nanoVGContext, 0, 0, string, bounds);
+    }
+
+    public static void nvgTextMetrics(float[] ascender, float[] descender, float[] lineh) {
+        NanoVG.nvgTextMetrics(nanoVGContext, ascender, descender, lineh);
+    }
+
     public static void nvgText(float x, float y, String text) {
         NanoVG.nvgText(nanoVGContext, x, y, text);
     }
@@ -88,6 +97,26 @@ public class NanoVGUtil {
 
     public static int nvgCreateFontMem(CharSequence name, ByteBuffer data, boolean freeData) {
         return NanoVG.nvgCreateFontMem(nanoVGContext, name, data, freeData);
+    }
+
+    public static void nvgMoveTo(float x, float y) {
+        NanoVG.nvgMoveTo(nanoVGContext, x, y);
+    }
+
+    public static void nvgLineTo(float x, float y) {
+        NanoVG.nvgLineTo(nanoVGContext, x, y);
+    }
+
+    public static void nvgStrokeWidth(float size) {
+        NanoVG.nvgStrokeWidth(nanoVGContext, size);
+    }
+
+    public static void nvgStrokeColor(NVGColor color) {
+        NanoVG.nvgStrokeColor(nanoVGContext, color);
+    }
+
+    public static void nvgStroke() {
+        NanoVG.nvgStroke(nanoVGContext);
     }
 
     public static NVGColor colorToNVG(Color color) {

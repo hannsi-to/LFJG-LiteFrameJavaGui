@@ -14,9 +14,7 @@ import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLTriangle;
 import me.hannsi.lfjg.render.openGL.renderers.shader.GLShader;
 import me.hannsi.lfjg.render.openGL.renderers.svg.GLSVG;
-import me.hannsi.lfjg.render.openGL.system.font.CFont;
 import me.hannsi.lfjg.render.openGL.system.font.FontCache;
-import me.hannsi.lfjg.render.openGL.system.font.UnicodeRange;
 import me.hannsi.lfjg.render.openGL.system.model.model.Entity;
 import me.hannsi.lfjg.render.openGL.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.render.openGL.system.scene.IScene;
@@ -89,10 +87,6 @@ public class TestScene1 implements IScene {
 
         imageCapture = new ImageCapture(new FileLocation("C:/Users/hanns/idea-project/LFJG-LiteFrameJavaGui/log/png"));
 
-        CFont.addUnicodeRange(UnicodeRange.HIRAGANA_START, UnicodeRange.HIRAGANA_END);
-        CFont.addUnicodeRange(UnicodeRange.KATAKANA_START, UnicodeRange.KATAKANA_END);
-        CFont.addUnicodeRange(UnicodeRange.CJK_IDEOGRAPHS_START, UnicodeRange.CJK_IDEOGRAPHS_END);
-
         objectInit();
 
         glObjectCache = new GLObjectCache();
@@ -130,10 +124,6 @@ public class TestScene1 implements IScene {
     }
 
     public void objectInit() {
-        fontCache = new FontCache();
-        ResourcesLocation font = new ResourcesLocation("font/default.ttf");
-        fontCache.createCache(font, 64);
-
         gl1 = new GLRect("test1");
         gl1.uv(0, 1, 1, 0);
         gl1.rectWH(0, 0, 1920, 1080, Color.of(0, 0, 0, 0));
@@ -331,7 +321,6 @@ public class TestScene1 implements IScene {
     public void stopFrame() {
         glObjectCache.cleanup();
         textureCache.cleanup();
-        fontCache.cleanup();
         soundCache.cleanup();
         imageCapture.cleanup();
 //        threadCache.cleanup();

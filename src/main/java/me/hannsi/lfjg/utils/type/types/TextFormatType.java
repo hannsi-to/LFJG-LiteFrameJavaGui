@@ -1,0 +1,99 @@
+package me.hannsi.lfjg.utils.type.types;
+
+import me.hannsi.lfjg.utils.graphics.color.Color;
+import me.hannsi.lfjg.utils.toolkit.StringUtil;
+import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
+import me.hannsi.test.TestScene1;
+
+public enum TextFormatType implements IEnumTypeBase {
+    BLACK("Black", 0, "0"),
+    DARK_BLUE("DarkBlue", 1, "1"),
+    DARK_GREEN("DarkGreen", 2, "2"),
+    DARK_AQUA("DarkAqua", 3, "3"),
+    DARK_RED("DarkRed", 4, "4"),
+    DARK_PURPLE("DarkPurple", 5, "5"),
+    GOLD("Gold", 6, "6"),
+    GRAY("Gray", 7, "7"),
+    DARK_GRAY("DarkGray", 8, "8"),
+    BLUE("Blue", 9, "9"),
+    GREEN("Green", 10, "a"),
+    AQUA("Aqua", 11, "b"),
+    RED("Red", 12, "c"),
+    LIGHT_PURPLE("LightPurple", 13, "d"),
+    YELLOW("Yellow", 14, "e"),
+    WHITE("White", 15, "f"),
+    OBFUSCATED("Obfuscated", 16, "g"),
+    BOLD("Bold", 17, "h"),
+    STRIKETHROUGH("Strikethrough", 18, "i"),
+    UNDERLINE("UnderLine", 19, "j"),
+    ITALIC("Italic", 20, "k"),
+    REST("Rest", 21, "r"),
+    NEWLINE("NewLine", 22, "l"),
+    SPASE_X("SpaceX", 23, "m"),
+    SPASE_Y("SpaceY", 24, "n"),
+    RESET_POINT_X("ResetPointX", 25, "o"),
+    RESET_POINT_Y("ResetPointY", 26, "p");
+
+    public static final String PREFIX_CODE = "§";
+
+    final String name;
+    final int id;
+    final String code;
+
+    TextFormatType(String name, int id, String code) {
+        this.name = name;
+        this.id = id;
+        this.code = code;
+    }
+
+    public static Color getColor(TextFormatType textFormatType) {
+        return switch (textFormatType) {
+            case BLACK -> new Color(0, 0, 0);
+            case DARK_BLUE -> new Color(0, 0, 170);
+            case DARK_GREEN -> new Color(0, 170, 0);
+            case DARK_AQUA -> new Color(0, 170, 170);
+            case DARK_RED -> new Color(170, 0, 0);
+            case DARK_PURPLE -> new Color(170, 0, 170);
+            case GOLD -> new Color(255, 170, 0);
+            case GRAY -> new Color(170, 170, 170);
+            case DARK_GRAY -> new Color(85, 85, 85);
+            case BLUE -> new Color(85, 85, 255);
+            case GREEN -> new Color(85, 255, 85);
+            case AQUA -> new Color(85, 255, 255);
+            case RED -> new Color(255, 85, 85);
+            case LIGHT_PURPLE -> new Color(255, 85, 255);
+            case YELLOW -> new Color(255, 255, 85);
+            case WHITE -> new Color(255, 255, 255);
+            default -> null;
+        };
+    }
+
+    public static TextFormatType getTextFormatType(char code) {
+        for (TextFormatType testFormatType : values()) {
+            if (testFormatType.getCode().equals(StringUtil.getStringFromChar(code))) {
+                return testFormatType;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return PREFIX_CODE + code;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+}
