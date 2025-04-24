@@ -3,7 +3,6 @@ package me.hannsi.lfjg.utils.type.types;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.toolkit.StringUtil;
 import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
-import me.hannsi.test.TestScene1;
 
 public enum TextFormatType implements IEnumTypeBase {
     BLACK("Black", 0, "0"),
@@ -34,7 +33,7 @@ public enum TextFormatType implements IEnumTypeBase {
     RESET_POINT_X("ResetPointX", 25, "o"),
     RESET_POINT_Y("ResetPointY", 26, "p");
 
-    public static final String PREFIX_CODE = "§";
+    public static final char PREFIX_CODE = '§';
 
     final String name;
     final int id;

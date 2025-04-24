@@ -22,7 +22,8 @@ import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgFontFace;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgFontSize;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgLineTo;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgMoveTo;
-import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgRotate;
+import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgRestore;
+import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgSave;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgStroke;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgStrokeColor;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgStrokeWidth;
@@ -30,6 +31,7 @@ import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgText;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTextAlign;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTextBounds;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTextMetrics;
+import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTransform;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.*;
 import static org.lwjgl.nanovg.NanoVG.*;
 
@@ -58,13 +60,15 @@ public class GLFont extends GLRect {
 
     private static void drawLine(float x, float y, float x1, float y1, float lineWidth, Color color) {
         nvgBeginPath();
+
         nvgMoveTo(x, y);
         nvgLineTo(x1, y1);
-        nvgStrokeWidth(lineWidth);
+
         NVGColor nvgColor = colorToNVG(color);
-        nvgRGBAf(0, 0, 0, 0, nvgColor);
         nvgStrokeColor(nvgColor);
+        nvgStrokeWidth(lineWidth);
         nvgStroke();
+
         nvgClosePath();
     }
 
@@ -90,9 +94,11 @@ public class GLFont extends GLRect {
     }
 
     public float getWidth() {
-        nvgFontFace(font.getName());
-        nvgFontSize(fontSize);
-        return nvgTextBounds(0, 0, text, new float[4]);
+        return getTextWidth(text);
+    }
+
+    public float getTextWidth(char ch) {
+        return getTextWidth(StringUtil.getStringFromChar(ch));
     }
 
     public float getTextWidth(String str) {
@@ -102,6 +108,10 @@ public class GLFont extends GLRect {
     }
 
     public float getHeight() {
+        return getTextHeight();
+    }
+
+    public float getTextHeight() {
         nvgFontFace(font.getName());
         nvgFontSize(fontSize);
 
@@ -132,7 +142,6 @@ public class GLFont extends GLRect {
         float offsetX = 0.0f;
         float offsetY = 0.0f;
         boolean code = false;
-        float heightMiddle = getHeight() / 2f;
         boolean obfuscated = false;
         char obfuscatedChar = '\u0000';
         boolean drawStrikethrough = false;
@@ -145,14 +154,12 @@ public class GLFont extends GLRect {
         float underLineY = 0.0f;
         float underLineWidth = 0.0f;
         float underLineHeight = 0.0f;
-        float italic = 0.0f;
+        boolean italic = false;
         float size = 0.0f;
         TextFormatType textFormatType = null;
         boolean bold = false;
 
         for (char ch : StringUtil.getChars(text)) {
-            String str = StringUtil.getStringFromChar(ch);
-
             if (code) {
                 textFormatType = TextFormatType.getTextFormatType(ch);
                 code = false;
@@ -177,7 +184,7 @@ public class GLFont extends GLRect {
                         underLineY = 0.0f;
                         underLineWidth = 0.0f;
                         underLineHeight = 0.0f;
-                        italic = 0.0f;
+                        italic = false;
                         size = 0.0f;
                         textFormatType = null;
                         obfuscated = false;
@@ -200,32 +207,21 @@ public class GLFont extends GLRect {
                             switch (integer) {
                                 case NVG_ALIGN_LEFT:
                                     strikethroughLineX = 0.0f;
-                                    strikethroughLineWidth = getTextWidth(str);
+                                    strikethroughLineWidth = getTextWidth(ch);
                                     break;
                                 case NVG_ALIGN_CENTER:
-                                    float widthCenter = getTextWidth(str) / 2f;
+                                    float widthCenter = getTextWidth(ch) / 2f;
                                     strikethroughLineX = -widthCenter;
-                                    strikethroughLineWidth = getTextWidth(str);
+                                    strikethroughLineWidth = getTextWidth(ch);
                                     break;
                                 case NVG_ALIGN_RIGHT:
-                                    strikethroughLineX = -getTextWidth(str);
-                                    strikethroughLineWidth = getTextWidth(str);
-                                    break;
-                                case NVG_ALIGN_TOP:
-                                    strikethroughLineY = heightMiddle;
-                                    strikethroughLineHeight = 0.0f;
-                                    break;
-                                case NVG_ALIGN_MIDDLE:
-                                    strikethroughLineY = 0;
-                                    strikethroughLineHeight = 0;
-                                    break;
-                                case NVG_ALIGN_BOTTOM:
-                                case NVG_ALIGN_BASELINE:
-                                    strikethroughLineY = -heightMiddle;
-                                    strikethroughLineHeight = 0.0f;
+                                    strikethroughLineX = -getTextWidth(ch);
+                                    strikethroughLineWidth = getTextWidth(ch);
                                     break;
                             }
                         }
+
+                        strikethroughLineY = fontSize * 0.3f;
 
                         drawStrikethrough = true;
                     }
@@ -236,81 +232,83 @@ public class GLFont extends GLRect {
                             switch (integer) {
                                 case NVG_ALIGN_LEFT:
                                     underLineX = 0.0f;
-                                    underLineWidth = getTextWidth(str);
+                                    underLineWidth = getTextWidth(ch);
                                     break;
                                 case NVG_ALIGN_CENTER:
-                                    float widthCenter = getTextWidth(str) / 2f;
+                                    float widthCenter = getTextWidth(ch) / 2f;
                                     underLineX = -widthCenter;
-                                    underLineWidth = getTextWidth(str);
+                                    underLineWidth = getTextWidth(ch);
                                     break;
                                 case NVG_ALIGN_RIGHT:
-                                    underLineX = -getTextWidth(str);
-                                    underLineWidth = getTextWidth(str);
-                                    break;
-                                case NVG_ALIGN_TOP:
-                                    underLineY = getHeight();
-                                    underLineHeight = 0.0f;
-                                    break;
-                                case NVG_ALIGN_MIDDLE:
-                                    underLineY = heightMiddle;
-                                    underLineHeight = 0.0f;
-                                    break;
-                                case NVG_ALIGN_BOTTOM:
-                                case NVG_ALIGN_BASELINE:
-                                    underLineY = 0.0f;
-                                    underLineHeight = 0.0f;
+                                    underLineX = -getTextWidth(ch);
+                                    underLineWidth = getTextWidth(ch);
                                     break;
                             }
                         }
 
+                        float[] ascender = new float[1];
+                        float[] descender = new float[1];
+                        float[] lineHeight = new float[1];
+
+                        nvgTextMetrics(ascender, descender, lineHeight);
+
+                        float lineOffset = fontSize * 0.3f;
+                        float middleLine = -(ascender[0] - descender[0]) / 2f;
+                        underLineY = middleLine + lineOffset;
+
                         drawUnderline = true;
                     }
-                    case ITALIC -> {
-                        italic = 0.1f;
-                    }
+                    case ITALIC -> italic = true;
                     case NEWLINE -> {
                         offsetX = 0.0f;
-                        offsetY += getHeight();
+                        offsetY -= getTextHeight();
+                        textFormatType = null;
                     }
                 }
             }
 
-            if (str.equals(TextFormatType.PREFIX_CODE)) {
+            if (ch == TextFormatType.PREFIX_CODE) {
                 code = true;
                 continue;
             }
 
-            drawNanoVGText(fontName, obfuscated ? StringUtil.getStringFromChar(obfuscatedChar) : str, x + offsetX, y + offsetY, color, align, italic, bold ? size : 0);
+            float lineWidth = bold ? fontSize + size / 10f : fontSize / 10f;
+            drawNanoVGText(fontName, obfuscated ? obfuscatedChar : ch, x + offsetX, y + offsetY, color, align, italic, bold ? size : 0);
             if (drawStrikethrough) {
-                drawLineWH(x + offsetX + strikethroughLineX, y + offsetY + strikethroughLineY, strikethroughLineWidth, strikethroughLineHeight, 1.0f, color);
+                drawLineWH(x + offsetX + strikethroughLineX, y + offsetY + strikethroughLineY, strikethroughLineWidth, strikethroughLineHeight, lineWidth, color);
             }
             if (drawUnderline) {
-                drawLineWH(x + offsetX + underLineX, y + offsetY + underLineY, underLineWidth, underLineHeight, 1.0f, color);
+                drawLineWH(x + offsetX + underLineX, y + offsetY + underLineY, underLineWidth, underLineHeight, lineWidth, color);
             }
 
-            offsetX += getTextWidth(str);
+            offsetX += getTextWidth(ch);
         }
 
         nvgFramePop();
     }
 
-    private void drawNanoVGText(String fontName, String text, float x, float y, Color color, int align, float italic, float plusSize) {
-        nvgBeginPath();
-        nvgRotate(italic);
+    private void drawNanoVGText(String fontName, char ch, float x, float y, Color color, int align, boolean italic, float plusSize) {
         NVGColor nvgColor = colorToNVG(color);
         nvgFillColor(nvgColor);
 
         nvgFontSize(fontSize + plusSize);
         nvgTextAlign(align);
         nvgFontFace(fontName);
-        nvgText(x, y, text);
 
-        nvgRGBAf(0, 0, 0, 0, nvgColor);
-        nvgFillColor(nvgColor);
+        nvgSave();
+        if (italic) {
+            float skewX = (float) Math.tan(0.3);
+            nvgTransform(
+                    1, 0,
+                    -skewX, 1,
+                    skewX * (1060 - y), 0.0f
+            );
+        }
+
+        nvgBeginPath();
+        nvgText(x, y, StringUtil.getStringFromChar(ch));
         nvgFill();
-        nvgRotate(0.0f);
-
-        nvgRotate(-italic);
+        nvgRestore();
         nvgClosePath();
     }
 

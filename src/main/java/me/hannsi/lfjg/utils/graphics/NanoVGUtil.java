@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.utils.graphics;
 
 import me.hannsi.lfjg.utils.graphics.color.Color;
+import org.joml.Vector2f;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NanoVG;
 
@@ -16,9 +17,6 @@ public class NanoVGUtil {
         nvgBeginFrame(projection.getWindowWidth(), projection.getWindowHeight(), 1);
 
         nvgSave();
-
-        nvgTranslate(0, projection.getWindowHeight());
-        nvgScale(1, 1);
     }
 
     public static void nvgFramePop() {
@@ -27,12 +25,25 @@ public class NanoVGUtil {
         glPopAttrib();
     }
 
+    public static Vector2f conversionCoordinate(Vector2f openGLCoordinate) {
+        float ox = openGLCoordinate.x();
+        float oy = openGLCoordinate.y();
+        float nx = ox;
+        float ny = projection.getWindowHeight() - oy;
+        return new Vector2f(nx, ny);
+    }
+
+    public static void nvgCurrentTransform(float[] xform) {
+        NanoVG.nvgCurrentTransform(nanoVGContext, xform);
+    }
+
     public static void nvgRestore() {
         NanoVG.nvgRestore(nanoVGContext);
     }
 
     public static void nvgTranslate(float x, float y) {
-        NanoVG.nvgTranslate(nanoVGContext, x, y);
+        Vector2f nvgCoordinate = conversionCoordinate(new Vector2f(x, y));
+        NanoVG.nvgTranslate(nanoVGContext, nvgCoordinate.x(), nvgCoordinate.y());
     }
 
     public static void nvgScale(float x, float y) {
@@ -79,8 +90,21 @@ public class NanoVGUtil {
         NanoVG.nvgFontFace(nanoVGContext, font);
     }
 
+    public static void nvgTransform(float a, float b, float c, float d, float e, float f) {
+        NanoVG.nvgTransform(nanoVGContext, a, b, c, d, e, f);
+    }
+
+    public static void nvgResetTransform() {
+        NanoVG.nvgResetTransform(nanoVGContext);
+    }
+
+    public static void nvgTransform(float[] matrix) {
+        NanoVG.nvgTransform(nanoVGContext, matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+    }
+
     public static float nvgTextBounds(float x, float y, CharSequence string, float[] bounds) {
-        return NanoVG.nvgTextBounds(nanoVGContext, 0, 0, string, bounds);
+        Vector2f nvgCoordinate = conversionCoordinate(new Vector2f(x, y));
+        return NanoVG.nvgTextBounds(nanoVGContext, nvgCoordinate.x(), nvgCoordinate.y(), string, bounds);
     }
 
     public static void nvgTextMetrics(float[] ascender, float[] descender, float[] lineh) {
@@ -88,7 +112,8 @@ public class NanoVGUtil {
     }
 
     public static void nvgText(float x, float y, String text) {
-        NanoVG.nvgText(nanoVGContext, x, y, text);
+        Vector2f nvgCoordinate = conversionCoordinate(new Vector2f(x, y));
+        NanoVG.nvgText(nanoVGContext, nvgCoordinate.x(), nvgCoordinate.y(), text);
     }
 
     public static void nvgFill() {
@@ -100,11 +125,13 @@ public class NanoVGUtil {
     }
 
     public static void nvgMoveTo(float x, float y) {
-        NanoVG.nvgMoveTo(nanoVGContext, x, y);
+        Vector2f nvgCoordinate = conversionCoordinate(new Vector2f(x, y));
+        NanoVG.nvgMoveTo(nanoVGContext, nvgCoordinate.x(), nvgCoordinate.y());
     }
 
     public static void nvgLineTo(float x, float y) {
-        NanoVG.nvgLineTo(nanoVGContext, x, y);
+        Vector2f nvgCoordinate = conversionCoordinate(new Vector2f(x, y));
+        NanoVG.nvgLineTo(nanoVGContext, nvgCoordinate.x(), nvgCoordinate.y());
     }
 
     public static void nvgStrokeWidth(float size) {
