@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL30;
 
 import java.util.List;
 
+import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.*;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgBeginPath;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgClosePath;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgFill;
@@ -32,7 +33,6 @@ import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTextAlign;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTextBounds;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTextMetrics;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTransform;
-import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.*;
 import static org.lwjgl.nanovg.NanoVG.*;
 
 /**
@@ -275,10 +275,10 @@ public class GLFont extends GLRect {
             float lineWidth = bold ? fontSize + size / 10f : fontSize / 10f;
             drawNanoVGText(fontName, obfuscated ? obfuscatedChar : ch, x + offsetX, y + offsetY, color, align, italic, bold ? size : 0);
             if (drawStrikethrough) {
-                drawLineWH(x + offsetX + strikethroughLineX, y + offsetY + strikethroughLineY, strikethroughLineWidth, strikethroughLineHeight, lineWidth, color);
+                drawLineWH(x + offsetX + strikethroughLineX, y + offsetY + strikethroughLineY, strikethroughLineWidth, strikethroughLineHeight, lineWidth, Color.getRandomColor());
             }
             if (drawUnderline) {
-                drawLineWH(x + offsetX + underLineX, y + offsetY + underLineY, underLineWidth, underLineHeight, lineWidth, color);
+                drawLineWH(x + offsetX + underLineX, y + offsetY + underLineY, underLineWidth, underLineHeight, lineWidth, Color.getRandomColor());
             }
 
             offsetX += getTextWidth(ch);

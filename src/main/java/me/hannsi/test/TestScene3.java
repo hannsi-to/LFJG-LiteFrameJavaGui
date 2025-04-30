@@ -29,8 +29,8 @@ public class TestScene3 implements IScene {
         glFont = new GLFont("GLFont1");
         glFont.text(
                 font,
-                TextFormatType.STRIKETHROUGH + "" + TextFormatType.ITALIC + "Hello" + " World!!" + TextFormatType.NEWLINE + "Hello World!!",
-                200, 500, 64, Color.of(255, 100, 100, 255), AlignType.LEFT_BASELINE
+                TextFormatType.STRIKETHROUGH + "Hello World!!" + TextFormatType.NEWLINE + "This is test text",
+                200, 500, 64, Color.of(255, 100, 100, 200), AlignType.LEFT_BASELINE
         );
     }
 

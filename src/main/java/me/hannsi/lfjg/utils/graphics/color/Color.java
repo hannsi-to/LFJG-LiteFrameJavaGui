@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.utils.graphics.color;
 
+import me.hannsi.lfjg.utils.math.MathHelper;
+
 import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.geom.AffineTransform;
@@ -416,6 +418,53 @@ public class Color {
      */
     public static Color of(String nm) {
         return new Color(nm);
+    }
+
+    public static Color getRandomColor(
+            int redMin, int redMax,
+            int greenMin, int greenMax,
+            int blueMin, int blueMax,
+            int alphaMin, int alphaMax
+    ) {
+        int red = MathHelper.getRandomInt(redMin, redMax);
+        int green = MathHelper.getRandomInt(greenMin, greenMax);
+        int blue = MathHelper.getRandomInt(blueMin, blueMax);
+        int alpha = MathHelper.getRandomInt(alphaMin, alphaMax);
+        return ColorUtil.fixColorRange(red, green, blue, alpha);
+    }
+
+    public static Color getRandomColor(
+            float redMin, float redMax,
+            float greenMin, float greenMax,
+            float blueMin, float blueMax,
+            float alphaMin, float alphaMax
+    ) {
+        return getRandomColor(
+                redMin * 255, redMax * 255,
+                greenMin * 255, greenMax * 255,
+                blueMin * 255, blueMax * 255,
+                alphaMin * 255, alphaMax * 255
+        );
+    }
+
+    public static Color getRandomColor(
+            int redMin, int redMax,
+            int greenMin, int greenMax,
+            int blueMin, int blueMax
+    ) {
+        return getRandomColor(redMin, redMax, greenMin, greenMax, blueMin, blueMax, 255, 255);
+    }
+
+    public static Color getRandomColor(
+            float redMin, float redMax,
+            float greenMin, float greenMax,
+            float blueMin, float blueMax
+    ) {
+        return getRandomColor(redMin, redMax, greenMin, greenMax, blueMin, blueMax, 255, 255);
+    }
+
+    public static Color getRandomColor() {
+        return getRandomColor(0, 255, 0, 255, 0, 255);
     }
 
     /**

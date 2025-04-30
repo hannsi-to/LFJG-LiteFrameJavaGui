@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.utils.toolkit;
 
+import me.hannsi.lfjg.utils.math.MathHelper;
+
 import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +13,7 @@ import java.util.regex.Pattern;
  * Utility class for various string operations.
  */
 public class StringUtil {
+    public static final String DEFAULT_CHARS_BASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     /**
      * Gets the first N characters of a string.
@@ -335,6 +338,20 @@ public class StringUtil {
         Random random = new Random();
         int index = random.nextInt(input.length());
         return input.charAt(index);
+    }
+
+    public static String getRandomString(String chars, int length) {
+        StringBuffer result = new StringBuffer();
+        for (int i = 0; i < length; i++) {
+            int index = MathHelper.getRandomInt(0, chars.length());
+            result.append(chars.charAt(index));
+        }
+
+        return result.toString();
+    }
+
+    public static String getRandomString(int length) {
+        return getRandomString(DEFAULT_CHARS_BASE, length);
     }
 
     public static String reverseString(String str) {

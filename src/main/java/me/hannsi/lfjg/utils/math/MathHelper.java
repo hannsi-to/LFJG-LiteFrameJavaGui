@@ -4,9 +4,7 @@ import org.joml.Math;
 import org.joml.Vector2d;
 import org.joml.Vector2f;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Utility class providing various mathematical functions and constants.
@@ -15,59 +13,61 @@ public class MathHelper {
     /**
      * Value of PI as double.
      */
-    public static double PI_d = (float) java.lang.Math.PI;
+    public static final double PI_d = (float) java.lang.Math.PI;
     /**
      * Value of PI as float.
      */
-    public static float PI = (float) java.lang.Math.PI;
+    public static final float PI = (float) java.lang.Math.PI;
     /**
      * Value of 2*PI as double.
      */
-    public static double PI_TIMES_2_d = PI_d * 2.0;
+    public static final double PI_TIMES_2_d = PI_d * 2.0;
     /**
      * Value of 2*PI as float.
      */
-    public static float PI_TIMES_2 = (float) (PI_d * 2.0f);
+    public static final float PI_TIMES_2 = (float) (PI_d * 2.0f);
     /**
      * Value of PI/2 as double.
      */
-    public static double PI_OVER_2_d = PI_d * 0.5;
+    public static final double PI_OVER_2_d = PI_d * 0.5;
     /**
      * Value of PI/2 as float.
      */
-    public static float PI_OVER_2 = (float) (PI_d * 0.5);
+    public static final float PI_OVER_2 = (float) (PI_d * 0.5);
     /**
      * Value of PI/4 as double.
      */
-    public static double PI_OVER_4_d = PI_d * 0.25;
+    public static final double PI_OVER_4_d = PI_d * 0.25;
     /**
      * Value of PI/4 as float.
      */
-    public static float PI_OVER_4 = (float) (PI_d * 0.25);
+    public static final float PI_OVER_4 = (float) (PI_d * 0.25);
     /**
      * Value of 1/PI as double.
      */
-    public static double ONE_OVER_PI_d = 1.0 / PI_d;
+    public static final double ONE_OVER_PI_d = 1.0 / PI_d;
     /**
      * Value of 1/PI as float.
      */
-    public static float ONE_OVER_PI = (float) (1.0 / PI_d);
+    public static final float ONE_OVER_PI = (float) (1.0 / PI_d);
     /**
      * Value of E as double.
      */
-    public static double E_d = java.lang.Math.E;
+    public static final double E_d = java.lang.Math.E;
     /**
      * Value of E as float.
      */
-    public static float E = (float) java.lang.Math.E;
+    public static final float E = (float) java.lang.Math.E;
     /**
      * Value of TAU as double.
      */
-    public static double TAU_d = java.lang.Math.TAU;
+    public static final double TAU_d = java.lang.Math.TAU;
     /**
      * Value of TAU as float.
      */
-    public static float TAU = (float) java.lang.Math.TAU;
+    public static final float TAU = (float) java.lang.Math.TAU;
+
+    public static final Random RANDOM = new Random();
 
     /**
      * Clamps the given value between a and b.
@@ -2972,5 +2972,74 @@ public class MathHelper {
         float midX = (a.x() + b.x()) / 2.0f;
         float midY = (a.y() + b.y()) / 2.0f;
         return new Vector2f(midX, midY);
+    }
+
+    public static int getRandomInt(int min, int max) {
+        return RANDOM.nextInt((max - min) + 1) + min;
+    }
+
+    public static double getRandomDouble(double min, double max) {
+        return min + (max - min) * RANDOM.nextDouble();
+    }
+
+    public static float getRandomFloat(float min, float max) {
+        return min + (max - min) * RANDOM.nextFloat();
+    }
+
+    public static boolean getRandomBoolean() {
+        return RANDOM.nextBoolean();
+    }
+
+    public static <T> T getRandomElement(T[] array) {
+        if (array == null || array.length == 0) {
+            throw new IllegalArgumentException("The array passed is invalid.");
+        }
+
+        int index = RANDOM.nextInt(array.length);
+        return array[index];
+    }
+
+    public static int tossCoin(int times) {
+        int count = 0;
+        for (int i = 0; i < times; i++) {
+            if (getRandomBoolean()) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    public static <T> void shuffleList(List<T> list) {
+        Collections.shuffle(list, RANDOM);
+    }
+
+    public static int randomSign() {
+        return getRandomBoolean() ? 1 : -1;
+    }
+
+    public static <T> T getWeightedRandomElement(T[] elements, int[] weights) {
+        if (elements.length != weights.length || elements.length == 0) {
+            throw new IllegalArgumentException("Element and weight list sizes are not equal or list contents are empty.");
+        }
+
+        int totalWeight = 0;
+        for (int w : weights) {
+            if (w < 0) {
+                throw new IllegalArgumentException("Negative to weight cannot be used.");
+            }
+            totalWeight += w;
+        }
+
+        int randomWeight = RANDOM.nextInt(totalWeight);
+        int currentSum = 0;
+
+        for (int i = 0; i < elements.length; i++) {
+            currentSum += weights[i];
+            if (randomWeight < currentSum) {
+                return elements[i];
+            }
+        }
+        throw new IllegalStateException("Weight selection error");
     }
 }
