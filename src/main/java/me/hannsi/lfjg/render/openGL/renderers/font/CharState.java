@@ -1,22 +1,57 @@
 package me.hannsi.lfjg.render.openGL.renderers.font;
 
-public class CharState {
-    public boolean obfuscated;
-    public char obfuscatedChar;
-    public boolean drawStrikethrough;
-    public float strikethroughLineX;
-    public float strikethroughLineY;
-    public float strikethroughLineWidth;
-    public float strikethroughLineHeight;
-    public boolean drawUnderLine;
-    public float underLineX;
-    public float underLineY;
-    public float underLineWidth;
-    public float underLineHeight;
-    public boolean italic;
-    public boolean plusSize;
-    public boolean bold;
+import me.hannsi.lfjg.utils.graphics.color.Color;
+import me.hannsi.lfjg.utils.type.types.TextFormatType;
 
-    public CharState() {
+public class CharState {
+    public Color defaultColor;
+    public Color color;
+    public boolean obfuscated;
+    public boolean strikethrough;
+    public boolean underLine;
+    public boolean italic;
+    public boolean bold;
+    public boolean spaseX;
+    public boolean spaseY;
+    public boolean spaseCheck;
+    public String spase;
+
+    public CharState(Color defaultColor) {
+        this.defaultColor = defaultColor;
+        reset();
+    }
+
+    public void reset() {
+        this.color = null;
+        this.obfuscated = false;
+        this.strikethrough = false;
+        this.underLine = false;
+        this.italic = false;
+        this.bold = false;
+        this.spaseX = false;
+        this.spaseY = false;
+        this.spaseCheck = false;
+        this.spase = "";
+    }
+
+    public void setState(TextFormatType textFormatType) {
+        switch (textFormatType) {
+            case BLACK, DARK_BLUE, DARK_GREEN, DARK_AQUA, DARK_RED, DARK_PURPLE, GOLD, GRAY, DARK_GRAY, BLUE, GREEN,
+                 AQUA, RED, LIGHT_PURPLE, YELLOW, WHITE -> color = TextFormatType.getColor(textFormatType);
+            case OBFUSCATED -> obfuscated = true;
+            case BOLD -> bold = true;
+            case STRIKETHROUGH -> strikethrough = true;
+            case UNDERLINE -> underLine = true;
+            case ITALIC -> italic = true;
+            case REST -> reset();
+            case NEWLINE -> {
+            }
+            case SPASE_X -> this.spaseX = true;
+            case SPASE_Y -> this.spaseY = true;
+            case RESET_POINT_X -> {
+            }
+            case RESET_POINT_Y -> {
+            }
+        }
     }
 }

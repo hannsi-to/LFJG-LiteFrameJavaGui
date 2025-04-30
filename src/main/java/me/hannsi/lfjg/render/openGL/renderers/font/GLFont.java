@@ -14,7 +14,6 @@ import org.lwjgl.opengl.GL30;
 
 import java.util.List;
 
-import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.*;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgBeginPath;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgClosePath;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgFill;
@@ -33,6 +32,7 @@ import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTextAlign;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTextBounds;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTextMetrics;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTransform;
+import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.*;
 import static org.lwjgl.nanovg.NanoVG.*;
 
 /**
@@ -141,147 +141,135 @@ public class GLFont extends GLRect {
 
         float offsetX = 0.0f;
         float offsetY = 0.0f;
+        float spaseX = 0.0f;
+        float spaseY = 0.0f;
         boolean code = false;
-        boolean obfuscated = false;
-        char obfuscatedChar = '\u0000';
-        boolean drawStrikethrough = false;
-        float strikethroughLineX = 0.0f;
-        float strikethroughLineY = 0.0f;
-        float strikethroughLineWidth = 0.0f;
-        float strikethroughLineHeight = 0.0f;
-        boolean drawUnderline = false;
-        float underLineX = 0.0f;
-        float underLineY = 0.0f;
-        float underLineWidth = 0.0f;
-        float underLineHeight = 0.0f;
-        boolean italic = false;
-        float size = 0.0f;
         TextFormatType textFormatType = null;
-        boolean bold = false;
+        CharState charState = new CharState(color);
+
+        float size = 0.0f;
 
         for (char ch : StringUtil.getChars(text)) {
-            if (code) {
-                textFormatType = TextFormatType.getTextFormatType(ch);
-                code = false;
-                continue;
-            }
-
-            if (textFormatType != null) {
-                Color textFormatColor = TextFormatType.getColor(textFormatType);
-                if (textFormatColor != null) {
-                    color = textFormatColor;
-                }
-
-                switch (textFormatType) {
-                    case REST -> {
-                        drawStrikethrough = false;
-                        strikethroughLineX = 0.0f;
-                        strikethroughLineY = 0.0f;
-                        strikethroughLineWidth = 0.0f;
-                        strikethroughLineHeight = 0.0f;
-                        drawUnderline = false;
-                        underLineX = 0.0f;
-                        underLineY = 0.0f;
-                        underLineWidth = 0.0f;
-                        underLineHeight = 0.0f;
-                        italic = false;
-                        size = 0.0f;
-                        textFormatType = null;
-                        obfuscated = false;
-                        obfuscatedChar = '\u0000';
-                        bold = false;
-                    }
-                    case OBFUSCATED -> {
-                        String characters = "1234567890abcdefghijklmnopqrstuvwxyz~!@#$%^&*()-=_+{}[]";
-                        obfuscatedChar = StringUtil.getRandomCharacter(characters);
-                        obfuscated = true;
-                    }
-                    case BOLD -> {
-                        bold = true;
-                        size = 10f;
-                    }
-                    case STRIKETHROUGH -> {
-                        List<Integer> alignments = AlignExtractor.getAlignmentsAsInteger(align);
-
-                        for (Integer integer : alignments) {
-                            switch (integer) {
-                                case NVG_ALIGN_LEFT:
-                                    strikethroughLineX = 0.0f;
-                                    strikethroughLineWidth = getTextWidth(ch);
-                                    break;
-                                case NVG_ALIGN_CENTER:
-                                    float widthCenter = getTextWidth(ch) / 2f;
-                                    strikethroughLineX = -widthCenter;
-                                    strikethroughLineWidth = getTextWidth(ch);
-                                    break;
-                                case NVG_ALIGN_RIGHT:
-                                    strikethroughLineX = -getTextWidth(ch);
-                                    strikethroughLineWidth = getTextWidth(ch);
-                                    break;
-                            }
-                        }
-
-                        strikethroughLineY = fontSize * 0.3f;
-
-                        drawStrikethrough = true;
-                    }
-                    case UNDERLINE -> {
-                        List<Integer> alignments = AlignExtractor.getAlignmentsAsInteger(align);
-
-                        for (Integer integer : alignments) {
-                            switch (integer) {
-                                case NVG_ALIGN_LEFT:
-                                    underLineX = 0.0f;
-                                    underLineWidth = getTextWidth(ch);
-                                    break;
-                                case NVG_ALIGN_CENTER:
-                                    float widthCenter = getTextWidth(ch) / 2f;
-                                    underLineX = -widthCenter;
-                                    underLineWidth = getTextWidth(ch);
-                                    break;
-                                case NVG_ALIGN_RIGHT:
-                                    underLineX = -getTextWidth(ch);
-                                    underLineWidth = getTextWidth(ch);
-                                    break;
-                            }
-                        }
-
-                        float[] ascender = new float[1];
-                        float[] descender = new float[1];
-                        float[] lineHeight = new float[1];
-
-                        nvgTextMetrics(ascender, descender, lineHeight);
-
-                        float lineOffset = fontSize * 0.3f;
-                        float middleLine = -(ascender[0] - descender[0]) / 2f;
-                        underLineY = middleLine + lineOffset;
-
-                        drawUnderline = true;
-                    }
-                    case ITALIC -> italic = true;
-                    case NEWLINE -> {
-                        offsetX = 0.0f;
-                        offsetY -= getTextHeight();
-                        textFormatType = null;
-                    }
-                }
-            }
+            float strikethroughLineX = 0.0f;
+            float strikethroughLineY = 0.0f;
+            float strikethroughLineWidth = 0.0f;
+            float strikethroughLineHeight = 0.0f;
+            float underLineX = 0.0f;
+            float underLineY = 0.0f;
+            float underLineWidth = 0.0f;
+            float underLineHeight = 0.0f;
 
             if (ch == TextFormatType.PREFIX_CODE) {
                 code = true;
                 continue;
             }
 
-            float lineWidth = bold ? fontSize + size / 10f : fontSize / 10f;
-            drawNanoVGText(fontName, obfuscated ? obfuscatedChar : ch, x + offsetX, y + offsetY, color, align, italic, bold ? size : 0);
-            if (drawStrikethrough) {
-                drawLineWH(x + offsetX + strikethroughLineX, y + offsetY + strikethroughLineY, strikethroughLineWidth, strikethroughLineHeight, lineWidth, Color.getRandomColor());
-            }
-            if (drawUnderline) {
-                drawLineWH(x + offsetX + underLineX, y + offsetY + underLineY, underLineWidth, underLineHeight, lineWidth, Color.getRandomColor());
+            if (code) {
+                textFormatType = TextFormatType.getTextFormatType(ch);
+                code = false;
+                if (textFormatType != null) {
+                    charState.setState(textFormatType);
+                } else {
+
+                }
+
+                continue;
             }
 
-            offsetX += getTextWidth(ch);
+            if (charState.obfuscated) {
+                String characters = "1234567890abcdefghijklmnopqrstuvwxyz~!@#$%^&*()-=_+{}[]";
+                ch = StringUtil.getRandomCharacter(characters);
+            }
+            if (charState.strikethrough) {
+                List<Integer> alignments = AlignExtractor.getAlignmentsAsInteger(align);
+
+                for (Integer integer : alignments) {
+                    switch (integer) {
+                        case NVG_ALIGN_LEFT:
+                            strikethroughLineX = 0.0f;
+                            strikethroughLineWidth = getTextWidth(ch);
+                            break;
+                        case NVG_ALIGN_CENTER:
+                            float widthCenter = getTextWidth(ch) / 2f;
+                            strikethroughLineX = -widthCenter;
+                            strikethroughLineWidth = getTextWidth(ch);
+                            break;
+                        case NVG_ALIGN_RIGHT:
+                            strikethroughLineX = -getTextWidth(ch);
+                            strikethroughLineWidth = getTextWidth(ch);
+                            break;
+                    }
+                }
+
+                strikethroughLineY = fontSize * 0.3f;
+            }
+            if (charState.underLine) {
+                List<Integer> alignments = AlignExtractor.getAlignmentsAsInteger(align);
+
+                for (Integer integer : alignments) {
+                    switch (integer) {
+                        case NVG_ALIGN_LEFT:
+                            underLineX = 0.0f;
+                            underLineWidth = getTextWidth(ch);
+                            break;
+                        case NVG_ALIGN_CENTER:
+                            float widthCenter = getTextWidth(ch) / 2f;
+                            underLineX = -widthCenter;
+                            underLineWidth = getTextWidth(ch);
+                            break;
+                        case NVG_ALIGN_RIGHT:
+                            underLineX = -getTextWidth(ch);
+                            underLineWidth = getTextWidth(ch);
+                            break;
+                    }
+                }
+
+                float[] ascender = new float[1];
+                float[] descender = new float[1];
+                float[] lineHeight = new float[1];
+
+                nvgTextMetrics(ascender, descender, lineHeight);
+
+                float lineOffset = fontSize * 0.3f;
+                float middleLine = -(ascender[0] - descender[0]) / 2f;
+                underLineY = middleLine + lineOffset;
+            }
+            if (textFormatType == TextFormatType.NEWLINE) {
+                offsetX = 0;
+                offsetY -= (getTextHeight() + spaseY);
+                textFormatType = null;
+            }
+            if (charState.spaseX || charState.spaseY) {
+                if (ch == '{') {
+                    charState.spaseCheck = true;
+                    continue;
+                } else if (ch == '}') {
+                    charState.spaseCheck = false;
+                    continue;
+                } else if (charState.spaseCheck) {
+                    charState.spase = charState.spase + StringUtil.getStringFromChar(ch);
+                    continue;
+                }
+                if (charState.spaseX) {
+                    spaseX += Float.parseFloat(charState.spase);
+                    charState.spaseX = false;
+                }
+                if (charState.spaseY) {
+                    spaseY += Float.parseFloat(charState.spase);
+                    charState.spaseY = false;
+                }
+            }
+
+            float lineWidth = charState.bold ? fontSize + size / 10f : fontSize / 10f;
+            drawNanoVGText(fontName, ch, x + offsetX, y + offsetY, color, align, charState.italic, charState.bold ? 10f : 0);
+            if (charState.strikethrough) {
+                drawLineWH(x + offsetX + strikethroughLineX, y + offsetY + strikethroughLineY, strikethroughLineWidth + spaseX, strikethroughLineHeight, lineWidth, color);
+            }
+            if (charState.underLine) {
+                drawLineWH(x + offsetX + underLineX, y + offsetY + underLineY, underLineWidth + spaseX, underLineHeight, lineWidth, color);
+            }
+
+            offsetX += getTextWidth(ch) + spaseX;
         }
 
         nvgFramePop();
