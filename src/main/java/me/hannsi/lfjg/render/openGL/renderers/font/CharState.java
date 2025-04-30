@@ -48,10 +48,6 @@ public class CharState {
             }
             case SPASE_X -> this.spaseX = true;
             case SPASE_Y -> this.spaseY = true;
-            case RESET_POINT_X -> {
-            }
-            case RESET_POINT_Y -> {
-            }
         }
     }
 }

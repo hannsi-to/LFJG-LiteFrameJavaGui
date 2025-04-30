@@ -29,9 +29,7 @@ public enum TextFormatType implements IEnumTypeBase {
     REST("Rest", 21, "r"),
     NEWLINE("NewLine", 22, "l"),
     SPASE_X("SpaceX", 23, "m"),
-    SPASE_Y("SpaceY", 24, "n"),
-    RESET_POINT_X("ResetPointX", 25, "o"),
-    RESET_POINT_Y("ResetPointY", 26, "p");
+    SPASE_Y("SpaceY", 24, "n");
 
     public static final char PREFIX_CODE = '§';
 

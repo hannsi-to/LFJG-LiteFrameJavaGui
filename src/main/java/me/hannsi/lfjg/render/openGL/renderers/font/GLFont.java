@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL30;
 
 import java.util.List;
 
+import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.*;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgBeginPath;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgClosePath;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgFill;
@@ -32,7 +33,6 @@ import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTextAlign;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTextBounds;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTextMetrics;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTransform;
-import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.*;
 import static org.lwjgl.nanovg.NanoVG.*;
 
 /**
@@ -144,7 +144,7 @@ public class GLFont extends GLRect {
         float spaseX = 0.0f;
         float spaseY = 0.0f;
         boolean code = false;
-        TextFormatType textFormatType = null;
+        TextFormatType textFormatType;
         CharState charState = new CharState(color);
 
         float size = 0.0f;
@@ -169,6 +169,11 @@ public class GLFont extends GLRect {
                 code = false;
                 if (textFormatType != null) {
                     charState.setState(textFormatType);
+
+                    if (textFormatType == TextFormatType.NEWLINE) {
+                        offsetX = 0;
+                        offsetY -= (getTextHeight());
+                    }
                 } else {
 
                 }
@@ -234,11 +239,6 @@ public class GLFont extends GLRect {
                 float middleLine = -(ascender[0] - descender[0]) / 2f;
                 underLineY = middleLine + lineOffset;
             }
-            if (textFormatType == TextFormatType.NEWLINE) {
-                offsetX = 0;
-                offsetY -= (getTextHeight() + spaseY);
-                textFormatType = null;
-            }
             if (charState.spaseX || charState.spaseY) {
                 if (ch == '{') {
                     charState.spaseCheck = true;
@@ -251,11 +251,13 @@ public class GLFont extends GLRect {
                     continue;
                 }
                 if (charState.spaseX) {
-                    spaseX += Float.parseFloat(charState.spase);
+                    spaseX = Float.parseFloat(charState.spase);
+                    charState.spase = "";
                     charState.spaseX = false;
                 }
                 if (charState.spaseY) {
-                    spaseY += Float.parseFloat(charState.spase);
+                    spaseY = Float.parseFloat(charState.spase);
+                    offsetY -= spaseY;
                     charState.spaseY = false;
                 }
             }
