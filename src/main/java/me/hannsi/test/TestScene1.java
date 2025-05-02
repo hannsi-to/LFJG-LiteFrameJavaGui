@@ -31,7 +31,7 @@ import org.joml.Vector3f;
 import org.lwjgl.openal.AL11;
 
 import static me.hannsi.lfjg.frame.frame.LFJGContext.frame;
-import static me.hannsi.lfjg.frame.frame.LFJGContext.resolution;
+import static me.hannsi.lfjg.frame.frame.LFJGContext.frameBufferSize;
 
 public class TestScene1 implements IScene {
     public Scene scene;
@@ -129,7 +129,7 @@ public class TestScene1 implements IScene {
         gl1.rectWH(0, 0, 1920, 1080, Color.of(0, 0, 0, 0));
 
         glGround = new GLRect("Ground");
-        glGround.rect(0, 0, resolution.x, 1, Color.of(255, 255, 255, 255));
+        glGround.rect(0, 0, frameBufferSize.x, 1, Color.of(255, 255, 255, 255));
 
         int alpha = 255;
 //        glFont = new GLFont("Font");
@@ -140,7 +140,7 @@ public class TestScene1 implements IScene {
         glTriangle.triangle(0, 0, 500, 0, 250, 500, Color.of(255, 255, 255, alpha), Color.of(255, 255, 0, alpha), Color.of(255, 255, 255, alpha));
 
         glShader = new GLShader("Shader1");
-        glShader.shader(new ResourcesLocation("shader/test/test.fsh"), 0, 0, frame.getWindowWidth(), frame.getWindowHeight());
+        glShader.shader(new ResourcesLocation("shader/test/test.fsh"), 0, 0, frame.getFrameBufferWidth(), frame.getFrameBufferHeight());
 
         glSVG = new GLSVG("SVG1");
         glSVG.svg(new ResourcesLocation("svg/delete.svg"), 100, 100, 5, 5);

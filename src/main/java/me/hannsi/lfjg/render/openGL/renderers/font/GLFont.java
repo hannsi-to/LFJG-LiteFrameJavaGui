@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.openGL.renderers.font;
 
-import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.system.font.Font;
 import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
@@ -85,12 +84,12 @@ public class GLFont extends GLRect {
         this.textX = x;
         this.textY = y;
 
-        this.frameBuffer = new FrameBuffer(0, 0, LFJGContext.resolution.x(), LFJGContext.resolution.y());
+        this.frameBuffer = new FrameBuffer(0, 0, getWidth(), getHeight());
         this.frameBuffer.createFrameBuffer();
         this.frameBuffer.createShaderProgram();
 
         uv(0, 0, 1, 1);
-        rectWH(0, 0, LFJGContext.resolution.x(), LFJGContext.resolution.y(), new Color(0, 0, 0, 0));
+        rectWH(x, y, getWidth(), getHeight(), new Color(0, 0, 0, 0));
     }
 
     public float getWidth() {
@@ -125,7 +124,7 @@ public class GLFont extends GLRect {
     public void draw() {
         frameBuffer.bindFrameBuffer();
 
-        drawTextFormat(font.getName(), textX, textY, color, align.getId());
+        drawTextFormat(font.getName(), 0, 0, color, align.getId());
 
         frameBuffer.unbindFrameBuffer();
 

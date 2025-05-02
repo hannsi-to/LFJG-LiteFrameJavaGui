@@ -65,8 +65,8 @@ public class GLFWCallback implements IFrame {
                     return;
                 }
 
-                frame.setWindowWidth(width);
-                frame.setWindowHeight(height);
+                frame.setFrameBufferWidth(width);
+                frame.setFrameBufferHeight(height);
             }
         };
         glfwSetFramebufferSizeCallback(frame.getWindowID(), framebufferSizeCallback);

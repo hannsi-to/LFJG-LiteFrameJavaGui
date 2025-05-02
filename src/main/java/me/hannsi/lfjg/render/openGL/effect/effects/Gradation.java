@@ -108,7 +108,7 @@ public class Gradation extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("center", new Vector2f(centerX / LFJGContext.resolution.x, centerY / LFJGContext.resolution.y));
+        getFrameBuffer().getShaderProgramFBO().setUniform("center", new Vector2f(centerX / LFJGContext.frameBufferSize.x, centerY / LFJGContext.frameBufferSize.y));
         getFrameBuffer().getShaderProgramFBO().setUniform("angle", angle);
         getFrameBuffer().getShaderProgramFBO().setUniform("width", width);
         getFrameBuffer().getShaderProgramFBO().setUniform1i("gradientShape", shapeMode.getId());

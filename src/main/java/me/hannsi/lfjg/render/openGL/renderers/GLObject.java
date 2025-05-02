@@ -158,7 +158,7 @@ public class GLObject implements Cloneable {
         shaderProgram.setUniform("projectionMatrix", LFJGContext.projection.getProjMatrix());
         shaderProgram.setUniform("modelMatrix", modelMatrix);
         shaderProgram.setUniform("viewMatrix", viewMatrix);
-        shaderProgram.setUniform("resolution", LFJGContext.resolution);
+        shaderProgram.setUniform("resolution", LFJGContext.frameBufferSize);
 
         if (mesh.getTexture() != null) {
             shaderProgram.setUniform1i("textureSampler", 0);

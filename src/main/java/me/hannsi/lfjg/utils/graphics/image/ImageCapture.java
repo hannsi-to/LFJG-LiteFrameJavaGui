@@ -34,8 +34,8 @@ public class ImageCapture {
     public ImageCapture(FileLocation filePath) {
         this.filePath = filePath;
 
-        this.width = (int) LFJGContext.resolution.x();
-        this.height = (int) LFJGContext.resolution.y();
+        this.width = (int) LFJGContext.frameBufferSize.x();
+        this.height = (int) LFJGContext.frameBufferSize.y();
         this.imageLoaderType = ImageLoaderType.STB_IMAGE;
         this.javaCVImageFormat = JavaCVImageFormat.PNG;
         this.colorFormatType = ColorFormatType.RGB;

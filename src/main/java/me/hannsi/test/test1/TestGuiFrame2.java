@@ -32,8 +32,8 @@ public class TestGuiFrame2 implements LFJGFrame {
 
     @Override
     public void init() {
-        LFJGContext.projection = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, frame.getWindowWidth(), frame.getWindowHeight());
-        LFJGContext.resolution = new Vector2f(frame.getWindowWidth(), frame.getWindowHeight());
+        LFJGContext.projection = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, frame.getFrameBufferWidth(), frame.getFrameBufferHeight());
+        LFJGContext.frameBufferSize = new Vector2f(frame.getFrameBufferWidth(), frame.getFrameBufferHeight());
 
         glRect1 = new GLRect("Rect1");
         glRect1.rect(500, 500, 1000, 1000, Color.RED);

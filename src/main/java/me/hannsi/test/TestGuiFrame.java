@@ -4,18 +4,15 @@ import me.hannsi.lfjg.frame.event.events.user.*;
 import me.hannsi.lfjg.frame.event.system.EventHandler;
 import me.hannsi.lfjg.frame.frame.Frame;
 import me.hannsi.lfjg.frame.frame.IFrame;
-import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.frame.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.render.openGL.system.scene.SceneSystem;
-import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import me.hannsi.lfjg.utils.toolkit.Camera;
 import me.hannsi.lfjg.utils.toolkit.KeyboardInfo;
 import me.hannsi.lfjg.utils.toolkit.MouseInfo;
 import me.hannsi.lfjg.utils.type.types.AntiAliasingType;
 import me.hannsi.lfjg.utils.type.types.MonitorType;
-import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.utils.type.types.VSyncType;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
@@ -40,8 +37,7 @@ public class TestGuiFrame implements LFJGFrame {
     public void init() {
         IFrame.eventManager.register(this);
 
-        LFJGContext.projection = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, frame.getWindowWidth(), frame.getWindowHeight());
-        LFJGContext.resolution = new Vector2f(frame.getWindowWidth(), frame.getWindowHeight());
+        frame.updateLFJGLContext();
 
         sceneSystem = new SceneSystem();
         sceneSystem.addScene(new TestScene1().getScene());

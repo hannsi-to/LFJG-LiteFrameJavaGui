@@ -31,10 +31,10 @@ public class TestScene2 implements IScene {
     @Override
     public void init() {
         glGround1 = new GLRect("GLGround1");
-        glGround1.rect(0, 0, LFJGContext.resolution.x(), 5, new Color(255, 255, 255, 255));
+        glGround1.rect(0, 0, LFJGContext.frameBufferSize.x(), 5, new Color(255, 255, 255, 255));
 
         glRect1 = new GLRect("GLRect1");
-        glRect1.rectWH(LFJGContext.resolution.x() / 2f, LFJGContext.resolution.y(), 50, 50, new Color(255, 255, 255, 255));
+        glRect1.rectWH(LFJGContext.frameBufferSize.x() / 2f, LFJGContext.frameBufferSize.y(), 50, 50, new Color(255, 255, 255, 255));
 
         physicWorld = new PhysicWorld();
 

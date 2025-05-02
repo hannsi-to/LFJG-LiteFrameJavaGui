@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.openGL.system.rendering;
 
-import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import org.joml.Vector2f;
 
@@ -102,8 +102,8 @@ public class SplitFrameBuffer {
 
                 int distX0 = 0;
                 int distY0 = 0;
-                int distX1 = (int) LFJGContext.resolution.x();
-                int distY1 = (int) LFJGContext.resolution.y();
+                int distX1 = (int) LFJGContext.frameBufferSize.x();
+                int distY1 = (int) LFJGContext.frameBufferSize.y();
 
                 glBlitFramebuffer(srcX0, srcY0, srcX1, srcY1, distX0, distY0, distX1, distY1, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 

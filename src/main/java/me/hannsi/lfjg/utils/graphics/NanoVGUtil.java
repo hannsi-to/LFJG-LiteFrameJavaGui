@@ -7,14 +7,13 @@ import org.lwjgl.nanovg.NanoVG;
 
 import java.nio.ByteBuffer;
 
-import static me.hannsi.lfjg.frame.frame.LFJGContext.nanoVGContext;
-import static me.hannsi.lfjg.frame.frame.LFJGContext.projection;
+import static me.hannsi.lfjg.frame.frame.LFJGContext.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class NanoVGUtil {
     public static void nvgFramePush() {
         glPushAttrib(GL_ALL_ATTRIB_BITS);
-        nvgBeginFrame(projection.getWindowWidth(), projection.getWindowHeight(), 1);
+        nvgBeginFrame(frameBufferSize.x(), frameBufferSize.y(), devicePixelRatio);
 
         nvgSave();
     }
@@ -29,7 +28,7 @@ public class NanoVGUtil {
         float ox = openGLCoordinate.x();
         float oy = openGLCoordinate.y();
         float nx = ox;
-        float ny = projection.getWindowHeight() - oy;
+        float ny = frameBufferSize.y() - oy;
         return new Vector2f(nx, ny);
     }
 

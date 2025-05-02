@@ -52,7 +52,7 @@ public class FrameBuffer {
     }
 
     public FrameBuffer(boolean uesStencil, GLObject glObject) {
-        this(uesStencil, glObject, 0, 0, LFJGContext.resolution.x(), LFJGContext.resolution.y());
+        this(uesStencil, glObject, 0, 0, LFJGContext.frameBufferSize.x(), LFJGContext.frameBufferSize.y());
     }
 
     /**

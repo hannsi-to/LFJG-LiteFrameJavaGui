@@ -12,6 +12,7 @@ import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.utils.graphics.GLFWUtil;
 import me.hannsi.lfjg.utils.math.ANSIFormat;
+import me.hannsi.lfjg.utils.math.MathHelper;
 import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.time.TimeCalculator;
 import me.hannsi.lfjg.utils.time.TimeSourceUtil;
@@ -44,6 +45,8 @@ public class Frame implements IFrame {
     private int fps;
     private int windowWidth;
     private int windowHeight;
+    private int frameBufferWidth;
+    private int frameBufferHeight;
     private float contentScaleX;
     private float contentScaleY;
     private long currentTime;
@@ -110,9 +113,12 @@ public class Frame implements IFrame {
         }
 
         Vector2i windowSizes = GLFWUtil.getWindowSize(getWindowID());
+        Vector2i frameBufferSize = GLFWUtil.getFrameBufferSize(getWindowID());
         Vector2f contentScale = GLFWUtil.getContentScale(this);
         windowWidth = windowSizes.x();
         windowHeight = windowSizes.y();
+        frameBufferWidth = frameBufferSize.x();
+        frameBufferHeight = frameBufferSize.y();
         contentScaleX = contentScale.x();
         contentScaleY = contentScale.y();
 
@@ -243,8 +249,12 @@ public class Frame implements IFrame {
     }
 
     public void updateLFJGLContext() {
-        LFJGContext.resolution = new Vector2f(getWindowWidth(), getWindowHeight());
-        LFJGContext.projection = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, getWindowWidth(), getWindowHeight());
+        LFJGContext.frameBufferSize = new Vector2f(getFrameBufferWidth(), getFrameBufferHeight());
+        LFJGContext.windowSize = new Vector2f(getWindowWidth(), getWindowHeight());
+        float devicePixelRatioX = (float) frameBufferWidth / windowWidth;
+        float devicePixelRatioY = (float) frameBufferHeight / windowHeight;
+        LFJGContext.devicePixelRatio = MathHelper.max(devicePixelRatioX, devicePixelRatioY);
+        LFJGContext.projection = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, getFrameBufferWidth(), getFrameBufferHeight());
     }
 
     /**
@@ -336,11 +346,11 @@ public class Frame implements IFrame {
      * Updates the viewport based on the window size and content scale.
      */
     public void updateViewport() {
-        GL11.glViewport(0, 0, windowWidth, windowHeight);
+        GL11.glViewport(0, 0, frameBufferWidth, frameBufferHeight);
 
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();
-        GL11.glOrtho(0, windowWidth / contentScaleX, 0, windowHeight / contentScaleY, -1, 1);
+        GL11.glOrtho(0, frameBufferWidth / contentScaleX, 0, frameBufferHeight / contentScaleY, -1, 1);
 
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         GL11.glLoadIdentity();
@@ -552,17 +562,17 @@ public class Frame implements IFrame {
      *
      * @return The window height.
      */
-    public int getWindowHeight() {
-        return windowHeight;
+    public int getFrameBufferHeight() {
+        return frameBufferHeight;
     }
 
     /**
      * Sets the window height.
      *
-     * @param windowHeight The window height to set.
+     * @param frameBufferHeight The window height to set.
      */
-    public void setWindowHeight(int windowHeight) {
-        this.windowHeight = windowHeight;
+    public void setFrameBufferHeight(int frameBufferHeight) {
+        this.frameBufferHeight = frameBufferHeight;
     }
 
     /**
@@ -570,17 +580,17 @@ public class Frame implements IFrame {
      *
      * @return The window width.
      */
-    public int getWindowWidth() {
-        return windowWidth;
+    public int getFrameBufferWidth() {
+        return frameBufferWidth;
     }
 
     /**
      * Sets the window width.
      *
-     * @param windowWidth The window width to set.
+     * @param frameBufferWidth The window width to set.
      */
-    public void setWindowWidth(int windowWidth) {
-        this.windowWidth = windowWidth;
+    public void setFrameBufferWidth(int frameBufferWidth) {
+        this.frameBufferWidth = frameBufferWidth;
     }
 
     /**
@@ -651,5 +661,21 @@ public class Frame implements IFrame {
 
     public void setShouldCleanup(boolean shouldCleanup) {
         this.shouldCleanup = shouldCleanup;
+    }
+
+    public int getWindowWidth() {
+        return windowWidth;
+    }
+
+    public void setWindowWidth(int windowWidth) {
+        this.windowWidth = windowWidth;
+    }
+
+    public int getWindowHeight() {
+        return windowHeight;
+    }
+
+    public void setWindowHeight(int windowHeight) {
+        this.windowHeight = windowHeight;
     }
 }

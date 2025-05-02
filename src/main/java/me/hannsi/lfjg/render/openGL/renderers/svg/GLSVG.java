@@ -62,7 +62,7 @@ public class GLSVG extends GLRect {
         svgRenderer.init();
 
         uv(0, 0, 1, 1);
-        rectWH(0, 0, LFJGContext.resolution.x(), LFJGContext.resolution.y(), new Color(0, 0, 0, 0));
+        rectWH(0, 0, LFJGContext.frameBufferSize.x(), LFJGContext.frameBufferSize.y(), new Color(0, 0, 0, 0));
     }
 
     public void svg(ByteBuffer svgData, double x, double y, double scaleX, double scaleY) {
