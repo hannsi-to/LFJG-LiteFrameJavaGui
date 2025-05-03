@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.openGL.renderers.svg;
 
-import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.utils.graphics.color.Color;
@@ -53,16 +52,16 @@ public class GLSVG extends GLRect {
 
         createTexture(svg, svgWidth, svgHeight, scaleX, scaleY);
 
-        frameBuffer = new FrameBuffer();
+        frameBuffer = new FrameBuffer(0, 0, svgWidth * scaleX, svgHeight * scaleY);
         frameBuffer.createFrameBuffer();
         frameBuffer.createShaderProgram();
 
         svgRenderer = new SVGRenderer();
-        svgRenderer.addVertex(x, y, svgWidth * scaleX, svgHeight * scaleY);
+        svgRenderer.addVertex(0, 0, svgWidth * scaleX, svgHeight * scaleY);
         svgRenderer.init();
 
         uv(0, 0, 1, 1);
-        rectWH(0, 0, LFJGContext.frameBufferSize.x(), LFJGContext.frameBufferSize.y(), new Color(0, 0, 0, 0));
+        rectWH(x, y, svgWidth * scaleX, svgHeight * scaleY, new Color(0, 0, 0, 0));
     }
 
     public void svg(ByteBuffer svgData, double x, double y, double scaleX, double scaleY) {
