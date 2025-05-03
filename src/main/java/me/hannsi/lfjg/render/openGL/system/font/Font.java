@@ -2,9 +2,11 @@ package me.hannsi.lfjg.render.openGL.system.font;
 
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.Location;
+import me.hannsi.lfjg.utils.reflection.location.URLLocation;
 import me.hannsi.lfjg.utils.toolkit.IOUtil;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.ByteBuffer;
 
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgCreateFontMem;
@@ -19,15 +21,20 @@ public class Font {
         this.location = location;
 
         InputStream inputStream = null;
-        if (location.isUrl()) {
+        try {
+            if (location.isUrl()) {
+                URL url = ((URLLocation) location).getURL();
+                inputStream = url.openStream();
+            } else if (location.isPath()) {
+                FileLocation fileLocation = (FileLocation) location;
+                inputStream = fileLocation.getInputStream();
+            }
 
-        } else if (location.isPath()) {
-            FileLocation fileLocation = (FileLocation) location;
-            inputStream = fileLocation.getInputStream();
-        }
-
-        if (inputStream == null) {
-            throw new RuntimeException("Invalid font location");
+            if (inputStream == null) {
+                throw new RuntimeException("Invalid font location: " + location);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load font from location: " + location, e);
         }
 
         this.byteBuffer = IOUtil.toByteBuffer(inputStream);
