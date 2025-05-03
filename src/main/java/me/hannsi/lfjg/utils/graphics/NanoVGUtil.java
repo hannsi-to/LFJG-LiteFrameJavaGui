@@ -145,6 +145,10 @@ public class NanoVGUtil {
         NanoVG.nvgStroke(nanoVGContext);
     }
 
+    public static void nvgFontBlur(float blur) {
+        NanoVG.nvgFontBlur(nanoVGContext, blur);
+    }
+
     public static NVGColor colorToNVG(Color color) {
         NVGColor nvgColor = NVGColor.calloc();
         nvgColor.r(color.getRedF());

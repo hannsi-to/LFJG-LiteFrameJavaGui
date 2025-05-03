@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.openGL.renderers.font;
 
+import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.system.font.Font;
 import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
@@ -18,6 +20,7 @@ import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgBeginPath;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgClosePath;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgFill;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgFillColor;
+import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgFontBlur;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgFontFace;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgFontSize;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgLineTo;
@@ -45,6 +48,8 @@ public class GLFont extends GLRect {
     private float textX;
     private float textY;
     private float fontSize;
+    private boolean blur;
+    private float blurSize;
     private Color color;
     private AlignType align;
 
@@ -75,10 +80,12 @@ public class GLFont extends GLRect {
         drawLine(x, y, x + width, y + height, lineWidth, color);
     }
 
-    public void text(Font font, String text, float x, float y, float fontSize, Color color, AlignType align) {
+    public void text(Font font, String text, float x, float y, float fontSize, boolean blur, float blurSize, Color color, AlignType align) {
         this.font = font;
         this.text = text;
         this.fontSize = fontSize;
+        this.blur = blur;
+        this.blurSize = blurSize;
         this.color = color;
         this.align = align;
         this.textX = x;
@@ -124,7 +131,7 @@ public class GLFont extends GLRect {
     public void draw() {
         frameBuffer.bindFrameBuffer();
 
-        drawTextFormat(font.getName(), 0, 0, color, align.getId());
+        drawTextFormat(font.getName(), color, align.getId());
 
         frameBuffer.unbindFrameBuffer();
 
@@ -135,13 +142,13 @@ public class GLFont extends GLRect {
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
     }
 
-    private void drawTextFormat(String fontName, float x, float y, Color color, int align) {
+    private void drawTextFormat(String fontName, Color color, int align) {
         nvgFramePush();
 
         float offsetX = 0.0f;
         float offsetY = 0.0f;
         float spaseX = 0.0f;
-        float spaseY = 0.0f;
+        float spaseY;
         boolean code = false;
         TextFormatType textFormatType;
         CharState charState = new CharState(color);
@@ -174,7 +181,14 @@ public class GLFont extends GLRect {
                         offsetY -= (getTextHeight());
                     }
                 } else {
-
+                    new LogGenerator(
+                            "TextFormat Message",
+                            "Source: GLFont",
+                            "Type: No Code",
+                            "ID: " + hashCode(),
+                            "Severity: Waring",
+                            "Message: Not font text format code: " + TextFormatType.PREFIX_CODE + ch
+                    ).logging(DebugLevel.WARNING);
                 }
 
                 continue;
@@ -262,12 +276,12 @@ public class GLFont extends GLRect {
             }
 
             float lineWidth = charState.bold ? fontSize + size / 10f : fontSize / 10f;
-            drawNanoVGText(fontName, ch, x + offsetX, y + offsetY, color, align, charState.italic, charState.bold ? 10f : 0);
+            drawNanoVGText(fontName, ch, (float) 0 + offsetX, (float) 0 + offsetY, color, align, charState.italic, charState.bold ? 10f : 0);
             if (charState.strikethrough) {
-                drawLineWH(x + offsetX + strikethroughLineX, y + offsetY + strikethroughLineY, strikethroughLineWidth + spaseX, strikethroughLineHeight, lineWidth, color);
+                drawLineWH((float) 0 + offsetX + strikethroughLineX, (float) 0 + offsetY + strikethroughLineY, strikethroughLineWidth + spaseX, strikethroughLineHeight, lineWidth, color);
             }
             if (charState.underLine) {
-                drawLineWH(x + offsetX + underLineX, y + offsetY + underLineY, underLineWidth + spaseX, underLineHeight, lineWidth, color);
+                drawLineWH((float) 0 + offsetX + underLineX, (float) 0 + offsetY + underLineY, underLineWidth + spaseX, underLineHeight, lineWidth, color);
             }
 
             offsetX += getTextWidth(ch) + spaseX;
@@ -277,6 +291,10 @@ public class GLFont extends GLRect {
     }
 
     private void drawNanoVGText(String fontName, char ch, float x, float y, Color color, int align, boolean italic, float plusSize) {
+        if (blur) {
+            nvgFontBlur(blurSize);
+        }
+
         NVGColor nvgColor = colorToNVG(color);
         nvgFillColor(nvgColor);
 
@@ -299,6 +317,10 @@ public class GLFont extends GLRect {
         nvgFill();
         nvgRestore();
         nvgClosePath();
+
+        if (blur) {
+            nvgFontBlur(0f);
+        }
     }
 
     public String getText() {
