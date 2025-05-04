@@ -40,7 +40,7 @@ import static org.lwjgl.nanovg.NanoVG.*;
 /**
  * Class representing a font renderer in OpenGL.
  */
-public class GLFont extends GLRect {
+public class GLText extends GLRect {
     private FrameBuffer frameBuffer;
 
     private Font font;
@@ -58,7 +58,7 @@ public class GLFont extends GLRect {
      *
      * @param name the name of the rectangle renderer
      */
-    public GLFont(String name) {
+    public GLText(String name) {
         super(name);
     }
 

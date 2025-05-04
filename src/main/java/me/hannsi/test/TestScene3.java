@@ -1,7 +1,7 @@
 package me.hannsi.test;
 
 import me.hannsi.lfjg.frame.frame.Frame;
-import me.hannsi.lfjg.render.openGL.renderers.font.GLFont;
+import me.hannsi.lfjg.render.openGL.renderers.font.GLText;
 import me.hannsi.lfjg.render.openGL.renderers.svg.GLSVG;
 import me.hannsi.lfjg.render.openGL.system.font.Font;
 import me.hannsi.lfjg.render.openGL.system.scene.IScene;
@@ -15,7 +15,7 @@ import me.hannsi.lfjg.utils.type.types.TextFormatType;
 public class TestScene3 implements IScene {
     public Scene scene;
     public Frame frame;
-    public GLFont glFont;
+    public GLText glText;
     public GLSVG glSVG;
     public Font font;
 
@@ -30,8 +30,8 @@ public class TestScene3 implements IScene {
 
         font.loadFont();
 
-        glFont = new GLFont("GLFont1");
-        glFont.text(
+        glText = new GLText("GLFont1");
+        glText.text(
                 font,
                 TextFormatType.STRIKETHROUGH + "" + TextFormatType.UNDERLINE + TextFormatType.SPASE_X + "{10}Hello World!!" + TextFormatType.SPASE_Y + "{50}" + TextFormatType.NEWLINE + "This is test text",
                 800, 0, 64, true, 10f, Color.of(255, 100, 100, 255), AlignType.LEFT_BASELINE
@@ -43,7 +43,7 @@ public class TestScene3 implements IScene {
 
     @Override
     public void drawFrame() {
-        glFont.draw();
+        glText.draw();
         glSVG.draw();
     }
 
