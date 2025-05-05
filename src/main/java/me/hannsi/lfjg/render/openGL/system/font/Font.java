@@ -1,9 +1,12 @@
 package me.hannsi.lfjg.render.openGL.system.font;
 
+import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.reflection.location.URLLocation;
 import me.hannsi.lfjg.utils.toolkit.IOUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -19,7 +22,26 @@ public class Font {
     public Font(String name, Location location) {
         this.name = name;
         this.location = location;
+    }
 
+    public void cleanup() {
+        byteBuffer.clear();
+        byteBuffer = null;
+
+        new LogGenerator("Font Debug Message", "Source: Font", "Type: Font Cleanup", "ID: " + getName(), "Severity: Info", "Message: Cleanup font");
+    }
+
+    public void loadFont() {
+        InputStream inputStream = getInputStream();
+
+        this.byteBuffer = IOUtil.toByteBuffer(inputStream);
+
+        nvgCreateFontMem(name, byteBuffer, false);
+
+        new LogGenerator("Font Debug Message", "Source: Font", "Type: Load SVG", "ID: " + getName(), "Severity: Info", "Message: Load font: " + getName()).logging(DebugLevel.DEBUG);
+    }
+
+    private @NotNull InputStream getInputStream() {
         InputStream inputStream = null;
         try {
             if (location.isUrl()) {
@@ -36,17 +58,7 @@ public class Font {
         } catch (Exception e) {
             throw new RuntimeException("Failed to load font from location: " + location, e);
         }
-
-        this.byteBuffer = IOUtil.toByteBuffer(inputStream);
-    }
-
-    public void cleanup() {
-        byteBuffer.clear();
-        byteBuffer = null;
-    }
-
-    public void loadFont() {
-        nvgCreateFontMem(name, byteBuffer, false);
+        return inputStream;
     }
 
     public String getName() {

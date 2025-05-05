@@ -142,9 +142,9 @@ public class TestScene1 implements IScene {
         glShader = new GLShader("Shader1");
         glShader.shader(new ResourcesLocation("shader/test/test.fsh"), 0, 0, frame.getFrameBufferWidth(), frame.getFrameBufferHeight());
 
-        glSVG = new GLSVG("SVG1");
-        glSVG.svg(new ResourcesLocation("svg/delete.svg"), 100, 100, 5, 5);
-        glSVG.setBlendType(BlendType.NORMAL);
+//        glSVG = new GLSVG("SVG1");
+//        glSVG.svg(new ResourcesLocation("svg/delete.svg"), 100, 100, 5, 5);
+//        glSVG.setBlendType(BlendType.NORMAL);
     }
 
     public void effectCacheInit() {

@@ -4,8 +4,6 @@ import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.math.MathHelper;
-import me.hannsi.lfjg.utils.reflection.location.FileLocation;
-import me.hannsi.lfjg.utils.reflection.location.URLLocation;
 import me.hannsi.lfjg.utils.toolkit.IOUtil;
 import org.lwjgl.nanovg.NSVGImage;
 import org.lwjgl.opengl.GL30;
@@ -13,6 +11,7 @@ import org.lwjgl.system.MemoryStack;
 
 import java.nio.ByteBuffer;
 
+import static me.hannsi.lfjg.frame.frame.LFJGContext.svgCache;
 import static org.lwjgl.nanovg.NanoSVG.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
@@ -34,7 +33,9 @@ public class GLSVG extends GLRect {
         super(name);
     }
 
-    public void svg(ByteBuffer svgData, float x, float y, float scaleX, float scaleY) {
+    public void svg(String svgName, float x, float y, float scaleX, float scaleY) {
+        ByteBuffer svgData = svgCache.getSVG(svgName).getByteBuffer();
+
         NSVGImage svg;
         float svgWidth;
         float svgHeight;
@@ -64,28 +65,8 @@ public class GLSVG extends GLRect {
         rectWH(x, y, svgWidth * scaleX, svgHeight * scaleY, new Color(0, 0, 0, 0));
     }
 
-    public void svg(ByteBuffer svgData, double x, double y, double scaleX, double scaleY) {
-        svg(svgData, (float) x, (float) y, (float) scaleX, (float) scaleY);
-    }
-
-    public void svg(FileLocation fileLocation, float x, float y, float scaleX, float scaleY) {
-        ByteBuffer svgData = IOUtil.svgToByteBuffer(fileLocation);
-
-        svg(svgData, x, y, scaleX, scaleY);
-    }
-
-    public void svg(FileLocation fileLocation, double x, double y, double scaleX, double scaleY) {
-        svg(fileLocation, (float) x, (float) y, (float) scaleX, (float) scaleY);
-    }
-
-    public void svg(URLLocation urlLocation, float x, float y, float scaleX, float scaleY) {
-        ByteBuffer svgData = IOUtil.downloadSVG(urlLocation);
-
-        svg(svgData, x, y, scaleX, scaleY);
-    }
-
-    public void svg(URLLocation urlLocation, double x, double y, double scaleX, double scaleY) {
-        svg(urlLocation, (float) x, (float) y, (float) scaleX, (float) scaleY);
+    public void svg(String svgName, double x, double y, double scaleX, double scaleY) {
+        svg(svgName, (float) x, (float) y, (float) scaleX, (float) scaleY);
     }
 
     @Override

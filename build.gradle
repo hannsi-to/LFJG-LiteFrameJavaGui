@@ -21,9 +21,19 @@ int targetCompatibility = javaVersion
 
 repositories {
     mavenCentral()
+    flatDir{
+        dirs 'libs'
+    }
 }
 
 dependencies {
+    implementation name: "gluegen-rt"
+    implementation name: "gluegen-rt-natives-windows-amd64"
+    implementation name: "jcef"
+    implementation name: "jcef-tests"
+    implementation name: "jogl-all"
+    implementation name: "jogl-all-natives-windows-amd64"
+
     implementation "net.java.dev.jna:jna:5.13.0"
     implementation "net.java.dev.jna:jna-platform:5.13.0"
 

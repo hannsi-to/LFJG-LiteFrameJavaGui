@@ -8,18 +8,42 @@ import java.util.HashMap;
 public class FontCache {
     private HashMap<String, Font> fontCache;
 
-    public FontCache() {
+    private FontCache() {
         fontCache = new HashMap<>();
     }
 
-    public void createCache(Font font) {
+    public static FontCache initFontCache() {
+        return new FontCache();
+    }
+
+    public FontCache createCache(Font font) {
         fontCache.put(font.getName(), font);
 
         new LogGenerator("FontCache Debug Message", "Source: FontCache", "Type: Cache Creation", "ID: " + font.getName(), "Severity: Info", "Message: Create font cache: " + font.getName()).logging(DebugLevel.DEBUG);
+
+        return this;
     }
 
-    public void loadFont() {
+    public FontCache loadFont() {
         fontCache.forEach((key, value) -> value.loadFont());
+        return this;
+    }
+
+    public Font getFont(String fontName) {
+        return fontCache.get(fontName);
+    }
+
+    public void cleanup(String... fontNames) {
+        for (String name : fontNames) {
+            Font font = fontCache.remove(name);
+            if (font != null) {
+                font.cleanup();
+
+                new LogGenerator("FontCache Debug Message", "Source: FontCache", "Type: Cache Cleanup", "ID: " + name, "Severity: Info", "Message: Cleanup font: " + name).logging(DebugLevel.DEBUG);
+            } else {
+                new LogGenerator("FontCache Debug Message", "Source: FontCache", "Type: Cache Cleanup", "ID: " + name, "Severity: Warning", "Message: Font not found in cache for cleanup: " + name).logging(DebugLevel.WARNING);
+            }
+        }
     }
 
     public void cleanup() {

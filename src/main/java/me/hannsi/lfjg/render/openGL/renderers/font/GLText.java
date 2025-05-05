@@ -2,6 +2,7 @@ package me.hannsi.lfjg.render.openGL.renderers.font;
 
 import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 import me.hannsi.lfjg.debug.debug.system.DebugLevel;
+import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.system.font.Font;
 import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
@@ -15,7 +16,6 @@ import org.lwjgl.opengl.GL30;
 
 import java.util.List;
 
-import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.*;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgBeginPath;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgClosePath;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgFill;
@@ -35,6 +35,7 @@ import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTextAlign;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTextBounds;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTextMetrics;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTransform;
+import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.*;
 import static org.lwjgl.nanovg.NanoVG.*;
 
 /**
@@ -80,8 +81,8 @@ public class GLText extends GLRect {
         drawLine(x, y, x + width, y + height, lineWidth, color);
     }
 
-    public void text(Font font, String text, float x, float y, float fontSize, boolean blur, float blurSize, Color color, AlignType align) {
-        this.font = font;
+    public void text(String fontName, String text, float x, float y, float fontSize, boolean blur, float blurSize, Color color, AlignType align) {
+        this.font = LFJGContext.fontCache.getFont(fontName);
         this.text = text;
         this.fontSize = fontSize;
         this.blur = blur;
@@ -181,14 +182,7 @@ public class GLText extends GLRect {
                         offsetY -= (getTextHeight());
                     }
                 } else {
-                    new LogGenerator(
-                            "TextFormat Message",
-                            "Source: GLFont",
-                            "Type: No Code",
-                            "ID: " + hashCode(),
-                            "Severity: Waring",
-                            "Message: Not font text format code: " + TextFormatType.PREFIX_CODE + ch
-                    ).logging(DebugLevel.WARNING);
+                    new LogGenerator("TextFormat Message", "Source: GLFont", "Type: No Code", "ID: " + hashCode(), "Severity: Waring", "Message: Not font text format code: " + TextFormatType.PREFIX_CODE + ch).logging(DebugLevel.WARNING);
                 }
 
                 continue;
@@ -305,11 +299,7 @@ public class GLText extends GLRect {
         nvgSave();
         if (italic) {
             float skewX = (float) Math.tan(0.3);
-            nvgTransform(
-                    1, 0,
-                    -skewX, 1,
-                    skewX * (1060 - y), 0.0f
-            );
+            nvgTransform(1, 0, -skewX, 1, skewX * (1060 - y), 0.0f);
         }
 
         nvgBeginPath();
