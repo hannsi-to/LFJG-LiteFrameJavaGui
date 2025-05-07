@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.debug.exceptions.shader;
+package me.hannsi.lfjg.render.openGL.exceptions.shader;
 
 /**
  * Exception thrown when there is an issue compiling the shader.

@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.debug.exceptions.texture;
+package me.hannsi.lfjg.render.openGL.exceptions.texture;
 
 /**
  * Exception thrown when there is an issue creating the texture.

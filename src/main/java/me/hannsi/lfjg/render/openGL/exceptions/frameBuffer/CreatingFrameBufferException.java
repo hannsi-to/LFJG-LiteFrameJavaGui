@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.debug.exceptions.frameBuffer;
+package me.hannsi.lfjg.render.openGL.exceptions.frameBuffer;
 
 /**
  * Exception thrown when there is an issue creating the frame buffer.

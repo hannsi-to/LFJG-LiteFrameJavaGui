@@ -4,11 +4,8 @@
 
 package me.hannsi.test.jcef;
 
-import me.hannsi.test.jcef.dialog.DownloadDialog;
-import me.hannsi.test.jcef.handler.*;
-import me.hannsi.test.jcef.ui.ControlPanel;
-import me.hannsi.test.jcef.ui.MenuBar;
-import me.hannsi.test.jcef.ui.StatusPanel;
+import me.hannsi.test.jcef.handler.MessageRouterHandler;
+import me.hannsi.test.jcef.handler.MessageRouterHandlerEx;
 import me.hannsi.test.jcef.util.DataUri;
 import org.cef.CefApp;
 import org.cef.CefApp.CefVersion;
@@ -20,13 +17,9 @@ import org.cef.browser.CefMessageRouter;
 import org.cef.handler.CefDisplayHandlerAdapter;
 import org.cef.handler.CefFocusHandlerAdapter;
 import org.cef.handler.CefLoadHandlerAdapter;
-import org.cef.network.CefCookieManager;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 
 public class MainFrame extends BrowserFrame {
     private static final long serialVersionUID = -2295538706810864538L;
@@ -34,8 +27,6 @@ public class MainFrame extends BrowserFrame {
     private final boolean osr_enabled_;
     private final boolean transparent_painting_enabled_;
     private String errorMsg_ = "";
-    private ControlPanel control_pane_;
-    private StatusPanel status_panel_;
     private boolean browserFocus_ = true;
 
     public MainFrame(boolean osrEnabled, boolean transparentPaintingEnabled, boolean createImmediately, String[] args) {
@@ -61,7 +52,7 @@ public class MainFrame extends BrowserFrame {
             //    add an own schemes (search:// and client://) and its corresponding
             //    protocol handlers. So if you enter "search:something on the web", your
             //    search request "something on the web" is forwarded to www.google.com
-            CefApp.addAppHandler(new AppHandler(args));
+//            CefApp.addAppHandler(new AppHandler(args));
         } else {
             myApp = CefApp.getInstance();
         }
@@ -79,13 +70,13 @@ public class MainFrame extends BrowserFrame {
         //    For each handler (with more than one method) adapter
         //    classes exists. So you don't need to override methods
         //    you're not interested in.
-        DownloadDialog downloadDialog = new DownloadDialog(this);
-        client_.addContextMenuHandler(new ContextMenuHandler(this));
-        client_.addDownloadHandler(downloadDialog);
-        client_.addDragHandler(new DragHandler());
-        client_.addJSDialogHandler(new JSDialogHandler());
-        client_.addKeyboardHandler(new KeyboardHandler());
-        client_.addRequestHandler(new RequestHandler(this));
+//        DownloadDialog downloadDialog = new DownloadDialog(this);
+//        client_.addContextMenuHandler(new ContextMenuHandler(this));
+//        client_.addDownloadHandler(downloadDialog);
+//        client_.addDragHandler(new DragHandler());
+//        client_.addJSDialogHandler(new JSDialogHandler());
+//        client_.addKeyboardHandler(new KeyboardHandler());
+//        client_.addRequestHandler(new RequestHandler(this));
 
         //    Beside the normal handler instances, we're registering a MessageRouter
         //    as well. That gives us the opportunity to reply to JavaScript method
@@ -103,17 +94,17 @@ public class MainFrame extends BrowserFrame {
         client_.addDisplayHandler(new CefDisplayHandlerAdapter() {
             @Override
             public void onAddressChange(CefBrowser browser, CefFrame frame, String url) {
-                control_pane_.setAddress(browser, url);
+//                control_pane_.setAddress(browser, url);
             }
 
             @Override
             public void onTitleChange(CefBrowser browser, String title) {
-                setTitle(title);
+//                setTitle(title);
             }
 
             @Override
             public void onStatusMessage(CefBrowser browser, String value) {
-                status_panel_.setStatusText(value);
+//                status_panel_.setStatusText(value);
             }
         });
 
@@ -126,9 +117,6 @@ public class MainFrame extends BrowserFrame {
         client_.addLoadHandler(new CefLoadHandlerAdapter() {
             @Override
             public void onLoadingStateChange(CefBrowser browser, boolean isLoading, boolean canGoBack, boolean canGoForward) {
-                control_pane_.update(browser, isLoading, canGoBack, canGoForward);
-                status_panel_.setIsInProgress(isLoading);
-
                 if (!isLoading && !errorMsg_.isEmpty()) {
                     browser.loadURL(DataUri.create("text/html", errorMsg_));
                     errorMsg_ = "";
@@ -156,42 +144,39 @@ public class MainFrame extends BrowserFrame {
 
         // Set up the UI for this example implementation.
         JPanel contentPanel = createContentPanel();
-        getContentPane().add(contentPanel, BorderLayout.CENTER);
-
-        // Clear focus from the browser when the address field gains focus.
-        control_pane_.getAddressField().addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (!browserFocus_) return;
-                browserFocus_ = false;
-                KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
-                control_pane_.getAddressField().requestFocus();
-            }
-        });
+//        getContentPane().add(contentPanel, BorderLayout.CENTER);
 
         // Clear focus from the address field when the browser gains focus.
         client_.addFocusHandler(new CefFocusHandlerAdapter() {
             @Override
             public void onGotFocus(CefBrowser browser) {
-                if (browserFocus_) return;
+                if (browserFocus_) {
+                    return;
+                }
                 browserFocus_ = true;
                 KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
                 browser.setFocus(true);
+
+                System.out.println("BrowserFocus: " + browserFocus_);
             }
 
             @Override
             public void onTakeFocus(CefBrowser browser, boolean next) {
                 browserFocus_ = false;
+
+                System.out.println("Take focus");
             }
         });
 
-        if (createImmediately) browser.createImmediately();
+        if (createImmediately) {
+            browser.createImmediately();
+        }
 
         // Add the browser to the UI.
         contentPanel.add(getBrowser().getUIComponent(), BorderLayout.CENTER);
 
-        MenuBar menuBar = getMenuBar(browser, downloadDialog);
-        setJMenuBar(menuBar);
+//        MenuBar menuBar = getMenuBar(browser, downloadDialog);
+//        setJMenuBar(menuBar);
     }
 
     public static void main(String[] args) {
@@ -224,33 +209,12 @@ public class MainFrame extends BrowserFrame {
         frame.setVisible(true);
     }
 
-    private @NotNull MenuBar getMenuBar(CefBrowser browser, DownloadDialog downloadDialog) {
-        MenuBar menuBar = new MenuBar(this, browser, control_pane_, downloadDialog, CefCookieManager.getGlobalManager());
-
-        menuBar.addBookmark("Binding Test", "client://tests/binding_test.html");
-        menuBar.addBookmark("Binding Test 2", "client://tests/binding_test2.html");
-        menuBar.addBookmark("Download Test", "https://cef-builds.spotifycdn.com/index.html");
-        menuBar.addBookmark("Login Test (username:pumpkin, password:pie)", "http://www.colostate.edu/~ric/protect/your.html");
-        menuBar.addBookmark("Certificate-error Test", "https://www.k2go.de");
-        menuBar.addBookmark("Resource-Handler Test", "http://www.foo.bar/");
-        menuBar.addBookmark("Resource-Handler Set Error Test", "http://seterror.test/");
-        menuBar.addBookmark("Scheme-Handler Test 1: (scheme \"client\")", "client://tests/handler.html");
-        menuBar.addBookmark("Scheme-Handler Test 2: (scheme \"search\")", "search://do a barrel roll/");
-        menuBar.addBookmark("Spellcheck Test", "client://tests/spellcheck.html");
-        menuBar.addBookmark("LocalStorage Test", "client://tests/localstorage.html");
-        menuBar.addBookmark("Transparency Test", "client://tests/transparency.html");
-        menuBar.addBookmarkSeparator();
-        menuBar.addBookmark("javachromiumembedded", "https://bitbucket.org/chromiumembedded/java-cef");
-        menuBar.addBookmark("chromiumembedded", "https://bitbucket.org/chromiumembedded/cef");
-        return menuBar;
-    }
-
     private JPanel createContentPanel() {
         JPanel contentPanel = new JPanel(new BorderLayout());
-        control_pane_ = new ControlPanel(getBrowser());
-        status_panel_ = new StatusPanel();
-        contentPanel.add(control_pane_, BorderLayout.NORTH);
-        contentPanel.add(status_panel_, BorderLayout.SOUTH);
+//        control_pane_ = new ControlPanel(getBrowser());
+//        status_panel_ = new StatusPanel();
+//        contentPanel.add(control_pane_, BorderLayout.NORTH);
+//        contentPanel.add(status_panel_, BorderLayout.SOUTH);
         return contentPanel;
     }
 
