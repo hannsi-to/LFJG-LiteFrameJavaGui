@@ -50,7 +50,9 @@ public class HelloWorld {
         }
 
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) glfwSetWindowShouldClose(window, true);
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
+                glfwSetWindowShouldClose(window, true);
+            }
         });
 
         try (MemoryStack stack = stackPush()) {
@@ -60,6 +62,7 @@ public class HelloWorld {
             glfwGetWindowSize(window, pWidth, pHeight);
 
             GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+            assert vidmode != null;
             glfwSetWindowPos(window, (vidmode.width() - pWidth.get(0)) / 2, (vidmode.height() - pHeight.get(0)) / 2);
         }
 

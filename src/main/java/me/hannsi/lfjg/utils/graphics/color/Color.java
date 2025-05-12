@@ -205,7 +205,7 @@ public class Color {
     public static Color getColor(String nm, int v) {
         Integer intval = Integer.getInteger(nm);
         int i = (intval != null) ? intval : v;
-        return new Color((i >> 16) & 0xFF, (i >> 8) & 0xFF, (i >> 0) & 0xFF);
+        return new Color((i >> 16) & 0xFF, (i >> 8) & 0xFF, (i) & 0xFF);
     }
 
     /**

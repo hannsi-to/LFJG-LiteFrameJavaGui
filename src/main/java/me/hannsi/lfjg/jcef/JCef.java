@@ -6,9 +6,9 @@ import me.hannsi.lfjg.debug.debug.system.DebugLog;
 import me.hannsi.lfjg.jcef.exceptions.JCefInitializationException;
 import me.hannsi.lfjg.jcef.handler.MessageRouterHandler;
 import me.hannsi.lfjg.jcef.handler.MessageRouterHandlerEx;
+import me.hannsi.lfjg.jcef.util.DataUri;
 import me.hannsi.lfjg.jcef.util.JCefUtil;
 import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.test.jcef.util.DataUri;
 import org.cef.CefApp;
 import org.cef.CefApp.CefVersion;
 import org.cef.CefClient;
@@ -16,14 +16,12 @@ import org.cef.CefSettings;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
 import org.cef.browser.CefMessageRouter;
-import org.cef.handler.CefDisplayHandlerAdapter;
-import org.cef.handler.CefFocusHandlerAdapter;
-import org.cef.handler.CefLifeSpanHandlerAdapter;
-import org.cef.handler.CefLoadHandlerAdapter;
+import org.cef.handler.*;
 import org.cef.network.CefRequest;
 
 import javax.swing.*;
 import java.awt.*;
+import java.nio.ByteBuffer;
 
 public class JCef {
     public static String DEFAULT_BROWSER_URL = "https://www.google.com";
@@ -39,22 +37,23 @@ public class JCef {
     private final Color backgroundColor;
     private String errorMessage;
     private boolean browserFocus;
+    private final int cefWindowWidth;
+    private final int cefWindowHeight;
 
-    private JCef(String[] args, boolean offScreenRendering, boolean transparentPainting, boolean createImmediately, Color backgroundColor) {
+    private JCef(String[] args,int cefWindowWidth, int cefWindowHeight, boolean offScreenRendering, boolean transparentPainting, boolean createImmediately, Color backgroundColor) {
         this.args = args;
         this.offScreenRendering = offScreenRendering;
         this.transparentPainting = transparentPainting;
         this.createImmediately = createImmediately;
         this.backgroundColor = backgroundColor;
         this.errorMessage = "";
+        this.browserFocus = false;
+        this.cefWindowWidth = cefWindowWidth;
+        this.cefWindowHeight = cefWindowHeight;
     }
 
-    public static void main(String... args) {
-        JCef jCef = JCef.initJCef(args, false, false, false, Color.WHITE);
-    }
-
-    public static JCef initJCef(String[] args, boolean offScreenRendering, boolean transparentPainting, boolean createImmediately, Color backgroundColor) {
-        JCef jcef = new JCef(args, offScreenRendering, transparentPainting, createImmediately, backgroundColor);
+    public static JCef initJCef(String[] args,int browserWidth, int browserHeight, boolean offScreenRendering, boolean transparentPainting, boolean createImmediately, Color backgroundColor) {
+        JCef jcef = new JCef(args,browserWidth,browserHeight, offScreenRendering, transparentPainting, createImmediately, backgroundColor);
 
         if (!CefApp.startup(args)) {
             throw new JCefInitializationException("Startup initialization failed");
@@ -75,12 +74,14 @@ public class JCef {
             cefApp = CefApp.getInstance(args, settings);
 
             CefVersion version = cefApp.getVersion();
-            new LogGenerator(
-                    "JavaChromiumEmbedFramework Debug Message",
-                    "JavaChromiumEmbedFramework: " + version.getJcefVersion(),
-                    "ChromiumEmbedFramework: " + version.getCefVersion(),
-                    "Chrome: " + version.getChromeVersion()
-            ).logging(DebugLevel.INFO);
+            if (version != null) {
+                new LogGenerator(
+                        "JavaChromiumEmbedFramework Debug Message",
+                        "JavaChromiumEmbedFramework: " + version.getJcefVersion(),
+                        "ChromiumEmbedFramework: " + version.getCefVersion(),
+                        "Chrome: " + version.getChromeVersion()
+                ).logging(DebugLevel.INFO);
+            }
         } else {
             cefApp = CefApp.getInstance();
         }
@@ -158,7 +159,12 @@ public class JCef {
             }
         });
 
-        CefBrowser cefBrowser = client.createBrowser(DEFAULT_BROWSER_URL, offScreenRendering, transparentPainting, null);
+        CefBrowser cefBrowser = CefBrowserBuilder.builderCreate(client)
+                .url(DEFAULT_BROWSER_URL)
+                .offScreenRendered(offScreenRendering)
+                .transparent(transparentPainting)
+                .build();
+
         setBrowser(cefBrowser);
 
         client.addFocusHandler(new CefFocusHandlerAdapter() {
@@ -186,7 +192,7 @@ public class JCef {
         contentPanel.add(browser.getUIComponent(), BorderLayout.CENTER);
         JFrame jFrame = new JFrame();
         jFrame.setContentPane(contentPanel);
-        jFrame.setSize(800, 600);
+        jFrame.setSize(cefWindowWidth,cefWindowHeight);
         jFrame.setVisible(true);
     }
 
@@ -229,5 +235,9 @@ public class JCef {
                 }
             }
         });
+    }
+
+    public static void onPaint(CefBrowser browser, boolean popup, Rectangle[] dirtyRects, ByteBuffer buffer, int width, int height){
+        System.out.println("onPaint");
     }
 }

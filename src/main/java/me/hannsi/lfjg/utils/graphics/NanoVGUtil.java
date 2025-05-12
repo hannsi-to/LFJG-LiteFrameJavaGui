@@ -27,9 +27,8 @@ public class NanoVGUtil {
     public static Vector2f conversionCoordinate(Vector2f openGLCoordinate) {
         float ox = openGLCoordinate.x();
         float oy = openGLCoordinate.y();
-        float nx = ox;
         float ny = frameBufferSize.y() - oy;
-        return new Vector2f(nx, ny);
+        return new Vector2f(ox, ny);
     }
 
     public static void nvgCurrentTransform(float[] xform) {

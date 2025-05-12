@@ -6,6 +6,8 @@ import me.hannsi.lfjg.utils.math.Projection;
 import org.joml.Vector2f;
 
 public class LFJGContext {
+    public static String[] args;
+
     public static Frame frame;
     public static Vector2f windowSize;
     public static Vector2f frameBufferSize;

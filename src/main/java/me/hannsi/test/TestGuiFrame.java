@@ -4,6 +4,7 @@ import me.hannsi.lfjg.frame.event.events.user.*;
 import me.hannsi.lfjg.frame.event.system.EventHandler;
 import me.hannsi.lfjg.frame.frame.Frame;
 import me.hannsi.lfjg.frame.frame.IFrame;
+import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.frame.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.render.openGL.system.scene.SceneSystem;
@@ -26,6 +27,7 @@ public class TestGuiFrame implements LFJGFrame {
     Camera camera;
 
     public static void main(String[] args) {
+        LFJGContext.args = args;
         new TestGuiFrame().setFrame();
     }
 
