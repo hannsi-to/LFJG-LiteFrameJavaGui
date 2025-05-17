@@ -4,9 +4,11 @@
 
 package org.cef;
 
+import me.hannsi.lfjg.jcef.LFJGCefClient;
 import org.cef.callback.CefSchemeHandlerFactory;
 import org.cef.handler.CefAppHandler;
 import org.cef.handler.CefAppHandlerAdapter;
+import org.cef.handler.CefRenderHandlerAdapter;
 
 import javax.swing.*;
 import java.io.File;
@@ -278,6 +280,24 @@ public class CefApp extends CefAppHandlerAdapter {
                 CefClient client = new CefClient();
                 clients_.add(client);
                 return client;
+
+            default:
+                throw new IllegalStateException("Can't crate client in state " + state_);
+        }
+    }
+
+    public synchronized CefClient createLFJGCefClient(CefRenderHandlerAdapter cefRenderHandler) {
+        switch (getState()) {
+            case NEW:
+                setState(CefAppState.INITIALIZING);
+                initialize();
+                // FALL THRU
+
+            case INITIALIZING:
+            case INITIALIZED:
+                LFJGCefClient lfjgCefClient = new LFJGCefClient(cefRenderHandler);
+                clients_.add(lfjgCefClient);
+                return lfjgCefClient;
 
             default:
                 throw new IllegalStateException("Can't crate client in state " + state_);

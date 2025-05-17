@@ -30,14 +30,14 @@ import java.util.concurrent.CompletableFuture;
  * The visibility of this class is "package". To create a new
  * CefBrowser instance, please use CefBrowserFactory.
  */
-abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowser {
+abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowser, AutoCloseable {
     private final CefClient client_;
     private final String url_;
     private final CefRequestContext request_context_;
     private final CefBrowserSettings settings_;
+    private final Point inspectAt_;
     private volatile boolean isPending_ = false;
     private volatile CefBrowser_N parent_;
-    private final Point inspectAt_;
     private volatile CefDevToolsClient devToolsClient_ = null;
     private boolean closeAllowed_ = false;
     private volatile boolean isClosed_ = false;
@@ -215,9 +215,11 @@ abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowser {
     }
 
     @Override
-    protected void finalize() throws Throwable {
-        close(true);
-        super.finalize();
+    public void close() {
+        if (!isClosed_) {
+            close(true);
+            isClosed_ = true;
+        }
     }
 
     @Override
@@ -617,7 +619,7 @@ abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowser {
      *
      * @param e The event to send.
      */
-    protected final void sendKeyEvent(KeyEvent e) {
+    public final void sendKeyEvent(KeyEvent e) {
         try {
             N_SendKeyEvent(e);
         } catch (UnsatisfiedLinkError ule) {
@@ -630,7 +632,7 @@ abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowser {
      *
      * @param e The event to send.
      */
-    protected final void sendMouseEvent(MouseEvent e) {
+    public final void sendMouseEvent(MouseEvent e) {
         try {
             N_SendMouseEvent(e);
         } catch (UnsatisfiedLinkError ule) {
@@ -643,7 +645,7 @@ abstract class CefBrowser_N extends CefNativeAdapter implements CefBrowser {
      *
      * @param e The event to send.
      */
-    protected final void sendMouseWheelEvent(MouseWheelEvent e) {
+    public final void sendMouseWheelEvent(MouseWheelEvent e) {
         try {
             N_SendMouseWheelEvent(e);
         } catch (UnsatisfiedLinkError ule) {

@@ -150,12 +150,10 @@ public class Frame implements IFrame {
                     throw new RuntimeException("Failed to create NanoVG context");
                 }
             }
-            case NANO_VG -> {
+            case NANO_VG, LIB_GDX -> {
             }
             case VULKAN -> {
 
-            }
-            case LIB_GDX -> {
             }
             default ->
                     throw new IllegalStateException("Unexpected value: " + getFrameSettingValue(RenderingTypeSetting.class));
@@ -263,11 +261,7 @@ public class Frame implements IFrame {
     private void draw() {
         switch ((RenderingType) getFrameSettingValue(RenderingTypeSetting.class)) {
             case OPEN_GL -> eventManager.call(new DrawFrameWithOpenGLEvent());
-            case NANO_VG -> {
-            }
-            case VULKAN -> {
-            }
-            case LIB_GDX -> {
+            case NANO_VG, LIB_GDX, VULKAN -> {
             }
             default ->
                     throw new IllegalStateException("Unexpected value: " + getFrameSettingValue(RenderingTypeSetting.class));

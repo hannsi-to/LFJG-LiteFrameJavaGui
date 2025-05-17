@@ -13,7 +13,6 @@ import org.cef.network.CefRequest;
 import org.cef.network.CefRequest.TransitionType;
 
 import java.awt.*;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.nio.ByteBuffer;
 import java.util.Collection;
@@ -58,7 +57,7 @@ public class CefClient extends CefClientHandler implements CefContextMenuHandler
      *
      * @see org.cef.CefApp.createClient()
      */
-    CefClient() throws UnsatisfiedLinkError {
+    protected CefClient() throws UnsatisfiedLinkError {
         super();
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addPropertyChangeListener(propertyChangeListener);

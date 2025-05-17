@@ -1,75 +1,85 @@
 package me.hannsi.lfjg.jcef.handler;
 
+import me.hannsi.lfjg.utils.graphics.image.ImageCapture;
+import me.hannsi.lfjg.utils.reflection.location.FileLocation;
+import me.hannsi.lfjg.utils.type.types.ColorFormatType;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefPaintEvent;
-import org.cef.callback.CefDragData;
-import org.cef.handler.CefRenderHandler;
+import org.cef.callback.CefNative;
 import org.cef.handler.CefRenderHandlerAdapter;
-import org.cef.handler.CefScreenInfo;
 
 import java.awt.*;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
-public class RenderHandler implements CefRenderHandler {
+public class RenderHandler extends CefRenderHandlerAdapter implements CefNative {
+    private final Map<String, Long> nativeRefs;
+    private ByteBuffer frame;
+    private int viewWidth;
+    private int viewHeight;
 
-    @Override
-    public Rectangle getViewRect(CefBrowser cefBrowser) {
-        return null;
+    public RenderHandler(int width, int height) {
+        super();
+
+        this.nativeRefs = new HashMap<>();
+        this.frame = null;
+        this.viewWidth = width;
+        this.viewHeight = height;
     }
 
     @Override
-    public boolean getScreenInfo(CefBrowser cefBrowser, CefScreenInfo cefScreenInfo) {
-        return false;
+    public Rectangle getViewRect(CefBrowser browser) {
+        return new Rectangle(0, 0, viewWidth, viewHeight);
     }
 
     @Override
-    public Point getScreenPoint(CefBrowser cefBrowser, Point point) {
-        return null;
+    public void onPaint(CefBrowser browser, boolean popup, Rectangle[] dirtyRects, ByteBuffer buffer, int width, int height) {
+        this.frame = buffer.flip();
+        this.viewWidth = width;
+        this.viewHeight = height;
+
+        ImageCapture imageCapture = new ImageCapture(new FileLocation("C:\\Users\\hanns\\idea-project\\LFJG-LiteFrameJavaGui\\log\\png"));
+        imageCapture.setColorFormatType(ColorFormatType.RGBA);
+        imageCapture.setFlip(false);
+        imageCapture.saveImage(buffer, "onPaint");
     }
 
     @Override
-    public void onPopupShow(CefBrowser cefBrowser, boolean b) {
-
-    }
-
-    @Override
-    public void onPopupSize(CefBrowser cefBrowser, Rectangle rectangle) {
-
-    }
-
-    @Override
-    public void onPaint(CefBrowser cefBrowser, boolean b, Rectangle[] rectangles, ByteBuffer byteBuffer, int i, int i1) {
-
-    }
-
-    @Override
-    public void addOnPaintListener(Consumer<CefPaintEvent> consumer) {
-
-    }
-
-    @Override
-    public void setOnPaintListener(Consumer<CefPaintEvent> consumer) {
+    public void addOnPaintListener(Consumer<CefPaintEvent> listener) {
 
     }
 
     @Override
-    public void removeOnPaintListener(Consumer<CefPaintEvent> consumer) {
+    public void setOnPaintListener(Consumer<CefPaintEvent> listener) {
 
     }
 
     @Override
-    public boolean onCursorChange(CefBrowser cefBrowser, int i) {
-        return false;
+    public void removeOnPaintListener(Consumer<CefPaintEvent> listener) {
+
     }
 
     @Override
-    public boolean startDragging(CefBrowser cefBrowser, CefDragData cefDragData, int i, int i1, int i2) {
-        return false;
+    public void setNativeRef(String identifer, long nativeRef) {
+        nativeRefs.put(identifer, nativeRef);
     }
 
     @Override
-    public void updateDragCursor(CefBrowser cefBrowser, int i) {
+    public long getNativeRef(String identifer) {
+        return 0;
+    }
 
+    public ByteBuffer getFrame() {
+        return frame;
+    }
+
+    public int getViewWidth() {
+        return viewWidth;
+    }
+
+    public int getViewHeight() {
+        return viewHeight;
     }
 }

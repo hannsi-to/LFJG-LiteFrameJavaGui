@@ -5,6 +5,7 @@ import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
+import me.hannsi.lfjg.utils.toolkit.IOUtil;
 import me.hannsi.lfjg.utils.type.types.ColorFormatType;
 import me.hannsi.lfjg.utils.type.types.ImageLoaderType;
 import me.hannsi.lfjg.utils.type.types.JavaCVImageFormat;
@@ -28,6 +29,7 @@ public class ImageCapture {
     private ColorFormatType colorFormatType;
     private STBImageFormat stbImageFormat;
     private JavaCVImageFormat javaCVImageFormat;
+    private boolean flip;
     private int jpgQuality;
     private String saveType;
 
@@ -40,7 +42,38 @@ public class ImageCapture {
         this.javaCVImageFormat = JavaCVImageFormat.PNG;
         this.colorFormatType = ColorFormatType.RGB;
         this.stbImageFormat = STBImageFormat.PNG;
+        this.flip = true;
         this.jpgQuality = 90;
+    }
+
+    public void saveImage(ByteBuffer buffer, String name) {
+        String path = filePath.getPath() + "/" + name + "." + stbImageFormat.getName();
+        saveType = "ByteBuffer";
+
+        ByteBuffer flippedBuffer = BufferUtils.createByteBuffer(width * height * colorFormatType.getChannels());
+        if (flip) {
+            for (int i = 0; i < height; i++) {
+                buffer.position((height - i - 1) * width * colorFormatType.getChannels());
+                flippedBuffer.put(buffer.slice().limit(width * colorFormatType.getChannels()));
+            }
+        } else {
+            flippedBuffer.put(buffer);
+        }
+
+        ByteBuffer convertedBuffer;
+        if (colorFormatType == ColorFormatType.BGRA) {
+            convertedBuffer = IOUtil.convertBGRAtoRGBA(flippedBuffer, width, height);
+        } else {
+            convertedBuffer = flippedBuffer;
+        }
+
+        LogGenerator logGenerator = null;
+        switch (imageLoaderType) {
+            case STB_IMAGE -> logGenerator = writeSTBImage(path, convertedBuffer);
+            case JAVA_CV -> logGenerator = writeJavaCV(path, convertedBuffer);
+        }
+
+        logGenerator.logging(DebugLevel.INFO);
     }
 
     public void saveImage(FrameBuffer frameBuffer, String name) {
@@ -58,19 +91,29 @@ public class ImageCapture {
         frameBuffer.unbindFrameBuffer();
 
         ByteBuffer flippedBuffer = BufferUtils.createByteBuffer(width * height * colorFormatType.getChannels());
-        for (int i = 0; i < height; i++) {
-            buffer.position((height - i - 1) * width * colorFormatType.getChannels());
-            flippedBuffer.put(buffer.slice().limit(width * colorFormatType.getChannels()));
+        if (flip) {
+            for (int i = 0; i < height; i++) {
+                buffer.position((height - i - 1) * width * colorFormatType.getChannels());
+                flippedBuffer.put(buffer.slice().limit(width * colorFormatType.getChannels()));
+            }
+        } else {
+            flippedBuffer.put(buffer);
         }
 
-        switch (imageLoaderType) {
-            case STB_IMAGE -> {
-                writeSTBImage(path, flippedBuffer);
-            }
-            case JAVA_CV -> {
-                writeJavaCV(path, flippedBuffer, colorFormatType.getChannels());
-            }
+        ByteBuffer convertedBuffer;
+        if (colorFormatType == ColorFormatType.BGRA) {
+            convertedBuffer = IOUtil.convertBGRAtoRGBA(flippedBuffer, width, height);
+        } else {
+            convertedBuffer = flippedBuffer;
         }
+
+        LogGenerator logGenerator = null;
+        switch (imageLoaderType) {
+            case STB_IMAGE -> logGenerator = writeSTBImage(path, convertedBuffer);
+            case JAVA_CV -> logGenerator = writeJavaCV(path, convertedBuffer);
+        }
+
+        logGenerator.logging(DebugLevel.INFO);
     }
 
     public void saveImage(String name) {
@@ -81,28 +124,35 @@ public class ImageCapture {
         glReadPixels(0, 0, width, height, colorFormatType.getId(), GL_UNSIGNED_BYTE, buffer);
 
         ByteBuffer flippedBuffer = BufferUtils.createByteBuffer(width * height * colorFormatType.getChannels());
-        for (int y = 0; y < height; y++) {
-            buffer.position((height - y - 1) * width * colorFormatType.getChannels());
-            flippedBuffer.put(buffer.slice().limit(width * colorFormatType.getChannels()));
+        if (flip) {
+            for (int i = 0; i < height; i++) {
+                buffer.position((height - i - 1) * width * colorFormatType.getChannels());
+                flippedBuffer.put(buffer.slice().limit(width * colorFormatType.getChannels()));
+            }
+        } else {
+            flippedBuffer.put(buffer);
+        }
+
+        ByteBuffer convertedBuffer;
+        if (colorFormatType == ColorFormatType.BGRA) {
+            convertedBuffer = IOUtil.convertBGRAtoRGBA(flippedBuffer, width, height);
+        } else {
+            convertedBuffer = flippedBuffer;
         }
 
         LogGenerator logGenerator = null;
         switch (imageLoaderType) {
-            case STB_IMAGE -> {
-                logGenerator = writeSTBImage(path, flippedBuffer);
-            }
-            case JAVA_CV -> {
-                logGenerator = writeJavaCV(path, flippedBuffer, colorFormatType.getChannels());
-            }
+            case STB_IMAGE -> logGenerator = writeSTBImage(path, convertedBuffer);
+            case JAVA_CV -> logGenerator = writeJavaCV(path, convertedBuffer);
         }
 
         logGenerator.logging(DebugLevel.INFO);
     }
 
-    private LogGenerator writeJavaCV(String path, ByteBuffer flippedBuffer, int channels) {
-        Mat mat = new Mat(height, width, opencv_core.CV_8UC(channels));
-        flippedBuffer.flip();
-        mat.data().put(flippedBuffer.slice().get());
+    private LogGenerator writeJavaCV(String path, ByteBuffer imageBuffer) {
+        Mat mat = new Mat(height, width, opencv_core.CV_8UC(colorFormatType.getChannels()));
+        imageBuffer.flip();
+        mat.data().put(imageBuffer.slice().get());
 
         boolean success = false;
 
@@ -123,23 +173,39 @@ public class ImageCapture {
         return new LogGenerator("ImageCapture Info Message", "Source: ImageCapture", "Type: Save image", "Severity: Info", "Message: Saved " + saveType + " to image.", "Path: " + path);
     }
 
-    private LogGenerator writeSTBImage(String path, ByteBuffer flippedBuffer) {
-        flippedBuffer.flip();
+    private LogGenerator writeSTBImage(String path, ByteBuffer imageBuffer) {
+        imageBuffer.rewind();
 
         boolean success = switch (stbImageFormat) {
             case PNG ->
-                    STBImageWrite.stbi_write_png(path, width, height, colorFormatType.getChannels(), flippedBuffer, width * colorFormatType.getChannels());
-            case JPG ->
-                    STBImageWrite.stbi_write_jpg(path, width, height, colorFormatType.getChannels(), flippedBuffer, jpgQuality);
-            case BMP -> STBImageWrite.stbi_write_bmp(path, width, height, colorFormatType.getChannels(), flippedBuffer);
-            case TGA -> STBImageWrite.stbi_write_tga(path, width, height, colorFormatType.getChannels(), flippedBuffer);
+                    STBImageWrite.stbi_write_png(path, width, height, colorFormatType.getChannels(), imageBuffer, width * colorFormatType.getChannels());
+
+            case JPG -> {
+                if (colorFormatType.getChannels() != 3) {
+                    throw new IllegalArgumentException("JPEG format only supports 3 (RGB) channels.");
+                }
+                yield STBImageWrite.stbi_write_jpg(path, width, height, 3, imageBuffer, jpgQuality);
+            }
+
+            case BMP -> STBImageWrite.stbi_write_bmp(path, width, height,
+                    colorFormatType.getChannels(), imageBuffer);
+
+            case TGA -> STBImageWrite.stbi_write_tga(path, width, height,
+                    colorFormatType.getChannels(), imageBuffer);
         };
 
         if (!success) {
             throw new RuntimeException("Failed to save screenshot to image: " + path);
         }
 
-        return new LogGenerator("ImageCapture Info Message", "Source: ImageCapture", "Type: Save image", "Severity: Info", "Message: Saved " + saveType + " to image.", "Path: " + path);
+        return new LogGenerator(
+                "ImageCapture Info Message",
+                "Source: ImageCapture",
+                "Type: Save image",
+                "Severity: Info",
+                "Message: Saved " + stbImageFormat + " to image.",
+                "Path: " + path
+        );
     }
 
     public void cleanup() {
@@ -206,5 +272,21 @@ public class ImageCapture {
     @Deprecated
     public void setJavaCVImageFormat(JavaCVImageFormat javaCVImageFormat) {
         this.javaCVImageFormat = javaCVImageFormat;
+    }
+
+    public boolean isFlip() {
+        return flip;
+    }
+
+    public void setFlip(boolean flip) {
+        this.flip = flip;
+    }
+
+    public String getSaveType() {
+        return saveType;
+    }
+
+    public void setSaveType(String saveType) {
+        this.saveType = saveType;
     }
 }

@@ -28,7 +28,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
@@ -38,7 +37,7 @@ import java.util.function.Consumer;
  * The visibility of this class is "package". To create a new
  * CefBrowser instance, please use CefBrowserFactory.
  */
-class CefBrowserOsr extends CefBrowser_N implements CefRenderHandler {
+public class CefBrowserOsr extends CefBrowser_N implements CefRenderHandler {
     private final CefRenderer renderer_;
     private final Rectangle browser_rect_ = new Rectangle(0, 0, 1, 1); // Work around CEF issue #1437.
     private final boolean isTransparent_;
@@ -55,7 +54,7 @@ class CefBrowserOsr extends CefBrowser_N implements CefRenderHandler {
         this(client, url, transparent, context, null, null, settings);
     }
 
-    private CefBrowserOsr(CefClient client, String url, boolean transparent, CefRequestContext context, CefBrowserOsr parent, Point inspectAt, CefBrowserSettings settings) {
+    CefBrowserOsr(CefClient client, String url, boolean transparent, CefRequestContext context, CefBrowserOsr parent, Point inspectAt, CefBrowserSettings settings) {
         super(client, url, context, parent, inspectAt, settings);
         isTransparent_ = transparent;
         renderer_ = new CefRenderer(transparent);

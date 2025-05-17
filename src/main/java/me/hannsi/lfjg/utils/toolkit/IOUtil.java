@@ -4,6 +4,7 @@ import me.hannsi.lfjg.utils.math.MathHelper;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.URLLocation;
 import org.bytedeco.opencv.opencv_core.Mat;
+import org.lwjgl.BufferUtils;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -23,6 +24,48 @@ import static org.lwjgl.system.MemoryUtil.*;
  * Utility class for byte operations.
  */
 public class IOUtil {
+    public static ByteBuffer convertRGBAtoBGRA(ByteBuffer rgbaBuffer, int width, int height) {
+        int numPixels = width * height;
+        ByteBuffer bgraBuffer = BufferUtils.createByteBuffer(numPixels * 4);
+        bgraBuffer.rewind();
+        if (bgraBuffer.remaining() < width * height * 4) {
+            throw new IllegalArgumentException("RGBA buffer does not contain enough data!");
+        }
+
+        for (int i = 0; i < numPixels; i++) {
+            byte r = rgbaBuffer.get();
+            byte g = rgbaBuffer.get();
+            byte b = rgbaBuffer.get();
+            byte a = rgbaBuffer.get();
+
+            bgraBuffer.put(b).put(g).put(r).put(a);
+        }
+
+        bgraBuffer.flip();
+        return bgraBuffer;
+    }
+
+    public static ByteBuffer convertBGRAtoRGBA(ByteBuffer bgraBuffer, int width, int height) {
+        int numPixels = width * height;
+        ByteBuffer rgbaBuffer = BufferUtils.createByteBuffer(numPixels * 4);
+        bgraBuffer.rewind();
+        if (bgraBuffer.remaining() < width * height * 4) {
+            throw new IllegalArgumentException("BGRA buffer does not contain enough data!");
+        }
+
+        for (int i = 0; i < numPixels; i++) {
+            byte b = bgraBuffer.get();
+            byte g = bgraBuffer.get();
+            byte r = bgraBuffer.get();
+            byte a = bgraBuffer.get();
+
+            rgbaBuffer.put(r).put(g).put(b).put(a);
+        }
+
+        rgbaBuffer.flip();
+        return rgbaBuffer;
+    }
+
     /**
      * Converts an OpenCV Mat object to a ByteBuffer in RGBA format.
      *
