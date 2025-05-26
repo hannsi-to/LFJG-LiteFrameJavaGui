@@ -15,6 +15,7 @@ public class Id {
      */
     public static final long initialEffectCacheId = Long.MIN_VALUE;
     public static final long initialAnimationCacheId = Long.MIN_VALUE;
+    public static final long initialItemId = Long.MIN_VALUE;
 
     public static int latestSceneId = initialSceneId;
     /**
@@ -23,4 +24,5 @@ public class Id {
     public static long latestGLObjectId = initialGLObjectId;
     public static long latestEffectCacheId = initialEffectCacheId;
     public static long latestAnimationCacheId = initialAnimationCacheId;
+    public static long latestItemId = initialItemId;
 }

@@ -247,8 +247,8 @@ public class Frame implements IFrame {
     }
 
     public void updateLFJGLContext() {
-        LFJGContext.frameBufferSize = new Vector2f(getFrameBufferWidth(), getFrameBufferHeight());
-        LFJGContext.windowSize = new Vector2f(getWindowWidth(), getWindowHeight());
+        LFJGContext.frameBufferSize = new Vector2i(getFrameBufferWidth(), getFrameBufferHeight());
+        LFJGContext.windowSize = new Vector2i(getWindowWidth(), getWindowHeight());
         float devicePixelRatioX = (float) frameBufferWidth / windowWidth;
         float devicePixelRatioY = (float) frameBufferHeight / windowHeight;
         LFJGContext.devicePixelRatio = MathHelper.max(devicePixelRatioX, devicePixelRatioY);

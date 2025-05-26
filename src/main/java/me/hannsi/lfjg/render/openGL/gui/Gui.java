@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.render.openGL.gui;
 
 import me.hannsi.lfjg.render.openGL.gui.item.Item;
+import me.hannsi.lfjg.utils.toolkit.KeyboardInfo;
 import me.hannsi.lfjg.utils.toolkit.MouseInfo;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class Gui {
         return this;
     }
 
-    public void renderItems(MouseInfo mouseInfo) {
+    public void renderItems(MouseInfo mouseInfo, KeyboardInfo keyboardInfo) {
         for (Item item : items) {
             item.render(mouseInfo.getCurrentPos());
         }

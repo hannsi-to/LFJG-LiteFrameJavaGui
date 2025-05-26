@@ -12,7 +12,7 @@ import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.math.MathHelper;
 import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
-import org.joml.Vector2f;
+import org.joml.Vector2i;
 
 public class TestGuiFrame2 implements LFJGFrame {
     GLObjectCache glObjectCache;
@@ -33,7 +33,7 @@ public class TestGuiFrame2 implements LFJGFrame {
     @Override
     public void init() {
         LFJGContext.projection = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, frame.getFrameBufferWidth(), frame.getFrameBufferHeight());
-        LFJGContext.frameBufferSize = new Vector2f(frame.getFrameBufferWidth(), frame.getFrameBufferHeight());
+        LFJGContext.frameBufferSize = new Vector2i(frame.getFrameBufferWidth(), frame.getFrameBufferHeight());
 
         glRect1 = new GLRect("Rect1");
         glRect1.rect(500, 500, 1000, 1000, Color.RED);
