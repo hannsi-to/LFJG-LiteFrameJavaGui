@@ -34,9 +34,21 @@ public class Gui {
         return this;
     }
 
+    public void init() {
+        for (Item item : items) {
+            item.init();
+        }
+    }
+
     public void renderItems(MouseInfo mouseInfo, KeyboardInfo keyboardInfo) {
         for (Item item : items) {
             item.render(mouseInfo, keyboardInfo);
+        }
+    }
+
+    public void cleanup() {
+        for (Item item : items) {
+            item.cleanup();
         }
     }
 

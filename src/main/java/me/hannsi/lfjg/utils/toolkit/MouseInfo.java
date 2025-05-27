@@ -123,6 +123,10 @@ public class MouseInfo {
         previousPos.y = currentPos.y;
     }
 
+    public boolean isInside(float x, float y, float width, float height) {
+        return x <= currentPos.x && currentPos.x <= x + width && y <= currentPos.y && currentPos.y <= y + height;
+    }
+
     /**
      * Checks if the left mouse button is pressed.
      *

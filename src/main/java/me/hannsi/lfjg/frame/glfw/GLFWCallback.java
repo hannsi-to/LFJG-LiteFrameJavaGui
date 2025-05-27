@@ -10,6 +10,7 @@ import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
 import me.hannsi.lfjg.frame.setting.settings.OpenGLDebugSetting;
 import org.lwjgl.glfw.*;
 
+import static me.hannsi.lfjg.frame.frame.LFJGContext.windowSize;
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
@@ -155,7 +156,7 @@ public class GLFWCallback implements IFrame {
         GLFWCursorPosCallback cursorPosCallback = new GLFWCursorPosCallback() {
             @Override
             public void invoke(long window, double xpos, double ypos) {
-                eventManager.call(new CursorPosEvent(xpos, ypos, window));
+                eventManager.call(new CursorPosEvent(xpos, windowSize.y() - ypos, window));
             }
         };
         glfwSetCursorPosCallback(frame.getWindowID(), cursorPosCallback);

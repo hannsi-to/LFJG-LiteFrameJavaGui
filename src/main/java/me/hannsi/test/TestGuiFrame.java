@@ -28,7 +28,7 @@ import org.joml.Vector2f;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
-import static me.hannsi.lfjg.frame.frame.LFJGContext.frame;
+import static me.hannsi.lfjg.frame.frame.LFJGContext.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class TestGuiFrame implements LFJGFrame {
@@ -37,8 +37,6 @@ public class TestGuiFrame implements LFJGFrame {
     private static final boolean TRANSPARENT = true;
     public static int textureId = -1;
     SceneSystem sceneSystem;
-    MouseInfo mouseInfo;
-    KeyboardInfo keyboardInfo;
     Camera camera;
 
     CefApp cefApp;
@@ -68,6 +66,9 @@ public class TestGuiFrame implements LFJGFrame {
         IFrame.eventManager.register(this);
 
         frame.updateLFJGLContext();
+        mouseInfo = new MouseInfo();
+        keyboardInfo = new KeyboardInfo();
+        camera = new Camera();
 
         sceneSystem = new SceneSystem();
         sceneSystem.addScene(new TestScene1().getScene());
@@ -75,10 +76,6 @@ public class TestGuiFrame implements LFJGFrame {
         sceneSystem.addScene(new TestScene3(frame).getScene());
         sceneSystem.setCurrentScene("TestScene3");
         sceneSystem.initScenes();
-
-        mouseInfo = new MouseInfo();
-        keyboardInfo = new KeyboardInfo();
-        camera = new Camera();
 
 
 //        if (!CefApp.startup(args)) {

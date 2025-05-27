@@ -3,6 +3,8 @@ package me.hannsi.lfjg.frame.frame;
 import me.hannsi.lfjg.render.openGL.system.font.FontCache;
 import me.hannsi.lfjg.render.openGL.system.svg.SVGCache;
 import me.hannsi.lfjg.utils.math.Projection;
+import me.hannsi.lfjg.utils.toolkit.KeyboardInfo;
+import me.hannsi.lfjg.utils.toolkit.MouseInfo;
 import org.joml.Vector2i;
 
 public class LFJGContext {
@@ -14,6 +16,9 @@ public class LFJGContext {
     public static float devicePixelRatio;
     public static Projection projection;
     public static long nanoVGContext;
+
+    public static MouseInfo mouseInfo;
+    public static KeyboardInfo keyboardInfo;
 
     public static FontCache fontCache;
     public static SVGCache svgCache;

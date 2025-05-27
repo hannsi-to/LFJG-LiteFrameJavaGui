@@ -8,7 +8,7 @@ import me.hannsi.lfjg.utils.toolkit.KeyboardInfo;
 import me.hannsi.lfjg.utils.toolkit.MouseInfo;
 
 
-public class Item {
+public class Item implements IItem {
     private final long id;
 
     private final float x;
@@ -27,7 +27,18 @@ public class Item {
         this.scale = scale;
     }
 
+    @Override
+    public void init() {
+
+    }
+
+    @Override
     public void render(MouseInfo mouseInfo, KeyboardInfo keyboardInfo) {
+
+    }
+
+    @Override
+    public void cleanup() {
 
     }
 
