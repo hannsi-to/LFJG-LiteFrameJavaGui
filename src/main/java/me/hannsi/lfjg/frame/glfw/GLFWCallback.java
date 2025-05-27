@@ -142,7 +142,7 @@ public class GLFWCallback implements IFrame {
         GLFWMouseButtonCallback mouseButtonCallback = new GLFWMouseButtonCallback() {
             @Override
             public void invoke(long window, int button, int action, int mods) {
-                eventManager.call(new MouseButtonCallbackEvent(window, button, action, mods));
+                eventManager.call(new MouseButtonEvent(window, button, action, mods));
                 if (action == GLFW.GLFW_PRESS) {
                     eventManager.call(new MouseButtonPressEvent(button, mods, window));
                 } else if (action == GLFW.GLFW_RELEASE) {

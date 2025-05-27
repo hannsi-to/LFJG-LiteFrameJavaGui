@@ -224,7 +224,7 @@ public class TestGuiFrame implements LFJGFrame {
     }
 
     @EventHandler
-    public void mouseButtonCallbackEvent(MouseButtonCallbackEvent event) {
+    public void mouseButtonCallbackEvent(MouseButtonEvent event) {
         mouseInfo.updateMouseButton(event.getButton(), event.getAction());
 
         MouseEvent mouseEvent = mouseEventAdapter.convertGLFWMouseEvent(event.getButton(), event.getAction(), event.getMods(), mouseInfo.getCurrentPos().x() - x, mouseInfo.getCurrentPos().y() - y);

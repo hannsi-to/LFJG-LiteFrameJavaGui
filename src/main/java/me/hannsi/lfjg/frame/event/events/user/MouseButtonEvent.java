@@ -5,7 +5,7 @@ import me.hannsi.lfjg.frame.event.system.Event;
 /**
  * The MouseButtonCallbackEvent class represents an event that occurs when a mouse button is pressed or released.
  */
-public class MouseButtonCallbackEvent extends Event {
+public class MouseButtonEvent extends Event {
     private final long window;
     private final int button;
     private final int action;
@@ -19,7 +19,7 @@ public class MouseButtonCallbackEvent extends Event {
      * @param action The action performed (press or release).
      * @param mods   The modifier keys pressed along with the mouse button.
      */
-    public MouseButtonCallbackEvent(long window, int button, int action, int mods) {
+    public MouseButtonEvent(long window, int button, int action, int mods) {
         this.window = window;
         this.button = button;
         this.action = action;
