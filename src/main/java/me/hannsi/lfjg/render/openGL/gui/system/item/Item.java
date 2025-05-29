@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.openGL.gui.system;
+package me.hannsi.lfjg.render.openGL.gui.system.item;
 
 import me.hannsi.lfjg.frame.event.events.user.CharEvent;
 import me.hannsi.lfjg.frame.event.events.user.KeyEvent;
@@ -11,20 +11,9 @@ import me.hannsi.lfjg.utils.toolkit.MouseInfo;
 public class Item implements IItem {
     private final long id;
 
-    private final float x;
-    private final float y;
-    private final float width;
-    private final float height;
-    private float scale;
 
-    public Item(float x, float y, float width, float height, float scale) {
+    public Item() {
         id = Id.latestItemId++;
-
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.scale = scale;
     }
 
     @Override
@@ -56,29 +45,5 @@ public class Item implements IItem {
 
     public long getId() {
         return id;
-    }
-
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public float getWidth() {
-        return width;
-    }
-
-    public float getHeight() {
-        return height;
-    }
-
-    public float getScale() {
-        return scale;
-    }
-
-    public void setScale(float scale) {
-        this.scale = scale;
     }
 }

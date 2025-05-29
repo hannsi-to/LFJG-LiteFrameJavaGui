@@ -24,7 +24,7 @@ public class FontCache {
         return this;
     }
 
-    public FontCache loadFont() {
+    public FontCache loadFonts() {
         fontCache.forEach((key, value) -> value.loadFont());
         return this;
     }

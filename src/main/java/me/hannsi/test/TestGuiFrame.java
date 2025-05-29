@@ -11,6 +11,8 @@ import me.hannsi.lfjg.jcef.adapter.KeyEventAdapter;
 import me.hannsi.lfjg.jcef.adapter.MouseEventAdapter;
 import me.hannsi.lfjg.jcef.adapter.MouseWheelEventAdapter;
 import me.hannsi.lfjg.jcef.handler.RenderHandler;
+import me.hannsi.lfjg.render.openGL.system.font.Font;
+import me.hannsi.lfjg.render.openGL.system.font.FontCache;
 import me.hannsi.lfjg.render.openGL.system.scene.SceneSystem;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import me.hannsi.lfjg.utils.toolkit.Camera;
@@ -69,6 +71,10 @@ public class TestGuiFrame implements LFJGFrame {
         mouseInfo = new MouseInfo();
         keyboardInfo = new KeyboardInfo();
         camera = new Camera();
+
+        fontCache = FontCache.initFontCache()
+                .createCache(new Font("font", new ResourcesLocation("font/default.ttf")))
+                .loadFonts();
 
         sceneSystem = new SceneSystem();
         sceneSystem.addScene(new TestScene1().getScene());
@@ -192,6 +198,8 @@ public class TestGuiFrame implements LFJGFrame {
 
     @Override
     public void stopFrame() {
+        fontCache.cleanup();
+
         sceneSystem.stopFrameScenes();
         sceneSystem.cleanup();
 

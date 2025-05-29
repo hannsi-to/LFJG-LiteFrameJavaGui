@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.openGL.gui.system;
+package me.hannsi.lfjg.render.openGL.gui.system.item;
 
 import me.hannsi.lfjg.utils.toolkit.KeyboardInfo;
 import me.hannsi.lfjg.utils.toolkit.MouseInfo;

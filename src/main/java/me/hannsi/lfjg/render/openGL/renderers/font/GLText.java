@@ -12,10 +12,10 @@ import me.hannsi.lfjg.utils.toolkit.StringUtil;
 import me.hannsi.lfjg.utils.type.types.AlignType;
 import me.hannsi.lfjg.utils.type.types.TextFormatType;
 import org.lwjgl.nanovg.NVGColor;
-import org.lwjgl.opengl.GL30;
 
 import java.util.List;
 
+import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.*;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgBeginPath;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgClosePath;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgFill;
@@ -35,8 +35,11 @@ import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTextAlign;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTextBounds;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTextMetrics;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTransform;
-import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.*;
 import static org.lwjgl.nanovg.NanoVG.*;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 /**
  * Class representing a font renderer in OpenGL.
@@ -136,11 +139,11 @@ public class GLText extends GLRect {
 
         frameBuffer.unbindFrameBuffer();
 
-        getGlUtil().addGLTarget(GL30.GL_TEXTURE_2D);
-        GL30.glActiveTexture(GL30.GL_TEXTURE0);
-        GL30.glBindTexture(GL30.GL_TEXTURE_2D, frameBuffer.getTextureId());
+        getGlUtil().addGLTarget(GL_TEXTURE_2D);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, frameBuffer.getTextureId());
         super.draw();
-        GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     private void drawTextFormat(String fontName, Color color, int align) {
@@ -270,12 +273,12 @@ public class GLText extends GLRect {
             }
 
             float lineWidth = charState.bold ? fontSize + size / 10f : fontSize / 10f;
-            drawNanoVGText(fontName, ch, (float) 0 + offsetX, (float) 0 + offsetY, color, align, charState.italic, charState.bold ? 10f : 0);
+            drawNanoVGText(fontName, ch, 0 + offsetX, 0 + offsetY, color, align, charState.italic, charState.bold ? 10f : 0);
             if (charState.strikethrough) {
-                drawLineWH((float) 0 + offsetX + strikethroughLineX, (float) 0 + offsetY + strikethroughLineY, strikethroughLineWidth + spaseX, strikethroughLineHeight, lineWidth, color);
+                drawLineWH(0 + offsetX + strikethroughLineX, 0 + offsetY + strikethroughLineY, strikethroughLineWidth + spaseX, strikethroughLineHeight, lineWidth, color);
             }
             if (charState.underLine) {
-                drawLineWH((float) 0 + offsetX + underLineX, (float) 0 + offsetY + underLineY, underLineWidth + spaseX, underLineHeight, lineWidth, color);
+                drawLineWH(0 + offsetX + underLineX, 0 + offsetY + underLineY, underLineWidth + spaseX, underLineHeight, lineWidth, color);
             }
 
             offsetX += getTextWidth(ch) + spaseX;

@@ -1,11 +1,11 @@
-package me.hannsi.lfjg.render.openGL.gui.system.items;
+package me.hannsi.lfjg.render.openGL.gui.system.item.items;
 
 import me.hannsi.lfjg.frame.event.events.user.MouseButtonEvent;
-import me.hannsi.lfjg.render.openGL.gui.system.Item;
+import me.hannsi.lfjg.render.openGL.gui.system.item.ItemRect;
 
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 
-public class Button extends Item {
+public class Button extends ItemRect {
     public String title;
     public boolean isHover;
 

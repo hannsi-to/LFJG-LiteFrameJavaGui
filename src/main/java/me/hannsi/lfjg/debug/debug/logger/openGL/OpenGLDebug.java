@@ -24,7 +24,7 @@ public class OpenGLDebug {
                 public void invoke(int source, int type, int id, int severity, int length, long message, long userParam) {
                     String errorMessage = memUTF8(message);
 
-                    String stackTrace = StackTraceUtil.getStackTrace(mainThreadName, "invoke", "callback", "getStackTrace");
+                    String stackTrace = StackTraceUtil.getStackTraceWithInsert(mainThreadName, "\t\t", "invoke", "callback", "getStackTraceWithInsert", "getStackTrace");
 
                     String sourceString = getSourceString(source);
                     String typeString = getTypeString(type);
