@@ -6,8 +6,8 @@ import me.hannsi.lfjg.render.openGL.gui.system.item.ItemRect;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 
 public class Button extends ItemRect {
-    public String title;
-    public boolean isHover;
+    private String title;
+    private boolean isHover;
 
     public Button(float x, float y, float width, float height, float scale) {
         super(x, y, width, height, scale);
