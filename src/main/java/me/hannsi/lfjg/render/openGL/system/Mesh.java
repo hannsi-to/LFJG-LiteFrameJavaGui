@@ -2,9 +2,9 @@ package me.hannsi.lfjg.render.openGL.system;
 
 import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 import me.hannsi.lfjg.debug.debug.system.DebugLevel;
+import me.hannsi.lfjg.utils.type.types.BufferObjectType;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
@@ -31,7 +31,7 @@ public class Mesh {
     private final boolean useEBO;
     private final boolean useIndirect;
     private final int vaoId;
-    private final List<Integer> bufferIdList;
+    private final Map<BufferObjectType, Integer> bufferIds;
     private int numVertices;
     private int eboId;
     private int indirectBufferId;
@@ -92,23 +92,23 @@ public class Mesh {
         this.useEBO = useEBO;
         this.useIndirect = useIndirect;
 
-        bufferIdList = new ArrayList<>();
+        bufferIds = new HashMap<>();
 
         vaoId = glGenVertexArrays();
         glBindVertexArray(vaoId);
 
         if (!useEBO) {
-            createVBO(positions, 0, getSize());
+            createVBO(BufferObjectType.POSITIONS_BUFFER, positions, 0, getSize());
         } else {
             createVBOEBOFromPositions();
         }
 
         if (colors != null) {
-            createVBO(colors, 1, 4);
+            createVBO(BufferObjectType.COLORS_BUFFER, colors, 1, 4);
         }
 
         if (texture != null) {
-            createVBO(texture, 2, 2);
+            createVBO(BufferObjectType.TEXTURE_BUFFER, texture, 2, 2);
         }
 
         if (useIndirect) {
@@ -136,14 +136,14 @@ public class Mesh {
         this.useIndirect = DEFAULT_USE_INDIRECT;
 
         numVertices = indices.length;
-        bufferIdList = new ArrayList<>();
+        bufferIds = new HashMap<>();
 
         vaoId = glGenVertexArrays();
         glBindVertexArray(vaoId);
 
-        createVBO(positions, 0, 3);
-        createVBO(normals, 1, 3);
-        createVBO(textCoords, 2, 2);
+        createVBO(BufferObjectType.POSITIONS_BUFFER, positions, 0, 3);
+        createVBO(BufferObjectType.NORMALS_BUFFER, normals, 1, 3);
+        createVBO(BufferObjectType.TEXTURE_BUFFER, textCoords, 2, 2);
 
         createEBO(indices);
 
@@ -190,7 +190,7 @@ public class Mesh {
         drawCommand.flip();
 
         indirectBufferId = glGenBuffers();
-        bufferIdList.add(indirectBufferId);
+        bufferIds.put(BufferObjectType.INDIRECT_BUFFER, indirectBufferId);
 
         glBindBuffer(GL_DRAW_INDIRECT_BUFFER, indirectBufferId);
         glBufferData(GL_DRAW_INDIRECT_BUFFER, drawCommand, usageHint);
@@ -224,14 +224,14 @@ public class Mesh {
         }
 
         int[] indicesArray = indices.stream().mapToInt(i -> i).toArray();
-        createVBO(newPositions, 0, stride);
+        createVBO(BufferObjectType.POSITIONS_BUFFER, newPositions, 0, stride);
         createEBO(indicesArray);
         numVertices = indicesArray.length;
     }
 
     public void createEBO(int[] indices) {
         eboId = glGenBuffers();
-        bufferIdList.add(eboId);
+        bufferIds.put(BufferObjectType.ELEMENT_ARRAY_BUFFER, eboId);
         IntBuffer indicesBuffer = MemoryUtil.memCallocInt(indices.length);
         indicesBuffer.put(0, indices);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboId);
@@ -239,9 +239,9 @@ public class Mesh {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
-    public void createVBO(float[] values, int index, int size) {
+    public void createVBO(BufferObjectType bufferObjectType, float[] values, int index, int size) {
         int vboId = glGenBuffers();
-        bufferIdList.add(vboId);
+        bufferIds.put(bufferObjectType, vboId);
         FloatBuffer valuesBuffer = MemoryUtil.memCallocFloat(values.length);
         valuesBuffer.put(0, values);
         glBindBuffer(GL_ARRAY_BUFFER, vboId);
@@ -252,15 +252,65 @@ public class Mesh {
         MemoryUtil.memFree(valuesBuffer);
     }
 
+    public void updateVBOData(BufferObjectType bufferObjectType, float[] newValues) {
+        for (Map.Entry<BufferObjectType, Integer> bufferObjectTypeEntry : bufferIds.entrySet()) {
+            BufferObjectType entryBufferObjectType = bufferObjectTypeEntry.getKey();
+            if (bufferObjectType != entryBufferObjectType) {
+                return;
+            }
+
+            int glId = entryBufferObjectType.getGlId();
+            int bufferId = bufferObjectTypeEntry.getValue();
+
+            glBindBuffer(glId, bufferId);
+            FloatBuffer buffer = BufferUtils.createFloatBuffer(newValues.length);
+            buffer.put(newValues).flip();
+            glBufferData(glId, buffer, GL_DYNAMIC_DRAW);
+            glBindBuffer(glId, 0);
+        }
+    }
+
+    public void updateVBOSubData(BufferObjectType bufferObjectType, float[] newValues, int offset) {
+        for (Map.Entry<BufferObjectType, Integer> bufferObjectTypeEntry : bufferIds.entrySet()) {
+            BufferObjectType entryBufferObjectType = bufferObjectTypeEntry.getKey();
+            if (bufferObjectType != entryBufferObjectType) {
+                return;
+            }
+
+            int glId = entryBufferObjectType.getGlId();
+            int bufferId = bufferObjectTypeEntry.getValue();
+
+            glBindBuffer(glId, bufferId);
+            FloatBuffer buffer = BufferUtils.createFloatBuffer(newValues.length);
+            buffer.put(newValues).flip();
+            glBufferSubData(glId, offset, buffer);
+            glBindBuffer(glId, 0);
+        }
+    }
+
     /**
      * Cleans up the mesh by deleting the VBOs and VAO.
      */
     public void cleanup() {
-        bufferIdList.forEach(GL30::glDeleteBuffers);
+        StringBuilder ids = new StringBuilder();
+        for (Map.Entry<BufferObjectType, Integer> entry : bufferIds.entrySet()) {
+            BufferObjectType key = entry.getKey();
+            Integer value = entry.getValue();
+            glDeleteBuffers(value);
+            ids.append(key.getName()).append(": ").append(value).append(", ");
+        }
+        bufferIds.clear();
+        ids.append("VertexArrayObject").append(": ").append(vaoId);
         glDeleteVertexArrays(vaoId);
-        bufferIdList.clear();
 
-        LogGenerator logGenerator = new LogGenerator("Mesh", "Source: Mesh", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: Mesh cleanup is complete.");
+        LogGenerator logGenerator = new LogGenerator(
+                "Mesh",
+                "Source: Mesh",
+                "Type: Cleanup",
+                "ID: " + ids,
+                "Severity: Debug",
+                "Message: Mesh cleanup is complete."
+        );
         logGenerator.logging(DebugLevel.DEBUG);
     }
 
@@ -282,13 +332,8 @@ public class Mesh {
         return projectionType;
     }
 
-    /**
-     * Gets the list of VBO IDs.
-     *
-     * @return the list of VBO IDs
-     */
-    public List<Integer> getBufferIdList() {
-        return bufferIdList;
+    public Map<BufferObjectType, Integer> getBufferIds() {
+        return bufferIds;
     }
 
     /**

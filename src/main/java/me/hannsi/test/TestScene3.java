@@ -4,14 +4,19 @@ import me.hannsi.lfjg.frame.frame.Frame;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.gui.system.Gui;
 import me.hannsi.lfjg.render.openGL.gui.ui.TestTextField;
+import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.system.scene.IScene;
 import me.hannsi.lfjg.render.openGL.system.scene.Scene;
+import me.hannsi.lfjg.utils.graphics.color.Color;
+import me.hannsi.lfjg.utils.type.types.BufferObjectType;
 
 public class TestScene3 implements IScene {
     public Scene scene;
     public Frame frame;
 
     public Gui gui;
+
+    public GLRect glRect;
 
     public TestScene3(Frame frame) {
         this.scene = new Scene("TestScene3", this);
@@ -33,11 +38,19 @@ public class TestScene3 implements IScene {
                 )
                 .setEventHandler();
         gui.init();
+
+        glRect = new GLRect("GLRect1");
+        glRect.rectWH(0, 0, 200, 200, Color.of(100, 100, 100, 255));
     }
 
     @Override
     public void drawFrame() {
         gui.renderItems(LFJGContext.mouseInfo, LFJGContext.keyboardInfo);
+
+        float[] positions = glRect.getMesh().getPositions();
+        positions[3] = 500;
+        glRect.getMesh().updateVBOData(BufferObjectType.POSITIONS_BUFFER, positions);
+        glRect.draw();
     }
 
     @Override
