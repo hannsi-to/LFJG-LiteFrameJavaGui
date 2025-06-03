@@ -2,7 +2,7 @@ package me.hannsi.lfjg.render.openGL.renderers.model;
 
 import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 import me.hannsi.lfjg.debug.debug.system.DebugLevel;
-import me.hannsi.lfjg.render.openGL.system.Mesh;
+import me.hannsi.lfjg.render.openGL.system.MeshBuilder;
 import me.hannsi.lfjg.render.openGL.system.model.Object3DCache;
 import me.hannsi.lfjg.render.openGL.system.model.lights.*;
 import me.hannsi.lfjg.render.openGL.system.model.model.Entity;
@@ -93,11 +93,11 @@ public class Object3DCacheRender {
                 glActiveTexture(GL_TEXTURE0);
                 texture.bind();
 
-                for (Mesh mesh : material.getMeshList()) {
-                    glBindVertexArray(mesh.getVaoId());
+                for (MeshBuilder meshBuilder : material.getMeshBuilders()) {
+                    glBindVertexArray(meshBuilder.getVertexArrayObjectId());
                     for (Entity entity : entities) {
                         shaderProgram.setUniform("modelMatrix", entity.getModelMatrix());
-                        glDrawElements(GL_TRIANGLES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
+                        glDrawElements(GL_TRIANGLES, meshBuilder.getNumVertices(), GL_UNSIGNED_INT, 0);
                     }
                 }
 

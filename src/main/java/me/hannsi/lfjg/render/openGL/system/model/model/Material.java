@@ -2,7 +2,7 @@ package me.hannsi.lfjg.render.openGL.system.model.model;
 
 import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 import me.hannsi.lfjg.debug.debug.system.DebugLevel;
-import me.hannsi.lfjg.render.openGL.system.Mesh;
+import me.hannsi.lfjg.render.openGL.system.MeshBuilder;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import org.joml.Vector4f;
 
@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class Material {
     public static final Vector4f DEFAULT_COLOR = new Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
-    private final List<Mesh> meshList;
+    private final List<MeshBuilder> meshBuilders;
     private Vector4f ambientColor;
     private Vector4f diffuseColor;
     private float reflectance;
@@ -29,7 +29,7 @@ public class Material {
         ambientColor = DEFAULT_COLOR;
         specularColor = DEFAULT_COLOR;
 
-        meshList = new ArrayList<>();
+        meshBuilders = new ArrayList<>();
     }
 
     /**
@@ -38,7 +38,7 @@ public class Material {
     public void cleanup() {
         ambientColor = null;
         diffuseColor = null;
-        meshList.forEach(Mesh::cleanup);
+        meshBuilders.forEach(MeshBuilder::cleanup);
         specularColor = null;
         texturePath.cleanup();
 
@@ -87,8 +87,8 @@ public class Material {
      *
      * @return the list of meshes associated with the material
      */
-    public List<Mesh> getMeshList() {
-        return meshList;
+    public List<MeshBuilder> getMeshBuilders() {
+        return meshBuilders;
     }
 
     /**

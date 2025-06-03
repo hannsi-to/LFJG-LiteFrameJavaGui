@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.openGL.renderers.svg;
 
 import me.hannsi.lfjg.frame.frame.LFJGContext;
-import me.hannsi.lfjg.render.openGL.system.Mesh;
+import me.hannsi.lfjg.render.openGL.system.MeshBuilder;
 import me.hannsi.lfjg.render.openGL.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
 import me.hannsi.lfjg.utils.graphics.GLUtil;
@@ -15,7 +15,7 @@ public class SVGRenderer {
     private final ShaderProgram shaderProgramFBO;
     private final ResourcesLocation vertexShaderFBO;
     private final ResourcesLocation fragmentShaderFBO;
-    private Mesh mesh;
+    private MeshBuilder meshBuilder;
 
     public SVGRenderer() {
         vaoRendering = new VAORendering();
@@ -52,7 +52,7 @@ public class SVGRenderer {
 
         GL30.glActiveTexture(GL30.GL_TEXTURE0 + textureUnit);
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, textureId);
-        vaoRendering.draw(mesh);
+        vaoRendering.draw(meshBuilder);
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
 
         glUtil.disableTargets();
@@ -65,19 +65,22 @@ public class SVGRenderer {
         float[] positions = new float[]{x, y, x + width, y, x + width, y + height, x, y + height};
         float[] uvs = new float[]{1, 1, 0, 1, 0, 0, 1, 0};
 
-        mesh = new Mesh(ProjectionType.ORTHOGRAPHIC_PROJECTION, positions, null, uvs);
+        meshBuilder = MeshBuilder.init()
+                .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
+                .createBufferObjects(positions, null, uvs)
+                .builderClose();
     }
 
     public VAORendering getVaoRendering() {
         return vaoRendering;
     }
 
-    public Mesh getMesh() {
-        return mesh;
+    public MeshBuilder getMeshBuilder() {
+        return meshBuilder;
     }
 
-    public void setMesh(Mesh mesh) {
-        this.mesh = mesh;
+    public void setMeshBuilder(MeshBuilder meshBuilder) {
+        this.meshBuilder = meshBuilder;
     }
 
     public ShaderProgram getShaderProgramFBO() {

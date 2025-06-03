@@ -8,7 +8,7 @@ import me.hannsi.lfjg.render.openGL.exceptions.frameBuffer.CreatingFrameBufferEx
 import me.hannsi.lfjg.render.openGL.exceptions.render.CreatingRenderBufferException;
 import me.hannsi.lfjg.render.openGL.exceptions.texture.CreatingTextureException;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
-import me.hannsi.lfjg.render.openGL.system.Mesh;
+import me.hannsi.lfjg.render.openGL.system.MeshBuilder;
 import me.hannsi.lfjg.render.openGL.system.shader.ShaderProgram;
 import me.hannsi.lfjg.utils.graphics.GLUtil;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
@@ -30,7 +30,7 @@ public class FrameBuffer {
     private float y;
     private float width;
     private float height;
-    private Mesh mesh;
+    private MeshBuilder meshBuilder;
     private ShaderProgram shaderProgramFBO;
     private ResourcesLocation vertexShaderFBO;
     private ResourcesLocation fragmentShaderFBO;
@@ -92,7 +92,10 @@ public class FrameBuffer {
 
         float[] uvs = new float[]{0, 0, 1, 0, 1, 1, 0, 1};
 
-        mesh = new Mesh(ProjectionType.ORTHOGRAPHIC_PROJECTION, positions, null, uvs);
+        meshBuilder = MeshBuilder.init()
+                .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
+                .createBufferObjects(positions, null, uvs)
+                .builderClose();
 
         this.uesStencil = uesStencil;
         this.glObject = glObject;
@@ -107,7 +110,7 @@ public class FrameBuffer {
         GL30.glDeleteRenderbuffers(renderBufferId);
 
         vaoRendering.cleanup();
-        mesh.cleanup();
+        meshBuilder.cleanup();
         shaderProgramFBO.cleanup();
         vaoRendering.cleanup();
         fragmentShaderFBO.cleanup();
@@ -198,7 +201,7 @@ public class FrameBuffer {
             GL30.glStencilFunc(GL30.GL_ALWAYS, 1, 0xff);
             GL30.glStencilOp(GL30.GL_KEEP, GL30.GL_KEEP, GL30.GL_REPLACE);
             GL30.glColorMask(false, false, false, false);
-            vaoRendering.draw(glObject.getMesh());
+            vaoRendering.draw(glObject.getMeshBuilder());
             GL30.glColorMask(true, true, true, true);
 
             GL30.glStencilFunc(GL30.GL_EQUAL, 1, 0xff);
@@ -206,7 +209,7 @@ public class FrameBuffer {
         }
 
         bindTexture(textureUnit);
-        vaoRendering.draw(mesh);
+        vaoRendering.draw(meshBuilder);
         unbindTexture(textureUnit);
 
         glUtil.disableTargets();
@@ -383,12 +386,12 @@ public class FrameBuffer {
      *
      * @return the mesh associated with the frame buffer
      */
-    public Mesh getMesh() {
-        return mesh;
+    public MeshBuilder getMeshBuilder() {
+        return meshBuilder;
     }
 
-    public void setMesh(Mesh mesh) {
-        this.mesh = mesh;
+    public void setMeshBuilder(MeshBuilder meshBuilder) {
+        this.meshBuilder = meshBuilder;
     }
 
     /**

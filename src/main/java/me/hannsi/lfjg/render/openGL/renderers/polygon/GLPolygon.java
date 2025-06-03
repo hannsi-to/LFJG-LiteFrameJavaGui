@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.openGL.renderers.polygon;
 
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
-import me.hannsi.lfjg.render.openGL.system.Mesh;
+import me.hannsi.lfjg.render.openGL.system.MeshBuilder;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
@@ -131,11 +131,14 @@ public class GLPolygon extends GLObject {
     }
 
     public void rendering(FileLocation vertexShaderPath, FileLocation fragmentShaderPath) {
-        Mesh mesh = new Mesh(ProjectionType.ORTHOGRAPHIC_PROJECTION, vertex, color, texture);
+        MeshBuilder meshBuilder = MeshBuilder.init()
+                .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
+                .createBufferObjects(vertex, color, texture)
+                .builderClose();
 
         setVertexShader(vertexShaderPath);
         setFragmentShader(fragmentShaderPath);
-        setMesh(mesh);
+        setMeshBuilder(meshBuilder);
 
         float[] bounds = getBounds();
         setX(bounds[0]);

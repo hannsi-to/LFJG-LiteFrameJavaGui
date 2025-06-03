@@ -1,9 +1,9 @@
 package me.hannsi.lfjg.render.openGL.system.rendering;
 
-import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
+import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
-import me.hannsi.lfjg.render.openGL.system.Mesh;
+import me.hannsi.lfjg.render.openGL.system.MeshBuilder;
 import org.lwjgl.opengl.GL30;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -22,7 +22,7 @@ public class VAORendering {
      * @param glObject the GLObject to draw
      */
     public void draw(GLObject glObject) {
-        drawMesh(glObject.getMesh(), glObject.getDrawType().getId());
+        drawMesh(glObject.getMeshBuilder(), glObject.getDrawType().getId());
     }
 
     /**
@@ -30,17 +30,17 @@ public class VAORendering {
      *
      * @param mesh the Mesh to draw;
      */
-    public void draw(Mesh mesh) {
+    public void draw(MeshBuilder mesh) {
         drawMesh(mesh, GL30.GL_POLYGON);
     }
 
-    public void drawMesh(Mesh mesh, int drawType) {
-        glBindVertexArray(mesh.getVaoId());
+    public void drawMesh(MeshBuilder mesh, int drawType) {
+        glBindVertexArray(mesh.getVertexArrayObjectId());
         try {
             if (mesh.isUseIndirect()) {
-                if (mesh.isUseEBO()) {
+                if (mesh.isUseElementBufferObject()) {
                     glBindBuffer(GL_DRAW_INDIRECT_BUFFER, mesh.getIndirectBufferId());
-                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.getEboId());
+                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.getElementBufferObjectId());
                     glDrawElementsIndirect(drawType, GL_UNSIGNED_INT, 0);
                     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
                     glBindBuffer(GL_DRAW_INDIRECT_BUFFER, 0);
@@ -50,8 +50,8 @@ public class VAORendering {
                     glBindBuffer(GL_DRAW_INDIRECT_BUFFER, 0);
                 }
             } else {
-                if (mesh.isUseEBO()) {
-                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.getEboId());
+                if (mesh.isUseElementBufferObject()) {
+                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.getElementBufferObjectId());
                     glDrawElements(drawType, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
                     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
                 } else {

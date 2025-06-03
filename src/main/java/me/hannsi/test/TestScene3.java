@@ -47,9 +47,9 @@ public class TestScene3 implements IScene {
     public void drawFrame() {
         gui.renderItems(LFJGContext.mouseInfo, LFJGContext.keyboardInfo);
 
-        float[] positions = glRect.getMesh().getPositions();
+        float[] positions = glRect.getMeshBuilder().getPositions();
         positions[3] = 500;
-        glRect.getMesh().updateVBOData(BufferObjectType.POSITIONS_BUFFER, positions);
+        glRect.getMeshBuilder().updateVBOData(BufferObjectType.POSITIONS_BUFFER, positions);
         glRect.draw();
     }
 

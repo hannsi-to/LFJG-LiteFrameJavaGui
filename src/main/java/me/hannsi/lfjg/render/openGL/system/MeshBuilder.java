@@ -127,8 +127,9 @@ public class MeshBuilder {
         return this;
     }
 
-    public void builderClose() {
+    public MeshBuilder builderClose() {
         glBindVertexArray(0);
+        return this;
     }
 
     public void updateVBOData(BufferObjectType bufferObjectType, float[] newValues) {
@@ -180,12 +181,12 @@ public class MeshBuilder {
         glDeleteVertexArrays(vertexArrayObjectId);
 
         LogGenerator logGenerator = new LogGenerator(
-                "Mesh",
-                "Source: Mesh",
+                "MeshBuilder",
+                "Source: MeshBuilder",
                 "Type: Cleanup",
                 "ID: " + ids,
                 "Severity: Debug",
-                "Message: Mesh cleanup is complete."
+                "Message: MeshBuilder cleanup is complete."
         );
         logGenerator.logging(DebugLevel.DEBUG);
     }
@@ -333,5 +334,21 @@ public class MeshBuilder {
 
     public int getElementBufferObjectId() {
         return elementBufferObjectId;
+    }
+
+    public float[] getPositions() {
+        return positions;
+    }
+
+    public float[] getColors() {
+        return colors;
+    }
+
+    public float[] getTextures() {
+        return textures;
+    }
+
+    public int getNumVertices() {
+        return numVertices;
     }
 }

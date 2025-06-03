@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.render.openGL.system.model.model;
 
-import me.hannsi.lfjg.render.openGL.system.Mesh;
+import me.hannsi.lfjg.render.openGL.system.MeshBuilder;
 import me.hannsi.lfjg.render.openGL.system.model.texture.TextureModelCache;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import org.joml.Vector4f;
@@ -70,7 +70,7 @@ public class ModelLoader {
         for (int i = 0; i < numMeshes; i++) {
             assert aiMeshes != null;
             AIMesh aiMesh = AIMesh.create(aiMeshes.get(i));
-            Mesh mesh = processMesh(aiMesh);
+            MeshBuilder mesh = processMesh(aiMesh);
             int materialIdx = aiMesh.mMaterialIndex();
             Material material;
             if (materialIdx >= 0 && materialIdx < materialList.size()) {
@@ -78,10 +78,10 @@ public class ModelLoader {
             } else {
                 material = defaultMaterial;
             }
-            material.getMeshList().add(mesh);
+            material.getMeshBuilders().add(mesh);
         }
 
-        if (!defaultMaterial.getMeshList().isEmpty()) {
+        if (!defaultMaterial.getMeshBuilders().isEmpty()) {
             materialList.add(defaultMaterial);
         }
 
@@ -166,7 +166,7 @@ public class ModelLoader {
      * @param aiMesh the Assimp mesh to process
      * @return the processed mesh
      */
-    private static Mesh processMesh(AIMesh aiMesh) {
+    private static MeshBuilder processMesh(AIMesh aiMesh) {
         float[] vertices = processVertices(aiMesh);
         float[] normals = processNormals(aiMesh);
         float[] textCoords = processTextCoords(aiMesh);
@@ -177,7 +177,9 @@ public class ModelLoader {
             textCoords = new float[numElements];
         }
 
-        return new Mesh(vertices, normals, textCoords, indices);
+        return MeshBuilder.init()
+                .createBufferObjects(vertices, normals, textCoords, indices)
+                .builderClose();
     }
 
     /**
