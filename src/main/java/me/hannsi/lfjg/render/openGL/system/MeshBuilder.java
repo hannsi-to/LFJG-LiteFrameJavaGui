@@ -7,6 +7,7 @@ import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.system.MemoryUtil;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.*;
@@ -20,9 +21,9 @@ import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 
 public class MeshBuilder {
     public static ProjectionType DEFAULT_PROJECTION_TYPE = ProjectionType.ORTHOGRAPHIC_PROJECTION;
-    public static boolean DEFAULT_USE_ELEMNT_BUFFER_OBJECT = true;
+    public static boolean DEFAULT_USE_ELEMENT_BUFFER_OBJECT = true;
     public static boolean DEFAULT_USE_INDIRECT = true;
-    public static int DEFAULT_USAGE_HINT = GL_STATIC_DRAW;
+    public static int DEFAULT_USAGE_HINT = GL_DYNAMIC_DRAW;
     private final int vertexArrayObjectId;
     private final Map<BufferObjectType, Integer> bufferIds;
     protected float[] positions;
@@ -38,7 +39,7 @@ public class MeshBuilder {
 
     MeshBuilder() {
         this.projectionType = DEFAULT_PROJECTION_TYPE;
-        this.useElementBufferObject = DEFAULT_USE_ELEMNT_BUFFER_OBJECT;
+        this.useElementBufferObject = DEFAULT_USE_ELEMENT_BUFFER_OBJECT;
         this.useIndirect = DEFAULT_USE_INDIRECT;
         this.usageHint = DEFAULT_USAGE_HINT;
 
@@ -136,7 +137,7 @@ public class MeshBuilder {
         for (Map.Entry<BufferObjectType, Integer> bufferObjectTypeEntry : bufferIds.entrySet()) {
             BufferObjectType entryBufferObjectType = bufferObjectTypeEntry.getKey();
             if (bufferObjectType != entryBufferObjectType) {
-                return;
+                continue;
             }
 
             int glId = entryBufferObjectType.getGlId();
@@ -154,7 +155,7 @@ public class MeshBuilder {
         for (Map.Entry<BufferObjectType, Integer> bufferObjectTypeEntry : bufferIds.entrySet()) {
             BufferObjectType entryBufferObjectType = bufferObjectTypeEntry.getKey();
             if (bufferObjectType != entryBufferObjectType) {
-                return;
+                continue;
             }
 
             int glId = entryBufferObjectType.getGlId();
@@ -163,7 +164,27 @@ public class MeshBuilder {
             glBindBuffer(glId, bufferId);
             FloatBuffer buffer = BufferUtils.createFloatBuffer(newValues.length);
             buffer.put(newValues).flip();
-            glBufferSubData(glId, offset, buffer);
+            glBufferSubData(glId, offset * Byte.BYTES, buffer);
+            glBindBuffer(glId, 0);
+        }
+    }
+
+    public void updateVBOMapBufferRange(BufferObjectType bufferObjectType, float[] newValue, int offset, int length, int access) {
+        for (Map.Entry<BufferObjectType, Integer> bufferObjectTypeEntry : bufferIds.entrySet()) {
+            BufferObjectType entryBufferObjectType = bufferObjectTypeEntry.getKey();
+            if (bufferObjectType != entryBufferObjectType) {
+                continue;
+            }
+
+            int glId = entryBufferObjectType.getGlId();
+            int bufferId = bufferObjectTypeEntry.getValue();
+
+            glBindBuffer(glId, bufferId);
+            ByteBuffer mapped = glMapBufferRange(GL_ARRAY_BUFFER, offset, length, access);
+            if (mapped != null) {
+                mapped.asFloatBuffer().put(newValue);
+                glUnmapBuffer(GL_ARRAY_BUFFER);
+            }
             glBindBuffer(glId, 0);
         }
     }
