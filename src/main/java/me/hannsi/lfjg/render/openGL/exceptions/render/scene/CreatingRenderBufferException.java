@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.openGL.exceptions.render;
+package me.hannsi.lfjg.render.openGL.exceptions.render.scene;
 
 /**
  * Exception thrown when there is an issue creating the render buffer.

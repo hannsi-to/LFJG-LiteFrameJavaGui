@@ -151,23 +151,38 @@ public class MeshBuilder {
         }
     }
 
-    public void updateVBOSubData(BufferObjectType bufferObjectType, float[] newValues, int offset) {
+    public void updateVBOSubData(BufferObjectType bufferObjectType, float[] newValues) {
+        ElementPair elementPair = null;
+        if (useElementBufferObject && bufferObjectType == BufferObjectType.POSITIONS_BUFFER) {
+            elementPair = getElementPositions(getSize(), newValues);
+        }
+
         for (Map.Entry<BufferObjectType, Integer> bufferObjectTypeEntry : bufferIds.entrySet()) {
             BufferObjectType entryBufferObjectType = bufferObjectTypeEntry.getKey();
+            int glId = entryBufferObjectType.getGlId();
+            int bufferId = bufferObjectTypeEntry.getValue();
+
+            if (entryBufferObjectType == BufferObjectType.ELEMENT_ARRAY_BUFFER && elementPair != null) {
+                int[] indices = elementPair.indices;
+                newValues = elementPair.positions;
+
+                IntBuffer indicesBuffer = MemoryUtil.memCallocInt(indices.length);
+                indicesBuffer.put(0, indices).flip();
+                glBindBuffer(glId, bufferId);
+                glBufferSubData(glId, 0, indicesBuffer);
+                glBindBuffer(glId, 0);
+
+                numVertices = elementPair.indices.length;
+            }
+
             if (bufferObjectType != entryBufferObjectType) {
                 continue;
             }
 
-            int glId = entryBufferObjectType.getGlId();
-            int bufferId = bufferObjectTypeEntry.getValue();
-            if (bufferObjectType == BufferObjectType.POSITIONS_BUFFER && useElementBufferObject) {
-
-            }
-
-            glBindBuffer(glId, bufferId);
             FloatBuffer buffer = BufferUtils.createFloatBuffer(newValues.length);
+            glBindBuffer(glId, bufferId);
             buffer.put(newValues).flip();
-            glBufferSubData(glId, offset * Byte.BYTES, buffer);
+            glBufferSubData(glId, 0, buffer);
             glBindBuffer(glId, 0);
         }
     }
@@ -244,13 +259,13 @@ public class MeshBuilder {
 
     private void createVectorBufferObjectAndElementBufferObject() {
         int stride = getSize();
-        ElementPair elementPair = getElementPositions(stride);
+        ElementPair elementPair = getElementPositions(stride, positions);
         createVertexBufferObject(BufferObjectType.POSITIONS_BUFFER, elementPair.positions, 0, stride);
         createElementBufferObject(elementPair.indices);
         numVertices = elementPair.indices.length;
     }
 
-    private ElementPair getElementPositions(int stride) {
+    private ElementPair getElementPositions(int stride, float[] positions) {
         Map<String, Integer> uniqueVertices = new HashMap<>();
         List<Integer> indices = new ArrayList<>();
         List<Float> uniquePositions = new ArrayList<>();

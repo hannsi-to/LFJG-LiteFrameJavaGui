@@ -2,8 +2,8 @@ package me.hannsi.lfjg.render.openGL.system.scene;
 
 import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
 import me.hannsi.lfjg.debug.debug.system.DebugLevel;
-import me.hannsi.lfjg.render.openGL.exceptions.render.ChangeSceneException;
-import me.hannsi.lfjg.render.openGL.exceptions.render.SetSceneException;
+import me.hannsi.lfjg.render.openGL.exceptions.render.scene.ChangeSceneException;
+import me.hannsi.lfjg.render.openGL.exceptions.render.scene.SetSceneException;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -8,7 +8,6 @@ import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.openGL.system.scene.IScene;
 import me.hannsi.lfjg.render.openGL.system.scene.Scene;
 import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.type.types.BufferObjectType;
 
 public class TestScene3 implements IScene {
     public Scene scene;
@@ -17,6 +16,8 @@ public class TestScene3 implements IScene {
     public Gui gui;
 
     public GLRect glRect;
+
+    public int x;
 
     public TestScene3(Frame frame) {
         this.scene = new Scene("TestScene3", this);
@@ -39,18 +40,18 @@ public class TestScene3 implements IScene {
                 .setEventHandler();
         gui.init();
 
+        x = 0;
         glRect = new GLRect("GLRect1");
-        glRect.rectWH(0, 0, 200, 200, Color.of(100, 100, 100, 255));
+        glRect.rectWH(x, 0, 200, 200, Color.of(100, 100, 100, 255));
     }
 
     @Override
     public void drawFrame() {
         gui.renderItems(LFJGContext.mouseInfo, LFJGContext.keyboardInfo);
 
-        float[] positions = glRect.getMeshBuilder().getPositions();
-        positions[3] = positions[3] + 1;
-        glRect.getMeshBuilder().updateVBOSubData(BufferObjectType.POSITIONS_BUFFER, positions, 0);
+        glRect.rectWH(x, 0, 200, 200, Color.of(100, 100, 100, 255));
         glRect.draw();
+        x++;
     }
 
     @Override

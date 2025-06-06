@@ -5,7 +5,7 @@ import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.openGL.exceptions.frameBuffer.CompleteFrameBufferException;
 import me.hannsi.lfjg.render.openGL.exceptions.frameBuffer.CreatingFrameBufferException;
-import me.hannsi.lfjg.render.openGL.exceptions.render.CreatingRenderBufferException;
+import me.hannsi.lfjg.render.openGL.exceptions.render.scene.CreatingRenderBufferException;
 import me.hannsi.lfjg.render.openGL.exceptions.texture.CreatingTextureException;
 import me.hannsi.lfjg.render.openGL.renderers.GLObject;
 import me.hannsi.lfjg.render.openGL.system.MeshBuilder;
