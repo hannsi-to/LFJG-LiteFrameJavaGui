@@ -160,6 +160,9 @@ public class MeshBuilder {
 
             int glId = entryBufferObjectType.getGlId();
             int bufferId = bufferObjectTypeEntry.getValue();
+            if (bufferObjectType == BufferObjectType.POSITIONS_BUFFER && useElementBufferObject) {
+
+            }
 
             glBindBuffer(glId, bufferId);
             FloatBuffer buffer = BufferUtils.createFloatBuffer(newValues.length);
@@ -240,11 +243,18 @@ public class MeshBuilder {
     }
 
     private void createVectorBufferObjectAndElementBufferObject() {
+        int stride = getSize();
+        ElementPair elementPair = getElementPositions(stride);
+        createVertexBufferObject(BufferObjectType.POSITIONS_BUFFER, elementPair.positions, 0, stride);
+        createElementBufferObject(elementPair.indices);
+        numVertices = elementPair.indices.length;
+    }
+
+    private ElementPair getElementPositions(int stride) {
         Map<String, Integer> uniqueVertices = new HashMap<>();
         List<Integer> indices = new ArrayList<>();
         List<Float> uniquePositions = new ArrayList<>();
         int index = 0;
-        int stride = getSize();
 
         for (int i = 0; i < positions.length; i += stride) {
             String key = Arrays.toString(Arrays.copyOfRange(positions, i, i + stride));
@@ -265,10 +275,7 @@ public class MeshBuilder {
             newPositions[i] = uniquePositions.get(i);
         }
 
-        int[] indicesArray = indices.stream().mapToInt(i -> i).toArray();
-        createVertexBufferObject(BufferObjectType.POSITIONS_BUFFER, newPositions, 0, stride);
-        createElementBufferObject(indicesArray);
-        numVertices = indicesArray.length;
+        return new ElementPair(newPositions, indices.stream().mapToInt(i -> i).toArray());
     }
 
     private void createElementBufferObject(int[] indices) {
@@ -371,5 +378,15 @@ public class MeshBuilder {
 
     public int getNumVertices() {
         return numVertices;
+    }
+
+    public static class ElementPair {
+        public float[] positions;
+        public int[] indices;
+
+        public ElementPair(float[] positions, int[] indices) {
+            this.positions = positions;
+            this.indices = indices;
+        }
     }
 }
