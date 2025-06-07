@@ -8,6 +8,7 @@ import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.BufferObjectType;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
+import me.hannsi.lfjg.utils.type.types.UpdateBufferType;
 import org.joml.Vector2f;
 
 import java.util.Arrays;
@@ -16,11 +17,13 @@ import java.util.Arrays;
  * Class representing a polygon renderer in OpenGL.
  */
 public class GLPolygon extends GLObject {
-    private boolean isUpdate;
+    public static final UpdateBufferType DEFAULT_UPDATE_BUFFER_TYPE = UpdateBufferType.MAP_BUFFER_RANGE;
 
+    private UpdateBufferType updateBufferType;
     private float[] vertex;
     private float[] color;
     private float[] texture;
+    private boolean isUpdate;
 
     /**
      * Constructs a new GLPolygon with the specified name.
@@ -29,6 +32,8 @@ public class GLPolygon extends GLObject {
      */
     public GLPolygon(String name) {
         super(name);
+
+        this.updateBufferType = DEFAULT_UPDATE_BUFFER_TYPE;
     }
 
     /**
@@ -160,11 +165,36 @@ public class GLPolygon extends GLObject {
         meshBuilder.updateVBOData(BufferObjectType.POSITIONS_BUFFER, vertex);
         meshBuilder.updateVBOData(BufferObjectType.COLORS_BUFFER, color);
         meshBuilder.updateVBOData(BufferObjectType.TEXTURE_BUFFER, texture);
+
+        vertex = new float[0];
+        color = new float[0];
+        texture = new float[0];
+    }
+
+    public void updateMapBufferRange() {
+        setGLObjectParameter();
+        MeshBuilder meshBuilder = getMeshBuilder();
+        if (meshBuilder == null) {
+            throw new MeshBuilderException("MeshBuilder is null.");
+        }
+
+        meshBuilder.updateVBOMapBufferRange(BufferObjectType.POSITIONS_BUFFER, vertex);
+        meshBuilder.updateVBOMapBufferRange(BufferObjectType.COLORS_BUFFER, color);
+        meshBuilder.updateVBOMapBufferRange(BufferObjectType.TEXTURE_BUFFER, texture);
+
+        vertex = new float[0];
+        color = new float[0];
+        texture = new float[0];
     }
 
     public void rendering(FileLocation vertexShaderPath, FileLocation fragmentShaderPath) {
         if (isUpdate) {
-            updateSubData();
+            switch (updateBufferType) {
+                case BUFFER_DATA -> updateData();
+                case BUFFER_SUB_DATA -> updateSubData();
+                case MAP_BUFFER_RANGE -> updateMapBufferRange();
+                default -> throw new IllegalStateException("Unexpected value: " + updateBufferType);
+            }
         } else {
             isUpdate = true;
 
@@ -234,6 +264,15 @@ public class GLPolygon extends GLObject {
         }
 
         return new float[]{minX, minY, maxX, maxY};
+    }
+
+    public UpdateBufferType getUpdateBufferType() {
+        return updateBufferType;
+    }
+
+    public GLPolygon setUpdateBufferType(UpdateBufferType updateBufferType) {
+        this.updateBufferType = updateBufferType;
+        return this;
     }
 
     public float[] getVertex() {

@@ -134,19 +134,37 @@ public class MeshBuilder {
     }
 
     public void updateVBOData(BufferObjectType bufferObjectType, float[] newValues) {
+        ElementPair elementPair = null;
+        if (useElementBufferObject && bufferObjectType == BufferObjectType.POSITIONS_BUFFER) {
+            elementPair = getElementPositions(getSize(), newValues);
+        }
+
         for (Map.Entry<BufferObjectType, Integer> bufferObjectTypeEntry : bufferIds.entrySet()) {
             BufferObjectType entryBufferObjectType = bufferObjectTypeEntry.getKey();
+            int glId = entryBufferObjectType.getGlId();
+            int bufferId = bufferObjectTypeEntry.getValue();
+
+            if (entryBufferObjectType == BufferObjectType.ELEMENT_ARRAY_BUFFER && elementPair != null) {
+                int[] indices = elementPair.indices;
+                newValues = elementPair.positions;
+
+                IntBuffer indicesBuffer = MemoryUtil.memCallocInt(indices.length);
+                indicesBuffer.put(0, indices).flip();
+                glBindBuffer(glId, bufferId);
+                glBufferData(glId, indicesBuffer, usageHint);
+                glBindBuffer(glId, 0);
+
+                numVertices = elementPair.indices.length;
+            }
+
             if (bufferObjectType != entryBufferObjectType) {
                 continue;
             }
 
-            int glId = entryBufferObjectType.getGlId();
-            int bufferId = bufferObjectTypeEntry.getValue();
-
-            glBindBuffer(glId, bufferId);
             FloatBuffer buffer = BufferUtils.createFloatBuffer(newValues.length);
+            glBindBuffer(glId, bufferId);
             buffer.put(newValues).flip();
-            glBufferData(glId, buffer, GL_DYNAMIC_DRAW);
+            glBufferData(glId, buffer, usageHint);
             glBindBuffer(glId, 0);
         }
     }
@@ -187,21 +205,53 @@ public class MeshBuilder {
         }
     }
 
-    public void updateVBOMapBufferRange(BufferObjectType bufferObjectType, float[] newValue, int offset, int length, int access) {
+    public void updateVBOMapBufferRange(BufferObjectType bufferObjectType, float[] newValues) {
+        ElementPair elementPair = null;
+        if (useElementBufferObject && bufferObjectType == BufferObjectType.POSITIONS_BUFFER) {
+            elementPair = getElementPositions(getSize(), newValues);
+        }
+
         for (Map.Entry<BufferObjectType, Integer> bufferObjectTypeEntry : bufferIds.entrySet()) {
             BufferObjectType entryBufferObjectType = bufferObjectTypeEntry.getKey();
+            int glId = entryBufferObjectType.getGlId();
+            int bufferId = bufferObjectTypeEntry.getValue();
+            int access = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT;
+
+            if (entryBufferObjectType == BufferObjectType.ELEMENT_ARRAY_BUFFER && elementPair != null) {
+                int[] indices = elementPair.indices;
+                newValues = elementPair.positions;
+
+                glBindBuffer(glId, bufferId);
+                ByteBuffer mappedBuffer = glMapBufferRange(
+                        glId,
+                        0,
+                        (long) indices.length * Integer.BYTES,
+                        access
+                );
+                if (mappedBuffer != null) {
+                    mappedBuffer.asIntBuffer().put(indices);
+                    glUnmapBuffer(glId);
+                }
+                glBindBuffer(glId, 0);
+
+                numVertices = indices.length;
+            }
+
+            int length = newValues.length;
             if (bufferObjectType != entryBufferObjectType) {
                 continue;
             }
 
-            int glId = entryBufferObjectType.getGlId();
-            int bufferId = bufferObjectTypeEntry.getValue();
-
             glBindBuffer(glId, bufferId);
-            ByteBuffer mapped = glMapBufferRange(GL_ARRAY_BUFFER, offset, length, access);
+            ByteBuffer mapped = glMapBufferRange(
+                    glId,
+                    0,
+                    (long) length * Float.BYTES,
+                    access
+            );
             if (mapped != null) {
-                mapped.asFloatBuffer().put(newValue);
-                glUnmapBuffer(GL_ARRAY_BUFFER);
+                mapped.asFloatBuffer().put(newValues);
+                glUnmapBuffer(glId);
             }
             glBindBuffer(glId, 0);
         }
