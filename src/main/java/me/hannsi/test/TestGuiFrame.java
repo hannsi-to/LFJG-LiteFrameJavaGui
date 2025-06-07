@@ -80,7 +80,8 @@ public class TestGuiFrame implements LFJGFrame {
         sceneSystem.addScene(new TestScene1().getScene());
         sceneSystem.addScene(new TestScene2(frame).getScene());
         sceneSystem.addScene(new TestScene3(frame).getScene());
-        sceneSystem.setCurrentScene("TestScene3");
+        sceneSystem.addScene(new TestSound1(frame).getScene());
+        sceneSystem.setCurrentScene("TestSound1");
         sceneSystem.initScenes();
 
 

@@ -5,7 +5,6 @@ import me.hannsi.lfjg.debug.debug.system.DebugLevel;
 import me.hannsi.lfjg.utils.toolkit.Camera;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
 
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import static me.hannsi.lfjg.audio.LFJGOpenALContext.openALDevice;
+import static org.lwjgl.openal.AL.createCapabilities;
 import static org.lwjgl.openal.AL10.alDistanceModel;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -56,7 +56,7 @@ public class SoundCache {
             throw new IllegalStateException("Failed to create OpenAL context.");
         }
         alcMakeContextCurrent(context);
-        AL.createCapabilities(deviceCaps);
+        createCapabilities(deviceCaps);
     }
 
     /**
