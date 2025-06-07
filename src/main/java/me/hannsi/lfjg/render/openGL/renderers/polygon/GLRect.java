@@ -34,11 +34,7 @@ public class GLRect extends GLPolygon {
         put().vertex(new Vector2f(x1, y2)).color(color).end();
 
         setDrawType(DrawType.QUADS);
-        if (!isUpdate()) {
-            rendering();
-        } else {
-            updateSubData();
-        }
+        rendering();
     }
 
     /**
@@ -71,11 +67,7 @@ public class GLRect extends GLPolygon {
         put().vertex(new Vector2f(x1, y2)).color(color1).end();
 
         setDrawType(DrawType.QUADS);
-        if (!isUpdate()) {
-            rendering();
-        } else {
-            updateSubData();
-        }
+        rendering();
     }
 
     /**
@@ -110,11 +102,7 @@ public class GLRect extends GLPolygon {
         put().vertex(new Vector2f(x1, y2)).color(color1).end();
 
         setDrawType(DrawType.QUADS);
-        if (!isUpdate()) {
-            rendering();
-        } else {
-            updateSubData();
-        }
+        rendering();
     }
 
     /**
@@ -151,11 +139,7 @@ public class GLRect extends GLPolygon {
         put().vertex(new Vector2f(x1, y2)).color(color4).end();
 
         setDrawType(DrawType.QUADS);
-        if (!isUpdate()) {
-            rendering();
-        } else {
-            updateSubData();
-        }
+        rendering();
     }
 
     /**
@@ -192,11 +176,7 @@ public class GLRect extends GLPolygon {
         setLineWidth(lineWidth);
 
         setDrawType(DrawType.QUADS);
-        if (!isUpdate()) {
-            rendering();
-        } else {
-            updateSubData();
-        }
+        rendering();
     }
 
     /**
@@ -232,11 +212,7 @@ public class GLRect extends GLPolygon {
         setLineWidth(lineWidth);
 
         setDrawType(DrawType.QUADS);
-        if (!isUpdate()) {
-            rendering();
-        } else {
-            updateSubData();
-        }
+        rendering();
     }
 
     /**
@@ -274,11 +250,7 @@ public class GLRect extends GLPolygon {
         setLineWidth(lineWidth);
 
         setDrawType(DrawType.QUADS);
-        if (!isUpdate()) {
-            rendering();
-        } else {
-            updateSubData();
-        }
+        rendering();
     }
 
     /**
@@ -318,11 +290,7 @@ public class GLRect extends GLPolygon {
         setLineWidth(lineWidth);
 
         setDrawType(DrawType.QUADS);
-        if (!isUpdate()) {
-            rendering();
-        } else {
-            updateSubData();
-        }
+        rendering();
     }
 
     /**
@@ -358,11 +326,7 @@ public class GLRect extends GLPolygon {
         put().vertex(new Vector2f((float) x1, (float) y2)).color(color).end();
 
         setDrawType(DrawType.QUADS);
-        if (!isUpdate()) {
-            rendering();
-        } else {
-            updateSubData();
-        }
+        rendering();
     }
 
     /**
@@ -395,11 +359,7 @@ public class GLRect extends GLPolygon {
         put().vertex(new Vector2f((float) x1, (float) y2)).color(color1).end();
 
         setDrawType(DrawType.QUADS);
-        if (!isUpdate()) {
-            rendering();
-        } else {
-            updateSubData();
-        }
+        rendering();
     }
 
     /**
@@ -434,11 +394,7 @@ public class GLRect extends GLPolygon {
         put().vertex(new Vector2f((float) x1, (float) y2)).color(color1).end();
 
         setDrawType(DrawType.QUADS);
-        if (!isUpdate()) {
-            rendering();
-        } else {
-            updateSubData();
-        }
+        rendering();
     }
 
     /**
@@ -475,11 +431,7 @@ public class GLRect extends GLPolygon {
         put().vertex(new Vector2f((float) x1, (float) y2)).color(color4).end();
 
         setDrawType(DrawType.QUADS);
-        if (!isUpdate()) {
-            rendering();
-        } else {
-            updateSubData();
-        }
+        rendering();
     }
 
     /**
@@ -516,11 +468,7 @@ public class GLRect extends GLPolygon {
         setLineWidth((float) lineWidth);
 
         setDrawType(DrawType.QUADS);
-        if (!isUpdate()) {
-            rendering();
-        } else {
-            updateSubData();
-        }
+        rendering();
     }
 
     /**
@@ -556,11 +504,7 @@ public class GLRect extends GLPolygon {
         setLineWidth((float) lineWidth);
 
         setDrawType(DrawType.QUADS);
-        if (!isUpdate()) {
-            rendering();
-        } else {
-            updateSubData();
-        }
+        rendering();
     }
 
     /**
@@ -598,11 +542,7 @@ public class GLRect extends GLPolygon {
         setLineWidth((float) lineWidth);
 
         setDrawType(DrawType.QUADS);
-        if (!isUpdate()) {
-            rendering();
-        } else {
-            updateSubData();
-        }
+        rendering();
     }
 
     /**
@@ -642,11 +582,7 @@ public class GLRect extends GLPolygon {
         setLineWidth((float) lineWidth);
 
         setDrawType(DrawType.QUADS);
-        if (!isUpdate()) {
-            rendering();
-        } else {
-            updateSubData();
-        }
+        rendering();
     }
 
     /**

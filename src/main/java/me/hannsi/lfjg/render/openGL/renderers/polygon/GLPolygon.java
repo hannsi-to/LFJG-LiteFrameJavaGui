@@ -163,22 +163,26 @@ public class GLPolygon extends GLObject {
     }
 
     public void rendering(FileLocation vertexShaderPath, FileLocation fragmentShaderPath) {
-        isUpdate = true;
+        if (isUpdate) {
+            updateSubData();
+        } else {
+            isUpdate = true;
 
-        MeshBuilder meshBuilder = MeshBuilder.init()
-                .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
-                .createBufferObjects(vertex, color, texture)
-                .builderClose();
+            MeshBuilder meshBuilder = MeshBuilder.init()
+                    .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
+                    .createBufferObjects(vertex, color, texture)
+                    .builderClose();
 
-        setVertexShader(vertexShaderPath);
-        setFragmentShader(fragmentShaderPath);
-        setMeshBuilder(meshBuilder);
+            setVertexShader(vertexShaderPath);
+            setFragmentShader(fragmentShaderPath);
+            setMeshBuilder(meshBuilder);
 
-        setGLObjectParameter();
-        create();
-        vertex = new float[0];
-        color = new float[0];
-        texture = new float[0];
+            setGLObjectParameter();
+            create();
+            vertex = new float[0];
+            color = new float[0];
+            texture = new float[0];
+        }
     }
 
     private void setGLObjectParameter() {
