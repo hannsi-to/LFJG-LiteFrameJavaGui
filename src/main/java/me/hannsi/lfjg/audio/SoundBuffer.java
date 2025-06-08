@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.audio;
 
-import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.type.types.SoundLoaderType;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
@@ -25,8 +25,6 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class SoundBuffer {
     private final int bufferId;
     private final ShortBuffer pcm;
-    private final FileLocation fileLocation;
-    private final SoundLoaderType soundLoaderType;
 
     /**
      * Constructs a SoundBuffer object and loads audio data from the specified file location.
@@ -35,9 +33,6 @@ public class SoundBuffer {
      * @param fileLocation    The location of the audio file.
      */
     public SoundBuffer(SoundLoaderType soundLoaderType, FileLocation fileLocation) {
-        this.fileLocation = fileLocation;
-        this.soundLoaderType = soundLoaderType;
-
         this.bufferId = alGenBuffers();
 
         switch (soundLoaderType) {
@@ -50,7 +45,7 @@ public class SoundBuffer {
             }
             case JAVA_CV -> {
                 try (FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(fileLocation.getPath())) {
-                    pcm = readAudio(grabber);
+                    pcm = readAudio(grabber, fileLocation.getPath());
 
                     int sampleRate = grabber.getSampleRate();
                     int channels = grabber.getAudioChannels();
@@ -69,14 +64,19 @@ public class SoundBuffer {
      * Cleans up the resources associated with this SoundBuffer.
      */
     public void cleanup() {
-        fileLocation.cleanup();
         alDeleteBuffers(this.bufferId);
         if (pcm != null) {
             MemoryUtil.memFree(pcm);
         }
 
-        LogGenerator logGenerator = new LogGenerator("SoundBuffer", "Source: SoundBuffer", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: SoundBuffer cleanup is complete.");
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                "SoundBuffer",
+                "Source: SoundBuffer",
+                "Type: Cleanup",
+                "ID: " + bufferId,
+                "Severity: Debug",
+                "Message: SoundBuffer cleanup is complete."
+        ).logging(DebugLevel.DEBUG);
     }
 
     /**
@@ -95,13 +95,13 @@ public class SoundBuffer {
      * @return The ShortBuffer containing the audio data.
      * @throws FFmpegFrameGrabber.Exception If an error occurs while reading the audio data.
      */
-    private ShortBuffer readAudio(FFmpegFrameGrabber grabber) throws FFmpegFrameGrabber.Exception {
+    private ShortBuffer readAudio(FFmpegFrameGrabber grabber, String filePath) throws FFmpegFrameGrabber.Exception {
         grabber.start();
 
         int channels = grabber.getAudioChannels();
 
         if (channels == 0) {
-            throw new RuntimeException("No audio channels found in file: " + fileLocation.getPath());
+            throw new RuntimeException("No audio channels found in file: " + filePath);
         }
 
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(1024 * 1024).order(ByteOrder.LITTLE_ENDIAN);
@@ -164,23 +164,5 @@ public class SoundBuffer {
      */
     public ShortBuffer getPcm() {
         return pcm;
-    }
-
-    /**
-     * Retrieves the file location of this SoundBuffer.
-     *
-     * @return The FileLocation object representing the file location.
-     */
-    public FileLocation getFileLocation() {
-        return fileLocation;
-    }
-
-    /**
-     * Retrieves the sound loader type of this SoundBuffer.
-     *
-     * @return The SoundLoaderType of this SoundBuffer.
-     */
-    public SoundLoaderType getSoundLoaderType() {
-        return soundLoaderType;
     }
 }

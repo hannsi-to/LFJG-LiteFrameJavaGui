@@ -24,6 +24,7 @@ public class TestSound1 implements IScene {
 
     @Override
     public void init() {
+        AudioDevices audioDevices = new AudioDevices();
         soundCache = new SoundCache();
         soundCache.setAttenuationModel(AL11.AL_EXPONENT_DISTANCE);
         soundCache.setListener(new SoundListener(new Vector3f(0, 0, 0)));

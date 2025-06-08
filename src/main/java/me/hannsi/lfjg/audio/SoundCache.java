@@ -1,14 +1,13 @@
 package me.hannsi.lfjg.audio;
 
-import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.utils.toolkit.Camera;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
 
-import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,16 +36,11 @@ public class SoundCache {
         this(AudioDevices.DEFAULT);
     }
 
-    /**
-     * Constructs a SoundCache object using the specified audio device.
-     *
-     * @param deviceByte The ByteBuffer representation of the audio device.
-     */
-    public SoundCache(ByteBuffer deviceByte) {
+    public SoundCache(String desiredDevice) {
         soundBufferList = new ArrayList<>();
         soundSourceMap = new HashMap<>();
 
-        openALDevice = alcOpenDevice(deviceByte);
+        openALDevice = alcOpenDevice(desiredDevice);
         if (openALDevice == NULL) {
             throw new IllegalStateException("Failed to open the default OpenAL device.");
         }
