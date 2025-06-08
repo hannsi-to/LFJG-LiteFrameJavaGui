@@ -3,8 +3,8 @@ package me.hannsi.lfjg.utils.reflection.nativeAccess.structure;
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 import com.sun.jna.WString;
-import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
-import me.hannsi.lfjg.debug.debug.system.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerator;
+import me.hannsi.lfjg.debug.DebugLevel;
 
 import java.util.Arrays;
 import java.util.List;

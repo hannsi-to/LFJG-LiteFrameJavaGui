@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.audio;
 
-import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
-import me.hannsi.lfjg.debug.debug.system.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerator;
+import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.utils.toolkit.Camera;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;

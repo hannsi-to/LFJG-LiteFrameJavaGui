@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.utils.reflection.nativeAccess;
 
-import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
-import me.hannsi.lfjg.debug.debug.system.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerator;
+import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.utils.reflection.nativeAccess.structure.OPENFILENAME;
 
 public class Comdlg32 {

@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.utils.graphics.video;
 
-import me.hannsi.lfjg.debug.debug.system.DebugLog;
+import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.utils.math.ANSIFormat;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;

@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.physic;
 
 import me.hannsi.lfjg.physic.collision.AxisAlignedBoundingBox;
-import me.hannsi.lfjg.render.openGL.renderers.GLObject;
+import me.hannsi.lfjg.render.renderers.GLObject;
 import org.joml.Vector2f;
 
 public class PhysicObject {

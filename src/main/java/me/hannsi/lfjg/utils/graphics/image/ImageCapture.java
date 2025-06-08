@@ -1,9 +1,9 @@
 package me.hannsi.lfjg.utils.graphics.image;
 
-import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
-import me.hannsi.lfjg.debug.debug.system.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerator;
+import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
-import me.hannsi.lfjg.render.openGL.system.rendering.FrameBuffer;
+import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.toolkit.IOUtil;
 import me.hannsi.lfjg.utils.type.types.ColorFormatType;

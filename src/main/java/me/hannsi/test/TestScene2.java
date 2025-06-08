@@ -5,9 +5,9 @@ import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.frame.setting.settings.TimeSourceSetting;
 import me.hannsi.lfjg.physic.PhysicObject;
 import me.hannsi.lfjg.physic.PhysicWorld;
-import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
-import me.hannsi.lfjg.render.openGL.system.scene.IScene;
-import me.hannsi.lfjg.render.openGL.system.scene.Scene;
+import me.hannsi.lfjg.render.renderers.polygon.GLRect;
+import me.hannsi.lfjg.render.system.scene.IScene;
+import me.hannsi.lfjg.render.system.scene.Scene;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import org.joml.Vector2f;
 

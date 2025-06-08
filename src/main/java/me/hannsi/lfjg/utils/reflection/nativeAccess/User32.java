@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.utils.reflection.nativeAccess;
 
-import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
-import me.hannsi.lfjg.debug.debug.system.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerator;
+import me.hannsi.lfjg.debug.DebugLevel;
 
 public class User32 {
     public static final int MB_ABORTRETRYIGNORE = 0x00000002;

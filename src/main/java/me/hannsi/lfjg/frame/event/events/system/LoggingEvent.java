@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.frame.event.events.system;
 
-import me.hannsi.lfjg.debug.debug.system.DebugLog;
+import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.frame.event.system.Event;
 
 /**

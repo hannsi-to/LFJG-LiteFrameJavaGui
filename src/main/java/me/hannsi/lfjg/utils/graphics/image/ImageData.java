@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.utils.graphics.image;
 
-import me.hannsi.lfjg.debug.debug.system.DebugLog;
+import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import me.hannsi.lfjg.utils.toolkit.IOUtil;
 import org.bytedeco.opencv.global.opencv_imgcodecs;

@@ -2,11 +2,11 @@ package me.hannsi.test;
 
 import me.hannsi.lfjg.frame.frame.Frame;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
-import me.hannsi.lfjg.render.openGL.gui.system.Gui;
-import me.hannsi.lfjg.render.openGL.gui.ui.TestTextField;
-import me.hannsi.lfjg.render.openGL.renderers.polygon.GLRect;
-import me.hannsi.lfjg.render.openGL.system.scene.IScene;
-import me.hannsi.lfjg.render.openGL.system.scene.Scene;
+import me.hannsi.lfjg.render.gui.system.Gui;
+import me.hannsi.lfjg.render.gui.ui.TestTextField;
+import me.hannsi.lfjg.render.renderers.polygon.GLRect;
+import me.hannsi.lfjg.render.system.scene.IScene;
+import me.hannsi.lfjg.render.system.scene.Scene;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 
 public class TestScene3 implements IScene {

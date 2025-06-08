@@ -2,8 +2,8 @@ package me.hannsi.test;
 
 import me.hannsi.lfjg.audio.*;
 import me.hannsi.lfjg.frame.frame.Frame;
-import me.hannsi.lfjg.render.openGL.system.scene.IScene;
-import me.hannsi.lfjg.render.openGL.system.scene.Scene;
+import me.hannsi.lfjg.render.system.scene.IScene;
+import me.hannsi.lfjg.render.system.scene.Scene;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.SoundEffectType;
 import me.hannsi.lfjg.utils.type.types.SoundFilterType;

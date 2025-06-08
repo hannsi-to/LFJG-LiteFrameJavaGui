@@ -1,8 +1,8 @@
 package me.hannsi.lfjg.frame.manager.managers;
 
-import me.hannsi.lfjg.debug.debug.logger.LogGenerator;
-import me.hannsi.lfjg.debug.debug.system.DebugLevel;
-import me.hannsi.lfjg.debug.debug.system.DebugLog;
+import me.hannsi.lfjg.debug.LogGenerator;
+import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.frame.frame.Frame;
 import me.hannsi.lfjg.frame.manager.Manager;
 import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
