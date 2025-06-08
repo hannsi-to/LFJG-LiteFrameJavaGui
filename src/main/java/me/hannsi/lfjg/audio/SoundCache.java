@@ -3,6 +3,7 @@ package me.hannsi.lfjg.audio;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.utils.toolkit.Camera;
+import me.hannsi.lfjg.utils.type.LogGenerateType;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.openal.ALC;
@@ -84,12 +85,10 @@ public class SoundCache {
         addSoundSource(name, soundSource);
 
         new LogGenerator(
-                "SoundCache Debug Message",
-                "Source: SoundCache",
-                "Type: Cache Creation",
-                "Name: " + name,
-                "Severity: Info",
-                "Message: Create sound cache"
+                LogGenerateType.CREATE_CACHE,
+                getClass(),
+                name,
+                ""
         ).logging(DebugLevel.DEBUG);
     }
 
@@ -109,12 +108,10 @@ public class SoundCache {
         }
 
         new LogGenerator(
-                "SoundCache",
-                "Source: SoundCache",
-                "Type: Cleanup",
-                "ID: " + this.hashCode(),
-                "Severity: Debug",
-                "Message: SoundCache cleanup is complete."
+                LogGenerateType.CLEANUP,
+                getClass(),
+                String.valueOf(context),
+                ""
         ).logging(DebugLevel.DEBUG);
     }
 

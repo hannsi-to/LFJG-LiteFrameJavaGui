@@ -2,6 +2,7 @@ package me.hannsi.lfjg.audio;
 
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerator;
+import me.hannsi.lfjg.utils.type.LogGenerateType;
 import org.joml.Vector3f;
 
 import static org.lwjgl.openal.AL10.*;
@@ -36,8 +37,12 @@ public class SoundSource {
 
         alDeleteSources(sourceId);
 
-        LogGenerator logGenerator = new LogGenerator("SoundSource", "Source: SoundSource", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: SoundSource cleanup is complete.");
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                sourceId,
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     /**

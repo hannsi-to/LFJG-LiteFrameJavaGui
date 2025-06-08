@@ -2,6 +2,7 @@ package me.hannsi.lfjg.audio;
 
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerator;
+import me.hannsi.lfjg.utils.type.LogGenerateType;
 import me.hannsi.lfjg.utils.type.types.SoundEffectType;
 import me.hannsi.lfjg.utils.type.types.SoundFilterType;
 
@@ -64,16 +65,14 @@ public class SoundEffect {
         }
         if (filterId != AL_FILTER_NULL) {
             alDeleteFilters(filterId);
-            ids = ids + "FilterId: " + filterId + " | ";
+            ids = ids + "FilterId: " + filterId;
         }
 
         new LogGenerator(
-                "SoundEffect",
-                "Source: " + getClass().getSimpleName(),
-                "Type: Cleanup",
+                LogGenerateType.CLEANUP,
+                getClass(),
                 ids,
-                "Severity: Debug",
-                "Message: " + getClass().getSimpleName() + " cleanup is complete."
+                ""
         ).logging(DebugLevel.DEBUG);
     }
 }

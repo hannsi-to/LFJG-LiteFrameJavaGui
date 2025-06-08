@@ -2,6 +2,7 @@ package me.hannsi.lfjg.audio;
 
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerator;
+import me.hannsi.lfjg.utils.type.LogGenerateType;
 
 import javax.sound.sampled.*;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class AudioDevices {
     public static final String DEFAULT = null;
+
     private Map<Mixer.Info, Boolean> deviceMap;
 
     /**
@@ -64,14 +66,11 @@ public class AudioDevices {
         deviceMap.clear();
         deviceMap = null;
 
-        LogGenerator logGenerator = new LogGenerator(
-                "AudioDevices",
-                "Source: AudioDevices",
-                "Type: Cleanup",
-                "ID: " + this.hashCode(),
-                "Severity: Debug",
-                "Message: Audio device cleanup is complete."
-        );
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                hashCode(),
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 }
