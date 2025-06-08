@@ -198,7 +198,7 @@ public class GLPolygon extends GLObject {
         } else {
             isUpdate = true;
 
-            MeshBuilder meshBuilder = MeshBuilder.init()
+            MeshBuilder meshBuilder = MeshBuilder.builderCreate()
                     .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
                     .createBufferObjects(vertex, color, texture)
                     .builderClose();

@@ -177,7 +177,7 @@ public class ModelLoader {
             textCoords = new float[numElements];
         }
 
-        return MeshBuilder.init()
+        return MeshBuilder.builderCreate()
                 .createBufferObjects(vertices, normals, textCoords, indices)
                 .builderClose();
     }

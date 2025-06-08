@@ -92,7 +92,7 @@ public class FrameBuffer {
 
         float[] uvs = new float[]{0, 0, 1, 0, 1, 1, 0, 1};
 
-        meshBuilder = MeshBuilder.init()
+        meshBuilder = MeshBuilder.builderCreate()
                 .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
                 .createBufferObjects(positions, null, uvs)
                 .builderClose();

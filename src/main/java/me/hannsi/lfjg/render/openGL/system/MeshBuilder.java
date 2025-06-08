@@ -49,7 +49,7 @@ public class MeshBuilder {
         this.bufferIds = new HashMap<>();
     }
 
-    public static MeshBuilder init() {
+    public static MeshBuilder builderCreate() {
         return new MeshBuilder();
     }
 

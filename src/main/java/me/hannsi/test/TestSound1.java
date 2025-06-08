@@ -6,6 +6,7 @@ import me.hannsi.lfjg.render.openGL.system.scene.IScene;
 import me.hannsi.lfjg.render.openGL.system.scene.Scene;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.SoundEffectType;
+import me.hannsi.lfjg.utils.type.types.SoundFilterType;
 import me.hannsi.lfjg.utils.type.types.SoundLoaderType;
 import org.joml.Vector3f;
 import org.lwjgl.openal.AL11;
@@ -29,8 +30,11 @@ public class TestSound1 implements IScene {
 
         SoundBuffer soundBuffer = new SoundBuffer(SoundLoaderType.STB_VORBIS, new ResourcesLocation("sound/test.ogg"));
 
-        SoundEffect soundEffect = new SoundEffect();
-        soundEffect.addSoundEffect(SoundEffectType.EAXREVERB);
+        SoundEffect soundEffect = SoundEffect.builderCreate()
+                .initEffect()
+                .initFilter()
+                .addSoundEffect(SoundEffectType.REVERB)
+                .addSoundFilter(SoundFilterType.LOWPASS_GAIN, 0.5f);
 
         SoundSource playerSoundSource = new SoundSource(false, false);
         playerSoundSource.setPosition(new Vector3f(0, 0, 0));

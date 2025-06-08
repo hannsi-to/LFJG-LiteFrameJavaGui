@@ -1,17 +1,42 @@
 package me.hannsi.lfjg.audio;
 
 import me.hannsi.lfjg.utils.type.types.SoundEffectType;
+import me.hannsi.lfjg.utils.type.types.SoundFilterType;
 
+import static org.lwjgl.openal.AL10.alSourcei;
 import static org.lwjgl.openal.AL11.alSource3i;
 import static org.lwjgl.openal.EXTEfx.*;
 
 public class SoundEffect {
-    private final int effectId;
-    private final int effectSlot;
+    private int effectId;
+    private int effectSlot;
+    private int filterId;
 
-    public SoundEffect() {
+    SoundEffect() {
+        this.effectId = AL_EFFECT_NULL;
+        this.effectSlot = AL_EFFECTSLOT_NULL;
+        this.filterId = AL_FILTER_NULL;
+    }
+
+    public static SoundEffect builderCreate() {
+        return new SoundEffect();
+    }
+
+    public SoundEffect initEffect() {
         this.effectId = alGenEffects();
         this.effectSlot = alGenAuxiliaryEffectSlots();
+        return this;
+    }
+
+    public SoundEffect initFilter() {
+        this.filterId = alGenFilters();
+        alFilteri(filterId, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
+        return this;
+    }
+
+    public SoundEffect addSoundFilter(SoundFilterType filterType, float value) {
+        alFilterf(filterId, filterType.getId(), value);
+        return this;
     }
 
     public SoundEffect addSoundEffect(SoundEffectType effectType) {
@@ -21,6 +46,7 @@ public class SoundEffect {
 
     public void sendEffectSlot(int sourceId) {
         alAuxiliaryEffectSloti(effectSlot, AL_EFFECTSLOT_EFFECT, effectId);
-        alSource3i(sourceId, AL_AUXILIARY_SEND_FILTER, effectSlot, 0, AL_FILTER_NULL);
+        alSourcei(sourceId, AL_DIRECT_FILTER, filterId);
+        alSource3i(sourceId, AL_AUXILIARY_SEND_FILTER, effectSlot, 0, filterId);
     }
 }
