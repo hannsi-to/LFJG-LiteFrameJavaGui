@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.audio;
 
-import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerator;
 import org.joml.Vector3f;
 
 import static org.lwjgl.openal.AL10.*;
@@ -11,6 +11,8 @@ import static org.lwjgl.openal.AL10.*;
  */
 public class SoundSource {
     private final int sourceId;
+
+    private SoundEffect soundEffect;
 
     /**
      * Constructs a SoundSource object and sets the looping and relative properties.
@@ -30,6 +32,8 @@ public class SoundSource {
      */
     public void cleanup() {
         stop();
+        soundEffect.cleanup();
+
         alDeleteSources(sourceId);
 
         LogGenerator logGenerator = new LogGenerator("SoundSource", "Source: SoundSource", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: SoundSource cleanup is complete.");
@@ -87,10 +91,6 @@ public class SoundSource {
         alSource3f(sourceId, AL_POSITION, position.x, position.y, position.z);
     }
 
-    public void setSoundEffect(SoundEffect soundEffect) {
-        soundEffect.sendEffectSlot(sourceId);
-    }
-
     /**
      * Stops the sound source.
      */
@@ -105,5 +105,14 @@ public class SoundSource {
      */
     public int getSourceId() {
         return sourceId;
+    }
+
+    public SoundEffect getSoundEffect() {
+        return soundEffect;
+    }
+
+    public void setSoundEffect(SoundEffect soundEffect) {
+        this.soundEffect = soundEffect;
+        soundEffect.sendEffectSlot(sourceId);
     }
 }

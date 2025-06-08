@@ -26,8 +26,8 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class SoundCache {
     private final List<SoundBuffer> soundBufferList;
     private final Map<String, SoundSource> soundSourceMap;
-    private long context;
     private SoundListener listener;
+    private long context;
 
     /**
      * Constructs a SoundCache object using the default audio device.
@@ -83,8 +83,14 @@ public class SoundCache {
         addSoundBuffer(soundBuffer);
         addSoundSource(name, soundSource);
 
-        LogGenerator logGenerator = new LogGenerator("SoundCache Debug Message", "Source: SoundCache", "Type: Cache Creation", "Name: " + name, "Severity: Info", "Message: Create sound cache");
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                "SoundCache Debug Message",
+                "Source: SoundCache",
+                "Type: Cache Creation",
+                "Name: " + name,
+                "Severity: Info",
+                "Message: Create sound cache"
+        ).logging(DebugLevel.DEBUG);
     }
 
     /**
@@ -102,8 +108,14 @@ public class SoundCache {
             alcCloseDevice(openALDevice);
         }
 
-        LogGenerator logGenerator = new LogGenerator("SoundCache", "Source: SoundCache", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: SoundCache cleanup is complete.");
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                "SoundCache",
+                "Source: SoundCache",
+                "Type: Cleanup",
+                "ID: " + this.hashCode(),
+                "Severity: Debug",
+                "Message: SoundCache cleanup is complete."
+        ).logging(DebugLevel.DEBUG);
     }
 
     /**

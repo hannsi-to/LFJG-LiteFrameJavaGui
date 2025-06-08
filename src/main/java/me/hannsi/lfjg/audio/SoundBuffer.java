@@ -39,7 +39,6 @@ public class SoundBuffer {
             case STB_VORBIS -> {
                 try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
                     pcm = readVorbis(fileLocation.getPath(), info);
-
                     alBufferData(bufferId, info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, pcm, info.sample_rate());
                 }
             }
@@ -99,7 +98,6 @@ public class SoundBuffer {
         grabber.start();
 
         int channels = grabber.getAudioChannels();
-
         if (channels == 0) {
             throw new RuntimeException("No audio channels found in file: " + filePath);
         }
@@ -122,7 +120,6 @@ public class SoundBuffer {
         }
 
         grabber.stop();
-
         shortBuffer.flip();
         return shortBuffer;
     }
@@ -145,11 +142,9 @@ public class SoundBuffer {
             stb_vorbis_get_info(decoder, info);
 
             int channels = info.channels();
-
             int lengthSamples = stb_vorbis_stream_length_in_samples(decoder);
 
             ShortBuffer result = MemoryUtil.memAllocShort(lengthSamples * channels);
-
             result.limit(stb_vorbis_get_samples_short_interleaved(decoder, channels, result) * channels);
             stb_vorbis_close(decoder);
 
