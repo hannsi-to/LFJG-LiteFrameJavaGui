@@ -1,7 +1,8 @@
 package me.hannsi.lfjg.render.system.rendering;
 
-import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
+import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import org.joml.Vector2f;
 
@@ -52,8 +53,10 @@ public class SplitFrameBuffer {
     public void cleanup() {
         mainFrameBuffer.cleanup();
 
+        StringBuilder ids = new StringBuilder();
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
+                ids.append(smallFrameBuffers[y][x].getFrameBufferId()).append(", ");
                 smallFrameBuffers[y][x].cleanup();
             }
         }
@@ -61,8 +64,12 @@ public class SplitFrameBuffer {
         smallFrameBuffers = null;
         smallResolution = null;
 
-        LogGenerator logGenerator = new LogGenerator("SplitFrameBuffer", "Source: SplitFrameBuffer", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: SplitFrameBuffer cleanup is complete.");
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                ids.substring(0, ids.length() - 2),
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     /**
@@ -102,8 +109,8 @@ public class SplitFrameBuffer {
 
                 int distX0 = 0;
                 int distY0 = 0;
-                int distX1 = (int) LFJGContext.frameBufferSize.x();
-                int distY1 = (int) LFJGContext.frameBufferSize.y();
+                int distX1 = LFJGContext.frameBufferSize.x();
+                int distY1 = LFJGContext.frameBufferSize.y();
 
                 glBlitFramebuffer(srcX0, srcY0, srcX1, srcY1, distX0, distY0, distX1, distY1, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 

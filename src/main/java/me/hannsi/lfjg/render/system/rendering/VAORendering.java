@@ -1,7 +1,8 @@
 package me.hannsi.lfjg.render.system.rendering;
 
-import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
+import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.MeshBuilder;
 import org.lwjgl.opengl.GL30;
@@ -71,6 +72,10 @@ public class VAORendering {
      * Cleans up the resources associated with the current GLObject.
      */
     public void cleanup() {
-        new LogGenerator("VAORendering", "Source: VAORendering", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: VAORendering cleanup is complete.").logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                hashCode(), ""
+        ).logging(DebugLevel.DEBUG);
     }
 }

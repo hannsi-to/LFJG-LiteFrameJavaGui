@@ -1,9 +1,9 @@
 package me.hannsi.lfjg.audio;
 
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.utils.toolkit.Camera;
-import me.hannsi.lfjg.utils.type.LogGenerateType;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.openal.ALC;

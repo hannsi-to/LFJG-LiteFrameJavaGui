@@ -1,9 +1,11 @@
 package me.hannsi.lfjg.render.system.font;
 
-import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
+import me.hannsi.lfjg.debug.LogGenerator;
 
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class FontCache {
     private HashMap<String, Font> fontCache;
@@ -19,7 +21,12 @@ public class FontCache {
     public FontCache createCache(Font font) {
         fontCache.put(font.getName(), font);
 
-        new LogGenerator("FontCache Debug Message", "Source: FontCache", "Type: Cache Creation", "ID: " + font.getName(), "Severity: Info", "Message: Create font cache: " + font.getName()).logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CREATE_CACHE,
+                getClass(),
+                font.getName(),
+                ""
+        ).logging(DebugLevel.DEBUG);
 
         return this;
     }
@@ -39,18 +46,39 @@ public class FontCache {
             if (font != null) {
                 font.cleanup();
 
-                new LogGenerator("FontCache Debug Message", "Source: FontCache", "Type: Cache Cleanup", "ID: " + name, "Severity: Info", "Message: Cleanup font: " + name).logging(DebugLevel.DEBUG);
+                new LogGenerator(
+                        LogGenerateType.CLEANUP,
+                        getClass(),
+                        name,
+                        ""
+                ).logging(DebugLevel.DEBUG);
             } else {
-                new LogGenerator("FontCache Debug Message", "Source: FontCache", "Type: Cache Cleanup", "ID: " + name, "Severity: Warning", "Message: Font not found in cache for cleanup: " + name).logging(DebugLevel.WARNING);
+                new LogGenerator(
+                        getClass().getSimpleName() + " Debug Message",
+                        "Source: " + getClass().getName(),
+                        "Type: Cache Cleanup",
+                        "ID: " + name,
+                        "Severity: Warning",
+                        "Message: Font not found in cache for cleanup: " + name
+                ).logging(DebugLevel.WARNING);
             }
         }
     }
 
     public void cleanup() {
-        fontCache.forEach((key, value) -> value.cleanup());
+        AtomicReference<String> ids = new AtomicReference<>();
+        fontCache.forEach((key, value) -> {
+            value.cleanup();
+            ids.set(ids.get() + ", ");
+        });
         fontCache.clear();
 
-        new LogGenerator("FontCache Debug Message", "Source: FontCache", "Type: Cache Cleanup", "ID: All", "Severity: Info", "Message: Cleanup font cache").logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                ids.get().substring(0, ids.get().length() - 2),
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     public HashMap<String, Font> getFontCache() {

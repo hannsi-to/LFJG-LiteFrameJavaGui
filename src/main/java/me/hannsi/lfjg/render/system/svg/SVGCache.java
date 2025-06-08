@@ -1,7 +1,8 @@
 package me.hannsi.lfjg.render.system.svg;
 
-import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
+import me.hannsi.lfjg.debug.LogGenerator;
 
 import java.util.HashMap;
 
@@ -19,7 +20,12 @@ public class SVGCache {
     public SVGCache createCache(SVG svg) {
         svgCache.put(svg.getName(), svg);
 
-        new LogGenerator("SVGCache Debug Message", "Source: FontCache", "Type: Cache Creation", "ID: " + svg.getName(), "Severity: Info", "Message: Create svg cache: " + svg.getName()).logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                svg.getName(),
+                ""
+        ).logging(DebugLevel.DEBUG);
 
         return this;
     }
@@ -40,9 +46,21 @@ public class SVGCache {
             if (svg != null) {
                 svg.cleanup();
 
-                new LogGenerator("SVGCache Debug Message", "Source: SVGCache", "Type: Cache Cleanup", "ID: " + name, "Severity: Info", "Message: Cleanup svg: " + name).logging(DebugLevel.DEBUG);
+                new LogGenerator(
+                        LogGenerateType.CLEANUP,
+                        getClass(),
+                        name,
+                        ""
+                ).logging(DebugLevel.DEBUG);
             } else {
-                new LogGenerator("SVGCache Debug Message", "Source: SVGCache", "Type: Cache Cleanup", "ID: " + name, "Severity: Warning", "Message: SVG not found in cache for cleanup: " + name).logging(DebugLevel.WARNING);
+                new LogGenerator(
+                        getClass().getSimpleName() + " Debug Message",
+                        "Source: " + getClass().getName(),
+                        "Type: Cache Cleanup",
+                        "ID: " + name,
+                        "Severity: Warning",
+                        "Message: SVG not found in cache for cleanup: " + name
+                ).logging(DebugLevel.WARNING);
             }
         }
     }

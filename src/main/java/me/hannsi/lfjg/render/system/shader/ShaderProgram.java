@@ -1,8 +1,9 @@
 package me.hannsi.lfjg.render.system.shader;
 
-import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.DebugLog;
+import me.hannsi.lfjg.debug.LogGenerateType;
+import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.render.debug.exceptions.shader.CompilingShaderException;
 import me.hannsi.lfjg.render.debug.exceptions.shader.CreatingShaderException;
 import me.hannsi.lfjg.render.debug.exceptions.shader.CreatingShaderProgramException;
@@ -49,8 +50,12 @@ public class ShaderProgram {
             glDeleteProgram(programId);
         }
 
-        LogGenerator logGenerator = new LogGenerator("ShaderProgram", "Source: ShaderProgram", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: ShaderProgram cleanup is complete.");
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                "ProgramId: " + programId + " | VertexShaderId: " + vertexShaderId + " | FragmentShaderId: " + fragmentShaderId,
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     /**

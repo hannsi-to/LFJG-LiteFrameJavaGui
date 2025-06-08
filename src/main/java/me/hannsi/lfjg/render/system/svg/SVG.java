@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.system.svg;
 
+import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.Location;
@@ -33,14 +35,24 @@ public class SVG {
             throw new RuntimeException("Failed to load svg from location: " + location, e);
         }
 
-        new LogGenerator("SVG Debug Message", "Source: SVG", "Type: Load SVG", "ID: " + getName(), "Severity: Info", "Message: Load SVG: " + getName());
+        new LogGenerator(
+                LogGenerateType.LOAD,
+                getClass(),
+                name,
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     public void cleanup() {
         byteBuffer.clear();
         byteBuffer = null;
 
-        new LogGenerator("SVG Debug Message", "Source: SVG", "Type: SVG Cleanup", "ID: " + getName(), "Severity: Info", "Message: Cleanup svg");
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                name,
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     public String getName() {

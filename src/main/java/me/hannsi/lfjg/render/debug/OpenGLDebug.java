@@ -1,8 +1,8 @@
 package me.hannsi.lfjg.render.debug;
 
-import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.DebugLog;
+import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.utils.reflection.StackTraceUtil;
 import me.hannsi.lfjg.utils.type.types.SeverityType;
 import org.lwjgl.opengl.GL;
@@ -32,7 +32,13 @@ public class OpenGLDebug {
 
                     for (SeverityType checkSeverity : severityTypes) {
                         if (checkSeverity.getId() == severity) {
-                            LogGenerator logGenerator = new LogGenerator("OpenGL Debug Message", "Source: " + sourceString, "Type: " + typeString, "ID: " + id, "Severity: " + severityString, "Message: " + errorMessage, "Stack Trace: \n" + stackTrace);
+                            LogGenerator logGenerator = new LogGenerator(
+                                    "OpenGL Debug Message",
+                                    "Source: " + sourceString,
+                                    "Type: " + typeString,
+                                    "ID: " + id, "Severity: " + severityString, "Message: " + errorMessage,
+                                    "Stack Trace: \n" + stackTrace
+                            );
 
                             if (type == GL43.GL_DEBUG_TYPE_ERROR || severity == GL43.GL_DEBUG_SEVERITY_HIGH) {
                                 logGenerator.logging(DebugLevel.ERROR);

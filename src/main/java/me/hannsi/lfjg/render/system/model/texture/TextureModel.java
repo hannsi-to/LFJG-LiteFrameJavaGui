@@ -1,7 +1,8 @@
 package me.hannsi.lfjg.render.system.model.texture;
 
-import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
+import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import org.lwjgl.system.MemoryStack;
 
@@ -77,8 +78,12 @@ public class TextureModel {
         texturePath.cleanup();
         glDeleteTextures(textureId);
 
-        LogGenerator logGenerator = new LogGenerator("TextureModel", "Source: TextureModel", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: TextureModel cleanup is complete.");
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                textureId,
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     /**

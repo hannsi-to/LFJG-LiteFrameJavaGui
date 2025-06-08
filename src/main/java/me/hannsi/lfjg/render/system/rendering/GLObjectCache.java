@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.render.system.rendering;
 
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.render.renderers.GLObject;
 
@@ -34,8 +35,12 @@ public class GLObjectCache {
     public void createCache(GLObject glObject) {
         glObjects.add(glObject);
 
-        LogGenerator logGenerator = new LogGenerator("GLObjectCache Debug Message", "Source: GLObjectCache", "Type: Cache Creation", "ID: " + glObject.getObjectId(), "Severity: Info", "Message: Create object cache: " + glObject.getName());
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CREATE_CACHE,
+                getClass(),
+                String.valueOf(glObject.getObjectId()),
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     /**
@@ -75,15 +80,21 @@ public class GLObjectCache {
      * Cleans up all cached GLObjects.
      */
     public void cleanup() {
+        StringBuilder ids = new StringBuilder();
         for (GLObject glObject : glObjects) {
             glObject.cleanup();
+            ids.append(glObject.getObjectId()).append(", ");
         }
 
         glObjects.clear();
         frameBuffer.cleanup();
 
-        LogGenerator logGenerator = new LogGenerator("GLObjectCache", "Source: GLObjectCache", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: GLObjectCache cleanup is complete.");
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                ids.substring(0, ids.length() - 2),
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     /**

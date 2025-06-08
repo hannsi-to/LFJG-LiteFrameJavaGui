@@ -1,7 +1,8 @@
 package me.hannsi.lfjg.frame.manager.managers;
 
-import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
+import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.frame.event.system.Event;
 import me.hannsi.lfjg.frame.event.system.EventHandler;
 
@@ -74,7 +75,11 @@ public class EventManager {
     public void cleanup() {
         handlers.clear();
 
-        LogGenerator logGenerator = new LogGenerator("EventManager", "Source: EventManager", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: EventManager cleanup is complete.");
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                hashCode(),
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 }

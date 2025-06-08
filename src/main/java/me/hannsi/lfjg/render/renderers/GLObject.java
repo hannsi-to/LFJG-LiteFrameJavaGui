@@ -1,7 +1,8 @@
 package me.hannsi.lfjg.render.renderers;
 
-import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
+import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
@@ -104,7 +105,12 @@ public class GLObject implements Cloneable {
         vaoRendering.cleanup();
         glUtil.cleanup();
 
-        new LogGenerator(name, "Source: GLObject", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: GLObject cleanup is complete.").logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                String.valueOf(objectId),
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     /**
@@ -208,9 +214,23 @@ public class GLObject implements Cloneable {
             glObject.setName(objectName);
             glObject.setObjectId(++Id.latestGLObjectId);
 
-            new LogGenerator("GLObject Debug Message", "Source: GLObject", "Type: Copy", "ID: " + glObject.getObjectId(), "Severity: Info", "Message: Create object copy: " + glObject.getName()).logging(DebugLevel.INFO);
+            new LogGenerator(
+                    getClass().getSimpleName() + " Debug Message",
+                    "Source: " + getClass().getName(),
+                    "Type: Copy",
+                    "ID: " + glObject.getObjectId(),
+                    "Severity: Info",
+                    "Message: Create object copy: " + glObject.getName()
+            ).logging(DebugLevel.INFO);
         } catch (Exception e) {
-            new LogGenerator("GLObject Debug Message", "Source: GLObject", "Type: Copy", "ID: " + this.getObjectId(), "Severity: Error", "Message: Failed to create object copy: " + this.getName()).logging(DebugLevel.ERROR);
+            new LogGenerator(
+                    getClass().getSimpleName() + " Debug Message",
+                    "Source: " + getClass().getName(),
+                    "Type: Copy",
+                    "ID: " + this.getObjectId(),
+                    "Severity: Error",
+                    "Message: Failed to create object copy: " + this.getName()
+            ).logging(DebugLevel.ERROR);
             throw new RuntimeException(e);
         }
 

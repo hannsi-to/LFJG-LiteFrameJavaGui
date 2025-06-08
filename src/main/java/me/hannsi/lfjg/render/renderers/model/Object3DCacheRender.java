@@ -1,7 +1,8 @@
 package me.hannsi.lfjg.render.renderers.model;
 
-import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
+import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.render.system.MeshBuilder;
 import me.hannsi.lfjg.render.system.model.Object3DCache;
 import me.hannsi.lfjg.render.system.model.lights.*;
@@ -56,8 +57,12 @@ public class Object3DCacheRender {
         shaderProgram.cleanup();
         glUtil.cleanup();
 
-        LogGenerator logGenerator = new LogGenerator("Object3DCacheRender", "Source: Object3DCacheRender", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: Object3DCacheRender cleanup is complete.");
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                hashCode(),
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     /**

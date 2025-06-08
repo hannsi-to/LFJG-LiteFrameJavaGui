@@ -1,12 +1,14 @@
 package me.hannsi.lfjg.render.effect.system;
 
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.Id;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Class representing a cache for OpenGL effects.
@@ -83,8 +85,12 @@ public class EffectCache {
     public void createCache(String name, EffectBase effectBase) {
         this.effectBases.put(effectBase, new Identifier(name, Id.latestEffectCacheId++));
 
-        LogGenerator logGenerator = new LogGenerator("EffectCache Debug Message", "Source: EffectCache", "Type: Cache Creation", "ID: " + effectBase.getId(), "Severity: Info", "Message: Create effect cache: " + effectBase.getName());
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CREATE_CACHE,
+                getClass(),
+                effectBase.getId(),
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     public void createCache(String name, EffectBase effectBase, int index) {
@@ -103,8 +109,12 @@ public class EffectCache {
 
         this.effectBases = newEffectCache;
 
-        LogGenerator logGenerator = new LogGenerator("EffectCache Debug Message", "Source: EffectCache", "Type: Cache Creation", "ID: " + effectBase.getId(), "Severity: Info", "Message: Create effect cache: " + effectBase.getName());
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CREATE_CACHE,
+                getClass(),
+                effectBase.getId(),
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     /**
@@ -226,12 +236,20 @@ public class EffectCache {
      * Cleans up the effect cache.
      */
     public void cleanup() {
-        effectBases.forEach((effectBase, id) -> effectBase.cleanup());
+        AtomicReference<String> ids = new AtomicReference<>();
+        effectBases.forEach((effectBase, id) -> {
+            effectBase.cleanup();
+            ids.set(ids.get() + id + ", ");
+        });
         effectBases.clear();
         endFrameBuffer.cleanup();
 
-        LogGenerator logGenerator = new LogGenerator("EffectCache", "Source: EffectCache", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: EffectCache cleanup is complete.");
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                ids.get().substring(0, ids.get().length() - 2),
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     /**

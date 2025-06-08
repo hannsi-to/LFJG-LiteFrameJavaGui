@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.render.system.model.model;
 
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -37,8 +38,12 @@ public class Entity {
         position = null;
         rotation = null;
 
-        LogGenerator logGenerator = new LogGenerator(id, "Source: Entity", "Type: Cleanup", "ID: " + modelId, "Severity: Debug", "Message: Entity cleanup is complete.");
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                modelId,
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     /**

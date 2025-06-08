@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.render.system.scene;
 
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.render.system.Id;
 
@@ -25,8 +26,12 @@ public class Scene {
         isInitialize = false;
         iScene = null;
 
-        LogGenerator logGenerator = new LogGenerator(sceneName, "Source: Scene", "Type: Cleanup", "ID: " + sceneId, "Severity: Debug", "Message: Scene cleanup is complete.");
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                sceneId,
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     public boolean isInitialize() {

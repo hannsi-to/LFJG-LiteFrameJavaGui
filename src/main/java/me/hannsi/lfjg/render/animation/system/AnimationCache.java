@@ -1,11 +1,13 @@
 package me.hannsi.lfjg.render.animation.system;
 
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.Id;
 
 import java.util.LinkedHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class AnimationCache {
     private LinkedHashMap<AnimationBase, Long> animationBases;
@@ -17,8 +19,12 @@ public class AnimationCache {
     public void createCache(AnimationBase animationBase) {
         this.animationBases.put(animationBase, Id.latestAnimationCacheId++);
 
-        LogGenerator logGenerator = new LogGenerator("AnimationCache Debug Message", "Source: AnimationCache", "Type: Cache Creation", "ID: " + animationBase.getId(), "Severity: Info", "Message: Create animation cache: " + animationBase.getName());
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CREATE_CACHE,
+                getClass(),
+                animationBase.getId(),
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     public void start(GLObject glObject) {
@@ -40,15 +46,21 @@ public class AnimationCache {
     }
 
     public void cleanup(GLObject glObject) {
+        AtomicReference<String> ids = new AtomicReference<>();
         animationBases.forEach((animationBase, id) -> {
             animationBase.stop(glObject);
             animationBase.cleanup();
+            ids.set(ids.get() + ", ");
         });
 
         animationBases.clear();
 
-        LogGenerator logGenerator = new LogGenerator("AnimationCache", "Source: AnimationCache", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: AnimationCache cleanup is complete.");
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                ids.get().substring(0, ids.get().length() - 2),
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     public LinkedHashMap<AnimationBase, Long> getAnimationBases() {

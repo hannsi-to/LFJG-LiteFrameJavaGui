@@ -1,7 +1,8 @@
 package me.hannsi.lfjg.render.system.model.texture;
 
-import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
+import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 
@@ -31,8 +32,12 @@ public class TextureModelCache {
         textureMap.values().forEach(TextureModel::cleanup);
         textureMap.clear();
 
-        LogGenerator logGenerator = new LogGenerator("TextureModelCache", "Source: TextureModelCache", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: TextureModelCache cleanup is complete.");
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                hashCode(),
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     /**

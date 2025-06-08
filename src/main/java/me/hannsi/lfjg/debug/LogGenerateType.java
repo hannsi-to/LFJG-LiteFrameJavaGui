@@ -1,10 +1,9 @@
-package me.hannsi.lfjg.utils.type;
+package me.hannsi.lfjg.debug;
 
-import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
-
-public enum LogGenerateType implements IEnumTypeBase {
+public enum LogGenerateType {
     CREATE_CACHE(0, "CreateCache"),
-    CLEANUP(1, "Cleanup");
+    CLEANUP(1, "Cleanup"),
+    LOAD(2, "Load");
 
     final int id;
     final String name;
@@ -14,12 +13,10 @@ public enum LogGenerateType implements IEnumTypeBase {
         this.name = name;
     }
 
-    @Override
     public int getId() {
         return id;
     }
 
-    @Override
     public String getName() {
         return name;
     }

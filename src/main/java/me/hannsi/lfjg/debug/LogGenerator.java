@@ -1,7 +1,6 @@
 package me.hannsi.lfjg.debug;
 
 import me.hannsi.lfjg.utils.math.MathHelper;
-import me.hannsi.lfjg.utils.type.LogGenerateType;
 
 /**
  * The LogGenerator class is responsible for generating formatted log messages with a title and multiple text lines.
@@ -11,11 +10,11 @@ public class LogGenerator {
     private String title;
     private String[] texts;
 
-    public LogGenerator(LogGenerateType logGenerateType, Class<?> clazz, String id, String subMessage) {
+    public LogGenerator(LogGenerateType logGenerateType, Class<?> clazz, String id, String severity, String subMessage) {
         String title = clazz.getSimpleName() + " Debug Message";
         String source = "Source: " + clazz.getName();
         String type = "Type: ";
-        String severity = "Severity: Info";
+        severity = "Severity: " + severity;
         String message = "Message: ";
         id = "ID: " + id;
 
@@ -28,6 +27,10 @@ public class LogGenerator {
                 type += "Cleanup";
                 message += clazz.getSimpleName() + " cleanup is complete" + (!subMessage.isEmpty() ? " | " : "") + subMessage;
             }
+            case LOAD -> {
+                type += "Load";
+                message += "Load " + clazz.getSimpleName() + (!subMessage.isEmpty() ? " | " : "") + subMessage;
+            }
             default -> throw new IllegalStateException("Unexpected value: " + logGenerateType);
         }
 
@@ -35,8 +38,12 @@ public class LogGenerator {
         this.texts = new String[]{source, type, id, severity, message};
     }
 
+    public LogGenerator(LogGenerateType logGenerateType, Class<?> clazz, String id, String subMessage) {
+        this(logGenerateType, clazz, String.valueOf(id), "Info", subMessage);
+    }
+
     public LogGenerator(LogGenerateType logGenerateType, Class<?> clazz, int id, String subMessage) {
-        this(logGenerateType, clazz, String.valueOf(id), subMessage);
+        this(logGenerateType, clazz, String.valueOf(id), "Info", subMessage);
     }
 
     /**

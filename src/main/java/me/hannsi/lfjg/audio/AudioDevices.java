@@ -1,8 +1,8 @@
 package me.hannsi.lfjg.audio;
 
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
-import me.hannsi.lfjg.utils.type.LogGenerateType;
 
 import javax.sound.sampled.*;
 import java.util.HashMap;

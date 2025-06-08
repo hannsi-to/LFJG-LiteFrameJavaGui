@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.render.system.model;
 
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.render.system.model.lights.Lights;
 import me.hannsi.lfjg.render.system.model.model.Entity;
@@ -12,6 +13,7 @@ import org.joml.Vector2f;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Caches 3D objects in the OpenGL rendering system.
@@ -43,18 +45,33 @@ public class Object3DCache {
         model.getEntitiesList().add(entity);
         modelMap.put(model.getId(), model);
 
-        new LogGenerator("Object3DCache Debug Message", "Source: Object3DCache", "Type: Cache Creation", "ID: " + model.getId(), "Severity: Info", "Message: Create 3D Object cache").logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CREATE_CACHE,
+                getClass(),
+                model.getId(),
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     /**
      * Cleans up the cache by cleaning up all models in the model map.
      */
     public void cleanup() {
+        AtomicReference<String> ids = new AtomicReference<>();
+
         lights.cleanup();
         textureModelCache.cleanup();
-        modelMap.values().forEach(Model::cleanup);
+        modelMap.forEach((key, value) -> {
+            value.cleanup();
+            ids.set(ids.get() + key + ", ");
+        });
 
-        new LogGenerator("Object3DCache", "Source: Object3DCache", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: Object3DCache cleanup is complete.").logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                ids.get().substring(0, ids.get().length() - 2),
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     /**

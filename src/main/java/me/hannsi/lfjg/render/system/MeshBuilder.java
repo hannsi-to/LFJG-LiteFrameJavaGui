@@ -1,7 +1,8 @@
 package me.hannsi.lfjg.render.system;
 
-import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
+import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.utils.type.types.BufferObjectType;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.lwjgl.BufferUtils;
@@ -263,21 +264,18 @@ public class MeshBuilder {
             BufferObjectType key = entry.getKey();
             Integer value = entry.getValue();
             glDeleteBuffers(value);
-            ids.append(key.getName()).append(": ").append(value).append(", ");
+            ids.append(key.getName()).append(": ").append(value).append("| ");
         }
         bufferIds.clear();
-        ids.append("VertexArrayObject").append(": ").append(vertexArrayObjectId);
+        ids.append("VertexArrayObject: ").append(vertexArrayObjectId);
         glDeleteVertexArrays(vertexArrayObjectId);
 
-        LogGenerator logGenerator = new LogGenerator(
-                "MeshBuilder",
-                "Source: MeshBuilder",
-                "Type: Cleanup",
-                "ID: " + ids,
-                "Severity: Debug",
-                "Message: MeshBuilder cleanup is complete."
-        );
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                ids.toString(),
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     private void createIndirectBuffer() {

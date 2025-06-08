@@ -1,7 +1,8 @@
 package me.hannsi.lfjg.render.system.font;
 
-import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
+import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.reflection.location.URLLocation;
@@ -28,17 +29,25 @@ public class Font {
         byteBuffer.clear();
         byteBuffer = null;
 
-        new LogGenerator("Font Debug Message", "Source: Font", "Type: Font Cleanup", "ID: " + getName(), "Severity: Info", "Message: Cleanup font");
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                name,
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     public void loadFont() {
         InputStream inputStream = getInputStream();
-
         this.byteBuffer = IOUtil.toByteBuffer(inputStream);
-
         nvgCreateFontMem(name, byteBuffer, false);
 
-        new LogGenerator("Font Debug Message", "Source: Font", "Type: Load SVG", "ID: " + getName(), "Severity: Info", "Message: Load font: " + getName()).logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.LOAD,
+                getClass(),
+                name,
+                name
+        ).logging(DebugLevel.DEBUG);
     }
 
     private @NotNull InputStream getInputStream() {

@@ -1,8 +1,8 @@
 package me.hannsi.lfjg.audio;
 
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
-import me.hannsi.lfjg.utils.type.LogGenerateType;
 import me.hannsi.lfjg.utils.type.types.SoundEffectType;
 import me.hannsi.lfjg.utils.type.types.SoundFilterType;
 
@@ -54,7 +54,7 @@ public class SoundEffect {
     }
 
     public void cleanup() {
-        String ids = "ID: ";
+        String ids = "";
         if (effectId != AL_EFFECT_NULL) {
             alDeleteEffects(effectId);
             ids = ids + "EffectId: " + effectId + " | ";

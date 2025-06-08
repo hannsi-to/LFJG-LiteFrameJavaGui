@@ -1,7 +1,8 @@
 package me.hannsi.lfjg.render.effect.system;
 
-import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
+import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
@@ -92,8 +93,12 @@ public class EffectBase {
         frameBuffer.cleanup();
         ignoreGLObject = null;
 
-        LogGenerator logGenerator = new LogGenerator(name, "Source: EffectBase", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: EffectBase cleanup is complete.");
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                id,
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     /**

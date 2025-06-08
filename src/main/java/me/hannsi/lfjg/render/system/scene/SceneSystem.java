@@ -1,7 +1,8 @@
 package me.hannsi.lfjg.render.system.scene;
 
-import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
+import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.render.debug.exceptions.render.scene.ChangeSceneException;
 import me.hannsi.lfjg.render.debug.exceptions.render.scene.SetSceneException;
 
@@ -20,8 +21,14 @@ public class SceneSystem {
     }
 
     public void changeScene(String newCurrentSceneName) {
-        LogGenerator logGenerator = new LogGenerator("StartSceneChange", "Source: SceneSystem", "Type: Scene change", "ID: " + currentScene.getSceneId(), "Severity: Info", "Message: Start change from " + currentSceneName + " to " + newCurrentSceneName + ".");
-        logGenerator.logging(DebugLevel.INFO);
+        new LogGenerator(
+                "Start Scene Change",
+                "Source: " + getClass().getName(),
+                "Type: Scene change",
+                "ID: " + currentScene.getSceneId(),
+                "Severity: Info",
+                "Message: Start change from " + currentSceneName + " to " + newCurrentSceneName + "."
+        ).logging(DebugLevel.INFO);
 
         currentScene.getiScene().stopFrame();
 
@@ -34,8 +41,14 @@ public class SceneSystem {
             throw new ChangeSceneException("Scene " + newCurrentSceneName + " not found.");
         }
 
-        logGenerator = new LogGenerator("EndSceneChange", "Source: SceneSystem", "Type: Scene change", "ID: " + currentScene.getSceneId(), "Severity: Info", "Message: Finished changing from " + currentSceneName + " to " + newCurrentSceneName + ".");
-        logGenerator.logging(DebugLevel.INFO);
+        new LogGenerator(
+                "End Scene Change",
+                "Source: " + getClass().getName(),
+                "Type: Scene change",
+                "ID: " + currentScene.getSceneId(),
+                "Severity: Info",
+                "Message: Finished changing from " + currentSceneName + " to " + newCurrentSceneName + "."
+        ).logging(DebugLevel.INFO);
     }
 
     public void addScene(Scene scene) {
@@ -80,13 +93,22 @@ public class SceneSystem {
     }
 
     public void cleanup() {
+        StringBuilder ids = new StringBuilder();
+        for (Scene scene : scenes) {
+            ids.append(scene.getSceneId()).append(". ");
+            scene.cleanup();
+        }
         scenes.forEach(Scene::cleanup);
         scenes.clear();
         currentScene = null;
         currentSceneName = null;
 
-        LogGenerator logGenerator = new LogGenerator("SceneSystem", "Source: SceneSystem", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: SceneSystem cleanup is complete.");
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                ids.substring(0, ids.length() - 2),
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     public List<Scene> getScenes() {
@@ -116,8 +138,14 @@ public class SceneSystem {
             throw new SetSceneException("Scene " + currentSceneName + " not found.");
         }
 
-        LogGenerator logGenerator = new LogGenerator("SetScene", "Source: SceneSystem", "Type: Set scene", "ID: " + currentScene.getSceneId(), "Severity: Info", "Message: " + currentSceneName + " is set.");
-        logGenerator.logging(DebugLevel.INFO);
+        new LogGenerator(
+                "Set Scene",
+                "Source: " + getClass().getName(),
+                "Type: Set scene",
+                "ID: " + currentScene.getSceneId(),
+                "Severity: Info",
+                "Message: " + currentSceneName + " is set."
+        ).logging(DebugLevel.INFO);
     }
 
     public void setCurrentScene(Scene currentScene) {
