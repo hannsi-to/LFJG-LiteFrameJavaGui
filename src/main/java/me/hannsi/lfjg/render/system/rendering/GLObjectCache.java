@@ -27,12 +27,16 @@ public class GLObjectCache {
         frameBuffer.createFrameBuffer();
     }
 
+    public static GLObjectCache initGLObjectCache() {
+        return new GLObjectCache();
+    }
+
     /**
      * Creates a cache for the specified GLObject.
      *
      * @param glObject the GLObject to cache
      */
-    public void createCache(GLObject glObject) {
+    public GLObjectCache createCache(GLObject glObject) {
         glObjects.add(glObject);
 
         new LogGenerator(
@@ -41,6 +45,8 @@ public class GLObjectCache {
                 String.valueOf(glObject.getObjectId()),
                 ""
         ).logging(DebugLevel.DEBUG);
+
+        return this;
     }
 
     /**

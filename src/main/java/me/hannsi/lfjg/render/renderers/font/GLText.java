@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.renderers.font;
 
-import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.system.font.Font;
@@ -15,7 +15,6 @@ import org.lwjgl.nanovg.NVGColor;
 
 import java.util.List;
 
-import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.*;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgBeginPath;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgClosePath;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgFill;
@@ -35,6 +34,7 @@ import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTextAlign;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTextBounds;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTextMetrics;
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgTransform;
+import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.*;
 import static org.lwjgl.nanovg.NanoVG.*;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBindTexture;
@@ -82,6 +82,10 @@ public class GLText extends GLRect {
 
     private static void drawLineWH(float x, float y, float width, float height, float lineWidth, Color color) {
         drawLine(x, y, x + width, y + height, lineWidth, color);
+    }
+
+    public void text(String fontName, String text, float x, float y, float fontSize, Color color, AlignType align) {
+        this.text(fontName, text, x, y, fontSize, false, 0.0f, color, align);
     }
 
     public void text(String fontName, String text, float x, float y, float fontSize, boolean blur, float blurSize, Color color, AlignType align) {

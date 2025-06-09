@@ -59,28 +59,20 @@ public class LoggerManager {
 
         switch (debugLevel) {
             case DEBUG:
-                if (logger.isDebugEnabled()) {
-                    System.out.print(ANSIFormat.RESET);
-                    logger.debug("{}{}{}", ANSIFormat.RESET, description, ANSIFormat.RESET);
-                }
+                System.out.print(ANSIFormat.RESET);
+                logger.debug("{}{}{}", ANSIFormat.RESET, description, ANSIFormat.RESET);
                 break;
             case INFO:
-                if (logger.isInfoEnabled()) {
-                    System.out.print(ANSIFormat.BLUE);
-                    logger.info("{}{}{}", ANSIFormat.BLUE, description, ANSIFormat.RESET);
-                }
+                System.out.print(ANSIFormat.BLUE);
+                logger.info("{}{}{}", ANSIFormat.BLUE, description, ANSIFormat.RESET);
                 break;
             case ERROR:
-                if (logger.isErrorEnabled()) {
-                    System.out.print(ANSIFormat.RED);
-                    logger.error("{}{}{}", ANSIFormat.RED, description, ANSIFormat.RESET);
-                }
+                System.out.print(ANSIFormat.RED);
+                logger.error("{}{}{}", ANSIFormat.RED, description, ANSIFormat.RESET);
                 break;
             case WARNING:
-                if (logger.isWarnEnabled()) {
-                    System.out.print(ANSIFormat.YELLOW);
-                    logger.warn("{}{}{}", ANSIFormat.YELLOW, description, ANSIFormat.RESET);
-                }
+                System.out.print(ANSIFormat.YELLOW);
+                logger.warn("{}{}{}", ANSIFormat.YELLOW, description, ANSIFormat.RESET);
                 break;
         }
     }
