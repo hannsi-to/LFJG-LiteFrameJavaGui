@@ -7,13 +7,13 @@ import static org.lwjgl.opengl.GL15C.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 
 public enum BufferObjectType implements IEnumTypeBase {
-    POSITIONS_BUFFER(0, GL_ARRAY_BUFFER, "PositionsBuffer"),
-    COLORS_BUFFER(1, GL_ARRAY_BUFFER, "ColorsBuffer"),
-    TEXTURE_BUFFER(2, GL_ARRAY_BUFFER, "TextureBuffer"),
-    INDIRECT_BUFFER(3, GL_DRAW_INDIRECT_BUFFER, "IndirectBuffer"),
-    ELEMENT_ARRAY_BUFFER(4, GL_ELEMENT_ARRAY_BUFFER, "ElementArrayBuffer"),
-    NORMALS_BUFFER(5, GL_ARRAY_BUFFER, "NormalsBuffer"),
-    VERTEX_ARRAY_BUFFER(6, GL_ARRAY_BUFFER, "VertexArrayBuffer");
+    VERTEX_ARRAY_BUFFER(0, GL_ARRAY_BUFFER, "VertexArrayBuffer"),
+    POSITIONS_BUFFER(1, GL_ARRAY_BUFFER, "PositionsBuffer"),
+    COLORS_BUFFER(4, GL_ARRAY_BUFFER, "ColorsBuffer"),
+    TEXTURE_BUFFER(5, GL_ARRAY_BUFFER, "TextureBuffer"),
+    INDIRECT_BUFFER(6, GL_DRAW_INDIRECT_BUFFER, "IndirectBuffer"),
+    ELEMENT_ARRAY_BUFFER(7, GL_ELEMENT_ARRAY_BUFFER, "ElementArrayBuffer"),
+    NORMALS_BUFFER(8, GL_ARRAY_BUFFER, "NormalsBuffer");
 
     final int id;
     final int glId;

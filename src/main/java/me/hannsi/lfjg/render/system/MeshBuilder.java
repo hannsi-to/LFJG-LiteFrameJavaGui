@@ -21,10 +21,11 @@ import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 
 public class MeshBuilder {
-    public static ProjectionType DEFAULT_PROJECTION_TYPE = ProjectionType.ORTHOGRAPHIC_PROJECTION;
-    public static boolean DEFAULT_USE_ELEMENT_BUFFER_OBJECT = true;
-    public static boolean DEFAULT_USE_INDIRECT = true;
-    public static int DEFAULT_USAGE_HINT = GL_DYNAMIC_DRAW;
+    public static final ProjectionType DEFAULT_PROJECTION_TYPE = ProjectionType.ORTHOGRAPHIC_PROJECTION;
+    public static final boolean DEFAULT_USE_ELEMENT_BUFFER_OBJECT = true;
+    public static final boolean DEFAULT_USE_INDIRECT = true;
+    public static final int DEFAULT_USAGE_HINT = GL_STREAM_DRAW;
+    public static final int DEFAULT_BUFFER_COUNT = 3;
     private final int vertexArrayObjectId;
     private final Map<BufferObjectType, Integer> bufferIds;
     protected float[] positions;
@@ -37,12 +38,17 @@ public class MeshBuilder {
     private int usageHint;
     private int elementBufferObjectId;
     private int indirectBufferId;
+    private int bufferCount;
+    private int currentBufferIndex;
 
     MeshBuilder() {
         this.projectionType = DEFAULT_PROJECTION_TYPE;
         this.useElementBufferObject = DEFAULT_USE_ELEMENT_BUFFER_OBJECT;
         this.useIndirect = DEFAULT_USE_INDIRECT;
         this.usageHint = DEFAULT_USAGE_HINT;
+        this.bufferCount = DEFAULT_BUFFER_COUNT;
+
+        this.currentBufferIndex = 0;
 
         this.vertexArrayObjectId = glGenVertexArrays();
         glBindVertexArray(this.vertexArrayObjectId);
@@ -129,12 +135,23 @@ public class MeshBuilder {
         return this;
     }
 
+    public MeshBuilder bufferCount(int bufferCount) {
+        this.bufferCount = bufferCount;
+        return this;
+    }
+
     public MeshBuilder builderClose() {
         glBindVertexArray(0);
         return this;
     }
 
+    private void rotateBuffer() {
+        currentBufferIndex = (currentBufferIndex + 1) % bufferCount;
+    }
+
     public void updateVBOData(BufferObjectType bufferObjectType, float[] newValues) {
+        rotateBuffer();
+
         ElementPair elementPair = null;
         if (useElementBufferObject && bufferObjectType == BufferObjectType.POSITIONS_BUFFER) {
             elementPair = getElementPositions(getSize(), newValues);
@@ -148,6 +165,8 @@ public class MeshBuilder {
             if (entryBufferObjectType == BufferObjectType.ELEMENT_ARRAY_BUFFER && elementPair != null) {
                 int[] indices = elementPair.indices;
                 newValues = elementPair.positions;
+                int length = indices.length;
+                long byteOffset = (long) currentBufferIndex * length * Float.BYTES;
 
                 IntBuffer indicesBuffer = MemoryUtil.memCallocInt(indices.length);
                 indicesBuffer.put(0, indices).flip();
@@ -162,15 +181,21 @@ public class MeshBuilder {
                 continue;
             }
 
+            int length = newValues.length;
+            long byteOffset = (long) currentBufferIndex * length * Float.BYTES;
+
             FloatBuffer buffer = BufferUtils.createFloatBuffer(newValues.length);
             glBindBuffer(glId, bufferId);
             buffer.put(newValues).flip();
             glBufferData(glId, buffer, usageHint);
+            glBufferSubData(glId, byteOffset, buffer);
             glBindBuffer(glId, 0);
         }
     }
 
     public void updateVBOSubData(BufferObjectType bufferObjectType, float[] newValues) {
+        rotateBuffer();
+
         ElementPair elementPair = null;
         if (useElementBufferObject && bufferObjectType == BufferObjectType.POSITIONS_BUFFER) {
             elementPair = getElementPositions(getSize(), newValues);
@@ -184,11 +209,13 @@ public class MeshBuilder {
             if (entryBufferObjectType == BufferObjectType.ELEMENT_ARRAY_BUFFER && elementPair != null) {
                 int[] indices = elementPair.indices;
                 newValues = elementPair.positions;
+                int length = indices.length;
+                long byteOffset = (long) currentBufferIndex * length * Float.BYTES;
 
                 IntBuffer indicesBuffer = MemoryUtil.memCallocInt(indices.length);
                 indicesBuffer.put(0, indices).flip();
                 glBindBuffer(glId, bufferId);
-                glBufferSubData(glId, 0, indicesBuffer);
+                glBufferSubData(glId, byteOffset, indicesBuffer);
                 glBindBuffer(glId, 0);
 
                 numVertices = elementPair.indices.length;
@@ -198,15 +225,20 @@ public class MeshBuilder {
                 continue;
             }
 
+            int length = newValues.length;
+            long byteOffset = (long) currentBufferIndex * length * Float.BYTES;
+
             FloatBuffer buffer = BufferUtils.createFloatBuffer(newValues.length);
             glBindBuffer(glId, bufferId);
             buffer.put(newValues).flip();
-            glBufferSubData(glId, 0, buffer);
+            glBufferSubData(glId, byteOffset, buffer);
             glBindBuffer(glId, 0);
         }
     }
 
     public void updateVBOMapBufferRange(BufferObjectType bufferObjectType, float[] newValues) {
+        rotateBuffer();
+
         ElementPair elementPair = null;
         if (useElementBufferObject && bufferObjectType == BufferObjectType.POSITIONS_BUFFER) {
             elementPair = getElementPositions(getSize(), newValues);
@@ -216,16 +248,18 @@ public class MeshBuilder {
             BufferObjectType entryBufferObjectType = bufferObjectTypeEntry.getKey();
             int glId = entryBufferObjectType.getGlId();
             int bufferId = bufferObjectTypeEntry.getValue();
-            int access = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT;
+            int access = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT;
 
             if (entryBufferObjectType == BufferObjectType.ELEMENT_ARRAY_BUFFER && elementPair != null) {
                 int[] indices = elementPair.indices;
                 newValues = elementPair.positions;
+                int length = indices.length;
+                long byteOffset = (long) currentBufferIndex * length * Float.BYTES;
 
                 glBindBuffer(glId, bufferId);
                 ByteBuffer mappedBuffer = glMapBufferRange(
                         glId,
-                        0,
+                        byteOffset,
                         (long) indices.length * Integer.BYTES,
                         access
                 );
@@ -239,6 +273,7 @@ public class MeshBuilder {
             }
 
             int length = newValues.length;
+            long byteOffset = (long) currentBufferIndex * length * Float.BYTES;
             if (bufferObjectType != entryBufferObjectType) {
                 continue;
             }
@@ -246,7 +281,7 @@ public class MeshBuilder {
             glBindBuffer(glId, bufferId);
             ByteBuffer mapped = glMapBufferRange(
                     glId,
-                    0,
+                    byteOffset,
                     (long) length * Float.BYTES,
                     access
             );
@@ -347,7 +382,9 @@ public class MeshBuilder {
         IntBuffer indicesBuffer = MemoryUtil.memCallocInt(indices.length);
         indicesBuffer.put(0, indices);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferObjectId);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, usageHint);
+        long byteSize = (long) indices.length * Integer.BYTES * bufferCount;
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, byteSize, usageHint);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, indicesBuffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
@@ -357,7 +394,9 @@ public class MeshBuilder {
         FloatBuffer valuesBuffer = MemoryUtil.memCallocFloat(values.length);
         valuesBuffer.put(0, values);
         glBindBuffer(GL_ARRAY_BUFFER, bufferId);
-        glBufferData(GL_ARRAY_BUFFER, valuesBuffer, usageHint);
+        long byteSize = (long) values.length * Float.BYTES * bufferCount;
+        glBufferData(GL_ARRAY_BUFFER, byteSize, usageHint);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, valuesBuffer);
         glEnableVertexAttribArray(index);
         glVertexAttribPointer(index, size, GL_FLOAT, false, 0, 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
