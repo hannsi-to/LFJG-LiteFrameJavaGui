@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.utils.toolkit;
 
 import com.sun.management.OperatingSystemMXBean;
+import me.hannsi.lfjg.utils.Util;
 
 import java.io.File;
 import java.lang.management.ManagementFactory;
@@ -11,7 +12,7 @@ import java.util.List;
 /**
  * Utility class for retrieving runtime memory information.
  */
-public class RuntimeUtil {
+public class RuntimeUtil extends Util {
 
     /**
      * Gets the runtime instance associated with the current Java application.

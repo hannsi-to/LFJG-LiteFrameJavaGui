@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.utils.graphics;
 
+import me.hannsi.lfjg.utils.Util;
 import me.hannsi.lfjg.utils.toolkit.ToolkitUtil;
 import org.joml.Vector2d;
 import org.joml.Vector2f;
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * Utility class for retrieving display size information in various formats.
  */
-public class DisplayUtil {
+public class DisplayUtil extends Util {
 
     /**
      * Gets the display size as a Dimension object.

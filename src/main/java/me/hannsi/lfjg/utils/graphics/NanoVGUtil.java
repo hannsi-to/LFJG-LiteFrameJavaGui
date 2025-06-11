@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.utils.graphics;
 
+import me.hannsi.lfjg.utils.Util;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import org.joml.Vector2f;
 import org.lwjgl.nanovg.NVGColor;
@@ -10,7 +11,7 @@ import java.nio.ByteBuffer;
 import static me.hannsi.lfjg.frame.frame.LFJGContext.*;
 import static org.lwjgl.opengl.GL11.*;
 
-public class NanoVGUtil {
+public class NanoVGUtil extends Util {
     public static void nvgFramePush() {
         glPushAttrib(GL_ALL_ATTRIB_BITS);
         nvgBeginFrame(frameBufferSize.x(), frameBufferSize.y(), devicePixelRatio);

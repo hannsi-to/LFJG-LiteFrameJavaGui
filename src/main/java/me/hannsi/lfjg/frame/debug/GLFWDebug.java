@@ -1,8 +1,8 @@
 package me.hannsi.lfjg.frame.debug;
 
-import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
-import me.hannsi.lfjg.frame.frame.Frame;
+import me.hannsi.lfjg.debug.LogGenerator;
+import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.GLFWDebugSetting;
 import org.lwjgl.glfw.GLFWErrorCallback;
 

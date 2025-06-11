@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.frame.frame;
 
+import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.system.font.FontCache;
 import me.hannsi.lfjg.render.system.svg.SVGCache;
 import me.hannsi.lfjg.utils.math.Projection;

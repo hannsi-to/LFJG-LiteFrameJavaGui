@@ -1,11 +1,10 @@
 package me.hannsi.lfjg.utils.graphics.color;
 
-import java.util.ArrayList;
-import java.util.List;
+import me.hannsi.lfjg.utils.Util;
 
 import static me.hannsi.lfjg.utils.math.MathHelper.*;
 
-public class ColorUtil {
+public class ColorUtil extends Util {
 
     /**
      * Generates a rainbow color based on the delay, timing, saturation, and brightness.
@@ -182,7 +181,7 @@ public class ColorUtil {
      * @return true if all components are within the valid range, false otherwise
      */
     public static boolean checkColorRange(int checkRed, int checkGreen, int checkBlue, int checkAlpha) {
-        int[] checkColors = new int[]{checkRed,checkGreen,checkBlue,checkAlpha};
+        int[] checkColors = new int[]{checkRed, checkGreen, checkBlue, checkAlpha};
 
         for (int check : checkColors) {
             return isWithinRange(check, 0, 255);

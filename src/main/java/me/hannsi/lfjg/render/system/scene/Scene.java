@@ -3,7 +3,7 @@ package me.hannsi.lfjg.render.system.scene;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
-import me.hannsi.lfjg.render.system.Id;
+import me.hannsi.lfjg.render.Id;
 
 public class Scene {
     private final int sceneId;

@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.utils.toolkit;
 
+import me.hannsi.lfjg.utils.Util;
 import me.hannsi.lfjg.utils.math.MathHelper;
 
 import java.awt.datatransfer.StringSelection;
@@ -12,7 +13,7 @@ import java.util.regex.Pattern;
 /**
  * Utility class for various string operations.
  */
-public class StringUtil {
+public class StringUtil extends Util {
     public static final String DEFAULT_CHARS_BASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     /**

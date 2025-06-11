@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.frame.setting.system;
 
-import me.hannsi.lfjg.frame.frame.Frame;
+import me.hannsi.lfjg.frame.Frame;
 
 /**
  * Base class for frame settings.
@@ -10,17 +10,17 @@ import me.hannsi.lfjg.frame.frame.Frame;
 public class FrameSettingBase<T> {
     private final Frame frame;
     private final T defaultValue;
+    private final boolean windowHint;
     private String name;
     private int id;
     private T value;
-    private final boolean windowHint;
 
     /**
      * Constructs a new FrameSettingBase with the specified parameters.
      *
-     * @param frame the frame to associate with this setting
-     * @param name the name of the setting
-     * @param id the identifier of the setting
+     * @param frame        the frame to associate with this setting
+     * @param name         the name of the setting
+     * @param id           the identifier of the setting
      * @param defaultValue the default value of the setting
      */
     public FrameSettingBase(Frame frame, String name, int id, T defaultValue) {
@@ -30,11 +30,11 @@ public class FrameSettingBase<T> {
     /**
      * Constructs a new FrameSettingBase with the specified parameters.
      *
-     * @param frame the frame to associate with this setting
-     * @param name the name of the setting
-     * @param id the identifier of the setting
+     * @param frame        the frame to associate with this setting
+     * @param name         the name of the setting
+     * @param id           the identifier of the setting
      * @param defaultValue the default value of the setting
-     * @param windowHint whether the setting is a window hint
+     * @param windowHint   whether the setting is a window hint
      */
     public FrameSettingBase(Frame frame, String name, int id, T defaultValue, boolean windowHint) {
         this.frame = frame;

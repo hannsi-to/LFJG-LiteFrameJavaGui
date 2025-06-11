@@ -1,8 +1,10 @@
 package me.hannsi.lfjg.utils.reflection;
 
+import me.hannsi.lfjg.utils.Util;
+
 import java.util.Map;
 
-public class StackTraceUtil {
+public class StackTraceUtil extends Util {
     public static String getStackTrace(String mainThreadName, String... ignoreMethod) {
         return getStackTraceWithInsert(mainThreadName, "", ignoreMethod);
     }

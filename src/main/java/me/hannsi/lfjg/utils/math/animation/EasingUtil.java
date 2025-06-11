@@ -1,11 +1,12 @@
 package me.hannsi.lfjg.utils.math.animation;
 
+import me.hannsi.lfjg.utils.Util;
 import me.hannsi.lfjg.utils.math.MathHelper;
 
 /**
  * Utility class for easing functions and animations.
  */
-public class EasingUtil {
+public class EasingUtil extends Util {
     public long current;
     public boolean reverse;
     public Easing easing;

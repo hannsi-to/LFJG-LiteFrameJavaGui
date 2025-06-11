@@ -1,11 +1,12 @@
 package me.hannsi.lfjg.frame.frame;
 
-import me.hannsi.lfjg.render.debug.OpenGLDebug;
+import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.event.events.monitor.MonitorEvent;
 import me.hannsi.lfjg.frame.event.events.monitor.window.*;
 import me.hannsi.lfjg.frame.event.events.user.*;
 import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
 import me.hannsi.lfjg.frame.setting.settings.OpenGLDebugSetting;
+import me.hannsi.lfjg.render.debug.OpenGLDebug;
 import org.lwjgl.glfw.*;
 
 import static me.hannsi.lfjg.frame.frame.LFJGContext.windowSize;

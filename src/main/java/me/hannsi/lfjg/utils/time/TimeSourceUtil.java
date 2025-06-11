@@ -1,12 +1,13 @@
 package me.hannsi.lfjg.utils.time;
 
+import me.hannsi.lfjg.utils.Util;
 import me.hannsi.lfjg.utils.type.types.TimeSourceType;
 import org.lwjgl.glfw.GLFW;
 
 /**
  * Utility class for retrieving time from different sources.
  */
-public class TimeSourceUtil {
+public class TimeSourceUtil extends Util {
 
     /**
      * Gets the current time from GLFW in seconds.

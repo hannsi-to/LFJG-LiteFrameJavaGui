@@ -1,6 +1,6 @@
 package me.hannsi.test.test1;
 
-import me.hannsi.lfjg.frame.frame.Frame;
+import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.frame.frame.LFJGFrame;
 import me.hannsi.lfjg.render.effect.effects.DrawObject;

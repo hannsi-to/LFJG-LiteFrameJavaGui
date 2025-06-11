@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.utils.graphics;
 
+import me.hannsi.lfjg.utils.Util;
 import org.lwjgl.opengl.GL11;
 
 import java.util.HashMap;
@@ -8,7 +9,7 @@ import java.util.Map;
 /**
  * Utility class for managing OpenGL targets and their states.
  */
-public class GLUtil {
+public class GLUtil extends Util {
     private final Map<Integer, Boolean> targets;
 
     /**

@@ -1,6 +1,6 @@
-package me.hannsi.example.wikiPage4;
+package me.hannsi.example.wikiPage5;
 
-import me.hannsi.lfjg.frame.frame.Frame;
+import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.frame.LFJGFrame;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;

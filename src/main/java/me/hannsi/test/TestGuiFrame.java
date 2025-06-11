@@ -1,8 +1,8 @@
 package me.hannsi.test;
 
+import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.event.events.user.*;
 import me.hannsi.lfjg.frame.event.system.EventHandler;
-import me.hannsi.lfjg.frame.frame.Frame;
 import me.hannsi.lfjg.frame.frame.IFrame;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.frame.frame.LFJGFrame;
@@ -76,14 +76,14 @@ public class TestGuiFrame implements LFJGFrame {
                 .createCache(new Font("font", new ResourcesLocation("font/default.ttf")))
                 .loadFonts();
 
-        sceneSystem = new SceneSystem();
-        sceneSystem.addScene(new TestScene1().getScene());
-        sceneSystem.addScene(new TestScene2(frame).getScene());
-        sceneSystem.addScene(new TestScene3(frame).getScene());
-        sceneSystem.addScene(new TestSound1(frame).getScene());
-        sceneSystem.setCurrentScene("TestSound1");
-        sceneSystem.initScenes();
-
+        sceneSystem = SceneSystem.builderCreate()
+                .addScene(new TestScene1().getScene())
+                .addScene(new TestScene2(frame).getScene())
+                .addScene(new TestScene3(frame).getScene())
+                .addScene(new TestSound1(frame).getScene())
+                .addScene(new TestVideo1(frame).getScene())
+                .setCurrentScene("TestVideo1")
+                .initScenes();
 
 //        if (!CefApp.startup(args)) {
 //            System.out.println("Startup initialization failed!");

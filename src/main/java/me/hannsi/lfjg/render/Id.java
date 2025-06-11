@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.system;
+package me.hannsi.lfjg.render;
 
 /**
  * Represents unique identifiers for OpenGL objects and effect caches.

@@ -1,6 +1,6 @@
 package me.hannsi.test;
 
-import me.hannsi.lfjg.frame.frame.Frame;
+import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.gui.system.Gui;
 import me.hannsi.lfjg.render.gui.ui.TestTextField;

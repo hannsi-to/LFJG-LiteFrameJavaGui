@@ -3,7 +3,7 @@ package me.hannsi.lfjg.render.gui.system.item;
 import me.hannsi.lfjg.frame.event.events.user.CharEvent;
 import me.hannsi.lfjg.frame.event.events.user.KeyEvent;
 import me.hannsi.lfjg.frame.event.events.user.MouseButtonEvent;
-import me.hannsi.lfjg.render.system.Id;
+import me.hannsi.lfjg.render.Id;
 import me.hannsi.lfjg.utils.toolkit.KeyboardInfo;
 import me.hannsi.lfjg.utils.toolkit.MouseInfo;
 

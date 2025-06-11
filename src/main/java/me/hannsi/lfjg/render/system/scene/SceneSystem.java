@@ -14,10 +14,14 @@ public class SceneSystem {
     private String currentSceneName;
     private Scene currentScene;
 
-    public SceneSystem() {
+    SceneSystem() {
         this.scenes = new ArrayList<>();
         this.currentSceneName = null;
         this.currentScene = null;
+    }
+
+    public static SceneSystem builderCreate() {
+        return new SceneSystem();
     }
 
     public void changeScene(String newCurrentSceneName) {
@@ -51,8 +55,9 @@ public class SceneSystem {
         ).logging(DebugLevel.INFO);
     }
 
-    public void addScene(Scene scene) {
+    public SceneSystem addScene(Scene scene) {
         this.scenes.add(scene);
+        return this;
     }
 
     public void removeScene(Scene scene) {
@@ -67,13 +72,15 @@ public class SceneSystem {
         return scenes.stream().filter(scene -> scene.getSceneName().equals(sceneName)).findFirst().orElse(null);
     }
 
-    public void initScenes() {
+    public SceneSystem initScenes() {
         if (currentScene == null) {
-            return;
+            return this;
         }
 
         currentScene.getiScene().init();
         currentScene.setInitialize(true);
+
+        return this;
     }
 
     public void drawFrameScenes() {
@@ -131,7 +138,7 @@ public class SceneSystem {
         return currentScene;
     }
 
-    public void setCurrentScene(String currentSceneName) {
+    public SceneSystem setCurrentScene(String currentSceneName) {
         this.currentSceneName = currentSceneName;
         currentScene = getScene(currentSceneName);
         if (currentScene == null) {
@@ -146,6 +153,8 @@ public class SceneSystem {
                 "Severity: Info",
                 "Message: " + currentSceneName + " is set."
         ).logging(DebugLevel.INFO);
+
+        return this;
     }
 
     public void setCurrentScene(Scene currentScene) {

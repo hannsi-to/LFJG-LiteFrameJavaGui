@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.frame.setting.settings;
 
-import me.hannsi.lfjg.frame.frame.Frame;
+import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 
 /**

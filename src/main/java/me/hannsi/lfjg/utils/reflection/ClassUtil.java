@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.utils.reflection;
 
+import me.hannsi.lfjg.utils.Util;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Constructor;
@@ -11,7 +12,7 @@ import java.util.*;
 /**
  * Utility class for reflection-based operations.
  */
-public class ClassUtil {
+public class ClassUtil extends Util {
 
     /**
      * Retrieves a set of classes from a specified package that are subclasses of a given class.

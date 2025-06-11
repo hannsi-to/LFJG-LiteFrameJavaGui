@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.utils.graphics;
 
-import me.hannsi.lfjg.frame.frame.Frame;
+import me.hannsi.lfjg.frame.Frame;
+import me.hannsi.lfjg.utils.Util;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.MonitorType;
 import org.joml.Vector2f;
@@ -21,7 +22,7 @@ import java.util.Objects;
 /**
  * Utility class for various GLFW operations.
  */
-public class GLFWUtil {
+public class GLFWUtil extends Util {
 
     /**
      * Gets the GLFW video mode for the specified window.

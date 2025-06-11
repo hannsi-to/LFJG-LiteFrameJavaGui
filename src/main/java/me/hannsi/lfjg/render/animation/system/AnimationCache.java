@@ -3,8 +3,8 @@ package me.hannsi.lfjg.render.animation.system;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
+import me.hannsi.lfjg.render.Id;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.render.system.Id;
 
 import java.util.LinkedHashMap;
 import java.util.concurrent.atomic.AtomicReference;

@@ -1,6 +1,6 @@
 package me.hannsi.test;
 
-import me.hannsi.lfjg.frame.frame.Frame;
+import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.frame.setting.settings.TimeSourceSetting;
 import me.hannsi.lfjg.physic.PhysicObject;

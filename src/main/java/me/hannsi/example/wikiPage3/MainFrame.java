@@ -1,6 +1,6 @@
 package me.hannsi.example.wikiPage3;
 
-import me.hannsi.lfjg.frame.frame.Frame;
+import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.frame.LFJGFrame;
 
 public class MainFrame implements LFJGFrame {

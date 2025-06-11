@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.utils.toolkit;
 
+import me.hannsi.lfjg.utils.Util;
 import me.hannsi.lfjg.utils.math.MathHelper;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.URLLocation;
@@ -23,7 +24,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * Utility class for byte operations.
  */
-public class IOUtil {
+public class IOUtil extends Util {
     public static ByteBuffer convertRGBAtoBGRA(ByteBuffer rgbaBuffer, int width, int height) {
         int numPixels = width * height;
         ByteBuffer bgraBuffer = BufferUtils.createByteBuffer(numPixels * 4);

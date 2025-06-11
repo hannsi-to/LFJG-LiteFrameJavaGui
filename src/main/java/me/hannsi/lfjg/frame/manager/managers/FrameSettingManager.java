@@ -4,7 +4,7 @@ import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
-import me.hannsi.lfjg.frame.frame.Frame;
+import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.manager.Manager;
 import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;

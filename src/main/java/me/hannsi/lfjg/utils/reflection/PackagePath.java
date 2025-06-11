@@ -1,9 +1,11 @@
 package me.hannsi.lfjg.utils.reflection;
 
+import me.hannsi.lfjg.utils.Util;
+
 /**
  * Utility class for storing package paths used in the application.
  */
-public class PackagePath {
+public class PackagePath extends Util {
     /**
      * Base package path.
      */
