@@ -7,6 +7,9 @@ import me.hannsi.lfjg.utils.reflection.location.URLLocation;
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.lwjgl.BufferUtils;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -25,6 +28,31 @@ import static org.lwjgl.system.MemoryUtil.*;
  * Utility class for byte operations.
  */
 public class IOUtil extends Util {
+    public static ByteBuffer convertBufferedImageToByteBuffer(BufferedImage image, int imageType) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        BufferedImage convertedImage = new BufferedImage(width, height, imageType);
+        Graphics2D graphics2D = convertedImage.createGraphics();
+        graphics2D.drawImage(image, 0, 0, width, height, null);
+        graphics2D.dispose();
+
+        byte[] pixelData = ((DataBufferByte) convertedImage.getRaster().getDataBuffer()).getData();
+        ByteBuffer buffer = ByteBuffer.allocateDirect(width * height * 4).order(ByteOrder.nativeOrder());
+
+        for (int i = 0; i < pixelData.length; i += 4) {
+            byte a = pixelData[i];
+            byte b = pixelData[i + 1];
+            byte g = pixelData[i + 2];
+            byte r = pixelData[i + 3];
+
+            buffer.put(r).put(g).put(b).put(a);
+        }
+
+        buffer.flip();
+        return buffer;
+    }
+
     public static ByteBuffer convertRGBAtoBGRA(ByteBuffer rgbaBuffer, int width, int height) {
         int numPixels = width * height;
         ByteBuffer bgraBuffer = BufferUtils.createByteBuffer(numPixels * 4);
