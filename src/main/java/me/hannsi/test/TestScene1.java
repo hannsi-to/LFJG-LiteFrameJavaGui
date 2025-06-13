@@ -225,7 +225,7 @@ public class TestScene1 implements IScene {
     }
 
     public void soundCacheInit() {
-        soundCache = new SoundCache();
+        soundCache = SoundCache.initSoundCache();
         soundCache.setAttenuationModel(AL11.AL_EXPONENT_DISTANCE);
         soundCache.setListener(new SoundListener(new Vector3f(0, 0, 0)));
 

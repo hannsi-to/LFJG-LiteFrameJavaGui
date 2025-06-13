@@ -25,9 +25,9 @@ public class TestSound1 implements IScene {
     @Override
     public void init() {
         AudioDevices audioDevices = new AudioDevices();
-        soundCache = new SoundCache();
-        soundCache.setAttenuationModel(AL11.AL_EXPONENT_DISTANCE);
-        soundCache.setListener(new SoundListener(new Vector3f(0, 0, 0)));
+        soundCache = SoundCache.initSoundCache()
+                .setAttenuationModel(AL11.AL_EXPONENT_DISTANCE)
+                .setListener(new SoundListener(new Vector3f(0, 0, 0)));
 
         SoundBuffer soundBuffer = new SoundBuffer(SoundLoaderType.STB_VORBIS, new ResourcesLocation("sound/test.ogg"));
 
@@ -37,10 +37,10 @@ public class TestSound1 implements IScene {
                 .addSoundEffect(SoundEffectType.REVERB)
                 .addSoundFilter(SoundFilterType.LOWPASS_GAIN, 0.5f);
 
-        SoundSource playerSoundSource = new SoundSource(false, false);
-        playerSoundSource.setPosition(new Vector3f(0, 0, 0));
-        playerSoundSource.setBuffer(soundBuffer.getBufferId());
-        playerSoundSource.setSoundEffect(soundEffect);
+        SoundSource playerSoundSource = new SoundSource(false, false)
+                .setPosition(new Vector3f(0, 0, 0))
+                .setBuffer(soundBuffer.getBufferId());
+//        playerSoundSource.setSoundEffect(soundEffect);
 
         soundCache.createCache("test", soundBuffer, playerSoundSource);
     }

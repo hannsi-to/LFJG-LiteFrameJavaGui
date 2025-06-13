@@ -28,7 +28,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * Utility class for byte operations.
  */
 public class IOUtil extends Util {
-    public static ByteBuffer convertBufferedImageToByteBuffer(BufferedImage image, int imageType) {
+    public static ByteBuffer convertBufferedImageToByteBuffer(BufferedImage image, int imageType, boolean flipVertically) {
         int width = image.getWidth();
         int height = image.getHeight();
 
@@ -40,13 +40,37 @@ public class IOUtil extends Util {
         byte[] pixelData = ((DataBufferByte) convertedImage.getRaster().getDataBuffer()).getData();
         ByteBuffer buffer = ByteBuffer.allocateDirect(width * height * 4).order(ByteOrder.nativeOrder());
 
-        for (int i = 0; i < pixelData.length; i += 4) {
-            byte a = pixelData[i];
-            byte b = pixelData[i + 1];
-            byte g = pixelData[i + 2];
-            byte r = pixelData[i + 3];
+        int pixelStride = 4;
+        int rowStride = width * pixelStride;
 
-            buffer.put(r).put(g).put(b).put(a);
+        if (flipVertically) {
+            for (int y = height - 1; y >= 0; y--) {
+                int rowStart = y * rowStride;
+                for (int x = 0; x < width; x++) {
+                    int i = rowStart + x * pixelStride;
+
+                    byte a = pixelData[i];
+                    byte b = pixelData[i + 1];
+                    byte g = pixelData[i + 2];
+                    byte r = pixelData[i + 3];
+
+                    buffer.put(r).put(g).put(b).put(a);
+                }
+            }
+        } else {
+            for (int y = 0; y < height; y++) {
+                int rowStart = y * rowStride;
+                for (int x = 0; x < width; x++) {
+                    int i = rowStart + x * pixelStride;
+
+                    byte a = pixelData[i];
+                    byte b = pixelData[i + 1];
+                    byte g = pixelData[i + 2];
+                    byte r = pixelData[i + 3];
+
+                    buffer.put(r).put(g).put(b).put(a);
+                }
+            }
         }
 
         buffer.flip();
