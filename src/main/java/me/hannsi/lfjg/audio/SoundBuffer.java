@@ -40,7 +40,7 @@ public class SoundBuffer {
             case STB_VORBIS -> {
                 try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
                     pcm = readVorbis(fileLocation.getPath(), info);
-                    alBufferData(bufferId, info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, pcm, info.sample_rate());
+                    updatePCMData(info.sample_rate(), info.channels());
                 }
             }
             case JAVA_CV -> {
@@ -50,7 +50,7 @@ public class SoundBuffer {
                     int sampleRate = grabber.getSampleRate();
                     int channels = grabber.getAudioChannels();
                     int format = (channels == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
-                    alBufferData(bufferId, format, pcm, sampleRate);
+                    updatePCMData(sampleRate, format);
                 } catch (Exception e) {
                     throw new RuntimeException("Failed to load audio file: " + fileLocation.getPath(), e);
                 }
@@ -58,6 +58,10 @@ public class SoundBuffer {
             }
             default -> throw new IllegalStateException("Unexpected value: " + soundLoaderType);
         }
+    }
+
+    public void updatePCMData(int sampleRate, int format) {
+        alBufferData(bufferId, format == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, pcm, sampleRate);
     }
 
     /**

@@ -73,9 +73,10 @@ public class SoundSource {
      *
      * @param bufferId The buffer ID to set.
      */
-    public void setBuffer(int bufferId) {
+    public SoundSource setBuffer(int bufferId) {
         stop();
         alSourcei(sourceId, AL_BUFFER, bufferId);
+        return this;
     }
 
     /**
@@ -83,8 +84,9 @@ public class SoundSource {
      *
      * @param gain The gain value to set.
      */
-    public void setGain(float gain) {
+    public SoundSource setGain(float gain) {
         alSourcef(sourceId, AL_GAIN, gain);
+        return this;
     }
 
     /**
@@ -92,8 +94,9 @@ public class SoundSource {
      *
      * @param position The new position of the sound source.
      */
-    public void setPosition(Vector3f position) {
+    public SoundSource setPosition(Vector3f position) {
         alSource3f(sourceId, AL_POSITION, position.x, position.y, position.z);
+        return this;
     }
 
     /**
@@ -116,8 +119,9 @@ public class SoundSource {
         return soundEffect;
     }
 
-    public void setSoundEffect(SoundEffect soundEffect) {
+    public SoundSource setSoundEffect(SoundEffect soundEffect) {
         this.soundEffect = soundEffect;
         soundEffect.sendEffectSlot(sourceId);
+        return this;
     }
 }

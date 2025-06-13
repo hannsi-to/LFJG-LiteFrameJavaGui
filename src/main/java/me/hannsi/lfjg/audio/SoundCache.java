@@ -30,14 +30,7 @@ public class SoundCache {
     private SoundListener listener;
     private long context;
 
-    /**
-     * Constructs a SoundCache object using the default audio device.
-     */
-    public SoundCache() {
-        this(AudioDevices.DEFAULT);
-    }
-
-    public SoundCache(String desiredDevice) {
+    SoundCache(String desiredDevice) {
         soundBufferList = new ArrayList<>();
         soundSourceMap = new HashMap<>();
 
@@ -52,6 +45,14 @@ public class SoundCache {
         }
         alcMakeContextCurrent(context);
         createCapabilities(deviceCaps);
+    }
+
+    public static SoundCache initSoundCache() {
+        return initSoundCache(AudioDevices.DEFAULT);
+    }
+
+    public static SoundCache initSoundCache(String desiredDevice) {
+        return new SoundCache(desiredDevice);
     }
 
     /**
@@ -80,7 +81,7 @@ public class SoundCache {
      * @param soundBuffer The SoundBuffer to add.
      * @param soundSource The SoundSource to add.
      */
-    public void createCache(String name, SoundBuffer soundBuffer, SoundSource soundSource) {
+    public SoundCache createCache(String name, SoundBuffer soundBuffer, SoundSource soundSource) {
         addSoundBuffer(soundBuffer);
         addSoundSource(name, soundSource);
 
@@ -90,6 +91,8 @@ public class SoundCache {
                 name,
                 ""
         ).logging(DebugLevel.DEBUG);
+
+        return this;
     }
 
     /**
@@ -129,8 +132,9 @@ public class SoundCache {
      *
      * @param listener The SoundListener to set.
      */
-    public void setListener(SoundListener listener) {
+    public SoundCache setListener(SoundListener listener) {
         this.listener = listener;
+        return this;
     }
 
     /**
@@ -169,8 +173,9 @@ public class SoundCache {
      *
      * @param model The attenuation model to set.
      */
-    public void setAttenuationModel(int model) {
+    public SoundCache setAttenuationModel(int model) {
         alDistanceModel(model);
+        return this;
     }
 
     /**
