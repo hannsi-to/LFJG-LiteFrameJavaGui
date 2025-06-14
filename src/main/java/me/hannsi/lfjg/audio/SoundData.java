@@ -64,6 +64,12 @@ public class SoundData {
         return this;
     }
 
+    public SoundData attachBuffer() {
+        stop();
+        setParameter(AL_BUFFER, bufferId);
+        return this;
+    }
+
     public void cleanup() {
         stop();
         soundEffect.cleanup();
@@ -106,8 +112,7 @@ public class SoundData {
     }
 
     public SoundData relative(boolean relative) {
-        return setParameter(AL_SOURCE_RELATIVE, relative ? AL_TRUE : AL_FALSE)
-                ;
+        return setParameter(AL_SOURCE_RELATIVE, relative ? AL_TRUE : AL_FALSE);
     }
 
     public SoundData loop(boolean loop) {

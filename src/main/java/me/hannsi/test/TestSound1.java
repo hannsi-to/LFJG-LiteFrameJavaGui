@@ -9,7 +9,8 @@ import me.hannsi.lfjg.utils.type.types.SoundEffectType;
 import me.hannsi.lfjg.utils.type.types.SoundFilterType;
 import me.hannsi.lfjg.utils.type.types.SoundLoaderType;
 import org.joml.Vector3f;
-import org.lwjgl.openal.AL11;
+
+import static org.lwjgl.openal.AL11.AL_EXPONENT_DISTANCE;
 
 public class TestSound1 implements IScene {
     public Scene scene;
@@ -26,15 +27,16 @@ public class TestSound1 implements IScene {
     public void init() {
         AudioDevices audioDevices = new AudioDevices();
         soundCache = SoundCache.initSoundCache()
-                .setAttenuationModel(AL11.AL_EXPONENT_DISTANCE)
+                .setAttenuationModel(AL_EXPONENT_DISTANCE)
                 .setListener(new SoundListener(new Vector3f(0, 0, 0)))
                 .createCache(
                         "test",
                         SoundData.createSoundData()
-                                .loop(false)
-                                .relative(false)
+                                .loop(true)
+                                .relative(true)
                                 .position(new Vector3f(0, 0, 0))
                                 .createSoundPCM(SoundLoaderType.STB_VORBIS, new ResourcesLocation("sound/test.ogg"))
+                                .attachBuffer()
                 );
 
         SoundEffect soundEffect = SoundEffect.builderCreate()
