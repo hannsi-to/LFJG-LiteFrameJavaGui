@@ -1,9 +1,8 @@
 package me.hannsi.test;
 
-import me.hannsi.lfjg.audio.SoundBuffer;
 import me.hannsi.lfjg.audio.SoundCache;
+import me.hannsi.lfjg.audio.SoundData;
 import me.hannsi.lfjg.audio.SoundListener;
-import me.hannsi.lfjg.audio.SoundSource;
 import me.hannsi.lfjg.render.animation.animations.Bounce;
 import me.hannsi.lfjg.render.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.effect.effects.*;
@@ -57,7 +56,6 @@ public class TestScene1 implements IScene {
     AnimationCache gl1AnimationCache;
     FontCache fontCache;
 
-    SoundBuffer soundBuffer;
     SoundCache soundCache;
 
     int first;
@@ -225,22 +223,23 @@ public class TestScene1 implements IScene {
     }
 
     public void soundCacheInit() {
-        soundCache = SoundCache.initSoundCache();
-        soundCache.setAttenuationModel(AL11.AL_EXPONENT_DISTANCE);
-        soundCache.setListener(new SoundListener(new Vector3f(0, 0, 0)));
-
-        soundBuffer = new SoundBuffer(SoundLoaderType.STB_VORBIS, new ResourcesLocation("sound/test.ogg"));
-        SoundSource playerSoundSource = new SoundSource(false, false);
-        playerSoundSource.setPosition(new Vector3f(0, 0, 0));
-        playerSoundSource.setBuffer(soundBuffer.getBufferId());
-
-        soundCache.createCache("test", soundBuffer, playerSoundSource);
+        soundCache = SoundCache.initSoundCache()
+                .setAttenuationModel(AL11.AL_EXPONENT_DISTANCE)
+                .setListener(new SoundListener(new Vector3f(0, 0, 0)))
+                .createCache(
+                        "test",
+                        SoundData.createSoundData()
+                                .loop(false)
+                                .relative(false)
+                                .position(new Vector3f(0, 0, 0))
+                                .createSoundPCM(SoundLoaderType.STB_VORBIS, new ResourcesLocation("sound/test.ogg"))
+                );
     }
 
     @Override
     public void drawFrame() {
-        soundCache.getSoundSource("test").setGain(0.05f);
-        soundCache.playSoundSource("test");
+        soundCache.getSoundData("test").gain(0.05f);
+        soundCache.playSoundData("test");
 
 //        Rotate rotate = (Rotate) glShaderSplitObjectEffectCache.getEffectBase("Rotate1");
 //        rotate.setZ(rotate.getZ() + 0.01f);

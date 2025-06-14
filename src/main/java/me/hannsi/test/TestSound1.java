@@ -27,28 +27,27 @@ public class TestSound1 implements IScene {
         AudioDevices audioDevices = new AudioDevices();
         soundCache = SoundCache.initSoundCache()
                 .setAttenuationModel(AL11.AL_EXPONENT_DISTANCE)
-                .setListener(new SoundListener(new Vector3f(0, 0, 0)));
-
-        SoundBuffer soundBuffer = new SoundBuffer(SoundLoaderType.STB_VORBIS, new ResourcesLocation("sound/test.ogg"));
+                .setListener(new SoundListener(new Vector3f(0, 0, 0)))
+                .createCache(
+                        "test",
+                        SoundData.createSoundData()
+                                .loop(false)
+                                .relative(false)
+                                .position(new Vector3f(0, 0, 0))
+                                .createSoundPCM(SoundLoaderType.STB_VORBIS, new ResourcesLocation("sound/test.ogg"))
+                );
 
         SoundEffect soundEffect = SoundEffect.builderCreate()
                 .initEffect()
                 .initFilter()
                 .addSoundEffect(SoundEffectType.REVERB)
                 .addSoundFilter(SoundFilterType.LOWPASS_GAIN, 0.5f);
-
-        SoundSource playerSoundSource = new SoundSource(false, false)
-                .setPosition(new Vector3f(0, 0, 0))
-                .setBuffer(soundBuffer.getBufferId());
-//        playerSoundSource.setSoundEffect(soundEffect);
-
-        soundCache.createCache("test", soundBuffer, playerSoundSource);
     }
 
     @Override
     public void drawFrame() {
-        soundCache.getSoundSource("test").setGain(0.05f);
-        soundCache.playSoundSource("test");
+        soundCache.getSoundData("test").gain(0.05f);
+        soundCache.playSoundData("test");
     }
 
     @Override

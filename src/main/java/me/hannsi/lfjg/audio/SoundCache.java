@@ -10,9 +10,7 @@ import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
 
 import java.nio.IntBuffer;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static me.hannsi.lfjg.audio.LFJGOpenALContext.openALDevice;
@@ -25,14 +23,12 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  * The SoundCache class is responsible for managing sound buffers, sound sources, and the OpenAL context.
  */
 public class SoundCache {
-    private final List<SoundBuffer> soundBufferList;
-    private final Map<String, SoundSource> soundSourceMap;
+    private final Map<String, SoundData> soundDataList;
     private SoundListener listener;
     private long context;
 
     SoundCache(String desiredDevice) {
-        soundBufferList = new ArrayList<>();
-        soundSourceMap = new HashMap<>();
+        soundDataList = new HashMap<>();
 
         openALDevice = alcOpenDevice(desiredDevice);
         if (openALDevice == NULL) {
@@ -55,35 +51,8 @@ public class SoundCache {
         return new SoundCache(desiredDevice);
     }
 
-    /**
-     * Adds a SoundBuffer to the sound buffer list.
-     *
-     * @param soundBuffer The SoundBuffer to add.
-     */
-    public void addSoundBuffer(SoundBuffer soundBuffer) {
-        this.soundBufferList.add(soundBuffer);
-    }
-
-    /**
-     * Adds a SoundSource to the sound source map with the specified name.
-     *
-     * @param name        The name of the sound source.
-     * @param soundSource The SoundSource to add.
-     */
-    public void addSoundSource(String name, SoundSource soundSource) {
-        this.soundSourceMap.put(name, soundSource);
-    }
-
-    /**
-     * Creates a sound cache by adding a SoundBuffer and SoundSource with the specified name.
-     *
-     * @param name        The name of the sound cache.
-     * @param soundBuffer The SoundBuffer to add.
-     * @param soundSource The SoundSource to add.
-     */
-    public SoundCache createCache(String name, SoundBuffer soundBuffer, SoundSource soundSource) {
-        addSoundBuffer(soundBuffer);
-        addSoundSource(name, soundSource);
+    public SoundCache createCache(String name, SoundData soundData) {
+        soundDataList.put(name, soundData);
 
         new LogGenerator(
                 LogGenerateType.CREATE_CACHE,
@@ -99,10 +68,10 @@ public class SoundCache {
      * Cleans up the resources associated with this SoundCache.
      */
     public void cleanup() {
-        soundSourceMap.values().forEach(SoundSource::cleanup);
-        soundSourceMap.clear();
-        soundBufferList.forEach(SoundBuffer::cleanup);
-        soundBufferList.clear();
+        soundDataList.forEach((name, soundData) -> {
+            soundData.cleanup();
+        });
+        soundDataList.clear();
         if (context != NULL) {
             alcDestroyContext(context);
         }
@@ -138,34 +107,15 @@ public class SoundCache {
     }
 
     /**
-     * Retrieves the SoundSource with the specified name.
-     *
-     * @param name The name of the sound source.
-     * @return The SoundSource, or null if not found.
-     */
-    public SoundSource getSoundSource(String name) {
-        return this.soundSourceMap.get(name);
-    }
-
-    /**
      * Plays the SoundSource with the specified name if it is not already playing.
      *
      * @param name The name of the sound source.
      */
-    public void playSoundSource(String name) {
-        SoundSource soundSource = this.soundSourceMap.get(name);
-        if (soundSource != null && !soundSource.isPlaying()) {
-            soundSource.play();
+    public void playSoundData(String name) {
+        SoundData soundData = soundDataList.get(name);
+        if (soundData != null && !soundData.isPlaying()) {
+            soundData.play();
         }
-    }
-
-    /**
-     * Removes the SoundSource with the specified name from the sound source map.
-     *
-     * @param name The name of the sound source to remove.
-     */
-    public void removeSoundSource(String name) {
-        this.soundSourceMap.remove(name);
     }
 
     /**
@@ -193,22 +143,8 @@ public class SoundCache {
         listener.setOrientation(at, up);
     }
 
-    /**
-     * Retrieves the list of SoundBuffers in this SoundCache.
-     *
-     * @return The list of SoundBuffers.
-     */
-    public List<SoundBuffer> getSoundBufferList() {
-        return soundBufferList;
-    }
-
-    /**
-     * Retrieves the map of SoundSources in this SoundCache.
-     *
-     * @return The map of SoundSources.
-     */
-    public Map<String, SoundSource> getSoundSourceMap() {
-        return soundSourceMap;
+    public SoundData getSoundData(String name) {
+        return soundDataList.get(name);
     }
 
     /**
