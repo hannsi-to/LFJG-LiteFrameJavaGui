@@ -70,6 +70,12 @@ public class SoundData {
         return this;
     }
 
+    public SoundData attachEffect(SoundEffect soundEffect) {
+        soundEffect.sendEffectSlot(sourceId);
+
+        return this;
+    }
+
     public void cleanup() {
         stop();
         soundEffect.cleanup();

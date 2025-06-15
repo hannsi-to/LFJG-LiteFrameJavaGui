@@ -12,7 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -27,6 +29,8 @@ public class VideoFrameSystem {
     private int height;
 
     private boolean paused = false;
+    private boolean doVideo = true;
+    private boolean doAudio = true;
 
     VideoFrameSystem() {
     }
@@ -148,11 +152,23 @@ public class VideoFrameSystem {
 
     public void drawFrame() {
         BufferedImage image = null;
+        ShortBuffer audioBuffer = null;
+
         if (!paused) {
             try {
                 frame = grabber.grabFrame(true, true, true, false, true);
                 if (frame != null) {
-                    image = java2DFrameConverter.convert(frame);
+                    if (doVideo && frame.image != null) {
+                        image = java2DFrameConverter.convert(frame);
+                    }
+                    if (doVideo && frame.samples != null && frame.samples.length > 0) {
+                        Buffer buffer = frame.samples[0];
+                        if (buffer instanceof ShortBuffer) {
+                            audioBuffer = (ShortBuffer) buffer;
+                        } else {
+                            throw new RuntimeException("Unsupported audio buffer type: " + buffer.getClass().getName());
+                        }
+                    }
                 }
             } catch (FFmpegFrameGrabber.Exception e) {
                 throw new RuntimeException(e);
@@ -177,6 +193,10 @@ public class VideoFrameSystem {
             glBindTexture(GL_TEXTURE_2D, textureId);
             glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, byteImage);
             glBindTexture(GL_TEXTURE_2D, 0);
+        }
+
+        if (audioBuffer != null) {
+
         }
     }
 
@@ -242,5 +262,23 @@ public class VideoFrameSystem {
 
     public void setPaused(boolean paused) {
         this.paused = paused;
+    }
+
+    public boolean isDoVideo() {
+        return doVideo;
+    }
+
+    public VideoFrameSystem setDoVideo(boolean doVideo) {
+        this.doVideo = doVideo;
+        return this;
+    }
+
+    public boolean isDoAudio() {
+        return doAudio;
+    }
+
+    public VideoFrameSystem setDoAudio(boolean doAudio) {
+        this.doAudio = doAudio;
+        return this;
     }
 }

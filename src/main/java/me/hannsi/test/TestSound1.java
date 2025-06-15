@@ -37,13 +37,14 @@ public class TestSound1 implements IScene {
                                 .position(new Vector3f(0, 0, 0))
                                 .createSoundPCM(SoundLoaderType.STB_VORBIS, new ResourcesLocation("sound/test.ogg"))
                                 .attachBuffer()
+                                .attachEffect(
+                                        SoundEffect.builderCreate()
+                                                .initEffect()
+                                                .initFilter()
+                                                .addSoundEffect(SoundEffectType.REVERB)
+                                                .addSoundFilter(SoundFilterType.LOWPASS_GAIN, 0.5f)
+                                )
                 );
-
-        SoundEffect soundEffect = SoundEffect.builderCreate()
-                .initEffect()
-                .initFilter()
-                .addSoundEffect(SoundEffectType.REVERB)
-                .addSoundFilter(SoundFilterType.LOWPASS_GAIN, 0.5f);
     }
 
     @Override
