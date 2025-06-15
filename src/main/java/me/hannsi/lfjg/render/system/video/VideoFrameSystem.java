@@ -4,6 +4,7 @@ import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.Location;
+import me.hannsi.lfjg.utils.reflection.location.URLLocation;
 import me.hannsi.lfjg.utils.toolkit.IOUtil;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
@@ -12,9 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
-import java.nio.ShortBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -31,6 +30,8 @@ public class VideoFrameSystem {
     private boolean paused = false;
     private boolean doVideo = true;
     private boolean doAudio = true;
+    private long startSystemNanos = -1;
+    private long startVideoTimestamp = -1;
 
     VideoFrameSystem() {
     }
@@ -76,7 +77,7 @@ public class VideoFrameSystem {
         if (location.isPath()) {
             this.grabber = new FFmpegFrameGrabber(((FileLocation) location).getInputStream());
         } else if (location.isUrl()) {
-
+            this.grabber = new FFmpegFrameGrabber(((URLLocation) location).getURL());
         }
 
         return this;
@@ -151,52 +152,44 @@ public class VideoFrameSystem {
     }
 
     public void drawFrame() {
-        BufferedImage image = null;
-        ShortBuffer audioBuffer = null;
+        long currentSystemTime = System.nanoTime();
 
-        if (!paused) {
+        if (startSystemNanos == -1) {
+            startSystemNanos = currentSystemTime;
+            startVideoTimestamp = grabber.getTimestamp();
+        }
+
+        long elapsedSystemMicros = (currentSystemTime - startSystemNanos) / 1000;
+        long expectedVideoTimestamp = startVideoTimestamp + elapsedSystemMicros;
+        long actualVideoTimestamp = grabber.getTimestamp();
+
+        if (!paused && actualVideoTimestamp < expectedVideoTimestamp) {
             try {
                 frame = grabber.grabFrame(true, true, true, false, true);
-                if (frame != null) {
-                    if (doVideo && frame.image != null) {
-                        image = java2DFrameConverter.convert(frame);
+                if (frame != null && doVideo && frame.image != null) {
+                    BufferedImage image = java2DFrameConverter.convert(frame);
+
+                    ByteBuffer byteImage = IOUtil.convertBufferedImageToByteBuffer(image, BufferedImage.TYPE_4BYTE_ABGR, true);
+                    width = image.getWidth();
+                    height = image.getHeight();
+
+                    if (textureId == -1) {
+                        textureId = glGenTextures();
+
+                        glBindTexture(GL_TEXTURE_2D, textureId);
+                        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+                        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, byteImage);
+                        glBindTexture(GL_TEXTURE_2D, 0);
                     }
-                    if (doVideo && frame.samples != null && frame.samples.length > 0) {
-                        Buffer buffer = frame.samples[0];
-                        if (buffer instanceof ShortBuffer) {
-                            audioBuffer = (ShortBuffer) buffer;
-                        } else {
-                            throw new RuntimeException("Unsupported audio buffer type: " + buffer.getClass().getName());
-                        }
-                    }
+
+                    glBindTexture(GL_TEXTURE_2D, textureId);
+                    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, byteImage);
+                    glBindTexture(GL_TEXTURE_2D, 0);
                 }
             } catch (FFmpegFrameGrabber.Exception e) {
                 throw new RuntimeException(e);
             }
-        }
-
-        if (image != null) {
-            ByteBuffer byteImage = IOUtil.convertBufferedImageToByteBuffer(image, BufferedImage.TYPE_4BYTE_ABGR, true);
-            width = image.getWidth();
-            height = image.getHeight();
-
-            if (textureId == -1) {
-                textureId = glGenTextures();
-
-                glBindTexture(GL_TEXTURE_2D, textureId);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, byteImage);
-                glBindTexture(GL_TEXTURE_2D, 0);
-            }
-
-            glBindTexture(GL_TEXTURE_2D, textureId);
-            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, byteImage);
-            glBindTexture(GL_TEXTURE_2D, 0);
-        }
-
-        if (audioBuffer != null) {
-
         }
     }
 
@@ -230,14 +223,6 @@ public class VideoFrameSystem {
 
     public void setJava2DFrameConverter(Java2DFrameConverter java2DFrameConverter) {
         this.java2DFrameConverter = java2DFrameConverter;
-    }
-
-    public int getTextureId() {
-        return textureId;
-    }
-
-    public void setTextureId(int textureId) {
-        this.textureId = textureId;
     }
 
     public int getWidth() {
@@ -280,5 +265,29 @@ public class VideoFrameSystem {
     public VideoFrameSystem setDoAudio(boolean doAudio) {
         this.doAudio = doAudio;
         return this;
+    }
+
+    public int getTextureId() {
+        return textureId;
+    }
+
+    public void setTextureId(int textureId) {
+        this.textureId = textureId;
+    }
+
+    public long getStartSystemNanos() {
+        return startSystemNanos;
+    }
+
+    public void setStartSystemNanos(long startSystemNanos) {
+        this.startSystemNanos = startSystemNanos;
+    }
+
+    public long getStartVideoTimestamp() {
+        return startVideoTimestamp;
+    }
+
+    public void setStartVideoTimestamp(long startVideoTimestamp) {
+        this.startVideoTimestamp = startVideoTimestamp;
     }
 }

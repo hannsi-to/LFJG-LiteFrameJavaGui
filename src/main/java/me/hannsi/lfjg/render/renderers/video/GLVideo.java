@@ -36,10 +36,12 @@ public class GLVideo extends GLRect {
     public void draw() {
         videoFrameSystem.drawFrame();
 
-        getGlUtil().addGLTarget(GL_TEXTURE_2D);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, videoFrameSystem.getTextureId());
-        super.draw();
-        glBindTexture(GL_TEXTURE_2D, 0);
+        if (videoFrameSystem.getTextureId() != 1) {
+            getGlUtil().addGLTarget(GL_TEXTURE_2D);
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, videoFrameSystem.getTextureId());
+            super.draw();
+            glBindTexture(GL_TEXTURE_2D, 0);
+        }
     }
 }

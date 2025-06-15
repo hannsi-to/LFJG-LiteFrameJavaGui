@@ -26,7 +26,7 @@ public class TestVideo1 implements IScene {
     @Override
     public void init() {
         this.glVideo = new GLVideo("TestVideo1");
-        this.glVideo.video(new ResourcesLocation("video/test2.mp4"), 0, 0, frame.getWindowWidth(), frame.getWindowHeight());
+        this.glVideo.video(new ResourcesLocation("video/test3.mp4"), 0, 0, frame.getWindowWidth(), frame.getWindowHeight());
     }
 
     @Override

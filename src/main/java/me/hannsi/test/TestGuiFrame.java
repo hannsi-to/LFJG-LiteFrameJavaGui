@@ -82,7 +82,7 @@ public class TestGuiFrame implements LFJGFrame {
                 .addScene(new TestScene3(frame).getScene())
                 .addScene(new TestSound1(frame).getScene())
                 .addScene(new TestVideo1(frame).getScene())
-                .setCurrentScene("TestSound1")
+                .setCurrentScene("TestVideo1")
                 .initScenes();
 
 //        if (!CefApp.startup(args)) {
@@ -216,7 +216,7 @@ public class TestGuiFrame implements LFJGFrame {
     public void setFrameSetting() {
         frame.setFrameSettingValue(RefreshRateSetting.class, 360);
         frame.setFrameSettingValue(MonitorSetting.class, MonitorType.BORDERLESS);
-        frame.setFrameSettingValue(VSyncSetting.class, VSyncType.V_SYNC_OFF);
+        frame.setFrameSettingValue(VSyncSetting.class, VSyncType.ADAPTIVE_V_SYNC);
         frame.setFrameSettingValue(FloatingSetting.class, false);
         frame.setFrameSettingValue(IconSetting.class, new ResourcesLocation("salad_x32.png"));
         frame.setFrameSettingValue(AntiAliasingSetting.class, AntiAliasingType.OFF);
