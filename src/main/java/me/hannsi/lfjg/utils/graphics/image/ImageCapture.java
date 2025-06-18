@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.utils.graphics.image;
 
-import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
@@ -36,8 +36,8 @@ public class ImageCapture {
     public ImageCapture(FileLocation filePath) {
         this.filePath = filePath;
 
-        this.width = (int) LFJGContext.frameBufferSize.x();
-        this.height = (int) LFJGContext.frameBufferSize.y();
+        this.width = LFJGContext.frameBufferSize.x();
+        this.height = LFJGContext.frameBufferSize.y();
         this.imageLoaderType = ImageLoaderType.STB_IMAGE;
         this.javaCVImageFormat = JavaCVImageFormat.PNG;
         this.colorFormatType = ColorFormatType.RGB;

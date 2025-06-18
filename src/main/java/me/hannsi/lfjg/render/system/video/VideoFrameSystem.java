@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.render.system.video;
 
+import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
@@ -9,8 +10,6 @@ import me.hannsi.lfjg.utils.toolkit.IOUtil;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.Java2DFrameConverter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
@@ -18,7 +17,6 @@ import java.nio.ByteBuffer;
 import static org.lwjgl.opengl.GL11.*;
 
 public class VideoFrameSystem {
-    private static final Logger log = LoggerFactory.getLogger(VideoFrameSystem.class);
     private Location location;
     private Frame frame;
     private FFmpegFrameGrabber grabber;
@@ -48,7 +46,7 @@ public class VideoFrameSystem {
                 grabber.close();
             }
         } catch (Exception e) {
-            log.warn("Failed to stop or release FFmpegFrameGrabber", e);
+            DebugLog.warning(getClass(), e);
         }
 
         if (java2DFrameConverter != null) {
