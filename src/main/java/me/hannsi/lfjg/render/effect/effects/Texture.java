@@ -1,20 +1,51 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.utils.graphics.image.TextureLoader;
 import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.type.types.BlendType;
-import org.lwjgl.opengl.GL30;
+
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 /**
  * Class representing a Texture effect in OpenGL.
  */
+@Setter
+@Getter
 public class Texture extends EffectBase {
+    /**
+     * -- GETTER --
+     * Gets the texture cache.
+     * <p>
+     * <p>
+     * -- SETTER --
+     * Sets the texture cache.
+     *
+     * @return the texture cache
+     * @param textureCache the texture cache
+     */
     private TextureCache textureCache;
     private Location path;
     private BlendType blendType;
+    /**
+     * -- GETTER --
+     * Gets the texture loader.
+     * <p>
+     * <p>
+     * -- SETTER --
+     * Sets the texture loader.
+     *
+     * @return the texture loader
+     * @param textureLoader the texture loader
+     */
     private TextureLoader textureLoader;
     private int textureId;
 
@@ -54,7 +85,7 @@ public class Texture extends EffectBase {
         if (textureLoader != null) {
             textureLoader.unbind();
         } else {
-            GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
+            glBindTexture(GL_TEXTURE_2D, 0);
         }
 
         super.pop(baseGLObject);
@@ -67,12 +98,12 @@ public class Texture extends EffectBase {
      */
     @Override
     public void push(GLObject baseGLObject) {
-        baseGLObject.getGlUtil().addGLTarget(GL30.GL_TEXTURE_2D);
-        GL30.glActiveTexture(GL30.GL_TEXTURE0);
+        GLStateCache.enable(GL_TEXTURE_2D);
+        glActiveTexture(GL_TEXTURE0);
         if (textureLoader != null) {
             textureLoader.bind();
         } else {
-            GL30.glBindTexture(GL30.GL_TEXTURE_2D, textureId);
+            glBindTexture(GL_TEXTURE_2D, textureId);
         }
 
         super.push(baseGLObject);
@@ -126,67 +157,8 @@ public class Texture extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Gets the texture cache.
-     *
-     * @return the texture cache
-     */
-    public TextureCache getTextureCache() {
-        return textureCache;
-    }
-
-    /**
-     * Sets the texture cache.
-     *
-     * @param textureCache the texture cache
-     */
-    public void setTextureCache(TextureCache textureCache) {
-        this.textureCache = textureCache;
-    }
-
     public Location getFileLocation() {
         return path;
     }
 
-    /**
-     * Gets the texture loader.
-     *
-     * @return the texture loader
-     */
-    public TextureLoader getTextureLoader() {
-        return textureLoader;
-    }
-
-    /**
-     * Sets the texture loader.
-     *
-     * @param textureLoader the texture loader
-     */
-    public void setTextureLoader(TextureLoader textureLoader) {
-        this.textureLoader = textureLoader;
-    }
-
-    public Location getPath() {
-        return path;
-    }
-
-    public void setPath(Location path) {
-        this.path = path;
-    }
-
-    public BlendType getBlendType() {
-        return blendType;
-    }
-
-    public void setBlendType(BlendType blendType) {
-        this.blendType = blendType;
-    }
-
-    public int getTextureId() {
-        return textureId;
-    }
-
-    public void setTextureId(int textureId) {
-        this.textureId = textureId;
-    }
 }

@@ -76,10 +76,15 @@ dependencies {
 
     // JavaCV
     api "org.bytedeco:javacv-platform:1.5.10"
+
+    // Lombok
+    compileOnly "org.projectlombok:lombok:1.18.32"
+    annotationProcessor "org.projectlombok:lombok:1.18.32"
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = "UTF-8"
+    options.compilerArgs << "-Xlint:deprecation"
 }
 
 test {

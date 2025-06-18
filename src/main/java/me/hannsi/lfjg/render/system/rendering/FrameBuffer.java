@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.render.system.rendering;
 
+import lombok.Data;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
@@ -11,18 +12,22 @@ import me.hannsi.lfjg.render.debug.exceptions.texture.CreatingTextureException;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.MeshBuilder;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
-import me.hannsi.lfjg.utils.graphics.GLUtil;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL30;
 
 import java.nio.ByteBuffer;
+
+import static org.lwjgl.opengl.GL11.glGenTextures;
+import static org.lwjgl.opengl.GL30.*;
 
 /**
  * Represents a frame buffer in the OpenGL rendering system.
  */
+@Data
 public class FrameBuffer {
+    private static float lastClearR = -1f, lastClearG = -1f, lastClearB = -1f, lastClearA = -1f;
+
     private final int frameBufferId;
     private final int textureId;
     private final int renderBufferId;
@@ -68,17 +73,17 @@ public class FrameBuffer {
         this.width = width;
         this.height = height;
 
-        frameBufferId = GL30.glGenFramebuffers();
+        frameBufferId = glGenFramebuffers();
         if (frameBufferId == 0) {
             throw new CreatingFrameBufferException("Failed to create frame buffer");
         }
 
-        textureId = GL30.glGenTextures();
+        textureId = glGenTextures();
         if (textureId == 0) {
             throw new CreatingTextureException("Failed to create texture");
         }
 
-        renderBufferId = GL30.glGenRenderbuffers();
+        renderBufferId = glGenRenderbuffers();
         if (renderBufferId == 0) {
             throw new CreatingRenderBufferException("Failed to create render buffer");
         }
@@ -106,9 +111,9 @@ public class FrameBuffer {
      * Cleans up the frame buffer by deleting the frame buffer and texture.
      */
     public void cleanup() {
-        GL30.glDeleteFramebuffers(frameBufferId);
-        GL30.glDeleteTextures(textureId);
-        GL30.glDeleteRenderbuffers(renderBufferId);
+        glDeleteFramebuffers(frameBufferId);
+        glDeleteTextures(textureId);
+        glDeleteRenderbuffers(renderBufferId);
 
         vaoRendering.cleanup();
         meshBuilder.cleanup();
@@ -143,30 +148,30 @@ public class FrameBuffer {
      * Creates the frame buffer and its associated texture and render buffer.
      */
     public void createFrameBuffer() {
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBufferId);
-        GL30.glBindTexture(GL30.GL_TEXTURE_2D, textureId);
-        GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, renderBufferId);
+        glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
+        glBindTexture(GL_TEXTURE_2D, textureId);
+        glBindRenderbuffer(GL_RENDERBUFFER, renderBufferId);
 
-        GL30.glTexImage2D(GL30.GL_TEXTURE_2D, 0, GL30.GL_RGBA, (int) width, (int) height, 0, GL30.GL_RGBA, GL30.GL_UNSIGNED_BYTE, (ByteBuffer) null);
-        GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_LINEAR);
-        GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (int) width, (int) height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL30.GL_TEXTURE_2D, textureId, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureId, 0);
 
-        if (GL30.glCheckFramebufferStatus(GL30.GL_FRAMEBUFFER) != GL30.GL_FRAMEBUFFER_COMPLETE) {
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
             throw new CompleteFrameBufferException("Frame Buffer not complete");
         }
 
-        GL30.glRenderbufferStorage(GL30.GL_RENDERBUFFER, GL30.GL_DEPTH32F_STENCIL8, (int) width, (int) height);
-        GL30.glFramebufferRenderbuffer(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_STENCIL_ATTACHMENT, GL30.GL_RENDERBUFFER, renderBufferId);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH32F_STENCIL8, (int) width, (int) height);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, renderBufferId);
 
-        if (GL30.glCheckFramebufferStatus(GL30.GL_FRAMEBUFFER) != GL30.GL_FRAMEBUFFER_COMPLETE) {
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
             throw new RuntimeException("Frame Buffer not complete");
         }
 
-        GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, 0);
-        GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+        glBindRenderbuffer(GL_RENDERBUFFER, 0);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
     /**
@@ -182,7 +187,6 @@ public class FrameBuffer {
      * @param textureUnit the texture unit to use
      */
     public void drawFrameBuffer(int textureUnit) {
-        GL30.glPushMatrix();
         shaderProgramFBO.bind();
 
         shaderProgramFBO.setUniform("projectionMatrix", LFJGContext.projection.getProjMatrix());
@@ -190,80 +194,73 @@ public class FrameBuffer {
         shaderProgramFBO.setUniform("viewMatrix", viewMatrix);
         shaderProgramFBO.setUniform1i("textureSampler", textureUnit);
 
-        GLUtil glUtil = new GLUtil();
-        glUtil.addGLTarget(GL30.GL_DEPTH_TEST, true);
-        glUtil.addGLTarget(GL30.GL_BLEND);
+        GLStateCache.enable(GL_BLEND);
+        GLStateCache.disable(GL_DEPTH_TEST);
         if (uesStencil) {
-            glUtil.addGLTarget(GL30.GL_STENCIL_TEST);
+            GLStateCache.enable(GL_STENCIL_TEST);
         }
 
-        glUtil.enableTargets();
-
-        GL30.glBlendFunc(GL30.GL_SRC_ALPHA, GL30.GL_ONE_MINUS_SRC_ALPHA);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         if (uesStencil) {
-            GL30.glClear(GL30.GL_STENCIL_BUFFER_BIT);
-            GL30.glStencilFunc(GL30.GL_ALWAYS, 1, 0xff);
-            GL30.glStencilOp(GL30.GL_KEEP, GL30.GL_KEEP, GL30.GL_REPLACE);
-            GL30.glColorMask(false, false, false, false);
+            glClear(GL_STENCIL_BUFFER_BIT);
+            glStencilFunc(GL_ALWAYS, 1, 0xff);
+            glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+            glColorMask(false, false, false, false);
             vaoRendering.draw(glObject.getMeshBuilder());
-            GL30.glColorMask(true, true, true, true);
+            glColorMask(true, true, true, true);
 
-            GL30.glStencilFunc(GL30.GL_EQUAL, 1, 0xff);
-            GL30.glStencilOp(GL30.GL_KEEP, GL30.GL_KEEP, GL30.GL_KEEP);
+            glStencilFunc(GL_EQUAL, 1, 0xff);
+            glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
         }
 
         bindTexture(textureUnit);
         vaoRendering.draw(meshBuilder);
         unbindTexture(textureUnit);
 
-        glUtil.disableTargets();
-        glUtil.cleanup();
-
         shaderProgramFBO.unbind();
-        GL30.glPopMatrix();
     }
 
     /**
      * Binds the render buffer.
      */
     public void bindRenderBuffer() {
-        GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, renderBufferId);
+        glBindRenderbuffer(GL_RENDERBUFFER, renderBufferId);
     }
 
     /**
      * Unbinds the render buffer.
      */
     public void unbindRenderBuffer() {
-        GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, 0);
+        glBindRenderbuffer(GL_RENDERBUFFER, 0);
     }
 
     /**
      * Binds the frame buffer for drawing.
      */
     public void bindDrawFrameBuffer() {
-        GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, frameBufferId);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBufferId);
     }
 
     /**
      * Unbinds the frame buffer from drawing.
      */
     public void unbindDrawFrameBuffer() {
-        GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, 0);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     }
 
     /**
      * Binds the frame buffer for reading.
      */
     public void bindReadFrameBuffer() {
-        GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, frameBufferId);
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBufferId);
     }
 
     /**
      * Unbinds the frame buffer from reading.
      */
     public void unBindReadFrameBuffer() {
-        GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, 0);
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
     }
 
     /**
@@ -271,19 +268,26 @@ public class FrameBuffer {
      */
     public void bindFrameBuffer() {
         bindFrameBufferNoClear();
-        GL30.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT | GL30.GL_STENCIL_BUFFER_BIT);
+
+        if (lastClearR != 0.0f || lastClearG != 0.0f || lastClearB != 0.0f || lastClearA != 0.0f) {
+            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+            lastClearR = 0.0f;
+            lastClearG = 0.0f;
+            lastClearB = 0.0f;
+            lastClearA = 0.0f;
+        }
     }
 
     public void bindFrameBufferNoClear() {
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBufferId);
+        glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
     }
 
     /**
      * Unbinds the frame buffer.
      */
     public void unbindFrameBuffer() {
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
     /**
@@ -292,8 +296,8 @@ public class FrameBuffer {
      * @param textureUnit the texture unit to bind to
      */
     public void bindTexture(int textureUnit) {
-        GL30.glActiveTexture(GL30.GL_TEXTURE0 + textureUnit);
-        GL30.glBindTexture(GL30.GL_TEXTURE_2D, textureId);
+        glActiveTexture(GL_TEXTURE0 + textureUnit);
+        glBindTexture(GL_TEXTURE_2D, textureId);
     }
 
     /**
@@ -302,213 +306,6 @@ public class FrameBuffer {
      * @param textureUnit the texture unit to unbind from
      */
     public void unbindTexture(int textureUnit) {
-        GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
-    }
-
-    /**
-     * Gets the frame buffer ID.
-     *
-     * @return the frame buffer ID
-     */
-    public int getFrameBufferId() {
-        return frameBufferId;
-    }
-
-    /**
-     * Gets the texture ID.
-     *
-     * @return the texture ID
-     */
-    public int getTextureId() {
-        return textureId;
-    }
-
-    /**
-     * Gets the fragment shader resource location.
-     *
-     * @return the fragment shader resource location
-     */
-    public ResourcesLocation getFragmentShaderFBO() {
-        return fragmentShaderFBO;
-    }
-
-    /**
-     * Sets the fragment shader resource location.
-     *
-     * @param fragmentShaderFBO the new fragment shader resource location
-     */
-    public void setFragmentShaderFBO(ResourcesLocation fragmentShaderFBO) {
-        this.fragmentShaderFBO = fragmentShaderFBO;
-    }
-
-    /**
-     * Gets the vertex shader resource location.
-     *
-     * @return the vertex shader resource location
-     */
-    public ResourcesLocation getVertexShaderFBO() {
-        return vertexShaderFBO;
-    }
-
-    /**
-     * Sets the vertex shader resource location.
-     *
-     * @param vertexShaderFBO the new vertex shader resource location
-     */
-    public void setVertexShaderFBO(ResourcesLocation vertexShaderFBO) {
-        this.vertexShaderFBO = vertexShaderFBO;
-    }
-
-    /**
-     * Gets the shader program for the frame buffer.
-     *
-     * @return the shader program for the frame buffer
-     */
-    public ShaderProgram getShaderProgramFBO() {
-        return shaderProgramFBO;
-    }
-
-    /**
-     * Sets the shader program for the frame buffer.
-     *
-     * @param shaderProgramFBO the new shader program for the frame buffer
-     */
-    public void setShaderProgramFBO(ShaderProgram shaderProgramFBO) {
-        this.shaderProgramFBO = shaderProgramFBO;
-    }
-
-    /**
-     * Gets the VAO rendering object.
-     *
-     * @return the VAO rendering object
-     */
-    public VAORendering getVaoRendering() {
-        return vaoRendering;
-    }
-
-    /**
-     * Gets the mesh associated with the frame buffer.
-     *
-     * @return the mesh associated with the frame buffer
-     */
-    public MeshBuilder getMeshBuilder() {
-        return meshBuilder;
-    }
-
-    public void setMeshBuilder(MeshBuilder meshBuilder) {
-        this.meshBuilder = meshBuilder;
-    }
-
-    /**
-     * Gets the render buffer ID.
-     *
-     * @return the render buffer ID
-     */
-    public int getRenderBufferId() {
-        return renderBufferId;
-    }
-
-    /**
-     * Gets the model matrix.
-     *
-     * @return the model matrix
-     */
-    public Matrix4f getModelMatrix() {
-        return modelMatrix;
-    }
-
-    /**
-     * Sets the model matrix.
-     *
-     * @param modelMatrix the new model matrix
-     */
-    public void setModelMatrix(Matrix4f modelMatrix) {
-        this.modelMatrix = modelMatrix;
-    }
-
-    /**
-     * Gets the view matrix.
-     *
-     * @return the view matrix
-     */
-    public Matrix4f getViewMatrix() {
-        return viewMatrix;
-    }
-
-    /**
-     * Sets the view matrix.
-     *
-     * @param viewMatrix the new view matrix
-     */
-    public void setViewMatrix(Matrix4f viewMatrix) {
-        this.viewMatrix = viewMatrix;
-    }
-
-    /**
-     * Checks if stencil buffer is used.
-     *
-     * @return true if stencil buffer is used, false otherwise
-     */
-    public boolean isUesStencil() {
-        return uesStencil;
-    }
-
-    /**
-     * Sets whether to use stencil buffer.
-     *
-     * @param uesStencil true to use stencil buffer, false otherwise
-     */
-    public void setUesStencil(boolean uesStencil) {
-        this.uesStencil = uesStencil;
-    }
-
-    /**
-     * Gets the GL object associated with the frame buffer.
-     *
-     * @return the GL object associated with the frame buffer
-     */
-    public GLObject getGlObject() {
-        return glObject;
-    }
-
-    /**
-     * Sets the GL object associated with the frame buffer.
-     *
-     * @param glObject the new GL object associated with the frame buffer
-     */
-    public void setGlObject(GLObject glObject) {
-        this.glObject = glObject;
-    }
-
-    public float getX() {
-        return x;
-    }
-
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    public float getWidth() {
-        return width;
-    }
-
-    public void setWidth(float width) {
-        this.width = width;
-    }
-
-    public float getHeight() {
-        return height;
-    }
-
-    public void setHeight(float height) {
-        this.height = height;
+//        glBindTexture(GL_TEXTURE_2D, 0);
     }
 }

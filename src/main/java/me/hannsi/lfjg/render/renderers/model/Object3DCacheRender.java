@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.renderers.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
@@ -11,8 +13,8 @@ import me.hannsi.lfjg.render.system.model.model.Material;
 import me.hannsi.lfjg.render.system.model.model.Model;
 import me.hannsi.lfjg.render.system.model.texture.TextureModel;
 import me.hannsi.lfjg.render.system.model.texture.TextureModelCache;
+import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
-import me.hannsi.lfjg.utils.graphics.GLUtil;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import me.hannsi.lfjg.utils.toolkit.Camera;
 import org.joml.Matrix4f;
@@ -32,17 +34,25 @@ public class Object3DCacheRender {
     private static final int MAX_SPOT_LIGHTS = 5;
 
     private Object3DCache object3DCache;
+    /**
+     * -- SETTER --
+     *  Sets the shader program used by the renderer.
+     *
+     *
+     * -- GETTER --
+     *  Gets the shader program used by the renderer.
+     *
+     @param shaderProgram the shader program to set
+      * @return the shader program
+     */
+    @Getter
+    @Setter
     private ShaderProgram shaderProgram;
-    private GLUtil glUtil;
 
     /**
      * Constructs a new Object3DCacheRender.
      */
     public Object3DCacheRender() {
-        this.glUtil = new GLUtil();
-        this.glUtil.addGLTarget(GL_DEPTH_TEST);
-        this.glUtil.addGLTarget(GL_CULL_FACE);
-
         this.shaderProgram = new ShaderProgram();
         this.shaderProgram.createVertexShader(new ResourcesLocation("shader/scene/model/VertexShader.vsh"));
         this.shaderProgram.createFragmentShader(new ResourcesLocation("shader/scene/model/FragmentShader.fsh"));
@@ -55,7 +65,6 @@ public class Object3DCacheRender {
     public void cleanup() {
         object3DCache.cleanup();
         shaderProgram.cleanup();
-        glUtil.cleanup();
 
         new LogGenerator(
                 LogGenerateType.CLEANUP,
@@ -71,7 +80,8 @@ public class Object3DCacheRender {
      * @param camera the camera to use for rendering
      */
     public void render(Camera camera) {
-        glUtil.enableTargets();
+        GLStateCache.enable(GL_DEPTH_TEST);
+        GLStateCache.enable(GL_CULL_FACE);
         glCullFace(GL_BACK);
 
         shaderProgram.bind();
@@ -113,8 +123,6 @@ public class Object3DCacheRender {
         glBindVertexArray(0);
 
         shaderProgram.unbind();
-
-        glUtil.disableTargets();
     }
 
     /**
@@ -228,24 +236,6 @@ public class Object3DCacheRender {
     }
 
     /**
-     * Gets the shader program used by the renderer.
-     *
-     * @return the shader program
-     */
-    public ShaderProgram getShaderProgram() {
-        return shaderProgram;
-    }
-
-    /**
-     * Sets the shader program used by the renderer.
-     *
-     * @param shaderProgram the shader program to set
-     */
-    public void setShaderProgram(ShaderProgram shaderProgram) {
-        this.shaderProgram = shaderProgram;
-    }
-
-    /**
      * Gets the 3D object cache used by the renderer.
      *
      * @return the 3D object cache
@@ -261,23 +251,5 @@ public class Object3DCacheRender {
      */
     public void setScene(Object3DCache object3DCache) {
         this.object3DCache = object3DCache;
-    }
-
-    /**
-     * Gets the GL utility used by the renderer.
-     *
-     * @return the GL utility
-     */
-    public GLUtil getGlUtil() {
-        return glUtil;
-    }
-
-    /**
-     * Sets the GL utility used by the renderer.
-     *
-     * @param glUtil the GL utility to set
-     */
-    public void setGlUtil(GLUtil glUtil) {
-        this.glUtil = glUtil;
     }
 }

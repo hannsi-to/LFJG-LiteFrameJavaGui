@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.render.renderers.video;
 
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
+import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.video.VideoFrameSystem;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.reflection.location.Location;
@@ -37,7 +38,7 @@ public class GLVideo extends GLRect {
         videoFrameSystem.drawFrame();
 
         if (videoFrameSystem.getTextureId() != 1) {
-            getGlUtil().addGLTarget(GL_TEXTURE_2D);
+            GLStateCache.enable(GL_TEXTURE_2D);
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, videoFrameSystem.getTextureId());
             super.draw();
@@ -45,3 +46,4 @@ public class GLVideo extends GLRect {
         }
     }
 }
+

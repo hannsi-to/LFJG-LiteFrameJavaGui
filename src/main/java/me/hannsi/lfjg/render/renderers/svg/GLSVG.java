@@ -1,7 +1,10 @@
 package me.hannsi.lfjg.render.renderers.svg;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
+import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.math.MathHelper;
 import me.hannsi.lfjg.utils.toolkit.IOUtil;
@@ -21,6 +24,8 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 public class GLSVG extends GLRect {
     private FrameBuffer frameBuffer;
+    @Getter
+    @Setter
     private SVGRenderer svgRenderer;
     private int texture;
 
@@ -77,7 +82,7 @@ public class GLSVG extends GLRect {
 
         frameBuffer.unbindFrameBuffer();
 
-        getGlUtil().addGLTarget(GL30.GL_TEXTURE_2D);
+        GLStateCache.enable(GL_TEXTURE_2D);
         GL30.glActiveTexture(GL30.GL_TEXTURE0);
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, frameBuffer.getTextureId());
         super.draw();
@@ -140,12 +145,5 @@ public class GLSVG extends GLRect {
 
         super.cleanup();
     }
-
-    public SVGRenderer getSvgRenderer() {
-        return svgRenderer;
-    }
-
-    public void setSvgRenderer(SVGRenderer svgRenderer) {
-        this.svgRenderer = svgRenderer;
-    }
 }
+

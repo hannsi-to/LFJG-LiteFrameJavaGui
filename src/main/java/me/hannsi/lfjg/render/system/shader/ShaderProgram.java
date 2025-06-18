@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.system.shader;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.debug.LogGenerateType;
@@ -20,9 +22,40 @@ import static org.lwjgl.opengl.GL20.*;
 /**
  * Represents a shader program in the OpenGL rendering system.
  */
+@Getter
 public class ShaderProgram {
+    /**
+     * -- GETTER --
+     * Gets the program ID.
+     *
+     * @return the program ID
+     */
     private final int programId;
+    /**
+     * -- SETTER --
+     * Sets the vertex shader ID.
+     * <p>
+     * <p>
+     * -- GETTER --
+     * Gets the vertex shader ID.
+     *
+     * @param vertexShaderId the new vertex shader ID
+     * @return the vertex shader ID
+     */
+    @Setter
     private int vertexShaderId;
+    /**
+     * -- SETTER --
+     * Sets the fragment shader ID.
+     * <p>
+     * <p>
+     * -- GETTER --
+     * Gets the fragment shader ID.
+     *
+     * @param fragmentShaderId the new fragment shader ID
+     * @return the fragment shader ID
+     */
+    @Setter
     private int fragmentShaderId;
 
     /**
@@ -391,51 +424,7 @@ public class ShaderProgram {
      * Unbinds the shader program.
      */
     public void unbind() {
-        glUseProgram(0);
+//        glUseProgram(0);
     }
 
-    /**
-     * Gets the program ID.
-     *
-     * @return the program ID
-     */
-    public int getProgramId() {
-        return programId;
-    }
-
-    /**
-     * Gets the vertex shader ID.
-     *
-     * @return the vertex shader ID
-     */
-    public int getVertexShaderId() {
-        return vertexShaderId;
-    }
-
-    /**
-     * Sets the vertex shader ID.
-     *
-     * @param vertexShaderId the new vertex shader ID
-     */
-    public void setVertexShaderId(int vertexShaderId) {
-        this.vertexShaderId = vertexShaderId;
-    }
-
-    /**
-     * Gets the fragment shader ID.
-     *
-     * @return the fragment shader ID
-     */
-    public int getFragmentShaderId() {
-        return fragmentShaderId;
-    }
-
-    /**
-     * Sets the fragment shader ID.
-     *
-     * @param fragmentShaderId the new fragment shader ID
-     */
-    public void setFragmentShaderId(int fragmentShaderId) {
-        this.fragmentShaderId = fragmentShaderId;
-    }
 }

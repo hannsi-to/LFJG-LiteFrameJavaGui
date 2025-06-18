@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.renderers.polygon;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.render.debug.exceptions.render.meshBuilder.MeshBuilderException;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.MeshBuilder;
@@ -19,9 +21,16 @@ import java.util.Arrays;
 public class GLPolygon extends GLObject {
     public static final UpdateBufferType DEFAULT_UPDATE_BUFFER_TYPE = UpdateBufferType.MAP_BUFFER_RANGE;
 
+    @Getter
     private UpdateBufferType updateBufferType;
+    @Getter
+    @Setter
     private float[] vertex;
+    @Getter
+    @Setter
     private float[] color;
+    @Getter
+    @Setter
     private float[] texture;
     private boolean isUpdate;
 
@@ -203,12 +212,10 @@ public class GLPolygon extends GLObject {
                     .createBufferObjects(vertex, color, texture)
                     .builderClose();
 
-            setVertexShader(vertexShaderPath);
-            setFragmentShader(fragmentShaderPath);
             setMeshBuilder(meshBuilder);
 
             setGLObjectParameter();
-            create();
+            create(vertexShaderPath, fragmentShaderPath);
             vertex = new float[0];
             color = new float[0];
             texture = new float[0];
@@ -266,37 +273,9 @@ public class GLPolygon extends GLObject {
         return new float[]{minX, minY, maxX, maxY};
     }
 
-    public UpdateBufferType getUpdateBufferType() {
-        return updateBufferType;
-    }
-
     public GLPolygon setUpdateBufferType(UpdateBufferType updateBufferType) {
         this.updateBufferType = updateBufferType;
         return this;
-    }
-
-    public float[] getVertex() {
-        return vertex;
-    }
-
-    public void setVertex(float[] vertex) {
-        this.vertex = vertex;
-    }
-
-    public float[] getColor() {
-        return color;
-    }
-
-    public void setColor(float[] color) {
-        this.color = color;
-    }
-
-    public float[] getTexture() {
-        return texture;
-    }
-
-    public void setTexture(float[] texture) {
-        this.texture = texture;
     }
 
     public boolean isUpdate() {

@@ -1,15 +1,20 @@
 package me.hannsi.lfjg.render.renderers.svg;
 
+import lombok.Getter;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.system.MeshBuilder;
+import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
-import me.hannsi.lfjg.utils.graphics.GLUtil;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL30;
 
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
+
+@Getter
 public class SVGRenderer {
     private final VAORendering vaoRendering;
     private final ShaderProgram shaderProgramFBO;
@@ -43,20 +48,14 @@ public class SVGRenderer {
         shaderProgramFBO.setUniform("viewMatrix", new Matrix4f());
         shaderProgramFBO.setUniform1i("textureSampler", textureUnit);
 
-        GLUtil glUtil = new GLUtil();
-        glUtil.addGLTarget(GL30.GL_DEPTH_TEST, true);
-        glUtil.addGLTarget(GL30.GL_BLEND);
+        GLStateCache.enable(GL_BLEND);
+        GLStateCache.disable(GL_DEPTH_TEST);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        glUtil.enableTargets();
-        GL30.glBlendFunc(GL30.GL_SRC_ALPHA, GL30.GL_ONE_MINUS_SRC_ALPHA);
-
-        GL30.glActiveTexture(GL30.GL_TEXTURE0 + textureUnit);
-        GL30.glBindTexture(GL30.GL_TEXTURE_2D, textureId);
+        glActiveTexture(GL_TEXTURE0 + textureUnit);
+        glBindTexture(GL_TEXTURE_2D, textureId);
         vaoRendering.draw(meshBuilder);
-        GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
-
-        glUtil.disableTargets();
-        glUtil.cleanup();
+        glBindTexture(GL_TEXTURE_2D, 0);
 
         shaderProgramFBO.unbind();
     }
@@ -69,29 +68,5 @@ public class SVGRenderer {
                 .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
                 .createBufferObjects(positions, null, uvs)
                 .builderClose();
-    }
-
-    public VAORendering getVaoRendering() {
-        return vaoRendering;
-    }
-
-    public MeshBuilder getMeshBuilder() {
-        return meshBuilder;
-    }
-
-    public void setMeshBuilder(MeshBuilder meshBuilder) {
-        this.meshBuilder = meshBuilder;
-    }
-
-    public ShaderProgram getShaderProgramFBO() {
-        return shaderProgramFBO;
-    }
-
-    public ResourcesLocation getVertexShaderFBO() {
-        return vertexShaderFBO;
-    }
-
-    public ResourcesLocation getFragmentShaderFBO() {
-        return fragmentShaderFBO;
     }
 }

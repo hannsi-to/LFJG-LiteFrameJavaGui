@@ -1,11 +1,14 @@
 package me.hannsi.lfjg.render.renderers.font;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.system.font.Font;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
+import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.math.AlignExtractor;
 import me.hannsi.lfjg.utils.toolkit.StringUtil;
@@ -48,12 +51,21 @@ public class GLText extends GLRect {
     private FrameBuffer frameBuffer;
 
     private Font font;
+    @Getter
+    @Setter
     private String text;
+    @Getter
+    @Setter
     private float textX;
+    @Getter
+    @Setter
     private float textY;
+    @Getter
+    @Setter
     private float fontSize;
     private boolean blur;
     private float blurSize;
+    @Setter
     private Color color;
     private AlignType align;
 
@@ -143,7 +155,7 @@ public class GLText extends GLRect {
 
         frameBuffer.unbindFrameBuffer();
 
-        getGlUtil().addGLTarget(GL_TEXTURE_2D);
+        GLStateCache.enable(GL_TEXTURE_2D);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, frameBuffer.getTextureId());
         super.draw();
@@ -318,41 +330,5 @@ public class GLText extends GLRect {
         if (blur) {
             nvgFontBlur(0f);
         }
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public float getFontSize() {
-        return fontSize;
-    }
-
-    public void setFontSize(float fontSize) {
-        this.fontSize = fontSize;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    public float getTextX() {
-        return textX;
-    }
-
-    public void setTextX(float textX) {
-        this.textX = textX;
-    }
-
-    public float getTextY() {
-        return textY;
-    }
-
-    public void setTextY(float textY) {
-        this.textY = textY;
     }
 }

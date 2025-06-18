@@ -33,8 +33,8 @@ public class TestScene4 implements IScene {
 
     @Override
     public void drawFrame() {
-//        glTriangle.draw();
-//        glLine.draw();
+        glTriangle.draw();
+        glLine.draw();
         glRect.draw();
     }
 

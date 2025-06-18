@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.frame;
 
+import lombok.Data;
 import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.frame.debug.GLFWDebug;
 import me.hannsi.lfjg.frame.event.events.render.DrawFrameWithNanoVGEvent;
@@ -10,7 +11,6 @@ import me.hannsi.lfjg.frame.frame.IFrame;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.frame.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.manager.managers.FrameSettingManager;
-import me.hannsi.lfjg.frame.manager.managers.LoggerManager;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.utils.graphics.GLFWUtil;
@@ -32,13 +32,15 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWNativeWin32;
 import org.lwjgl.nanovg.NanoVGGL3;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
 import org.lwjgl.system.MemoryUtil;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
 
 /**
  * The Frame class is responsible for creating and managing the main application window, handling rendering, and managing frame settings.
  */
+@Data
 public class Frame implements IFrame {
     private final LFJGFrame lfjgFrame;
     private FrameSettingManager frameSettingManager;
@@ -186,6 +188,9 @@ public class Frame implements IFrame {
 
         startTime = TimeSourceUtil.getTimeMills(getFrameSettingValue(TimeSourceSetting.class));
 
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        setAntiAliasing();
         while (!GLFW.glfwWindowShouldClose(windowID)) {
             currentTime = TimeSourceUtil.getTimeMills(getFrameSettingValue(TimeSourceSetting.class));
 
@@ -194,10 +199,6 @@ public class Frame implements IFrame {
             lastTime2 = currentTime2;
 
             if (deltaTime2 >= targetTime) {
-                GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-                GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-                setAntiAliasing();
-
                 updateViewport();
                 updateLFJGLContext();
                 draw();
@@ -304,10 +305,10 @@ public class Frame implements IFrame {
     private void setAntiAliasing() {
         switch (((AntiAliasingType) getFrameSettingValue(AntiAliasingSetting.class))) {
             case MSAA -> {
-                GL13.glEnable(GL13.GL_MULTISAMPLE);
+                glEnable(GL_MULTISAMPLE);
             }
             case OFF -> {
-                GL13.glDisable(GL13.GL_MULTISAMPLE);
+                glDisable(GL_MULTISAMPLE);
             }
         }
     }
@@ -343,14 +344,14 @@ public class Frame implements IFrame {
      * Updates the viewport based on the window size and content scale.
      */
     public void updateViewport() {
-        GL11.glViewport(0, 0, frameBufferWidth, frameBufferHeight);
+        glViewport(0, 0, frameBufferWidth, frameBufferHeight);
 
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
-        GL11.glLoadIdentity();
-        GL11.glOrtho(0, frameBufferWidth / contentScaleX, 0, frameBufferHeight / contentScaleY, -1, 1);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(0, frameBufferWidth / contentScaleX, 0, frameBufferHeight / contentScaleY, -1, 1);
 
-        GL11.glMatrixMode(GL11.GL_MODELVIEW);
-        GL11.glLoadIdentity();
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
     }
 
     public long getWin32Window() {
@@ -394,24 +395,6 @@ public class Frame implements IFrame {
     }
 
     /**
-     * Retrieves the window ID.
-     *
-     * @return The window ID.
-     */
-    public long getWindowID() {
-        return windowID;
-    }
-
-    /**
-     * Sets the window ID.
-     *
-     * @param windowID The window ID to set.
-     */
-    public void setWindowID(long windowID) {
-        this.windowID = windowID;
-    }
-
-    /**
      * Retrieves the frame setting base for the specified frame setting class.
      *
      * @param frameSettingBase The frame setting class.
@@ -444,235 +427,5 @@ public class Frame implements IFrame {
      */
     public <T> void setFrameSettingValue(Class<? extends FrameSettingBase<?>> frameSettingBase, T value) {
         getFrameSettingBase(frameSettingBase).setValue(value);
-    }
-
-    /**
-     * Retrieves the LoggerManager associated with this frame.
-     *
-     * @return The LoggerManager.
-     */
-    public LoggerManager getLoggerManager() {
-        return loggerManager;
-    }
-
-    /**
-     * Retrieves the LFJGFrame associated with this frame.
-     *
-     * @return The LFJGFrame.
-     */
-    public LFJGFrame getLfjgFrame() {
-        return lfjgFrame;
-    }
-
-    /**
-     * Retrieves the current frames per second (FPS).
-     *
-     * @return The current FPS.
-     */
-    public int getFps() {
-        return fps;
-    }
-
-    /**
-     * Sets the current frames per second (FPS).
-     *
-     * @param fps The FPS to set.
-     */
-    public void setFps(int fps) {
-        this.fps = fps;
-    }
-
-    /**
-     * Retrieves the current time in milliseconds.
-     *
-     * @return The current time in milliseconds.
-     */
-    public long getCurrentTime() {
-        return currentTime;
-    }
-
-    /**
-     * Sets the current time in milliseconds.
-     *
-     * @param currentTime The current time to set in milliseconds.
-     */
-    public void setCurrentTime(long currentTime) {
-        this.currentTime = currentTime;
-    }
-
-    /**
-     * Retrieves the last time in milliseconds.
-     *
-     * @return The last time in milliseconds.
-     */
-    public long getLastTime() {
-        return lastTime;
-    }
-
-    /**
-     * Sets the last time in milliseconds.
-     *
-     * @param lastTime The last time to set in milliseconds.
-     */
-    public void setLastTime(long lastTime) {
-        this.lastTime = lastTime;
-    }
-
-    /**
-     * Retrieves the start time in milliseconds.
-     *
-     * @return The start time in milliseconds.
-     */
-    public long getStartTime() {
-        return startTime;
-    }
-
-    /**
-     * Sets the start time in milliseconds.
-     *
-     * @param startTime The start time to set in milliseconds.
-     */
-    public void setStartTime(long startTime) {
-        this.startTime = startTime;
-    }
-
-    /**
-     * Retrieves the finish time in milliseconds.
-     *
-     * @return The finish time in milliseconds.
-     */
-    public long getFinishTime() {
-        return finishTime;
-    }
-
-    /**
-     * Sets the finish time in milliseconds.
-     *
-     * @param finishTime The finish time to set in milliseconds.
-     */
-    public void setFinishTime(long finishTime) {
-        this.finishTime = finishTime;
-    }
-
-    /**
-     * Retrieves the window height.
-     *
-     * @return The window height.
-     */
-    public int getFrameBufferHeight() {
-        return frameBufferHeight;
-    }
-
-    /**
-     * Sets the window height.
-     *
-     * @param frameBufferHeight The window height to set.
-     */
-    public void setFrameBufferHeight(int frameBufferHeight) {
-        this.frameBufferHeight = frameBufferHeight;
-    }
-
-    /**
-     * Retrieves the window width.
-     *
-     * @return The window width.
-     */
-    public int getFrameBufferWidth() {
-        return frameBufferWidth;
-    }
-
-    /**
-     * Sets the window width.
-     *
-     * @param frameBufferWidth The window width to set.
-     */
-    public void setFrameBufferWidth(int frameBufferWidth) {
-        this.frameBufferWidth = frameBufferWidth;
-    }
-
-    /**
-     * Retrieves the FrameSettingManager associated with this frame.
-     *
-     * @return The FrameSettingManager.
-     */
-    public FrameSettingManager getFrameSettingManager() {
-        return frameSettingManager;
-    }
-
-    /**
-     * Sets the FrameSettingManager for this frame.
-     *
-     * @param frameSettingManager The FrameSettingManager to set.
-     */
-    public void setFrameSettingManager(FrameSettingManager frameSettingManager) {
-        this.frameSettingManager = frameSettingManager;
-    }
-
-    /**
-     * Retrieves the content scale factor in the X direction.
-     *
-     * @return The content scale factor in the X direction.
-     */
-    public float getContentScaleX() {
-        return contentScaleX;
-    }
-
-    /**
-     * Sets the content scale factor in the X direction.
-     *
-     * @param contentScaleX The content scale factor in the X direction to set.
-     */
-    public void setContentScaleX(float contentScaleX) {
-        this.contentScaleX = contentScaleX;
-    }
-
-    /**
-     * Retrieves the content scale factor in the Y direction.
-     *
-     * @return The content scale factor in the Y direction.
-     */
-    public float getContentScaleY() {
-        return contentScaleY;
-    }
-
-    /**
-     * Sets the content scale factor in the Y direction.
-     *
-     * @param contentScaleY The content scale factor in the Y direction to set.
-     */
-    public void setContentScaleY(float contentScaleY) {
-        this.contentScaleY = contentScaleY;
-    }
-
-    public String getThreadName() {
-        return threadName;
-    }
-
-    public void setThreadName(String threadName) {
-        this.threadName = threadName;
-    }
-
-    public boolean isShouldCleanup() {
-        return shouldCleanup;
-    }
-
-    public void setShouldCleanup(boolean shouldCleanup) {
-        this.shouldCleanup = shouldCleanup;
-    }
-
-    public int getWindowWidth() {
-        return windowWidth;
-    }
-
-    public void setWindowWidth(int windowWidth) {
-        this.windowWidth = windowWidth;
-    }
-
-    public int getWindowHeight() {
-        return windowHeight;
-    }
-
-    public void setWindowHeight(int windowHeight) {
-        this.windowHeight = windowHeight;
     }
 }
