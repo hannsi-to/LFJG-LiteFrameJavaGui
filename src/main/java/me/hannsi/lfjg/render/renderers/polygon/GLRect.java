@@ -175,7 +175,7 @@ public class GLRect extends GLPolygon {
         put().vertex(new Vector2f(x1, y2)).color(color).end();
         setLineWidth(lineWidth);
 
-        setDrawType(DrawType.QUADS);
+        setDrawType(DrawType.LINE_LOOP);
         rendering();
     }
 

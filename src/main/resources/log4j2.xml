@@ -1,35 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE project>
-<Configuration status="off">
-    <Properties>
-        <Property name="format1">[%d{yyyy/MM/dd HH:mm:ss.SSS}] [%t] [%c{1}] [%p] %m%n</Property>
-        <Property name="logfile">./log/LiteFrameJavaGui_log.log</Property>
-        <Property name="logfile-archive">./log/LiteFrameJavaGui_log_%d{yyyy-MM-dd}-%i.log</Property>
-    </Properties>
-
+<Configuration status="WARN">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout>
-                <pattern>${format1}</pattern>
-            </PatternLayout>
+            <PatternLayout pattern="[%d{HH:mm:ss}] [%-level] [%logger{36}] %msg%n"/>
         </Console>
-
-        <RollingFile name="logfile001" append="true" fileName="${logfile}"
-                     filePattern="${logfile-archive}">
-            <PatternLayout>
-                <pattern>${format1}</pattern>
-            </PatternLayout>
+        <RollingFile name="RollingFile" fileName="logs/app.log" filePattern="logs/app-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="%d [%t] %-5level %logger{36} - %msg%n"/>
             <Policies>
-                <SizeBasedTriggeringPolicy size="1GB"/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+                <TimeBasedTriggeringPolicy interval="1"/>
             </Policies>
-            <DefaultRolloverStrategy max="3"/>
+            <DefaultRolloverStrategy max="7"/>
         </RollingFile>
     </Appenders>
 
     <Loggers>
-        <Root level="trace">
+        <Root level="TRACE">
             <AppenderRef ref="Console"/>
-            <AppenderRef ref="logfile001"/>
         </Root>
     </Loggers>
 </Configuration>

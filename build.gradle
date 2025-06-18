@@ -42,11 +42,10 @@ dependencies {
     api "org.reflections:reflections:0.10.2"
 
     // Logging
-    api "org.apache.logging.log4j:log4j-api:2.23.1"
-    api "org.apache.logging.log4j:log4j-core:2.23.1"
-    api "org.apache.logging.log4j:log4j-web:2.23.1"
-    api "org.slf4j:slf4j-api:1.7.36"
-    api "ch.qos.logback:logback-classic:1.5.16"
+    implementation "org.slf4j:slf4j-api:2.0.12"
+    implementation "org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1"
+    implementation "org.apache.logging.log4j:log4j-core:2.23.1"
+    annotationProcessor "org.apache.logging.log4j:log4j-core:2.23.1"
 
     // XML graphics
     api("org.apache.xmlgraphics:xmlgraphics-commons:2.9") {
@@ -87,12 +86,6 @@ test {
     useJUnitPlatform()
 }
 
-jar {
-    manifest {
-        attributes "Main-Class": "me.hannsi.test.TestGuiFrame"
-    }
-}
-
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(javaVersion)
@@ -103,4 +96,8 @@ configurations {
     runtimeElements {
         extendsFrom runtimeOnly
     }
+}
+
+shadowJar {
+    mergeServiceFiles()
 }
