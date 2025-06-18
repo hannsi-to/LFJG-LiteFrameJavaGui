@@ -214,9 +214,9 @@ public class TestGuiFrame implements LFJGFrame {
 
     @Override
     public void setFrameSetting() {
-        frame.setFrameSettingValue(RefreshRateSetting.class, 360);
+        frame.setFrameSettingValue(RefreshRateSetting.class, -1);
         frame.setFrameSettingValue(MonitorSetting.class, MonitorType.BORDERLESS);
-        frame.setFrameSettingValue(VSyncSetting.class, VSyncType.ADAPTIVE_V_SYNC);
+        frame.setFrameSettingValue(VSyncSetting.class, VSyncType.V_SYNC_OFF);
         frame.setFrameSettingValue(FloatingSetting.class, false);
         frame.setFrameSettingValue(IconSetting.class, new ResourcesLocation("salad_x32.png"));
         frame.setFrameSettingValue(AntiAliasingSetting.class, AntiAliasingType.OFF);

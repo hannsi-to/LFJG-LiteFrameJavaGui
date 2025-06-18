@@ -4,9 +4,13 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.event.events.user.KeyEvent;
 import me.hannsi.lfjg.frame.event.events.user.MouseButtonEvent;
 import me.hannsi.lfjg.frame.event.system.EventHandler;
+import me.hannsi.lfjg.render.effect.effects.DrawObject;
+import me.hannsi.lfjg.render.effect.effects.Monochrome;
+import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.video.GLVideo;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
+import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 
 import static me.hannsi.lfjg.frame.frame.IFrame.eventManager;
@@ -15,6 +19,7 @@ public class TestVideo1 implements IScene {
     public Scene scene;
     public Frame frame;
     public GLVideo glVideo;
+    public EffectCache effectCache;
 
     public TestVideo1(Frame frame) {
         this.scene = new Scene("TestVideo1", this);
@@ -25,12 +30,19 @@ public class TestVideo1 implements IScene {
 
     @Override
     public void init() {
-        this.glVideo = new GLVideo("TestVideo1");
-        this.glVideo.video(new ResourcesLocation("video/test3.mp4"), 0, 0, frame.getWindowWidth(), frame.getWindowHeight());
+        glVideo = new GLVideo("TestVideo1");
+        glVideo.video(new ResourcesLocation("video/test4.webm"), 0, 0, frame.getWindowWidth(), frame.getWindowHeight());
+
+        effectCache = new EffectCache();
+        effectCache.createCache("DrawObject1", new DrawObject());
+        effectCache.createCache("Monochrome", new Monochrome(1f, new Color(255, 255, 255, 0), true));
+        effectCache.create(glVideo);
+        glVideo.setEffectCache(effectCache);
     }
 
     @Override
     public void drawFrame() {
+        System.out.println(frame.getFps());
         glVideo.draw();
     }
 
