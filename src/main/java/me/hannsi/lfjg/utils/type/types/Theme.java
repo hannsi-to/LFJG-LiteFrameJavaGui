@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.utils.type.types;
 
+import lombok.Getter;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
 
@@ -59,9 +60,13 @@ public enum Theme implements IEnumTypeBase {
 
     final int id;
     final String name;
+    @Getter
     final Color mainColor;
+    @Getter
     final Color subColor1;
+    @Getter
     final Color subColor2;
+    @Getter
     final Color subColor3;
 
     Theme(int id, String name, Color mainColor, Color subColor1, Color subColor2, Color subColor3) {
@@ -83,19 +88,4 @@ public enum Theme implements IEnumTypeBase {
         return name;
     }
 
-    public Color getMainColor() {
-        return mainColor;
-    }
-
-    public Color getSubColor1() {
-        return subColor1;
-    }
-
-    public Color getSubColor2() {
-        return subColor2;
-    }
-
-    public Color getSubColor3() {
-        return subColor3;
-    }
 }

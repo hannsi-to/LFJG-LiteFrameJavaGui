@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.system.video;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
@@ -16,19 +18,30 @@ import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 
+@Getter
 public class VideoFrameSystem {
+    @Setter
     private Location location;
+    @Setter
     private Frame frame;
+    @Setter
     private FFmpegFrameGrabber grabber;
+    @Setter
     private Java2DFrameConverter java2DFrameConverter;
+    @Setter
     private int textureId = -1;
+    @Setter
     private int width;
+    @Setter
     private int height;
 
+    @Setter
     private boolean paused = false;
     private boolean doVideo = true;
     private boolean doAudio = true;
+    @Setter
     private long startSystemNanos = -1;
+    @Setter
     private long startVideoTimestamp = -1;
 
     VideoFrameSystem() {
@@ -191,73 +204,9 @@ public class VideoFrameSystem {
         }
     }
 
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public Frame getFrame() {
-        return frame;
-    }
-
-    public void setFrame(Frame frame) {
-        this.frame = frame;
-    }
-
-    public FFmpegFrameGrabber getGrabber() {
-        return grabber;
-    }
-
-    public void setGrabber(FFmpegFrameGrabber grabber) {
-        this.grabber = grabber;
-    }
-
-    public Java2DFrameConverter getJava2DFrameConverter() {
-        return java2DFrameConverter;
-    }
-
-    public void setJava2DFrameConverter(Java2DFrameConverter java2DFrameConverter) {
-        this.java2DFrameConverter = java2DFrameConverter;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public boolean isPaused() {
-        return paused;
-    }
-
-    public void setPaused(boolean paused) {
-        this.paused = paused;
-    }
-
-    public boolean isDoVideo() {
-        return doVideo;
-    }
-
     public VideoFrameSystem setDoVideo(boolean doVideo) {
         this.doVideo = doVideo;
         return this;
-    }
-
-    public boolean isDoAudio() {
-        return doAudio;
     }
 
     public VideoFrameSystem setDoAudio(boolean doAudio) {
@@ -265,27 +214,4 @@ public class VideoFrameSystem {
         return this;
     }
 
-    public int getTextureId() {
-        return textureId;
-    }
-
-    public void setTextureId(int textureId) {
-        this.textureId = textureId;
-    }
-
-    public long getStartSystemNanos() {
-        return startSystemNanos;
-    }
-
-    public void setStartSystemNanos(long startSystemNanos) {
-        this.startSystemNanos = startSystemNanos;
-    }
-
-    public long getStartVideoTimestamp() {
-        return startVideoTimestamp;
-    }
-
-    public void setStartVideoTimestamp(long startVideoTimestamp) {
-        this.startVideoTimestamp = startVideoTimestamp;
-    }
 }

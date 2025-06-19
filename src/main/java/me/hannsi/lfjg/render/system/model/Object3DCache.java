@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.system.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
@@ -19,9 +21,48 @@ import java.util.concurrent.atomic.AtomicReference;
  * Caches 3D objects in the OpenGL rendering system.
  */
 public class Object3DCache {
+    /**
+     * -- SETTER --
+     * Sets the model map.
+     * <p>
+     * <p>
+     * -- GETTER --
+     * Gets the model map.
+     *
+     * @param modelMap the new model map
+     * @return the model map
+     */
+    @Getter
+    @Setter
     private Map<String, Model> modelMap;
+    /**
+     * -- SETTER --
+     * Sets the projection.
+     * <p>
+     * <p>
+     * -- GETTER --
+     * Gets the projection.
+     *
+     * @param projection the new projection
+     * @return the projection
+     */
+    @Getter
+    @Setter
     private Projection projection;
     private Lights lights;
+    /**
+     * -- SETTER --
+     * Sets the texture model cache.
+     * <p>
+     * <p>
+     * -- GETTER --
+     * Gets the texture model cache.
+     *
+     * @param textureModelCache the new texture model cache
+     * @return the texture model cache
+     */
+    @Getter
+    @Setter
     private TextureModelCache textureModelCache;
 
     /**
@@ -72,60 +113,6 @@ public class Object3DCache {
                 ids.get().substring(0, ids.get().length() - 2),
                 ""
         ).logging(DebugLevel.DEBUG);
-    }
-
-    /**
-     * Gets the model map.
-     *
-     * @return the model map
-     */
-    public Map<String, Model> getModelMap() {
-        return modelMap;
-    }
-
-    /**
-     * Sets the model map.
-     *
-     * @param modelMap the new model map
-     */
-    public void setModelMap(Map<String, Model> modelMap) {
-        this.modelMap = modelMap;
-    }
-
-    /**
-     * Gets the projection.
-     *
-     * @return the projection
-     */
-    public Projection getProjection() {
-        return projection;
-    }
-
-    /**
-     * Sets the projection.
-     *
-     * @param projection the new projection
-     */
-    public void setProjection(Projection projection) {
-        this.projection = projection;
-    }
-
-    /**
-     * Gets the texture model cache.
-     *
-     * @return the texture model cache
-     */
-    public TextureModelCache getTextureModelCache() {
-        return textureModelCache;
-    }
-
-    /**
-     * Sets the texture model cache.
-     *
-     * @param textureModelCache the new texture model cache
-     */
-    public void setTextureModelCache(TextureModelCache textureModelCache) {
-        this.textureModelCache = textureModelCache;
     }
 
     /**

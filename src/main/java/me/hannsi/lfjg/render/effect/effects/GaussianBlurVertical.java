@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
@@ -13,7 +15,20 @@ import java.nio.FloatBuffer;
 /**
  * Class representing a Gaussian Blur Vertical effect in OpenGL.
  */
+@Getter
+@Setter
 public class GaussianBlurVertical extends EffectBase {
+    /**
+     * -- SETTER --
+     *  Sets the radius of the blur in the y-direction.
+     *
+     *
+     * -- GETTER --
+     *  Gets the radius of the blur in the y-direction.
+     *
+     @param radiusY the radius of the blur in the y-direction
+      * @return the radius of the blur in the y-direction
+     */
     private float radiusY;
 
     /**
@@ -90,21 +105,4 @@ public class GaussianBlurVertical extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Gets the radius of the blur in the y-direction.
-     *
-     * @return the radius of the blur in the y-direction
-     */
-    public float getRadiusY() {
-        return radiusY;
-    }
-
-    /**
-     * Sets the radius of the blur in the y-direction.
-     *
-     * @param radiusY the radius of the blur in the y-direction
-     */
-    public void setRadiusY(float radiusY) {
-        this.radiusY = radiusY;
-    }
 }

@@ -1,13 +1,33 @@
 package me.hannsi.lfjg.frame.event.events.user;
 
+import lombok.Getter;
 import me.hannsi.lfjg.frame.event.system.Event;
 
 /**
  * The MouseButtonReleasedEvent class represents an event that occurs when a mouse button is released.
  */
+@Getter
 public class MouseButtonReleasedEvent extends Event {
+    /**
+     * -- GETTER --
+     *  Retrieves the mouse button that was released.
+     *
+     * @return The mouse button that was released.
+     */
     private final int button;
+    /**
+     * -- GETTER --
+     *  Retrieves the modifier keys pressed along with the mouse button.
+     *
+     * @return The modifier keys pressed along with the mouse button.
+     */
     private final int mods;
+    /**
+     * -- GETTER --
+     *  Retrieves the window associated with this event.
+     *
+     * @return The window associated with this event.
+     */
     private final long window;
 
     /**
@@ -23,30 +43,4 @@ public class MouseButtonReleasedEvent extends Event {
         this.window = window;
     }
 
-    /**
-     * Retrieves the mouse button that was released.
-     *
-     * @return The mouse button that was released.
-     */
-    public int getButton() {
-        return button;
-    }
-
-    /**
-     * Retrieves the modifier keys pressed along with the mouse button.
-     *
-     * @return The modifier keys pressed along with the mouse button.
-     */
-    public int getMods() {
-        return mods;
-    }
-
-    /**
-     * Retrieves the window associated with this event.
-     *
-     * @return The window associated with this event.
-     */
-    public long getWindow() {
-        return window;
-    }
 }

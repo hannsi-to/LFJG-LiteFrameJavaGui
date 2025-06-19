@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.system.model.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
@@ -13,13 +15,80 @@ import java.util.List;
 /**
  * Represents a material in the OpenGL rendering system.
  */
+@Getter
 public class Material {
     public static final Vector4f DEFAULT_COLOR = new Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
+    /**
+     * -- GETTER --
+     *  Gets the list of meshes associated with the material.
+     *
+     * @return the list of meshes associated with the material
+     */
     private final List<MeshBuilder> meshBuilders;
+    /**
+     * -- SETTER --
+     *  Sets the ambient color of the material.
+     *
+     *
+     * -- GETTER --
+     *  Gets the ambient color of the material.
+     *
+     @param ambientColor the new ambient color of the material
+      * @return the ambient color of the material
+     */
+    @Setter
     private Vector4f ambientColor;
+    /**
+     * -- SETTER --
+     *  Sets the diffuse color of the material.
+     *
+     *
+     * -- GETTER --
+     *  Gets the diffuse color of the material.
+     *
+     @param diffuseColor the new diffuse color of the material
+      * @return the diffuse color of the material
+     */
+    @Setter
     private Vector4f diffuseColor;
+    /**
+     * -- SETTER --
+     *  Sets the reflectance of the material.
+     *
+     *
+     * -- GETTER --
+     *  Gets the reflectance of the material.
+     *
+     @param reflectance the new reflectance of the material
+      * @return the reflectance of the material
+     */
+    @Setter
     private float reflectance;
+    /**
+     * -- SETTER --
+     *  Sets the specular color of the material.
+     *
+     *
+     * -- GETTER --
+     *  Gets the specular color of the material.
+     *
+     @param specularColor the new specular color of the material
+      * @return the specular color of the material
+     */
+    @Setter
     private Vector4f specularColor;
+    /**
+     * -- SETTER --
+     *  Sets the texture path of the material.
+     *
+     *
+     * -- GETTER --
+     *  Gets the texture path of the material.
+     *
+     @param texturePath the new texture path of the material
+      * @return the texture path of the material
+     */
+    @Setter
     private FileLocation texturePath;
 
     /**
@@ -51,102 +120,4 @@ public class Material {
         ).logging(DebugLevel.DEBUG);
     }
 
-    /**
-     * Gets the ambient color of the material.
-     *
-     * @return the ambient color of the material
-     */
-    public Vector4f getAmbientColor() {
-        return ambientColor;
-    }
-
-    /**
-     * Sets the ambient color of the material.
-     *
-     * @param ambientColor the new ambient color of the material
-     */
-    public void setAmbientColor(Vector4f ambientColor) {
-        this.ambientColor = ambientColor;
-    }
-
-    /**
-     * Gets the diffuse color of the material.
-     *
-     * @return the diffuse color of the material
-     */
-    public Vector4f getDiffuseColor() {
-        return diffuseColor;
-    }
-
-    /**
-     * Sets the diffuse color of the material.
-     *
-     * @param diffuseColor the new diffuse color of the material
-     */
-    public void setDiffuseColor(Vector4f diffuseColor) {
-        this.diffuseColor = diffuseColor;
-    }
-
-    /**
-     * Gets the list of meshes associated with the material.
-     *
-     * @return the list of meshes associated with the material
-     */
-    public List<MeshBuilder> getMeshBuilders() {
-        return meshBuilders;
-    }
-
-    /**
-     * Gets the reflectance of the material.
-     *
-     * @return the reflectance of the material
-     */
-    public float getReflectance() {
-        return reflectance;
-    }
-
-    /**
-     * Sets the reflectance of the material.
-     *
-     * @param reflectance the new reflectance of the material
-     */
-    public void setReflectance(float reflectance) {
-        this.reflectance = reflectance;
-    }
-
-    /**
-     * Gets the specular color of the material.
-     *
-     * @return the specular color of the material
-     */
-    public Vector4f getSpecularColor() {
-        return specularColor;
-    }
-
-    /**
-     * Sets the specular color of the material.
-     *
-     * @param specularColor the new specular color of the material
-     */
-    public void setSpecularColor(Vector4f specularColor) {
-        this.specularColor = specularColor;
-    }
-
-    /**
-     * Gets the texture path of the material.
-     *
-     * @return the texture path of the material
-     */
-    public FileLocation getTexturePath() {
-        return texturePath;
-    }
-
-    /**
-     * Sets the texture path of the material.
-     *
-     * @param texturePath the new texture path of the material
-     */
-    public void setTexturePath(FileLocation texturePath) {
-        this.texturePath = texturePath;
-    }
 }

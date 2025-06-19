@@ -43,7 +43,7 @@ public class GLFWCallback implements IFrame {
         GLFWWindowPosCallback windowPosCallback = new GLFWWindowPosCallback() {
             @Override
             public void invoke(long window, int xpos, int ypos) {
-                eventManager.call(new WindowSizeEvent(window, xpos, ypos));
+                eventManager.call(new WindowPosEvent(window, xpos, ypos));
             }
         };
         glfwSetWindowPosCallback(frame.getWindowID(), windowPosCallback);

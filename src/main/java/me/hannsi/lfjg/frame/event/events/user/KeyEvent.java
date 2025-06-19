@@ -1,7 +1,9 @@
 package me.hannsi.lfjg.frame.event.events.user;
 
+import lombok.Getter;
 import me.hannsi.lfjg.frame.event.system.Event;
 
+@Getter
 public class KeyEvent extends Event {
     private final long window;
     private final int key;
@@ -17,23 +19,4 @@ public class KeyEvent extends Event {
         this.mods = mods;
     }
 
-    public long getWindow() {
-        return window;
-    }
-
-    public int getKey() {
-        return key;
-    }
-
-    public int getScancode() {
-        return scancode;
-    }
-
-    public int getAction() {
-        return action;
-    }
-
-    public int getMods() {
-        return mods;
-    }
 }

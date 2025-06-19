@@ -1,14 +1,53 @@
 package me.hannsi.lfjg.render.system.model.lights;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.joml.Vector3f;
 
 /**
  * Represents a point light in the OpenGL rendering system.
  */
+@Getter
 public class PointLight extends Light {
+    /**
+     * -- SETTER --
+     *  Sets the attenuation of the light.
+     *
+     *
+     * -- GETTER --
+     *  Gets the attenuation of the light.
+     *
+     @param attenuation the new attenuation of the light
+      * @return the attenuation of the light
+     */
+    @Setter
     private Attenuation attenuation;
+    /**
+     * -- GETTER --
+     *  Gets the color of the light.
+     *
+     * @return the color of the light
+     */
     private Vector3f color;
+    /**
+     * -- SETTER --
+     *  Sets the intensity of the light.
+     *
+     *
+     * -- GETTER --
+     *  Gets the intensity of the light.
+     *
+     @param intensity the new intensity of the light
+      * @return the intensity of the light
+     */
+    @Setter
     private float intensity;
+    /**
+     * -- GETTER --
+     *  Gets the position of the light.
+     *
+     * @return the position of the light
+     */
     private Vector3f position;
 
     /**
@@ -28,66 +67,12 @@ public class PointLight extends Light {
     }
 
     /**
-     * Gets the attenuation of the light.
-     *
-     * @return the attenuation of the light
-     */
-    public Attenuation getAttenuation() {
-        return attenuation;
-    }
-
-    /**
-     * Sets the attenuation of the light.
-     *
-     * @param attenuation the new attenuation of the light
-     */
-    public void setAttenuation(Attenuation attenuation) {
-        this.attenuation = attenuation;
-    }
-
-    /**
-     * Gets the color of the light.
-     *
-     * @return the color of the light
-     */
-    public Vector3f getColor() {
-        return color;
-    }
-
-    /**
      * Sets the color of the light.
      *
      * @param color the new color of the light
      */
     public void setColor(Vector3f color) {
         this.color = color;
-    }
-
-    /**
-     * Gets the intensity of the light.
-     *
-     * @return the intensity of the light
-     */
-    public float getIntensity() {
-        return intensity;
-    }
-
-    /**
-     * Sets the intensity of the light.
-     *
-     * @param intensity the new intensity of the light
-     */
-    public void setIntensity(float intensity) {
-        this.intensity = intensity;
-    }
-
-    /**
-     * Gets the position of the light.
-     *
-     * @return the position of the light
-     */
-    public Vector3f getPosition() {
-        return position;
     }
 
     /**
@@ -124,10 +109,45 @@ public class PointLight extends Light {
     /**
      * Represents the attenuation of a point light.
      */
+    @Getter
+    @Setter
     public static class Attenuation {
 
+        /**
+         * -- SETTER --
+         *  Sets the constant attenuation factor.
+         *
+         *
+         * -- GETTER --
+         *  Gets the constant attenuation factor.
+         *
+         @param constant the new constant attenuation factor
+          * @return the constant attenuation factor
+         */
         private float constant;
+        /**
+         * -- SETTER --
+         *  Sets the exponent attenuation factor.
+         *
+         *
+         * -- GETTER --
+         *  Gets the exponent attenuation factor.
+         *
+         @param exponent the new exponent attenuation factor
+          * @return the exponent attenuation factor
+         */
         private float exponent;
+        /**
+         * -- SETTER --
+         *  Sets the linear attenuation factor.
+         *
+         *
+         * -- GETTER --
+         *  Gets the linear attenuation factor.
+         *
+         @param linear the new linear attenuation factor
+          * @return the linear attenuation factor
+         */
         private float linear;
 
         /**
@@ -143,58 +163,5 @@ public class PointLight extends Light {
             this.exponent = exponent;
         }
 
-        /**
-         * Gets the constant attenuation factor.
-         *
-         * @return the constant attenuation factor
-         */
-        public float getConstant() {
-            return constant;
-        }
-
-        /**
-         * Sets the constant attenuation factor.
-         *
-         * @param constant the new constant attenuation factor
-         */
-        public void setConstant(float constant) {
-            this.constant = constant;
-        }
-
-        /**
-         * Gets the exponent attenuation factor.
-         *
-         * @return the exponent attenuation factor
-         */
-        public float getExponent() {
-            return exponent;
-        }
-
-        /**
-         * Sets the exponent attenuation factor.
-         *
-         * @param exponent the new exponent attenuation factor
-         */
-        public void setExponent(float exponent) {
-            this.exponent = exponent;
-        }
-
-        /**
-         * Gets the linear attenuation factor.
-         *
-         * @return the linear attenuation factor
-         */
-        public float getLinear() {
-            return linear;
-        }
-
-        /**
-         * Sets the linear attenuation factor.
-         *
-         * @param linear the new linear attenuation factor
-         */
-        public void setLinear(float linear) {
-            this.linear = linear;
-        }
     }
 }

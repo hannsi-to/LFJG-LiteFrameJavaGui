@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
@@ -8,9 +10,44 @@ import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 /**
  * Class representing a Radial Blur effect in OpenGL.
  */
+@Getter
+@Setter
 public class RadialBlur extends EffectBase {
+    /**
+     * -- SETTER --
+     * Sets the range of the blur.
+     * <p>
+     * <p>
+     * -- GETTER --
+     * Gets the range of the blur.
+     *
+     * @param range the range of the blur
+     * @return the range of the blur
+     */
     private float range;
+    /**
+     * -- SETTER --
+     * Sets the X coordinate of the blur center.
+     * <p>
+     * <p>
+     * -- GETTER --
+     * Gets the X coordinate of the blur center.
+     *
+     * @param centerX the X coordinate of the blur center
+     * @return the X coordinate of the blur center
+     */
     private float centerX;
+    /**
+     * -- SETTER --
+     * Sets the Y coordinate of the blur center.
+     * <p>
+     * <p>
+     * -- GETTER --
+     * Gets the Y coordinate of the blur center.
+     *
+     * @param centerY the Y coordinate of the blur center
+     * @return the Y coordinate of the blur center
+     */
     private float centerY;
 
     /**
@@ -90,57 +127,4 @@ public class RadialBlur extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Gets the range of the blur.
-     *
-     * @return the range of the blur
-     */
-    public float getRange() {
-        return range;
-    }
-
-    /**
-     * Sets the range of the blur.
-     *
-     * @param range the range of the blur
-     */
-    public void setRange(float range) {
-        this.range = range;
-    }
-
-    /**
-     * Gets the X coordinate of the blur center.
-     *
-     * @return the X coordinate of the blur center
-     */
-    public float getCenterX() {
-        return centerX;
-    }
-
-    /**
-     * Sets the X coordinate of the blur center.
-     *
-     * @param centerX the X coordinate of the blur center
-     */
-    public void setCenterX(float centerX) {
-        this.centerX = centerX;
-    }
-
-    /**
-     * Gets the Y coordinate of the blur center.
-     *
-     * @return the Y coordinate of the blur center
-     */
-    public float getCenterY() {
-        return centerY;
-    }
-
-    /**
-     * Sets the Y coordinate of the blur center.
-     *
-     * @param centerY the Y coordinate of the blur center
-     */
-    public void setCenterY(float centerY) {
-        this.centerY = centerY;
-    }
 }

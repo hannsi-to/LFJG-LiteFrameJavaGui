@@ -1,14 +1,40 @@
 package me.hannsi.lfjg.frame.event.events.user;
 
+import lombok.Getter;
 import me.hannsi.lfjg.frame.event.system.Event;
 
 /**
  * The MouseButtonCallbackEvent class represents an event that occurs when a mouse button is pressed or released.
  */
+@Getter
 public class MouseButtonEvent extends Event {
+    /**
+     * -- GETTER --
+     *  Retrieves the window associated with this event.
+     *
+     * @return The window associated with this event.
+     */
     private final long window;
+    /**
+     * -- GETTER --
+     *  Retrieves the mouse button that was pressed or released.
+     *
+     * @return The mouse button that was pressed or released.
+     */
     private final int button;
+    /**
+     * -- GETTER --
+     *  Retrieves the action performed (press or release).
+     *
+     * @return The action performed (press or release).
+     */
     private final int action;
+    /**
+     * -- GETTER --
+     *  Retrieves the modifier keys pressed along with the mouse button.
+     *
+     * @return The modifier keys pressed along with the mouse button.
+     */
     private final int mods;
 
     /**
@@ -26,39 +52,4 @@ public class MouseButtonEvent extends Event {
         this.mods = mods;
     }
 
-    /**
-     * Retrieves the window associated with this event.
-     *
-     * @return The window associated with this event.
-     */
-    public long getWindow() {
-        return window;
-    }
-
-    /**
-     * Retrieves the mouse button that was pressed or released.
-     *
-     * @return The mouse button that was pressed or released.
-     */
-    public int getButton() {
-        return button;
-    }
-
-    /**
-     * Retrieves the action performed (press or release).
-     *
-     * @return The action performed (press or release).
-     */
-    public int getAction() {
-        return action;
-    }
-
-    /**
-     * Retrieves the modifier keys pressed along with the mouse button.
-     *
-     * @return The modifier keys pressed along with the mouse button.
-     */
-    public int getMods() {
-        return mods;
-    }
 }

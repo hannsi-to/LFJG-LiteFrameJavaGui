@@ -1,17 +1,25 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.rendering.SplitFrameBuffer;
 
+@Getter
 public class SplitObject extends EffectBase {
     private final EffectCache effectCache;
+    @Setter
     private int rows;
+    @Setter
     private int cols;
+    @Setter
     private int offsetX;
+    @Setter
     private int offsetY;
+    @Setter
     private SplitFrameBuffer splitFrameBuffer;
 
     public SplitObject(int rows, int cols, int offsetX, int offsetY) {
@@ -109,47 +117,4 @@ public class SplitObject extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    public int getRows() {
-        return rows;
-    }
-
-    public void setRows(int rows) {
-        this.rows = rows;
-    }
-
-    public int getCols() {
-        return cols;
-    }
-
-    public void setCols(int cols) {
-        this.cols = cols;
-    }
-
-    public int getOffsetX() {
-        return offsetX;
-    }
-
-    public void setOffsetX(int offsetX) {
-        this.offsetX = offsetX;
-    }
-
-    public int getOffsetY() {
-        return offsetY;
-    }
-
-    public void setOffsetY(int offsetY) {
-        this.offsetY = offsetY;
-    }
-
-    public SplitFrameBuffer getSplitFrameBuffer() {
-        return splitFrameBuffer;
-    }
-
-    public void setSplitFrameBuffer(SplitFrameBuffer splitFrameBuffer) {
-        this.splitFrameBuffer = splitFrameBuffer;
-    }
-
-    public EffectCache getEffectCache() {
-        return effectCache;
-    }
 }

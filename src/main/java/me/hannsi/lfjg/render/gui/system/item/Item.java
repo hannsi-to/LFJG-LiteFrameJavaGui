@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.render.gui.system.item;
 
+import lombok.Getter;
 import me.hannsi.lfjg.frame.event.events.user.CharEvent;
 import me.hannsi.lfjg.frame.event.events.user.KeyEvent;
 import me.hannsi.lfjg.frame.event.events.user.MouseButtonEvent;
@@ -8,6 +9,7 @@ import me.hannsi.lfjg.utils.toolkit.KeyboardInfo;
 import me.hannsi.lfjg.utils.toolkit.MouseInfo;
 
 
+@Getter
 public class Item implements IItem {
     private final long id;
 
@@ -43,7 +45,4 @@ public class Item implements IItem {
 
     }
 
-    public long getId() {
-        return id;
-    }
 }

@@ -1,11 +1,14 @@
 package me.hannsi.lfjg.utils.type.types;
 
+import lombok.Getter;
+
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL14.*;
 
 /**
  * Enumeration representing different types of blend modes.
  */
+@Getter
 public enum BlendType {
     NORMAL("Normal", 0, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD),
     ADD("Add", 1, GL_ONE, GL_ONE, GL_FUNC_ADD),
@@ -48,23 +51,4 @@ public enum BlendType {
         this.equation = equation;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getSfactor() {
-        return sfactor;
-    }
-
-    public int getDfactor() {
-        return dfactor;
-    }
-
-    public int getEquation() {
-        return equation;
-    }
 }

@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.utils.graphics.image;
 
+import lombok.Getter;
 import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.render.debug.exceptions.texture.CreatingTextureException;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
@@ -32,8 +33,22 @@ import static org.lwjgl.opengl.GL30.glGenerateMipmap;
  * Class for loading textures from various sources.
  */
 public class TextureLoader {
+    /**
+     * -- GETTER --
+     *  Gets the texture path.
+     *
+     * @return the texture path
+     */
+    @Getter
     private final Location texturePath;
     private final ImageLoaderType imageLoaderType;
+    /**
+     * -- GETTER --
+     *  Gets the texture ID.
+     *
+     * @return the texture ID
+     */
+    @Getter
     private int textureId;
 
     /**
@@ -217,15 +232,6 @@ public class TextureLoader {
     }
 
     /**
-     * Gets the texture path.
-     *
-     * @return the texture path
-     */
-    public Location getTexturePath() {
-        return texturePath;
-    }
-
-    /**
      * Gets the texture loader type.
      *
      * @return the texture loader type
@@ -234,12 +240,4 @@ public class TextureLoader {
         return imageLoaderType;
     }
 
-    /**
-     * Gets the texture ID.
-     *
-     * @return the texture ID
-     */
-    public int getTextureId() {
-        return textureId;
-    }
 }

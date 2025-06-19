@@ -1,14 +1,51 @@
 package me.hannsi.lfjg.utils.math.animation;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.utils.Util;
 import me.hannsi.lfjg.utils.math.MathHelper;
 
 /**
  * Utility class for easing functions and animations.
  */
+@Getter
+@Setter
 public class EasingUtil extends Util {
+    /**
+     * -- SETTER --
+     *  Sets the current time.
+     *
+     *
+     * -- GETTER --
+     *  Gets the current time.
+     *
+     @param current the new current time
+      * @return the current time
+     */
     public long current;
+    /**
+     * -- SETTER --
+     *  Sets the reverse mode of the animation.
+     *
+     *
+     * -- GETTER --
+     *  Checks if the animation is in reverse mode.
+     *
+     @param reverse true to set the animation to reverse mode, false otherwise
+      * @return true if the animation is in reverse mode, false otherwise
+     */
     public boolean reverse;
+    /**
+     * -- SETTER --
+     *  Sets the easing function.
+     *
+     *
+     * -- GETTER --
+     *  Gets the easing function.
+     *
+     @param easing the new easing function
+      * @return the easing function
+     */
     public Easing easing;
 
     /**
@@ -73,57 +110,4 @@ public class EasingUtil extends Util {
         }
     }
 
-    /**
-     * Checks if the animation is in reverse mode.
-     *
-     * @return true if the animation is in reverse mode, false otherwise
-     */
-    public boolean isReverse() {
-        return reverse;
-    }
-
-    /**
-     * Sets the reverse mode of the animation.
-     *
-     * @param reverse true to set the animation to reverse mode, false otherwise
-     */
-    public void setReverse(boolean reverse) {
-        this.reverse = reverse;
-    }
-
-    /**
-     * Gets the current time.
-     *
-     * @return the current time
-     */
-    public long getCurrent() {
-        return current;
-    }
-
-    /**
-     * Sets the current time.
-     *
-     * @param current the new current time
-     */
-    public void setCurrent(long current) {
-        this.current = current;
-    }
-
-    /**
-     * Gets the easing function.
-     *
-     * @return the easing function
-     */
-    public Easing getEasing() {
-        return easing;
-    }
-
-    /**
-     * Sets the easing function.
-     *
-     * @param easing the new easing function
-     */
-    public void setEasing(Easing easing) {
-        this.easing = easing;
-    }
 }

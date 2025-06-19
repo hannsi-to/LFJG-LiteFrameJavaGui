@@ -1,16 +1,75 @@
 package me.hannsi.lfjg.debug;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.frame.event.events.system.LoggingEvent;
 import me.hannsi.lfjg.frame.frame.IFrame;
 
 /**
  * The DebugLog class is responsible for logging debug information, including exceptions and text messages, with different debug levels.
  */
+@Setter
+@Getter
 public class DebugLog {
+    /**
+     * -- GETTER --
+     * Retrieves the class where the debug log is generated.
+     * <p>
+     * <p>
+     * -- SETTER --
+     * Sets the class where the debug log is generated.
+     *
+     * @return The class where the debug log is generated.
+     * @param clazz The class to set.
+     */
     private Class<?> clazz;
+    /**
+     * -- GETTER --
+     * Retrieves the type of debug log (EXCEPTION or TEXT).
+     * <p>
+     * <p>
+     * -- SETTER --
+     * Sets the type of debug log (EXCEPTION or TEXT).
+     *
+     * @return The type of debug log.
+     * @param debugType The type of debug log to set.
+     */
     private DebugType debugType;
+    /**
+     * -- GETTER --
+     * Retrieves the exception to log (if applicable).
+     * <p>
+     * <p>
+     * -- SETTER --
+     * Sets the exception to log.
+     *
+     * @return The exception to log.
+     * @param exception The exception to set.
+     */
     private Exception exception;
+    /**
+     * -- GETTER --
+     * Retrieves the text message to log.
+     * <p>
+     * <p>
+     * -- SETTER --
+     * Sets the text message to log.
+     *
+     * @return The text message to log.
+     * @param debugText The text message to set.
+     */
     private String debugText;
+    /**
+     * -- GETTER --
+     * Retrieves the debug level (DEBUG, INFO, WARNING, ERROR).
+     * <p>
+     * <p>
+     * -- SETTER --
+     * Sets the debug level (DEBUG, INFO, WARNING, ERROR).
+     *
+     * @return The debug level.
+     * @param debugLevel The debug level to set.
+     */
     private DebugLevel debugLevel;
 
     /**
@@ -127,95 +186,5 @@ public class DebugLog {
      */
     public static void warning(Class<?> clazz, Exception exception) {
         new DebugLog(clazz, DebugType.EXCEPTION, exception, DebugLevel.WARNING);
-    }
-
-    /**
-     * Retrieves the class where the debug log is generated.
-     *
-     * @return The class where the debug log is generated.
-     */
-    public Class<?> getClazz() {
-        return clazz;
-    }
-
-    /**
-     * Sets the class where the debug log is generated.
-     *
-     * @param clazz The class to set.
-     */
-    public void setClazz(Class<?> clazz) {
-        this.clazz = clazz;
-    }
-
-    /**
-     * Retrieves the type of debug log (EXCEPTION or TEXT).
-     *
-     * @return The type of debug log.
-     */
-    public DebugType getDebugType() {
-        return debugType;
-    }
-
-    /**
-     * Sets the type of debug log (EXCEPTION or TEXT).
-     *
-     * @param debugType The type of debug log to set.
-     */
-    public void setDebugType(DebugType debugType) {
-        this.debugType = debugType;
-    }
-
-    /**
-     * Retrieves the exception to log (if applicable).
-     *
-     * @return The exception to log.
-     */
-    public Exception getException() {
-        return exception;
-    }
-
-    /**
-     * Sets the exception to log.
-     *
-     * @param exception The exception to set.
-     */
-    public void setException(Exception exception) {
-        this.exception = exception;
-    }
-
-    /**
-     * Retrieves the text message to log.
-     *
-     * @return The text message to log.
-     */
-    public String getDebugText() {
-        return debugText;
-    }
-
-    /**
-     * Sets the text message to log.
-     *
-     * @param debugText The text message to set.
-     */
-    public void setDebugText(String debugText) {
-        this.debugText = debugText;
-    }
-
-    /**
-     * Retrieves the debug level (DEBUG, INFO, WARNING, ERROR).
-     *
-     * @return The debug level.
-     */
-    public DebugLevel getDebugLevel() {
-        return debugLevel;
-    }
-
-    /**
-     * Sets the debug level (DEBUG, INFO, WARNING, ERROR).
-     *
-     * @param debugLevel The debug level to set.
-     */
-    public void setDebugLevel(DebugLevel debugLevel) {
-        this.debugLevel = debugLevel;
     }
 }

@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.system;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
@@ -27,17 +29,33 @@ public class MeshBuilder {
     public static final int DEFAULT_USAGE_HINT = GL_STREAM_DRAW;
     public static final int DEFAULT_BUFFER_COUNT = 3;
 
+    @Getter
     private final int vertexArrayObjectId;
+    @Getter
     private final Map<BufferObjectType, Integer> bufferIds;
+    @Getter
     protected float[] positions;
+    @Getter
     protected float[] colors;
+    @Getter
     protected float[] textures;
+    @Getter
     protected int numVertices;
+    @Getter
+    @Setter
     private ProjectionType projectionType;
+    @Getter
+    @Setter
     private boolean useElementBufferObject;
+    @Getter
+    @Setter
     private boolean useIndirect;
+    @Getter
+    @Setter
     private int usageHint;
+    @Getter
     private int elementBufferObjectId;
+    @Getter
     private int indirectBufferId;
     private int bufferCount;
     private int currentBufferIndex;
@@ -417,70 +435,6 @@ public class MeshBuilder {
         }
 
         return size;
-    }
-
-    public ProjectionType getProjectionType() {
-        return projectionType;
-    }
-
-    public void setProjectionType(ProjectionType projectionType) {
-        this.projectionType = projectionType;
-    }
-
-    public boolean isUseElementBufferObject() {
-        return useElementBufferObject;
-    }
-
-    public void setUseElementBufferObject(boolean useElementBufferObject) {
-        this.useElementBufferObject = useElementBufferObject;
-    }
-
-    public boolean isUseIndirect() {
-        return useIndirect;
-    }
-
-    public void setUseIndirect(boolean useIndirect) {
-        this.useIndirect = useIndirect;
-    }
-
-    public int getUsageHint() {
-        return usageHint;
-    }
-
-    public void setUsageHint(int usageHint) {
-        this.usageHint = usageHint;
-    }
-
-    public Map<BufferObjectType, Integer> getBufferIds() {
-        return bufferIds;
-    }
-
-    public int getIndirectBufferId() {
-        return indirectBufferId;
-    }
-
-    public int getVertexArrayObjectId() {
-        return vertexArrayObjectId;
-    }
-
-    public int getElementBufferObjectId() {
-        return elementBufferObjectId;
-    }
-
-    public float[] getPositions() {
-        return positions;
-    }
-
-    public float[] getColors() {
-        return colors;
-    }
-
-    public float[] getTextures() {
-        return textures;
-    }
-
-    public int getNumVertices() {
-        return numVertices;
     }
 
     public static class ElementPair {

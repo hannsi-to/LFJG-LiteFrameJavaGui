@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.utils.graphics.image;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
@@ -22,15 +24,32 @@ import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
 import static org.lwjgl.opengl.GL11.glReadPixels;
 
 public class ImageCapture {
+    @Getter
     private final FileLocation filePath;
+    @Getter
+    @Setter
     private int width;
+    @Getter
+    @Setter
     private int height;
+    @Getter
+    @Setter
     private ImageLoaderType imageLoaderType;
+    @Getter
+    @Setter
     private ColorFormatType colorFormatType;
+    @Getter
+    @Setter
     private STBImageFormat stbImageFormat;
     private JavaCVImageFormat javaCVImageFormat;
+    @Getter
+    @Setter
     private boolean flip;
+    @Getter
+    @Setter
     private int jpgQuality;
+    @Getter
+    @Setter
     private String saveType;
 
     public ImageCapture(FileLocation filePath) {
@@ -212,58 +231,6 @@ public class ImageCapture {
         filePath.cleanup();
     }
 
-    public FileLocation getFilePath() {
-        return filePath;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public ColorFormatType getColorFormatType() {
-        return colorFormatType;
-    }
-
-    public void setColorFormatType(ColorFormatType colorFormatType) {
-        this.colorFormatType = colorFormatType;
-    }
-
-    public STBImageFormat getStbImageFormat() {
-        return stbImageFormat;
-    }
-
-    public void setStbImageFormat(STBImageFormat stbImageFormat) {
-        this.stbImageFormat = stbImageFormat;
-    }
-
-    public int getJpgQuality() {
-        return jpgQuality;
-    }
-
-    public void setJpgQuality(int jpgQuality) {
-        this.jpgQuality = jpgQuality;
-    }
-
-    public ImageLoaderType getImageLoaderType() {
-        return imageLoaderType;
-    }
-
-    public void setImageLoaderType(ImageLoaderType imageLoaderType) {
-        this.imageLoaderType = imageLoaderType;
-    }
-
     @Deprecated
     public JavaCVImageFormat getJavaCVImageFormat() {
         return javaCVImageFormat;
@@ -274,19 +241,4 @@ public class ImageCapture {
         this.javaCVImageFormat = javaCVImageFormat;
     }
 
-    public boolean isFlip() {
-        return flip;
-    }
-
-    public void setFlip(boolean flip) {
-        this.flip = flip;
-    }
-
-    public String getSaveType() {
-        return saveType;
-    }
-
-    public void setSaveType(String saveType) {
-        this.saveType = saveType;
-    }
 }

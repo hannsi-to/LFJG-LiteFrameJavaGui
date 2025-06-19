@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.utils.graphics.image;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.utils.reflection.location.Location;
@@ -11,7 +13,20 @@ import java.util.Map;
 /**
  * Class for managing a cache of textures.
  */
+@Getter
+@Setter
 public class TextureCache {
+    /**
+     * -- SETTER --
+     *  Sets the texture map.
+     *
+     *
+     * -- GETTER --
+     *  Gets the texture map.
+     *
+     @param textureMap the new texture map
+      * @return the texture map
+     */
     private Map<Location, TextureLoader> textureMap;
 
     /**
@@ -57,21 +72,4 @@ public class TextureCache {
         return texture;
     }
 
-    /**
-     * Gets the texture map.
-     *
-     * @return the texture map
-     */
-    public Map<Location, TextureLoader> getTextureMap() {
-        return textureMap;
-    }
-
-    /**
-     * Sets the texture map.
-     *
-     * @param textureMap the new texture map
-     */
-    public void setTextureMap(Map<Location, TextureLoader> textureMap) {
-        this.textureMap = textureMap;
-    }
 }

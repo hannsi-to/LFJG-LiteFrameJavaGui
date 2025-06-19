@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.utils.toolkit;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.joml.Vector2f;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -8,12 +10,80 @@ import static org.lwjgl.glfw.GLFW.*;
  * Represents the mouse information in the OpenGL rendering system.
  * Handles mouse position, displacement, button states, and window focus.
  */
+@Getter
+@Setter
 public class MouseInfo {
+    /**
+     * -- SETTER --
+     *  Sets the current cursor position.
+     *
+     *
+     * -- GETTER --
+     *  Gets the current cursor position.
+     *
+     @param currentPos the new cursor position
+      * @return the current cursor position
+     */
     private Vector2f currentPos;
+    /**
+     * -- SETTER --
+     *  Sets the displacement vector.
+     *
+     *
+     * -- GETTER --
+     *  Gets the displacement vector.
+     *
+     @param displaySize the new displacement vector
+      * @return the displacement vector
+     */
     private Vector2f displaySize;
+    /**
+     * -- SETTER --
+     *  Sets whether the mouse is in the window.
+     *
+     *
+     * -- GETTER --
+     *  Checks if the mouse is in the window.
+     *
+     @param inWindow true if the mouse is in the window, false otherwise
+      * @return true if the mouse is in the window, false otherwise
+     */
     private boolean inWindow;
+    /**
+     * -- SETTER --
+     *  Sets the state of the left mouse button.
+     *
+     *
+     * -- GETTER --
+     *  Checks if the left mouse button is pressed.
+     *
+     @param leftButtonPressed true if the left mouse button is pressed, false otherwise
+      * @return true if the left mouse button is pressed, false otherwise
+     */
     private boolean leftButtonPressed;
+    /**
+     * -- SETTER --
+     *  Sets the previous cursor position.
+     *
+     *
+     * -- GETTER --
+     *  Gets the previous cursor position.
+     *
+     @param previousPos the new previous cursor position
+      * @return the previous cursor position
+     */
     private Vector2f previousPos;
+    /**
+     * -- SETTER --
+     *  Sets the state of the right mouse button.
+     *
+     *
+     * -- GETTER --
+     *  Checks if the right mouse button is pressed.
+     *
+     @param rightButtonPressed true if the right mouse button is pressed, false otherwise
+      * @return true if the right mouse button is pressed, false otherwise
+     */
     private boolean rightButtonPressed;
 
     /**
@@ -66,42 +136,6 @@ public class MouseInfo {
     }
 
     /**
-     * Gets the current cursor position.
-     *
-     * @return the current cursor position
-     */
-    public Vector2f getCurrentPos() {
-        return currentPos;
-    }
-
-    /**
-     * Sets the current cursor position.
-     *
-     * @param currentPos the new cursor position
-     */
-    public void setCurrentPos(Vector2f currentPos) {
-        this.currentPos = currentPos;
-    }
-
-    /**
-     * Gets the displacement vector.
-     *
-     * @return the displacement vector
-     */
-    public Vector2f getDisplaySize() {
-        return displaySize;
-    }
-
-    /**
-     * Sets the displacement vector.
-     *
-     * @param displaySize the new displacement vector
-     */
-    public void setDisplaySize(Vector2f displaySize) {
-        this.displaySize = displaySize;
-    }
-
-    /**
      * Processes the mouse input to calculate the displacement vector.
      */
     public void input() {
@@ -127,75 +161,4 @@ public class MouseInfo {
         return x <= currentPos.x && currentPos.x <= x + width && y <= currentPos.y && currentPos.y <= y + height;
     }
 
-    /**
-     * Checks if the left mouse button is pressed.
-     *
-     * @return true if the left mouse button is pressed, false otherwise
-     */
-    public boolean isLeftButtonPressed() {
-        return leftButtonPressed;
-    }
-
-    /**
-     * Sets the state of the left mouse button.
-     *
-     * @param leftButtonPressed true if the left mouse button is pressed, false otherwise
-     */
-    public void setLeftButtonPressed(boolean leftButtonPressed) {
-        this.leftButtonPressed = leftButtonPressed;
-    }
-
-    /**
-     * Checks if the right mouse button is pressed.
-     *
-     * @return true if the right mouse button is pressed, false otherwise
-     */
-    public boolean isRightButtonPressed() {
-        return rightButtonPressed;
-    }
-
-    /**
-     * Sets the state of the right mouse button.
-     *
-     * @param rightButtonPressed true if the right mouse button is pressed, false otherwise
-     */
-    public void setRightButtonPressed(boolean rightButtonPressed) {
-        this.rightButtonPressed = rightButtonPressed;
-    }
-
-    /**
-     * Checks if the mouse is in the window.
-     *
-     * @return true if the mouse is in the window, false otherwise
-     */
-    public boolean isInWindow() {
-        return inWindow;
-    }
-
-    /**
-     * Sets whether the mouse is in the window.
-     *
-     * @param inWindow true if the mouse is in the window, false otherwise
-     */
-    public void setInWindow(boolean inWindow) {
-        this.inWindow = inWindow;
-    }
-
-    /**
-     * Gets the previous cursor position.
-     *
-     * @return the previous cursor position
-     */
-    public Vector2f getPreviousPos() {
-        return previousPos;
-    }
-
-    /**
-     * Sets the previous cursor position.
-     *
-     * @param previousPos the new previous cursor position
-     */
-    public void setPreviousPos(Vector2f previousPos) {
-        this.previousPos = previousPos;
-    }
 }

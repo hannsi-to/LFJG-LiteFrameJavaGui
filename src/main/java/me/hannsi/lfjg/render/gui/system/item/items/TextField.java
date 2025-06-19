@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.gui.system.item.items;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.frame.event.events.user.CharEvent;
 import me.hannsi.lfjg.frame.event.events.user.KeyEvent;
 import me.hannsi.lfjg.frame.event.events.user.MouseButtonEvent;
@@ -9,7 +11,11 @@ import me.hannsi.lfjg.utils.toolkit.StringUtil;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class TextField extends ItemRect {
+    @Getter
+    @Setter
     private boolean typedFocus;
+    @Getter
+    @Setter
     private String typedField;
     private boolean isHover;
 
@@ -62,22 +68,6 @@ public class TextField extends ItemRect {
             typedFocus = isHover;
         }
         super.mouseButtonEvent(event);
-    }
-
-    public String getTypedField() {
-        return typedField;
-    }
-
-    public void setTypedField(String typedField) {
-        this.typedField = typedField;
-    }
-
-    public boolean isTypedFocus() {
-        return typedFocus;
-    }
-
-    public void setTypedFocus(boolean typedFocus) {
-        this.typedFocus = typedFocus;
     }
 
     public boolean isHover() {

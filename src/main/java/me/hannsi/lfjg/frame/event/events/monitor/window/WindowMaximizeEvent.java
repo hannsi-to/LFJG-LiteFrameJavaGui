@@ -1,7 +1,9 @@
 package me.hannsi.lfjg.frame.event.events.monitor.window;
 
+import lombok.Getter;
 import me.hannsi.lfjg.frame.event.system.Event;
 
+@Getter
 public class WindowMaximizeEvent extends Event {
     private final long window;
     private final boolean maximized;
@@ -11,11 +13,4 @@ public class WindowMaximizeEvent extends Event {
         this.maximized = maximized;
     }
 
-    public long getWindow() {
-        return window;
-    }
-
-    public boolean isMaximized() {
-        return maximized;
-    }
 }

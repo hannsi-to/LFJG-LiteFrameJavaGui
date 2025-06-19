@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.color.Color;
@@ -9,9 +11,44 @@ import org.joml.Vector3f;
 /**
  * Class representing a Monochrome effect in OpenGL.
  */
+@Getter
+@Setter
 public class Monochrome extends EffectBase {
+    /**
+     * -- SETTER --
+     *  Sets the intensity of the monochrome effect.
+     *
+     *
+     * -- GETTER --
+     *  Gets the intensity of the monochrome effect.
+     *
+     @param intensity the intensity of the monochrome effect
+      * @return the intensity of the monochrome effect
+     */
     private float intensity;
+    /**
+     * -- SETTER --
+     *  Sets the color to be used for the monochrome effect.
+     *
+     *
+     * -- GETTER --
+     *  Gets the color to be used for the monochrome effect.
+     *
+     @param color the color to be used for the monochrome effect
+      * @return the color to be used for the monochrome effect
+     */
     private Color color;
+    /**
+     * -- SETTER --
+     *  Sets whether to preserve the brightness.
+     *
+     *
+     * -- GETTER --
+     *  Checks if the brightness is preserved.
+     *
+     @param preserveBrightness true to preserve the brightness, false otherwise
+      * @return true if the brightness is preserved, false otherwise
+     */
     private boolean preserveBrightness;
 
     /**
@@ -87,57 +124,4 @@ public class Monochrome extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Gets the intensity of the monochrome effect.
-     *
-     * @return the intensity of the monochrome effect
-     */
-    public float getIntensity() {
-        return intensity;
-    }
-
-    /**
-     * Sets the intensity of the monochrome effect.
-     *
-     * @param intensity the intensity of the monochrome effect
-     */
-    public void setIntensity(float intensity) {
-        this.intensity = intensity;
-    }
-
-    /**
-     * Gets the color to be used for the monochrome effect.
-     *
-     * @return the color to be used for the monochrome effect
-     */
-    public Color getColor() {
-        return color;
-    }
-
-    /**
-     * Sets the color to be used for the monochrome effect.
-     *
-     * @param color the color to be used for the monochrome effect
-     */
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    /**
-     * Checks if the brightness is preserved.
-     *
-     * @return true if the brightness is preserved, false otherwise
-     */
-    public boolean isPreserveBrightness() {
-        return preserveBrightness;
-    }
-
-    /**
-     * Sets whether to preserve the brightness.
-     *
-     * @param preserveBrightness true to preserve the brightness, false otherwise
-     */
-    public void setPreserveBrightness(boolean preserveBrightness) {
-        this.preserveBrightness = preserveBrightness;
-    }
 }

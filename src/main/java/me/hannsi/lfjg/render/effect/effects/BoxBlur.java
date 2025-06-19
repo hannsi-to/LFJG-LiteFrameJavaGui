@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
@@ -7,8 +9,32 @@ import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 /**
  * Class representing a Box Blur effect in OpenGL.
  */
+@Setter
+@Getter
 public class BoxBlur extends EffectBase {
+    /**
+     * -- GETTER --
+     *  Gets the kernel size in the x-direction.
+     *
+     *
+     * -- SETTER --
+     *  Sets the kernel size in the x-direction.
+     *
+     @return the kernel size in the x-direction
+      * @param kernelX the kernel size in the x-direction
+     */
     private int kernelX;
+    /**
+     * -- GETTER --
+     *  Gets the kernel size in the y-direction.
+     *
+     *
+     * -- SETTER --
+     *  Sets the kernel size in the y-direction.
+     *
+     @return the kernel size in the y-direction
+      * @param kernelY the kernel size in the y-direction
+     */
     private int kernelY;
 
     /**
@@ -73,39 +99,4 @@ public class BoxBlur extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Gets the kernel size in the x-direction.
-     *
-     * @return the kernel size in the x-direction
-     */
-    public int getKernelX() {
-        return kernelX;
-    }
-
-    /**
-     * Sets the kernel size in the x-direction.
-     *
-     * @param kernelX the kernel size in the x-direction
-     */
-    public void setKernelX(int kernelX) {
-        this.kernelX = kernelX;
-    }
-
-    /**
-     * Gets the kernel size in the y-direction.
-     *
-     * @return the kernel size in the y-direction
-     */
-    public int getKernelY() {
-        return kernelY;
-    }
-
-    /**
-     * Sets the kernel size in the y-direction.
-     *
-     * @param kernelY the kernel size in the y-direction
-     */
-    public void setKernelY(int kernelY) {
-        this.kernelY = kernelY;
-    }
 }

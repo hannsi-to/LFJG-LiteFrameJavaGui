@@ -1,6 +1,9 @@
 package me.hannsi.lfjg.utils.reflection.location;
 
+import lombok.Getter;
+
 public class Location {
+    @Getter
     public String path;
     public boolean isUrl;
     public boolean isPath;
@@ -30,10 +33,6 @@ public class Location {
 
     public boolean isPath() {
         return isPath;
-    }
-
-    public String getPath() {
-        return path;
     }
 
     public void setPath(boolean path) {

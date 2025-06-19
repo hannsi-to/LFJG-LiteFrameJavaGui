@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.system.rendering;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
@@ -13,15 +15,68 @@ import static org.lwjgl.opengl.GL30.glBlitFramebuffer;
 /**
  * Represents a split frame buffer in the OpenGL rendering system.
  */
+@Getter
 public class SplitFrameBuffer {
+    /**
+     * -- GETTER --
+     *  Gets the number of columns.
+     *
+     * @return the number of columns
+     */
     private final int cols;
+    /**
+     * -- GETTER --
+     *  Gets the number of rows.
+     *
+     * @return the number of rows
+     */
     private final int rows;
+    /**
+     * -- SETTER --
+     *  Sets the main frame buffer.
+     *
+     *
+     * -- GETTER --
+     *  Gets the main frame buffer.
+     *
+     @param mainFrameBuffer the new main frame buffer
+      * @return the main frame buffer
+     */
+    @Setter
     private FrameBuffer mainFrameBuffer;
+    /**
+     * -- SETTER --
+     *  Sets the small frame buffers.
+     *
+     *
+     * -- GETTER --
+     *  Gets the small frame buffers.
+     *
+     @param smallFrameBuffers the new small frame buffers
+      * @return the small frame buffers
+     */
+    @Setter
     private FrameBuffer[][] smallFrameBuffers;
+    /**
+     * -- SETTER --
+     *  Sets the resolution of the small frame buffers.
+     *
+     *
+     * -- GETTER --
+     *  Gets the resolution of the small frame buffers.
+     *
+     @param smallResolution the new resolution of the small frame buffers
+      * @return the resolution of the small frame buffers
+     */
+    @Setter
     private Vector2f smallResolution;
+    @Setter
     private int offsetX;
+    @Setter
     private int offsetY;
+    @Setter
     private int indexX;
+    @Setter
     private int indexY;
 
     /**
@@ -153,107 +208,4 @@ public class SplitFrameBuffer {
         return smallFrameBuffers[y][x];
     }
 
-    /**
-     * Gets the main frame buffer.
-     *
-     * @return the main frame buffer
-     */
-    public FrameBuffer getMainFrameBuffer() {
-        return mainFrameBuffer;
-    }
-
-    /**
-     * Sets the main frame buffer.
-     *
-     * @param mainFrameBuffer the new main frame buffer
-     */
-    public void setMainFrameBuffer(FrameBuffer mainFrameBuffer) {
-        this.mainFrameBuffer = mainFrameBuffer;
-    }
-
-    /**
-     * Gets the small frame buffers.
-     *
-     * @return the small frame buffers
-     */
-    public FrameBuffer[][] getSmallFrameBuffers() {
-        return smallFrameBuffers;
-    }
-
-    /**
-     * Sets the small frame buffers.
-     *
-     * @param smallFrameBuffers the new small frame buffers
-     */
-    public void setSmallFrameBuffers(FrameBuffer[][] smallFrameBuffers) {
-        this.smallFrameBuffers = smallFrameBuffers;
-    }
-
-    /**
-     * Gets the resolution of the small frame buffers.
-     *
-     * @return the resolution of the small frame buffers
-     */
-    public Vector2f getSmallResolution() {
-        return smallResolution;
-    }
-
-    /**
-     * Sets the resolution of the small frame buffers.
-     *
-     * @param smallResolution the new resolution of the small frame buffers
-     */
-    public void setSmallResolution(Vector2f smallResolution) {
-        this.smallResolution = smallResolution;
-    }
-
-    /**
-     * Gets the number of columns.
-     *
-     * @return the number of columns
-     */
-    public int getCols() {
-        return cols;
-    }
-
-    /**
-     * Gets the number of rows.
-     *
-     * @return the number of rows
-     */
-    public int getRows() {
-        return rows;
-    }
-
-    public int getIndexX() {
-        return indexX;
-    }
-
-    public void setIndexX(int indexX) {
-        this.indexX = indexX;
-    }
-
-    public int getIndexY() {
-        return indexY;
-    }
-
-    public void setIndexY(int indexY) {
-        this.indexY = indexY;
-    }
-
-    public int getOffsetX() {
-        return offsetX;
-    }
-
-    public void setOffsetX(int offsetX) {
-        this.offsetX = offsetX;
-    }
-
-    public int getOffsetY() {
-        return offsetY;
-    }
-
-    public void setOffsetY(int offsetY) {
-        this.offsetY = offsetY;
-    }
 }

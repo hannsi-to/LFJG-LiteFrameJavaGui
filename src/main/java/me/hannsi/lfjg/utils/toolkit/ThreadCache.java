@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.utils.toolkit;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerator;
 
@@ -8,7 +10,20 @@ import java.util.HashMap;
 /**
  * Utility class for managing a cache of threads.
  */
+@Getter
+@Setter
 public class ThreadCache {
+    /**
+     * -- SETTER --
+     *  Sets the thread cache.
+     *
+     *
+     * -- GETTER --
+     *  Gets the current thread cache.
+     *
+     @param threadCache the new thread cache
+      * @return the current thread cache
+     */
     private HashMap<Long, Thread> threadCache;
 
     /**
@@ -101,21 +116,4 @@ public class ThreadCache {
         threadCache.clear();
     }
 
-    /**
-     * Gets the current thread cache.
-     *
-     * @return the current thread cache
-     */
-    public HashMap<Long, Thread> getThreadCache() {
-        return threadCache;
-    }
-
-    /**
-     * Sets the thread cache.
-     *
-     * @param threadCache the new thread cache
-     */
-    public void setThreadCache(HashMap<Long, Thread> threadCache) {
-        this.threadCache = threadCache;
-    }
 }

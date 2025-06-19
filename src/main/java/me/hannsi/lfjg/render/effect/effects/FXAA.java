@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
@@ -9,7 +11,20 @@ import org.joml.Vector2f;
 /**
  * Class representing a Fast Approximate Anti-Aliasing (FXAA) effect in OpenGL.
  */
+@Getter
+@Setter
 public class FXAA extends EffectBase {
+    /**
+     * -- SETTER --
+     *  Sets whether to use alpha in the effect.
+     *
+     *
+     * -- GETTER --
+     *  Checks if alpha is used in the effect.
+     *
+     @param useAlpha true to use alpha, false otherwise
+      * @return true if alpha is used, false otherwise
+     */
     private boolean useAlpha;
 
     /**
@@ -69,21 +84,4 @@ public class FXAA extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Checks if alpha is used in the effect.
-     *
-     * @return true if alpha is used, false otherwise
-     */
-    public boolean isUseAlpha() {
-        return useAlpha;
-    }
-
-    /**
-     * Sets whether to use alpha in the effect.
-     *
-     * @param useAlpha true to use alpha, false otherwise
-     */
-    public void setUseAlpha(boolean useAlpha) {
-        this.useAlpha = useAlpha;
-    }
 }

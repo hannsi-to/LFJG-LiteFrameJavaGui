@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 
@@ -10,8 +12,47 @@ public class Translate extends EffectBase {
     protected float latestX;
     protected float latestY;
     protected float latestZ;
+    /**
+     * -- SETTER --
+     *  Sets the translation distance along the X axis.
+     *
+     *
+     * -- GETTER --
+     *  Gets the translation distance along the X axis.
+     *
+     @param x the translation distance along the X axis
+      * @return the translation distance along the X axis
+     */
+    @Getter
+    @Setter
     private float x;
+    /**
+     * -- SETTER --
+     *  Sets the translation distance along the Y axis.
+     *
+     *
+     * -- GETTER --
+     *  Gets the translation distance along the Y axis.
+     *
+     @param y the translation distance along the Y axis
+      * @return the translation distance along the Y axis
+     */
+    @Getter
+    @Setter
     private float y;
+    /**
+     * -- SETTER --
+     *  Sets the translation distance along the Z axis.
+     *
+     *
+     * -- GETTER --
+     *  Gets the translation distance along the Z axis.
+     *
+     @param z the translation distance along the Z axis
+      * @return the translation distance along the Z axis
+     */
+    @Getter
+    @Setter
     private float z;
 
     /**
@@ -127,57 +168,4 @@ public class Translate extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Gets the translation distance along the X axis.
-     *
-     * @return the translation distance along the X axis
-     */
-    public float getX() {
-        return x;
-    }
-
-    /**
-     * Sets the translation distance along the X axis.
-     *
-     * @param x the translation distance along the X axis
-     */
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    /**
-     * Gets the translation distance along the Y axis.
-     *
-     * @return the translation distance along the Y axis
-     */
-    public float getY() {
-        return y;
-    }
-
-    /**
-     * Sets the translation distance along the Y axis.
-     *
-     * @param y the translation distance along the Y axis
-     */
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    /**
-     * Gets the translation distance along the Z axis.
-     *
-     * @return the translation distance along the Z axis
-     */
-    public float getZ() {
-        return z;
-    }
-
-    /**
-     * Sets the translation distance along the Z axis.
-     *
-     * @param z the translation distance along the Z axis
-     */
-    public void setZ(float z) {
-        this.z = z;
-    }
 }

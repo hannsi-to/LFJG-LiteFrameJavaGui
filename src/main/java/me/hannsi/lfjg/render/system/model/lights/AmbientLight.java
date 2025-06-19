@@ -1,19 +1,40 @@
 package me.hannsi.lfjg.render.system.model.lights;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.joml.Vector3f;
 
 /**
  * Represents an ambient light in the OpenGL rendering system.
  */
+@Getter
 public class AmbientLight extends Light {
+    /**
+     * -- GETTER --
+     * Gets the color of the ambient light.
+     *
+     * @return the color of the ambient light
+     */
     private Vector3f color;
+    /**
+     * -- SETTER --
+     * Sets the intensity of the ambient light.
+     * <p>
+     * <p>
+     * -- GETTER --
+     * Gets the intensity of the ambient light.
+     *
+     * @param intensity the new intensity of the ambient light
+     * @return the intensity of the ambient light
+     */
+    @Setter
     private float intensity;
 
     /**
      * Constructs an AmbientLight with the specified intensity and color.
      *
      * @param intensity the intensity of the ambient light
-     * @param color the color of the ambient light
+     * @param color     the color of the ambient light
      */
     public AmbientLight(float intensity, Vector3f color) {
         super("AmbientLight", 0);
@@ -30,39 +51,12 @@ public class AmbientLight extends Light {
     }
 
     /**
-     * Gets the color of the ambient light.
-     *
-     * @return the color of the ambient light
-     */
-    public Vector3f getColor() {
-        return color;
-    }
-
-    /**
      * Sets the color of the ambient light.
      *
      * @param color the new color of the ambient light
      */
     public void setColor(Vector3f color) {
         this.color = color;
-    }
-
-    /**
-     * Gets the intensity of the ambient light.
-     *
-     * @return the intensity of the ambient light
-     */
-    public float getIntensity() {
-        return intensity;
-    }
-
-    /**
-     * Sets the intensity of the ambient light.
-     *
-     * @param intensity the new intensity of the ambient light
-     */
-    public void setIntensity(float intensity) {
-        this.intensity = intensity;
     }
 
     /**

@@ -1,13 +1,50 @@
 package me.hannsi.lfjg.debug;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.utils.math.MathHelper;
 
 /**
  * The LogGenerator class is responsible for generating formatted log messages with a title and multiple text lines.
  */
+@Setter
+@Getter
 public class LogGenerator {
+    /**
+     * -- GETTER --
+     * Retrieves the bar count used for formatting the log message.
+     * <p>
+     * <p>
+     * -- SETTER --
+     * Sets the bar count used for formatting the log message.
+     *
+     * @return The bar count.
+     * @param barCount The bar count to set.
+     */
     private int barCount = 30;
+    /**
+     * -- GETTER --
+     * Retrieves the title of the log message.
+     * <p>
+     * <p>
+     * -- SETTER --
+     * Sets the title of the log message.
+     *
+     * @return The title of the log message.
+     * @param title The title to set.
+     */
     private String title;
+    /**
+     * -- GETTER --
+     * Retrieves the text lines of the log message.
+     * <p>
+     * <p>
+     * -- SETTER --
+     * Sets the text lines of the log message.
+     *
+     * @return The text lines of the log message.
+     * @param texts The text lines to set.
+     */
     private String[] texts;
 
     public LogGenerator(LogGenerateType logGenerateType, Class<?> clazz, String id, String severity, String subMessage) {
@@ -93,57 +130,4 @@ public class LogGenerator {
         }
     }
 
-    /**
-     * Retrieves the bar count used for formatting the log message.
-     *
-     * @return The bar count.
-     */
-    public int getBarCount() {
-        return barCount;
-    }
-
-    /**
-     * Sets the bar count used for formatting the log message.
-     *
-     * @param barCount The bar count to set.
-     */
-    public void setBarCount(int barCount) {
-        this.barCount = barCount;
-    }
-
-    /**
-     * Retrieves the title of the log message.
-     *
-     * @return The title of the log message.
-     */
-    public String getTitle() {
-        return title;
-    }
-
-    /**
-     * Sets the title of the log message.
-     *
-     * @param title The title to set.
-     */
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    /**
-     * Retrieves the text lines of the log message.
-     *
-     * @return The text lines of the log message.
-     */
-    public String[] getTexts() {
-        return texts;
-    }
-
-    /**
-     * Sets the text lines of the log message.
-     *
-     * @param texts The text lines to set.
-     */
-    public void setTexts(String[] texts) {
-        this.texts = texts;
-    }
 }

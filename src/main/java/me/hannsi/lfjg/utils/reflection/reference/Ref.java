@@ -1,17 +1,14 @@
 package me.hannsi.lfjg.utils.reflection.reference;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Ref<T> {
     private T value;
 
     public Ref(T value) {
-        this.value = value;
-    }
-
-    public T getValue() {
-        return value;
-    }
-
-    public void setValue(T value) {
         this.value = value;
     }
 

@@ -71,6 +71,7 @@ public class SoundData {
     }
 
     public SoundData attachEffect(SoundEffect soundEffect) {
+        this.soundEffect = soundEffect;
         soundEffect.sendEffectSlot(sourceId);
 
         return this;

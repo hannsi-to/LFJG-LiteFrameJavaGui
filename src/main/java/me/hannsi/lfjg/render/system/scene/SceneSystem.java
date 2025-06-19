@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.system.scene;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
@@ -9,8 +11,11 @@ import me.hannsi.lfjg.render.debug.exceptions.render.scene.SetSceneException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class SceneSystem {
+    @Setter
     private List<Scene> scenes;
+    @Setter
     private String currentSceneName;
     private Scene currentScene;
 
@@ -34,13 +39,13 @@ public class SceneSystem {
                 "Message: Start change from " + currentSceneName + " to " + newCurrentSceneName + "."
         ).logging(DebugLevel.INFO);
 
-        currentScene.getiScene().stopFrame();
+        currentScene.getIScene().stopFrame();
 
         currentSceneName = newCurrentSceneName;
         currentScene = getScene(newCurrentSceneName);
 
         if (currentScene != null) {
-            currentScene.getiScene().init();
+            currentScene.getIScene().init();
         } else {
             throw new ChangeSceneException("Scene " + newCurrentSceneName + " not found.");
         }
@@ -77,7 +82,7 @@ public class SceneSystem {
             return this;
         }
 
-        currentScene.getiScene().init();
+        currentScene.getIScene().init();
         currentScene.setInitialize(true);
 
         return this;
@@ -88,7 +93,7 @@ public class SceneSystem {
             return;
         }
 
-        currentScene.getiScene().drawFrame();
+        currentScene.getIScene().drawFrame();
     }
 
     public void stopFrameScenes() {
@@ -96,7 +101,7 @@ public class SceneSystem {
             return;
         }
 
-        currentScene.getiScene().stopFrame();
+        currentScene.getIScene().stopFrame();
     }
 
     public void cleanup() {
@@ -116,26 +121,6 @@ public class SceneSystem {
                 ids.substring(0, ids.length() - 2),
                 ""
         ).logging(DebugLevel.DEBUG);
-    }
-
-    public List<Scene> getScenes() {
-        return scenes;
-    }
-
-    public void setScenes(List<Scene> scenes) {
-        this.scenes = scenes;
-    }
-
-    public String getCurrentSceneName() {
-        return currentSceneName;
-    }
-
-    public void setCurrentSceneName(String currentSceneName) {
-        this.currentSceneName = currentSceneName;
-    }
-
-    public Scene getCurrentScene() {
-        return currentScene;
     }
 
     public SceneSystem setCurrentScene(String currentSceneName) {

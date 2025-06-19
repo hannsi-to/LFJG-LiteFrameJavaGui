@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
@@ -8,7 +10,20 @@ import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 /**
  * Class representing a Pixelate effect in OpenGL.
  */
+@Getter
+@Setter
 public class Pixelate extends EffectBase {
+    /**
+     * -- SETTER --
+     *  Sets the size of the mosaic.
+     *
+     *
+     * -- GETTER --
+     *  Gets the size of the mosaic.
+     *
+     @param mosaicSize the size of the mosaic
+      * @return the size of the mosaic
+     */
     private float mosaicSize;
 
     /**
@@ -80,21 +95,4 @@ public class Pixelate extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Gets the size of the mosaic.
-     *
-     * @return the size of the mosaic
-     */
-    public float getMosaicSize() {
-        return mosaicSize;
-    }
-
-    /**
-     * Sets the size of the mosaic.
-     *
-     * @param mosaicSize the size of the mosaic
-     */
-    public void setMosaicSize(float mosaicSize) {
-        this.mosaicSize = mosaicSize;
-    }
 }

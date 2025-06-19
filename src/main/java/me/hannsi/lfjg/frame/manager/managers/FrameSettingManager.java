@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.frame.manager.managers;
 
+import lombok.Getter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.debug.LogGenerateType;
@@ -23,7 +24,14 @@ import java.util.Set;
 /**
  * Manages frame settings for a given frame.
  */
+@Getter
 public class FrameSettingManager extends Manager {
+    /**
+     * -- GETTER --
+     *  Retrieves all frame settings.
+     *
+     * @return a list of all frame settings
+     */
     private final List<FrameSettingBase<?>> frameSettings;
 
     /**
@@ -116,7 +124,6 @@ public class FrameSettingManager extends Manager {
                     register(frameSettingBase);
                 }
 
-                //noinspection DataFlowIssue
                 sb.append("\n\t").append(count).append(".\t").append("Loaded FrameSetting: ").append(frameSettingBase.getName());
 
                 count++;
@@ -149,12 +156,4 @@ public class FrameSettingManager extends Manager {
         frameSettings.add(frameSetting);
     }
 
-    /**
-     * Retrieves all frame settings.
-     *
-     * @return a list of all frame settings
-     */
-    public List<FrameSettingBase<?>> getFrameSettings() {
-        return frameSettings;
-    }
 }

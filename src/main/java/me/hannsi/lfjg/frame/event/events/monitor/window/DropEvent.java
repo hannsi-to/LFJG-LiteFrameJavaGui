@@ -1,7 +1,9 @@
 package me.hannsi.lfjg.frame.event.events.monitor.window;
 
+import lombok.Getter;
 import me.hannsi.lfjg.frame.event.system.Event;
 
+@Getter
 public class DropEvent extends Event {
     private final long window;
     private final int count;
@@ -13,15 +15,4 @@ public class DropEvent extends Event {
         this.name = name;
     }
 
-    public long getWindow() {
-        return window;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public long getName() {
-        return name;
-    }
 }

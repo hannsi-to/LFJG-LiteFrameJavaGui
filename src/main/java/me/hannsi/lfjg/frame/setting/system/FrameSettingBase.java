@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.frame.setting.system;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.frame.Frame;
 
 /**
@@ -7,12 +9,50 @@ import me.hannsi.lfjg.frame.Frame;
  *
  * @param <T> the type of the setting value
  */
+@Getter
+@Setter
 public class FrameSettingBase<T> {
+    /**
+     * -- GETTER --
+     *  Returns the frame associated with this setting.
+     *
+     * @return the frame
+     */
     private final Frame frame;
+    /**
+     * -- GETTER --
+     *  Returns the default value of the setting.
+     *
+     * @return the default value
+     */
     private final T defaultValue;
+    /**
+     * -- GETTER --
+     *  Returns whether the setting is a window hint.
+     *
+     * @return true if the setting is a window hint, false otherwise
+     */
     private final boolean windowHint;
+    /**
+     * -- GETTER --
+     *  Returns the name of the setting.
+     *
+     * @return the name
+     */
     private String name;
+    /**
+     * -- GETTER --
+     *  Returns the identifier of the setting.
+     *
+     * @return the identifier
+     */
     private int id;
+    /**
+     * -- GETTER --
+     *  Returns the current value of the setting.
+     *
+     * @return the current value
+     */
     private T value;
 
     /**
@@ -49,86 +89,5 @@ public class FrameSettingBase<T> {
      * Updates the setting. This method should be overridden by subclasses.
      */
     public void updateSetting() {
-    }
-
-    /**
-     * Returns the frame associated with this setting.
-     *
-     * @return the frame
-     */
-    public Frame getFrame() {
-        return frame;
-    }
-
-    /**
-     * Returns the default value of the setting.
-     *
-     * @return the default value
-     */
-    public T getDefaultValue() {
-        return defaultValue;
-    }
-
-    /**
-     * Returns the name of the setting.
-     *
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the name of the setting.
-     *
-     * @param name the new name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Returns the identifier of the setting.
-     *
-     * @return the identifier
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * Sets the identifier of the setting.
-     *
-     * @param id the new identifier
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    /**
-     * Returns the current value of the setting.
-     *
-     * @return the current value
-     */
-    public T getValue() {
-        return value;
-    }
-
-    /**
-     * Sets the current value of the setting.
-     *
-     * @param value the new value
-     */
-    public void setValue(T value) {
-        this.value = value;
-    }
-
-    /**
-     * Returns whether the setting is a window hint.
-     *
-     * @return true if the setting is a window hint, false otherwise
-     */
-    public boolean isWindowHint() {
-        return windowHint;
     }
 }

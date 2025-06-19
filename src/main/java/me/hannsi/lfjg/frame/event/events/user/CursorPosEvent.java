@@ -1,10 +1,12 @@
 package me.hannsi.lfjg.frame.event.events.user;
 
+import lombok.Getter;
 import me.hannsi.lfjg.frame.event.system.Event;
 
 /**
  * The CursorPosEvent class represents an event that occurs when the cursor position changes.
  */
+@Getter
 public class CursorPosEvent extends Event {
     private final double xPos;
     private final double yPos;
@@ -21,32 +23,5 @@ public class CursorPosEvent extends Event {
         this.xPos = xPos;
         this.yPos = yPos;
         this.window = window;
-    }
-
-    /**
-     * Retrieves the x-coordinate of the cursor position.
-     *
-     * @return The x-coordinate of the cursor position.
-     */
-    public double getXPos() {
-        return xPos;
-    }
-
-    /**
-     * Retrieves the y-coordinate of the cursor position.
-     *
-     * @return The y-coordinate of the cursor position.
-     */
-    public double getYPos() {
-        return yPos;
-    }
-
-    /**
-     * Retrieves the window associated with this event.
-     *
-     * @return The window associated with this event.
-     */
-    public long getWindow() {
-        return window;
     }
 }

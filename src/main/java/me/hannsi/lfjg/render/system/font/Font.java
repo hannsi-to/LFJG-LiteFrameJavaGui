@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.system.font;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
@@ -15,9 +17,11 @@ import java.nio.ByteBuffer;
 
 import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgCreateFontMem;
 
+@Getter
 public class Font {
     private final String name;
     private final Location location;
+    @Setter
     private ByteBuffer byteBuffer;
 
     public Font(String name, Location location) {
@@ -70,19 +74,4 @@ public class Font {
         return inputStream;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public ByteBuffer getByteBuffer() {
-        return byteBuffer;
-    }
-
-    public void setByteBuffer(ByteBuffer byteBuffer) {
-        this.byteBuffer = byteBuffer;
-    }
 }

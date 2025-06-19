@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.utils.toolkit;
 
+import lombok.Getter;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -10,11 +11,32 @@ import org.joml.Vector3f;
  */
 public class Camera {
     protected Vector3f direction;
+    /**
+     * -- GETTER --
+     *  Gets the inverse view matrix of the camera.
+     *
+     * @return the inverse view matrix
+     */
+    @Getter
     protected Matrix4f invViewMatrix;
+    /**
+     * -- GETTER --
+     *  Gets the position of the camera.
+     *
+     * @return the position vector
+     */
+    @Getter
     protected Vector3f position;
     protected Vector3f right;
     protected Vector2f rotation;
     protected Vector3f up;
+    /**
+     * -- GETTER --
+     *  Gets the view matrix of the camera.
+     *
+     * @return the view matrix
+     */
+    @Getter
     protected Matrix4f viewMatrix;
 
     /**
@@ -49,33 +71,6 @@ public class Camera {
     public void addRotation(float x, float y) {
         rotation.add(x, y);
         recalculate();
-    }
-
-    /**
-     * Gets the inverse view matrix of the camera.
-     *
-     * @return the inverse view matrix
-     */
-    public Matrix4f getInvViewMatrix() {
-        return invViewMatrix;
-    }
-
-    /**
-     * Gets the position of the camera.
-     *
-     * @return the position vector
-     */
-    public Vector3f getPosition() {
-        return position;
-    }
-
-    /**
-     * Gets the view matrix of the camera.
-     *
-     * @return the view matrix
-     */
-    public Matrix4f getViewMatrix() {
-        return viewMatrix;
     }
 
     /**

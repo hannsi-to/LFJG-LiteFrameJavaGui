@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
@@ -8,9 +10,44 @@ import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
 /**
  * Class representing a Luminance Key effect in OpenGL.
  */
+@Getter
+@Setter
 public class LuminanceKey extends EffectBase {
+    /**
+     * -- SETTER --
+     *  Sets the threshold for the luminance key.
+     *
+     *
+     * -- GETTER --
+     *  Gets the threshold for the luminance key.
+     *
+     @param threshold the threshold for the luminance key
+      * @return the threshold for the luminance key
+     */
     private float threshold;
+    /**
+     * -- SETTER --
+     *  Sets the amount of blur to apply.
+     *
+     *
+     * -- GETTER --
+     *  Gets the amount of blur to apply.
+     *
+     @param blurAmount the amount of blur to apply
+      * @return the amount of blur to apply
+     */
     private float blurAmount;
+    /**
+     * -- SETTER --
+     *  Sets the mode of the luminance key.
+     *
+     *
+     * -- GETTER --
+     *  Gets the mode of the luminance key.
+     *
+     @param luminanceMode the mode of the luminance key
+      * @return the mode of the luminance key
+     */
     private LuminanceMode luminanceMode;
 
     /**
@@ -87,60 +124,6 @@ public class LuminanceKey extends EffectBase {
         getFrameBuffer().getShaderProgramFBO().setUniform1i("mode", luminanceMode.getId());
 
         super.setUniform(baseGLObject);
-    }
-
-    /**
-     * Gets the threshold for the luminance key.
-     *
-     * @return the threshold for the luminance key
-     */
-    public float getThreshold() {
-        return threshold;
-    }
-
-    /**
-     * Sets the threshold for the luminance key.
-     *
-     * @param threshold the threshold for the luminance key
-     */
-    public void setThreshold(float threshold) {
-        this.threshold = threshold;
-    }
-
-    /**
-     * Gets the amount of blur to apply.
-     *
-     * @return the amount of blur to apply
-     */
-    public float getBlurAmount() {
-        return blurAmount;
-    }
-
-    /**
-     * Sets the amount of blur to apply.
-     *
-     * @param blurAmount the amount of blur to apply
-     */
-    public void setBlurAmount(float blurAmount) {
-        this.blurAmount = blurAmount;
-    }
-
-    /**
-     * Gets the mode of the luminance key.
-     *
-     * @return the mode of the luminance key
-     */
-    public LuminanceMode getLuminanceMode() {
-        return luminanceMode;
-    }
-
-    /**
-     * Sets the mode of the luminance key.
-     *
-     * @param luminanceMode the mode of the luminance key
-     */
-    public void setLuminanceMode(LuminanceMode luminanceMode) {
-        this.luminanceMode = luminanceMode;
     }
 
     /**

@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
@@ -7,9 +9,44 @@ import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 /**
  * Class representing a Bloom effect in OpenGL.
  */
+@Setter
+@Getter
 public class Bloom extends EffectBase {
+    /**
+     * -- GETTER --
+     *  Gets the intensity of the bloom.
+     *
+     *
+     * -- SETTER --
+     *  Sets the intensity of the bloom.
+     *
+     @return the intensity of the bloom
+      * @param intensity the intensity of the bloom
+     */
     private float intensity;
+    /**
+     * -- GETTER --
+     *  Gets the spread of the bloom.
+     *
+     *
+     * -- SETTER --
+     *  Sets the spread of the bloom.
+     *
+     @return the spread of the bloom
+      * @param spread the spread of the bloom
+     */
     private float spread;
+    /**
+     * -- GETTER --
+     *  Gets the threshold for the bloom.
+     *
+     *
+     * -- SETTER --
+     *  Sets the threshold for the bloom.
+     *
+     @return the threshold for the bloom
+      * @param threshold the threshold for the bloom
+     */
     private float threshold;
 
     /**
@@ -88,57 +125,4 @@ public class Bloom extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Gets the intensity of the bloom.
-     *
-     * @return the intensity of the bloom
-     */
-    public float getIntensity() {
-        return intensity;
-    }
-
-    /**
-     * Sets the intensity of the bloom.
-     *
-     * @param intensity the intensity of the bloom
-     */
-    public void setIntensity(float intensity) {
-        this.intensity = intensity;
-    }
-
-    /**
-     * Gets the spread of the bloom.
-     *
-     * @return the spread of the bloom
-     */
-    public float getSpread() {
-        return spread;
-    }
-
-    /**
-     * Sets the spread of the bloom.
-     *
-     * @param spread the spread of the bloom
-     */
-    public void setSpread(float spread) {
-        this.spread = spread;
-    }
-
-    /**
-     * Gets the threshold for the bloom.
-     *
-     * @return the threshold for the bloom
-     */
-    public float getThreshold() {
-        return threshold;
-    }
-
-    /**
-     * Sets the threshold for the bloom.
-     *
-     * @param threshold the threshold for the bloom
-     */
-    public void setThreshold(float threshold) {
-        this.threshold = threshold;
-    }
 }

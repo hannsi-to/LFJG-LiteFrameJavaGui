@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
@@ -7,8 +9,32 @@ import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 /**
  * Class representing a Lens Blur effect in OpenGL.
  */
+@Getter
+@Setter
 public class LensBlur extends EffectBase {
+    /**
+     * -- SETTER --
+     *  Sets the range of the blur.
+     *
+     *
+     * -- GETTER --
+     *  Gets the range of the blur.
+     *
+     @param range the range of the blur
+      * @return the range of the blur
+     */
     private float range;
+    /**
+     * -- SETTER --
+     *  Sets the intensity of the blur.
+     *
+     *
+     * -- GETTER --
+     *  Gets the intensity of the blur.
+     *
+     @param intensity the intensity of the blur
+      * @return the intensity of the blur
+     */
     private float intensity;
 
     /**
@@ -80,39 +106,4 @@ public class LensBlur extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Gets the range of the blur.
-     *
-     * @return the range of the blur
-     */
-    public float getRange() {
-        return range;
-    }
-
-    /**
-     * Sets the range of the blur.
-     *
-     * @param range the range of the blur
-     */
-    public void setRange(float range) {
-        this.range = range;
-    }
-
-    /**
-     * Gets the intensity of the blur.
-     *
-     * @return the intensity of the blur
-     */
-    public float getIntensity() {
-        return intensity;
-    }
-
-    /**
-     * Sets the intensity of the blur.
-     *
-     * @param intensity the intensity of the blur
-     */
-    public void setIntensity(float intensity) {
-        this.intensity = intensity;
-    }
 }

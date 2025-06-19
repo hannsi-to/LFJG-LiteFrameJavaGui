@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
@@ -9,11 +11,68 @@ import org.joml.Vector2f;
 /**
  * Class representing a Diagonal Clipping effect in OpenGL.
  */
+@Getter
+@Setter
 public class DiagonalClipping extends EffectBase {
+    /**
+     * -- SETTER --
+     *  Sets the x-coordinate of the clipping center.
+     *
+     *
+     * -- GETTER --
+     *  Gets the x-coordinate of the clipping center.
+     *
+     @param centerX the x-coordinate of the clipping center
+      * @return the x-coordinate of the clipping center
+     */
     private float centerX;
+    /**
+     * -- SETTER --
+     *  Sets the y-coordinate of the clipping center.
+     *
+     *
+     * -- GETTER --
+     *  Gets the y-coordinate of the clipping center.
+     *
+     @param centerY the y-coordinate of the clipping center
+      * @return the y-coordinate of the clipping center
+     */
     private float centerY;
+    /**
+     * -- SETTER --
+     *  Sets the angle of the clipping.
+     *
+     *
+     * -- GETTER --
+     *  Gets the angle of the clipping.
+     *
+     @param clipAngle the angle of the clipping
+      * @return the angle of the clipping
+     */
     private float clipAngle;
+    /**
+     * -- SETTER --
+     *  Sets the width of the blur.
+     *
+     *
+     * -- GETTER --
+     *  Gets the width of the blur.
+     *
+     @param blurWidth the width of the blur
+      * @return the width of the blur
+     */
     private float blurWidth;
+    /**
+     * -- SETTER --
+     *  Sets whether the clipping is inverted.
+     *
+     *
+     * -- GETTER --
+     *  Checks if the clipping is inverted.
+     *
+     @param invertClip true to invert the clipping, false otherwise
+      * @return true if the clipping is inverted, false otherwise
+     */
     private boolean invertClip;
 
     /**
@@ -99,93 +158,4 @@ public class DiagonalClipping extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Gets the x-coordinate of the clipping center.
-     *
-     * @return the x-coordinate of the clipping center
-     */
-    public float getCenterX() {
-        return centerX;
-    }
-
-    /**
-     * Sets the x-coordinate of the clipping center.
-     *
-     * @param centerX the x-coordinate of the clipping center
-     */
-    public void setCenterX(float centerX) {
-        this.centerX = centerX;
-    }
-
-    /**
-     * Gets the y-coordinate of the clipping center.
-     *
-     * @return the y-coordinate of the clipping center
-     */
-    public float getCenterY() {
-        return centerY;
-    }
-
-    /**
-     * Sets the y-coordinate of the clipping center.
-     *
-     * @param centerY the y-coordinate of the clipping center
-     */
-    public void setCenterY(float centerY) {
-        this.centerY = centerY;
-    }
-
-    /**
-     * Gets the angle of the clipping.
-     *
-     * @return the angle of the clipping
-     */
-    public float getClipAngle() {
-        return clipAngle;
-    }
-
-    /**
-     * Sets the angle of the clipping.
-     *
-     * @param clipAngle the angle of the clipping
-     */
-    public void setClipAngle(float clipAngle) {
-        this.clipAngle = clipAngle;
-    }
-
-    /**
-     * Gets the width of the blur.
-     *
-     * @return the width of the blur
-     */
-    public float getBlurWidth() {
-        return blurWidth;
-    }
-
-    /**
-     * Sets the width of the blur.
-     *
-     * @param blurWidth the width of the blur
-     */
-    public void setBlurWidth(float blurWidth) {
-        this.blurWidth = blurWidth;
-    }
-
-    /**
-     * Checks if the clipping is inverted.
-     *
-     * @return true if the clipping is inverted, false otherwise
-     */
-    public boolean isInvertClip() {
-        return invertClip;
-    }
-
-    /**
-     * Sets whether the clipping is inverted.
-     *
-     * @param invertClip true to invert the clipping, false otherwise
-     */
-    public void setInvertClip(boolean invertClip) {
-        this.invertClip = invertClip;
-    }
 }

@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.color.Color;
@@ -9,11 +11,68 @@ import org.joml.Vector4f;
 /**
  * Class representing an Edge Extraction effect in OpenGL.
  */
+@Getter
+@Setter
 public class EdgeExtraction extends EffectBase {
+    /**
+     * -- SETTER --
+     *  Sets the strength of the edges.
+     *
+     *
+     * -- GETTER --
+     *  Gets the strength of the edges.
+     *
+     @param edgeStrength the strength of the edges
+      * @return the strength of the edges
+     */
     private float edgeStrength;
+    /**
+     * -- SETTER --
+     *  Sets the threshold for edge detection.
+     *
+     *
+     * -- GETTER --
+     *  Gets the threshold for edge detection.
+     *
+     @param threshold the threshold for edge detection
+      * @return the threshold for edge detection
+     */
     private float threshold;
+    /**
+     * -- SETTER --
+     *  Sets whether luminance edge detection is enabled.
+     *
+     *
+     * -- GETTER --
+     *  Checks if luminance edge detection is enabled.
+     *
+     @param enableLuminanceEdge true to enable luminance edge detection, false otherwise
+      * @return true if luminance edge detection is enabled, false otherwise
+     */
     private boolean enableLuminanceEdge;
+    /**
+     * -- SETTER --
+     *  Sets whether alpha edge detection is enabled.
+     *
+     *
+     * -- GETTER --
+     *  Checks if alpha edge detection is enabled.
+     *
+     @param enableAlphaEdge true to enable alpha edge detection, false otherwise
+      * @return true if alpha edge detection is enabled, false otherwise
+     */
     private boolean enableAlphaEdge;
+    /**
+     * -- SETTER --
+     *  Sets the color of the edges.
+     *
+     *
+     * -- GETTER --
+     *  Gets the color of the edges.
+     *
+     @param edgeColor the color of the edges
+      * @return the color of the edges
+     */
     private Color edgeColor;
 
     /**
@@ -100,93 +159,4 @@ public class EdgeExtraction extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Gets the strength of the edges.
-     *
-     * @return the strength of the edges
-     */
-    public float getEdgeStrength() {
-        return edgeStrength;
-    }
-
-    /**
-     * Sets the strength of the edges.
-     *
-     * @param edgeStrength the strength of the edges
-     */
-    public void setEdgeStrength(float edgeStrength) {
-        this.edgeStrength = edgeStrength;
-    }
-
-    /**
-     * Gets the threshold for edge detection.
-     *
-     * @return the threshold for edge detection
-     */
-    public float getThreshold() {
-        return threshold;
-    }
-
-    /**
-     * Sets the threshold for edge detection.
-     *
-     * @param threshold the threshold for edge detection
-     */
-    public void setThreshold(float threshold) {
-        this.threshold = threshold;
-    }
-
-    /**
-     * Checks if luminance edge detection is enabled.
-     *
-     * @return true if luminance edge detection is enabled, false otherwise
-     */
-    public boolean isEnableLuminanceEdge() {
-        return enableLuminanceEdge;
-    }
-
-    /**
-     * Sets whether luminance edge detection is enabled.
-     *
-     * @param enableLuminanceEdge true to enable luminance edge detection, false otherwise
-     */
-    public void setEnableLuminanceEdge(boolean enableLuminanceEdge) {
-        this.enableLuminanceEdge = enableLuminanceEdge;
-    }
-
-    /**
-     * Checks if alpha edge detection is enabled.
-     *
-     * @return true if alpha edge detection is enabled, false otherwise
-     */
-    public boolean isEnableAlphaEdge() {
-        return enableAlphaEdge;
-    }
-
-    /**
-     * Sets whether alpha edge detection is enabled.
-     *
-     * @param enableAlphaEdge true to enable alpha edge detection, false otherwise
-     */
-    public void setEnableAlphaEdge(boolean enableAlphaEdge) {
-        this.enableAlphaEdge = enableAlphaEdge;
-    }
-
-    /**
-     * Gets the color of the edges.
-     *
-     * @return the color of the edges
-     */
-    public Color getEdgeColor() {
-        return edgeColor;
-    }
-
-    /**
-     * Sets the color of the edges.
-     *
-     * @param edgeColor the color of the edges
-     */
-    public void setEdgeColor(Color edgeColor) {
-        this.edgeColor = edgeColor;
-    }
 }

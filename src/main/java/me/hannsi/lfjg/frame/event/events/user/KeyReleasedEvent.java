@@ -1,14 +1,40 @@
 package me.hannsi.lfjg.frame.event.events.user;
 
+import lombok.Getter;
 import me.hannsi.lfjg.frame.event.system.Event;
 
 /**
  * The KeyReleasedEvent class represents an event that occurs when a key is released.
  */
+@Getter
 public class KeyReleasedEvent extends Event {
+    /**
+     * -- GETTER --
+     *  Retrieves the key code of the released key.
+     *
+     * @return The key code of the released key.
+     */
     private final int key;
+    /**
+     * -- GETTER --
+     *  Retrieves the scancode of the released key.
+     *
+     * @return The scancode of the released key.
+     */
     private final int scancode;
+    /**
+     * -- GETTER --
+     *  Retrieves the modifier keys pressed along with the key.
+     *
+     * @return The modifier keys pressed along with the key.
+     */
     private final int mods;
+    /**
+     * -- GETTER --
+     *  Retrieves the window associated with the event.
+     *
+     * @return The window associated with the event.
+     */
     private final long window;
 
     /**
@@ -26,39 +52,4 @@ public class KeyReleasedEvent extends Event {
         this.window = window;
     }
 
-    /**
-     * Retrieves the key code of the released key.
-     *
-     * @return The key code of the released key.
-     */
-    public int getKey() {
-        return key;
-    }
-
-    /**
-     * Retrieves the scancode of the released key.
-     *
-     * @return The scancode of the released key.
-     */
-    public int getScancode() {
-        return scancode;
-    }
-
-    /**
-     * Retrieves the modifier keys pressed along with the key.
-     *
-     * @return The modifier keys pressed along with the key.
-     */
-    public int getMods() {
-        return mods;
-    }
-
-    /**
-     * Retrieves the window associated with the event.
-     *
-     * @return The window associated with the event.
-     */
-    public long getWindow() {
-        return window;
-    }
 }

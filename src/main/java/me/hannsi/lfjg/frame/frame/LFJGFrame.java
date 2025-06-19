@@ -9,8 +9,6 @@ public interface LFJGFrame {
      */
     void init();
 
-    //    void drawFrame(long nvg);
-
     /**
      * Draws the frame.
      */

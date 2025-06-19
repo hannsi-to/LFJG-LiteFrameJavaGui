@@ -1,5 +1,8 @@
 package me.hannsi.lfjg.utils.toolkit;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
@@ -8,6 +11,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+@Getter
 public class KeyboardInfo {
     private static final Map<Integer, String> keyMap = new HashMap<>();
     private static final long DEFAULT_HOLD_THRESHOLD = 10;
@@ -142,7 +146,9 @@ public class KeyboardInfo {
     private final Queue<Integer> pressedKeys;
     private final Map<Integer, Long> holdKeys;
     private final Map<Integer, Runnable> keyListeners;
+    @Setter
     private long holdThreshold;
+    @Setter
     private boolean debugMode;
 
     public KeyboardInfo() {
@@ -223,31 +229,4 @@ public class KeyboardInfo {
         holdKeys.clear();
     }
 
-    public Queue<Integer> getPressedKeys() {
-        return pressedKeys;
-    }
-
-    public Map<Integer, Long> getHoldKeys() {
-        return holdKeys;
-    }
-
-    public long getHoldThreshold() {
-        return holdThreshold;
-    }
-
-    public void setHoldThreshold(long holdThreshold) {
-        this.holdThreshold = holdThreshold;
-    }
-
-    public Map<Integer, Runnable> getKeyListeners() {
-        return keyListeners;
-    }
-
-    public boolean isDebugMode() {
-        return debugMode;
-    }
-
-    public void setDebugMode(boolean debugMode) {
-        this.debugMode = debugMode;
-    }
 }

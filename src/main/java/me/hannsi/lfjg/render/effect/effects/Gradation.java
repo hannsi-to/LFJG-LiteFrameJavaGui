@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
@@ -13,15 +15,116 @@ import org.joml.Vector4f;
 /**
  * Class representing a Gradation effect in OpenGL.
  */
+@Getter
+@Setter
 public class Gradation extends EffectBase {
+    /**
+     * -- SETTER --
+     *  Sets the x-coordinate of the center.
+     *
+     *
+     * -- GETTER --
+     *  Gets the x-coordinate of the center.
+     *
+     @param centerX the x-coordinate of the center
+      * @return the x-coordinate of the center
+     */
     private float centerX;
+    /**
+     * -- SETTER --
+     *  Sets the y-coordinate of the center.
+     *
+     *
+     * -- GETTER --
+     *  Gets the y-coordinate of the center.
+     *
+     @param centerY the y-coordinate of the center
+      * @return the y-coordinate of the center
+     */
     private float centerY;
+    /**
+     * -- SETTER --
+     *  Sets the angle of the gradation.
+     *
+     *
+     * -- GETTER --
+     *  Gets the angle of the gradation.
+     *
+     @param angle the angle of the gradation
+      * @return the angle of the gradation
+     */
     private float angle;
+    /**
+     * -- SETTER --
+     *  Sets the width of the gradation.
+     *
+     *
+     * -- GETTER --
+     *  Gets the width of the gradation.
+     *
+     @param width the width of the gradation
+      * @return the width of the gradation
+     */
     private float width;
+    /**
+     * -- SETTER --
+     *  Sets the shape mode of the gradation.
+     *
+     *
+     * -- GETTER --
+     *  Gets the shape mode of the gradation.
+     *
+     @param shapeMode the shape mode of the gradation
+      * @return the shape mode of the gradation
+     */
     private ShapeMode shapeMode;
+    /**
+     * -- SETTER --
+     *  Sets the blend type of the gradation.
+     *
+     *
+     * -- GETTER --
+     *  Gets the blend type of the gradation.
+     *
+     @param blendType the blend type of the gradation
+      * @return the blend type of the gradation
+     */
     private BlendType blendType;
+    /**
+     * -- SETTER --
+     *  Sets the start color of the gradation.
+     *
+     *
+     * -- GETTER --
+     *  Gets the start color of the gradation.
+     *
+     @param startColor the start color of the gradation
+      * @return the start color of the gradation
+     */
     private Color startColor;
+    /**
+     * -- SETTER --
+     *  Sets the end color of the gradation.
+     *
+     *
+     * -- GETTER --
+     *  Gets the end color of the gradation.
+     *
+     @param endColor the end color of the gradation
+      * @return the end color of the gradation
+     */
     private Color endColor;
+    /**
+     * -- SETTER --
+     *  Sets the intensity of the gradation.
+     *
+     *
+     * -- GETTER --
+     *  Gets the intensity of the gradation.
+     *
+     @param intensity the intensity of the gradation
+      * @return the intensity of the gradation
+     */
     private float intensity;
 
     /**
@@ -118,168 +221,6 @@ public class Gradation extends EffectBase {
         getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
 
         super.setUniform(baseGLObject);
-    }
-
-    /**
-     * Gets the x-coordinate of the center.
-     *
-     * @return the x-coordinate of the center
-     */
-    public float getCenterX() {
-        return centerX;
-    }
-
-    /**
-     * Sets the x-coordinate of the center.
-     *
-     * @param centerX the x-coordinate of the center
-     */
-    public void setCenterX(float centerX) {
-        this.centerX = centerX;
-    }
-
-    /**
-     * Gets the y-coordinate of the center.
-     *
-     * @return the y-coordinate of the center
-     */
-    public float getCenterY() {
-        return centerY;
-    }
-
-    /**
-     * Sets the y-coordinate of the center.
-     *
-     * @param centerY the y-coordinate of the center
-     */
-    public void setCenterY(float centerY) {
-        this.centerY = centerY;
-    }
-
-    /**
-     * Gets the angle of the gradation.
-     *
-     * @return the angle of the gradation
-     */
-    public float getAngle() {
-        return angle;
-    }
-
-    /**
-     * Sets the angle of the gradation.
-     *
-     * @param angle the angle of the gradation
-     */
-    public void setAngle(float angle) {
-        this.angle = angle;
-    }
-
-    /**
-     * Gets the width of the gradation.
-     *
-     * @return the width of the gradation
-     */
-    public float getWidth() {
-        return width;
-    }
-
-    /**
-     * Sets the width of the gradation.
-     *
-     * @param width the width of the gradation
-     */
-    public void setWidth(float width) {
-        this.width = width;
-    }
-
-    /**
-     * Gets the shape mode of the gradation.
-     *
-     * @return the shape mode of the gradation
-     */
-    public ShapeMode getShapeMode() {
-        return shapeMode;
-    }
-
-    /**
-     * Sets the shape mode of the gradation.
-     *
-     * @param shapeMode the shape mode of the gradation
-     */
-    public void setShapeMode(ShapeMode shapeMode) {
-        this.shapeMode = shapeMode;
-    }
-
-    /**
-     * Gets the blend type of the gradation.
-     *
-     * @return the blend type of the gradation
-     */
-    public BlendType getBlendType() {
-        return blendType;
-    }
-
-    /**
-     * Sets the blend type of the gradation.
-     *
-     * @param blendType the blend type of the gradation
-     */
-    public void setBlendType(BlendType blendType) {
-        this.blendType = blendType;
-    }
-
-    /**
-     * Gets the start color of the gradation.
-     *
-     * @return the start color of the gradation
-     */
-    public Color getStartColor() {
-        return startColor;
-    }
-
-    /**
-     * Sets the start color of the gradation.
-     *
-     * @param startColor the start color of the gradation
-     */
-    public void setStartColor(Color startColor) {
-        this.startColor = startColor;
-    }
-
-    /**
-     * Gets the end color of the gradation.
-     *
-     * @return the end color of the gradation
-     */
-    public Color getEndColor() {
-        return endColor;
-    }
-
-    /**
-     * Sets the end color of the gradation.
-     *
-     * @param endColor the end color of the gradation
-     */
-    public void setEndColor(Color endColor) {
-        this.endColor = endColor;
-    }
-
-    /**
-     * Gets the intensity of the gradation.
-     *
-     * @return the intensity of the gradation
-     */
-    public float getIntensity() {
-        return intensity;
-    }
-
-    /**
-     * Sets the intensity of the gradation.
-     *
-     * @param intensity the intensity of the gradation
-     */
-    public void setIntensity(float intensity) {
-        this.intensity = intensity;
     }
 
     /**

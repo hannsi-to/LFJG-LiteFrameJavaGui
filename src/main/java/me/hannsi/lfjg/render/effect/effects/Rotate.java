@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 
@@ -10,12 +12,92 @@ public class Rotate extends EffectBase {
     protected float latestX;
     protected float latestY;
     protected float latestZ;
+    /**
+     * -- SETTER --
+     *  Sets the rotation angle around the X axis.
+     *
+     *
+     * -- GETTER --
+     *  Gets the rotation angle around the X axis.
+     *
+     @param x the rotation angle around the X axis
+      * @return the rotation angle around the X axis
+     */
+    @Getter
+    @Setter
     private float x;
+    /**
+     * -- SETTER --
+     *  Sets the rotation angle around the Y axis.
+     *
+     *
+     * -- GETTER --
+     *  Gets the rotation angle around the Y axis.
+     *
+     @param y the rotation angle around the Y axis
+      * @return the rotation angle around the Y axis
+     */
+    @Getter
+    @Setter
     private float y;
+    /**
+     * -- SETTER --
+     *  Sets the rotation angle around the Z axis.
+     *
+     *
+     * -- GETTER --
+     *  Gets the rotation angle around the Z axis.
+     *
+     @param z the rotation angle around the Z axis
+      * @return the rotation angle around the Z axis
+     */
+    @Getter
+    @Setter
     private float z;
+    @Getter
+    @Setter
     private boolean autoCenter;
+    /**
+     * -- SETTER --
+     *  Sets the X coordinate of the rotation center.
+     *
+     *
+     * -- GETTER --
+     *  Gets the X coordinate of the rotation center.
+     *
+     @param cx the X coordinate of the rotation center
+      * @return the X coordinate of the rotation center
+     */
+    @Getter
+    @Setter
     private float cx;
+    /**
+     * -- SETTER --
+     *  Sets the Y coordinate of the rotation center.
+     *
+     *
+     * -- GETTER --
+     *  Gets the Y coordinate of the rotation center.
+     *
+     @param cy the Y coordinate of the rotation center
+      * @return the Y coordinate of the rotation center
+     */
+    @Getter
+    @Setter
     private float cy;
+    /**
+     * -- SETTER --
+     *  Sets the Z coordinate of the rotation center.
+     *
+     *
+     * -- GETTER --
+     *  Gets the Z coordinate of the rotation center.
+     *
+     @param cz the Z coordinate of the rotation center
+      * @return the Z coordinate of the rotation center
+     */
+    @Getter
+    @Setter
     private float cz;
 
     /**
@@ -184,119 +266,4 @@ public class Rotate extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Gets the rotation angle around the X axis.
-     *
-     * @return the rotation angle around the X axis
-     */
-    public float getX() {
-        return x;
-    }
-
-    /**
-     * Sets the rotation angle around the X axis.
-     *
-     * @param x the rotation angle around the X axis
-     */
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    /**
-     * Gets the rotation angle around the Y axis.
-     *
-     * @return the rotation angle around the Y axis
-     */
-    public float getY() {
-        return y;
-    }
-
-    /**
-     * Sets the rotation angle around the Y axis.
-     *
-     * @param y the rotation angle around the Y axis
-     */
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    /**
-     * Gets the rotation angle around the Z axis.
-     *
-     * @return the rotation angle around the Z axis
-     */
-    public float getZ() {
-        return z;
-    }
-
-    /**
-     * Sets the rotation angle around the Z axis.
-     *
-     * @param z the rotation angle around the Z axis
-     */
-    public void setZ(float z) {
-        this.z = z;
-    }
-
-    /**
-     * Gets the X coordinate of the rotation center.
-     *
-     * @return the X coordinate of the rotation center
-     */
-    public float getCx() {
-        return cx;
-    }
-
-    /**
-     * Sets the X coordinate of the rotation center.
-     *
-     * @param cx the X coordinate of the rotation center
-     */
-    public void setCx(float cx) {
-        this.cx = cx;
-    }
-
-    /**
-     * Gets the Y coordinate of the rotation center.
-     *
-     * @return the Y coordinate of the rotation center
-     */
-    public float getCy() {
-        return cy;
-    }
-
-    /**
-     * Sets the Y coordinate of the rotation center.
-     *
-     * @param cy the Y coordinate of the rotation center
-     */
-    public void setCy(float cy) {
-        this.cy = cy;
-    }
-
-    /**
-     * Gets the Z coordinate of the rotation center.
-     *
-     * @return the Z coordinate of the rotation center
-     */
-    public float getCz() {
-        return cz;
-    }
-
-    /**
-     * Sets the Z coordinate of the rotation center.
-     *
-     * @param cz the Z coordinate of the rotation center
-     */
-    public void setCz(float cz) {
-        this.cz = cz;
-    }
-
-    public boolean isAutoCenter() {
-        return autoCenter;
-    }
-
-    public void setAutoCenter(boolean autoCenter) {
-        this.autoCenter = autoCenter;
-    }
 }

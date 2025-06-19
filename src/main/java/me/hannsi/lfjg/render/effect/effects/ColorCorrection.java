@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
@@ -7,10 +9,56 @@ import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 /**
  * Class representing a Color Correction effect in OpenGL.
  */
+@Getter
+@Setter
 public class ColorCorrection extends EffectBase {
+    /**
+     * -- SETTER --
+     *  Sets the brightness level.
+     *
+     *
+     * -- GETTER --
+     *  Gets the brightness level.
+     *
+     @param brightness the brightness level
+      * @return the brightness level
+     */
     private float brightness;
+    /**
+     * -- SETTER --
+     *  Sets the contrast level.
+     *
+     *
+     * -- GETTER --
+     *  Gets the contrast level.
+     *
+     @param contrast the contrast level
+      * @return the contrast level
+     */
     private float contrast;
+    /**
+     * -- SETTER --
+     *  Sets the saturation level.
+     *
+     *
+     * -- GETTER --
+     *  Gets the saturation level.
+     *
+     @param saturation the saturation level
+      * @return the saturation level
+     */
     private float saturation;
+    /**
+     * -- SETTER --
+     *  Sets the hue level.
+     *
+     *
+     * -- GETTER --
+     *  Gets the hue level.
+     *
+     @param hue the hue level
+      * @return the hue level
+     */
     private float hue;
 
     /**
@@ -93,75 +141,4 @@ public class ColorCorrection extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Gets the brightness level.
-     *
-     * @return the brightness level
-     */
-    public float getBrightness() {
-        return brightness;
-    }
-
-    /**
-     * Sets the brightness level.
-     *
-     * @param brightness the brightness level
-     */
-    public void setBrightness(float brightness) {
-        this.brightness = brightness;
-    }
-
-    /**
-     * Gets the contrast level.
-     *
-     * @return the contrast level
-     */
-    public float getContrast() {
-        return contrast;
-    }
-
-    /**
-     * Sets the contrast level.
-     *
-     * @param contrast the contrast level
-     */
-    public void setContrast(float contrast) {
-        this.contrast = contrast;
-    }
-
-    /**
-     * Gets the saturation level.
-     *
-     * @return the saturation level
-     */
-    public float getSaturation() {
-        return saturation;
-    }
-
-    /**
-     * Sets the saturation level.
-     *
-     * @param saturation the saturation level
-     */
-    public void setSaturation(float saturation) {
-        this.saturation = saturation;
-    }
-
-    /**
-     * Gets the hue level.
-     *
-     * @return the hue level
-     */
-    public float getHue() {
-        return hue;
-    }
-
-    /**
-     * Sets the hue level.
-     *
-     * @param hue the hue level
-     */
-    public void setHue(float hue) {
-        this.hue = hue;
-    }
 }

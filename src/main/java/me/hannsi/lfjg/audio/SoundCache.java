@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.audio;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
@@ -24,7 +26,27 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  */
 public class SoundCache {
     private final Map<String, SoundData> soundDataList;
+    /**
+     * -- GETTER --
+     * Retrieves the SoundListener associated with this SoundCache.
+     *
+     * @return The SoundListener.
+     */
+    @Getter
     private SoundListener listener;
+    /**
+     * -- SETTER --
+     * Sets the OpenAL context for this SoundCache.
+     * <p>
+     * <p>
+     * -- GETTER --
+     * Retrieves the OpenAL context associated with this SoundCache.
+     *
+     * @param context The OpenAL context to set.
+     * @return The OpenAL context.
+     */
+    @Getter
+    @Setter
     private long context;
 
     SoundCache(String desiredDevice) {
@@ -88,15 +110,6 @@ public class SoundCache {
     }
 
     /**
-     * Retrieves the SoundListener associated with this SoundCache.
-     *
-     * @return The SoundListener.
-     */
-    public SoundListener getListener() {
-        return this.listener;
-    }
-
-    /**
      * Sets the SoundListener for this SoundCache.
      *
      * @param listener The SoundListener to set.
@@ -145,24 +158,6 @@ public class SoundCache {
 
     public SoundData getSoundData(String name) {
         return soundDataList.get(name);
-    }
-
-    /**
-     * Retrieves the OpenAL context associated with this SoundCache.
-     *
-     * @return The OpenAL context.
-     */
-    public long getContext() {
-        return context;
-    }
-
-    /**
-     * Sets the OpenAL context for this SoundCache.
-     *
-     * @param context The OpenAL context to set.
-     */
-    public void setContext(long context) {
-        this.context = context;
     }
 
     /**

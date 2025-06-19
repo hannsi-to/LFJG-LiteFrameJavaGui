@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
@@ -7,11 +9,68 @@ import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 /**
  * Class representing an Inversion effect in OpenGL.
  */
+@Getter
+@Setter
 public class Inversion extends EffectBase {
+    /**
+     * -- SETTER --
+     *  Sets whether to flip the image vertically.
+     *
+     *
+     * -- GETTER --
+     *  Checks if the image is flipped vertically.
+     *
+     @param flipVertical true to flip the image vertically, false otherwise
+      * @return true if the image is flipped vertically, false otherwise
+     */
     private boolean flipVertical;
+    /**
+     * -- SETTER --
+     *  Sets whether to flip the image horizontally.
+     *
+     *
+     * -- GETTER --
+     *  Checks if the image is flipped horizontally.
+     *
+     @param flipHorizontal true to flip the image horizontally, false otherwise
+      * @return true if the image is flipped horizontally, false otherwise
+     */
     private boolean flipHorizontal;
+    /**
+     * -- SETTER --
+     *  Sets whether to invert the brightness.
+     *
+     *
+     * -- GETTER --
+     *  Checks if the brightness is inverted.
+     *
+     @param invertBrightness true to invert the brightness, false otherwise
+      * @return true if the brightness is inverted, false otherwise
+     */
     private boolean invertBrightness;
+    /**
+     * -- SETTER --
+     *  Sets whether to invert the hue.
+     *
+     *
+     * -- GETTER --
+     *  Checks if the hue is inverted.
+     *
+     @param invertHue true to invert the hue, false otherwise
+      * @return true if the hue is inverted, false otherwise
+     */
     private boolean invertHue;
+    /**
+     * -- SETTER --
+     *  Sets whether to invert the alpha.
+     *
+     *
+     * -- GETTER --
+     *  Checks if the alpha is inverted.
+     *
+     @param invertAlpha true to invert the alpha, false otherwise
+      * @return true if the alpha is inverted, false otherwise
+     */
     private boolean invertAlpha;
 
     /**
@@ -82,93 +141,4 @@ public class Inversion extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Checks if the image is flipped vertically.
-     *
-     * @return true if the image is flipped vertically, false otherwise
-     */
-    public boolean isFlipVertical() {
-        return flipVertical;
-    }
-
-    /**
-     * Sets whether to flip the image vertically.
-     *
-     * @param flipVertical true to flip the image vertically, false otherwise
-     */
-    public void setFlipVertical(boolean flipVertical) {
-        this.flipVertical = flipVertical;
-    }
-
-    /**
-     * Checks if the image is flipped horizontally.
-     *
-     * @return true if the image is flipped horizontally, false otherwise
-     */
-    public boolean isFlipHorizontal() {
-        return flipHorizontal;
-    }
-
-    /**
-     * Sets whether to flip the image horizontally.
-     *
-     * @param flipHorizontal true to flip the image horizontally, false otherwise
-     */
-    public void setFlipHorizontal(boolean flipHorizontal) {
-        this.flipHorizontal = flipHorizontal;
-    }
-
-    /**
-     * Checks if the brightness is inverted.
-     *
-     * @return true if the brightness is inverted, false otherwise
-     */
-    public boolean isInvertBrightness() {
-        return invertBrightness;
-    }
-
-    /**
-     * Sets whether to invert the brightness.
-     *
-     * @param invertBrightness true to invert the brightness, false otherwise
-     */
-    public void setInvertBrightness(boolean invertBrightness) {
-        this.invertBrightness = invertBrightness;
-    }
-
-    /**
-     * Checks if the hue is inverted.
-     *
-     * @return true if the hue is inverted, false otherwise
-     */
-    public boolean isInvertHue() {
-        return invertHue;
-    }
-
-    /**
-     * Sets whether to invert the hue.
-     *
-     * @param invertHue true to invert the hue, false otherwise
-     */
-    public void setInvertHue(boolean invertHue) {
-        this.invertHue = invertHue;
-    }
-
-    /**
-     * Checks if the alpha is inverted.
-     *
-     * @return true if the alpha is inverted, false otherwise
-     */
-    public boolean isInvertAlpha() {
-        return invertAlpha;
-    }
-
-    /**
-     * Sets whether to invert the alpha.
-     *
-     * @param invertAlpha true to invert the alpha, false otherwise
-     */
-    public void setInvertAlpha(boolean invertAlpha) {
-        this.invertAlpha = invertAlpha;
-    }
 }

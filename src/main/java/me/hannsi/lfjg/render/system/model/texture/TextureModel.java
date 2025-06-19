@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.render.system.model.texture;
 
+import lombok.Getter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
@@ -16,6 +17,13 @@ import static org.lwjgl.stb.STBImage.*;
  * Represents a texture model in the OpenGL rendering system.
  */
 public class TextureModel {
+    /**
+     * -- GETTER --
+     *  Gets the file location of the texture.
+     *
+     * @return the file location of the texture
+     */
+    @Getter
     private final FileLocation texturePath;
     private int textureId;
 
@@ -104,12 +112,4 @@ public class TextureModel {
         glGenerateMipmap(GL_TEXTURE_2D);
     }
 
-    /**
-     * Gets the file location of the texture.
-     *
-     * @return the file location of the texture
-     */
-    public FileLocation getTexturePath() {
-        return texturePath;
-    }
 }

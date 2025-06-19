@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
@@ -9,11 +11,68 @@ import org.joml.Vector4f;
 /**
  * Class representing a 2D Clipping Rectangle effect in OpenGL.
  */
+@Getter
+@Setter
 public class Clipping2DRect extends EffectBase {
+    /**
+     * -- SETTER --
+     *  Sets the x-coordinate of the first corner.
+     *
+     *
+     * -- GETTER --
+     *  Gets the x-coordinate of the first corner.
+     *
+     @param x1 the x-coordinate of the first corner
+      * @return the x-coordinate of the first corner
+     */
     private float x1;
+    /**
+     * -- SETTER --
+     *  Sets the y-coordinate of the first corner.
+     *
+     *
+     * -- GETTER --
+     *  Gets the y-coordinate of the first corner.
+     *
+     @param y1 the y-coordinate of the first corner
+      * @return the y-coordinate of the first corner
+     */
     private float y1;
+    /**
+     * -- SETTER --
+     *  Sets the x-coordinate of the opposite corner.
+     *
+     *
+     * -- GETTER --
+     *  Gets the x-coordinate of the opposite corner.
+     *
+     @param x2 the x-coordinate of the opposite corner
+      * @return the x-coordinate of the opposite corner
+     */
     private float x2;
+    /**
+     * -- SETTER --
+     *  Sets the y-coordinate of the opposite corner.
+     *
+     *
+     * -- GETTER --
+     *  Gets the y-coordinate of the opposite corner.
+     *
+     @param y2 the y-coordinate of the opposite corner
+      * @return the y-coordinate of the opposite corner
+     */
     private float y2;
+    /**
+     * -- SETTER --
+     *  Sets whether the clipping region is inverted.
+     *
+     *
+     * -- GETTER --
+     *  Checks if the clipping region is inverted.
+     *
+     @param invert true to invert the clipping region, false otherwise
+      * @return true if the clipping region is inverted, false otherwise
+     */
     private boolean invert;
 
     /**
@@ -129,93 +188,4 @@ public class Clipping2DRect extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Gets the x-coordinate of the first corner.
-     *
-     * @return the x-coordinate of the first corner
-     */
-    public float getX1() {
-        return x1;
-    }
-
-    /**
-     * Sets the x-coordinate of the first corner.
-     *
-     * @param x1 the x-coordinate of the first corner
-     */
-    public void setX1(float x1) {
-        this.x1 = x1;
-    }
-
-    /**
-     * Gets the y-coordinate of the first corner.
-     *
-     * @return the y-coordinate of the first corner
-     */
-    public float getY1() {
-        return y1;
-    }
-
-    /**
-     * Sets the y-coordinate of the first corner.
-     *
-     * @param y1 the y-coordinate of the first corner
-     */
-    public void setY1(float y1) {
-        this.y1 = y1;
-    }
-
-    /**
-     * Gets the x-coordinate of the opposite corner.
-     *
-     * @return the x-coordinate of the opposite corner
-     */
-    public float getX2() {
-        return x2;
-    }
-
-    /**
-     * Sets the x-coordinate of the opposite corner.
-     *
-     * @param x2 the x-coordinate of the opposite corner
-     */
-    public void setX2(float x2) {
-        this.x2 = x2;
-    }
-
-    /**
-     * Gets the y-coordinate of the opposite corner.
-     *
-     * @return the y-coordinate of the opposite corner
-     */
-    public float getY2() {
-        return y2;
-    }
-
-    /**
-     * Sets the y-coordinate of the opposite corner.
-     *
-     * @param y2 the y-coordinate of the opposite corner
-     */
-    public void setY2(float y2) {
-        this.y2 = y2;
-    }
-
-    /**
-     * Checks if the clipping region is inverted.
-     *
-     * @return true if the clipping region is inverted, false otherwise
-     */
-    public boolean isInvert() {
-        return invert;
-    }
-
-    /**
-     * Sets whether the clipping region is inverted.
-     *
-     * @param invert true to invert the clipping region, false otherwise
-     */
-    public void setInvert(boolean invert) {
-        this.invert = invert;
-    }
 }

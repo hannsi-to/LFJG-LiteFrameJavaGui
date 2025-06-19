@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
@@ -7,8 +9,32 @@ import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 /**
  * Class representing a Directional Blur effect in OpenGL.
  */
+@Getter
+@Setter
 public class DirectionalBlur extends EffectBase {
+    /**
+     * -- SETTER --
+     *  Sets the radius of the blur.
+     *
+     *
+     * -- GETTER --
+     *  Gets the radius of the blur.
+     *
+     @param radius the radius of the blur
+      * @return the radius of the blur
+     */
     private float radius;
+    /**
+     * -- SETTER --
+     *  Sets the angle of the blur.
+     *
+     *
+     * -- GETTER --
+     *  Gets the angle of the blur.
+     *
+     @param angle the angle of the blur
+      * @return the angle of the blur
+     */
     private float angle;
 
     /**
@@ -80,39 +106,4 @@ public class DirectionalBlur extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Gets the radius of the blur.
-     *
-     * @return the radius of the blur
-     */
-    public float getRadius() {
-        return radius;
-    }
-
-    /**
-     * Sets the radius of the blur.
-     *
-     * @param radius the radius of the blur
-     */
-    public void setRadius(float radius) {
-        this.radius = radius;
-    }
-
-    /**
-     * Gets the angle of the blur.
-     *
-     * @return the angle of the blur
-     */
-    public float getAngle() {
-        return angle;
-    }
-
-    /**
-     * Sets the angle of the blur.
-     *
-     * @param angle the angle of the blur
-     */
-    public void setAngle(float angle) {
-        this.angle = angle;
-    }
 }

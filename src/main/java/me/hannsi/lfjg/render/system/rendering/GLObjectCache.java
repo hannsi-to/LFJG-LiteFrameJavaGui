@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.system.rendering;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
@@ -11,7 +13,20 @@ import java.util.List;
 /**
  * Caches OpenGL objects for rendering.
  */
+@Getter
+@Setter
 public class GLObjectCache {
+    /**
+     * -- SETTER --
+     *  Sets the list of cached GLObjects.
+     *
+     *
+     * -- GETTER --
+     *  Gets the list of cached GLObjects.
+     *
+     @param glObjects the new list of cached GLObjects
+      * @return the list of cached GLObjects
+     */
     private List<GLObject> glObjects;
     private FrameBuffer frameBuffer;
 
@@ -127,29 +142,4 @@ public class GLObjectCache {
         return null;
     }
 
-    /**
-     * Gets the list of cached GLObjects.
-     *
-     * @return the list of cached GLObjects
-     */
-    public List<GLObject> getGlObjects() {
-        return glObjects;
-    }
-
-    /**
-     * Sets the list of cached GLObjects.
-     *
-     * @param glObjects the new list of cached GLObjects
-     */
-    public void setGlObjects(List<GLObject> glObjects) {
-        this.glObjects = glObjects;
-    }
-
-    public FrameBuffer getFrameBuffer() {
-        return frameBuffer;
-    }
-
-    public void setFrameBuffer(FrameBuffer frameBuffer) {
-        this.frameBuffer = frameBuffer;
-    }
 }

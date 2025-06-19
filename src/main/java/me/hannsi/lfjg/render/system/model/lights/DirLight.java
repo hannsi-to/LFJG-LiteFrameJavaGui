@@ -1,13 +1,46 @@
 package me.hannsi.lfjg.render.system.model.lights;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.joml.Vector3f;
 
 /**
  * Represents a directional light in the OpenGL rendering system.
  */
+@Getter
 public class DirLight extends Light {
+    /**
+     * -- GETTER --
+     *  Gets the color of the light.
+     *
+     * @return the color of the light
+     */
     private Vector3f color;
+    /**
+     * -- SETTER --
+     *  Sets the direction of the light.
+     *
+     *
+     * -- GETTER --
+     *  Gets the direction of the light.
+     *
+     @param direction the new direction of the light
+      * @return the direction of the light
+     */
+    @Setter
     private Vector3f direction;
+    /**
+     * -- SETTER --
+     *  Sets the intensity of the light.
+     *
+     *
+     * -- GETTER --
+     *  Gets the intensity of the light.
+     *
+     @param intensity the new intensity of the light
+      * @return the intensity of the light
+     */
+    @Setter
     private float intensity;
 
     /**
@@ -26,57 +59,12 @@ public class DirLight extends Light {
     }
 
     /**
-     * Gets the color of the light.
-     *
-     * @return the color of the light
-     */
-    public Vector3f getColor() {
-        return color;
-    }
-
-    /**
      * Sets the color of the light.
      *
      * @param color the new color of the light
      */
     public void setColor(Vector3f color) {
         this.color = color;
-    }
-
-    /**
-     * Gets the direction of the light.
-     *
-     * @return the direction of the light
-     */
-    public Vector3f getDirection() {
-        return direction;
-    }
-
-    /**
-     * Sets the direction of the light.
-     *
-     * @param direction the new direction of the light
-     */
-    public void setDirection(Vector3f direction) {
-        this.direction = direction;
-    }
-
-    /**
-     * Gets the intensity of the light.
-     *
-     * @return the intensity of the light
-     */
-    public float getIntensity() {
-        return intensity;
-    }
-
-    /**
-     * Sets the intensity of the light.
-     *
-     * @param intensity the new intensity of the light
-     */
-    public void setIntensity(float intensity) {
-        this.intensity = intensity;
     }
 
     /**

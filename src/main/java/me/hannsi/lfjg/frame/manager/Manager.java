@@ -1,12 +1,26 @@
 package me.hannsi.lfjg.frame.manager;
 
+import lombok.Getter;
 import me.hannsi.lfjg.frame.Frame;
 
 /**
  * The Manager class is responsible for managing various aspects of the frame.
  */
+@Getter
 public class Manager {
+    /**
+     * -- GETTER --
+     *  Retrieves the frame associated with this manager.
+     *
+     * @return The frame associated with this manager.
+     */
     private final Frame frame;
+    /**
+     * -- GETTER --
+     *  Retrieves the name of this manager.
+     *
+     * @return The name of this manager.
+     */
     private final String name;
 
     /**
@@ -20,21 +34,4 @@ public class Manager {
         this.name = name;
     }
 
-    /**
-     * Retrieves the frame associated with this manager.
-     *
-     * @return The frame associated with this manager.
-     */
-    public Frame getFrame() {
-        return frame;
-    }
-
-    /**
-     * Retrieves the name of this manager.
-     *
-     * @return The name of this manager.
-     */
-    public String getName() {
-        return name;
-    }
 }

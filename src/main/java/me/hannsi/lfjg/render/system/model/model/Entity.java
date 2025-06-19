@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.system.model.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
@@ -10,12 +12,61 @@ import org.joml.Vector3f;
 /**
  * Represents an entity in the OpenGL rendering system.
  */
+@Getter
 public class Entity {
+    /**
+     * -- GETTER --
+     *  Gets the unique identifier of the entity.
+     *
+     * @return the unique identifier of the entity
+     */
     private final String id;
+    /**
+     * -- GETTER --
+     *  Gets the identifier of the model associated with the entity.
+     *
+     * @return the identifier of the model associated with the entity
+     */
     private final String modelId;
+    /**
+     * -- SETTER --
+     *  Sets the model matrix of the entity.
+     *
+     *
+     * -- GETTER --
+     *  Gets the model matrix of the entity.
+     *
+     @param modelMatrix the new model matrix of the entity
+      * @return the model matrix of the entity
+     */
+    @Setter
     private Matrix4f modelMatrix;
+    /**
+     * -- GETTER --
+     *  Gets the position of the entity.
+     *
+     * @return the position of the entity
+     */
     private Vector3f position;
+    /**
+     * -- GETTER --
+     *  Gets the rotation of the entity.
+     *
+     * @return the rotation of the entity
+     */
     private Quaternionf rotation;
+    /**
+     * -- SETTER --
+     *  Sets the scale of the entity.
+     *
+     *
+     * -- GETTER --
+     *  Gets the scale of the entity.
+     *
+     @param scale the new scale of the entity
+      * @return the scale of the entity
+     */
+    @Setter
     private float scale;
 
     /**
@@ -47,51 +98,6 @@ public class Entity {
     }
 
     /**
-     * Gets the unique identifier of the entity.
-     *
-     * @return the unique identifier of the entity
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Gets the identifier of the model associated with the entity.
-     *
-     * @return the identifier of the model associated with the entity
-     */
-    public String getModelId() {
-        return modelId;
-    }
-
-    /**
-     * Gets the model matrix of the entity.
-     *
-     * @return the model matrix of the entity
-     */
-    public Matrix4f getModelMatrix() {
-        return modelMatrix;
-    }
-
-    /**
-     * Sets the model matrix of the entity.
-     *
-     * @param modelMatrix the new model matrix of the entity
-     */
-    public void setModelMatrix(Matrix4f modelMatrix) {
-        this.modelMatrix = modelMatrix;
-    }
-
-    /**
-     * Gets the position of the entity.
-     *
-     * @return the position of the entity
-     */
-    public Vector3f getPosition() {
-        return position;
-    }
-
-    /**
      * Sets the position of the entity.
      *
      * @param position the new position of the entity
@@ -101,39 +107,12 @@ public class Entity {
     }
 
     /**
-     * Gets the rotation of the entity.
-     *
-     * @return the rotation of the entity
-     */
-    public Quaternionf getRotation() {
-        return rotation;
-    }
-
-    /**
      * Sets the rotation of the entity.
      *
      * @param rotation the new rotation of the entity
      */
     public void setRotation(Quaternionf rotation) {
         this.rotation = rotation;
-    }
-
-    /**
-     * Gets the scale of the entity.
-     *
-     * @return the scale of the entity
-     */
-    public float getScale() {
-        return scale;
-    }
-
-    /**
-     * Sets the scale of the entity.
-     *
-     * @param scale the new scale of the entity
-     */
-    public void setScale(float scale) {
-        this.scale = scale;
     }
 
     /**

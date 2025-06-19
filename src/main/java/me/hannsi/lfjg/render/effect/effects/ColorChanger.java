@@ -1,10 +1,14 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 
+@Getter
+@Setter
 public class ColorChanger extends EffectBase {
     private boolean alpha;
     private Color targetColor;
@@ -72,27 +76,4 @@ public class ColorChanger extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    public boolean isAlpha() {
-        return alpha;
-    }
-
-    public void setAlpha(boolean alpha) {
-        this.alpha = alpha;
-    }
-
-    public Color getTargetColor() {
-        return targetColor;
-    }
-
-    public void setTargetColor(Color targetColor) {
-        this.targetColor = targetColor;
-    }
-
-    public Color getNewColor() {
-        return newColor;
-    }
-
-    public void setNewColor(Color newColor) {
-        this.newColor = newColor;
-    }
 }

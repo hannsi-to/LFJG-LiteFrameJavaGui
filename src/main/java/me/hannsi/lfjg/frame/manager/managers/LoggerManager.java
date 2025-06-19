@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.frame.manager.managers;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.debug.DebugType;
@@ -17,7 +19,20 @@ import java.io.StringWriter;
 /**
  * Manages logging for the application.
  */
+@Setter
+@Getter
 public class LoggerManager {
+    /**
+     * -- GETTER --
+     *  Retrieves the logger.
+     *
+     *
+     * -- SETTER --
+     *  Sets the logger.
+     *
+     @return the logger
+      * @param logger the logger to set
+     */
     private Logger logger;
 
     /**
@@ -77,21 +92,4 @@ public class LoggerManager {
         }
     }
 
-    /**
-     * Retrieves the logger.
-     *
-     * @return the logger
-     */
-    public Logger getLogger() {
-        return logger;
-    }
-
-    /**
-     * Sets the logger.
-     *
-     * @param logger the logger to set
-     */
-    public void setLogger(Logger logger) {
-        this.logger = logger;
-    }
 }

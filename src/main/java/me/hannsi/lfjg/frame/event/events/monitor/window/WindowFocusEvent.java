@@ -1,7 +1,9 @@
 package me.hannsi.lfjg.frame.event.events.monitor.window;
 
+import lombok.Getter;
 import me.hannsi.lfjg.frame.event.system.Event;
 
+@Getter
 public class WindowFocusEvent extends Event {
     private final long window;
     private final boolean focused;
@@ -11,11 +13,4 @@ public class WindowFocusEvent extends Event {
         this.focused = focused;
     }
 
-    public long getWindow() {
-        return window;
-    }
-
-    public boolean isFocused() {
-        return focused;
-    }
 }

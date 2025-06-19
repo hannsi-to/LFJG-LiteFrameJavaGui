@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
@@ -12,11 +14,68 @@ import org.joml.Vector3f;
 /**
  * Class representing a Flash effect in OpenGL.
  */
+@Getter
+@Setter
 public class Flash extends EffectBase {
+    /**
+     * -- SETTER --
+     *  Sets the intensity of the flash.
+     *
+     *
+     * -- GETTER --
+     *  Gets the intensity of the flash.
+     *
+     @param intensity the intensity of the flash
+      * @return the intensity of the flash
+     */
     private float intensity;
+    /**
+     * -- SETTER --
+     *  Sets the x-coordinate of the flash position.
+     *
+     *
+     * -- GETTER --
+     *  Gets the x-coordinate of the flash position.
+     *
+     @param x the x-coordinate of the flash position
+      * @return the x-coordinate of the flash position
+     */
     private float x;
+    /**
+     * -- SETTER --
+     *  Sets the y-coordinate of the flash position.
+     *
+     *
+     * -- GETTER --
+     *  Gets the y-coordinate of the flash position.
+     *
+     @param y the y-coordinate of the flash position
+      * @return the y-coordinate of the flash position
+     */
     private float y;
+    /**
+     * -- SETTER --
+     *  Sets the blend mode of the flash.
+     *
+     *
+     * -- GETTER --
+     *  Gets the blend mode of the flash.
+     *
+     @param flashBlendMode the blend mode of the flash
+      * @return the blend mode of the flash
+     */
     private FlashBlendMode flashBlendMode;
+    /**
+     * -- SETTER --
+     *  Sets the color of the light.
+     *
+     *
+     * -- GETTER --
+     *  Gets the color of the light.
+     *
+     @param lightColor the color of the light
+      * @return the color of the light
+     */
     private Color lightColor;
 
     /**
@@ -101,96 +160,6 @@ public class Flash extends EffectBase {
         getFrameBuffer().getShaderProgramFBO().setUniform("lightColor", new Vector3f(lightColor.getRedF(), lightColor.getGreenF(), lightColor.getBlueF()));
 
         super.setUniform(baseGLObject);
-    }
-
-    /**
-     * Gets the intensity of the flash.
-     *
-     * @return the intensity of the flash
-     */
-    public float getIntensity() {
-        return intensity;
-    }
-
-    /**
-     * Sets the intensity of the flash.
-     *
-     * @param intensity the intensity of the flash
-     */
-    public void setIntensity(float intensity) {
-        this.intensity = intensity;
-    }
-
-    /**
-     * Gets the x-coordinate of the flash position.
-     *
-     * @return the x-coordinate of the flash position
-     */
-    public float getX() {
-        return x;
-    }
-
-    /**
-     * Sets the x-coordinate of the flash position.
-     *
-     * @param x the x-coordinate of the flash position
-     */
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    /**
-     * Gets the y-coordinate of the flash position.
-     *
-     * @return the y-coordinate of the flash position
-     */
-    public float getY() {
-        return y;
-    }
-
-    /**
-     * Sets the y-coordinate of the flash position.
-     *
-     * @param y the y-coordinate of the flash position
-     */
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    /**
-     * Gets the blend mode of the flash.
-     *
-     * @return the blend mode of the flash
-     */
-    public FlashBlendMode getFlashBlendMode() {
-        return flashBlendMode;
-    }
-
-    /**
-     * Sets the blend mode of the flash.
-     *
-     * @param flashBlendMode the blend mode of the flash
-     */
-    public void setFlashBlendMode(FlashBlendMode flashBlendMode) {
-        this.flashBlendMode = flashBlendMode;
-    }
-
-    /**
-     * Gets the color of the light.
-     *
-     * @return the color of the light
-     */
-    public Color getLightColor() {
-        return lightColor;
-    }
-
-    /**
-     * Sets the color of the light.
-     *
-     * @param lightColor the color of the light
-     */
-    public void setLightColor(Color lightColor) {
-        this.lightColor = lightColor;
     }
 
     /**

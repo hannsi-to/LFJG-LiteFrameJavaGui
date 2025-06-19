@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
@@ -8,10 +10,56 @@ import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
 /**
  * Class representing a Chromatic Aberration effect in OpenGL.
  */
+@Getter
+@Setter
 public class ChromaticAberration extends EffectBase {
+    /**
+     * -- SETTER --
+     *  Sets the offset amount for the chromatic aberration.
+     *
+     *
+     * -- GETTER --
+     *  Gets the offset amount for the chromatic aberration.
+     *
+     @param offsetAmount the offset amount
+      * @return the offset amount
+     */
     private float offsetAmount;
+    /**
+     * -- SETTER --
+     *  Sets the angle of the chromatic aberration.
+     *
+     *
+     * -- GETTER --
+     *  Gets the angle of the chromatic aberration.
+     *
+     @param angle the angle
+      * @return the angle
+     */
     private float angle;
+    /**
+     * -- SETTER --
+     *  Sets the strength of the chromatic aberration.
+     *
+     *
+     * -- GETTER --
+     *  Gets the strength of the chromatic aberration.
+     *
+     @param strength the strength
+      * @return the strength
+     */
     private float strength;
+    /**
+     * -- SETTER --
+     *  Sets the type of chromatic aberration.
+     *
+     *
+     * -- GETTER --
+     *  Gets the type of chromatic aberration.
+     *
+     @param aberrationType the type of chromatic aberration
+      * @return the type of chromatic aberration
+     */
     private AberrationType aberrationType;
 
     /**
@@ -88,78 +136,6 @@ public class ChromaticAberration extends EffectBase {
         getFrameBuffer().getShaderProgramFBO().setUniform("strength", strength);
         getFrameBuffer().getShaderProgramFBO().setUniform1i("aberrationType", aberrationType.getId());
         super.setUniform(baseGLObject);
-    }
-
-    /**
-     * Gets the offset amount for the chromatic aberration.
-     *
-     * @return the offset amount
-     */
-    public float getOffsetAmount() {
-        return offsetAmount;
-    }
-
-    /**
-     * Sets the offset amount for the chromatic aberration.
-     *
-     * @param offsetAmount the offset amount
-     */
-    public void setOffsetAmount(float offsetAmount) {
-        this.offsetAmount = offsetAmount;
-    }
-
-    /**
-     * Gets the angle of the chromatic aberration.
-     *
-     * @return the angle
-     */
-    public float getAngle() {
-        return angle;
-    }
-
-    /**
-     * Sets the angle of the chromatic aberration.
-     *
-     * @param angle the angle
-     */
-    public void setAngle(float angle) {
-        this.angle = angle;
-    }
-
-    /**
-     * Gets the strength of the chromatic aberration.
-     *
-     * @return the strength
-     */
-    public float getStrength() {
-        return strength;
-    }
-
-    /**
-     * Sets the strength of the chromatic aberration.
-     *
-     * @param strength the strength
-     */
-    public void setStrength(float strength) {
-        this.strength = strength;
-    }
-
-    /**
-     * Gets the type of chromatic aberration.
-     *
-     * @return the type of chromatic aberration
-     */
-    public AberrationType getAberrationType() {
-        return aberrationType;
-    }
-
-    /**
-     * Sets the type of chromatic aberration.
-     *
-     * @param aberrationType the type of chromatic aberration
-     */
-    public void setAberrationType(AberrationType aberrationType) {
-        this.aberrationType = aberrationType;
     }
 
     /**

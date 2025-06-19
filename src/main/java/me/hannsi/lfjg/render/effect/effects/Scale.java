@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 
@@ -7,15 +9,94 @@ import me.hannsi.lfjg.render.renderers.GLObject;
  * Class representing a Size effect in OpenGL.
  */
 public class Scale extends EffectBase {
+    @Getter
     private final boolean autoCenter;
     protected float latestX;
     protected float latestY;
     protected float latestZ;
+    /**
+     * -- SETTER --
+     *  Sets the scaling factor along the X axis.
+     *
+     *
+     * -- GETTER --
+     *  Gets the scaling factor along the X axis.
+     *
+     @param x the scaling factor along the X axis
+      * @return the scaling factor along the X axis
+     */
+    @Getter
+    @Setter
     private float x;
+    /**
+     * -- SETTER --
+     *  Sets the scaling factor along the Y axis.
+     *
+     *
+     * -- GETTER --
+     *  Gets the scaling factor along the Y axis.
+     *
+     @param y the scaling factor along the Y axis
+      * @return the scaling factor along the Y axis
+     */
+    @Getter
+    @Setter
     private float y;
+    /**
+     * -- SETTER --
+     *  Sets the scaling factor along the Z axis.
+     *
+     *
+     * -- GETTER --
+     *  Gets the scaling factor along the Z axis.
+     *
+     @param z the scaling factor along the Z axis
+      * @return the scaling factor along the Z axis
+     */
+    @Getter
+    @Setter
     private float z;
+    /**
+     * -- SETTER --
+     *  Sets the X coordinate of the scaling center.
+     *
+     *
+     * -- GETTER --
+     *  Gets the X coordinate of the scaling center.
+     *
+     @param cx the X coordinate of the scaling center
+      * @return the X coordinate of the scaling center
+     */
+    @Getter
+    @Setter
     private float cx;
+    /**
+     * -- SETTER --
+     *  Sets the Y coordinate of the scaling center.
+     *
+     *
+     * -- GETTER --
+     *  Gets the Y coordinate of the scaling center.
+     *
+     @param cy the Y coordinate of the scaling center
+      * @return the Y coordinate of the scaling center
+     */
+    @Getter
+    @Setter
     private float cy;
+    /**
+     * -- SETTER --
+     *  Sets the Z coordinate of the scaling center.
+     *
+     *
+     * -- GETTER --
+     *  Gets the Z coordinate of the scaling center.
+     *
+     @param cz the Z coordinate of the scaling center
+      * @return the Z coordinate of the scaling center
+     */
+    @Getter
+    @Setter
     private float cz;
 
     /**
@@ -215,115 +296,4 @@ public class Scale extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Gets the scaling factor along the X axis.
-     *
-     * @return the scaling factor along the X axis
-     */
-    public float getX() {
-        return x;
-    }
-
-    /**
-     * Sets the scaling factor along the X axis.
-     *
-     * @param x the scaling factor along the X axis
-     */
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    /**
-     * Gets the scaling factor along the Y axis.
-     *
-     * @return the scaling factor along the Y axis
-     */
-    public float getY() {
-        return y;
-    }
-
-    /**
-     * Sets the scaling factor along the Y axis.
-     *
-     * @param y the scaling factor along the Y axis
-     */
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    /**
-     * Gets the scaling factor along the Z axis.
-     *
-     * @return the scaling factor along the Z axis
-     */
-    public float getZ() {
-        return z;
-    }
-
-    /**
-     * Sets the scaling factor along the Z axis.
-     *
-     * @param z the scaling factor along the Z axis
-     */
-    public void setZ(float z) {
-        this.z = z;
-    }
-
-    /**
-     * Gets the X coordinate of the scaling center.
-     *
-     * @return the X coordinate of the scaling center
-     */
-    public float getCx() {
-        return cx;
-    }
-
-    /**
-     * Sets the X coordinate of the scaling center.
-     *
-     * @param cx the X coordinate of the scaling center
-     */
-    public void setCx(float cx) {
-        this.cx = cx;
-    }
-
-    /**
-     * Gets the Y coordinate of the scaling center.
-     *
-     * @return the Y coordinate of the scaling center
-     */
-    public float getCy() {
-        return cy;
-    }
-
-    /**
-     * Sets the Y coordinate of the scaling center.
-     *
-     * @param cy the Y coordinate of the scaling center
-     */
-    public void setCy(float cy) {
-        this.cy = cy;
-    }
-
-    /**
-     * Gets the Z coordinate of the scaling center.
-     *
-     * @return the Z coordinate of the scaling center
-     */
-    public float getCz() {
-        return cz;
-    }
-
-    /**
-     * Sets the Z coordinate of the scaling center.
-     *
-     * @param cz the Z coordinate of the scaling center
-     */
-    public void setCz(float cz) {
-        this.cz = cz;
-    }
-
-    public boolean isAutoCenter() {
-        return autoCenter;
-    }
 }

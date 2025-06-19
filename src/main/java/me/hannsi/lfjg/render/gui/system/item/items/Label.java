@@ -1,7 +1,11 @@
 package me.hannsi.lfjg.render.gui.system.item.items;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.render.gui.system.item.ItemPoint;
 
+@Getter
+@Setter
 public class Label extends ItemPoint {
     private String labelText;
 
@@ -14,11 +18,4 @@ public class Label extends ItemPoint {
         return this;
     }
 
-    public String getLabelText() {
-        return labelText;
-    }
-
-    public void setLabelText(String labelText) {
-        this.labelText = labelText;
-    }
 }

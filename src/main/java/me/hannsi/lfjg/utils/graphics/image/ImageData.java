@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.utils.graphics.image;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import me.hannsi.lfjg.utils.toolkit.IOUtil;
@@ -14,9 +16,44 @@ import static org.bytedeco.opencv.global.opencv_imgproc.cvtColor;
 /**
  * Class representing image data, including the image path, OpenCV Mat object, and ByteBuffer.
  */
+@Getter
+@Setter
 public class ImageData {
+    /**
+     * -- SETTER --
+     *  Sets the image path.
+     *
+     *
+     * -- GETTER --
+     *  Gets the image path.
+     *
+     @param imagePath the new image path
+      * @return the image path
+     */
     private ResourcesLocation imagePath;
+    /**
+     * -- SETTER --
+     *  Sets the OpenCV Mat object.
+     *
+     *
+     * -- GETTER --
+     *  Gets the OpenCV Mat object.
+     *
+     @param mat the new Mat object
+      * @return the Mat object
+     */
     private Mat mat;
+    /**
+     * -- SETTER --
+     *  Sets the ByteBuffer containing the image data in RGBA format.
+     *
+     *
+     * -- GETTER --
+     *  Gets the ByteBuffer containing the image data in RGBA format.
+     *
+     @param byteBuffer the new ByteBuffer
+      * @return the ByteBuffer
+     */
     private ByteBuffer byteBuffer;
 
     /**
@@ -46,57 +83,4 @@ public class ImageData {
         byteBuffer.clear();
     }
 
-    /**
-     * Gets the image path.
-     *
-     * @return the image path
-     */
-    public ResourcesLocation getImagePath() {
-        return imagePath;
-    }
-
-    /**
-     * Sets the image path.
-     *
-     * @param imagePath the new image path
-     */
-    public void setImagePath(ResourcesLocation imagePath) {
-        this.imagePath = imagePath;
-    }
-
-    /**
-     * Gets the OpenCV Mat object.
-     *
-     * @return the Mat object
-     */
-    public Mat getMat() {
-        return mat;
-    }
-
-    /**
-     * Sets the OpenCV Mat object.
-     *
-     * @param mat the new Mat object
-     */
-    public void setMat(Mat mat) {
-        this.mat = mat;
-    }
-
-    /**
-     * Gets the ByteBuffer containing the image data in RGBA format.
-     *
-     * @return the ByteBuffer
-     */
-    public ByteBuffer getByteBuffer() {
-        return byteBuffer;
-    }
-
-    /**
-     * Sets the ByteBuffer containing the image data in RGBA format.
-     *
-     * @param byteBuffer the new ByteBuffer
-     */
-    public void setByteBuffer(ByteBuffer byteBuffer) {
-        this.byteBuffer = byteBuffer;
-    }
 }

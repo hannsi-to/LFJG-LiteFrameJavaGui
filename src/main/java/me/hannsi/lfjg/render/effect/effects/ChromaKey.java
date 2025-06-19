@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.color.Color;
@@ -9,11 +11,68 @@ import org.joml.Vector3f;
 /**
  * Class representing a Chroma Key effect in OpenGL.
  */
+@Setter
+@Getter
 public class ChromaKey extends EffectBase {
+    /**
+     * -- GETTER --
+     *  Gets the chroma key color.
+     *
+     *
+     * -- SETTER --
+     *  Sets the chroma key color.
+     *
+     @return the chroma key color
+      * @param chromaKeyColor the chroma key color
+     */
     private Color chromaKeyColor;
+    /**
+     * -- GETTER --
+     *  Gets the hue range for the chroma key.
+     *
+     *
+     * -- SETTER --
+     *  Sets the hue range for the chroma key.
+     *
+     @return the hue range for the chroma key
+      * @param hueRange the hue range for the chroma key
+     */
     private float hueRange;
+    /**
+     * -- GETTER --
+     *  Gets the saturation range for the chroma key.
+     *
+     *
+     * -- SETTER --
+     *  Sets the saturation range for the chroma key.
+     *
+     @return the saturation range for the chroma key
+      * @param saturationRange the saturation range for the chroma key
+     */
     private float saturationRange;
+    /**
+     * -- GETTER --
+     *  Gets the boundary smoothness.
+     *
+     *
+     * -- SETTER --
+     *  Sets the boundary smoothness.
+     *
+     @return the boundary smoothness
+      * @param boundarySmoothness the boundary smoothness
+     */
     private float boundarySmoothness;
+    /**
+     * -- GETTER --
+     *  Gets the color adjustment.
+     *
+     *
+     * -- SETTER --
+     *  Sets the color adjustment.
+     *
+     @return the color adjustment
+      * @param colorAdjustment the color adjustment
+     */
     private Color colorAdjustment;
 
     /**
@@ -100,93 +159,4 @@ public class ChromaKey extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Gets the chroma key color.
-     *
-     * @return the chroma key color
-     */
-    public Color getChromaKeyColor() {
-        return chromaKeyColor;
-    }
-
-    /**
-     * Sets the chroma key color.
-     *
-     * @param chromaKeyColor the chroma key color
-     */
-    public void setChromaKeyColor(Color chromaKeyColor) {
-        this.chromaKeyColor = chromaKeyColor;
-    }
-
-    /**
-     * Gets the hue range for the chroma key.
-     *
-     * @return the hue range for the chroma key
-     */
-    public float getHueRange() {
-        return hueRange;
-    }
-
-    /**
-     * Sets the hue range for the chroma key.
-     *
-     * @param hueRange the hue range for the chroma key
-     */
-    public void setHueRange(float hueRange) {
-        this.hueRange = hueRange;
-    }
-
-    /**
-     * Gets the saturation range for the chroma key.
-     *
-     * @return the saturation range for the chroma key
-     */
-    public float getSaturationRange() {
-        return saturationRange;
-    }
-
-    /**
-     * Sets the saturation range for the chroma key.
-     *
-     * @param saturationRange the saturation range for the chroma key
-     */
-    public void setSaturationRange(float saturationRange) {
-        this.saturationRange = saturationRange;
-    }
-
-    /**
-     * Gets the boundary smoothness.
-     *
-     * @return the boundary smoothness
-     */
-    public float getBoundarySmoothness() {
-        return boundarySmoothness;
-    }
-
-    /**
-     * Sets the boundary smoothness.
-     *
-     * @param boundarySmoothness the boundary smoothness
-     */
-    public void setBoundarySmoothness(float boundarySmoothness) {
-        this.boundarySmoothness = boundarySmoothness;
-    }
-
-    /**
-     * Gets the color adjustment.
-     *
-     * @return the color adjustment
-     */
-    public Color getColorAdjustment() {
-        return colorAdjustment;
-    }
-
-    /**
-     * Sets the color adjustment.
-     *
-     * @param colorAdjustment the color adjustment
-     */
-    public void setColorAdjustment(Color colorAdjustment) {
-        this.colorAdjustment = colorAdjustment;
-    }
 }

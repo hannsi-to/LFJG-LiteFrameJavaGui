@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.jcef.handler;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefPaintEvent;
 import org.cef.callback.CefNative;
@@ -15,12 +17,22 @@ import java.util.function.Consumer;
 public class RenderHandler extends CefRenderHandlerAdapter implements CefNative {
     private final Map<String, Long> nativeRefs = new HashMap<>();
 
+    @Getter
     private volatile ByteBuffer latestFrame;
     private int texWidth, texHeight;
+    @Getter
     private volatile boolean frameUpdated = false;
+    @Getter
+    @Setter
     private int x;
+    @Getter
+    @Setter
     private int y;
+    @Getter
+    @Setter
     private int width;
+    @Getter
+    @Setter
     private int height;
 
     private int frameCount = 0;
@@ -98,53 +110,14 @@ public class RenderHandler extends CefRenderHandlerAdapter implements CefNative 
         return 0;
     }
 
-    public boolean isFrameUpdated() {
-        return frameUpdated;
-    }
-
     public void consumeFrame(IntBuffer outTexWidth, IntBuffer outTexHeight) {
         outTexWidth.put(0, texWidth);
         outTexHeight.put(0, texHeight);
         frameUpdated = false;
     }
 
-    public ByteBuffer getLatestFrame() {
-        return latestFrame;
-    }
-
     public int getFPS() {
         return currentFPS;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
 }

@@ -1,8 +1,13 @@
 package me.hannsi.lfjg.render.gui.system.item;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
 public class ItemPoint extends Item {
     private final float x;
     private final float y;
+    @Setter
     private float scale;
 
     public ItemPoint(float x, float y, float scale) {
@@ -11,19 +16,4 @@ public class ItemPoint extends Item {
         this.scale = scale;
     }
 
-    public float getX() {
-        return x;
-    }
-
-    public float getScale() {
-        return scale;
-    }
-
-    public void setScale(float scale) {
-        this.scale = scale;
-    }
-
-    public float getY() {
-        return y;
-    }
 }

@@ -1,7 +1,9 @@
 package me.hannsi.lfjg.frame.event.events.monitor.window;
 
+import lombok.Getter;
 import me.hannsi.lfjg.frame.event.system.Event;
 
+@Getter
 public class WindowSizeEvent extends Event {
     private final long window;
     private final int width;
@@ -13,15 +15,4 @@ public class WindowSizeEvent extends Event {
         this.height = height;
     }
 
-    public long getWindow() {
-        return window;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
 }

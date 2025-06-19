@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.color.Color;
@@ -9,12 +11,80 @@ import org.joml.Vector3f;
 /**
  * Class representing a Glow effect in OpenGL.
  */
+@Getter
+@Setter
 public class Glow extends EffectBase {
+    /**
+     * -- SETTER --
+     *  Sets the intensity of the glow.
+     *
+     *
+     * -- GETTER --
+     *  Gets the intensity of the glow.
+     *
+     @param intensity the intensity of the glow
+      * @return the intensity of the glow
+     */
     private float intensity;
+    /**
+     * -- SETTER --
+     *  Sets the threshold for the glow effect.
+     *
+     *
+     * -- GETTER --
+     *  Gets the threshold for the glow effect.
+     *
+     @param threshold the threshold for the glow effect
+      * @return the threshold for the glow effect
+     */
     private float threshold;
+    /**
+     * -- SETTER --
+     *  Sets the spread of the glow.
+     *
+     *
+     * -- GETTER --
+     *  Gets the spread of the glow.
+     *
+     @param spread the spread of the glow
+      * @return the spread of the glow
+     */
     private float spread;
+    /**
+     * -- SETTER --
+     *  Sets whether to use the original color.
+     *
+     *
+     * -- GETTER --
+     *  Checks if the original color is used.
+     *
+     @param useOriginalColor true to use the original color, false otherwise
+      * @return true if the original color is used, false otherwise
+     */
     private boolean useOriginalColor;
+    /**
+     * -- SETTER --
+     *  Sets the color of the glow.
+     *
+     *
+     * -- GETTER --
+     *  Gets the color of the glow.
+     *
+     @param glowColor the color of the glow
+      * @return the color of the glow
+     */
     private Color glowColor;
+    /**
+     * -- SETTER --
+     *  Sets whether to apply only the glow effect.
+     *
+     *
+     * -- GETTER --
+     *  Checks if only the glow effect is applied.
+     *
+     @param glowOnly true to apply only the glow effect, false otherwise
+      * @return true if only the glow effect is applied, false otherwise
+     */
     private boolean glowOnly;
 
     /**
@@ -136,111 +206,4 @@ public class Glow extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Checks if only the glow effect is applied.
-     *
-     * @return true if only the glow effect is applied, false otherwise
-     */
-    public boolean isGlowOnly() {
-        return glowOnly;
-    }
-
-    /**
-     * Sets whether to apply only the glow effect.
-     *
-     * @param glowOnly true to apply only the glow effect, false otherwise
-     */
-    public void setGlowOnly(boolean glowOnly) {
-        this.glowOnly = glowOnly;
-    }
-
-    /**
-     * Gets the color of the glow.
-     *
-     * @return the color of the glow
-     */
-    public Color getGlowColor() {
-        return glowColor;
-    }
-
-    /**
-     * Sets the color of the glow.
-     *
-     * @param glowColor the color of the glow
-     */
-    public void setGlowColor(Color glowColor) {
-        this.glowColor = glowColor;
-    }
-
-    /**
-     * Checks if the original color is used.
-     *
-     * @return true if the original color is used, false otherwise
-     */
-    public boolean isUseOriginalColor() {
-        return useOriginalColor;
-    }
-
-    /**
-     * Sets whether to use the original color.
-     *
-     * @param useOriginalColor true to use the original color, false otherwise
-     */
-    public void setUseOriginalColor(boolean useOriginalColor) {
-        this.useOriginalColor = useOriginalColor;
-    }
-
-    /**
-     * Gets the spread of the glow.
-     *
-     * @return the spread of the glow
-     */
-    public float getSpread() {
-        return spread;
-    }
-
-    /**
-     * Sets the spread of the glow.
-     *
-     * @param spread the spread of the glow
-     */
-    public void setSpread(float spread) {
-        this.spread = spread;
-    }
-
-    /**
-     * Gets the threshold for the glow effect.
-     *
-     * @return the threshold for the glow effect
-     */
-    public float getThreshold() {
-        return threshold;
-    }
-
-    /**
-     * Sets the threshold for the glow effect.
-     *
-     * @param threshold the threshold for the glow effect
-     */
-    public void setThreshold(float threshold) {
-        this.threshold = threshold;
-    }
-
-    /**
-     * Gets the intensity of the glow.
-     *
-     * @return the intensity of the glow
-     */
-    public float getIntensity() {
-        return intensity;
-    }
-
-    /**
-     * Sets the intensity of the glow.
-     *
-     * @param intensity the intensity of the glow
-     */
-    public void setIntensity(float intensity) {
-        this.intensity = intensity;
-    }
 }

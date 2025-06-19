@@ -1,11 +1,15 @@
 package me.hannsi.lfjg.render.gui.system.item.items;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.frame.event.events.user.MouseButtonEvent;
 import me.hannsi.lfjg.render.gui.system.item.ItemRect;
 
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 
 public class Button extends ItemRect {
+    @Getter
+    @Setter
     private String title;
     private boolean isHover;
 
@@ -31,14 +35,6 @@ public class Button extends ItemRect {
 
     public void doAction(MouseButtonEvent event) {
 
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public boolean isHover() {

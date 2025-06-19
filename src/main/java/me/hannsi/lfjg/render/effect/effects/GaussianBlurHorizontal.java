@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
@@ -13,7 +15,20 @@ import java.nio.FloatBuffer;
 /**
  * Class representing a Gaussian Blur Horizontal effect in OpenGL.
  */
+@Getter
+@Setter
 public class GaussianBlurHorizontal extends EffectBase {
+    /**
+     * -- SETTER --
+     *  Sets the radius of the blur in the x-direction.
+     *
+     *
+     * -- GETTER --
+     *  Gets the radius of the blur in the x-direction.
+     *
+     @param radiusX the radius of the blur in the x-direction
+      * @return the radius of the blur in the x-direction
+     */
     private float radiusX;
 
     /**
@@ -93,21 +108,4 @@ public class GaussianBlurHorizontal extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Gets the radius of the blur in the x-direction.
-     *
-     * @return the radius of the blur in the x-direction
-     */
-    public float getRadiusX() {
-        return radiusX;
-    }
-
-    /**
-     * Sets the radius of the blur in the x-direction.
-     *
-     * @param radiusX the radius of the blur in the x-direction
-     */
-    public void setRadiusX(float radiusX) {
-        this.radiusX = radiusX;
-    }
 }

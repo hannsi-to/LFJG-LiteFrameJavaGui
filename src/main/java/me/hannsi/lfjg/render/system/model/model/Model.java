@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.render.system.model.model;
 
+import lombok.Getter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
@@ -10,9 +11,28 @@ import java.util.List;
 /**
  * Represents a model in the OpenGL rendering system.
  */
+@Getter
 public class Model {
+    /**
+     * -- GETTER --
+     *  Gets the unique identifier of the model.
+     *
+     * @return the unique identifier of the model
+     */
     private final String id;
+    /**
+     * -- GETTER --
+     *  Gets the list of entities associated with the model.
+     *
+     * @return the list of entities associated with the model
+     */
     private final List<Entity> entitiesList;
+    /**
+     * -- GETTER --
+     *  Gets the list of materials associated with the model.
+     *
+     * @return the list of materials associated with the model
+     */
     private final List<Material> materialList;
 
     /**
@@ -44,30 +64,4 @@ public class Model {
         ).logging(DebugLevel.DEBUG);
     }
 
-    /**
-     * Gets the list of entities associated with the model.
-     *
-     * @return the list of entities associated with the model
-     */
-    public List<Entity> getEntitiesList() {
-        return entitiesList;
-    }
-
-    /**
-     * Gets the unique identifier of the model.
-     *
-     * @return the unique identifier of the model
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Gets the list of materials associated with the model.
-     *
-     * @return the list of materials associated with the model
-     */
-    public List<Material> getMaterialList() {
-        return materialList;
-    }
 }

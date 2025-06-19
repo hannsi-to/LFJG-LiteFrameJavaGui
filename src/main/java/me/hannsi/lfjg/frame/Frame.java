@@ -3,7 +3,6 @@ package me.hannsi.lfjg.frame;
 import lombok.Data;
 import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.frame.debug.GLFWDebug;
-import me.hannsi.lfjg.frame.event.events.render.DrawFrameWithNanoVGEvent;
 import me.hannsi.lfjg.frame.event.events.render.DrawFrameWithOpenGLEvent;
 import me.hannsi.lfjg.frame.event.system.EventHandler;
 import me.hannsi.lfjg.frame.frame.GLFWCallback;
@@ -137,9 +136,7 @@ public class Frame implements IFrame {
      */
     private void registerManagers() {
         DebugLog.debug(getClass(), "Managers loading...\n");
-        long tookTime = TimeCalculator.calculateMillis(() -> {
-            this.frameSettingManager = new FrameSettingManager(this);
-        });
+        long tookTime = TimeCalculator.calculateMillis(() -> this.frameSettingManager = new FrameSettingManager(this));
         DebugLog.debug(getClass(), ANSIFormat.GREEN + "Managers took " + tookTime + "ms to load!\n");
     }
 
@@ -222,7 +219,7 @@ public class Frame implements IFrame {
                 try {
                     Thread.sleep((long) sleepTime);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    DebugLog.warning(Frame.class, e);
                 }
             }
 
@@ -267,8 +264,7 @@ public class Frame implements IFrame {
             case OPEN_GL -> eventManager.call(new DrawFrameWithOpenGLEvent());
             case NANO_VG, LIB_GDX, VULKAN -> {
             }
-            default ->
-                    throw new IllegalStateException("Unexpected value: " + getFrameSettingValue(RenderingTypeSetting.class));
+            default -> throw new IllegalStateException("Unexpected value: " + getFrameSettingValue(RenderingTypeSetting.class));
         }
     }
 
@@ -280,16 +276,6 @@ public class Frame implements IFrame {
     @EventHandler
     public void drawFrameWidthOpenGLEvent(DrawFrameWithOpenGLEvent event) {
         lfjgFrame.drawFrame();
-    }
-
-    /**
-     * Event handler for drawing a frame with NanoVG.
-     *
-     * @param event The DrawFrameWithNanoVGEvent.
-     */
-    @EventHandler
-    public void drawFrameWidthNanoVGEvent(DrawFrameWithNanoVGEvent event) {
-//        lfjgFrame.drawFrame(nvg);
     }
 
     /**
@@ -322,8 +308,7 @@ public class Frame implements IFrame {
             }
             case LIB_GDX -> {
             }
-            default ->
-                    throw new IllegalStateException("Unexpected value: " + getFrameSettingValue(RenderingTypeSetting.class));
+            default -> throw new IllegalStateException("Unexpected value: " + getFrameSettingValue(RenderingTypeSetting.class));
         }
 
         GLFW.glfwDestroyWindow(windowID);

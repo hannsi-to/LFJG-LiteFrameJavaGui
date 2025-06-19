@@ -1,10 +1,25 @@
 package me.hannsi.lfjg.render.system.model.lights;
 
+import lombok.Getter;
+
 /**
  * Represents a generic light in the OpenGL rendering system.
  */
+@Getter
 public class Light {
+    /**
+     * -- GETTER --
+     *  Gets the name of the light.
+     *
+     * @return the name of the light
+     */
     final String name;
+    /**
+     * -- GETTER --
+     *  Gets the id of the light.
+     *
+     * @return the id of the light
+     */
     final int id;
 
     /**
@@ -18,21 +33,4 @@ public class Light {
         this.id = id;
     }
 
-    /**
-     * Gets the name of the light.
-     *
-     * @return the name of the light
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Gets the id of the light.
-     *
-     * @return the id of the light
-     */
-    public int getId() {
-        return id;
-    }
 }
