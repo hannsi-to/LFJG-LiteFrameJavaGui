@@ -4,7 +4,7 @@ import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.render.system.MeshBuilder;
+import me.hannsi.lfjg.render.system.Mesh;
 import org.lwjgl.opengl.GL30;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -23,7 +23,7 @@ public class VAORendering {
      * @param glObject the GLObject to draw
      */
     public void draw(GLObject glObject) {
-        drawMesh(glObject.getMeshBuilder(), glObject.getDrawType().getId());
+        drawMesh(glObject.getMesh(), glObject.getDrawType().getId());
     }
 
     /**
@@ -31,11 +31,11 @@ public class VAORendering {
      *
      * @param mesh the Mesh to draw;
      */
-    public void draw(MeshBuilder mesh) {
+    public void draw(Mesh mesh) {
         drawMesh(mesh, GL30.GL_POLYGON);
     }
 
-    public void drawMesh(MeshBuilder mesh, int drawType) {
+    public void drawMesh(Mesh mesh, int drawType) {
         glBindVertexArray(mesh.getVertexArrayObjectId());
         try {
             if (mesh.isUseIndirect()) {

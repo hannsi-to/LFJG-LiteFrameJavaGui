@@ -2,7 +2,7 @@ package me.hannsi.lfjg.render.renderers.svg;
 
 import lombok.Getter;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
-import me.hannsi.lfjg.render.system.MeshBuilder;
+import me.hannsi.lfjg.render.system.Mesh;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
@@ -20,7 +20,7 @@ public class SVGRenderer {
     private final ShaderProgram shaderProgramFBO;
     private final ResourcesLocation vertexShaderFBO;
     private final ResourcesLocation fragmentShaderFBO;
-    private MeshBuilder meshBuilder;
+    private Mesh mesh;
 
     public SVGRenderer() {
         vaoRendering = new VAORendering();
@@ -54,7 +54,7 @@ public class SVGRenderer {
 
         glActiveTexture(GL_TEXTURE0 + textureUnit);
         glBindTexture(GL_TEXTURE_2D, textureId);
-        vaoRendering.draw(meshBuilder);
+        vaoRendering.draw(mesh);
         glBindTexture(GL_TEXTURE_2D, 0);
 
         shaderProgramFBO.unbind();
@@ -64,7 +64,7 @@ public class SVGRenderer {
         float[] positions = new float[]{x, y, x + width, y, x + width, y + height, x, y + height};
         float[] uvs = new float[]{1, 1, 0, 1, 0, 0, 1, 0};
 
-        meshBuilder = MeshBuilder.builderCreate()
+        mesh = Mesh.initMesh()
                 .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
                 .createBufferObjects(positions, null, uvs)
                 .builderClose();

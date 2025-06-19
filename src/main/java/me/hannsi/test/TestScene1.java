@@ -150,13 +150,13 @@ public class TestScene1 implements IScene {
         ResourcesLocation image = new ResourcesLocation("texture/test/test_image_1920x1080.jpg");
         textureCache.createCache(image);
 
-        gl1EffectCache = new EffectCache();
-        gl1SplitObjectEffectCache = new EffectCache();
-        glFontEffectCache = new EffectCache();
-        glTriangleEffectCache = new EffectCache();
-        glShaderEffectCache = new EffectCache();
-        glShaderSplitObjectEffectCache = new EffectCache();
-        glSVGEffectCache = new EffectCache();
+        gl1EffectCache = EffectCache.initEffectCache();
+        gl1SplitObjectEffectCache = EffectCache.initEffectCache();
+        glFontEffectCache = EffectCache.initEffectCache();
+        glTriangleEffectCache = EffectCache.initEffectCache();
+        glShaderEffectCache = EffectCache.initEffectCache();
+        glShaderSplitObjectEffectCache = EffectCache.initEffectCache();
+        glSVGEffectCache = EffectCache.initEffectCache();
 
         gl1SplitObjectEffectCache.createCache("Rotate1", new Rotate(0, 0, MathHelper.toRadians(0), true));
 
@@ -213,9 +213,8 @@ public class TestScene1 implements IScene {
     }
 
     public void animationCacheInit() {
-        gl1AnimationCache = new AnimationCache();
-
-        gl1AnimationCache.createCache(new Bounce(0, 500, 100f, 45));
+        gl1AnimationCache = AnimationCache.initAnimationCache()
+                .createCache(new Bounce(0, 500, 100f, 45));
 //        gl1AnimationCache.createCache(new Trembling(0, 1000, 90, resolution.x / 2, resolution.y / 2));
 
 //        gl1.setAnimationCache(gl1AnimationCache);

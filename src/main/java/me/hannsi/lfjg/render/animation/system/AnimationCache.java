@@ -16,11 +16,15 @@ import java.util.concurrent.atomic.AtomicReference;
 public class AnimationCache {
     private LinkedHashMap<AnimationBase, Long> animationBases;
 
-    public AnimationCache() {
+    AnimationCache() {
         this.animationBases = new LinkedHashMap<>();
     }
 
-    public void createCache(AnimationBase animationBase) {
+    public static AnimationCache initAnimationCache() {
+        return new AnimationCache();
+    }
+
+    public AnimationCache createCache(AnimationBase animationBase) {
         this.animationBases.put(animationBase, Id.latestAnimationCacheId++);
 
         new LogGenerator(
@@ -29,6 +33,8 @@ public class AnimationCache {
                 animationBase.getId(),
                 ""
         ).logging(DebugLevel.DEBUG);
+
+        return this;
     }
 
     public void start(GLObject glObject) {

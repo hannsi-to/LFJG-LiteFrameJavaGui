@@ -5,7 +5,7 @@ import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
-import me.hannsi.lfjg.render.system.MeshBuilder;
+import me.hannsi.lfjg.render.system.Mesh;
 import me.hannsi.lfjg.render.system.model.Object3DCache;
 import me.hannsi.lfjg.render.system.model.lights.*;
 import me.hannsi.lfjg.render.system.model.model.Entity;
@@ -36,14 +36,14 @@ public class Object3DCacheRender {
     private Object3DCache object3DCache;
     /**
      * -- SETTER --
-     *  Sets the shader program used by the renderer.
-     *
-     *
+     * Sets the shader program used by the renderer.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the shader program used by the renderer.
+     * Gets the shader program used by the renderer.
      *
-     @param shaderProgram the shader program to set
-      * @return the shader program
+     * @param shaderProgram the shader program to set
+     * @return the shader program
      */
     @Getter
     @Setter
@@ -108,11 +108,11 @@ public class Object3DCacheRender {
                 glActiveTexture(GL_TEXTURE0);
                 texture.bind();
 
-                for (MeshBuilder meshBuilder : material.getMeshBuilders()) {
-                    glBindVertexArray(meshBuilder.getVertexArrayObjectId());
+                for (Mesh mesh : material.getMeshes()) {
+                    glBindVertexArray(mesh.getVertexArrayObjectId());
                     for (Entity entity : entities) {
                         shaderProgram.setUniform("modelMatrix", entity.getModelMatrix());
-                        glDrawElements(GL_TRIANGLES, meshBuilder.getNumVertices(), GL_UNSIGNED_INT, 0);
+                        glDrawElements(GL_TRIANGLES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
                     }
                 }
 

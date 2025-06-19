@@ -25,7 +25,7 @@ public class SceneSystem {
         this.currentScene = null;
     }
 
-    public static SceneSystem builderCreate() {
+    public static SceneSystem initSceneSystem() {
         return new SceneSystem();
     }
 

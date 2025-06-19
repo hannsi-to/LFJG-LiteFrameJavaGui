@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.hannsi.lfjg.render.debug.exceptions.render.meshBuilder.MeshBuilderException;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.render.system.MeshBuilder;
+import me.hannsi.lfjg.render.system.Mesh;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
@@ -150,14 +150,14 @@ public class GLPolygon extends GLObject {
 
     public void updateSubData() {
         setGLObjectParameter();
-        MeshBuilder meshBuilder = getMeshBuilder();
-        if (meshBuilder == null) {
+        Mesh mesh = getMesh();
+        if (mesh == null) {
             throw new MeshBuilderException("MeshBuilder is null.");
         }
 
-        meshBuilder.updateVBOSubData(BufferObjectType.POSITIONS_BUFFER, vertex);
-        meshBuilder.updateVBOSubData(BufferObjectType.COLORS_BUFFER, color);
-        meshBuilder.updateVBOSubData(BufferObjectType.TEXTURE_BUFFER, texture);
+        mesh.updateVBOSubData(BufferObjectType.POSITIONS_BUFFER, vertex);
+        mesh.updateVBOSubData(BufferObjectType.COLORS_BUFFER, color);
+        mesh.updateVBOSubData(BufferObjectType.TEXTURE_BUFFER, texture);
 
         vertex = new float[0];
         color = new float[0];
@@ -166,14 +166,14 @@ public class GLPolygon extends GLObject {
 
     public void updateData() {
         setGLObjectParameter();
-        MeshBuilder meshBuilder = getMeshBuilder();
-        if (meshBuilder == null) {
+        Mesh mesh = getMesh();
+        if (mesh == null) {
             throw new MeshBuilderException("MeshBuilder is null.");
         }
 
-        meshBuilder.updateVBOData(BufferObjectType.POSITIONS_BUFFER, vertex);
-        meshBuilder.updateVBOData(BufferObjectType.COLORS_BUFFER, color);
-        meshBuilder.updateVBOData(BufferObjectType.TEXTURE_BUFFER, texture);
+        mesh.updateVBOData(BufferObjectType.POSITIONS_BUFFER, vertex);
+        mesh.updateVBOData(BufferObjectType.COLORS_BUFFER, color);
+        mesh.updateVBOData(BufferObjectType.TEXTURE_BUFFER, texture);
 
         vertex = new float[0];
         color = new float[0];
@@ -182,14 +182,14 @@ public class GLPolygon extends GLObject {
 
     public void updateMapBufferRange() {
         setGLObjectParameter();
-        MeshBuilder meshBuilder = getMeshBuilder();
-        if (meshBuilder == null) {
+        Mesh mesh = getMesh();
+        if (mesh == null) {
             throw new MeshBuilderException("MeshBuilder is null.");
         }
 
-        meshBuilder.updateVBOMapBufferRange(BufferObjectType.POSITIONS_BUFFER, vertex);
-        meshBuilder.updateVBOMapBufferRange(BufferObjectType.COLORS_BUFFER, color);
-        meshBuilder.updateVBOMapBufferRange(BufferObjectType.TEXTURE_BUFFER, texture);
+        mesh.updateVBOMapBufferRange(BufferObjectType.POSITIONS_BUFFER, vertex);
+        mesh.updateVBOMapBufferRange(BufferObjectType.COLORS_BUFFER, color);
+        mesh.updateVBOMapBufferRange(BufferObjectType.TEXTURE_BUFFER, texture);
 
         vertex = new float[0];
         color = new float[0];
@@ -207,12 +207,12 @@ public class GLPolygon extends GLObject {
         } else {
             isUpdate = true;
 
-            MeshBuilder meshBuilder = MeshBuilder.builderCreate()
+            Mesh mesh = Mesh.initMesh()
                     .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
                     .createBufferObjects(vertex, color, texture)
                     .builderClose();
 
-            setMeshBuilder(meshBuilder);
+            setMesh(mesh);
 
             setGLObjectParameter();
             create(vertexShaderPath, fragmentShaderPath);

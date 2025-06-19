@@ -33,7 +33,7 @@ public class TestVideo1 implements IScene {
         glVideo = new GLVideo("TestVideo1");
         glVideo.video(new ResourcesLocation("video/test4.webm"), 0, 0, frame.getWindowWidth(), frame.getWindowHeight());
 
-        effectCache = new EffectCache();
+        effectCache = EffectCache.initEffectCache();
         effectCache.createCache("DrawObject1", new DrawObject());
         effectCache.createCache("Monochrome", new Monochrome(1f, new Color(255, 255, 255, 0), true));
         effectCache.create(glVideo);

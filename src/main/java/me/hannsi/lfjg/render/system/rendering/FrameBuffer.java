@@ -10,7 +10,7 @@ import me.hannsi.lfjg.render.debug.exceptions.frameBuffer.CreatingFrameBufferExc
 import me.hannsi.lfjg.render.debug.exceptions.render.scene.CreatingRenderBufferException;
 import me.hannsi.lfjg.render.debug.exceptions.texture.CreatingTextureException;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.render.system.MeshBuilder;
+import me.hannsi.lfjg.render.system.Mesh;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
@@ -36,7 +36,7 @@ public class FrameBuffer {
     private float y;
     private float width;
     private float height;
-    private MeshBuilder meshBuilder;
+    private Mesh mesh;
     private ShaderProgram shaderProgramFBO;
     private ResourcesLocation vertexShaderFBO;
     private ResourcesLocation fragmentShaderFBO;
@@ -98,7 +98,7 @@ public class FrameBuffer {
 
         float[] uvs = new float[]{0, 0, 1, 0, 1, 1, 0, 1};
 
-        meshBuilder = MeshBuilder.builderCreate()
+        mesh = Mesh.initMesh()
                 .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
                 .createBufferObjects(positions, null, uvs)
                 .builderClose();
@@ -116,7 +116,7 @@ public class FrameBuffer {
         glDeleteRenderbuffers(renderBufferId);
 
         vaoRendering.cleanup();
-        meshBuilder.cleanup();
+        mesh.cleanup();
         shaderProgramFBO.cleanup();
         vaoRendering.cleanup();
         fragmentShaderFBO.cleanup();
@@ -207,7 +207,7 @@ public class FrameBuffer {
             glStencilFunc(GL_ALWAYS, 1, 0xff);
             glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
             glColorMask(false, false, false, false);
-            vaoRendering.draw(glObject.getMeshBuilder());
+            vaoRendering.draw(glObject.getMesh());
             glColorMask(true, true, true, true);
 
             glStencilFunc(GL_EQUAL, 1, 0xff);
@@ -215,7 +215,7 @@ public class FrameBuffer {
         }
 
         bindTexture(textureUnit);
-        vaoRendering.draw(meshBuilder);
+        vaoRendering.draw(mesh);
         unbindTexture(textureUnit);
 
         shaderProgramFBO.unbind();

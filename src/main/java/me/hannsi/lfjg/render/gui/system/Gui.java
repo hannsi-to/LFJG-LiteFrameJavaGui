@@ -19,7 +19,7 @@ public class Gui {
 
     }
 
-    public Gui builder() {
+    public Gui initGui() {
         items = new ArrayList<>();
         return this;
     }

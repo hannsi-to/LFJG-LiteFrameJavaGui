@@ -27,7 +27,7 @@ public class TestScene3 implements IScene {
     @Override
     public void init() {
         gui = new Gui()
-                .builder()
+                .initGui()
 //                .addItem(new TestButton(0, 0, 100, 100, 4))
 //                .addItem(
 //                        new TestLabel(500, 500, 1)

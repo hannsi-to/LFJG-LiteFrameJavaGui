@@ -35,12 +35,16 @@ public class EffectCache {
     /**
      * Constructs a new EffectCache.
      */
-    public EffectCache() {
+    EffectCache() {
         this.effectBases = new LinkedHashMap<>();
 
         this.endFrameBuffer = new FrameBuffer();
         this.endFrameBuffer.createFrameBuffer();
         this.endFrameBuffer.createShaderProgram();
+    }
+
+    public static EffectCache initEffectCache() {
+        return new EffectCache();
     }
 
     /**
@@ -77,10 +81,12 @@ public class EffectCache {
         return reversedMap;
     }
 
-    public void create(GLObject glObject) {
+    public EffectCache create(GLObject glObject) {
         for (Map.Entry<EffectBase, Identifier> effectBase : effectBases.entrySet()) {
             effectBase.getKey().create(glObject);
         }
+
+        return this;
     }
 
     public void updateFrameBufferSize(FrameBuffer frameBuffer) {
@@ -97,7 +103,7 @@ public class EffectCache {
      *
      * @param effectBase the effect to cache
      */
-    public void createCache(String name, EffectBase effectBase) {
+    public EffectCache createCache(String name, EffectBase effectBase) {
         this.effectBases.put(effectBase, new Identifier(name, Id.latestEffectCacheId++));
 
         new LogGenerator(
@@ -106,9 +112,11 @@ public class EffectCache {
                 effectBase.getId(),
                 ""
         ).logging(DebugLevel.DEBUG);
+
+        return this;
     }
 
-    public void createCache(String name, EffectBase effectBase, int index) {
+    public EffectCache createCache(String name, EffectBase effectBase, int index) {
         LinkedHashMap<EffectBase, Identifier> newEffectCache = new LinkedHashMap<>();
 
         int i = 0;
@@ -130,6 +138,8 @@ public class EffectCache {
                 effectBase.getId(),
                 ""
         ).logging(DebugLevel.DEBUG);
+
+        return this;
     }
 
     /**

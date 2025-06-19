@@ -5,7 +5,7 @@ import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
-import me.hannsi.lfjg.render.system.MeshBuilder;
+import me.hannsi.lfjg.render.system.Mesh;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import org.joml.Vector4f;
 
@@ -20,73 +20,73 @@ public class Material {
     public static final Vector4f DEFAULT_COLOR = new Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
     /**
      * -- GETTER --
-     *  Gets the list of meshes associated with the material.
+     * Gets the list of meshes associated with the material.
      *
      * @return the list of meshes associated with the material
      */
-    private final List<MeshBuilder> meshBuilders;
+    private final List<Mesh> meshes;
     /**
      * -- SETTER --
-     *  Sets the ambient color of the material.
-     *
-     *
+     * Sets the ambient color of the material.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the ambient color of the material.
+     * Gets the ambient color of the material.
      *
-     @param ambientColor the new ambient color of the material
-      * @return the ambient color of the material
+     * @param ambientColor the new ambient color of the material
+     * @return the ambient color of the material
      */
     @Setter
     private Vector4f ambientColor;
     /**
      * -- SETTER --
-     *  Sets the diffuse color of the material.
-     *
-     *
+     * Sets the diffuse color of the material.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the diffuse color of the material.
+     * Gets the diffuse color of the material.
      *
-     @param diffuseColor the new diffuse color of the material
-      * @return the diffuse color of the material
+     * @param diffuseColor the new diffuse color of the material
+     * @return the diffuse color of the material
      */
     @Setter
     private Vector4f diffuseColor;
     /**
      * -- SETTER --
-     *  Sets the reflectance of the material.
-     *
-     *
+     * Sets the reflectance of the material.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the reflectance of the material.
+     * Gets the reflectance of the material.
      *
-     @param reflectance the new reflectance of the material
-      * @return the reflectance of the material
+     * @param reflectance the new reflectance of the material
+     * @return the reflectance of the material
      */
     @Setter
     private float reflectance;
     /**
      * -- SETTER --
-     *  Sets the specular color of the material.
-     *
-     *
+     * Sets the specular color of the material.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the specular color of the material.
+     * Gets the specular color of the material.
      *
-     @param specularColor the new specular color of the material
-      * @return the specular color of the material
+     * @param specularColor the new specular color of the material
+     * @return the specular color of the material
      */
     @Setter
     private Vector4f specularColor;
     /**
      * -- SETTER --
-     *  Sets the texture path of the material.
-     *
-     *
+     * Sets the texture path of the material.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the texture path of the material.
+     * Gets the texture path of the material.
      *
-     @param texturePath the new texture path of the material
-      * @return the texture path of the material
+     * @param texturePath the new texture path of the material
+     * @return the texture path of the material
      */
     @Setter
     private FileLocation texturePath;
@@ -99,7 +99,7 @@ public class Material {
         ambientColor = DEFAULT_COLOR;
         specularColor = DEFAULT_COLOR;
 
-        meshBuilders = new ArrayList<>();
+        meshes = new ArrayList<>();
     }
 
     /**
@@ -108,7 +108,7 @@ public class Material {
     public void cleanup() {
         ambientColor = null;
         diffuseColor = null;
-        meshBuilders.forEach(MeshBuilder::cleanup);
+        meshes.forEach(Mesh::cleanup);
         specularColor = null;
         texturePath.cleanup();
 

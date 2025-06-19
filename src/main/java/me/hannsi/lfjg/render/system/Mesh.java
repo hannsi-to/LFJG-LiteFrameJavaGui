@@ -22,7 +22,7 @@ import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 
-public class MeshBuilder {
+public class Mesh {
     public static final ProjectionType DEFAULT_PROJECTION_TYPE = ProjectionType.ORTHOGRAPHIC_PROJECTION;
     public static final boolean DEFAULT_USE_ELEMENT_BUFFER_OBJECT = true;
     public static final boolean DEFAULT_USE_INDIRECT = true;
@@ -60,7 +60,7 @@ public class MeshBuilder {
     private int bufferCount;
     private int currentBufferIndex;
 
-    MeshBuilder() {
+    Mesh() {
         this.projectionType = DEFAULT_PROJECTION_TYPE;
         this.useElementBufferObject = DEFAULT_USE_ELEMENT_BUFFER_OBJECT;
         this.useIndirect = DEFAULT_USE_INDIRECT;
@@ -75,19 +75,19 @@ public class MeshBuilder {
         this.bufferIds = new HashMap<>();
     }
 
-    public static MeshBuilder builderCreate() {
-        return new MeshBuilder();
+    public static Mesh initMesh() {
+        return new Mesh();
     }
 
-    public MeshBuilder createBufferObjects(float[] positions) {
+    public Mesh createBufferObjects(float[] positions) {
         return createBufferObjects(positions, null);
     }
 
-    public MeshBuilder createBufferObjects(float[] positions, float[] colors) {
+    public Mesh createBufferObjects(float[] positions, float[] colors) {
         return createBufferObjects(positions, colors, null);
     }
 
-    public MeshBuilder createBufferObjects(float[] positions, float[] colors, float[] texture) {
+    public Mesh createBufferObjects(float[] positions, float[] colors, float[] texture) {
         this.positions = positions;
         this.colors = colors;
         this.textures = texture;
@@ -113,7 +113,7 @@ public class MeshBuilder {
         return this;
     }
 
-    public MeshBuilder createBufferObjects(float[] positions, float[] normals, float[] textures, int[] indices) {
+    public Mesh createBufferObjects(float[] positions, float[] normals, float[] textures, int[] indices) {
         this.positions = positions;
         this.textures = textures;
         this.colors = null;
@@ -134,32 +134,32 @@ public class MeshBuilder {
         return this;
     }
 
-    public MeshBuilder projectionType(ProjectionType projectionType) {
+    public Mesh projectionType(ProjectionType projectionType) {
         this.projectionType = projectionType;
         return this;
     }
 
-    public MeshBuilder useElementBufferObject(boolean useElementBufferObject) {
+    public Mesh useElementBufferObject(boolean useElementBufferObject) {
         this.useElementBufferObject = useElementBufferObject;
         return this;
     }
 
-    public MeshBuilder useIndirect(boolean useIndirect) {
+    public Mesh useIndirect(boolean useIndirect) {
         this.useIndirect = useIndirect;
         return this;
     }
 
-    public MeshBuilder usageHint(int usageHint) {
+    public Mesh usageHint(int usageHint) {
         this.usageHint = usageHint;
         return this;
     }
 
-    public MeshBuilder bufferCount(int bufferCount) {
+    public Mesh bufferCount(int bufferCount) {
         this.bufferCount = bufferCount;
         return this;
     }
 
-    public MeshBuilder builderClose() {
+    public Mesh builderClose() {
         glBindVertexArray(0);
         return this;
     }

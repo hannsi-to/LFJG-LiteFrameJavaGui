@@ -9,7 +9,7 @@ import me.hannsi.lfjg.render.Id;
 import me.hannsi.lfjg.render.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
-import me.hannsi.lfjg.render.system.MeshBuilder;
+import me.hannsi.lfjg.render.system.Mesh;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
@@ -30,7 +30,7 @@ public class GLObject implements Cloneable {
     private long objectId;
 
     private VAORendering vaoRendering;
-    private MeshBuilder meshBuilder;
+    private Mesh mesh;
     private FrameBuffer frameBuffer;
     private ShaderProgram shaderProgram;
 
@@ -69,7 +69,7 @@ public class GLObject implements Cloneable {
         this.name = name;
 
         this.vaoRendering = null;
-        this.meshBuilder = null;
+        this.mesh = null;
         this.frameBuffer = null;
         this.shaderProgram = null;
 
@@ -93,8 +93,8 @@ public class GLObject implements Cloneable {
         if (effectCache != null) {
             effectCache.cleanup();
         }
-        if (meshBuilder != null) {
-            meshBuilder.cleanup();
+        if (mesh != null) {
+            mesh.cleanup();
         }
         if (frameBuffer != null) {
             frameBuffer.cleanup();
@@ -192,7 +192,7 @@ public class GLObject implements Cloneable {
         shaderProgram.setUniform("modelMatrix", modelMatrix);
         shaderProgram.setUniform("viewMatrix", viewMatrix);
         shaderProgram.setUniform("resolution", LFJGContext.frameBufferSize);
-        if (meshBuilder.getTextures() != null) {
+        if (mesh.getTextures() != null) {
             shaderProgram.setUniform1i("textureSampler", 0);
         }
     }
@@ -301,11 +301,11 @@ public class GLObject implements Cloneable {
     /**
      * Sets the Mesh of the GLObject.
      *
-     * @param meshBuilder the Mesh to set
+     * @param mesh the Mesh to set
      * @return the GLObject instance
      */
-    public GLObject setMeshBuilder(MeshBuilder meshBuilder) {
-        this.meshBuilder = meshBuilder;
+    public GLObject setMesh(Mesh mesh) {
+        this.mesh = mesh;
 
         return this;
     }

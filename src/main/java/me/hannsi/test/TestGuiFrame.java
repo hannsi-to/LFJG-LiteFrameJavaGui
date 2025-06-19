@@ -76,7 +76,7 @@ public class TestGuiFrame implements LFJGFrame {
                 .createCache(new Font("font", new ResourcesLocation("font/default.ttf")))
                 .loadFonts();
 
-        sceneSystem = SceneSystem.builderCreate()
+        sceneSystem = SceneSystem.initSceneSystem()
                 .addScene(new TestScene1().getScene())
                 .addScene(new TestScene2(frame).getScene())
                 .addScene(new TestScene3(frame).getScene())
