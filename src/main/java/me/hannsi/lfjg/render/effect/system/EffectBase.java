@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.system;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
@@ -10,12 +12,50 @@ import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 /**
  * Base class for effects in OpenGL.
  */
+@Getter
 public class EffectBase {
     private final ResourcesLocation vertexPath;
     private final ResourcesLocation fragmentPath;
+    /**
+     * -- GETTER --
+     * Gets the name of the effect.
+     *
+     * @return the name of the effect
+     */
     private final String name;
+    /**
+     * -- GETTER --
+     * Gets the frame buffer.
+     *
+     * @return the frame buffer
+     */
+    @Setter
     private FrameBuffer frameBuffer;
+    /**
+     * -- GETTER --
+     * Gets the ID of the effect.
+     * <p>
+     * <p>
+     * -- SETTER --
+     * Sets the ID of the effect.
+     *
+     * @return the ID of the effect
+     * @param id the ID of the effect
+     */
+    @Setter
     private int id;
+    /**
+     * -- GETTER --
+     * Gets the GL objects to ignore.
+     * <p>
+     * <p>
+     * -- SETTER --
+     * Sets the GL objects to ignore.
+     *
+     * @return the GL objects to ignore
+     * @param ignoreGLObject the GL objects to ignore
+     */
+    @Setter
     private Class<GLObject>[] ignoreGLObject;
 
     /**
@@ -162,71 +202,5 @@ public class EffectBase {
      */
     public void setUniform(GLObject baseGLObject) {
 
-    }
-
-    /**
-     * Gets the ID of the effect.
-     *
-     * @return the ID of the effect
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * Sets the ID of the effect.
-     *
-     * @param id the ID of the effect
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    /**
-     * Gets the name of the effect.
-     *
-     * @return the name of the effect
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Gets the GL objects to ignore.
-     *
-     * @return the GL objects to ignore
-     */
-    public Class<GLObject>[] getIgnoreGLObject() {
-        return ignoreGLObject;
-    }
-
-    /**
-     * Sets the GL objects to ignore.
-     *
-     * @param ignoreGLObject the GL objects to ignore
-     */
-    public void setIgnoreGLObject(Class<GLObject>[] ignoreGLObject) {
-        this.ignoreGLObject = ignoreGLObject;
-    }
-
-    /**
-     * Gets the frame buffer.
-     *
-     * @return the frame buffer
-     */
-    public FrameBuffer getFrameBuffer() {
-        return frameBuffer;
-    }
-
-    public void setFrameBuffer(FrameBuffer frameBuffer) {
-        this.frameBuffer = frameBuffer;
-    }
-
-    public ResourcesLocation getVertexPath() {
-        return vertexPath;
-    }
-
-    public ResourcesLocation getFragmentPath() {
-        return fragmentPath;
     }
 }

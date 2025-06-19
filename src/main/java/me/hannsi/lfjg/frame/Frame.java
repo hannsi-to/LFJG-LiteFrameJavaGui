@@ -304,12 +304,8 @@ public class Frame implements IFrame {
      */
     private void setAntiAliasing() {
         switch (((AntiAliasingType) getFrameSettingValue(AntiAliasingSetting.class))) {
-            case MSAA -> {
-                glEnable(GL_MULTISAMPLE);
-            }
-            case OFF -> {
-                glDisable(GL_MULTISAMPLE);
-            }
+            case MSAA -> glEnable(GL_MULTISAMPLE);
+            case OFF -> glDisable(GL_MULTISAMPLE);
         }
     }
 

@@ -31,9 +31,7 @@ public class GLObject implements Cloneable {
 
     private VAORendering vaoRendering;
     private MeshBuilder meshBuilder;
-
     private FrameBuffer frameBuffer;
-
     private ShaderProgram shaderProgram;
 
     private Matrix4f modelMatrix;
@@ -71,15 +69,17 @@ public class GLObject implements Cloneable {
         this.name = name;
 
         this.vaoRendering = null;
-        this.shaderProgram = null;
-        this.lineWidth = -1f;
-        this.pointSize = -1f;
-        this.modelMatrix = null;
-        this.viewMatrix = null;
-        this.blendType = null;
-        this.drawType = null;
         this.meshBuilder = null;
         this.frameBuffer = null;
+        this.shaderProgram = null;
+
+        this.modelMatrix = null;
+        this.viewMatrix = null;
+
+        this.lineWidth = -1f;
+        this.pointSize = -1f;
+        this.blendType = null;
+        this.drawType = null;
         this.objectId = ++Id.latestGLObjectId;
     }
 
@@ -149,7 +149,13 @@ public class GLObject implements Cloneable {
 
         vaoRendering.draw(this);
 
+        if (effectCache != null) {
+            effectCache.push(this);
+        }
         uploadCache();
+        if (effectCache != null) {
+            effectCache.pop(this);
+        }
 
         frameBuffer.unbindFrameBuffer();
 
@@ -159,9 +165,6 @@ public class GLObject implements Cloneable {
     }
 
     private void uploadCache() {
-        if (effectCache != null) {
-            effectCache.pop(this);
-        }
         if (effectCache != null) {
             effectCache.frameBuffer(this);
         }
@@ -176,9 +179,6 @@ public class GLObject implements Cloneable {
         }
         if (pointSize != -1f) {
             glPointSize(pointSize);
-        }
-        if (effectCache != null) {
-            effectCache.push(this);
         }
 
         GLStateCache.setBlendFunc(blendType.getSfactor(), blendType.getDfactor());

@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.system;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
@@ -13,7 +15,20 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * Class representing a cache for OpenGL effects.
  */
+@Setter
+@Getter
 public class EffectCache {
+    /**
+     * -- GETTER --
+     * Gets the effect bases.
+     * <p>
+     * <p>
+     * -- SETTER --
+     * Sets the effect bases.
+     *
+     * @return the effect bases
+     * @param effectBases the effect bases
+     */
     private LinkedHashMap<EffectBase, Identifier> effectBases;
     private FrameBuffer endFrameBuffer;
 
@@ -250,32 +265,6 @@ public class EffectCache {
                 ids.get().substring(0, ids.get().length() - 2),
                 ""
         ).logging(DebugLevel.DEBUG);
-    }
-
-    /**
-     * Gets the effect bases.
-     *
-     * @return the effect bases
-     */
-    public LinkedHashMap<EffectBase, Identifier> getEffectBases() {
-        return effectBases;
-    }
-
-    /**
-     * Sets the effect bases.
-     *
-     * @param effectBases the effect bases
-     */
-    public void setEffectBases(LinkedHashMap<EffectBase, Identifier> effectBases) {
-        this.effectBases = effectBases;
-    }
-
-    public FrameBuffer getEndFrameBuffer() {
-        return endFrameBuffer;
-    }
-
-    public void setEndFrameBuffer(FrameBuffer endFrameBuffer) {
-        this.endFrameBuffer = endFrameBuffer;
     }
 
     public record Identifier(String name, long id) {
