@@ -14,7 +14,10 @@ import org.lwjgl.system.MemoryUtil;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL15.*;
@@ -59,12 +62,12 @@ public class Mesh {
     private int currentBufferIndex;
 
     Mesh() {
-        this.projectionType = MeshDefaults.PROJECTION_TYPE;
-        this.useElementBufferObject = MeshDefaults.USE_ELEMENT_BUFFER_OBJECT;
-        this.useIndirect = MeshDefaults.USE_INDIRECT;
-        this.usageHint = MeshDefaults.USAGE_HINT;
-        this.accessHint = MeshDefaults.ACCESS_HINT;
-        this.bufferCount = MeshDefaults.BUFFER_COUNT;
+        this.projectionType = MeshConstants.PROJECTION_TYPE;
+        this.useElementBufferObject = MeshConstants.USE_ELEMENT_BUFFER_OBJECT;
+        this.useIndirect = MeshConstants.USE_INDIRECT;
+        this.usageHint = MeshConstants.USAGE_HINT;
+        this.accessHint = MeshConstants.ACCESS_HINT;
+        this.bufferCount = MeshConstants.BUFFER_COUNT;
 
         this.currentBufferIndex = 0;
 
@@ -366,15 +369,16 @@ public class Mesh {
     }
 
     private ElementPair getElementPositions(int stride, float[] positions) {
-        Map<String, Integer> uniqueVertices = new HashMap<>();
+        Map<VertexKey, Integer> uniqueVertices = new HashMap<>();
         List<Integer> indices = new ArrayList<>();
         List<Float> uniquePositions = new ArrayList<>();
         int index = 0;
 
         for (int i = 0; i < positions.length; i += stride) {
-            String key = Arrays.toString(Arrays.copyOfRange(positions, i, i + stride));
-            if (uniqueVertices.containsKey(key)) {
-                indices.add(uniqueVertices.get(key));
+            VertexKey key = new VertexKey(positions, i, stride);
+            Integer existingIndex = uniqueVertices.get(key);
+            if (existingIndex != null) {
+                indices.add(existingIndex);
             } else {
                 uniqueVertices.put(key, index);
                 indices.add(index);
@@ -396,27 +400,38 @@ public class Mesh {
     private void createElementBufferObject(int[] indices) {
         elementBufferObjectId = glGenBuffers();
         bufferIds.put(BufferObjectType.ELEMENT_ARRAY_BUFFER, elementBufferObjectId);
-        IntBuffer indicesBuffer = MemoryUtil.memCallocInt(indices.length);
-        indicesBuffer.put(0, indices);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferObjectId);
+
         long byteSize = (long) indices.length * Integer.BYTES * bufferCount;
+
+        IntBuffer indicesBuffer = MemoryUtil.memCallocInt(indices.length);
+        indicesBuffer.put(indices);
+        indicesBuffer.flip();
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferObjectId);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, byteSize, usageHint);
         glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, indicesBuffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+        MemoryUtil.memFree(indicesBuffer);
     }
 
     private void createVertexBufferObject(BufferObjectType bufferObjectType, float[] values, int index, int size) {
         int bufferId = glGenBuffers();
         bufferIds.put(bufferObjectType, bufferId);
-        FloatBuffer valuesBuffer = MemoryUtil.memCallocFloat(values.length);
-        valuesBuffer.put(0, values);
-        glBindBuffer(GL_ARRAY_BUFFER, bufferId);
+
         long byteSize = (long) values.length * Float.BYTES * bufferCount;
+
+        FloatBuffer valuesBuffer = MemoryUtil.memCallocFloat(values.length);
+        valuesBuffer.put(values);
+        valuesBuffer.flip();
+
+        glBindBuffer(GL_ARRAY_BUFFER, bufferId);
         glBufferData(GL_ARRAY_BUFFER, byteSize, usageHint);
         glBufferSubData(GL_ARRAY_BUFFER, 0, valuesBuffer);
         glEnableVertexAttribArray(index);
         glVertexAttribPointer(index, size, GL_FLOAT, false, 0, 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
+
         MemoryUtil.memFree(valuesBuffer);
     }
 
@@ -424,13 +439,67 @@ public class Mesh {
         return projectionType.getStride();
     }
 
-    public static class ElementPair {
-        public float[] positions;
-        public int[] indices;
-
+    public record ElementPair(float[] positions, int[] indices) {
         public ElementPair(float[] positions, int[] indices) {
-            this.positions = positions;
-            this.indices = indices;
+            this.positions = positions.clone();
+            this.indices = indices.clone();
+        }
+
+        @Override
+        public float[] positions() {
+            return positions.clone();
+        }
+
+        @Override
+        public int[] indices() {
+            return indices.clone();
+        }
+    }
+
+    private static class VertexKey {
+        private final float[] data;
+        private final int offset;
+        private final int length;
+        private final int hash;
+
+        public VertexKey(float[] data, int offset, int length) {
+            this.data = data;
+            this.offset = offset;
+            this.length = length;
+            this.hash = computeHash();
+        }
+
+        private int computeHash() {
+            int h = 1;
+            for (int i = 0; i < length; i++) {
+                h = 31 * h + Float.hashCode(data[offset + i]);
+            }
+            return h;
+        }
+
+        @Override
+        public int hashCode() {
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof VertexKey other)) {
+                return false;
+            }
+            if (this.length != other.length) {
+                return false;
+            }
+
+            for (int i = 0; i < length; i++) {
+                if (Float.compare(this.data[offset + i], other.data[other.offset + i]) != 0) {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
