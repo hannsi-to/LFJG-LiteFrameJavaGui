@@ -25,7 +25,7 @@ import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 
-public class Mesh implements AutoCloseable {
+public class Mesh {
     @Getter
     private final int vertexArrayObjectId;
     @Getter
@@ -430,11 +430,6 @@ public class Mesh implements AutoCloseable {
 
     private int getStride() {
         return projectionType.getStride();
-    }
-
-    @Override
-    public void close() {
-        cleanup();
     }
 
     public record ElementPair(float[] positions, int[] indices) {
