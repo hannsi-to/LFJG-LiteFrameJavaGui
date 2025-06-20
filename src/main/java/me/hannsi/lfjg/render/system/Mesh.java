@@ -24,13 +24,6 @@ import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 
 public class Mesh {
-    public static final ProjectionType DEFAULT_PROJECTION_TYPE = ProjectionType.ORTHOGRAPHIC_PROJECTION;
-    public static final boolean DEFAULT_USE_ELEMENT_BUFFER_OBJECT = true;
-    public static final boolean DEFAULT_USE_INDIRECT = true;
-    public static final int DEFAULT_USAGE_HINT = GL_DYNAMIC_DRAW;
-    public static final int DEFAULT_ACCESS_HINT = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT;
-    public static final int DEFAULT_BUFFER_COUNT = 1;
-
     @Getter
     private final int vertexArrayObjectId;
     @Getter
@@ -66,12 +59,12 @@ public class Mesh {
     private int currentBufferIndex;
 
     Mesh() {
-        this.projectionType = DEFAULT_PROJECTION_TYPE;
-        this.useElementBufferObject = DEFAULT_USE_ELEMENT_BUFFER_OBJECT;
-        this.useIndirect = DEFAULT_USE_INDIRECT;
-        this.usageHint = DEFAULT_USAGE_HINT;
-        this.accessHint = DEFAULT_ACCESS_HINT;
-        this.bufferCount = DEFAULT_BUFFER_COUNT;
+        this.projectionType = MeshDefaults.PROJECTION_TYPE;
+        this.useElementBufferObject = MeshDefaults.USE_ELEMENT_BUFFER_OBJECT;
+        this.useIndirect = MeshDefaults.USE_INDIRECT;
+        this.usageHint = MeshDefaults.USAGE_HINT;
+        this.accessHint = MeshDefaults.ACCESS_HINT;
+        this.bufferCount = MeshDefaults.BUFFER_COUNT;
 
         this.currentBufferIndex = 0;
 
@@ -101,7 +94,7 @@ public class Mesh {
         if (useElementBufferObject) {
             createVectorBufferObjectAndElementBufferObject();
         } else {
-            createVertexBufferObject(BufferObjectType.POSITIONS_BUFFER, positions, 0, getSize());
+            createVertexBufferObject(BufferObjectType.POSITIONS_BUFFER, positions, 0, getStride());
         }
 
         if (colors != null) {
@@ -186,7 +179,6 @@ public class Mesh {
 
         for (Map.Entry<BufferObjectType, Integer> bufferObjectTypeEntry : bufferIds.entrySet()) {
             BufferObjectType entryBufferObjectType = bufferObjectTypeEntry.getKey();
-            int glId = entryBufferObjectType.getGlId();
             int bufferId = bufferObjectTypeEntry.getValue();
 
             if (entryBufferObjectType == BufferObjectType.ELEMENT_ARRAY_BUFFER && elementPair != null) {
@@ -197,12 +189,7 @@ public class Mesh {
                 continue;
             }
 
-            FloatBuffer buffer = BufferUtils.createFloatBuffer(newValues.length);
-            buffer.put(newValues).flip();
-
-            glBindBuffer(glId, bufferId);
-            glBufferData(glId, buffer, usageHint);
-            glBindBuffer(glId, 0);
+            uploadVertexBufferObject(UpdateBufferType.BUFFER_DATA, entryBufferObjectType, bufferId, newValues);
         }
     }
 
@@ -213,7 +200,6 @@ public class Mesh {
 
         for (Map.Entry<BufferObjectType, Integer> bufferObjectTypeEntry : bufferIds.entrySet()) {
             BufferObjectType entryBufferObjectType = bufferObjectTypeEntry.getKey();
-            int glId = entryBufferObjectType.getGlId();
             int bufferId = bufferObjectTypeEntry.getValue();
 
             if (entryBufferObjectType == BufferObjectType.ELEMENT_ARRAY_BUFFER && elementPair != null) {
@@ -224,14 +210,7 @@ public class Mesh {
                 continue;
             }
 
-            int length = newValues.length;
-            long byteOffset = (long) currentBufferIndex * length * Float.BYTES;
-
-            FloatBuffer buffer = BufferUtils.createFloatBuffer(newValues.length);
-            glBindBuffer(glId, bufferId);
-            buffer.put(newValues).flip();
-            glBufferSubData(glId, byteOffset, buffer);
-            glBindBuffer(glId, 0);
+            uploadVertexBufferObject(UpdateBufferType.BUFFER_SUB_DATA, entryBufferObjectType, bufferId, newValues);
         }
     }
 
@@ -242,38 +221,51 @@ public class Mesh {
 
         for (Map.Entry<BufferObjectType, Integer> bufferObjectTypeEntry : bufferIds.entrySet()) {
             BufferObjectType entryBufferObjectType = bufferObjectTypeEntry.getKey();
-            int glId = entryBufferObjectType.getGlId();
             int bufferId = bufferObjectTypeEntry.getValue();
-            int access = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT;
 
             if (entryBufferObjectType == BufferObjectType.ELEMENT_ARRAY_BUFFER && elementPair != null) {
                 uploadElementBuffer(UpdateBufferType.MAP_BUFFER_RANGE, elementPair, currentBufferIndex);
             }
 
-            int length = newValues.length;
-            long byteOffset = (long) currentBufferIndex * length * Float.BYTES;
             if (bufferObjectType != entryBufferObjectType) {
                 continue;
             }
 
-            glBindBuffer(glId, bufferId);
-            ByteBuffer mapped = glMapBufferRange(
-                    glId,
-                    byteOffset,
-                    (long) length * Float.BYTES,
-                    access
-            );
-            if (mapped != null) {
-                mapped.asFloatBuffer().put(newValues);
-                glUnmapBuffer(glId);
-            }
-            glBindBuffer(glId, 0);
+            uploadVertexBufferObject(UpdateBufferType.MAP_BUFFER_RANGE, entryBufferObjectType, bufferId, newValues);
         }
+    }
+
+    private void uploadVertexBufferObject(UpdateBufferType updateBufferType, BufferObjectType bufferObjectType, int bufferId, float[] newValues) {
+        int length = newValues.length;
+        long byteOffset = (long) currentBufferIndex * length * Float.BYTES;
+
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(newValues.length);
+        buffer.put(newValues).flip();
+
+        glBindBuffer(bufferObjectType.getGlId(), bufferId);
+        switch (updateBufferType) {
+            case BUFFER_DATA -> glBufferData(bufferObjectType.getGlId(), buffer, usageHint);
+            case BUFFER_SUB_DATA -> glBufferSubData(bufferObjectType.getGlId(), byteOffset, buffer);
+            case MAP_BUFFER_RANGE -> {
+                ByteBuffer mapped = glMapBufferRange(
+                        bufferObjectType.getGlId(),
+                        byteOffset,
+                        (long) length * Float.BYTES,
+                        accessHint
+                );
+                if (mapped != null) {
+                    mapped.asFloatBuffer().put(newValues);
+                    glUnmapBuffer(bufferObjectType.getGlId());
+                }
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + updateBufferType);
+        }
+        glBindBuffer(bufferObjectType.getGlId(), 0);
     }
 
     private ElementPair updateElementPairIfNeeded(BufferObjectType bufferObjectType, float[] newValues) {
         if (useElementBufferObject && bufferObjectType == BufferObjectType.POSITIONS_BUFFER) {
-            return getElementPositions(getSize(), newValues);
+            return getElementPositions(getStride(), newValues);
         }
         return null;
     }
@@ -346,7 +338,7 @@ public class Mesh {
             drawCommand.put(1);
             drawCommand.put(0);
         } else {
-            int size = getSize();
+            int size = getStride();
             int count = positions.length / size;
 
             drawCommand = BufferUtils.createIntBuffer(4);
@@ -366,7 +358,7 @@ public class Mesh {
     }
 
     private void createVectorBufferObjectAndElementBufferObject() {
-        int stride = getSize();
+        int stride = getStride();
         ElementPair elementPair = getElementPositions(stride, positions);
         createVertexBufferObject(BufferObjectType.POSITIONS_BUFFER, elementPair.positions, 0, stride);
         createElementBufferObject(elementPair.indices);
@@ -428,19 +420,8 @@ public class Mesh {
         MemoryUtil.memFree(valuesBuffer);
     }
 
-    private int getSize() {
-        int size;
-        switch (projectionType) {
-            case ORTHOGRAPHIC_PROJECTION -> {
-                size = 2;
-            }
-            case PERSPECTIVE_PROJECTION -> {
-                size = 3;
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + projectionType);
-        }
-
-        return size;
+    private int getStride() {
+        return projectionType.getStride();
     }
 
     public static class ElementPair {
