@@ -7,6 +7,7 @@ import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.utils.type.types.BufferObjectType;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
+import me.hannsi.lfjg.utils.type.types.UpdateBufferType;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.system.MemoryUtil;
 
@@ -27,7 +28,8 @@ public class Mesh {
     public static final boolean DEFAULT_USE_ELEMENT_BUFFER_OBJECT = true;
     public static final boolean DEFAULT_USE_INDIRECT = true;
     public static final int DEFAULT_USAGE_HINT = GL_DYNAMIC_DRAW;
-    public static final int DEFAULT_BUFFER_COUNT = 3;
+    public static final int DEFAULT_ACCESS_HINT = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT;
+    public static final int DEFAULT_BUFFER_COUNT = 1;
 
     @Getter
     private final int vertexArrayObjectId;
@@ -54,6 +56,9 @@ public class Mesh {
     @Setter
     private int usageHint;
     @Getter
+    @Setter
+    private int accessHint;
+    @Getter
     private int elementBufferObjectId;
     @Getter
     private int indirectBufferId;
@@ -65,6 +70,7 @@ public class Mesh {
         this.useElementBufferObject = DEFAULT_USE_ELEMENT_BUFFER_OBJECT;
         this.useIndirect = DEFAULT_USE_INDIRECT;
         this.usageHint = DEFAULT_USAGE_HINT;
+        this.accessHint = DEFAULT_ACCESS_HINT;
         this.bufferCount = DEFAULT_BUFFER_COUNT;
 
         this.currentBufferIndex = 0;
@@ -154,6 +160,11 @@ public class Mesh {
         return this;
     }
 
+    public Mesh accessHint(int accessHint) {
+        this.accessHint = accessHint;
+        return this;
+    }
+
     public Mesh bufferCount(int bufferCount) {
         this.bufferCount = bufferCount;
         return this;
@@ -171,10 +182,7 @@ public class Mesh {
     public void updateVBOData(BufferObjectType bufferObjectType, float[] newValues) {
         rotateBuffer();
 
-        ElementPair elementPair = null;
-        if (useElementBufferObject && bufferObjectType == BufferObjectType.POSITIONS_BUFFER) {
-            elementPair = getElementPositions(getSize(), newValues);
-        }
+        ElementPair elementPair = updateElementPairIfNeeded(bufferObjectType, newValues);
 
         for (Map.Entry<BufferObjectType, Integer> bufferObjectTypeEntry : bufferIds.entrySet()) {
             BufferObjectType entryBufferObjectType = bufferObjectTypeEntry.getKey();
@@ -182,32 +190,18 @@ public class Mesh {
             int bufferId = bufferObjectTypeEntry.getValue();
 
             if (entryBufferObjectType == BufferObjectType.ELEMENT_ARRAY_BUFFER && elementPair != null) {
-                int[] indices = elementPair.indices;
-                newValues = elementPair.positions;
-                int length = indices.length;
-                long byteOffset = (long) currentBufferIndex * length * Float.BYTES;
-
-                IntBuffer indicesBuffer = MemoryUtil.memCallocInt(indices.length);
-                indicesBuffer.put(0, indices).flip();
-                glBindBuffer(glId, bufferId);
-                glBufferData(glId, indicesBuffer, usageHint);
-                glBindBuffer(glId, 0);
-
-                numVertices = elementPair.indices.length;
+                uploadElementBuffer(UpdateBufferType.BUFFER_DATA, elementPair, currentBufferIndex);
             }
 
             if (bufferObjectType != entryBufferObjectType) {
                 continue;
             }
 
-            int length = newValues.length;
-            long byteOffset = (long) currentBufferIndex * length * Float.BYTES;
-
             FloatBuffer buffer = BufferUtils.createFloatBuffer(newValues.length);
-            glBindBuffer(glId, bufferId);
             buffer.put(newValues).flip();
+
+            glBindBuffer(glId, bufferId);
             glBufferData(glId, buffer, usageHint);
-            glBufferSubData(glId, byteOffset, buffer);
             glBindBuffer(glId, 0);
         }
     }
@@ -215,10 +209,7 @@ public class Mesh {
     public void updateVBOSubData(BufferObjectType bufferObjectType, float[] newValues) {
         rotateBuffer();
 
-        ElementPair elementPair = null;
-        if (useElementBufferObject && bufferObjectType == BufferObjectType.POSITIONS_BUFFER) {
-            elementPair = getElementPositions(getSize(), newValues);
-        }
+        ElementPair elementPair = updateElementPairIfNeeded(bufferObjectType, newValues);
 
         for (Map.Entry<BufferObjectType, Integer> bufferObjectTypeEntry : bufferIds.entrySet()) {
             BufferObjectType entryBufferObjectType = bufferObjectTypeEntry.getKey();
@@ -226,18 +217,7 @@ public class Mesh {
             int bufferId = bufferObjectTypeEntry.getValue();
 
             if (entryBufferObjectType == BufferObjectType.ELEMENT_ARRAY_BUFFER && elementPair != null) {
-                int[] indices = elementPair.indices;
-                newValues = elementPair.positions;
-                int length = indices.length;
-                long byteOffset = (long) currentBufferIndex * length * Float.BYTES;
-
-                IntBuffer indicesBuffer = MemoryUtil.memCallocInt(indices.length);
-                indicesBuffer.put(0, indices).flip();
-                glBindBuffer(glId, bufferId);
-                glBufferSubData(glId, byteOffset, indicesBuffer);
-                glBindBuffer(glId, 0);
-
-                numVertices = elementPair.indices.length;
+                uploadElementBuffer(UpdateBufferType.BUFFER_SUB_DATA, elementPair, currentBufferIndex);
             }
 
             if (bufferObjectType != entryBufferObjectType) {
@@ -258,10 +238,7 @@ public class Mesh {
     public void updateVBOMapBufferRange(BufferObjectType bufferObjectType, float[] newValues) {
         rotateBuffer();
 
-        ElementPair elementPair = null;
-        if (useElementBufferObject && bufferObjectType == BufferObjectType.POSITIONS_BUFFER) {
-            elementPair = getElementPositions(getSize(), newValues);
-        }
+        ElementPair elementPair = updateElementPairIfNeeded(bufferObjectType, newValues);
 
         for (Map.Entry<BufferObjectType, Integer> bufferObjectTypeEntry : bufferIds.entrySet()) {
             BufferObjectType entryBufferObjectType = bufferObjectTypeEntry.getKey();
@@ -270,25 +247,7 @@ public class Mesh {
             int access = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT;
 
             if (entryBufferObjectType == BufferObjectType.ELEMENT_ARRAY_BUFFER && elementPair != null) {
-                int[] indices = elementPair.indices;
-                newValues = elementPair.positions;
-                int length = indices.length;
-                long byteOffset = (long) currentBufferIndex * length * Float.BYTES;
-
-                glBindBuffer(glId, bufferId);
-                ByteBuffer mappedBuffer = glMapBufferRange(
-                        glId,
-                        byteOffset,
-                        (long) indices.length * Integer.BYTES,
-                        access
-                );
-                if (mappedBuffer != null) {
-                    mappedBuffer.asIntBuffer().put(indices);
-                    glUnmapBuffer(glId);
-                }
-                glBindBuffer(glId, 0);
-
-                numVertices = indices.length;
+                uploadElementBuffer(UpdateBufferType.MAP_BUFFER_RANGE, elementPair, currentBufferIndex);
             }
 
             int length = newValues.length;
@@ -310,6 +269,53 @@ public class Mesh {
             }
             glBindBuffer(glId, 0);
         }
+    }
+
+    private ElementPair updateElementPairIfNeeded(BufferObjectType bufferObjectType, float[] newValues) {
+        if (useElementBufferObject && bufferObjectType == BufferObjectType.POSITIONS_BUFFER) {
+            return getElementPositions(getSize(), newValues);
+        }
+        return null;
+    }
+
+    private void uploadElementBuffer(UpdateBufferType updateBufferType, ElementPair elementPair, int currentBufferIndex) {
+        if (elementPair == null) {
+            return;
+        }
+
+        int[] indices = elementPair.indices;
+        IntBuffer indicesBuffer = BufferUtils.createIntBuffer(indices.length);
+        indicesBuffer.put(indices).flip();
+
+        int length = indices.length;
+        long byteOffset = (long) currentBufferIndex * length * Integer.BYTES;
+
+        int bufferId = bufferIds.get(BufferObjectType.ELEMENT_ARRAY_BUFFER);
+        int glId = BufferObjectType.ELEMENT_ARRAY_BUFFER.getGlId();
+
+        glBindBuffer(glId, bufferId);
+
+        switch (updateBufferType) {
+            case BUFFER_DATA -> glBufferData(glId, indicesBuffer, usageHint);
+            case BUFFER_SUB_DATA -> glBufferSubData(glId, byteOffset, indicesBuffer);
+            case MAP_BUFFER_RANGE -> {
+                ByteBuffer mappedBuffer = glMapBufferRange(
+                        glId,
+                        byteOffset,
+                        (long) indices.length * Integer.BYTES,
+                        accessHint
+                );
+                if (mappedBuffer != null) {
+                    mappedBuffer.asIntBuffer().put(indices);
+                    glUnmapBuffer(glId);
+                }
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + updateBufferType);
+        }
+
+        glBindBuffer(glId, 0);
+
+        numVertices = indices.length;
     }
 
     public void cleanup() {
