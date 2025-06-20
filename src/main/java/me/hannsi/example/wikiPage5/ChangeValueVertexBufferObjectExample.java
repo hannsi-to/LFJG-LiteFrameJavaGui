@@ -25,8 +25,8 @@ public class ChangeValueVertexBufferObjectExample implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-        glRect1.setUpdateBufferType(UpdateBufferType.MAP_BUFFER_RANGE);
-        glRect1.rect(x++, 0, 500, 500, Color.of(255, 0, 255, 255));
+        glRect1.setUpdateBufferType(UpdateBufferType.BUFFER_SUB_DATA);
+        glRect1.rectWH(x++, 0, 500, 500, Color.of(255, 0, 255, 255));
         glRect1.draw();
     }
 

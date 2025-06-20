@@ -185,8 +185,6 @@ public class Frame implements IFrame {
 
         startTime = TimeSourceUtil.getTimeMills(getFrameSettingValue(TimeSourceSetting.class));
 
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         setAntiAliasing();
         while (!GLFW.glfwWindowShouldClose(windowID)) {
             currentTime = TimeSourceUtil.getTimeMills(getFrameSettingValue(TimeSourceSetting.class));
@@ -198,6 +196,8 @@ public class Frame implements IFrame {
             if (deltaTime2 >= targetTime) {
                 updateViewport();
                 updateLFJGLContext();
+                glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                 draw();
 
                 GLFW.glfwSwapBuffers(windowID);
@@ -264,7 +264,8 @@ public class Frame implements IFrame {
             case OPEN_GL -> eventManager.call(new DrawFrameWithOpenGLEvent());
             case NANO_VG, LIB_GDX, VULKAN -> {
             }
-            default -> throw new IllegalStateException("Unexpected value: " + getFrameSettingValue(RenderingTypeSetting.class));
+            default ->
+                    throw new IllegalStateException("Unexpected value: " + getFrameSettingValue(RenderingTypeSetting.class));
         }
     }
 
@@ -308,7 +309,8 @@ public class Frame implements IFrame {
             }
             case LIB_GDX -> {
             }
-            default -> throw new IllegalStateException("Unexpected value: " + getFrameSettingValue(RenderingTypeSetting.class));
+            default ->
+                    throw new IllegalStateException("Unexpected value: " + getFrameSettingValue(RenderingTypeSetting.class));
         }
 
         GLFW.glfwDestroyWindow(windowID);

@@ -26,7 +26,7 @@ public class Mesh {
     public static final ProjectionType DEFAULT_PROJECTION_TYPE = ProjectionType.ORTHOGRAPHIC_PROJECTION;
     public static final boolean DEFAULT_USE_ELEMENT_BUFFER_OBJECT = true;
     public static final boolean DEFAULT_USE_INDIRECT = true;
-    public static final int DEFAULT_USAGE_HINT = GL_STREAM_DRAW;
+    public static final int DEFAULT_USAGE_HINT = GL_DYNAMIC_DRAW;
     public static final int DEFAULT_BUFFER_COUNT = 3;
 
     @Getter

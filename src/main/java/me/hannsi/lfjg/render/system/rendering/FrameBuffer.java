@@ -269,14 +269,8 @@ public class FrameBuffer {
     public void bindFrameBuffer() {
         bindFrameBufferNoClear();
 
-        if (lastClearR != 0.0f || lastClearG != 0.0f || lastClearB != 0.0f || lastClearA != 0.0f) {
-            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-            lastClearR = 0.0f;
-            lastClearG = 0.0f;
-            lastClearB = 0.0f;
-            lastClearA = 0.0f;
-        }
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     }
 
     public void bindFrameBufferNoClear() {
