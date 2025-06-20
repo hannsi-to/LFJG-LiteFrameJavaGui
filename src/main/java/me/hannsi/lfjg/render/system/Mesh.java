@@ -14,9 +14,8 @@ import org.lwjgl.system.MemoryUtil;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
@@ -26,7 +25,7 @@ import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 
-public class Mesh {
+public class Mesh implements AutoCloseable {
     @Getter
     private final int vertexArrayObjectId;
     @Getter
@@ -370,31 +369,25 @@ public class Mesh {
 
     private ElementPair getElementPositions(int stride, float[] positions) {
         Map<VertexKey, Integer> uniqueVertices = new HashMap<>();
-        List<Integer> indices = new ArrayList<>();
-        List<Float> uniquePositions = new ArrayList<>();
-        int index = 0;
+        int[] indices = new int[positions.length / stride];
+        float[] uniquePositions = new float[positions.length];
+        int uniqueCount = 0;
 
-        for (int i = 0; i < positions.length; i += stride) {
+        for (int i = 0, idx = 0; i < positions.length; i += stride, idx++) {
             VertexKey key = new VertexKey(positions, i, stride);
             Integer existingIndex = uniqueVertices.get(key);
             if (existingIndex != null) {
-                indices.add(existingIndex);
+                indices[idx] = existingIndex;
             } else {
-                uniqueVertices.put(key, index);
-                indices.add(index);
-                for (int j = 0; j < stride; j++) {
-                    uniquePositions.add(positions[i + j]);
-                }
-                index++;
+                uniqueVertices.put(key, uniqueCount);
+                indices[idx] = uniqueCount;
+                System.arraycopy(positions, i, uniquePositions, uniqueCount * stride, stride);
+                uniqueCount++;
             }
         }
 
-        float[] newPositions = new float[uniquePositions.size()];
-        for (int i = 0; i < uniquePositions.size(); i++) {
-            newPositions[i] = uniquePositions.get(i);
-        }
-
-        return new ElementPair(newPositions, indices.stream().mapToInt(i -> i).toArray());
+        float[] finalPositions = Arrays.copyOf(uniquePositions, uniqueCount * stride);
+        return new ElementPair(finalPositions, indices);
     }
 
     private void createElementBufferObject(int[] indices) {
@@ -437,6 +430,11 @@ public class Mesh {
 
     private int getStride() {
         return projectionType.getStride();
+    }
+
+    @Override
+    public void close() {
+        cleanup();
     }
 
     public record ElementPair(float[] positions, int[] indices) {
