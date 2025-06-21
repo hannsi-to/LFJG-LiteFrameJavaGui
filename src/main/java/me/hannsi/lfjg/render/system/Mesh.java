@@ -5,6 +5,7 @@ import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
+import me.hannsi.lfjg.utils.type.types.AttributeType;
 import me.hannsi.lfjg.utils.type.types.BufferObjectType;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.utils.type.types.UpdateBufferType;
@@ -15,6 +16,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +31,7 @@ public class Mesh {
     @Getter
     private final int vertexArrayObjectId;
     @Getter
-    private final Map<BufferObjectType, Integer> bufferIds;
+    private final EnumMap<BufferObjectType, int[]> bufferIds;
     @Getter
     protected float[] positions;
     @Getter
@@ -73,38 +75,38 @@ public class Mesh {
         this.vertexArrayObjectId = glGenVertexArrays();
         glBindVertexArray(this.vertexArrayObjectId);
 
-        this.bufferIds = new HashMap<>();
+        this.bufferIds = new EnumMap<>(BufferObjectType.class);
     }
 
     public static Mesh initMesh() {
         return new Mesh();
     }
 
-    public Mesh createBufferObjects(float[] positions) {
-        return createBufferObjects(positions, null);
+    public Mesh createBufferObjects2D(float[] positions) {
+        return createBufferObjects2D(positions, null);
     }
 
-    public Mesh createBufferObjects(float[] positions, float[] colors) {
-        return createBufferObjects(positions, colors, null);
+    public Mesh createBufferObjects2D(float[] positions, float[] colors) {
+        return createBufferObjects2D(positions, colors, null);
     }
 
-    public Mesh createBufferObjects(float[] positions, float[] colors, float[] texture) {
+    public Mesh createBufferObjects2D(float[] positions, float[] colors, float[] texture) {
         this.positions = positions;
         this.colors = colors;
         this.textures = texture;
 
         if (useElementBufferObject) {
-            createVectorBufferObjectAndElementBufferObject();
+            createVectorBufferObjectAndElementBufferObject(AttributeType.POSITION_2D);
         } else {
-            createVertexBufferObject(BufferObjectType.POSITIONS_BUFFER, positions, 0, getStride());
+            createVertexBufferObject(BufferObjectType.POSITIONS_BUFFER, AttributeType.POSITION_2D, positions);
         }
 
         if (colors != null) {
-            createVertexBufferObject(BufferObjectType.COLORS_BUFFER, colors, 1, 4);
+            createVertexBufferObject(BufferObjectType.COLORS_BUFFER, AttributeType.COLOR, colors);
         }
 
         if (texture != null) {
-            createVertexBufferObject(BufferObjectType.TEXTURE_BUFFER, texture, 2, 2);
+            createVertexBufferObject(BufferObjectType.TEXTURE_BUFFER, AttributeType.TEXTURE, texture);
         }
 
         if (useIndirect) {
@@ -114,7 +116,7 @@ public class Mesh {
         return this;
     }
 
-    public Mesh createBufferObjects(float[] positions, float[] normals, float[] textures, int[] indices) {
+    public Mesh createBufferObjects3D(float[] positions, float[] normals, float[] textures, int[] indices) {
         this.positions = positions;
         this.textures = textures;
         this.colors = null;
@@ -122,9 +124,9 @@ public class Mesh {
 
         numVertices = indices.length;
 
-        createVertexBufferObject(BufferObjectType.POSITIONS_BUFFER, positions, 0, 3);
-        createVertexBufferObject(BufferObjectType.NORMALS_BUFFER, normals, 1, 3);
-        createVertexBufferObject(BufferObjectType.TEXTURE_BUFFER, textures, 2, 2);
+        createVertexBufferObject(BufferObjectType.POSITIONS_BUFFER, AttributeType.POSITION_3D, positions);
+        createVertexBufferObject(BufferObjectType.NORMALS_BUFFER, AttributeType.NORMAL_3D, normals);
+        createVertexBufferObject(BufferObjectType.TEXTURE_BUFFER, AttributeType.TEXTURE, textures);
 
         createElementBufferObject(indices);
 
@@ -179,9 +181,9 @@ public class Mesh {
 
         ElementPair elementPair = updateElementPairIfNeeded(bufferObjectType, newValues);
 
-        for (Map.Entry<BufferObjectType, Integer> bufferObjectTypeEntry : bufferIds.entrySet()) {
+        for (Map.Entry<BufferObjectType, int[]> bufferObjectTypeEntry : bufferIds.entrySet()) {
             BufferObjectType entryBufferObjectType = bufferObjectTypeEntry.getKey();
-            int bufferId = bufferObjectTypeEntry.getValue();
+            int bufferId = bufferObjectTypeEntry.getValue()[0];
 
             if (entryBufferObjectType == BufferObjectType.ELEMENT_ARRAY_BUFFER && elementPair != null) {
                 uploadElementBuffer(UpdateBufferType.BUFFER_DATA, elementPair, currentBufferIndex);
@@ -200,9 +202,9 @@ public class Mesh {
 
         ElementPair elementPair = updateElementPairIfNeeded(bufferObjectType, newValues);
 
-        for (Map.Entry<BufferObjectType, Integer> bufferObjectTypeEntry : bufferIds.entrySet()) {
+        for (Map.Entry<BufferObjectType, int[]> bufferObjectTypeEntry : bufferIds.entrySet()) {
             BufferObjectType entryBufferObjectType = bufferObjectTypeEntry.getKey();
-            int bufferId = bufferObjectTypeEntry.getValue();
+            int bufferId = bufferObjectTypeEntry.getValue()[0];
 
             if (entryBufferObjectType == BufferObjectType.ELEMENT_ARRAY_BUFFER && elementPair != null) {
                 uploadElementBuffer(UpdateBufferType.BUFFER_SUB_DATA, elementPair, currentBufferIndex);
@@ -221,9 +223,9 @@ public class Mesh {
 
         ElementPair elementPair = updateElementPairIfNeeded(bufferObjectType, newValues);
 
-        for (Map.Entry<BufferObjectType, Integer> bufferObjectTypeEntry : bufferIds.entrySet()) {
+        for (Map.Entry<BufferObjectType, int[]> bufferObjectTypeEntry : bufferIds.entrySet()) {
             BufferObjectType entryBufferObjectType = bufferObjectTypeEntry.getKey();
-            int bufferId = bufferObjectTypeEntry.getValue();
+            int bufferId = bufferObjectTypeEntry.getValue()[0];
 
             if (entryBufferObjectType == BufferObjectType.ELEMENT_ARRAY_BUFFER && elementPair != null) {
                 uploadElementBuffer(UpdateBufferType.MAP_BUFFER_RANGE, elementPair, currentBufferIndex);
@@ -284,7 +286,7 @@ public class Mesh {
         int length = indices.length;
         long byteOffset = (long) currentBufferIndex * length * Integer.BYTES;
 
-        int bufferId = bufferIds.get(BufferObjectType.ELEMENT_ARRAY_BUFFER);
+        int bufferId = bufferIds.get(BufferObjectType.ELEMENT_ARRAY_BUFFER)[0];
         int glId = BufferObjectType.ELEMENT_ARRAY_BUFFER.getGlId();
 
         glBindBuffer(glId, bufferId);
@@ -314,9 +316,9 @@ public class Mesh {
 
     public void cleanup() {
         StringBuilder ids = new StringBuilder();
-        for (Map.Entry<BufferObjectType, Integer> entry : bufferIds.entrySet()) {
+        for (Map.Entry<BufferObjectType, int[]> entry : bufferIds.entrySet()) {
             BufferObjectType key = entry.getKey();
-            Integer value = entry.getValue();
+            Integer value = entry.getValue()[0];
             glDeleteBuffers(value);
             ids.append(key.getName()).append(": ").append(value).append("| ");
         }
@@ -352,17 +354,17 @@ public class Mesh {
         drawCommand.flip();
 
         indirectBufferId = glGenBuffers();
-        bufferIds.put(BufferObjectType.INDIRECT_BUFFER, indirectBufferId);
+        bufferIds.put(BufferObjectType.INDIRECT_BUFFER, new int[]{indirectBufferId});
 
         glBindBuffer(GL_DRAW_INDIRECT_BUFFER, indirectBufferId);
         glBufferData(GL_DRAW_INDIRECT_BUFFER, drawCommand, usageHint);
         glBindBuffer(GL_DRAW_INDIRECT_BUFFER, 0);
     }
 
-    private void createVectorBufferObjectAndElementBufferObject() {
+    private void createVectorBufferObjectAndElementBufferObject(AttributeType attributeType) {
         int stride = getStride();
         ElementPair elementPair = getElementPositions(stride, positions);
-        createVertexBufferObject(BufferObjectType.POSITIONS_BUFFER, elementPair.positions, 0, stride);
+        createVertexBufferObject(BufferObjectType.POSITIONS_BUFFER, attributeType, elementPair.positions);
         createElementBufferObject(elementPair.indices);
         numVertices = elementPair.indices.length;
     }
@@ -392,7 +394,7 @@ public class Mesh {
 
     private void createElementBufferObject(int[] indices) {
         elementBufferObjectId = glGenBuffers();
-        bufferIds.put(BufferObjectType.ELEMENT_ARRAY_BUFFER, elementBufferObjectId);
+        bufferIds.put(BufferObjectType.ELEMENT_ARRAY_BUFFER, new int[]{elementBufferObjectId});
 
         long byteSize = (long) indices.length * Integer.BYTES * bufferCount;
 
@@ -408,9 +410,9 @@ public class Mesh {
         MemoryUtil.memFree(indicesBuffer);
     }
 
-    private void createVertexBufferObject(BufferObjectType bufferObjectType, float[] values, int index, int size) {
+    private void createVertexBufferObject(BufferObjectType bufferObjectType, AttributeType attributeType, float[] values) {
         int bufferId = glGenBuffers();
-        bufferIds.put(bufferObjectType, bufferId);
+        bufferIds.put(bufferObjectType, new int[]{bufferId});
 
         long byteSize = (long) values.length * Float.BYTES * bufferCount;
 
@@ -421,11 +423,18 @@ public class Mesh {
         glBindBuffer(GL_ARRAY_BUFFER, bufferId);
         glBufferData(GL_ARRAY_BUFFER, byteSize, usageHint);
         glBufferSubData(GL_ARRAY_BUFFER, 0, valuesBuffer);
-        glEnableVertexAttribArray(index);
-        glVertexAttribPointer(index, size, GL_FLOAT, false, 0, 0);
+        setAttribute(attributeType);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         MemoryUtil.memFree(valuesBuffer);
+    }
+
+    private void setAttribute(AttributeType attributeType) {
+        int index = attributeType.getIndex();
+        int size = attributeType.getSize();
+
+        glEnableVertexAttribArray(index);
+        glVertexAttribPointer(index, size, GL_FLOAT, false, 0, 0);
     }
 
     private int getStride() {

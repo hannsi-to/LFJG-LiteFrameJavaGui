@@ -209,7 +209,7 @@ public class GLPolygon extends GLObject {
 
             Mesh mesh = Mesh.initMesh()
                     .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
-                    .createBufferObjects(vertex, color, texture)
+                    .createBufferObjects2D(vertex, color, texture)
                     .builderClose();
 
             setMesh(mesh);
