@@ -109,7 +109,7 @@ public class Object3DCacheRender {
                 texture.bind();
 
                 for (Mesh mesh : material.getMeshes()) {
-                    glBindVertexArray(mesh.getVertexArrayObjectId());
+                    glBindVertexArray(mesh.getVaoId());
                     for (Entity entity : entities) {
                         shaderProgram.setUniform("modelMatrix", entity.getModelMatrix());
                         glDrawElements(GL_TRIANGLES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);

@@ -9,6 +9,7 @@ import me.hannsi.lfjg.utils.type.types.UpdateBufferType;
 public class ChangeValueVertexBufferObjectExample implements LFJGFrame {
     GLRect glRect1;
     int x = 0;
+    boolean revers;
     private Frame frame;
 
     public static void main(String[] args) {

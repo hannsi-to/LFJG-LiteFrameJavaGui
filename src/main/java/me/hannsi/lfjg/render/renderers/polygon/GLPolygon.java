@@ -6,7 +6,6 @@ import me.hannsi.lfjg.render.debug.exceptions.render.meshBuilder.MeshBuilderExce
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.math.io.BufferHolder;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.BufferObjectType;
@@ -156,9 +155,9 @@ public class GLPolygon extends GLObject {
             throw new MeshBuilderException("MeshBuilder is null.");
         }
 
-        mesh.updateVBOData(updateBufferType, BufferObjectType.POSITIONS_BUFFER, BufferHolder.from(vertex));
-        mesh.updateVBOData(updateBufferType, BufferObjectType.COLORS_BUFFER, BufferHolder.from(color));
-        mesh.updateVBOData(updateBufferType, BufferObjectType.TEXTURE_BUFFER, BufferHolder.from(texture));
+        mesh.updateVBOData(BufferObjectType.POSITIONS_BUFFER, vertex);
+        mesh.updateVBOData(BufferObjectType.COLORS_BUFFER, color);
+        mesh.updateVBOData(BufferObjectType.TEXTURE_BUFFER, texture);
 
         vertex = new float[0];
         color = new float[0];
@@ -173,8 +172,8 @@ public class GLPolygon extends GLObject {
 
             Mesh mesh = Mesh.initMesh()
                     .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
-                    .createBufferObjects2D(vertex, color, texture)
-                    .builderClose();
+                    .createBufferObject2D(vertex, color, texture)
+                    .close();
 
             setMesh(mesh);
 

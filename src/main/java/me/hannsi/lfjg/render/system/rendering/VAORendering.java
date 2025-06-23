@@ -36,12 +36,12 @@ public class VAORendering {
     }
 
     public void drawMesh(Mesh mesh, int drawType) {
-        glBindVertexArray(mesh.getVertexArrayObjectId());
+        glBindVertexArray(mesh.getVaoId());
         try {
             if (mesh.isUseIndirect()) {
                 if (mesh.isUseElementBufferObject()) {
                     glBindBuffer(GL_DRAW_INDIRECT_BUFFER, mesh.getIndirectBufferId());
-                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.getElementBufferObjectId());
+                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.getEboId().getBufferId());
                     glDrawElementsIndirect(drawType, GL_UNSIGNED_INT, 0);
                     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
                     glBindBuffer(GL_DRAW_INDIRECT_BUFFER, 0);
@@ -52,15 +52,11 @@ public class VAORendering {
                 }
             } else {
                 if (mesh.isUseElementBufferObject()) {
-                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.getElementBufferObjectId());
+                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.getEboId().getBufferId());
                     glDrawElements(drawType, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
                     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
                 } else {
-                    int count = switch (mesh.getProjectionType()) {
-                        case ORTHOGRAPHIC_PROJECTION -> mesh.getPositions().getSize() / 2;
-                        case PERSPECTIVE_PROJECTION -> mesh.getPositions().getSize() / 3;
-                    };
-                    glDrawArrays(drawType, 0, count);
+                    glDrawArrays(drawType, 0, mesh.getCount());
                 }
             }
         } finally {

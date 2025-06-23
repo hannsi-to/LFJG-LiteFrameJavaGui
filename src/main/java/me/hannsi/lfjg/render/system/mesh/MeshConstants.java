@@ -4,6 +4,8 @@ import me.hannsi.lfjg.utils.type.types.ProjectionType;
 
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
 import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL44.GL_MAP_COHERENT_BIT;
+import static org.lwjgl.opengl.GL44.GL_MAP_PERSISTENT_BIT;
 
 public final class MeshConstants {
     public static final ProjectionType PROJECTION_TYPE = ProjectionType.ORTHOGRAPHIC_PROJECTION;
@@ -11,6 +13,7 @@ public final class MeshConstants {
     public static final boolean USE_INDIRECT = true;
     public static final int USAGE_HINT = GL_DYNAMIC_DRAW;
     public static final int ACCESS_HINT = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT;
+    public static final int FLAGS_HINT = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
     public static final int BUFFER_COUNT = 1;
 
     private MeshConstants() {

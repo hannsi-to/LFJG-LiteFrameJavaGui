@@ -1,16 +1,12 @@
 package me.hannsi.lfjg.render.system.mesh;
 
-import me.hannsi.lfjg.utils.math.io.BufferHolder;
-
-import java.nio.FloatBuffer;
-
 public class VertexKey {
-    private final BufferHolder<FloatBuffer> data;
+    private final float[] data;
     private final int offset;
     private final int length;
     private final int hash;
 
-    public VertexKey(BufferHolder<FloatBuffer> data, int offset, int length) {
+    public VertexKey(float[] data, int offset, int length) {
         this.data = data;
         this.offset = offset;
         this.length = length;
@@ -20,7 +16,7 @@ public class VertexKey {
     private int computeHash() {
         int h = 1;
         for (int i = 0; i < length; i++) {
-            h = 31 * h + Float.hashCode(data.getBuffer().get(offset + i));
+            h = 31 * h + Float.hashCode(data[offset + i]);
         }
         return h;
     }
@@ -43,7 +39,7 @@ public class VertexKey {
         }
 
         for (int i = 0; i < length; i++) {
-            if (Float.compare(this.data.getBuffer().get(offset + i), other.data.getBuffer().get(offset + i)) != 0) {
+            if (Float.compare(this.data[offset + i], other.data[other.offset + i]) != 0) {
                 return false;
             }
         }

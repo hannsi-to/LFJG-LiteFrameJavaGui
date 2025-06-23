@@ -178,8 +178,8 @@ public class ModelLoader {
         }
 
         return Mesh.initMesh()
-                .createBufferObjects3D(vertices, normals, textCoords, indices)
-                .builderClose();
+                .createBufferObject3D(vertices, normals, textCoords, indices)
+                .close();
     }
 
     /**

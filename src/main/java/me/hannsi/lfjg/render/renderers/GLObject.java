@@ -16,6 +16,7 @@ import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.type.types.BlendType;
+import me.hannsi.lfjg.utils.type.types.BufferObjectType;
 import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.joml.Matrix4f;
 
@@ -192,7 +193,7 @@ public class GLObject implements Cloneable {
         shaderProgram.setUniform("modelMatrix", modelMatrix);
         shaderProgram.setUniform("viewMatrix", viewMatrix);
         shaderProgram.setUniform("resolution", LFJGContext.frameBufferSize);
-        if (mesh.getTextures() != null) {
+        if (mesh.getVboIds().get(BufferObjectType.TEXTURE_BUFFER) != null) {
             shaderProgram.setUniform1i("textureSampler", 0);
         }
     }

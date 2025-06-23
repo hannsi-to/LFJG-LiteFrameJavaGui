@@ -15,6 +15,10 @@ public class BufferHolder<T extends Buffer> {
         this.size = size;
     }
 
+    public BufferHolder(T buffer) {
+        this(buffer, buffer.remaining());
+    }
+
     public static BufferHolder<ByteBuffer> allocateByteBuffer(int size) {
         return new BufferHolder<>(MemoryUtil.memAlloc(size), size);
     }
