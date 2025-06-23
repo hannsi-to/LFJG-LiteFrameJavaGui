@@ -148,22 +148,6 @@ public class GLPolygon extends GLObject {
         rendering(isFragmentShaderPath ? new ResourcesLocation("shader/scene/object/VertexShader.vsh") : fileLocation, isFragmentShaderPath ? fileLocation : new ResourcesLocation("shader/scene/object/FragmentShader.fsh"));
     }
 
-    public void updateSubData() {
-        setGLObjectParameter();
-        Mesh mesh = getMesh();
-        if (mesh == null) {
-            throw new MeshBuilderException("MeshBuilder is null.");
-        }
-
-        mesh.updateVBOSubData(BufferObjectType.POSITIONS_BUFFER, vertex);
-        mesh.updateVBOSubData(BufferObjectType.COLORS_BUFFER, color);
-        mesh.updateVBOSubData(BufferObjectType.TEXTURE_BUFFER, texture);
-
-        vertex = new float[0];
-        color = new float[0];
-        texture = new float[0];
-    }
-
     public void updateData() {
         setGLObjectParameter();
         Mesh mesh = getMesh();
@@ -171,25 +155,9 @@ public class GLPolygon extends GLObject {
             throw new MeshBuilderException("MeshBuilder is null.");
         }
 
-        mesh.updateVBOData(BufferObjectType.POSITIONS_BUFFER, vertex);
-        mesh.updateVBOData(BufferObjectType.COLORS_BUFFER, color);
-        mesh.updateVBOData(BufferObjectType.TEXTURE_BUFFER, texture);
-
-        vertex = new float[0];
-        color = new float[0];
-        texture = new float[0];
-    }
-
-    public void updateMapBufferRange() {
-        setGLObjectParameter();
-        Mesh mesh = getMesh();
-        if (mesh == null) {
-            throw new MeshBuilderException("MeshBuilder is null.");
-        }
-
-        mesh.updateVBOMapBufferRange(BufferObjectType.POSITIONS_BUFFER, vertex);
-        mesh.updateVBOMapBufferRange(BufferObjectType.COLORS_BUFFER, color);
-        mesh.updateVBOMapBufferRange(BufferObjectType.TEXTURE_BUFFER, texture);
+        mesh.updateVBOData(updateBufferType, BufferObjectType.POSITIONS_BUFFER, vertex);
+        mesh.updateVBOData(updateBufferType, BufferObjectType.COLORS_BUFFER, color);
+        mesh.updateVBOData(updateBufferType, BufferObjectType.TEXTURE_BUFFER, texture);
 
         vertex = new float[0];
         color = new float[0];
@@ -198,12 +166,7 @@ public class GLPolygon extends GLObject {
 
     public void rendering(FileLocation vertexShaderPath, FileLocation fragmentShaderPath) {
         if (isUpdate) {
-            switch (updateBufferType) {
-                case BUFFER_DATA -> updateData();
-                case BUFFER_SUB_DATA -> updateSubData();
-                case MAP_BUFFER_RANGE -> updateMapBufferRange();
-                default -> throw new IllegalStateException("Unexpected value: " + updateBufferType);
-            }
+            updateData();
         } else {
             isUpdate = true;
 

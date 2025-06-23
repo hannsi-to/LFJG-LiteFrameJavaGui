@@ -176,7 +176,7 @@ public class Mesh {
         currentBufferIndex = (currentBufferIndex + 1) % bufferCount;
     }
 
-    public void updateVBOData(BufferObjectType bufferObjectType, float[] newValues) {
+    public void updateVBOData(UpdateBufferType updateBufferType, BufferObjectType bufferObjectType, float[] newValues) {
         rotateBuffer();
 
         ElementPair elementPair = updateElementPairIfNeeded(bufferObjectType, newValues);
@@ -186,56 +186,14 @@ public class Mesh {
             int bufferId = bufferObjectTypeEntry.getValue()[0];
 
             if (entryBufferObjectType == BufferObjectType.ELEMENT_ARRAY_BUFFER && elementPair != null) {
-                uploadElementBuffer(UpdateBufferType.BUFFER_DATA, elementPair, currentBufferIndex);
+                uploadElementBuffer(updateBufferType, elementPair, currentBufferIndex);
             }
 
             if (bufferObjectType != entryBufferObjectType) {
                 continue;
             }
 
-            uploadVertexBufferObject(UpdateBufferType.BUFFER_DATA, entryBufferObjectType, bufferId, newValues);
-        }
-    }
-
-    public void updateVBOSubData(BufferObjectType bufferObjectType, float[] newValues) {
-        rotateBuffer();
-
-        ElementPair elementPair = updateElementPairIfNeeded(bufferObjectType, newValues);
-
-        for (Map.Entry<BufferObjectType, int[]> bufferObjectTypeEntry : bufferIds.entrySet()) {
-            BufferObjectType entryBufferObjectType = bufferObjectTypeEntry.getKey();
-            int bufferId = bufferObjectTypeEntry.getValue()[0];
-
-            if (entryBufferObjectType == BufferObjectType.ELEMENT_ARRAY_BUFFER && elementPair != null) {
-                uploadElementBuffer(UpdateBufferType.BUFFER_SUB_DATA, elementPair, currentBufferIndex);
-            }
-
-            if (bufferObjectType != entryBufferObjectType) {
-                continue;
-            }
-
-            uploadVertexBufferObject(UpdateBufferType.BUFFER_SUB_DATA, entryBufferObjectType, bufferId, newValues);
-        }
-    }
-
-    public void updateVBOMapBufferRange(BufferObjectType bufferObjectType, float[] newValues) {
-        rotateBuffer();
-
-        ElementPair elementPair = updateElementPairIfNeeded(bufferObjectType, newValues);
-
-        for (Map.Entry<BufferObjectType, int[]> bufferObjectTypeEntry : bufferIds.entrySet()) {
-            BufferObjectType entryBufferObjectType = bufferObjectTypeEntry.getKey();
-            int bufferId = bufferObjectTypeEntry.getValue()[0];
-
-            if (entryBufferObjectType == BufferObjectType.ELEMENT_ARRAY_BUFFER && elementPair != null) {
-                uploadElementBuffer(UpdateBufferType.MAP_BUFFER_RANGE, elementPair, currentBufferIndex);
-            }
-
-            if (bufferObjectType != entryBufferObjectType) {
-                continue;
-            }
-
-            uploadVertexBufferObject(UpdateBufferType.MAP_BUFFER_RANGE, entryBufferObjectType, bufferId, newValues);
+            uploadVertexBufferObject(updateBufferType, entryBufferObjectType, bufferId, newValues);
         }
     }
 
