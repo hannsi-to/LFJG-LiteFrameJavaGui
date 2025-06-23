@@ -5,7 +5,6 @@ import me.hannsi.lfjg.utils.math.MathHelper;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.URLLocation;
 import org.bytedeco.opencv.opencv_core.Mat;
-import org.lwjgl.BufferUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -28,45 +27,47 @@ import static org.lwjgl.system.MemoryUtil.*;
  * Utility class for byte operations.
  */
 public class IOUtil extends Util {
-    public static ByteBuffer convertBufferedImageToByteBuffer(BufferedImage image, int imageType, boolean flipVertically) {
+    public static ByteBuffer convertBufferedImageToByteBuffer(BufferedImage image, boolean flipVertically) {
         int width = image.getWidth();
         int height = image.getHeight();
 
-        BufferedImage convertedImage = new BufferedImage(width, height, imageType);
-        Graphics2D graphics2D = convertedImage.createGraphics();
-        graphics2D.drawImage(image, 0, 0, width, height, null);
-        graphics2D.dispose();
+        if (image.getType() != BufferedImage.TYPE_4BYTE_ABGR) {
+            BufferedImage converted = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
+            Graphics2D g = converted.createGraphics();
+            g.drawImage(image, 0, 0, null);
+            g.dispose();
+            image = converted;
+        }
 
-        byte[] pixelData = ((DataBufferByte) convertedImage.getRaster().getDataBuffer()).getData();
+        byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+        int stride = width * 4;
+
         ByteBuffer buffer = ByteBuffer.allocateDirect(width * height * 4).order(ByteOrder.nativeOrder());
-
-        int pixelStride = 4;
-        int rowStride = width * pixelStride;
 
         if (flipVertically) {
             for (int y = height - 1; y >= 0; y--) {
-                int rowStart = y * rowStride;
+                int rowStart = y * stride;
                 for (int x = 0; x < width; x++) {
-                    int i = rowStart + x * pixelStride;
+                    int i = rowStart + x * 4;
 
-                    byte a = pixelData[i];
-                    byte b = pixelData[i + 1];
-                    byte g = pixelData[i + 2];
-                    byte r = pixelData[i + 3];
+                    byte a = pixels[i];
+                    byte b = pixels[i + 1];
+                    byte g = pixels[i + 2];
+                    byte r = pixels[i + 3];
 
                     buffer.put(r).put(g).put(b).put(a);
                 }
             }
         } else {
             for (int y = 0; y < height; y++) {
-                int rowStart = y * rowStride;
+                int rowStart = y * stride;
                 for (int x = 0; x < width; x++) {
-                    int i = rowStart + x * pixelStride;
+                    int i = rowStart + x * 4;
 
-                    byte a = pixelData[i];
-                    byte b = pixelData[i + 1];
-                    byte g = pixelData[i + 2];
-                    byte r = pixelData[i + 3];
+                    byte a = pixels[i];
+                    byte b = pixels[i + 1];
+                    byte g = pixels[i + 2];
+                    byte r = pixels[i + 3];
 
                     buffer.put(r).put(g).put(b).put(a);
                 }
@@ -79,17 +80,22 @@ public class IOUtil extends Util {
 
     public static ByteBuffer convertRGBAtoBGRA(ByteBuffer rgbaBuffer, int width, int height) {
         int numPixels = width * height;
-        ByteBuffer bgraBuffer = BufferUtils.createByteBuffer(numPixels * 4);
-        bgraBuffer.rewind();
-        if (bgraBuffer.remaining() < width * height * 4) {
+        int requiredBytes = numPixels * 4;
+
+        if (rgbaBuffer.remaining() < requiredBytes) {
             throw new IllegalArgumentException("RGBA buffer does not contain enough data!");
         }
 
+        ByteBuffer rgbaDup = rgbaBuffer.duplicate();
+        rgbaDup.order(ByteOrder.nativeOrder());
+
+        ByteBuffer bgraBuffer = ByteBuffer.allocateDirect(requiredBytes).order(ByteOrder.nativeOrder());
+
         for (int i = 0; i < numPixels; i++) {
-            byte r = rgbaBuffer.get();
-            byte g = rgbaBuffer.get();
-            byte b = rgbaBuffer.get();
-            byte a = rgbaBuffer.get();
+            byte r = rgbaDup.get();
+            byte g = rgbaDup.get();
+            byte b = rgbaDup.get();
+            byte a = rgbaDup.get();
 
             bgraBuffer.put(b).put(g).put(r).put(a);
         }
@@ -100,17 +106,22 @@ public class IOUtil extends Util {
 
     public static ByteBuffer convertBGRAtoRGBA(ByteBuffer bgraBuffer, int width, int height) {
         int numPixels = width * height;
-        ByteBuffer rgbaBuffer = BufferUtils.createByteBuffer(numPixels * 4);
-        bgraBuffer.rewind();
-        if (bgraBuffer.remaining() < width * height * 4) {
+        int requiredBytes = numPixels * 4;
+
+        if (bgraBuffer.remaining() < requiredBytes) {
             throw new IllegalArgumentException("BGRA buffer does not contain enough data!");
         }
 
+        ByteBuffer bgraDup = bgraBuffer.duplicate();
+        bgraDup.order(ByteOrder.nativeOrder());
+
+        ByteBuffer rgbaBuffer = ByteBuffer.allocateDirect(requiredBytes).order(ByteOrder.nativeOrder());
+
         for (int i = 0; i < numPixels; i++) {
-            byte b = bgraBuffer.get();
-            byte g = bgraBuffer.get();
-            byte r = bgraBuffer.get();
-            byte a = bgraBuffer.get();
+            byte b = bgraDup.get();
+            byte g = bgraDup.get();
+            byte r = bgraDup.get();
+            byte a = bgraDup.get();
 
             rgbaBuffer.put(r).put(g).put(b).put(a);
         }

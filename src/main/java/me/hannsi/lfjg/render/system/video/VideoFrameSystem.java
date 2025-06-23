@@ -180,7 +180,7 @@ public class VideoFrameSystem {
                 if (frame != null && doVideo && frame.image != null) {
                     BufferedImage image = java2DFrameConverter.convert(frame);
 
-                    ByteBuffer byteImage = IOUtil.convertBufferedImageToByteBuffer(image, BufferedImage.TYPE_4BYTE_ABGR, true);
+                    ByteBuffer byteImage = IOUtil.convertBufferedImageToByteBuffer(image, true);
                     width = image.getWidth();
                     height = image.getHeight();
 

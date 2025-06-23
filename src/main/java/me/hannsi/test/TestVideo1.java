@@ -31,7 +31,7 @@ public class TestVideo1 implements IScene {
     @Override
     public void init() {
         glVideo = new GLVideo("TestVideo1");
-        glVideo.video(new ResourcesLocation("video/test4.webm"), 0, 0, frame.getWindowWidth(), frame.getWindowHeight());
+        glVideo.video(new ResourcesLocation("video/[FMV] world.execute(me); - MILI [cn4M-fH08XY].webm"), 0, 0, frame.getWindowWidth(), frame.getWindowHeight());
 
         effectCache = EffectCache.initEffectCache();
         effectCache.createCache("DrawObject1", new DrawObject());
