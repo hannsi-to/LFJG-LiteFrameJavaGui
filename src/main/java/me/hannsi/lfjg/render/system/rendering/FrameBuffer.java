@@ -101,7 +101,7 @@ public class FrameBuffer {
         mesh = Mesh.initMesh()
                 .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
                 .createBufferObject2D(positions, null, uvs)
-                .close();
+                .builderClose();
 
         this.uesStencil = uesStencil;
         this.glObject = glObject;

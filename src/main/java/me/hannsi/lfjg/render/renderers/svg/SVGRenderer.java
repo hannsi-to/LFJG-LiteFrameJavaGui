@@ -67,6 +67,6 @@ public class SVGRenderer {
         mesh = Mesh.initMesh()
                 .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
                 .createBufferObject2D(positions, null, uvs)
-                .close();
+                .builderClose();
     }
 }

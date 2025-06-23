@@ -20,7 +20,7 @@ import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 
 @Getter
-public class Mesh {
+public class Mesh implements AutoCloseable {
     private final int vaoId;
     private final HashMap<BufferObjectType, PersistentMappedVBO> vboIds;
     private PersistentMappedEBO eboId;
@@ -215,7 +215,7 @@ public class Mesh {
         }
     }
 
-    public Mesh close() {
+    public Mesh builderClose() {
         glBindVertexArray(0);
         return this;
     }
@@ -294,5 +294,10 @@ public class Mesh {
         glBindBuffer(GL_DRAW_INDIRECT_BUFFER, indirectBufferId);
         glBufferData(GL_DRAW_INDIRECT_BUFFER, drawCommand, usageHint);
         glBindBuffer(GL_DRAW_INDIRECT_BUFFER, 0);
+    }
+
+    @Override
+    public void close() {
+        cleanup();
     }
 }

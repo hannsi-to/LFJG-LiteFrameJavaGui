@@ -10,7 +10,6 @@ import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.BufferObjectType;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
-import me.hannsi.lfjg.utils.type.types.UpdateBufferType;
 import org.joml.Vector2f;
 
 import java.util.Arrays;
@@ -19,10 +18,6 @@ import java.util.Arrays;
  * Class representing a polygon renderer in OpenGL.
  */
 public class GLPolygon extends GLObject {
-    public static final UpdateBufferType DEFAULT_UPDATE_BUFFER_TYPE = UpdateBufferType.MAP_BUFFER_RANGE;
-
-    @Getter
-    private UpdateBufferType updateBufferType;
     @Getter
     @Setter
     private float[] vertex;
@@ -41,8 +36,6 @@ public class GLPolygon extends GLObject {
      */
     public GLPolygon(String name) {
         super(name);
-
-        this.updateBufferType = DEFAULT_UPDATE_BUFFER_TYPE;
     }
 
     /**
@@ -173,7 +166,7 @@ public class GLPolygon extends GLObject {
             Mesh mesh = Mesh.initMesh()
                     .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
                     .createBufferObject2D(vertex, color, texture)
-                    .close();
+                    .builderClose();
 
             setMesh(mesh);
 
@@ -234,11 +227,6 @@ public class GLPolygon extends GLObject {
         }
 
         return new float[]{minX, minY, maxX, maxY};
-    }
-
-    public GLPolygon setUpdateBufferType(UpdateBufferType updateBufferType) {
-        this.updateBufferType = updateBufferType;
-        return this;
     }
 
     public boolean isUpdate() {

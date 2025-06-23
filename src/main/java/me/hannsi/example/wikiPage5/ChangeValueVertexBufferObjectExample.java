@@ -4,7 +4,6 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.frame.LFJGFrame;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.type.types.UpdateBufferType;
 
 public class ChangeValueVertexBufferObjectExample implements LFJGFrame {
     GLRect glRect1;
@@ -26,7 +25,6 @@ public class ChangeValueVertexBufferObjectExample implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-        glRect1.setUpdateBufferType(UpdateBufferType.BUFFER_SUB_DATA);
         glRect1.rectWH(x++, 0, 500, 500, Color.of(255, 0, 255, 255));
         glRect1.draw();
     }
