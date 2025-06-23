@@ -1,11 +1,21 @@
 package me.hannsi.lfjg.render.system.mesh;
 
-public class ElementPair {
-    public float[] positions;
-    public int[] indices;
+import me.hannsi.lfjg.utils.math.io.BufferHolder;
 
-    public ElementPair(float[] positions, int[] indices) {
-        this.positions = positions.clone();
-        this.indices = indices.clone();
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
+public class ElementPair {
+    public BufferHolder<FloatBuffer> positions;
+    public BufferHolder<IntBuffer> indices;
+
+    public ElementPair(BufferHolder<FloatBuffer> positions, BufferHolder<IntBuffer> indices) {
+        this.positions = positions;
+        this.indices = indices;
+    }
+
+    public void memFree() {
+        positions.memFree();
+        indices.memFree();
     }
 }
