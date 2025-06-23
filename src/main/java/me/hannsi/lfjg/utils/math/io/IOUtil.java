@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.utils.toolkit;
+package me.hannsi.lfjg.utils.math.io;
 
 import me.hannsi.lfjg.utils.Util;
 import me.hannsi.lfjg.utils.math.MathHelper;

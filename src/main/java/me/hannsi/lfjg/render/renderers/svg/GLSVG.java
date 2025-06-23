@@ -7,7 +7,7 @@ import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.math.MathHelper;
-import me.hannsi.lfjg.utils.toolkit.IOUtil;
+import me.hannsi.lfjg.utils.math.io.IOUtil;
 import org.lwjgl.nanovg.NSVGImage;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;

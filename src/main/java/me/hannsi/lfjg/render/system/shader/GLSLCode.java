@@ -4,9 +4,9 @@ import lombok.Getter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
+import me.hannsi.lfjg.utils.math.io.IOUtil;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
-import me.hannsi.lfjg.utils.toolkit.IOUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 public class GLSLCode {
     /**
      * -- GETTER --
-     *  Gets the resource location of the shader.
+     * Gets the resource location of the shader.
      *
      * @return the resource location of the shader
      */

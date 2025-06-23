@@ -5,10 +5,10 @@ import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
+import me.hannsi.lfjg.utils.math.io.IOUtil;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.reflection.location.URLLocation;
-import me.hannsi.lfjg.utils.toolkit.IOUtil;
 
 import java.nio.ByteBuffer;
 

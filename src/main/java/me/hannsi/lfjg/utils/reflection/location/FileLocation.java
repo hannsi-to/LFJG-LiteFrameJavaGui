@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.utils.reflection.location;
 
-import me.hannsi.lfjg.utils.toolkit.IOUtil;
+import me.hannsi.lfjg.utils.math.io.IOUtil;
 
 import java.io.InputStream;
 import java.util.Objects;

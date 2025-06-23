@@ -3,10 +3,10 @@ package me.hannsi.lfjg.utils.graphics.image;
 import lombok.Getter;
 import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.render.debug.exceptions.texture.CreatingTextureException;
+import me.hannsi.lfjg.utils.math.io.IOUtil;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
-import me.hannsi.lfjg.utils.toolkit.IOUtil;
 import me.hannsi.lfjg.utils.type.types.ImageLoaderType;
 import org.bytedeco.opencv.global.opencv_imgcodecs;
 import org.bytedeco.opencv.global.opencv_imgproc;
@@ -35,7 +35,7 @@ import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 public class TextureLoader {
     /**
      * -- GETTER --
-     *  Gets the texture path.
+     * Gets the texture path.
      *
      * @return the texture path
      */
@@ -44,7 +44,7 @@ public class TextureLoader {
     private final ImageLoaderType imageLoaderType;
     /**
      * -- GETTER --
-     *  Gets the texture ID.
+     * Gets the texture ID.
      *
      * @return the texture ID
      */

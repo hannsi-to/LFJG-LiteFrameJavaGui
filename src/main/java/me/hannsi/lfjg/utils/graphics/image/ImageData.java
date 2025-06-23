@@ -3,8 +3,8 @@ package me.hannsi.lfjg.utils.graphics.image;
 import lombok.Getter;
 import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLog;
+import me.hannsi.lfjg.utils.math.io.IOUtil;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
-import me.hannsi.lfjg.utils.toolkit.IOUtil;
 import org.bytedeco.opencv.global.opencv_imgcodecs;
 import org.bytedeco.opencv.global.opencv_imgproc;
 import org.bytedeco.opencv.opencv_core.Mat;
@@ -21,38 +21,38 @@ import static org.bytedeco.opencv.global.opencv_imgproc.cvtColor;
 public class ImageData {
     /**
      * -- SETTER --
-     *  Sets the image path.
-     *
-     *
+     * Sets the image path.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the image path.
+     * Gets the image path.
      *
-     @param imagePath the new image path
-      * @return the image path
+     * @param imagePath the new image path
+     * @return the image path
      */
     private ResourcesLocation imagePath;
     /**
      * -- SETTER --
-     *  Sets the OpenCV Mat object.
-     *
-     *
+     * Sets the OpenCV Mat object.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the OpenCV Mat object.
+     * Gets the OpenCV Mat object.
      *
-     @param mat the new Mat object
-      * @return the Mat object
+     * @param mat the new Mat object
+     * @return the Mat object
      */
     private Mat mat;
     /**
      * -- SETTER --
-     *  Sets the ByteBuffer containing the image data in RGBA format.
-     *
-     *
+     * Sets the ByteBuffer containing the image data in RGBA format.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the ByteBuffer containing the image data in RGBA format.
+     * Gets the ByteBuffer containing the image data in RGBA format.
      *
-     @param byteBuffer the new ByteBuffer
-      * @return the ByteBuffer
+     * @param byteBuffer the new ByteBuffer
+     * @return the ByteBuffer
      */
     private ByteBuffer byteBuffer;
 
