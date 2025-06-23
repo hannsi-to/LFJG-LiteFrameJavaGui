@@ -356,4 +356,18 @@ public class IOUtil extends Util {
             throw new RuntimeException(e);
         }
     }
+
+    public static <T> boolean allElementsEqual(T[] array) {
+        if (array == null || array.length == 0) {
+            return true;
+        }
+
+        T first = array[0];
+        for (int i = 1; i < array.length; i++) {
+            if (!first.equals(array[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

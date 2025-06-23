@@ -21,12 +21,16 @@ public class GLPolygon extends GLObject {
     @Getter
     @Setter
     private float[] vertex;
+    private float[] latestVertex;
     @Getter
     @Setter
     private float[] color;
+    private float[] latestColor;
     @Getter
     @Setter
     private float[] texture;
+    private float[] latestTexture;
+
     private boolean isUpdate;
 
     /**
@@ -148,10 +152,19 @@ public class GLPolygon extends GLObject {
             throw new MeshBuilderException("MeshBuilder is null.");
         }
 
-        mesh.updateVBOData(BufferObjectType.POSITIONS_BUFFER, vertex);
-        mesh.updateVBOData(BufferObjectType.COLORS_BUFFER, color);
-        mesh.updateVBOData(BufferObjectType.TEXTURE_BUFFER, texture);
+        if (!Arrays.equals(vertex, latestVertex)) {
+            mesh.updateVBOData(BufferObjectType.POSITIONS_BUFFER, vertex);
+        }
+        if (!Arrays.equals(color, latestColor)) {
+            mesh.updateVBOData(BufferObjectType.COLORS_BUFFER, color);
+        }
+        if (!Arrays.equals(texture, latestTexture)) {
+            mesh.updateVBOData(BufferObjectType.TEXTURE_BUFFER, texture);
+        }
 
+        latestVertex = vertex;
+        latestColor = color;
+        latestTexture = texture;
         vertex = new float[0];
         color = new float[0];
         texture = new float[0];
@@ -172,6 +185,9 @@ public class GLPolygon extends GLObject {
 
             setGLObjectParameter();
             create(vertexShaderPath, fragmentShaderPath);
+            latestVertex = vertex;
+            latestColor = color;
+            latestTexture = texture;
             vertex = new float[0];
             color = new float[0];
             texture = new float[0];

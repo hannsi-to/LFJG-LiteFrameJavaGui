@@ -2,13 +2,15 @@ package me.hannsi.example.wikiPage5;
 
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.frame.LFJGFrame;
+import me.hannsi.lfjg.frame.setting.settings.MonitorSetting;
+import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.utils.graphics.color.Color;
+import me.hannsi.lfjg.utils.type.types.MonitorType;
 
 public class ChangeValueVertexBufferObjectExample implements LFJGFrame {
     GLRect glRect1;
     int x = 0;
-    boolean revers;
     private Frame frame;
 
     public static void main(String[] args) {
@@ -36,7 +38,8 @@ public class ChangeValueVertexBufferObjectExample implements LFJGFrame {
 
     @Override
     public void setFrameSetting() {
-
+        frame.setFrameSettingValue(MonitorSetting.class, MonitorType.BORDERLESS);
+        frame.setFrameSettingValue(RefreshRateSetting.class, -1);
     }
 
     public void setFrame() {
