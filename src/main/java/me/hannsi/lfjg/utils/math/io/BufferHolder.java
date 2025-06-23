@@ -35,6 +35,36 @@ public class BufferHolder<T extends Buffer> {
         return new BufferHolder<>(MemoryUtil.memAllocLong(elementCount), elementCount);
     }
 
+    public static BufferHolder<ByteBuffer> from(byte[] array) {
+        ByteBuffer buffer = MemoryUtil.memAlloc(array.length);
+        buffer.put(array).flip();
+        return new BufferHolder<>(buffer, array.length);
+    }
+
+    public static BufferHolder<FloatBuffer> from(float[] array) {
+        FloatBuffer buffer = MemoryUtil.memAllocFloat(array.length);
+        buffer.put(array).flip();
+        return new BufferHolder<>(buffer, array.length);
+    }
+
+    public static BufferHolder<IntBuffer> from(int[] array) {
+        IntBuffer buffer = MemoryUtil.memAllocInt(array.length);
+        buffer.put(array).flip();
+        return new BufferHolder<>(buffer, array.length);
+    }
+
+    public static BufferHolder<ShortBuffer> from(short[] array) {
+        ShortBuffer buffer = MemoryUtil.memAllocShort(array.length);
+        buffer.put(array).flip();
+        return new BufferHolder<>(buffer, array.length);
+    }
+
+    public static BufferHolder<LongBuffer> from(long[] array) {
+        LongBuffer buffer = MemoryUtil.memAllocLong(array.length);
+        buffer.put(array).flip();
+        return new BufferHolder<>(buffer, array.length);
+    }
+
     public void memFree() {
         MemoryUtil.memFree(buffer);
     }

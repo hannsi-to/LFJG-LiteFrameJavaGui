@@ -5,6 +5,7 @@ import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
+import me.hannsi.lfjg.utils.math.io.BufferHolder;
 import me.hannsi.lfjg.utils.type.types.AttributeType;
 import me.hannsi.lfjg.utils.type.types.BufferObjectType;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
@@ -33,11 +34,11 @@ public class Mesh {
     @Getter
     private final EnumMap<BufferObjectType, int[]> bufferIds;
     @Getter
-    protected float[] positions;
+    protected BufferHolder<FloatBuffer> positions;
     @Getter
-    protected float[] colors;
+    protected BufferHolder<FloatBuffer> colors;
     @Getter
-    protected float[] textures;
+    protected BufferHolder<FloatBuffer> textures;
     @Getter
     protected int numVertices;
     @Getter
@@ -82,11 +83,8 @@ public class Mesh {
         return new Mesh();
     }
 
-    public Mesh createBufferObjects2D(float[] positions, float[] colors, float[] texture) {
-        this.positions = positions;
-        this.colors = colors;
-        this.textures = texture;
-
+    public Mesh createBufferObjects2D(float[] positions, float[] colors, float[] textures) {
+        this.positions = BufferHolder.from(positions);
         if (useElementBufferObject) {
             createVectorBufferObjectAndElementBufferObject(AttributeType.POSITION_2D);
         } else {
@@ -94,11 +92,13 @@ public class Mesh {
         }
 
         if (colors != null) {
+            this.colors = BufferHolder.from(colors);
             createVertexBufferObject(BufferObjectType.COLORS_BUFFER, AttributeType.COLOR, colors);
         }
 
-        if (texture != null) {
-            createVertexBufferObject(BufferObjectType.TEXTURE_BUFFER, AttributeType.TEXTURE, texture);
+        if (textures != null) {
+            this.textures = BufferHolder.from(textures);
+            createVertexBufferObject(BufferObjectType.TEXTURE_BUFFER, AttributeType.TEXTURE, textures);
         }
 
         if (useIndirect) {
@@ -109,8 +109,8 @@ public class Mesh {
     }
 
     public Mesh createBufferObjects3D(float[] positions, float[] normals, float[] textures, int[] indices) {
-        this.positions = positions;
-        this.textures = textures;
+        this.positions = BufferHolder.from(positions);
+        this.textures = BufferHolder.from(textures);
         this.colors = null;
         this.useElementBufferObject = true;
 
@@ -168,7 +168,7 @@ public class Mesh {
         currentBufferIndex = (currentBufferIndex + 1) % bufferCount;
     }
 
-    public void updateVBOData(UpdateBufferType updateBufferType, BufferObjectType bufferObjectType, float[] newValues) {
+    public void updateVBOData(UpdateBufferType updateBufferType, BufferObjectType bufferObjectType, BufferHolder<FloatBuffer> newValues) {
         rotateBuffer();
 
         ElementPair elementPair = updateElementPairIfNeeded(bufferObjectType, newValues);
@@ -189,17 +189,21 @@ public class Mesh {
         }
     }
 
-    private void uploadVertexBufferObject(UpdateBufferType updateBufferType, BufferObjectType bufferObjectType, int bufferId, float[] newValues) {
-        int length = newValues.length;
+    private void uploadVertexBufferObject(UpdateBufferType updateBufferType, BufferObjectType bufferObjectType, int bufferId, BufferHolder<FloatBuffer> newValues) {
+        FloatBuffer buffer = newValues.getBuffer();
+        int length = newValues.getSize();
         long byteOffset = (long) currentBufferIndex * length * Float.BYTES;
-
-        FloatBuffer buffer = BufferUtils.createFloatBuffer(newValues.length);
-        buffer.put(newValues).flip();
 
         glBindBuffer(bufferObjectType.getGlId(), bufferId);
         switch (updateBufferType) {
-            case BUFFER_DATA -> glBufferData(bufferObjectType.getGlId(), buffer, usageHint);
-            case BUFFER_SUB_DATA -> glBufferSubData(bufferObjectType.getGlId(), byteOffset, buffer);
+            case BUFFER_DATA -> {
+                buffer.rewind();
+                glBufferData(bufferObjectType.getGlId(), buffer, usageHint);
+            }
+            case BUFFER_SUB_DATA -> {
+                buffer.rewind();
+                glBufferSubData(bufferObjectType.getGlId(), byteOffset, buffer);
+            }
             case MAP_BUFFER_RANGE -> {
                 ByteBuffer mapped = glMapBufferRange(
                         bufferObjectType.getGlId(),
@@ -208,7 +212,7 @@ public class Mesh {
                         accessHint
                 );
                 if (mapped != null) {
-                    mapped.asFloatBuffer().put(newValues);
+                    mapped.asFloatBuffer().put(buffer.duplicate().rewind());
                     glUnmapBuffer(bufferObjectType.getGlId());
                 }
             }
@@ -217,7 +221,7 @@ public class Mesh {
         glBindBuffer(bufferObjectType.getGlId(), 0);
     }
 
-    private ElementPair updateElementPairIfNeeded(BufferObjectType bufferObjectType, float[] newValues) {
+    private ElementPair updateElementPairIfNeeded(BufferObjectType bufferObjectType, BufferHolder<FloatBuffer> newValues) {
         if (useElementBufferObject && bufferObjectType == BufferObjectType.POSITIONS_BUFFER) {
             return getElementPositions(getStride(), newValues);
         }
@@ -293,7 +297,7 @@ public class Mesh {
             drawCommand.put(0);
         } else {
             int size = getStride();
-            int count = positions.length / size;
+            int count = positions.getSize() / size;
 
             drawCommand = BufferUtils.createIntBuffer(4);
             drawCommand.put(count);
@@ -319,21 +323,28 @@ public class Mesh {
         numVertices = elementPair.indices.length;
     }
 
-    private ElementPair getElementPositions(int stride, float[] positions) {
+    private ElementPair getElementPositions(int stride, BufferHolder<FloatBuffer> positionsBuffer) {
+        FloatBuffer buffer = positionsBuffer.getBuffer();
         Map<VertexKey, Integer> uniqueVertices = new HashMap<>();
-        int[] indices = new int[positions.length / stride];
-        float[] uniquePositions = new float[positions.length];
+        int vertexCount = buffer.remaining() / stride;
+        int[] indices = new int[vertexCount];
+        float[] uniquePositions = new float[buffer.remaining()];
         int uniqueCount = 0;
 
-        for (int i = 0, idx = 0; i < positions.length; i += stride, idx++) {
-            VertexKey key = new VertexKey(positions, i, stride);
+        int basePos = buffer.position();
+
+        for (int idx = 0; idx < vertexCount; idx++) {
+            int offset = basePos + idx * stride;
+            VertexKey key = new VertexKey(positionsBuffer, offset, stride);
             Integer existingIndex = uniqueVertices.get(key);
             if (existingIndex != null) {
                 indices[idx] = existingIndex;
             } else {
                 uniqueVertices.put(key, uniqueCount);
                 indices[idx] = uniqueCount;
-                System.arraycopy(positions, i, uniquePositions, uniqueCount * stride, stride);
+                for (int j = 0; j < stride; j++) {
+                    uniquePositions[uniqueCount * stride + j] = buffer.get(offset + j);
+                }
                 uniqueCount++;
             }
         }
