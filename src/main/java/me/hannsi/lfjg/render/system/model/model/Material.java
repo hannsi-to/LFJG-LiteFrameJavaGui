@@ -5,7 +5,7 @@ import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
-import me.hannsi.lfjg.render.system.Mesh;
+import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import org.joml.Vector4f;
 

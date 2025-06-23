@@ -10,7 +10,7 @@ import me.hannsi.lfjg.render.debug.exceptions.frameBuffer.CreatingFrameBufferExc
 import me.hannsi.lfjg.render.debug.exceptions.render.scene.CreatingRenderBufferException;
 import me.hannsi.lfjg.render.debug.exceptions.texture.CreatingTextureException;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.render.system.Mesh;
+import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;

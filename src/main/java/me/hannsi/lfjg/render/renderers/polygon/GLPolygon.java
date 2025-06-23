@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.hannsi.lfjg.render.debug.exceptions.render.meshBuilder.MeshBuilderException;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.render.system.Mesh;
+import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;

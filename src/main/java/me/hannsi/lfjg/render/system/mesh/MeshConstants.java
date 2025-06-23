@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.system;
+package me.hannsi.lfjg.render.system.mesh;
 
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 

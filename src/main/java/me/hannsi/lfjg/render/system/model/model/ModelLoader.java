@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.render.system.model.model;
 
-import me.hannsi.lfjg.render.system.Mesh;
+import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.render.system.model.texture.TextureModelCache;
 import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import org.joml.Vector4f;

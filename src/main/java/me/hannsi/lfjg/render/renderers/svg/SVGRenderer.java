@@ -2,7 +2,7 @@ package me.hannsi.lfjg.render.renderers.svg;
 
 import lombok.Getter;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
-import me.hannsi.lfjg.render.system.Mesh;
+import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
