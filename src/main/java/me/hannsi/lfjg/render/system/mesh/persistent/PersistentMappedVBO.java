@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.system.mesh;
+package me.hannsi.lfjg.render.system.mesh.persistent;
 
 import lombok.Getter;
 import me.hannsi.lfjg.utils.type.types.AttributeType;
@@ -10,7 +10,7 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL44.*;
 
 @Getter
-public class PersistentMappedVBO {
+public class PersistentMappedVBO implements PersistentMappedBuffer {
     private final int bufferId;
     private final FloatBuffer mappedBuffer;
     private final int sizeInBytes;
@@ -60,6 +60,7 @@ public class PersistentMappedVBO {
         return this;
     }
 
+    @Override
     public void cleanup() {
         glDeleteBuffers(bufferId);
     }

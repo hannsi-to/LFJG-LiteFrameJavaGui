@@ -5,6 +5,9 @@ import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.render.debug.exceptions.render.meshBuilder.MeshBuilderException;
+import me.hannsi.lfjg.render.system.mesh.persistent.PersistentMappedEBO;
+import me.hannsi.lfjg.render.system.mesh.persistent.PersistentMappedIBO;
+import me.hannsi.lfjg.render.system.mesh.persistent.PersistentMappedVBO;
 import me.hannsi.lfjg.utils.type.types.AttributeType;
 import me.hannsi.lfjg.utils.type.types.BufferObjectType;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
@@ -13,9 +16,7 @@ import org.lwjgl.BufferUtils;
 import java.nio.IntBuffer;
 import java.util.*;
 
-import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 
 @Getter
 public class Mesh implements AutoCloseable {
@@ -23,7 +24,7 @@ public class Mesh implements AutoCloseable {
     private final HashMap<BufferObjectType, PersistentMappedVBO> vboIds;
     private final List<DrawCommand> drawCommands;
     private PersistentMappedEBO eboId;
-    private int indirectBufferId;
+    private PersistentMappedIBO iboId;
     private int numVertices;
     private int count;
     private ProjectionType projectionType;
@@ -70,8 +71,9 @@ public class Mesh implements AutoCloseable {
         }
 
         if (useIndirect) {
-            glDeleteBuffers(indirectBufferId);
-            ids.append("IndirectBufferObject: ").append(indirectBufferId).append(" | ");
+            int id = iboId.getBufferId();
+            iboId.cleanup();
+            ids.append("IndirectBufferObject: ").append(id).append(" | ");
         }
 
         glDeleteVertexArrays(vaoId);
@@ -224,6 +226,10 @@ public class Mesh implements AutoCloseable {
         return this;
     }
 
+    public int getDrawCommandCount() {
+        return drawCommands.size();
+    }
+
     private void createPositionsVBO(float[] positions) {
         if (useElementBufferObject) {
             ElementPair elementPair = getElementPositions(positions);
@@ -299,10 +305,9 @@ public class Mesh implements AutoCloseable {
 
         buffer.flip();
 
-        indirectBufferId = glGenBuffers();
-        glBindBuffer(GL_DRAW_INDIRECT_BUFFER, indirectBufferId);
-        glBufferData(GL_DRAW_INDIRECT_BUFFER, buffer, usageHint);
-        glBindBuffer(GL_DRAW_INDIRECT_BUFFER, 0);
+        iboId = new PersistentMappedIBO(
+                drawCommands.size(), flagsHint
+        ).update(drawCommands);
     }
 
     @Override

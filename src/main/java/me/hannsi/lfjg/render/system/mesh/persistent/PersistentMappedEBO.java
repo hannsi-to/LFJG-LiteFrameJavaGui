@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.system.mesh;
+package me.hannsi.lfjg.render.system.mesh.persistent;
 
 import lombok.Getter;
 
@@ -12,7 +12,7 @@ import static org.lwjgl.opengl.GL44.GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT;
 import static org.lwjgl.opengl.GL44.glBufferStorage;
 
 @Getter
-public class PersistentMappedEBO {
+public class PersistentMappedEBO implements PersistentMappedBuffer {
     private final int bufferId;
     private final IntBuffer mappedBuffer;
     private final int sizeInBytes;
@@ -54,6 +54,7 @@ public class PersistentMappedEBO {
         return this;
     }
 
+    @Override
     public void cleanup() {
         glDeleteBuffers(bufferId);
     }
