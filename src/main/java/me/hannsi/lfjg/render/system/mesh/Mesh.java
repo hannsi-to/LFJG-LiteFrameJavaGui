@@ -11,9 +11,7 @@ import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.lwjgl.BufferUtils;
 
 import java.nio.IntBuffer;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL30.*;
@@ -23,9 +21,9 @@ import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 public class Mesh implements AutoCloseable {
     private final int vaoId;
     private final HashMap<BufferObjectType, PersistentMappedVBO> vboIds;
+    private final List<DrawCommand> drawCommands;
     private PersistentMappedEBO eboId;
     private int indirectBufferId;
-
     private int numVertices;
     private int count;
     private ProjectionType projectionType;
@@ -43,6 +41,7 @@ public class Mesh implements AutoCloseable {
         this.usageHint = MeshConstants.USAGE_HINT;
         this.useElementBufferObject = MeshConstants.USE_ELEMENT_BUFFER_OBJECT;
         this.useIndirect = MeshConstants.USE_INDIRECT;
+        this.drawCommands = new ArrayList<>();
 
         glBindVertexArray(vaoId);
     }
@@ -108,6 +107,11 @@ public class Mesh implements AutoCloseable {
 
     public Mesh useIndirect(boolean useIndirect) {
         this.useIndirect = useIndirect;
+        return this;
+    }
+
+    public Mesh addDrawCommand(DrawCommand command) {
+        drawCommands.add(command);
         return this;
     }
 
@@ -274,25 +278,30 @@ public class Mesh implements AutoCloseable {
     }
 
     private void createIndirectBuffer() {
-        IntBuffer drawCommand;
-        if (useElementBufferObject) {
-            drawCommand = BufferUtils.createIntBuffer(5);
-            drawCommand.put(numVertices);
-            drawCommand.put(1);
-            drawCommand.put(0);
-        } else {
-            drawCommand = BufferUtils.createIntBuffer(4);
-            drawCommand.put(count);
-            drawCommand.put(1);
+        int commandCount = drawCommands.isEmpty() ? 1 : drawCommands.size();
+        IntBuffer buffer = BufferUtils.createIntBuffer(commandCount * 5);
+
+        if (drawCommands.isEmpty()) {
+            drawCommands.add(
+                    new DrawCommand(
+                            useElementBufferObject ? numVertices : count,
+                            1,
+                            0,
+                            0,
+                            0
+                    )
+            );
         }
-        drawCommand.put(0);
-        drawCommand.put(0);
-        drawCommand.flip();
+
+        for (DrawCommand drawCommand : drawCommands) {
+            drawCommand.putIntoBuffer(buffer);
+        }
+
+        buffer.flip();
 
         indirectBufferId = glGenBuffers();
-
         glBindBuffer(GL_DRAW_INDIRECT_BUFFER, indirectBufferId);
-        glBufferData(GL_DRAW_INDIRECT_BUFFER, drawCommand, usageHint);
+        glBufferData(GL_DRAW_INDIRECT_BUFFER, buffer, usageHint);
         glBindBuffer(GL_DRAW_INDIRECT_BUFFER, 0);
     }
 
