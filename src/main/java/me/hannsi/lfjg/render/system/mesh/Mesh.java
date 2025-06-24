@@ -11,9 +11,7 @@ import me.hannsi.lfjg.render.system.mesh.persistent.PersistentMappedVBO;
 import me.hannsi.lfjg.utils.type.types.AttributeType;
 import me.hannsi.lfjg.utils.type.types.BufferObjectType;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
-import org.lwjgl.BufferUtils;
 
-import java.nio.IntBuffer;
 import java.util.*;
 
 import static org.lwjgl.opengl.GL30.*;
@@ -284,30 +282,20 @@ public class Mesh implements AutoCloseable {
     }
 
     private void createIndirectBuffer() {
-        int commandCount = drawCommands.isEmpty() ? 1 : drawCommands.size();
-        IntBuffer buffer = BufferUtils.createIntBuffer(commandCount * 5);
-
         if (drawCommands.isEmpty()) {
-            drawCommands.add(
-                    new DrawCommand(
-                            useElementBufferObject ? numVertices : count,
-                            1,
-                            0,
-                            0,
-                            0
-                    )
-            );
+            drawCommands.addAll(generateDefaultDrawCommands());
         }
+        uploadIndirectBuffer();
+    }
 
-        for (DrawCommand drawCommand : drawCommands) {
-            drawCommand.putIntoBuffer(buffer);
-        }
+    private List<DrawCommand> generateDefaultDrawCommands() {
+        int count = useElementBufferObject ? numVertices : this.count;
+        return List.of(new DrawCommand(count, 1, 0, 0, 0));
+    }
 
-        buffer.flip();
-
-        iboId = new PersistentMappedIBO(
-                drawCommands.size(), flagsHint
-        ).update(drawCommands);
+    private void uploadIndirectBuffer() {
+        iboId = new PersistentMappedIBO(drawCommands.size(), flagsHint)
+                .update(drawCommands);
     }
 
     @Override
