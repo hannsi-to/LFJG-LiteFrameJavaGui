@@ -58,7 +58,7 @@ public class Mesh implements AutoCloseable {
             PersistentMappedVBO persistentMappedVBO = vboEntry.getValue();
             int bufferId = persistentMappedVBO.getBufferId();
 
-            glDeleteBuffers(bufferId);
+            persistentMappedVBO.cleanup();
 
             ids.append(bufferObjectType.getName()).append(": ").append(bufferId).append(" | ");
         }
@@ -66,7 +66,7 @@ public class Mesh implements AutoCloseable {
         vboIds.clear();
         if (useElementBufferObject) {
             int id = eboId.getBufferId();
-            glDeleteBuffers(id);
+            eboId.cleanup();
             ids.append("ElementBufferObject: ").append(id).append(" | ");
         }
 
