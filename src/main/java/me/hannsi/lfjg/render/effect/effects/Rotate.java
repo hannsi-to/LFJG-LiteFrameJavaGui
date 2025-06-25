@@ -14,42 +14,42 @@ public class Rotate extends EffectBase {
     protected float latestZ;
     /**
      * -- SETTER --
-     *  Sets the rotation angle around the X axis.
-     *
-     *
+     * Sets the rotation angle around the X axis.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the rotation angle around the X axis.
+     * Gets the rotation angle around the X axis.
      *
-     @param x the rotation angle around the X axis
-      * @return the rotation angle around the X axis
+     * @param x the rotation angle around the X axis
+     * @return the rotation angle around the X axis
      */
     @Getter
     @Setter
     private float x;
     /**
      * -- SETTER --
-     *  Sets the rotation angle around the Y axis.
-     *
-     *
+     * Sets the rotation angle around the Y axis.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the rotation angle around the Y axis.
+     * Gets the rotation angle around the Y axis.
      *
-     @param y the rotation angle around the Y axis
-      * @return the rotation angle around the Y axis
+     * @param y the rotation angle around the Y axis
+     * @return the rotation angle around the Y axis
      */
     @Getter
     @Setter
     private float y;
     /**
      * -- SETTER --
-     *  Sets the rotation angle around the Z axis.
-     *
-     *
+     * Sets the rotation angle around the Z axis.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the rotation angle around the Z axis.
+     * Gets the rotation angle around the Z axis.
      *
-     @param z the rotation angle around the Z axis
-      * @return the rotation angle around the Z axis
+     * @param z the rotation angle around the Z axis
+     * @return the rotation angle around the Z axis
      */
     @Getter
     @Setter
@@ -59,42 +59,42 @@ public class Rotate extends EffectBase {
     private boolean autoCenter;
     /**
      * -- SETTER --
-     *  Sets the X coordinate of the rotation center.
-     *
-     *
+     * Sets the X coordinate of the rotation center.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the X coordinate of the rotation center.
+     * Gets the X coordinate of the rotation center.
      *
-     @param cx the X coordinate of the rotation center
-      * @return the X coordinate of the rotation center
+     * @param cx the X coordinate of the rotation center
+     * @return the X coordinate of the rotation center
      */
     @Getter
     @Setter
     private float cx;
     /**
      * -- SETTER --
-     *  Sets the Y coordinate of the rotation center.
-     *
-     *
+     * Sets the Y coordinate of the rotation center.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the Y coordinate of the rotation center.
+     * Gets the Y coordinate of the rotation center.
      *
-     @param cy the Y coordinate of the rotation center
-      * @return the Y coordinate of the rotation center
+     * @param cy the Y coordinate of the rotation center
+     * @return the Y coordinate of the rotation center
      */
     @Getter
     @Setter
     private float cy;
     /**
      * -- SETTER --
-     *  Sets the Z coordinate of the rotation center.
-     *
-     *
+     * Sets the Z coordinate of the rotation center.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the Z coordinate of the rotation center.
+     * Gets the Z coordinate of the rotation center.
      *
-     @param cz the Z coordinate of the rotation center
-      * @return the Z coordinate of the rotation center
+     * @param cz the Z coordinate of the rotation center
+     * @return the Z coordinate of the rotation center
      */
     @Getter
     @Setter
@@ -214,11 +214,11 @@ public class Rotate extends EffectBase {
     @Override
     public void push(GLObject baseGLObject) {
         if (autoCenter) {
-            cx = baseGLObject.getCenterX();
-            cy = baseGLObject.getCenterY();
+            cx = baseGLObject.getTransform().getCenterX();
+            cy = baseGLObject.getTransform().getCenterY();
         }
 
-        baseGLObject.translate(cx, cy, cz).rotateXYZ(-latestX, -latestY, -latestZ).rotateXYZ(x, y, z).translate(-cx, -cy, -cz);
+        baseGLObject.getTransform().translate(cx, cy, cz).rotateXYZ(-latestX, -latestY, -latestZ).rotateXYZ(x, y, z).translate(-cx, -cy, -cz);
 
         super.push(baseGLObject);
     }

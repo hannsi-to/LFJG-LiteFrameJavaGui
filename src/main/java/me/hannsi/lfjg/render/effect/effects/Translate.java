@@ -14,42 +14,42 @@ public class Translate extends EffectBase {
     protected float latestZ;
     /**
      * -- SETTER --
-     *  Sets the translation distance along the X axis.
-     *
-     *
+     * Sets the translation distance along the X axis.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the translation distance along the X axis.
+     * Gets the translation distance along the X axis.
      *
-     @param x the translation distance along the X axis
-      * @return the translation distance along the X axis
+     * @param x the translation distance along the X axis
+     * @return the translation distance along the X axis
      */
     @Getter
     @Setter
     private float x;
     /**
      * -- SETTER --
-     *  Sets the translation distance along the Y axis.
-     *
-     *
+     * Sets the translation distance along the Y axis.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the translation distance along the Y axis.
+     * Gets the translation distance along the Y axis.
      *
-     @param y the translation distance along the Y axis
-      * @return the translation distance along the Y axis
+     * @param y the translation distance along the Y axis
+     * @return the translation distance along the Y axis
      */
     @Getter
     @Setter
     private float y;
     /**
      * -- SETTER --
-     *  Sets the translation distance along the Z axis.
-     *
-     *
+     * Sets the translation distance along the Z axis.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the translation distance along the Z axis.
+     * Gets the translation distance along the Z axis.
      *
-     @param z the translation distance along the Z axis
-      * @return the translation distance along the Z axis
+     * @param z the translation distance along the Z axis
+     * @return the translation distance along the Z axis
      */
     @Getter
     @Setter
@@ -121,7 +121,7 @@ public class Translate extends EffectBase {
      */
     @Override
     public void push(GLObject baseGLObject) {
-        baseGLObject.translate(-latestX, -latestY, -latestZ).translate(x, y, z);
+        baseGLObject.getTransform().translate(-latestX, -latestY, -latestZ).translate(x, y, z);
         super.push(baseGLObject);
     }
 

@@ -23,7 +23,7 @@ public class ChangeValueModelMatrixExample implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-        glRect1.translate(1, 0, 0);
+        glRect1.getTransform().translate(1, 0, 0);
         glRect1.draw();
     }
 

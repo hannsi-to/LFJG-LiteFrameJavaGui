@@ -16,84 +16,84 @@ public class Scale extends EffectBase {
     protected float latestZ;
     /**
      * -- SETTER --
-     *  Sets the scaling factor along the X axis.
-     *
-     *
+     * Sets the scaling factor along the X axis.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the scaling factor along the X axis.
+     * Gets the scaling factor along the X axis.
      *
-     @param x the scaling factor along the X axis
-      * @return the scaling factor along the X axis
+     * @param x the scaling factor along the X axis
+     * @return the scaling factor along the X axis
      */
     @Getter
     @Setter
     private float x;
     /**
      * -- SETTER --
-     *  Sets the scaling factor along the Y axis.
-     *
-     *
+     * Sets the scaling factor along the Y axis.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the scaling factor along the Y axis.
+     * Gets the scaling factor along the Y axis.
      *
-     @param y the scaling factor along the Y axis
-      * @return the scaling factor along the Y axis
+     * @param y the scaling factor along the Y axis
+     * @return the scaling factor along the Y axis
      */
     @Getter
     @Setter
     private float y;
     /**
      * -- SETTER --
-     *  Sets the scaling factor along the Z axis.
-     *
-     *
+     * Sets the scaling factor along the Z axis.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the scaling factor along the Z axis.
+     * Gets the scaling factor along the Z axis.
      *
-     @param z the scaling factor along the Z axis
-      * @return the scaling factor along the Z axis
+     * @param z the scaling factor along the Z axis
+     * @return the scaling factor along the Z axis
      */
     @Getter
     @Setter
     private float z;
     /**
      * -- SETTER --
-     *  Sets the X coordinate of the scaling center.
-     *
-     *
+     * Sets the X coordinate of the scaling center.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the X coordinate of the scaling center.
+     * Gets the X coordinate of the scaling center.
      *
-     @param cx the X coordinate of the scaling center
-      * @return the X coordinate of the scaling center
+     * @param cx the X coordinate of the scaling center
+     * @return the X coordinate of the scaling center
      */
     @Getter
     @Setter
     private float cx;
     /**
      * -- SETTER --
-     *  Sets the Y coordinate of the scaling center.
-     *
-     *
+     * Sets the Y coordinate of the scaling center.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the Y coordinate of the scaling center.
+     * Gets the Y coordinate of the scaling center.
      *
-     @param cy the Y coordinate of the scaling center
-      * @return the Y coordinate of the scaling center
+     * @param cy the Y coordinate of the scaling center
+     * @return the Y coordinate of the scaling center
      */
     @Getter
     @Setter
     private float cy;
     /**
      * -- SETTER --
-     *  Sets the Z coordinate of the scaling center.
-     *
-     *
+     * Sets the Z coordinate of the scaling center.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the Z coordinate of the scaling center.
+     * Gets the Z coordinate of the scaling center.
      *
-     @param cz the Z coordinate of the scaling center
-      * @return the Z coordinate of the scaling center
+     * @param cz the Z coordinate of the scaling center
+     * @return the Z coordinate of the scaling center
      */
     @Getter
     @Setter
@@ -242,11 +242,11 @@ public class Scale extends EffectBase {
     @Override
     public void push(GLObject baseGLObject) {
         if (autoCenter) {
-            cx = baseGLObject.getCenterX();
-            cy = baseGLObject.getCenterY();
+            cx = baseGLObject.getTransform().getCenterX();
+            cy = baseGLObject.getTransform().getCenterY();
         }
 
-        baseGLObject.translate(cx, cy, cz).scale(1 / latestX, 1 / latestY, 1 / latestZ).scale(x, y, z).translate(-cx, -cy, -cz);
+        baseGLObject.getTransform().translate(cx, cy, cz).scale(1 / latestX, 1 / latestY, 1 / latestZ).scale(x, y, z).translate(-cx, -cy, -cz);
 
         super.push(baseGLObject);
     }

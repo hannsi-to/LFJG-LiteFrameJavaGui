@@ -202,16 +202,16 @@ public class GLPolygon extends GLObject {
         setHeight(bounds[3] - bounds[1]);
 
         Vector2f center = new Vector2f(bounds[0] + getWidth() / 2f, bounds[1] + getHeight() / 2f);
-        setCenterX(center.x());
-        setCenterY(center.y());
+        getTransform().setCenterX(center.x());
+        getTransform().setCenterY(center.y());
 
-        setAngleX(0);
-        setAngleY(0);
-        setAngleZ(0);
+        getTransform().setAngleX(0);
+        getTransform().setAngleY(0);
+        getTransform().setAngleZ(0);
 
-        setScaleX(1);
-        setScaleY(1);
-        setScaleZ(1);
+        getTransform().setScaleX(1);
+        getTransform().setScaleY(1);
+        getTransform().setScaleZ(1);
     }
 
     private float[] getBounds() {

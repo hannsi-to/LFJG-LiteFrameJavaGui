@@ -35,7 +35,6 @@ public class GLObject implements Cloneable {
     private FrameBuffer frameBuffer;
     private ShaderProgram shaderProgram;
 
-    private Matrix4f modelMatrix;
     private Matrix4f viewMatrix;
 
     private EffectCache effectCache;
@@ -50,16 +49,7 @@ public class GLObject implements Cloneable {
     private float width;
     private float height;
 
-    private float centerX;
-    private float centerY;
-
-    private float angleX;
-    private float angleY;
-    private float angleZ;
-
-    private float scaleX;
-    private float scaleY;
-    private float scaleZ;
+    private Transform transform;
 
     /**
      * Constructs a new GLObject with the specified name.
@@ -74,8 +64,8 @@ public class GLObject implements Cloneable {
         this.frameBuffer = null;
         this.shaderProgram = null;
 
-        this.modelMatrix = null;
         this.viewMatrix = null;
+        this.transform = new Transform();
 
         this.lineWidth = -1f;
         this.pointSize = -1f;
@@ -130,7 +120,6 @@ public class GLObject implements Cloneable {
         shaderProgram.createFragmentShader(fragmentShader);
         shaderProgram.link();
 
-        modelMatrix = new Matrix4f();
         viewMatrix = new Matrix4f();
 
         blendType = BlendType.NORMAL;
@@ -190,7 +179,7 @@ public class GLObject implements Cloneable {
 
     private void uploadUniforms() {
         shaderProgram.setUniform("projectionMatrix", LFJGContext.projection.getProjMatrix());
-        shaderProgram.setUniform("modelMatrix", modelMatrix);
+        shaderProgram.setUniform("modelMatrix", transform.getModelMatrix());
         shaderProgram.setUniform("viewMatrix", viewMatrix);
         shaderProgram.setUniform("resolution", LFJGContext.frameBufferSize);
         if (mesh.getVboIds().get(BufferObjectType.TEXTURE_BUFFER) != null) {
@@ -239,32 +228,6 @@ public class GLObject implements Cloneable {
         }
 
         return glObject;
-    }
-
-    public GLObject translate(float x, float y, float z) {
-        centerX += x;
-        centerY += y;
-        modelMatrix.translate(x, y, z);
-
-        return this;
-    }
-
-    public GLObject rotateXYZ(float angleX, float angleY, float angleZ) {
-        this.angleX += angleX;
-        this.angleY += angleY;
-        this.angleZ += angleZ;
-        modelMatrix.rotateXYZ(angleX, angleY, angleZ);
-
-        return this;
-    }
-
-    public GLObject scale(float scaleX, float scaleY, float scaleZ) {
-        this.scaleX = scaleX;
-        this.scaleY = scaleY;
-        this.scaleZ = scaleZ;
-        modelMatrix.scale(scaleX, scaleY, scaleZ);
-
-        return this;
     }
 
     @Override
@@ -319,18 +282,6 @@ public class GLObject implements Cloneable {
      */
     public GLObject setShaderProgram(ShaderProgram shaderProgram) {
         this.shaderProgram = shaderProgram;
-
-        return this;
-    }
-
-    /**
-     * Sets the model matrix of the GLObject.
-     *
-     * @param modelMatrix the model matrix to set
-     * @return the GLObject instance
-     */
-    public GLObject setModelMatrix(Matrix4f modelMatrix) {
-        this.modelMatrix = modelMatrix;
 
         return this;
     }
