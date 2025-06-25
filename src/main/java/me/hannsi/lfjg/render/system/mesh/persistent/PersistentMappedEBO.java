@@ -45,9 +45,12 @@ public class PersistentMappedEBO implements PersistentMappedBuffer {
     }
 
     public PersistentMappedEBO update(int[] newData) {
+        if (newData.length > mappedBuffer.capacity()) {
+            throw new IllegalArgumentException("Data exceeds buffer size. New data: " + newData.length + " > " + "Capacity: " + mappedBuffer.capacity());
+        }
+
         mappedBuffer.clear();
         mappedBuffer.put(newData);
-        mappedBuffer.flip();
 
         glMemoryBarrier(GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT);
 

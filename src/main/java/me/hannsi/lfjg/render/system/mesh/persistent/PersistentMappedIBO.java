@@ -56,7 +56,6 @@ public class PersistentMappedIBO implements PersistentMappedBuffer {
         for (DrawCommand cmd : commands) {
             cmd.putIntoBuffer(mappedBuffer);
         }
-        mappedBuffer.flip();
 
         glMemoryBarrier(GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT);
 
