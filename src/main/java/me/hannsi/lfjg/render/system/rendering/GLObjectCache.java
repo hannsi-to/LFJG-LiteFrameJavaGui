@@ -1,41 +1,32 @@
 package me.hannsi.lfjg.render.system.rendering;
 
 import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.render.renderers.GLObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Caches OpenGL objects for rendering.
  */
 @Getter
-@Setter
 public class GLObjectCache {
     /**
-     * -- SETTER --
-     *  Sets the list of cached GLObjects.
-     *
-     *
-     * -- GETTER --
-     *  Gets the list of cached GLObjects.
-     *
-     @param glObjects the new list of cached GLObjects
-      * @return the list of cached GLObjects
+     * Maps objectId to GLObject.
      */
-    private List<GLObject> glObjects;
-    private FrameBuffer frameBuffer;
+    private final Map<Long, GLObject> glObjects;
+    private final FrameBuffer frameBuffer;
 
     /**
      * Constructs a new GLObjectCache.
      */
     public GLObjectCache() {
-        glObjects = new ArrayList<>();
-
+        glObjects = new HashMap<>();
         frameBuffer = new FrameBuffer();
 
         frameBuffer.createShaderProgram();
@@ -47,12 +38,13 @@ public class GLObjectCache {
     }
 
     /**
-     * Creates a cache for the specified GLObject.
+     * Adds a GLObject to the cache.
      *
      * @param glObject the GLObject to cache
+     * @return this
      */
     public GLObjectCache createCache(GLObject glObject) {
-        glObjects.add(glObject);
+        glObjects.put(glObject.getObjectId(), glObject);
 
         new LogGenerator(
                 LogGenerateType.CREATE_CACHE,
@@ -68,28 +60,25 @@ public class GLObjectCache {
      * Draws all cached GLObjects with the specified resolution and projection.
      */
     public void draw() {
-        draw((String) null);
+        draw(glObject -> true);
     }
 
+    @Deprecated
     public void draw(String... ignoreGLObjectNames) {
+        if (ignoreGLObjectNames == null) {
+            draw();
+            return;
+        }
+
+        Set<String> ignoreSet = Set.of(ignoreGLObjectNames);
+        draw(glObject -> !ignoreSet.contains(glObject.getName()));
+    }
+
+    public void draw(Predicate<GLObject> filter) {
         frameBuffer.bindFrameBuffer();
 
-        for (GLObject glObject : glObjects) {
-            if (ignoreGLObjectNames != null) {
-                boolean ignore = false;
-
-                for (String ignoreGLObjectName : ignoreGLObjectNames) {
-                    if (glObject.getName().equals(ignoreGLObjectName)) {
-                        ignore = true;
-                        break;
-                    }
-                }
-
-                if (ignore) {
-                    continue;
-                }
-            }
-
+        for (GLObject glObject : glObjects.values()) {
+            if (filter != null && !filter.test(glObject)) continue;
             glObject.draw();
         }
 
@@ -102,18 +91,22 @@ public class GLObjectCache {
      */
     public void cleanup() {
         StringBuilder ids = new StringBuilder();
-        for (GLObject glObject : glObjects) {
+        for (GLObject glObject : glObjects.values()) {
             glObject.cleanup();
             ids.append(glObject.getObjectId()).append(", ");
         }
 
-        glObjects.clear();
         frameBuffer.cleanup();
+        glObjects.clear();
+
+        if (ids.length() > 2) {
+            ids.setLength(ids.length() - 2);
+        }
 
         new LogGenerator(
                 LogGenerateType.CLEANUP,
                 getClass(),
-                ids.substring(0, ids.length() - 2),
+                ids.toString(),
                 ""
         ).logging(DebugLevel.DEBUG);
     }
@@ -125,21 +118,21 @@ public class GLObjectCache {
      * @return the GLObject with the specified ID, or null if not found
      */
     public GLObject getGLObject(long objectId) {
-        for (GLObject glObject : glObjects) {
-            if (glObject.getObjectId() == objectId) {
-                return glObject;
-            }
-        }
-        return null;
+        return glObjects.get(objectId);
     }
 
+    /**
+     * Gets the GLObject with the specified name.
+     *
+     * @param name the name of the GLObject
+     * @return the matching GLObject, or null if not found
+     */
     public GLObject getGLObject(String name) {
-        for (GLObject glObject : glObjects) {
+        for (GLObject glObject : glObjects.values()) {
             if (glObject.getName().equals(name)) {
                 return glObject;
             }
         }
         return null;
     }
-
 }
