@@ -8,13 +8,11 @@ import me.hannsi.lfjg.render.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.effect.effects.*;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.font.GLText;
-import me.hannsi.lfjg.render.renderers.model.Object3DCacheRender;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.renderers.polygon.GLTriangle;
 import me.hannsi.lfjg.render.renderers.shader.GLShader;
 import me.hannsi.lfjg.render.renderers.svg.GLSVG;
 import me.hannsi.lfjg.render.system.font.FontCache;
-import me.hannsi.lfjg.render.system.model.model.Entity;
 import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
@@ -66,9 +64,6 @@ public class TestScene1 implements IScene {
     int textureId = -1;
     int pboId = -1;
     float rotation;
-
-    Object3DCacheRender object3DCacheRender;
-    Entity cubeEntity;
 
     public TestScene1() {
         this.scene = new Scene("TestScene1", this);
