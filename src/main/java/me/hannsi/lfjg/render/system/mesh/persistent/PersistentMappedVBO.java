@@ -47,7 +47,7 @@ public class PersistentMappedVBO implements PersistentMappedBuffer {
             throw new IllegalArgumentException("Data exceeds buffer size. New data: " + newData.length + " > " + "Capacity: " + mappedBuffer.capacity());
         }
 
-        mappedBuffer.clear();
+        mappedBuffer.position(0);
         mappedBuffer.put(newData);
 
         glMemoryBarrier(GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT);
