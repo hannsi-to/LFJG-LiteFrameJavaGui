@@ -9,6 +9,7 @@ public class Transform {
 
     private float centerX;
     private float centerY;
+    private float centerZ;
 
     private float angleX;
     private float angleY;
@@ -27,8 +28,9 @@ public class Transform {
     }
 
     public Transform translate(float x, float y, float z) {
-        centerX += x;
-        centerY += y;
+        this.centerX += x;
+        this.centerY += y;
+        this.centerZ += z;
         modelMatrix.translate(x, y, z);
 
         return this;
