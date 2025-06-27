@@ -54,11 +54,11 @@ public class Mesh implements AutoCloseable {
         for (Map.Entry<BufferObjectType, PersistentMappedVBO> vboEntry : vboIds.entrySet()) {
             BufferObjectType bufferObjectType = vboEntry.getKey();
             PersistentMappedVBO persistentMappedVBO = vboEntry.getValue();
-            int bufferId = persistentMappedVBO.getBufferId();
+            int[] bufferId = persistentMappedVBO.getBufferIds();
 
             persistentMappedVBO.cleanup();
 
-            ids.append(bufferObjectType.getName()).append(": ").append(bufferId).append(" | ");
+            ids.append(bufferObjectType.getName()).append(": ").append(Arrays.toString(bufferId)).append(" | ");
         }
 
         vboIds.clear();
@@ -279,6 +279,14 @@ public class Mesh implements AutoCloseable {
 
         float[] finalPositions = Arrays.copyOf(uniquePositions, uniqueCount * stride);
         return new ElementPair(finalPositions, indices);
+    }
+
+    public void startFrame() {
+
+    }
+
+    public void endFrame() {
+        vboIds.forEach((key, value) -> value.finishFrame());
     }
 
     private void createIndirectBuffer() {

@@ -40,11 +40,13 @@ public class VAORendering {
     public void drawMesh(Mesh mesh, int drawType) {
         glBindVertexArray(mesh.getVaoId());
         try {
+            mesh.startFrame();
             if (mesh.isUseIndirect()) {
                 drawIndirect(mesh, drawType);
             } else {
                 drawDirect(mesh, drawType);
             }
+            mesh.endFrame();
         } finally {
             glBindVertexArray(0);
         }

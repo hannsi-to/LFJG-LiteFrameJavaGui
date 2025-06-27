@@ -6,65 +6,92 @@ import me.hannsi.lfjg.utils.type.types.AttributeType;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
+import static me.hannsi.lfjg.render.system.mesh.MeshConstants.BUFFER_COUNT;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL44.*;
 
 @Getter
 public class PersistentMappedVBO implements PersistentMappedBuffer {
-    private final int bufferId;
-    private final FloatBuffer mappedBuffer;
+    private final int[] bufferIds = new int[BUFFER_COUNT];
+    private final FloatBuffer[] mappedBuffers = new FloatBuffer[BUFFER_COUNT];
+    private final long[] fenceSyncs = new long[BUFFER_COUNT];
     private final int sizeInBytes;
+
+    private int currentIndex = 0;
 
     public PersistentMappedVBO(int size, int flags) {
         this.sizeInBytes = size * Float.BYTES;
 
-        bufferId = glGenBuffers();
+        for (int i = 0; i < BUFFER_COUNT; i++) {
+            bufferIds[i] = glGenBuffers();
 
-        glBindBuffer(GL_ARRAY_BUFFER, bufferId);
-        glBufferStorage(
-                GL_ARRAY_BUFFER,
-                sizeInBytes,
-                flags
-        );
+            glBindBuffer(GL_ARRAY_BUFFER, bufferIds[i]);
+            glBufferStorage(GL_ARRAY_BUFFER, sizeInBytes, flags);
 
-        ByteBuffer byteBuffer = glMapBufferRange(
-                GL_ARRAY_BUFFER,
-                0,
-                sizeInBytes,
-                flags
-        );
+            ByteBuffer byteBuffer = glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeInBytes, flags);
+            if (byteBuffer == null) {
+                throw new NullPointerException("glMapBufferRange failed at index " + i);
+            }
 
-        if (byteBuffer == null) {
-            throw new NullPointerException();
+            mappedBuffers[i] = byteBuffer.asFloatBuffer();
         }
-        mappedBuffer = byteBuffer.asFloatBuffer();
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
     public PersistentMappedVBO update(float[] newData) {
-        if (newData.length > mappedBuffer.capacity()) {
-            throw new IllegalArgumentException("Data exceeds buffer size. New data: " + newData.length + " > " + "Capacity: " + mappedBuffer.capacity());
+        waitForGPU(currentIndex);
+
+        FloatBuffer buffer = mappedBuffers[currentIndex];
+        if (newData.length > buffer.capacity()) {
+            throw new IllegalArgumentException("Data exceeds buffer capacity.");
         }
 
-        mappedBuffer.position(0);
-        mappedBuffer.put(newData);
+        buffer.position(0);
+        buffer.put(newData);
 
         glMemoryBarrier(GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT);
 
         return this;
     }
 
+    private void waitForGPU(int index) {
+        long fence = fenceSyncs[index];
+        if (fence != 0L) {
+            int waitResult = glClientWaitSync(fence, GL_SYNC_FLUSH_COMMANDS_BIT, 1_000_000);
+            if (waitResult == GL_TIMEOUT_EXPIRED) {
+                System.err.println("GPU still processing buffer " + index + ", consider blocking or skipping.");
+            }
+            glDeleteSync(fence);
+            fenceSyncs[index] = 0L;
+        }
+    }
+
     public PersistentMappedVBO attribute(AttributeType attributeType) {
+        int bufferId = bufferIds[currentIndex];
         glBindBuffer(GL_ARRAY_BUFFER, bufferId);
         glEnableVertexAttribArray(attributeType.getIndex());
         glVertexAttribPointer(attributeType.getIndex(), attributeType.getSize(), GL_FLOAT, false, 0, 0);
-
         return this;
+    }
+
+    public void finishFrame() {
+        if (fenceSyncs[currentIndex] != 0L) {
+            glDeleteSync(fenceSyncs[currentIndex]);
+        }
+
+        fenceSyncs[currentIndex] = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+
+        currentIndex = (currentIndex + 1) % BUFFER_COUNT;
     }
 
     @Override
     public void cleanup() {
-        glDeleteBuffers(bufferId);
+        for (int i = 0; i < BUFFER_COUNT; i++) {
+            if (fenceSyncs[i] != 0L) {
+                glDeleteSync(fenceSyncs[i]);
+            }
+            glDeleteBuffers(bufferIds[i]);
+        }
     }
 }
