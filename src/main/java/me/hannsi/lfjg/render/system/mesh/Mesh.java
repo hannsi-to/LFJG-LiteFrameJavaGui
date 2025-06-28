@@ -27,7 +27,6 @@ public class Mesh implements AutoCloseable {
     private int count;
     private ProjectionType projectionType;
     private int flagsHint;
-    private int usageHint;
     private boolean useElementBufferObject;
     private boolean useIndirect;
 
@@ -35,11 +34,10 @@ public class Mesh implements AutoCloseable {
         this.vaoId = glGenVertexArrays();
         this.vboIds = new HashMap<>();
 
-        this.projectionType = MeshConstants.PROJECTION_TYPE;
-        this.flagsHint = MeshConstants.FLAGS_HINT;
-        this.usageHint = MeshConstants.USAGE_HINT;
-        this.useElementBufferObject = MeshConstants.USE_ELEMENT_BUFFER_OBJECT;
-        this.useIndirect = MeshConstants.USE_INDIRECT;
+        this.projectionType = MeshConstants.DEFAULT_PROJECTION_TYPE;
+        this.flagsHint = MeshConstants.DEFAULT_FLAGS_HINT;
+        this.useElementBufferObject = MeshConstants.DEFAULT_USE_ELEMENT_BUFFER_OBJECT;
+        this.useIndirect = MeshConstants.DEFAULT_USE_INDIRECT;
         this.drawCommands = new ArrayList<>();
 
         glBindVertexArray(vaoId);
@@ -92,11 +90,6 @@ public class Mesh implements AutoCloseable {
 
     public Mesh flagsHint(int flagsHint) {
         this.flagsHint = flagsHint;
-        return this;
-    }
-
-    public Mesh usageHint(int usageHint) {
-        this.usageHint = usageHint;
         return this;
     }
 

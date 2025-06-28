@@ -6,15 +6,15 @@ import me.hannsi.lfjg.utils.type.types.AttributeType;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
-import static me.hannsi.lfjg.render.system.mesh.MeshConstants.BUFFER_COUNT;
+import static me.hannsi.lfjg.render.system.mesh.MeshConstants.DEFAULT_BUFFER_COUNT;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL44.*;
 
 @Getter
 public class PersistentMappedVBO implements PersistentMappedBuffer {
-    private final int[] bufferIds = new int[BUFFER_COUNT];
-    private final FloatBuffer[] mappedBuffers = new FloatBuffer[BUFFER_COUNT];
-    private final long[] fenceSyncs = new long[BUFFER_COUNT];
+    private final int[] bufferIds = new int[DEFAULT_BUFFER_COUNT];
+    private final FloatBuffer[] mappedBuffers = new FloatBuffer[DEFAULT_BUFFER_COUNT];
+    private final long[] fenceSyncs = new long[DEFAULT_BUFFER_COUNT];
     private final int sizeInBytes;
 
     private int currentIndex = 0;
@@ -22,7 +22,7 @@ public class PersistentMappedVBO implements PersistentMappedBuffer {
     public PersistentMappedVBO(int size, int flags) {
         this.sizeInBytes = size * Float.BYTES;
 
-        for (int i = 0; i < BUFFER_COUNT; i++) {
+        for (int i = 0; i < DEFAULT_BUFFER_COUNT; i++) {
             bufferIds[i] = glGenBuffers();
 
             glBindBuffer(GL_ARRAY_BUFFER, bufferIds[i]);
@@ -82,12 +82,12 @@ public class PersistentMappedVBO implements PersistentMappedBuffer {
 
         fenceSyncs[currentIndex] = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
 
-        currentIndex = (currentIndex + 1) % BUFFER_COUNT;
+        currentIndex = (currentIndex + 1) % DEFAULT_BUFFER_COUNT;
     }
 
     @Override
     public void cleanup() {
-        for (int i = 0; i < BUFFER_COUNT; i++) {
+        for (int i = 0; i < DEFAULT_BUFFER_COUNT; i++) {
             if (fenceSyncs[i] != 0L) {
                 glDeleteSync(fenceSyncs[i]);
             }

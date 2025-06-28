@@ -38,9 +38,8 @@ public class TestGuiFrame implements LFJGFrame {
     private static final boolean OFFSCREEN = true;
     private static final boolean TRANSPARENT = true;
     public static int textureId = -1;
+    public Camera camera;
     SceneSystem sceneSystem;
-    Camera camera;
-
     CefApp cefApp;
     CefClient client;
     CefBrowser browser;
@@ -84,7 +83,8 @@ public class TestGuiFrame implements LFJGFrame {
                 .addScene(new TestSound1(frame).getScene())
                 .addScene(new TestVideo1(frame).getScene())
                 .addScene(new TestPhysic1(frame).getScene())
-                .setCurrentScene("TestPhysic1")
+                .addScene(new Test3D1(frame, this).getScene())
+                .setCurrentScene("Test3D1")
                 .initScenes();
 
 //        if (!CefApp.startup(args)) {
