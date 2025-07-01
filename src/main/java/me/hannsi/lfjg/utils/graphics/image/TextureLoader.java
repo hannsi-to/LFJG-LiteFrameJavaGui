@@ -4,10 +4,9 @@ import lombok.Getter;
 import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.render.debug.exceptions.texture.CreatingTextureException;
 import me.hannsi.lfjg.utils.math.io.IOUtil;
-import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.Location;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 import me.hannsi.lfjg.utils.type.types.ImageLoaderType;
+import me.hannsi.lfjg.utils.type.types.LocationType;
 import org.bytedeco.opencv.global.opencv_imgcodecs;
 import org.bytedeco.opencv.global.opencv_imgproc;
 import org.bytedeco.opencv.opencv_core.Mat;
@@ -67,19 +66,19 @@ public class TextureLoader {
     /**
      * Loads an image using STBImage and returns it as a ByteBuffer.
      *
-     * @param resourcesLocation the location of the resource
-     * @param widthBuffer       the buffer to store the image width
-     * @param heightBuffer      the buffer to store the image height
-     * @param channelsBuffer    the buffer to store the number of channels
+     * @param location       the location of the resource
+     * @param widthBuffer    the buffer to store the image width
+     * @param heightBuffer   the buffer to store the image height
+     * @param channelsBuffer the buffer to store the number of channels
      * @return the ByteBuffer containing the image data
      */
-    public static ByteBuffer loadImageInSTBImage(ResourcesLocation resourcesLocation, IntBuffer widthBuffer, IntBuffer heightBuffer, IntBuffer channelsBuffer) {
+    public static ByteBuffer loadImageInSTBImage(Location location, IntBuffer widthBuffer, IntBuffer heightBuffer, IntBuffer channelsBuffer) {
         ByteBuffer image;
         ByteBuffer buffer = null;
 
-        try (InputStream inputStream = resourcesLocation.getInputStream()) {
+        try (InputStream inputStream = location.openStream()) {
             if (inputStream == null) {
-                throw new RuntimeException("Resource not found: " + resourcesLocation.getPath());
+                throw new RuntimeException("Resource not found: " + location.path());
             }
 
             byte[] data = inputStream.readAllBytes();
@@ -101,7 +100,7 @@ public class TextureLoader {
 
             return image;
         } catch (IOException e) {
-            throw new RuntimeException("Failed to read resource: " + resourcesLocation.getPath(), e);
+            throw new RuntimeException("Failed to read resource: " + location.path(), e);
         } finally {
             if (buffer != null) {
                 MemoryUtil.memFree(buffer);
@@ -113,7 +112,6 @@ public class TextureLoader {
      * Cleans up the texture resources.
      */
     public void cleanup() {
-        texturePath.cleanup();
         glDeleteTextures(textureId);
     }
 
@@ -121,7 +119,7 @@ public class TextureLoader {
      * Loads the texture based on the specified loader type.
      */
     private void loadTexture() {
-        if (!texturePath.isUrl()) {
+        if (texturePath.locationType() == LocationType.FILE || texturePath.locationType() == LocationType.RESOURCE) {
             switch (imageLoaderType) {
                 case STB_IMAGE -> {
                     try (MemoryStack stack = MemoryStack.stackPush()) {
@@ -129,9 +127,9 @@ public class TextureLoader {
                         IntBuffer height = stack.mallocInt(1);
                         IntBuffer channels = stack.mallocInt(1);
 
-                        ByteBuffer image = STBImage.stbi_load(texturePath.getPath(), width, height, channels, 4);
+                        ByteBuffer image = STBImage.stbi_load_from_memory(texturePath.getByteBuffer(), width, height, channels, 4);
                         if (image == null) {
-                            throw new RuntimeException("Failed to load image: " + texturePath.getPath());
+                            throw new RuntimeException("Failed to load image: " + texturePath.path());
                         }
 
                         generateTexture(width.get(0), height.get(0), image);
@@ -140,7 +138,7 @@ public class TextureLoader {
                     }
                 }
                 case JAVA_CV -> {
-                    Mat bgrMat = opencv_imgcodecs.imdecode(new Mat(((FileLocation) this.texturePath).getBytes()), opencv_imgcodecs.IMREAD_COLOR);
+                    Mat bgrMat = opencv_imgcodecs.imdecode(new Mat(texturePath.getBytes()), opencv_imgcodecs.IMREAD_COLOR);
 
                     if (bgrMat.empty()) {
                         DebugLog.error(getClass(), "Image file [" + texturePath + "] not loaded.");
@@ -156,11 +154,11 @@ public class TextureLoader {
             }
         } else {
             try {
-                URL url = new URL(texturePath.getPath());
+                URL url = new URL(texturePath.path());
 
                 BufferedImage image = ImageIO.read(url);
                 if (image == null) {
-                    throw new IOException("Failed to load image.");
+                    throw new IOException("Failed to load image: " + texturePath.path());
                 }
 
                 int width = image.getWidth();

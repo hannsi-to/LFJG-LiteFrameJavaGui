@@ -2,8 +2,7 @@ package me.hannsi.lfjg.utils.math.io;
 
 import me.hannsi.lfjg.utils.Util;
 import me.hannsi.lfjg.utils.math.MathHelper;
-import me.hannsi.lfjg.utils.reflection.location.FileLocation;
-import me.hannsi.lfjg.utils.reflection.location.URLLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import org.bytedeco.opencv.opencv_core.Mat;
 
 import java.awt.*;
@@ -261,10 +260,10 @@ public class IOUtil extends Util {
         return out.toString(StandardCharsets.UTF_8);
     }
 
-    public static ByteBuffer svgToByteBuffer(FileLocation fileLocation) {
+    public static ByteBuffer svgToByteBuffer(Location fileLocation) {
         ByteBuffer buffer = memAlloc(128 * 1024);
-        try (FileInputStream fis = new FileInputStream(fileLocation.getPath())) {
-            boolean isGzip = fileLocation.getPath().endsWith(".gz");
+        try (FileInputStream fis = new FileInputStream(fileLocation.path())) {
+            boolean isGzip = fileLocation.path().endsWith(".gz");
 
             InputStream is = fis;
             if (isGzip) {
@@ -295,7 +294,7 @@ public class IOUtil extends Util {
         return buffer;
     }
 
-    public static ByteBuffer downloadSVG(URLLocation spec) {
+    public static ByteBuffer downloadSVG(Location spec) {
         ByteBuffer buffer = memAlloc(128 * 1024);
         try {
             URL url = spec.getURL();

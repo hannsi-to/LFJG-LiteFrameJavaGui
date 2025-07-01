@@ -12,7 +12,7 @@ import me.hannsi.lfjg.render.debug.exceptions.texture.CreatingTextureException;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.joml.Matrix4f;
 
@@ -38,8 +38,8 @@ public class FrameBuffer {
     private float height;
     private Mesh mesh;
     private ShaderProgram shaderProgramFBO;
-    private ResourcesLocation vertexShaderFBO;
-    private ResourcesLocation fragmentShaderFBO;
+    private Location vertexShaderFBO;
+    private Location fragmentShaderFBO;
     private Matrix4f modelMatrix;
     private Matrix4f viewMatrix;
 
@@ -89,8 +89,8 @@ public class FrameBuffer {
         }
 
         shaderProgramFBO = new ShaderProgram();
-        vertexShaderFBO = new ResourcesLocation("shader/frameBuffer/VertexShader.vsh");
-        fragmentShaderFBO = new ResourcesLocation("shader/frameBuffer/FragmentShader.fsh");
+        vertexShaderFBO = Location.fromResource("shader/frameBuffer/VertexShader.vsh");
+        fragmentShaderFBO = Location.fromResource("shader/frameBuffer/FragmentShader.fsh");
 
         vaoRendering = new VAORendering();
 
@@ -119,7 +119,6 @@ public class FrameBuffer {
         mesh.cleanup();
         shaderProgramFBO.cleanup();
         vaoRendering.cleanup();
-        fragmentShaderFBO.cleanup();
 
         modelMatrix = null;
         viewMatrix = null;
@@ -189,9 +188,9 @@ public class FrameBuffer {
     public void drawFrameBuffer(int textureUnit) {
         shaderProgramFBO.bind();
 
-        shaderProgramFBO.setUniform("projectionMatrix", LFJGContext.projection.getProjMatrix());
-        shaderProgramFBO.setUniform("modelMatrix", modelMatrix);
-        shaderProgramFBO.setUniform("viewMatrix", viewMatrix);
+        shaderProgramFBO.setUniformMatrix4fv("projectionMatrix", LFJGContext.projection.getProjMatrix());
+        shaderProgramFBO.setUniformMatrix4fv("modelMatrix", modelMatrix);
+        shaderProgramFBO.setUniformMatrix4fv("viewMatrix", viewMatrix);
         shaderProgramFBO.setUniform1i("textureSampler", textureUnit);
 
         GLStateCache.enable(GL_BLEND);

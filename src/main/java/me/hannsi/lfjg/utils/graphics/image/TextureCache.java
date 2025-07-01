@@ -2,8 +2,9 @@ package me.hannsi.lfjg.utils.graphics.image;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.debug.DebugLevel;
+import me.hannsi.lfjg.debug.LogGenerateType;
+import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.type.types.ImageLoaderType;
 
@@ -18,30 +19,51 @@ import java.util.Map;
 public class TextureCache {
     /**
      * -- SETTER --
-     *  Sets the texture map.
-     *
-     *
+     * Sets the texture map.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the texture map.
+     * Gets the texture map.
      *
-     @param textureMap the new texture map
-      * @return the texture map
+     * @param textureMap the new texture map
+     * @return the texture map
      */
-    private Map<Location, TextureLoader> textureMap;
+    private Map<String, TextureLoader> textureMap;
 
     /**
      * Constructs a TextureCache instance and initializes the cache with the default texture.
      */
-    public TextureCache() {
+    TextureCache() {
         this.textureMap = new HashMap<>();
+    }
+
+    public static TextureCache createTextureCache() {
+        return new TextureCache();
     }
 
     /**
      * Cleans up all textures in the cache.
      */
     public void cleanup() {
-        textureMap.values().forEach(TextureLoader::cleanup);
+        StringBuilder ids = new StringBuilder();
+        int index = 0;
+        for (TextureLoader textureLoader : textureMap.values()) {
+            if (index == 0) {
+                ids.append(textureLoader.getTextureId());
+            } else {
+                ids.append(", ").append(textureLoader.getTextureId());
+            }
+            textureLoader.cleanup();
+            index++;
+        }
         textureMap.clear();
+
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                ids.toString(),
+                ""
+        ).logging(DebugLevel.DEBUG);
     }
 
     /**
@@ -49,11 +71,18 @@ public class TextureCache {
      *
      * @param path the path to the texture resource
      */
-    public void createCache(Location path) {
-        textureMap.put(path, new TextureLoader(path, ImageLoaderType.STB_IMAGE));
+    public TextureCache createCache(Location path) {
+        TextureLoader textureLoader = new TextureLoader(path, ImageLoaderType.STB_IMAGE);
+        textureMap.put(path.path(), textureLoader);
 
-        LogGenerator logGenerator = new LogGenerator("TextureCache Debug Message", "Source: TextureCache", "Type: Cache Creation", "ID: " + path.hashCode(), "Severity: Info", "Message: Create texture cache: " + path.getPath());
-        logGenerator.logging(DebugLevel.DEBUG);
+        new LogGenerator(
+                LogGenerateType.CREATE_CACHE,
+                getClass(),
+                textureLoader.getTextureId(),
+                path.path()
+        ).logging(DebugLevel.DEBUG);
+
+        return this;
     }
 
     /**
@@ -66,7 +95,7 @@ public class TextureCache {
     public TextureLoader getTexture(Location path) {
         TextureLoader texture = null;
         if (path != null) {
-            texture = textureMap.get(path);
+            texture = textureMap.get(path.path());
         }
 
         return texture;

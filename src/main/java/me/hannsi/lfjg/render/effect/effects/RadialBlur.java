@@ -5,7 +5,7 @@ import lombok.Setter;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 
 /**
  * Class representing a Radial Blur effect in OpenGL.
@@ -58,7 +58,7 @@ public class RadialBlur extends EffectBase {
      * @param centerY the Y coordinate of the blur center
      */
     public RadialBlur(float range, float centerX, float centerY) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/RadialBlur.fsh"), true, 18, "RadialBlur");
+        super(Location.fromResource("shader/frameBuffer/filter/RadialBlur.fsh"), true, 18, "RadialBlur");
 
         this.range = range;
         this.centerX = centerX;
@@ -73,7 +73,7 @@ public class RadialBlur extends EffectBase {
      * @param centerY the Y coordinate of the blur center
      */
     public RadialBlur(double range, double centerX, double centerY) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/RadialBlur.fsh"), true, 18, "RadialBlur");
+        super(Location.fromResource("shader/frameBuffer/filter/RadialBlur.fsh"), true, 18, "RadialBlur");
 
         this.range = (float) range;
         this.centerX = (float) centerX;
@@ -120,9 +120,9 @@ public class RadialBlur extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("range", range);
-        getFrameBuffer().getShaderProgramFBO().setUniform("centerX", centerX / LFJGContext.frameBufferSize.x);
-        getFrameBuffer().getShaderProgramFBO().setUniform("centerY", centerY / LFJGContext.frameBufferSize.y);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("range", range);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("centerX", centerX / LFJGContext.frameBufferSize.x);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("centerY", centerY / LFJGContext.frameBufferSize.y);
 
         super.setUniform(baseGLObject);
     }

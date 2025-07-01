@@ -7,7 +7,7 @@ import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.utils.math.io.IOUtil;
-import me.hannsi.lfjg.utils.reflection.location.FileLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.type.types.ColorFormatType;
 import me.hannsi.lfjg.utils.type.types.ImageLoaderType;
 import me.hannsi.lfjg.utils.type.types.JavaCVImageFormat;
@@ -25,7 +25,7 @@ import static org.lwjgl.opengl.GL11.glReadPixels;
 
 public class ImageCapture {
     @Getter
-    private final FileLocation filePath;
+    private final Location filePath;
     @Getter
     @Setter
     private int width;
@@ -52,7 +52,7 @@ public class ImageCapture {
     @Setter
     private String saveType;
 
-    public ImageCapture(FileLocation filePath) {
+    public ImageCapture(Location filePath) {
         this.filePath = filePath;
 
         this.width = LFJGContext.frameBufferSize.x();
@@ -66,7 +66,7 @@ public class ImageCapture {
     }
 
     public void saveImage(ByteBuffer buffer, String name) {
-        String path = filePath.getPath() + "/" + name + "." + stbImageFormat.getName();
+        String path = filePath.path() + "/" + name + "." + stbImageFormat.getName();
         saveType = "ByteBuffer";
 
         ByteBuffer flippedBuffer = BufferUtils.createByteBuffer(width * height * colorFormatType.getChannels());
@@ -96,7 +96,7 @@ public class ImageCapture {
     }
 
     public void saveImage(FrameBuffer frameBuffer, String name) {
-        String path = filePath.getPath() + "/" + name + "." + stbImageFormat.getName();
+        String path = filePath.path() + "/" + name + "." + stbImageFormat.getName();
         saveType = "FrameBuffer";
 
         int x = (int) frameBuffer.getX();
@@ -136,7 +136,7 @@ public class ImageCapture {
     }
 
     public void saveImage(String name) {
-        String path = filePath.getPath() + "/" + name + "." + stbImageFormat.getName();
+        String path = filePath.path() + "/" + name + "." + stbImageFormat.getName();
         saveType = "ScreenShot";
 
         ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * colorFormatType.getChannels());
@@ -228,7 +228,6 @@ public class ImageCapture {
     }
 
     public void cleanup() {
-        filePath.cleanup();
     }
 
     @Deprecated

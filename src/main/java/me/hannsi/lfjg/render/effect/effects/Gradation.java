@@ -6,7 +6,7 @@ import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
 import me.hannsi.lfjg.utils.type.types.BlendType;
 import org.joml.Vector2f;
@@ -20,110 +20,110 @@ import org.joml.Vector4f;
 public class Gradation extends EffectBase {
     /**
      * -- SETTER --
-     *  Sets the x-coordinate of the center.
-     *
-     *
+     * Sets the x-coordinate of the center.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the x-coordinate of the center.
+     * Gets the x-coordinate of the center.
      *
-     @param centerX the x-coordinate of the center
-      * @return the x-coordinate of the center
+     * @param centerX the x-coordinate of the center
+     * @return the x-coordinate of the center
      */
     private float centerX;
     /**
      * -- SETTER --
-     *  Sets the y-coordinate of the center.
-     *
-     *
+     * Sets the y-coordinate of the center.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the y-coordinate of the center.
+     * Gets the y-coordinate of the center.
      *
-     @param centerY the y-coordinate of the center
-      * @return the y-coordinate of the center
+     * @param centerY the y-coordinate of the center
+     * @return the y-coordinate of the center
      */
     private float centerY;
     /**
      * -- SETTER --
-     *  Sets the angle of the gradation.
-     *
-     *
+     * Sets the angle of the gradation.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the angle of the gradation.
+     * Gets the angle of the gradation.
      *
-     @param angle the angle of the gradation
-      * @return the angle of the gradation
+     * @param angle the angle of the gradation
+     * @return the angle of the gradation
      */
     private float angle;
     /**
      * -- SETTER --
-     *  Sets the width of the gradation.
-     *
-     *
+     * Sets the width of the gradation.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the width of the gradation.
+     * Gets the width of the gradation.
      *
-     @param width the width of the gradation
-      * @return the width of the gradation
+     * @param width the width of the gradation
+     * @return the width of the gradation
      */
     private float width;
     /**
      * -- SETTER --
-     *  Sets the shape mode of the gradation.
-     *
-     *
+     * Sets the shape mode of the gradation.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the shape mode of the gradation.
+     * Gets the shape mode of the gradation.
      *
-     @param shapeMode the shape mode of the gradation
-      * @return the shape mode of the gradation
+     * @param shapeMode the shape mode of the gradation
+     * @return the shape mode of the gradation
      */
     private ShapeMode shapeMode;
     /**
      * -- SETTER --
-     *  Sets the blend type of the gradation.
-     *
-     *
+     * Sets the blend type of the gradation.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the blend type of the gradation.
+     * Gets the blend type of the gradation.
      *
-     @param blendType the blend type of the gradation
-      * @return the blend type of the gradation
+     * @param blendType the blend type of the gradation
+     * @return the blend type of the gradation
      */
     private BlendType blendType;
     /**
      * -- SETTER --
-     *  Sets the start color of the gradation.
-     *
-     *
+     * Sets the start color of the gradation.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the start color of the gradation.
+     * Gets the start color of the gradation.
      *
-     @param startColor the start color of the gradation
-      * @return the start color of the gradation
+     * @param startColor the start color of the gradation
+     * @return the start color of the gradation
      */
     private Color startColor;
     /**
      * -- SETTER --
-     *  Sets the end color of the gradation.
-     *
-     *
+     * Sets the end color of the gradation.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the end color of the gradation.
+     * Gets the end color of the gradation.
      *
-     @param endColor the end color of the gradation
-      * @return the end color of the gradation
+     * @param endColor the end color of the gradation
+     * @return the end color of the gradation
      */
     private Color endColor;
     /**
      * -- SETTER --
-     *  Sets the intensity of the gradation.
-     *
-     *
+     * Sets the intensity of the gradation.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the intensity of the gradation.
+     * Gets the intensity of the gradation.
      *
-     @param intensity the intensity of the gradation
-      * @return the intensity of the gradation
+     * @param intensity the intensity of the gradation
+     * @return the intensity of the gradation
      */
     private float intensity;
 
@@ -141,7 +141,7 @@ public class Gradation extends EffectBase {
      * @param intensity  the intensity of the gradation
      */
     public Gradation(float centerX, float centerY, float angle, float width, ShapeMode shapeMode, BlendType blendType, Color startColor, Color endColor, float intensity) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/Gradation.fsh"), true, 24, "Gradation");
+        super(Location.fromResource("shader/frameBuffer/filter/Gradation.fsh"), true, 24, "Gradation");
 
         this.centerX = centerX;
         this.centerY = centerY;
@@ -211,14 +211,14 @@ public class Gradation extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("center", new Vector2f(centerX / LFJGContext.frameBufferSize.x, centerY / LFJGContext.frameBufferSize.y));
-        getFrameBuffer().getShaderProgramFBO().setUniform("angle", angle);
-        getFrameBuffer().getShaderProgramFBO().setUniform("width", width);
+        getFrameBuffer().getShaderProgramFBO().setUniform2f("center", new Vector2f(centerX / LFJGContext.frameBufferSize.x, centerY / LFJGContext.frameBufferSize.y));
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("angle", angle);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("width", width);
         getFrameBuffer().getShaderProgramFBO().setUniform1i("gradientShape", shapeMode.getId());
         getFrameBuffer().getShaderProgramFBO().setUniform1i("blendMode", blendType.getId());
-        getFrameBuffer().getShaderProgramFBO().setUniform("startColor", new Vector4f(startColor.getRedF(), startColor.getGreenF(), startColor.getBlueF(), startColor.getAlphaF()));
-        getFrameBuffer().getShaderProgramFBO().setUniform("endColor", new Vector4f(endColor.getRedF(), endColor.getGreenF(), endColor.getBlueF(), endColor.getAlphaF()));
-        getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
+        getFrameBuffer().getShaderProgramFBO().setUniform4f("startColor", new Vector4f(startColor.getRedF(), startColor.getGreenF(), startColor.getBlueF(), startColor.getAlphaF()));
+        getFrameBuffer().getShaderProgramFBO().setUniform4f("endColor", new Vector4f(endColor.getRedF(), endColor.getGreenF(), endColor.getBlueF(), endColor.getAlphaF()));
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("intensity", intensity);
 
         super.setUniform(baseGLObject);
     }

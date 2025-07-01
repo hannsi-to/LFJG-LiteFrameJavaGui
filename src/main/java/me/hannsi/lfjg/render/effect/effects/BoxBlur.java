@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 
 /**
  * Class representing a Box Blur effect in OpenGL.
@@ -14,26 +14,26 @@ import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 public class BoxBlur extends EffectBase {
     /**
      * -- GETTER --
-     *  Gets the kernel size in the x-direction.
-     *
-     *
+     * Gets the kernel size in the x-direction.
+     * <p>
+     * <p>
      * -- SETTER --
-     *  Sets the kernel size in the x-direction.
+     * Sets the kernel size in the x-direction.
      *
-     @return the kernel size in the x-direction
-      * @param kernelX the kernel size in the x-direction
+     * @return the kernel size in the x-direction
+     * @param kernelX the kernel size in the x-direction
      */
     private int kernelX;
     /**
      * -- GETTER --
-     *  Gets the kernel size in the y-direction.
-     *
-     *
+     * Gets the kernel size in the y-direction.
+     * <p>
+     * <p>
      * -- SETTER --
-     *  Sets the kernel size in the y-direction.
+     * Sets the kernel size in the y-direction.
      *
-     @return the kernel size in the y-direction
-      * @param kernelY the kernel size in the y-direction
+     * @return the kernel size in the y-direction
+     * @param kernelY the kernel size in the y-direction
      */
     private int kernelY;
 
@@ -44,7 +44,7 @@ public class BoxBlur extends EffectBase {
      * @param kernelY the kernel size in the y-direction
      */
     public BoxBlur(int kernelX, int kernelY) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/BoxBlur.fsh"), true, 16, "BoxBlur");
+        super(Location.fromResource("shader/frameBuffer/filter/BoxBlur.fsh"), true, 16, "BoxBlur");
 
         this.kernelX = kernelX;
         this.kernelY = kernelY;

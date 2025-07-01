@@ -152,7 +152,7 @@ public class Texture extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("blendMode", blendType.getId());
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("blendMode", blendType.getId());
 
         super.setUniform(baseGLObject);
     }

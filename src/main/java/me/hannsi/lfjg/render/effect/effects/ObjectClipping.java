@@ -4,7 +4,7 @@ import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 
 public class ObjectClipping extends EffectBase {
     private final GLObjectCache glObjectCache;
@@ -13,7 +13,7 @@ public class ObjectClipping extends EffectBase {
     protected FrameBuffer clippingFrameBuffer;
 
     public ObjectClipping(GLObjectCache glObjectCache, String clippingObjectName, boolean invert) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/ObjectClipping.fsh"), true, 27, "ObjectClipping");
+        super(Location.fromResource("shader/frameBuffer/filter/ObjectClipping.fsh"), true, 27, "ObjectClipping");
 
         this.clippingFrameBuffer = new FrameBuffer();
         this.clippingFrameBuffer.createFrameBuffer();
@@ -61,7 +61,7 @@ public class ObjectClipping extends EffectBase {
     @Override
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().setUniform1i("clippingTextureSampler", 1);
-        getFrameBuffer().getShaderProgramFBO().setUniform("invert", invert);
+        getFrameBuffer().getShaderProgramFBO().setUniformB("invert", invert);
 
         super.setUniform(baseGLObject);
     }

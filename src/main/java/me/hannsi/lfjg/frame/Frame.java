@@ -9,7 +9,7 @@ import me.hannsi.lfjg.frame.frame.GLFWCallback;
 import me.hannsi.lfjg.frame.frame.IFrame;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.frame.frame.LFJGFrame;
-import me.hannsi.lfjg.frame.manager.managers.FrameSettingManager;
+import me.hannsi.lfjg.frame.manager.WorkspaceManager;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.utils.graphics.GLFWUtil;
@@ -42,7 +42,6 @@ import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
 @Data
 public class Frame implements IFrame {
     private final LFJGFrame lfjgFrame;
-    private FrameSettingManager frameSettingManager;
     private String threadName;
     private boolean shouldCleanup = false;
     private long windowID = -1L;
@@ -80,6 +79,9 @@ public class Frame implements IFrame {
      * Creates the frame, initializes GLFW, sets up rendering, and starts the main loop.
      */
     public void createFrame() {
+        workspaceManager.createDirectories();
+        workspaceManager.copyResourcesToWorkspace();
+
         registerManagers();
 
         lfjgFrame.setFrameSetting();
@@ -136,7 +138,10 @@ public class Frame implements IFrame {
      */
     private void registerManagers() {
         DebugLog.debug(getClass(), "Managers loading...\n");
-        long tookTime = TimeCalculator.calculateMillis(() -> this.frameSettingManager = new FrameSettingManager(this));
+        long tookTime = TimeCalculator.calculateMillis(() -> {
+            frameSettingManager.setFrame(this);
+            frameSettingManager.loadFrameSettings();
+        });
         DebugLog.debug(getClass(), ANSIFormat.GREEN + "Managers took " + tookTime + "ms to load!\n");
     }
 
@@ -410,5 +415,9 @@ public class Frame implements IFrame {
      */
     public <T> void setFrameSettingValue(Class<? extends FrameSettingBase<?>> frameSettingBase, T value) {
         getFrameSettingBase(frameSettingBase).setValue(value);
+    }
+
+    public WorkspaceManager getWorkspaceManager() {
+        return workspaceManager;
     }
 }

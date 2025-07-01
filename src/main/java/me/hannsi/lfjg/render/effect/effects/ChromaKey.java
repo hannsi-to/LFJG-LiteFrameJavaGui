@@ -5,7 +5,7 @@ import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import org.joml.Vector3f;
 
 /**
@@ -16,62 +16,62 @@ import org.joml.Vector3f;
 public class ChromaKey extends EffectBase {
     /**
      * -- GETTER --
-     *  Gets the chroma key color.
-     *
-     *
+     * Gets the chroma key color.
+     * <p>
+     * <p>
      * -- SETTER --
-     *  Sets the chroma key color.
+     * Sets the chroma key color.
      *
-     @return the chroma key color
-      * @param chromaKeyColor the chroma key color
+     * @return the chroma key color
+     * @param chromaKeyColor the chroma key color
      */
     private Color chromaKeyColor;
     /**
      * -- GETTER --
-     *  Gets the hue range for the chroma key.
-     *
-     *
+     * Gets the hue range for the chroma key.
+     * <p>
+     * <p>
      * -- SETTER --
-     *  Sets the hue range for the chroma key.
+     * Sets the hue range for the chroma key.
      *
-     @return the hue range for the chroma key
-      * @param hueRange the hue range for the chroma key
+     * @return the hue range for the chroma key
+     * @param hueRange the hue range for the chroma key
      */
     private float hueRange;
     /**
      * -- GETTER --
-     *  Gets the saturation range for the chroma key.
-     *
-     *
+     * Gets the saturation range for the chroma key.
+     * <p>
+     * <p>
      * -- SETTER --
-     *  Sets the saturation range for the chroma key.
+     * Sets the saturation range for the chroma key.
      *
-     @return the saturation range for the chroma key
-      * @param saturationRange the saturation range for the chroma key
+     * @return the saturation range for the chroma key
+     * @param saturationRange the saturation range for the chroma key
      */
     private float saturationRange;
     /**
      * -- GETTER --
-     *  Gets the boundary smoothness.
-     *
-     *
+     * Gets the boundary smoothness.
+     * <p>
+     * <p>
      * -- SETTER --
-     *  Sets the boundary smoothness.
+     * Sets the boundary smoothness.
      *
-     @return the boundary smoothness
-      * @param boundarySmoothness the boundary smoothness
+     * @return the boundary smoothness
+     * @param boundarySmoothness the boundary smoothness
      */
     private float boundarySmoothness;
     /**
      * -- GETTER --
-     *  Gets the color adjustment.
-     *
-     *
+     * Gets the color adjustment.
+     * <p>
+     * <p>
      * -- SETTER --
-     *  Sets the color adjustment.
+     * Sets the color adjustment.
      *
-     @return the color adjustment
-      * @param colorAdjustment the color adjustment
+     * @return the color adjustment
+     * @param colorAdjustment the color adjustment
      */
     private Color colorAdjustment;
 
@@ -85,7 +85,7 @@ public class ChromaKey extends EffectBase {
      * @param colorAdjustment    the color adjustment
      */
     public ChromaKey(Color chromaKeyColor, float hueRange, float saturationRange, float boundarySmoothness, Color colorAdjustment) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/ChromaKey.fsh"), true, 12, "ChromaKey");
+        super(Location.fromResource("shader/frameBuffer/filter/ChromaKey.fsh"), true, 12, "ChromaKey");
 
         this.chromaKeyColor = chromaKeyColor;
         this.hueRange = hueRange;
@@ -150,11 +150,11 @@ public class ChromaKey extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("chromaKeyColor", new Vector3f(chromaKeyColor.getRedF(), chromaKeyColor.getGreenF(), chromaKeyColor.getBlueF()));
-        getFrameBuffer().getShaderProgramFBO().setUniform("hueRange", hueRange);
-        getFrameBuffer().getShaderProgramFBO().setUniform("saturationRange", saturationRange);
-        getFrameBuffer().getShaderProgramFBO().setUniform("boundarySmoothness", boundarySmoothness);
-        getFrameBuffer().getShaderProgramFBO().setUniform("colorAdjustment", new Vector3f(colorAdjustment.getRedF(), colorAdjustment.getGreenF(), colorAdjustment.getBlueF()));
+        getFrameBuffer().getShaderProgramFBO().setUniform3f("chromaKeyColor", new Vector3f(chromaKeyColor.getRedF(), chromaKeyColor.getGreenF(), chromaKeyColor.getBlueF()));
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("hueRange", hueRange);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("saturationRange", saturationRange);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("boundarySmoothness", boundarySmoothness);
+        getFrameBuffer().getShaderProgramFBO().setUniform3f("colorAdjustment", new Vector3f(colorAdjustment.getRedF(), colorAdjustment.getGreenF(), colorAdjustment.getBlueF()));
 
         super.setUniform(baseGLObject);
     }

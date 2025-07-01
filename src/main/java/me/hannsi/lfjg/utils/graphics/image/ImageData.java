@@ -2,16 +2,10 @@ package me.hannsi.lfjg.utils.graphics.image;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.hannsi.lfjg.debug.DebugLog;
-import me.hannsi.lfjg.utils.math.io.IOUtil;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
-import org.bytedeco.opencv.global.opencv_imgcodecs;
-import org.bytedeco.opencv.global.opencv_imgproc;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import org.bytedeco.opencv.opencv_core.Mat;
 
 import java.nio.ByteBuffer;
-
-import static org.bytedeco.opencv.global.opencv_imgproc.cvtColor;
 
 /**
  * Class representing image data, including the image path, OpenCV Mat object, and ByteBuffer.
@@ -30,7 +24,7 @@ public class ImageData {
      * @param imagePath the new image path
      * @return the image path
      */
-    private ResourcesLocation imagePath;
+    private Location imagePath;
     /**
      * -- SETTER --
      * Sets the OpenCV Mat object.
@@ -56,29 +50,7 @@ public class ImageData {
      */
     private ByteBuffer byteBuffer;
 
-    /**
-     * Constructs an ImageData instance from the specified image path.
-     *
-     * @param imagePath the path to the image resource
-     */
-    public ImageData(ResourcesLocation imagePath) {
-        this.imagePath = imagePath;
-
-        Mat bgrMat = opencv_imgcodecs.imdecode(new Mat(imagePath.getBytes()), opencv_imgcodecs.IMREAD_COLOR);
-
-        if (bgrMat.empty()) {
-            DebugLog.error(getClass(), "Failed to load image");
-            return;
-        }
-
-        mat = new Mat();
-
-        cvtColor(bgrMat, mat, opencv_imgproc.COLOR_BGR2RGBA);
-        this.byteBuffer = IOUtil.matToByteBufferRGBA(mat);
-    }
-
     public void cleanup() {
-        imagePath.cleanup();
         mat = null;
         byteBuffer.clear();
     }

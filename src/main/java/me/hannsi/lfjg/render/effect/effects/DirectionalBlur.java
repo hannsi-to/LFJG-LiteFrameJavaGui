@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 
 /**
  * Class representing a Directional Blur effect in OpenGL.
@@ -14,26 +14,26 @@ import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 public class DirectionalBlur extends EffectBase {
     /**
      * -- SETTER --
-     *  Sets the radius of the blur.
-     *
-     *
+     * Sets the radius of the blur.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the radius of the blur.
+     * Gets the radius of the blur.
      *
-     @param radius the radius of the blur
-      * @return the radius of the blur
+     * @param radius the radius of the blur
+     * @return the radius of the blur
      */
     private float radius;
     /**
      * -- SETTER --
-     *  Sets the angle of the blur.
-     *
-     *
+     * Sets the angle of the blur.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the angle of the blur.
+     * Gets the angle of the blur.
      *
-     @param angle the angle of the blur
-      * @return the angle of the blur
+     * @param angle the angle of the blur
+     * @return the angle of the blur
      */
     private float angle;
 
@@ -44,7 +44,7 @@ public class DirectionalBlur extends EffectBase {
      * @param angle  the angle of the blur
      */
     public DirectionalBlur(float radius, float angle) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/DirectionalBlur.fsh"), true, 19, "DirectionalBlur");
+        super(Location.fromResource("shader/frameBuffer/filter/DirectionalBlur.fsh"), true, 19, "DirectionalBlur");
 
         this.radius = radius;
         this.angle = angle;
@@ -100,8 +100,8 @@ public class DirectionalBlur extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("radius", radius * 10);
-        getFrameBuffer().getShaderProgramFBO().setUniform("angle", angle);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("radius", radius * 10);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("angle", angle);
 
         super.setUniform(baseGLObject);
     }

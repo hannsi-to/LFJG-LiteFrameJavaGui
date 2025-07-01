@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.frame.manager.managers;
+package me.hannsi.lfjg.frame.manager;
 
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;

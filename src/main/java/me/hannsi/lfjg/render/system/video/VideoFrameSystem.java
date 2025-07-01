@@ -6,14 +6,15 @@ import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.utils.math.io.IOUtil;
-import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.Location;
-import me.hannsi.lfjg.utils.reflection.location.URLLocation;
+import me.hannsi.lfjg.utils.type.types.LocationType;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.Java2DFrameConverter;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -71,10 +72,6 @@ public class VideoFrameSystem {
             textureId = -1;
         }
 
-        if (location != null) {
-            location.cleanup();
-        }
-
         new LogGenerator(
                 LogGenerateType.CLEANUP,
                 getClass(),
@@ -85,10 +82,18 @@ public class VideoFrameSystem {
 
     public VideoFrameSystem createFFmpegFrameGrabber(Location location) {
         this.location = location;
-        if (location.isPath()) {
-            this.grabber = new FFmpegFrameGrabber(((FileLocation) location).getInputStream());
-        } else if (location.isUrl()) {
-            this.grabber = new FFmpegFrameGrabber(((URLLocation) location).getURL());
+        if (location.locationType() == LocationType.FILE || location.locationType() == LocationType.RESOURCE) {
+            try {
+                this.grabber = new FFmpegFrameGrabber(location.openStream());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else if (location.locationType() == LocationType.URL) {
+            try {
+                this.grabber = new FFmpegFrameGrabber(location.getURL());
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         return this;

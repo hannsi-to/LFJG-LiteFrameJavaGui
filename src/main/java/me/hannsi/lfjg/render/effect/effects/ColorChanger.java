@@ -5,7 +5,7 @@ import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 
 @Getter
 @Setter
@@ -15,7 +15,7 @@ public class ColorChanger extends EffectBase {
     private Color newColor;
 
     public ColorChanger(boolean alpha, Color targetColor, Color newColor) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/ColorChanger.fsh"), true, 28, "ColorChanger");
+        super(Location.fromResource("shader/frameBuffer/filter/ColorChanger.fsh"), true, 28, "ColorChanger");
 
         this.alpha = alpha;
         this.targetColor = targetColor;
@@ -69,9 +69,9 @@ public class ColorChanger extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("alpha", alpha);
-        getFrameBuffer().getShaderProgramFBO().setUniform("targetColor", targetColor);
-        getFrameBuffer().getShaderProgramFBO().setUniform("newColor", newColor);
+        getFrameBuffer().getShaderProgramFBO().setUniformB("alpha", alpha);
+        getFrameBuffer().getShaderProgramFBO().setUniform4f("targetColor", targetColor);
+        getFrameBuffer().getShaderProgramFBO().setUniform4f("newColor", newColor);
 
         super.setUniform(baseGLObject);
     }

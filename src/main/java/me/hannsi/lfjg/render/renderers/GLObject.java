@@ -14,7 +14,7 @@ import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
-import me.hannsi.lfjg.utils.reflection.location.FileLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.type.types.BlendType;
 import me.hannsi.lfjg.utils.type.types.BufferObjectType;
 import me.hannsi.lfjg.utils.type.types.DrawType;
@@ -108,7 +108,7 @@ public class GLObject implements Cloneable {
     /**
      * Initializes the GLObject by creating necessary OpenGL resources.
      */
-    public void create(FileLocation vertexShader, FileLocation fragmentShader) {
+    public void create(Location vertexShader, Location fragmentShader) {
         vaoRendering = new VAORendering();
 
         frameBuffer = new FrameBuffer();
@@ -178,10 +178,10 @@ public class GLObject implements Cloneable {
     }
 
     private void uploadUniforms() {
-        shaderProgram.setUniform("projectionMatrix", LFJGContext.projection.getProjMatrix());
-        shaderProgram.setUniform("modelMatrix", transform.getModelMatrix());
-        shaderProgram.setUniform("viewMatrix", viewMatrix);
-        shaderProgram.setUniform("resolution", LFJGContext.frameBufferSize);
+        shaderProgram.setUniformMatrix4fv("projectionMatrix", LFJGContext.projection.getProjMatrix());
+        shaderProgram.setUniformMatrix4fv("modelMatrix", transform.getModelMatrix());
+        shaderProgram.setUniformMatrix4fv("viewMatrix", viewMatrix);
+        shaderProgram.setUniform2i("resolution", LFJGContext.frameBufferSize);
         if (mesh.getVboIds().get(BufferObjectType.TEXTURE_BUFFER) != null) {
             shaderProgram.setUniform1i("textureSampler", 0);
         }

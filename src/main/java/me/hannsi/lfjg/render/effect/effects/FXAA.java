@@ -5,7 +5,7 @@ import lombok.Setter;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import org.joml.Vector2f;
 
 /**
@@ -16,14 +16,14 @@ import org.joml.Vector2f;
 public class FXAA extends EffectBase {
     /**
      * -- SETTER --
-     *  Sets whether to use alpha in the effect.
-     *
-     *
+     * Sets whether to use alpha in the effect.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Checks if alpha is used in the effect.
+     * Checks if alpha is used in the effect.
      *
-     @param useAlpha true to use alpha, false otherwise
-      * @return true if alpha is used, false otherwise
+     * @param useAlpha true to use alpha, false otherwise
+     * @return true if alpha is used, false otherwise
      */
     private boolean useAlpha;
 
@@ -33,7 +33,7 @@ public class FXAA extends EffectBase {
      * @param useAlpha whether to use alpha in the effect
      */
     public FXAA(boolean useAlpha) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/FXAA.fsh"), true, 17, "FastApproximateAntiAliasing");
+        super(Location.fromResource("shader/frameBuffer/filter/FXAA.fsh"), true, 17, "FastApproximateAntiAliasing");
 
         this.useAlpha = useAlpha;
     }
@@ -78,8 +78,8 @@ public class FXAA extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("texelStep", new Vector2f(1.0f / LFJGContext.frameBufferSize.x(), 1.0f / LFJGContext.frameBufferSize.y()));
-        getFrameBuffer().getShaderProgramFBO().setUniform("useAlpha", useAlpha);
+        getFrameBuffer().getShaderProgramFBO().setUniform2f("texelStep", new Vector2f(1.0f / LFJGContext.frameBufferSize.x(), 1.0f / LFJGContext.frameBufferSize.y()));
+        getFrameBuffer().getShaderProgramFBO().setUniformB("useAlpha", useAlpha);
 
         super.setUniform(baseGLObject);
     }

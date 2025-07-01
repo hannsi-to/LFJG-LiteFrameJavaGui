@@ -6,9 +6,8 @@ import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.utils.math.io.IOUtil;
-import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.Location;
-import me.hannsi.lfjg.utils.reflection.location.URLLocation;
+import me.hannsi.lfjg.utils.type.types.LocationType;
 
 import java.nio.ByteBuffer;
 
@@ -26,10 +25,10 @@ public class SVG {
 
     public void loadSVG() {
         try {
-            if (location.isUrl()) {
-                byteBuffer = IOUtil.downloadSVG((URLLocation) location);
-            } else if (location.isPath()) {
-                byteBuffer = IOUtil.svgToByteBuffer((FileLocation) location);
+            if (location.locationType() == LocationType.URL) {
+                byteBuffer = IOUtil.downloadSVG(location);
+            } else if (location.locationType() == LocationType.FILE || location.locationType() == LocationType.RESOURCE) {
+                byteBuffer = IOUtil.svgToByteBuffer(location);
             }
 
             if (byteBuffer == null) {

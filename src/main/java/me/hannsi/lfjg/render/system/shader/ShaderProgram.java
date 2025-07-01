@@ -11,7 +11,7 @@ import me.hannsi.lfjg.render.debug.exceptions.shader.CreatingShaderException;
 import me.hannsi.lfjg.render.debug.exceptions.shader.CreatingShaderProgramException;
 import me.hannsi.lfjg.render.debug.exceptions.shader.LinkingShaderException;
 import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.reflection.location.FileLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import org.joml.*;
 import org.lwjgl.system.MemoryStack;
 
@@ -96,7 +96,7 @@ public class ShaderProgram {
      *
      * @param fileLocation the location of the vertex shader resource
      */
-    public void createVertexShader(FileLocation fileLocation) {
+    public void createVertexShader(Location fileLocation) {
         GLSLCode glslCode = new GLSLCode(fileLocation);
         String shaderCode = glslCode.createCode();
 
@@ -108,7 +108,7 @@ public class ShaderProgram {
      *
      * @param fileLocation the location of the fragment shader resource
      */
-    public void createFragmentShader(FileLocation fileLocation) {
+    public void createFragmentShader(Location fileLocation) {
         GLSLCode glslCode = new GLSLCode(fileLocation);
         String shaderCode = glslCode.createCode();
 
@@ -169,7 +169,7 @@ public class ShaderProgram {
      * @param name  the name of the uniform
      * @param value the boolean value to set
      */
-    public void setUniform(String name, boolean value) {
+    public void setUniformB(String name, boolean value) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform1i(uniformId, value ? 1 : 0);
@@ -181,7 +181,7 @@ public class ShaderProgram {
      * @param name  the name of the uniform
      * @param value the Matrix4f value to set
      */
-    public void setUniform(String name, Matrix4f value) {
+    public void setUniformMatrix4fv(String name, Matrix4f value) {
         int uniformId = glGetUniformLocation(programId, name);
 
         try (MemoryStack stack = MemoryStack.stackPush()) {
@@ -195,7 +195,7 @@ public class ShaderProgram {
      * @param name  the name of the uniform
      * @param value the FloatBuffer value to set
      */
-    public void setUniform(String name, FloatBuffer value) {
+    public void setUniform1fv(String name, FloatBuffer value) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform1fv(uniformId, value);
@@ -207,7 +207,7 @@ public class ShaderProgram {
      * @param name  the name of the uniform
      * @param value the float value to set
      */
-    public void setUniform(String name, float value) {
+    public void setUniform1f(String name, float value) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform1f(uniformId, value);
@@ -219,7 +219,7 @@ public class ShaderProgram {
      * @param name  the name of the uniform
      * @param value the Vector2f value to set
      */
-    public void setUniform(String name, Vector2f value) {
+    public void setUniform2f(String name, Vector2f value) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform2f(uniformId, value.x, value.y);
@@ -232,7 +232,7 @@ public class ShaderProgram {
      * @param value1 the first float value
      * @param value2 the second float value
      */
-    public void setUniform(String name, float value1, float value2) {
+    public void setUniform2f(String name, float value1, float value2) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform2f(uniformId, value1, value2);
@@ -244,7 +244,7 @@ public class ShaderProgram {
      * @param name  the name of the uniform
      * @param value the Vector3f value to set
      */
-    public void setUniform(String name, Vector3f value) {
+    public void setUniform3f(String name, Vector3f value) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform3f(uniformId, value.x, value.y, value.z);
@@ -258,7 +258,7 @@ public class ShaderProgram {
      * @param value2 the second float value
      * @param value3 the third float value
      */
-    public void setUniform(String name, float value1, float value2, float value3) {
+    public void setUniform3f(String name, float value1, float value2, float value3) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform3f(uniformId, value1, value2, value3);
@@ -294,19 +294,19 @@ public class ShaderProgram {
         glUniform4i(uniformId, value1, value2, value3, value4);
     }
 
-    public void setUniform(String name, Vector2i value) {
+    public void setUniform2i(String name, Vector2i value) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform2i(uniformId, value.x, value.y);
     }
 
-    public void setUniform(String name, Vector3i value) {
+    public void setUniform3i(String name, Vector3i value) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform3i(uniformId, value.x, value.y, value.z);
     }
 
-    public void setUniform(String name, Vector4i value) {
+    public void setUniform4i(String name, Vector4i value) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform4i(uniformId, value.x, value.y, value.z, value.w);
@@ -318,7 +318,7 @@ public class ShaderProgram {
      * @param name  the name of the uniform
      * @param value the Vector4f value to set
      */
-    public void setUniform(String name, Vector4f value) {
+    public void setUniform4f(String name, Vector4f value) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform4f(uniformId, value.x, value.y, value.z, value.w);
@@ -333,7 +333,7 @@ public class ShaderProgram {
      * @param value3 the third float value
      * @param value4 the fourth float value
      */
-    public void setUniform(String name, float value1, float value2, float value3, float value4) {
+    public void setUniform4f(String name, float value1, float value2, float value3, float value4) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform4f(uniformId, value1, value2, value3, value4);
@@ -345,7 +345,7 @@ public class ShaderProgram {
      * @param name  the name of the uniform
      * @param color the Color value to set
      */
-    public void setUniform(String name, Color color) {
+    public void setUniform4f(String name, Color color) {
         int uniformId = glGetUniformLocation(programId, name);
 
         glUniform4f(uniformId, color.getRedF(), color.getGreenF(), color.getBlueF(), color.getAlphaF());
@@ -354,35 +354,35 @@ public class ShaderProgram {
     public void setUniform(String name, Object... values) {
         if (values.length == 1) {
             if (values[0] instanceof Boolean) {
-                setUniform(name, (boolean) values[0]);
+                setUniformB(name, (boolean) values[0]);
             } else if (values[0] instanceof Matrix4f) {
-                setUniform(name, (Matrix4f) values[0]);
+                setUniformMatrix4fv(name, (Matrix4f) values[0]);
             } else if (values[0] instanceof FloatBuffer) {
-                setUniform(name, (FloatBuffer) values[0]);
+                setUniform1fv(name, (FloatBuffer) values[0]);
             } else if (values[0] instanceof Float) {
-                setUniform(name, (float) values[0]);
+                setUniform1f(name, (float) values[0]);
             } else if (values[0] instanceof Vector2f) {
-                setUniform(name, (Vector2f) values[0]);
+                setUniform2f(name, (Vector2f) values[0]);
             } else if (values[0] instanceof Vector3f) {
-                setUniform(name, (Vector3f) values[0]);
+                setUniform3f(name, (Vector3f) values[0]);
             } else if (values[0] instanceof Vector4f) {
-                setUniform(name, (Vector4f) values[0]);
+                setUniform4f(name, (Vector4f) values[0]);
             } else if (values[0] instanceof Integer) {
                 setUniform1i(name, (int) values[0]);
             } else if (values[0] instanceof Vector2i) {
-                setUniform(name, (Vector2i) values[0]);
+                setUniform2i(name, (Vector2i) values[0]);
             } else if (values[0] instanceof Vector3i) {
-                setUniform(name, (Vector3i) values[0]);
+                setUniform3i(name, (Vector3i) values[0]);
             } else if (values[0] instanceof Vector4i) {
-                setUniform(name, (Vector4i) values[0]);
+                setUniform4i(name, (Vector4i) values[0]);
             } else if (values[0] instanceof Color) {
-                setUniform(name, (Color) values[0]);
+                setUniform4f(name, (Color) values[0]);
             } else {
                 throw new RuntimeException(values[0].getClass().getName() + " type is not supported.");
             }
         } else if (values.length == 2) {
             if (values[0] instanceof Float && values[1] instanceof Float) {
-                setUniform(name, (float) values[0], (float) values[1]);
+                setUniform2f(name, (float) values[0], (float) values[1]);
             } else if (values[0] instanceof Integer && values[1] instanceof Integer) {
                 setUniform2i(name, (int) values[0], (int) values[1]);
             } else {
@@ -391,7 +391,7 @@ public class ShaderProgram {
 
         } else if (values.length == 3) {
             if (values[0] instanceof Float && values[1] instanceof Float && values[2] instanceof Float) {
-                setUniform(name, (float) values[0], (float) values[1], (float) values[2]);
+                setUniform3f(name, (float) values[0], (float) values[1], (float) values[2]);
             } else if (values[0] instanceof Integer && values[1] instanceof Integer && values[2] instanceof Integer) {
                 setUniform3i(name, (int) values[0], (int) values[1], (int) values[2]);
             } else {
@@ -399,7 +399,7 @@ public class ShaderProgram {
             }
         } else if (values.length == 4) {
             if (values[0] instanceof Float && values[1] instanceof Float && values[2] instanceof Float && values[3] instanceof Float) {
-                setUniform(name, (float) values[0], (float) values[1], (float) values[2], (float) values[3]);
+                setUniform4f(name, (float) values[0], (float) values[1], (float) values[2], (float) values[3]);
             } else if (values[0] instanceof Integer && values[1] instanceof Integer && values[2] instanceof Integer && values[3] instanceof Integer) {
                 setUniform4i(name, (int) values[0], (int) values[1], (int) values[2], (int) values[3]);
             } else {

@@ -1,12 +1,12 @@
-package me.hannsi.lfjg.frame.manager.managers;
+package me.hannsi.lfjg.frame.manager;
 
 import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.DebugLog;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.frame.manager.Manager;
 import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
@@ -25,24 +25,22 @@ import java.util.Set;
  * Manages frame settings for a given frame.
  */
 @Getter
-public class FrameSettingManager extends Manager {
+public class FrameSettingManager {
     /**
      * -- GETTER --
-     *  Retrieves all frame settings.
+     * Retrieves all frame settings.
      *
      * @return a list of all frame settings
      */
     private final List<FrameSettingBase<?>> frameSettings;
+    @Setter
+    private Frame frame;
 
     /**
      * Constructs a new FrameSettingManager for the specified frame.
-     *
-     * @param frame the frame to manage settings for
      */
-    public FrameSettingManager(Frame frame) {
-        super(frame, "FrameSettingManager");
+    public FrameSettingManager() {
         this.frameSettings = new ArrayList<>();
-        loadFrameSettings();
     }
 
     /**
@@ -118,7 +116,7 @@ public class FrameSettingManager extends Manager {
         long tookTime = TimeCalculator.calculateMillis(() -> {
             int count = 0;
             for (Class<? extends FrameSettingBase<?>> subType : sortedClasses) {
-                FrameSettingBase<?> frameSettingBase = ClassUtil.createInstance(subType, getFrame());
+                FrameSettingBase<?> frameSettingBase = ClassUtil.createInstance(subType, frame);
 
                 if (frameSettingBase != null) {
                     register(frameSettingBase);

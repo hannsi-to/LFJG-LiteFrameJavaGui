@@ -20,8 +20,7 @@ import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.graphics.image.ImageCapture;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.utils.math.MathHelper;
-import me.hannsi.lfjg.utils.reflection.location.FileLocation;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.type.types.BlendType;
 import me.hannsi.lfjg.utils.type.types.SoundLoaderType;
 import org.joml.Vector3f;
@@ -78,7 +77,7 @@ public class TestScene1 implements IScene {
 //        threadCache.createCache(thread);
 //        threadCache.run(thread.threadId());
 
-        imageCapture = new ImageCapture(new FileLocation("C:/Users/hanns/idea-project/LFJG-LiteFrameJavaGui/log/png"));
+        imageCapture = new ImageCapture(Location.fromFile("C:/Users/hanns/idea-project/LFJG-LiteFrameJavaGui/log/png"));
 
         objectInit();
 
@@ -133,7 +132,7 @@ public class TestScene1 implements IScene {
         glTriangle.triangle(0, 0, 500, 0, 250, 500, Color.of(255, 255, 255, alpha), Color.of(255, 255, 0, alpha), Color.of(255, 255, 255, alpha));
 
         glShader = new GLShader("Shader1");
-        glShader.shader(new ResourcesLocation("shader/test/test.fsh"), 0, 0, frame.getFrameBufferWidth(), frame.getFrameBufferHeight());
+        glShader.shader(Location.fromResource("shader/test/test.fsh"), 0, 0, frame.getFrameBufferWidth(), frame.getFrameBufferHeight());
 
 //        glSVG = new GLSVG("SVG1");
 //        glSVG.svg(new ResourcesLocation("svg/delete.svg"), 100, 100, 5, 5);
@@ -141,8 +140,8 @@ public class TestScene1 implements IScene {
     }
 
     public void effectCacheInit() {
-        textureCache = new TextureCache();
-        ResourcesLocation image = new ResourcesLocation("texture/test/test_image_1920x1080.jpg");
+        textureCache = TextureCache.createTextureCache();
+        Location image = Location.fromResource("texture/test/test_image_1920x1080.jpg");
         textureCache.createCache(image);
 
         gl1EffectCache = EffectCache.initEffectCache();
@@ -226,7 +225,7 @@ public class TestScene1 implements IScene {
                                 .loop(false)
                                 .relative(false)
                                 .position(new Vector3f(0, 0, 0))
-                                .createSoundPCM(SoundLoaderType.STB_VORBIS, new ResourcesLocation("sound/test.ogg"))
+                                .createSoundPCM(SoundLoaderType.STB_VORBIS, Location.fromResource("sound/test.ogg"))
                 );
     }
 

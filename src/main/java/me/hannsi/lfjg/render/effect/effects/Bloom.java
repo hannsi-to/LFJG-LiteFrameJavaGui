@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 
 /**
  * Class representing a Bloom effect in OpenGL.
@@ -14,38 +14,38 @@ import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 public class Bloom extends EffectBase {
     /**
      * -- GETTER --
-     *  Gets the intensity of the bloom.
-     *
-     *
+     * Gets the intensity of the bloom.
+     * <p>
+     * <p>
      * -- SETTER --
-     *  Sets the intensity of the bloom.
+     * Sets the intensity of the bloom.
      *
-     @return the intensity of the bloom
-      * @param intensity the intensity of the bloom
+     * @return the intensity of the bloom
+     * @param intensity the intensity of the bloom
      */
     private float intensity;
     /**
      * -- GETTER --
-     *  Gets the spread of the bloom.
-     *
-     *
+     * Gets the spread of the bloom.
+     * <p>
+     * <p>
      * -- SETTER --
-     *  Sets the spread of the bloom.
+     * Sets the spread of the bloom.
      *
-     @return the spread of the bloom
-      * @param spread the spread of the bloom
+     * @return the spread of the bloom
+     * @param spread the spread of the bloom
      */
     private float spread;
     /**
      * -- GETTER --
-     *  Gets the threshold for the bloom.
-     *
-     *
+     * Gets the threshold for the bloom.
+     * <p>
+     * <p>
      * -- SETTER --
-     *  Sets the threshold for the bloom.
+     * Sets the threshold for the bloom.
      *
-     @return the threshold for the bloom
-      * @param threshold the threshold for the bloom
+     * @return the threshold for the bloom
+     * @param threshold the threshold for the bloom
      */
     private float threshold;
 
@@ -57,7 +57,7 @@ public class Bloom extends EffectBase {
      * @param threshold the threshold for the bloom
      */
     public Bloom(float intensity, float spread, float threshold) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/Bloom.fsh"), true, 9, "Bloom");
+        super(Location.fromResource("shader/frameBuffer/filter/Bloom.fsh"), true, 9, "Bloom");
 
         this.intensity = intensity;
         this.spread = spread;
@@ -118,9 +118,9 @@ public class Bloom extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
-        getFrameBuffer().getShaderProgramFBO().setUniform("spread", spread);
-        getFrameBuffer().getShaderProgramFBO().setUniform("threshold", threshold);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("intensity", intensity);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("spread", spread);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("threshold", threshold);
 
         super.setUniform(baseGLObject);
     }

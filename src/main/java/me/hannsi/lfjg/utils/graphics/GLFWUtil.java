@@ -2,7 +2,7 @@ package me.hannsi.lfjg.utils.graphics;
 
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.utils.Util;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.type.types.MonitorType;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
@@ -67,11 +67,13 @@ public class GLFWUtil extends Util {
     /**
      * Sets the window icon using a resource location.
      *
-     * @param windowID          the ID of the window
-     * @param resourcesLocation the location of the icon resource
+     * @param windowID the ID of the window
+     * @param location the location of the icon resource
      */
-    public static void setWindowIcon(long windowID, ResourcesLocation resourcesLocation) {
-        GLFW.glfwSetWindowIcon(windowID, loadIconImageBuffer(resourcesLocation));
+    public static void setWindowIcon(long windowID, Location location) {
+        GLFWImage.Buffer iconBuffer = loadIconImageBuffer(location);
+        GLFW.glfwSetWindowIcon(windowID, iconBuffer);
+        iconBuffer.free();
     }
 
     /**
@@ -87,18 +89,18 @@ public class GLFWUtil extends Util {
     /**
      * Loads an icon image buffer from a resource location.
      *
-     * @param resourcesLocation the location of the icon resource
+     * @param location the location of the icon resource
      * @return the GLFWImage buffer containing the icon
      */
-    public static GLFWImage.Buffer loadIconImageBuffer(ResourcesLocation resourcesLocation) {
+    public static GLFWImage.Buffer loadIconImageBuffer(Location location) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             IntBuffer width = stack.mallocInt(1);
             IntBuffer height = stack.mallocInt(1);
             IntBuffer channels = stack.mallocInt(1);
 
-            ByteBuffer image = STBImage.stbi_load(resourcesLocation.getPath(), width, height, channels, 4);
+            ByteBuffer image = STBImage.stbi_load_from_memory(location.getByteBuffer(), width, height, channels, 4);
             if (image == null) {
-                throw new RuntimeException("Failed to load icon image: " + resourcesLocation.getPath());
+                throw new RuntimeException("Failed to load icon image: " + location.path());
             }
 
             GLFWImage.Buffer iconBuffer = GLFWImage.malloc(1);

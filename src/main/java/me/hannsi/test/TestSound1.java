@@ -4,7 +4,7 @@ import me.hannsi.lfjg.audio.*;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.type.types.SoundEffectType;
 import me.hannsi.lfjg.utils.type.types.SoundFilterType;
 import me.hannsi.lfjg.utils.type.types.SoundLoaderType;
@@ -35,7 +35,7 @@ public class TestSound1 implements IScene {
                                 .loop(true)
                                 .relative(true)
                                 .position(new Vector3f(0, 0, 0))
-                                .createSoundPCM(SoundLoaderType.STB_VORBIS, new ResourcesLocation("sound/test.ogg"))
+                                .createSoundPCM(SoundLoaderType.STB_VORBIS, Location.fromResource("sound/test.ogg"))
                                 .attachBuffer()
                                 .attachEffect(
                                         SoundEffect.builderCreate()

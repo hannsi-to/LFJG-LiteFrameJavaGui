@@ -3,7 +3,7 @@ package me.hannsi.lfjg.audio;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
-import me.hannsi.lfjg.utils.reflection.location.FileLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.type.types.SoundLoaderType;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
@@ -37,24 +37,24 @@ public class SoundData {
         return new SoundData();
     }
 
-    public SoundData createSoundPCM(SoundLoaderType soundLoaderType, FileLocation fileLocation) {
+    public SoundData createSoundPCM(SoundLoaderType soundLoaderType, Location fileLocation) {
         switch (soundLoaderType) {
             case STB_VORBIS -> {
                 try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
-                    pcm = readVorbis(fileLocation.getPath(), info);
+                    pcm = readVorbis(fileLocation.path(), info);
                     updatePCMData(info.sample_rate(), info.channels());
                 }
             }
             case JAVA_CV -> {
-                try (FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(fileLocation.getPath())) {
-                    pcm = readAudio(grabber, fileLocation.getPath());
+                try (FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(fileLocation.path())) {
+                    pcm = readAudio(grabber, fileLocation.path());
 
                     int sampleRate = grabber.getSampleRate();
                     int channels = grabber.getAudioChannels();
                     int format = (channels == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
                     updatePCMData(sampleRate, format);
                 } catch (Exception e) {
-                    throw new RuntimeException("Failed to load audio file: " + fileLocation.getPath(), e);
+                    throw new RuntimeException("Failed to load audio file: " + fileLocation.path(), e);
                 }
 
             }

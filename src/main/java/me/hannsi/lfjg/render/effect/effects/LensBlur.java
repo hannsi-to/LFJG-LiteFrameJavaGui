@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 
 /**
  * Class representing a Lens Blur effect in OpenGL.
@@ -14,26 +14,26 @@ import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 public class LensBlur extends EffectBase {
     /**
      * -- SETTER --
-     *  Sets the range of the blur.
-     *
-     *
+     * Sets the range of the blur.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the range of the blur.
+     * Gets the range of the blur.
      *
-     @param range the range of the blur
-      * @return the range of the blur
+     * @param range the range of the blur
+     * @return the range of the blur
      */
     private float range;
     /**
      * -- SETTER --
-     *  Sets the intensity of the blur.
-     *
-     *
+     * Sets the intensity of the blur.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the intensity of the blur.
+     * Gets the intensity of the blur.
      *
-     @param intensity the intensity of the blur
-      * @return the intensity of the blur
+     * @param intensity the intensity of the blur
+     * @return the intensity of the blur
      */
     private float intensity;
 
@@ -44,7 +44,7 @@ public class LensBlur extends EffectBase {
      * @param intensity the intensity of the blur
      */
     public LensBlur(float range, float intensity) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/LensBlur.fsh"), true, 20, "LensBlur");
+        super(Location.fromResource("shader/frameBuffer/filter/LensBlur.fsh"), true, 20, "LensBlur");
 
         this.range = range;
         this.intensity = intensity;
@@ -100,8 +100,8 @@ public class LensBlur extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("range", range);
-        getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("range", range);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("intensity", intensity);
 
         super.setUniform(baseGLObject);
     }

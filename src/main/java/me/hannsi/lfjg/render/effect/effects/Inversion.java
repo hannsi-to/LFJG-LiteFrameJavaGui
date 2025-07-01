@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 
 /**
  * Class representing an Inversion effect in OpenGL.
@@ -14,62 +14,62 @@ import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 public class Inversion extends EffectBase {
     /**
      * -- SETTER --
-     *  Sets whether to flip the image vertically.
-     *
-     *
+     * Sets whether to flip the image vertically.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Checks if the image is flipped vertically.
+     * Checks if the image is flipped vertically.
      *
-     @param flipVertical true to flip the image vertically, false otherwise
-      * @return true if the image is flipped vertically, false otherwise
+     * @param flipVertical true to flip the image vertically, false otherwise
+     * @return true if the image is flipped vertically, false otherwise
      */
     private boolean flipVertical;
     /**
      * -- SETTER --
-     *  Sets whether to flip the image horizontally.
-     *
-     *
+     * Sets whether to flip the image horizontally.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Checks if the image is flipped horizontally.
+     * Checks if the image is flipped horizontally.
      *
-     @param flipHorizontal true to flip the image horizontally, false otherwise
-      * @return true if the image is flipped horizontally, false otherwise
+     * @param flipHorizontal true to flip the image horizontally, false otherwise
+     * @return true if the image is flipped horizontally, false otherwise
      */
     private boolean flipHorizontal;
     /**
      * -- SETTER --
-     *  Sets whether to invert the brightness.
-     *
-     *
+     * Sets whether to invert the brightness.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Checks if the brightness is inverted.
+     * Checks if the brightness is inverted.
      *
-     @param invertBrightness true to invert the brightness, false otherwise
-      * @return true if the brightness is inverted, false otherwise
+     * @param invertBrightness true to invert the brightness, false otherwise
+     * @return true if the brightness is inverted, false otherwise
      */
     private boolean invertBrightness;
     /**
      * -- SETTER --
-     *  Sets whether to invert the hue.
-     *
-     *
+     * Sets whether to invert the hue.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Checks if the hue is inverted.
+     * Checks if the hue is inverted.
      *
-     @param invertHue true to invert the hue, false otherwise
-      * @return true if the hue is inverted, false otherwise
+     * @param invertHue true to invert the hue, false otherwise
+     * @return true if the hue is inverted, false otherwise
      */
     private boolean invertHue;
     /**
      * -- SETTER --
-     *  Sets whether to invert the alpha.
-     *
-     *
+     * Sets whether to invert the alpha.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Checks if the alpha is inverted.
+     * Checks if the alpha is inverted.
      *
-     @param invertAlpha true to invert the alpha, false otherwise
-      * @return true if the alpha is inverted, false otherwise
+     * @param invertAlpha true to invert the alpha, false otherwise
+     * @return true if the alpha is inverted, false otherwise
      */
     private boolean invertAlpha;
 
@@ -83,7 +83,7 @@ public class Inversion extends EffectBase {
      * @param invertAlpha      whether to invert the alpha
      */
     public Inversion(boolean flipVertical, boolean flipHorizontal, boolean invertBrightness, boolean invertHue, boolean invertAlpha) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/Inversion.fsh"), true, 21, "Inversion");
+        super(Location.fromResource("shader/frameBuffer/filter/Inversion.fsh"), true, 21, "Inversion");
 
         this.flipVertical = flipVertical;
         this.flipHorizontal = flipHorizontal;
@@ -132,11 +132,11 @@ public class Inversion extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("flipVertical", flipVertical);
-        getFrameBuffer().getShaderProgramFBO().setUniform("flipHorizontal", flipHorizontal);
-        getFrameBuffer().getShaderProgramFBO().setUniform("invertBrightness", invertBrightness);
-        getFrameBuffer().getShaderProgramFBO().setUniform("invertHue", invertHue);
-        getFrameBuffer().getShaderProgramFBO().setUniform("invertAlpha", invertAlpha);
+        getFrameBuffer().getShaderProgramFBO().setUniformB("flipVertical", flipVertical);
+        getFrameBuffer().getShaderProgramFBO().setUniformB("flipHorizontal", flipHorizontal);
+        getFrameBuffer().getShaderProgramFBO().setUniformB("invertBrightness", invertBrightness);
+        getFrameBuffer().getShaderProgramFBO().setUniformB("invertHue", invertHue);
+        getFrameBuffer().getShaderProgramFBO().setUniformB("invertAlpha", invertAlpha);
 
         super.setUniform(baseGLObject);
     }

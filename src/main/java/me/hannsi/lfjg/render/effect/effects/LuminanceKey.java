@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
 
 /**
@@ -15,38 +15,38 @@ import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
 public class LuminanceKey extends EffectBase {
     /**
      * -- SETTER --
-     *  Sets the threshold for the luminance key.
-     *
-     *
+     * Sets the threshold for the luminance key.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the threshold for the luminance key.
+     * Gets the threshold for the luminance key.
      *
-     @param threshold the threshold for the luminance key
-      * @return the threshold for the luminance key
+     * @param threshold the threshold for the luminance key
+     * @return the threshold for the luminance key
      */
     private float threshold;
     /**
      * -- SETTER --
-     *  Sets the amount of blur to apply.
-     *
-     *
+     * Sets the amount of blur to apply.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the amount of blur to apply.
+     * Gets the amount of blur to apply.
      *
-     @param blurAmount the amount of blur to apply
-      * @return the amount of blur to apply
+     * @param blurAmount the amount of blur to apply
+     * @return the amount of blur to apply
      */
     private float blurAmount;
     /**
      * -- SETTER --
-     *  Sets the mode of the luminance key.
-     *
-     *
+     * Sets the mode of the luminance key.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the mode of the luminance key.
+     * Gets the mode of the luminance key.
      *
-     @param luminanceMode the mode of the luminance key
-      * @return the mode of the luminance key
+     * @param luminanceMode the mode of the luminance key
+     * @return the mode of the luminance key
      */
     private LuminanceMode luminanceMode;
 
@@ -58,7 +58,7 @@ public class LuminanceKey extends EffectBase {
      * @param luminanceMode the mode of the luminance key
      */
     public LuminanceKey(float threshold, float blurAmount, LuminanceMode luminanceMode) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/LuminanceKey.fsh"), true, 13, "LuminanceKey");
+        super(Location.fromResource("shader/frameBuffer/filter/LuminanceKey.fsh"), true, 13, "LuminanceKey");
 
         this.threshold = threshold;
         this.blurAmount = blurAmount;
@@ -119,8 +119,8 @@ public class LuminanceKey extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("threshold", threshold);
-        getFrameBuffer().getShaderProgramFBO().setUniform("blurAmount", blurAmount);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("threshold", threshold);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("blurAmount", blurAmount);
         getFrameBuffer().getShaderProgramFBO().setUniform1i("mode", luminanceMode.getId());
 
         super.setUniform(baseGLObject);

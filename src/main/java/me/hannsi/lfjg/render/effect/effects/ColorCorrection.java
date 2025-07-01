@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 
 /**
  * Class representing a Color Correction effect in OpenGL.
@@ -14,50 +14,50 @@ import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 public class ColorCorrection extends EffectBase {
     /**
      * -- SETTER --
-     *  Sets the brightness level.
-     *
-     *
+     * Sets the brightness level.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the brightness level.
+     * Gets the brightness level.
      *
-     @param brightness the brightness level
-      * @return the brightness level
+     * @param brightness the brightness level
+     * @return the brightness level
      */
     private float brightness;
     /**
      * -- SETTER --
-     *  Sets the contrast level.
-     *
-     *
+     * Sets the contrast level.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the contrast level.
+     * Gets the contrast level.
      *
-     @param contrast the contrast level
-      * @return the contrast level
+     * @param contrast the contrast level
+     * @return the contrast level
      */
     private float contrast;
     /**
      * -- SETTER --
-     *  Sets the saturation level.
-     *
-     *
+     * Sets the saturation level.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the saturation level.
+     * Gets the saturation level.
      *
-     @param saturation the saturation level
-      * @return the saturation level
+     * @param saturation the saturation level
+     * @return the saturation level
      */
     private float saturation;
     /**
      * -- SETTER --
-     *  Sets the hue level.
-     *
-     *
+     * Sets the hue level.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the hue level.
+     * Gets the hue level.
      *
-     @param hue the hue level
-      * @return the hue level
+     * @param hue the hue level
+     * @return the hue level
      */
     private float hue;
 
@@ -70,7 +70,7 @@ public class ColorCorrection extends EffectBase {
      * @param hue        the hue level
      */
     public ColorCorrection(float brightness, float contrast, float saturation, float hue) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/ColorCorrection.fsh"), true, 4, "ColorCorrection");
+        super(Location.fromResource("shader/frameBuffer/filter/ColorCorrection.fsh"), true, 4, "ColorCorrection");
 
         this.brightness = brightness;
         this.contrast = contrast;
@@ -133,10 +133,10 @@ public class ColorCorrection extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("brightness", brightness);
-        getFrameBuffer().getShaderProgramFBO().setUniform("contrast", contrast);
-        getFrameBuffer().getShaderProgramFBO().setUniform("saturation", saturation);
-        getFrameBuffer().getShaderProgramFBO().setUniform("hue", hue);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("brightness", brightness);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("contrast", contrast);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("saturation", saturation);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("hue", hue);
 
         super.setUniform(baseGLObject);
     }

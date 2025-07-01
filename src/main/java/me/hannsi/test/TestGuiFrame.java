@@ -14,7 +14,7 @@ import me.hannsi.lfjg.jcef.handler.RenderHandler;
 import me.hannsi.lfjg.render.system.font.Font;
 import me.hannsi.lfjg.render.system.font.FontCache;
 import me.hannsi.lfjg.render.system.scene.SceneSystem;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.toolkit.Camera;
 import me.hannsi.lfjg.utils.toolkit.KeyboardInfo;
 import me.hannsi.lfjg.utils.toolkit.MouseInfo;
@@ -72,7 +72,7 @@ public class TestGuiFrame implements LFJGFrame {
         camera = new Camera();
 
         fontCache = FontCache.initFontCache()
-                .createCache(new Font("font", new ResourcesLocation("font/default.ttf")))
+                .createCache(new Font("font", Location.fromResource("font/default.ttf")))
                 .loadFonts();
 
         sceneSystem = SceneSystem.initSceneSystem()
@@ -216,11 +216,11 @@ public class TestGuiFrame implements LFJGFrame {
 
     @Override
     public void setFrameSetting() {
-        frame.setFrameSettingValue(RefreshRateSetting.class, -1);
+        frame.setFrameSettingValue(RefreshRateSetting.class, 60);
         frame.setFrameSettingValue(MonitorSetting.class, MonitorType.BORDERLESS);
         frame.setFrameSettingValue(VSyncSetting.class, VSyncType.V_SYNC_OFF);
         frame.setFrameSettingValue(FloatingSetting.class, false);
-        frame.setFrameSettingValue(IconSetting.class, new ResourcesLocation("salad_x32.png"));
+        frame.setFrameSettingValue(IconSetting.class, Location.fromResource("salad_x32.png"));
         frame.setFrameSettingValue(AntiAliasingSetting.class, AntiAliasingType.OFF);
         frame.setFrameSettingValue(WidthSetting.class, 1920);
         frame.setFrameSettingValue(HeightSetting.class, 1080);

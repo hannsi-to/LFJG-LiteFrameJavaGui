@@ -5,7 +5,7 @@ import lombok.Setter;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 
 /**
  * Class representing a Pixelate effect in OpenGL.
@@ -15,14 +15,14 @@ import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
 public class Pixelate extends EffectBase {
     /**
      * -- SETTER --
-     *  Sets the size of the mosaic.
-     *
-     *
+     * Sets the size of the mosaic.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the size of the mosaic.
+     * Gets the size of the mosaic.
      *
-     @param mosaicSize the size of the mosaic
-      * @return the size of the mosaic
+     * @param mosaicSize the size of the mosaic
+     * @return the size of the mosaic
      */
     private float mosaicSize;
 
@@ -32,7 +32,7 @@ public class Pixelate extends EffectBase {
      * @param mosaicSize the size of the mosaic
      */
     public Pixelate(float mosaicSize) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/Pixelate.fsh"), true, 8, "Pixelate");
+        super(Location.fromResource("shader/frameBuffer/filter/Pixelate.fsh"), true, 8, "Pixelate");
 
         this.mosaicSize = mosaicSize;
     }
@@ -89,8 +89,8 @@ public class Pixelate extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("resolution", LFJGContext.frameBufferSize);
-        getFrameBuffer().getShaderProgramFBO().setUniform("mosaicSize", mosaicSize);
+        getFrameBuffer().getShaderProgramFBO().setUniform2i("resolution", LFJGContext.frameBufferSize);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("mosaicSize", mosaicSize);
 
         super.setUniform(baseGLObject);
     }

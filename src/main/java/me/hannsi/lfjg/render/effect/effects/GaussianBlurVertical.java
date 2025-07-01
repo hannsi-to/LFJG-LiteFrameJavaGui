@@ -6,7 +6,7 @@ import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.math.MathHelper;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 
@@ -20,14 +20,14 @@ import java.nio.FloatBuffer;
 public class GaussianBlurVertical extends EffectBase {
     /**
      * -- SETTER --
-     *  Sets the radius of the blur in the y-direction.
-     *
-     *
+     * Sets the radius of the blur in the y-direction.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the radius of the blur in the y-direction.
+     * Gets the radius of the blur in the y-direction.
      *
-     @param radiusY the radius of the blur in the y-direction
-      * @return the radius of the blur in the y-direction
+     * @param radiusY the radius of the blur in the y-direction
+     * @return the radius of the blur in the y-direction
      */
     private float radiusY;
 
@@ -37,7 +37,7 @@ public class GaussianBlurVertical extends EffectBase {
      * @param radiusY the radius of the blur in the y-direction
      */
     public GaussianBlurVertical(float radiusY) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/GaussianBlur.fsh"), true, 6, "GaussianBlurVertical");
+        super(Location.fromResource("shader/frameBuffer/filter/GaussianBlur.fsh"), true, 6, "GaussianBlurVertical");
 
         this.radiusY = radiusY;
     }
@@ -91,16 +91,16 @@ public class GaussianBlurVertical extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("direction", new Vector2f(0, 1));
-        getFrameBuffer().getShaderProgramFBO().setUniform("radius", radiusY);
-        getFrameBuffer().getShaderProgramFBO().setUniform("texelSize", new Vector2f(1.0f / LFJGContext.frameBufferSize.x(), 1.0f / LFJGContext.frameBufferSize.y()));
+        getFrameBuffer().getShaderProgramFBO().setUniform2f("direction", new Vector2f(0, 1));
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("radius", radiusY);
+        getFrameBuffer().getShaderProgramFBO().setUniform2f("texelSize", new Vector2f(1.0f / LFJGContext.frameBufferSize.x(), 1.0f / LFJGContext.frameBufferSize.y()));
 
         final FloatBuffer weightBuffer = BufferUtils.createFloatBuffer(256);
         for (int i = 0; i < radiusY; i++) {
             weightBuffer.put(MathHelper.calculateGaussianValue(i, radiusY / 2));
         }
         weightBuffer.rewind();
-        getFrameBuffer().getShaderProgramFBO().setUniform("values", weightBuffer);
+        getFrameBuffer().getShaderProgramFBO().setUniform1fv("values", weightBuffer);
 
         super.setUniform(baseGLObject);
     }

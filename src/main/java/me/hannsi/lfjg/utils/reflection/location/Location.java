@@ -1,45 +1,93 @@
 package me.hannsi.lfjg.utils.reflection.location;
 
-import lombok.Getter;
+import me.hannsi.lfjg.frame.manager.WorkspaceManager;
+import me.hannsi.lfjg.utils.type.types.LocationType;
+import org.lwjgl.BufferUtils;
 
-public class Location {
-    @Getter
-    public String path;
-    public boolean isUrl;
-    public boolean isPath;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-    public Location(String path, boolean isUrl, boolean isPath) {
-        this.path = path;
-        this.isUrl = isUrl;
-        this.isPath = isPath;
+public record Location(String path, LocationType locationType) {
+
+    public static Location fromFile(String absolutePath) {
+        return new Location(absolutePath, LocationType.FILE);
     }
 
-    @Override
-    public String toString() {
-        return path;
+    public static Location fromResource(String resourcePath) {
+        String normalizedPath = resourcePath.startsWith("/") || resourcePath.startsWith("\\") ? resourcePath.substring(1) : resourcePath;
+        Path fullPath = Paths.get(WorkspaceManager.currentWorkspace, normalizedPath);
+        
+        return new Location(fullPath.toString(), LocationType.RESOURCE);
     }
 
-    public void cleanup() {
-        this.path = "";
+    public static Location fromURL(String url) {
+        return new Location(url, LocationType.URL);
     }
 
-    public boolean isUrl() {
-        return isUrl;
+    public InputStream openStream() throws IOException {
+        return switch (locationType) {
+            case FILE, RESOURCE -> new FileInputStream(path);
+            case URL -> new URL(path).openStream();
+        };
     }
 
-    public void setUrl(boolean url) {
-        isUrl = url;
+    public boolean exists() throws IOException {
+        return switch (locationType) {
+            case FILE, RESOURCE -> Files.exists(Paths.get(path));
+            case URL -> {
+                try {
+                    HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(path).openConnection();
+                    httpURLConnection.setRequestMethod("HEAD");
+                    httpURLConnection.connect();
+                    yield httpURLConnection.getResponseCode() == 200;
+                } catch (Exception e) {
+                    yield false;
+                }
+            }
+        };
     }
 
-    public boolean isPath() {
-        return isPath;
+    public URL getURL() throws MalformedURLException {
+        if (locationType != LocationType.URL) {
+            throw new IllegalStateException("LocationType is not URL: " + locationType);
+        }
+        return new URL(path);
     }
 
-    public void setPath(boolean path) {
-        isPath = path;
+    public byte[] getBytes() {
+        try (InputStream is = openStream()) {
+            return is.readAllBytes();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public ByteBuffer getByteBuffer() {
+        byte[] bytes = getBytes();
+        ByteBuffer buffer = BufferUtils.createByteBuffer(bytes.length);
+        buffer.put(bytes);
+        buffer.flip();
+        return buffer;
+    }
+
+    public File getFile() {
+        if (locationType == LocationType.URL) {
+            throw new UnsupportedOperationException("Only FILE or RESOURCE supports getFile()");
+        }
+        return new File(path).getAbsoluteFile();
+    }
+
+    public Location getParent() {
+        File parent = new File(path).getParentFile();
+        return (parent != null) ? new Location(parent.getPath(), locationType) : null;
     }
 }

@@ -6,8 +6,7 @@ import me.hannsi.lfjg.render.debug.exceptions.render.meshBuilder.MeshBuilderExce
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.reflection.location.FileLocation;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.type.types.BufferObjectType;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.joml.Vector2f;
@@ -138,11 +137,11 @@ public class GLPolygon extends GLObject {
      * Renders the polygon.
      */
     public void rendering() {
-        rendering(new ResourcesLocation("shader/scene/object/VertexShader.vsh"), new ResourcesLocation("shader/scene/object/FragmentShader.fsh"));
+        rendering(Location.fromResource("shader/scene/object/VertexShader.vsh"), Location.fromResource("shader/scene/object/FragmentShader.fsh"));
     }
 
-    public void rendering(boolean isFragmentShaderPath, FileLocation fileLocation) {
-        rendering(isFragmentShaderPath ? new ResourcesLocation("shader/scene/object/VertexShader.vsh") : fileLocation, isFragmentShaderPath ? fileLocation : new ResourcesLocation("shader/scene/object/FragmentShader.fsh"));
+    public void rendering(boolean isFragmentShaderPath, Location location) {
+        rendering(isFragmentShaderPath ? Location.fromResource("shader/scene/object/VertexShader.vsh") : location, isFragmentShaderPath ? location : Location.fromResource("shader/scene/object/FragmentShader.fsh"));
     }
 
     public void updateData() {
@@ -170,7 +169,7 @@ public class GLPolygon extends GLObject {
         texture = new float[0];
     }
 
-    public void rendering(FileLocation vertexShaderPath, FileLocation fragmentShaderPath) {
+    public void rendering(Location vertexShaderPath, Location fragmentShaderPath) {
         if (isUpdate) {
             updateData();
         } else {

@@ -6,7 +6,7 @@ import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.joml.Matrix4f;
 
@@ -18,16 +18,16 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 public class SVGRenderer {
     private final VAORendering vaoRendering;
     private final ShaderProgram shaderProgramFBO;
-    private final ResourcesLocation vertexShaderFBO;
-    private final ResourcesLocation fragmentShaderFBO;
+    private final Location vertexShaderFBO;
+    private final Location fragmentShaderFBO;
     private Mesh mesh;
 
     public SVGRenderer() {
         vaoRendering = new VAORendering();
 
         shaderProgramFBO = new ShaderProgram();
-        vertexShaderFBO = new ResourcesLocation("shader/frameBuffer/VertexShader.vsh");
-        fragmentShaderFBO = new ResourcesLocation("shader/frameBuffer/FragmentShader.fsh");
+        vertexShaderFBO = Location.fromResource("shader/frameBuffer/VertexShader.vsh");
+        fragmentShaderFBO = Location.fromResource("shader/frameBuffer/FragmentShader.fsh");
     }
 
     public void cleanup() {
@@ -43,9 +43,9 @@ public class SVGRenderer {
     public void flush(int textureId, int textureUnit) {
         shaderProgramFBO.bind();
 
-        shaderProgramFBO.setUniform("projectionMatrix", LFJGContext.projection.getProjMatrix());
-        shaderProgramFBO.setUniform("modelMatrix", new Matrix4f());
-        shaderProgramFBO.setUniform("viewMatrix", new Matrix4f());
+        shaderProgramFBO.setUniformMatrix4fv("projectionMatrix", LFJGContext.projection.getProjMatrix());
+        shaderProgramFBO.setUniformMatrix4fv("modelMatrix", new Matrix4f());
+        shaderProgramFBO.setUniformMatrix4fv("viewMatrix", new Matrix4f());
         shaderProgramFBO.setUniform1i("textureSampler", textureUnit);
 
         GLStateCache.enable(GL_BLEND);

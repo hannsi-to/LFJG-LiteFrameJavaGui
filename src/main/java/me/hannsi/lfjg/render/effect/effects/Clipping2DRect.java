@@ -5,7 +5,7 @@ import lombok.Setter;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import org.joml.Vector4f;
 
 /**
@@ -16,62 +16,62 @@ import org.joml.Vector4f;
 public class Clipping2DRect extends EffectBase {
     /**
      * -- SETTER --
-     *  Sets the x-coordinate of the first corner.
-     *
-     *
+     * Sets the x-coordinate of the first corner.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the x-coordinate of the first corner.
+     * Gets the x-coordinate of the first corner.
      *
-     @param x1 the x-coordinate of the first corner
-      * @return the x-coordinate of the first corner
+     * @param x1 the x-coordinate of the first corner
+     * @return the x-coordinate of the first corner
      */
     private float x1;
     /**
      * -- SETTER --
-     *  Sets the y-coordinate of the first corner.
-     *
-     *
+     * Sets the y-coordinate of the first corner.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the y-coordinate of the first corner.
+     * Gets the y-coordinate of the first corner.
      *
-     @param y1 the y-coordinate of the first corner
-      * @return the y-coordinate of the first corner
+     * @param y1 the y-coordinate of the first corner
+     * @return the y-coordinate of the first corner
      */
     private float y1;
     /**
      * -- SETTER --
-     *  Sets the x-coordinate of the opposite corner.
-     *
-     *
+     * Sets the x-coordinate of the opposite corner.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the x-coordinate of the opposite corner.
+     * Gets the x-coordinate of the opposite corner.
      *
-     @param x2 the x-coordinate of the opposite corner
-      * @return the x-coordinate of the opposite corner
+     * @param x2 the x-coordinate of the opposite corner
+     * @return the x-coordinate of the opposite corner
      */
     private float x2;
     /**
      * -- SETTER --
-     *  Sets the y-coordinate of the opposite corner.
-     *
-     *
+     * Sets the y-coordinate of the opposite corner.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the y-coordinate of the opposite corner.
+     * Gets the y-coordinate of the opposite corner.
      *
-     @param y2 the y-coordinate of the opposite corner
-      * @return the y-coordinate of the opposite corner
+     * @param y2 the y-coordinate of the opposite corner
+     * @return the y-coordinate of the opposite corner
      */
     private float y2;
     /**
      * -- SETTER --
-     *  Sets whether the clipping region is inverted.
-     *
-     *
+     * Sets whether the clipping region is inverted.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Checks if the clipping region is inverted.
+     * Checks if the clipping region is inverted.
      *
-     @param invert true to invert the clipping region, false otherwise
-      * @return true if the clipping region is inverted, false otherwise
+     * @param invert true to invert the clipping region, false otherwise
+     * @return true if the clipping region is inverted, false otherwise
      */
     private boolean invert;
 
@@ -85,7 +85,7 @@ public class Clipping2DRect extends EffectBase {
      * @param invert whether to invert the clipping region
      */
     public Clipping2DRect(float x1, float y1, float x2, float y2, boolean invert) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/Clipping2D.fsh"), true, 5, "Clipping2DRect");
+        super(Location.fromResource("shader/frameBuffer/filter/Clipping2D.fsh"), true, 5, "Clipping2DRect");
 
         this.x1 = x1;
         this.y1 = y1;
@@ -116,7 +116,7 @@ public class Clipping2DRect extends EffectBase {
      * @param invert whether to invert the clipping region
      */
     public Clipping2DRect(double x1, double y1, double x2, double y2, boolean invert) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/Clipping2D.fsh"), true, 5, "Clipping2DRect");
+        super(Location.fromResource("shader/frameBuffer/filter/Clipping2D.fsh"), true, 5, "Clipping2DRect");
 
         this.x1 = (float) x1;
         this.y1 = (float) y1;
@@ -180,10 +180,10 @@ public class Clipping2DRect extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("resolution", LFJGContext.frameBufferSize);
-        getFrameBuffer().getShaderProgramFBO().setUniform("clippingRect2DBool", true);
-        getFrameBuffer().getShaderProgramFBO().setUniform("clippingRect2DInvert", invert);
-        getFrameBuffer().getShaderProgramFBO().setUniform("clippingRect2DSize", new Vector4f(x1, y1, x2, y2));
+        getFrameBuffer().getShaderProgramFBO().setUniform2i("resolution", LFJGContext.frameBufferSize);
+        getFrameBuffer().getShaderProgramFBO().setUniformB("clippingRect2DBool", true);
+        getFrameBuffer().getShaderProgramFBO().setUniformB("clippingRect2DInvert", invert);
+        getFrameBuffer().getShaderProgramFBO().setUniform4f("clippingRect2DSize", new Vector4f(x1, y1, x2, y2));
 
         super.setUniform(baseGLObject);
     }

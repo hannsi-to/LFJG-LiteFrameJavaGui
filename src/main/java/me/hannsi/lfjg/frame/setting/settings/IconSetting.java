@@ -4,14 +4,14 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
 import me.hannsi.lfjg.utils.graphics.GLFWUtil;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import org.lwjgl.glfw.GLFW;
 
 /**
  * Represents a setting for the icon of a frame.
  */
 @ReflectionsLevel(level = 8)
-public class IconSetting extends FrameSettingBase<ResourcesLocation> {
+public class IconSetting extends FrameSettingBase<Location> {
 
     /**
      * Constructs a new IconSetting with the specified frame.

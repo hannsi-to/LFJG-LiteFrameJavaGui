@@ -11,7 +11,7 @@ import me.hannsi.lfjg.render.renderers.video.GLVideo;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
 import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 
 import static me.hannsi.lfjg.frame.frame.IFrame.eventManager;
 
@@ -31,7 +31,7 @@ public class TestVideo1 implements IScene {
     @Override
     public void init() {
         glVideo = new GLVideo("TestVideo1");
-        glVideo.video(new ResourcesLocation("video/[FMV] world.execute(me); - MILI [cn4M-fH08XY].webm"), 0, 0, frame.getWindowWidth(), frame.getWindowHeight());
+        glVideo.video(Location.fromResource("video/[FMV] world.execute(me); - MILI [cn4M-fH08XY].webm"), 0, 0, frame.getWindowWidth(), frame.getWindowHeight());
 
         effectCache = EffectCache.initEffectCache();
         effectCache.createCache("DrawObject1", new DrawObject());

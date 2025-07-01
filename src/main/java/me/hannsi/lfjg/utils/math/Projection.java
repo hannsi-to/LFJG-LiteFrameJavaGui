@@ -153,9 +153,8 @@ public class Projection {
      * @param windowHeight the height of the window
      * @param zFar         the far clipping plane distance
      * @param zNear        the near clipping plane distance
-     * @return the updated Projection instance
      */
-    public Projection updateProjMatrix(float fov, int windowWidth, int windowHeight, float zFar, float zNear) {
+    public void updateProjMatrix(float fov, int windowWidth, int windowHeight, float zFar, float zNear) {
         float aspectWindow = (float) windowWidth / windowHeight;
 
         switch (projectionType) {
@@ -167,8 +166,6 @@ public class Projection {
             }
             default -> throw new IllegalStateException("Unexpected value: " + projectionType);
         }
-
-        return this;
     }
 
 }

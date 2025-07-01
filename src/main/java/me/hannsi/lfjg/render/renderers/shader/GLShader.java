@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.renderers.shader;
 
 import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
-import me.hannsi.lfjg.utils.reflection.location.FileLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.joml.Vector2f;
 
@@ -19,7 +19,7 @@ public class GLShader extends GLPolygon {
         this.initTime = System.currentTimeMillis();
     }
 
-    public void shader(FileLocation fragmentShaderPath, float x1, float y1, float x2, float y2) {
+    public void shader(Location fragmentShaderPath, float x1, float y1, float x2, float y2) {
         put().vertex(new Vector2f(x1, y1)).end();
         put().vertex(new Vector2f(x2, y1)).end();
         put().vertex(new Vector2f(x2, y2)).end();
@@ -29,15 +29,15 @@ public class GLShader extends GLPolygon {
         rendering(true, fragmentShaderPath);
     }
 
-    public void shaderWH(FileLocation fragmentShaderPath, float x, float y, float width, float height) {
+    public void shaderWH(Location fragmentShaderPath, float x, float y, float width, float height) {
         shader(fragmentShaderPath, x, y, x + width, y + height);
     }
 
-    public void shader(FileLocation fragmentShaderPath, double x1, double y1, double x2, double y2) {
+    public void shader(Location fragmentShaderPath, double x1, double y1, double x2, double y2) {
         shader(fragmentShaderPath, (float) x1, (float) y1, (float) x2, (float) y2);
     }
 
-    public void shaderWH(FileLocation fragmentShaderPath, double x, double y, double width, double height) {
+    public void shaderWH(Location fragmentShaderPath, double x, double y, double width, double height) {
         shader(fragmentShaderPath, x, y, x + width, y + height);
     }
 

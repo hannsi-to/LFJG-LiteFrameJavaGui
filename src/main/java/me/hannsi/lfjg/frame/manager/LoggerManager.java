@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.frame.manager.managers;
+package me.hannsi.lfjg.frame.manager;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -24,14 +24,14 @@ import java.io.StringWriter;
 public class LoggerManager {
     /**
      * -- GETTER --
-     *  Retrieves the logger.
-     *
-     *
+     * Retrieves the logger.
+     * <p>
+     * <p>
      * -- SETTER --
-     *  Sets the logger.
+     * Sets the logger.
      *
-     @return the logger
-      * @param logger the logger to set
+     * @return the logger
+     * @param logger the logger to set
      */
     private Logger logger;
 

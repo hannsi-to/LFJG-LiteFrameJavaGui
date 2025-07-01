@@ -5,7 +5,7 @@ import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import org.joml.Vector4f;
 
 /**
@@ -16,62 +16,62 @@ import org.joml.Vector4f;
 public class EdgeExtraction extends EffectBase {
     /**
      * -- SETTER --
-     *  Sets the strength of the edges.
-     *
-     *
+     * Sets the strength of the edges.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the strength of the edges.
+     * Gets the strength of the edges.
      *
-     @param edgeStrength the strength of the edges
-      * @return the strength of the edges
+     * @param edgeStrength the strength of the edges
+     * @return the strength of the edges
      */
     private float edgeStrength;
     /**
      * -- SETTER --
-     *  Sets the threshold for edge detection.
-     *
-     *
+     * Sets the threshold for edge detection.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the threshold for edge detection.
+     * Gets the threshold for edge detection.
      *
-     @param threshold the threshold for edge detection
-      * @return the threshold for edge detection
+     * @param threshold the threshold for edge detection
+     * @return the threshold for edge detection
      */
     private float threshold;
     /**
      * -- SETTER --
-     *  Sets whether luminance edge detection is enabled.
-     *
-     *
+     * Sets whether luminance edge detection is enabled.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Checks if luminance edge detection is enabled.
+     * Checks if luminance edge detection is enabled.
      *
-     @param enableLuminanceEdge true to enable luminance edge detection, false otherwise
-      * @return true if luminance edge detection is enabled, false otherwise
+     * @param enableLuminanceEdge true to enable luminance edge detection, false otherwise
+     * @return true if luminance edge detection is enabled, false otherwise
      */
     private boolean enableLuminanceEdge;
     /**
      * -- SETTER --
-     *  Sets whether alpha edge detection is enabled.
-     *
-     *
+     * Sets whether alpha edge detection is enabled.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Checks if alpha edge detection is enabled.
+     * Checks if alpha edge detection is enabled.
      *
-     @param enableAlphaEdge true to enable alpha edge detection, false otherwise
-      * @return true if alpha edge detection is enabled, false otherwise
+     * @param enableAlphaEdge true to enable alpha edge detection, false otherwise
+     * @return true if alpha edge detection is enabled, false otherwise
      */
     private boolean enableAlphaEdge;
     /**
      * -- SETTER --
-     *  Sets the color of the edges.
-     *
-     *
+     * Sets the color of the edges.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the color of the edges.
+     * Gets the color of the edges.
      *
-     @param edgeColor the color of the edges
-      * @return the color of the edges
+     * @param edgeColor the color of the edges
+     * @return the color of the edges
      */
     private Color edgeColor;
 
@@ -85,7 +85,7 @@ public class EdgeExtraction extends EffectBase {
      * @param edgeColor           the color of the edges
      */
     public EdgeExtraction(float edgeStrength, float threshold, boolean enableLuminanceEdge, boolean enableAlphaEdge, Color edgeColor) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/EdgeExtraction.fsh"), true, 14, "EdgeExtraction");
+        super(Location.fromResource("shader/frameBuffer/filter/EdgeExtraction.fsh"), true, 14, "EdgeExtraction");
 
         this.edgeStrength = edgeStrength;
         this.threshold = threshold;
@@ -150,11 +150,11 @@ public class EdgeExtraction extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("edgeStrength", edgeStrength);
-        getFrameBuffer().getShaderProgramFBO().setUniform("threshold", threshold);
-        getFrameBuffer().getShaderProgramFBO().setUniform("enableLuminanceEdge", enableLuminanceEdge);
-        getFrameBuffer().getShaderProgramFBO().setUniform("enableAlphaEdge", enableAlphaEdge);
-        getFrameBuffer().getShaderProgramFBO().setUniform("edgeColor", new Vector4f(edgeColor.getRedF(), edgeColor.getGreenF(), edgeColor.getBlueF(), edgeColor.getAlphaF()));
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("edgeStrength", edgeStrength);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("threshold", threshold);
+        getFrameBuffer().getShaderProgramFBO().setUniformB("enableLuminanceEdge", enableLuminanceEdge);
+        getFrameBuffer().getShaderProgramFBO().setUniformB("enableAlphaEdge", enableAlphaEdge);
+        getFrameBuffer().getShaderProgramFBO().setUniform4f("edgeColor", new Vector4f(edgeColor.getRedF(), edgeColor.getGreenF(), edgeColor.getBlueF(), edgeColor.getAlphaF()));
 
         super.setUniform(baseGLObject);
     }

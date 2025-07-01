@@ -7,15 +7,15 @@ import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 
 /**
  * Base class for effects in OpenGL.
  */
 @Getter
 public class EffectBase {
-    private final ResourcesLocation vertexPath;
-    private final ResourcesLocation fragmentPath;
+    private final Location vertexPath;
+    private final Location fragmentPath;
     /**
      * -- GETTER --
      * Gets the name of the effect.
@@ -68,7 +68,7 @@ public class EffectBase {
      * @param ignoreGLObject the GL objects to ignore
      */
     @SafeVarargs
-    public EffectBase(ResourcesLocation vertexPath, ResourcesLocation fragmentPath, int id, String name, Class<GLObject>... ignoreGLObject) {
+    public EffectBase(Location vertexPath, Location fragmentPath, int id, String name, Class<GLObject>... ignoreGLObject) {
         this.id = id;
         this.name = name;
         this.ignoreGLObject = ignoreGLObject;
@@ -84,7 +84,7 @@ public class EffectBase {
      * @param id             the ID of the effect
      * @param name           the name of the effect
      */
-    public EffectBase(ResourcesLocation path, boolean isFragmentPath, int id, String name) {
+    public EffectBase(Location path, boolean isFragmentPath, int id, String name) {
         this(isFragmentPath ? null : path, isFragmentPath ? path : null, id, name);
     }
 
@@ -98,7 +98,7 @@ public class EffectBase {
      * @param ignoreGLObject the GL objects to ignore
      */
     @SafeVarargs
-    public EffectBase(ResourcesLocation path, boolean isFragmentPath, int id, String name, Class<GLObject>... ignoreGLObject) {
+    public EffectBase(Location path, boolean isFragmentPath, int id, String name, Class<GLObject>... ignoreGLObject) {
         this(isFragmentPath ? null : path, isFragmentPath ? path : null, id, name, ignoreGLObject);
     }
 

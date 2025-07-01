@@ -6,9 +6,8 @@ import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.utils.math.io.IOUtil;
-import me.hannsi.lfjg.utils.reflection.location.FileLocation;
 import me.hannsi.lfjg.utils.reflection.location.Location;
-import me.hannsi.lfjg.utils.reflection.location.URLLocation;
+import me.hannsi.lfjg.utils.type.types.LocationType;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
@@ -57,12 +56,11 @@ public class Font {
     private @NotNull InputStream getInputStream() {
         InputStream inputStream = null;
         try {
-            if (location.isUrl()) {
-                URL url = ((URLLocation) location).getURL();
+            if (location.locationType() == LocationType.URL) {
+                URL url = location.getURL();
                 inputStream = url.openStream();
-            } else if (location.isPath()) {
-                FileLocation fileLocation = (FileLocation) location;
-                inputStream = fileLocation.getInputStream();
+            } else if (location.locationType() == LocationType.FILE || location.locationType() == LocationType.RESOURCE) {
+                inputStream = location.openStream();
             }
 
             if (inputStream == null) {

@@ -5,9 +5,9 @@ import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
 import me.hannsi.lfjg.utils.math.io.IOUtil;
-import me.hannsi.lfjg.utils.reflection.location.FileLocation;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,7 +23,7 @@ public class GLSLCode {
      * @return the resource location of the shader
      */
     @Getter
-    private final FileLocation fileLocation;
+    private final Location fileLocation;
     private boolean checkInclude;
 
     /**
@@ -31,14 +31,12 @@ public class GLSLCode {
      *
      * @param fileLocation the location of the shader resource
      */
-    public GLSLCode(FileLocation fileLocation) {
+    public GLSLCode(Location fileLocation) {
         this.fileLocation = fileLocation;
         checkInclude = true;
     }
 
     public void cleanup() {
-        fileLocation.cleanup();
-
         new LogGenerator(
                 LogGenerateType.CLEANUP,
                 getClass(),
@@ -63,7 +61,12 @@ public class GLSLCode {
             checkInclude = true;
 
             String includeFilePath = matcher.group(1);
-            String includeCode = IOUtil.readInputStreamToString(new ResourcesLocation(includeFilePath).getInputStream());
+            String includeCode;
+            try {
+                includeCode = IOUtil.readInputStreamToString(Location.fromResource(includeFilePath).openStream());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             shaderCode = shaderCode.replace(matcher.group(0), includeCode);
         }
 
@@ -80,7 +83,12 @@ public class GLSLCode {
      * @return the final shader code
      */
     public String createCode() {
-        String shaderCode = IOUtil.readInputStreamToString(fileLocation.getInputStream());
+        String shaderCode;
+        try {
+            shaderCode = IOUtil.readInputStreamToString(fileLocation.openStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         shaderCode = processIncludes(shaderCode);
 
         return shaderCode;

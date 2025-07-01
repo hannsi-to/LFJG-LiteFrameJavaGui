@@ -2,7 +2,7 @@ package me.hannsi.lfjg.render.effect.effects;
 
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 
 /**
  * Class representing a Frame Buffer Contents effect in OpenGL.
@@ -13,7 +13,7 @@ public class FrameBufferContents extends EffectBase {
      * Constructs a new FrameBufferContents effect with the specified resolution.
      */
     public FrameBufferContents() {
-        super(new ResourcesLocation("shader/frameBuffer/filter/FrameBufferContents.fsh"), true, 25, "FrameBufferContents");
+        super(Location.fromResource("shader/frameBuffer/filter/FrameBufferContents.fsh"), true, 25, "FrameBufferContents");
     }
 
     /**

@@ -6,7 +6,7 @@ import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -19,62 +19,62 @@ import org.joml.Vector3f;
 public class Flash extends EffectBase {
     /**
      * -- SETTER --
-     *  Sets the intensity of the flash.
-     *
-     *
+     * Sets the intensity of the flash.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the intensity of the flash.
+     * Gets the intensity of the flash.
      *
-     @param intensity the intensity of the flash
-      * @return the intensity of the flash
+     * @param intensity the intensity of the flash
+     * @return the intensity of the flash
      */
     private float intensity;
     /**
      * -- SETTER --
-     *  Sets the x-coordinate of the flash position.
-     *
-     *
+     * Sets the x-coordinate of the flash position.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the x-coordinate of the flash position.
+     * Gets the x-coordinate of the flash position.
      *
-     @param x the x-coordinate of the flash position
-      * @return the x-coordinate of the flash position
+     * @param x the x-coordinate of the flash position
+     * @return the x-coordinate of the flash position
      */
     private float x;
     /**
      * -- SETTER --
-     *  Sets the y-coordinate of the flash position.
-     *
-     *
+     * Sets the y-coordinate of the flash position.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the y-coordinate of the flash position.
+     * Gets the y-coordinate of the flash position.
      *
-     @param y the y-coordinate of the flash position
-      * @return the y-coordinate of the flash position
+     * @param y the y-coordinate of the flash position
+     * @return the y-coordinate of the flash position
      */
     private float y;
     /**
      * -- SETTER --
-     *  Sets the blend mode of the flash.
-     *
-     *
+     * Sets the blend mode of the flash.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the blend mode of the flash.
+     * Gets the blend mode of the flash.
      *
-     @param flashBlendMode the blend mode of the flash
-      * @return the blend mode of the flash
+     * @param flashBlendMode the blend mode of the flash
+     * @return the blend mode of the flash
      */
     private FlashBlendMode flashBlendMode;
     /**
      * -- SETTER --
-     *  Sets the color of the light.
-     *
-     *
+     * Sets the color of the light.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the color of the light.
+     * Gets the color of the light.
      *
-     @param lightColor the color of the light
-      * @return the color of the light
+     * @param lightColor the color of the light
+     * @return the color of the light
      */
     private Color lightColor;
 
@@ -88,7 +88,7 @@ public class Flash extends EffectBase {
      * @param lightColor     the color of the light
      */
     public Flash(float intensity, float x, float y, FlashBlendMode flashBlendMode, Color lightColor) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/Flash.fsh"), true, 10, "Flash");
+        super(Location.fromResource("shader/frameBuffer/filter/Flash.fsh"), true, 10, "Flash");
 
         this.intensity = intensity;
         this.x = x;
@@ -153,11 +153,11 @@ public class Flash extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("screenSize", LFJGContext.frameBufferSize);
-        getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
-        getFrameBuffer().getShaderProgramFBO().setUniform("screenPosition", new Vector2f(x, y));
+        getFrameBuffer().getShaderProgramFBO().setUniform2i("screenSize", LFJGContext.frameBufferSize);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("intensity", intensity);
+        getFrameBuffer().getShaderProgramFBO().setUniform2f("screenPosition", new Vector2f(x, y));
         getFrameBuffer().getShaderProgramFBO().setUniform1i("blendMode", flashBlendMode.getId());
-        getFrameBuffer().getShaderProgramFBO().setUniform("lightColor", new Vector3f(lightColor.getRedF(), lightColor.getGreenF(), lightColor.getBlueF()));
+        getFrameBuffer().getShaderProgramFBO().setUniform3f("lightColor", new Vector3f(lightColor.getRedF(), lightColor.getGreenF(), lightColor.getBlueF()));
 
         super.setUniform(baseGLObject);
     }

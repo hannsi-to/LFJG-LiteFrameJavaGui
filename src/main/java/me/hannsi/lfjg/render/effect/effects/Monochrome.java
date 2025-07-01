@@ -5,7 +5,7 @@ import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.reflection.location.ResourcesLocation;
+import me.hannsi.lfjg.utils.reflection.location.Location;
 import org.joml.Vector3f;
 
 /**
@@ -16,38 +16,38 @@ import org.joml.Vector3f;
 public class Monochrome extends EffectBase {
     /**
      * -- SETTER --
-     *  Sets the intensity of the monochrome effect.
-     *
-     *
+     * Sets the intensity of the monochrome effect.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the intensity of the monochrome effect.
+     * Gets the intensity of the monochrome effect.
      *
-     @param intensity the intensity of the monochrome effect
-      * @return the intensity of the monochrome effect
+     * @param intensity the intensity of the monochrome effect
+     * @return the intensity of the monochrome effect
      */
     private float intensity;
     /**
      * -- SETTER --
-     *  Sets the color to be used for the monochrome effect.
-     *
-     *
+     * Sets the color to be used for the monochrome effect.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the color to be used for the monochrome effect.
+     * Gets the color to be used for the monochrome effect.
      *
-     @param color the color to be used for the monochrome effect
-      * @return the color to be used for the monochrome effect
+     * @param color the color to be used for the monochrome effect
+     * @return the color to be used for the monochrome effect
      */
     private Color color;
     /**
      * -- SETTER --
-     *  Sets whether to preserve the brightness.
-     *
-     *
+     * Sets whether to preserve the brightness.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Checks if the brightness is preserved.
+     * Checks if the brightness is preserved.
      *
-     @param preserveBrightness true to preserve the brightness, false otherwise
-      * @return true if the brightness is preserved, false otherwise
+     * @param preserveBrightness true to preserve the brightness, false otherwise
+     * @return true if the brightness is preserved, false otherwise
      */
     private boolean preserveBrightness;
 
@@ -59,7 +59,7 @@ public class Monochrome extends EffectBase {
      * @param preserveBrightness whether to preserve the brightness
      */
     public Monochrome(float intensity, Color color, boolean preserveBrightness) {
-        super(new ResourcesLocation("shader/frameBuffer/filter/Monochrome.fsh"), true, 23, "Monochrome");
+        super(Location.fromResource("shader/frameBuffer/filter/Monochrome.fsh"), true, 23, "Monochrome");
 
         this.intensity = intensity;
         this.color = color;
@@ -117,9 +117,9 @@ public class Monochrome extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
-        getFrameBuffer().getShaderProgramFBO().setUniform("color", new Vector3f(color.getRedF(), color.getGreenF(), color.getBlueF()));
-        getFrameBuffer().getShaderProgramFBO().setUniform("preserveBrightness", preserveBrightness);
+        getFrameBuffer().getShaderProgramFBO().setUniform1f("intensity", intensity);
+        getFrameBuffer().getShaderProgramFBO().setUniform3f("color", new Vector3f(color.getRedF(), color.getGreenF(), color.getBlueF()));
+        getFrameBuffer().getShaderProgramFBO().setUniformB("preserveBrightness", preserveBrightness);
 
         super.setUniform(baseGLObject);
     }
