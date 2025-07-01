@@ -1,0 +1,124 @@
+package me.hannsi.lfjg.render.renderers.model;
+
+import lombok.Getter;
+import me.hannsi.lfjg.render.debug.exceptions.model.ModelException;
+import me.hannsi.lfjg.render.system.mesh.Mesh;
+import me.hannsi.lfjg.render.system.model.Entity;
+import me.hannsi.lfjg.render.system.model.Material;
+import me.hannsi.lfjg.render.system.model.Model;
+import me.hannsi.lfjg.render.system.model.ModelCache;
+import me.hannsi.lfjg.render.system.rendering.GLStateCache;
+import me.hannsi.lfjg.render.system.rendering.VAORendering;
+import me.hannsi.lfjg.render.system.shader.ShaderProgram;
+import me.hannsi.lfjg.utils.graphics.image.TextureCache;
+import me.hannsi.lfjg.utils.graphics.image.TextureLoader;
+import me.hannsi.lfjg.utils.math.Projection;
+import me.hannsi.lfjg.utils.reflection.location.Location;
+import me.hannsi.lfjg.utils.toolkit.Camera;
+import me.hannsi.lfjg.utils.type.types.ProjectionType;
+
+import java.util.Collection;
+import java.util.List;
+
+import static me.hannsi.lfjg.frame.frame.LFJGContext.windowSize;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL13.*;
+
+@Getter
+public class ModelRender {
+    private final ShaderProgram shaderProgram;
+    private final VAORendering vaoRendering;
+
+    private Projection projection;
+    private ModelCache modelCache;
+    private TextureCache textureCache;
+    private Camera camera;
+
+    ModelRender() {
+        shaderProgram = new ShaderProgram();
+        shaderProgram.createVertexShader(Location.fromResource("shader/scene/model/VertexShader.vsh"));
+        shaderProgram.createFragmentShader(Location.fromResource("shader/scene/model/FragmentShader.fsh"));
+        shaderProgram.link();
+
+        vaoRendering = new VAORendering();
+
+        projection = new Projection(ProjectionType.PERSPECTIVE_PROJECTION, Projection.DEFAULT_FOV, windowSize.x(), windowSize.y(), Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
+        camera = new Camera();
+    }
+
+    public static ModelRender createModelRender() {
+        return new ModelRender();
+    }
+
+    public ModelRender projection(Projection projection) {
+        this.projection = projection;
+        return this;
+    }
+
+    public ModelRender modelCache(ModelCache modelCache) {
+        this.modelCache = modelCache;
+        return this;
+    }
+
+    public ModelRender textureCache(TextureCache textureCache) {
+        this.textureCache = textureCache;
+        return this;
+    }
+
+    public ModelRender camera(Camera camera) {
+        this.camera = camera;
+        return this;
+    }
+
+    public void render() {
+        GLStateCache.enable(GL_DEPTH_TEST);
+
+        shaderProgram.bind();
+
+        shaderProgram.setUniform("textureSampler", 0);
+        shaderProgram.setUniform("projectionMatrix", projection.getProjMatrix());
+        shaderProgram.setUniform("viewMatrix", camera.getViewMatrix());
+
+        Collection<Model> models = modelCache.getModels().values();
+        for (Model model : models) {
+            List<Entity> entities = model.getEntities();
+
+            for (Material material : model.getMaterials()) {
+                shaderProgram.setUniform("materialType", material.getMaterialType().getId());
+
+                switch (material.getMaterialType()) {
+                    case NO_MATERIAL, COLOR -> {
+                    }
+                    case TEXTURE -> {
+                        if (textureCache == null) {
+                            throw new ModelException("To use a texture material, TextureCache must be set.");
+                        }
+
+                        glActiveTexture(GL_TEXTURE0);
+                        GLStateCache.enable(GL_TEXTURE_2D);
+
+                        TextureLoader textureLoader = textureCache.getTexture(material.getTextureLocation());
+                        if (textureLoader == null) {
+                            throw new ModelException("Not found texture: " + material.getTextureLocation().path());
+                        }
+                        textureLoader.bind();
+                    }
+                    default -> throw new IllegalStateException("Unexpected value: " + material.getMaterialType());
+                }
+
+                for (Mesh mesh : material.getMeshes()) {
+                    for (Entity entity : entities) {
+                        shaderProgram.setUniform("modelMatrix", entity.getModelMatrix());
+                        vaoRendering.drawMesh(mesh, GL_TRIANGLES);
+                    }
+                }
+            }
+        }
+
+        shaderProgram.unbind();
+    }
+
+    public Model getModel(String id) {
+        return getModelCache().getModels().get(id);
+    }
+}

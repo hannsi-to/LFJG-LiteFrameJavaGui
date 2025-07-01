@@ -17,7 +17,7 @@ import java.util.*;
 import static org.lwjgl.opengl.GL30.*;
 
 @Getter
-public class Mesh implements AutoCloseable {
+public class Mesh {
     private final int vaoId;
     private final HashMap<BufferObjectType, PersistentMappedVBO> vboIds;
     private final List<DrawCommand> drawCommands;
@@ -45,6 +45,31 @@ public class Mesh implements AutoCloseable {
 
     public static Mesh initMesh() {
         return new Mesh();
+    }
+
+    public String getIds() {
+        StringBuilder ids = new StringBuilder();
+        for (Map.Entry<BufferObjectType, PersistentMappedVBO> vboEntry : vboIds.entrySet()) {
+            BufferObjectType bufferObjectType = vboEntry.getKey();
+            PersistentMappedVBO persistentMappedVBO = vboEntry.getValue();
+            int[] bufferId = persistentMappedVBO.getBufferIds();
+
+            ids.append(bufferObjectType.getName()).append(": ").append(Arrays.toString(bufferId)).append(" | ");
+        }
+
+        if (useElementBufferObject) {
+            int id = eboId.getBufferId();
+            ids.append("ElementBufferObject: ").append(id).append(" | ");
+        }
+
+        if (useIndirect) {
+            int id = iboId.getBufferId();
+            ids.append("IndirectBufferObject: ").append(id).append(" | ");
+        }
+
+        ids.append("VertexArrayObject: ").append(vaoId);
+
+        return ids.toString();
     }
 
     public void cleanup() {
@@ -148,11 +173,7 @@ public class Mesh implements AutoCloseable {
         return this;
     }
 
-    public Mesh createBufferObject3D(float[] positions, float[] normals, float[] textures, int[] indices) {
-        this.useElementBufferObject = true;
-
-        numVertices = indices.length;
-
+    public Mesh createBufferObject3D(float[] positions, int[] indices, float[] colors, float[] textures, float[] normals) {
         vboIds.put(
                 BufferObjectType.POSITIONS_BUFFER,
                 new PersistentMappedVBO(
@@ -162,26 +183,45 @@ public class Mesh implements AutoCloseable {
         );
         count = positions.length / projectionType.getStride();
 
-        vboIds.put(
-                BufferObjectType.NORMALS_BUFFER,
-                new PersistentMappedVBO(
-                        normals.length,
-                        flagsHint
-                ).update(normals).attribute(AttributeType.NORMAL_3D)
-        );
+        if (indices != null) {
+            this.useElementBufferObject = true;
+            numVertices = indices.length;
 
-        vboIds.put(
-                BufferObjectType.TEXTURE_BUFFER,
-                new PersistentMappedVBO(
-                        textures.length,
-                        flagsHint
-                ).update(textures).attribute(AttributeType.TEXTURE)
-        );
+            eboId = new PersistentMappedEBO(
+                    numVertices,
+                    flagsHint
+            ).update(indices);
+        }
 
-        eboId = new PersistentMappedEBO(
-                numVertices,
-                flagsHint
-        ).update(indices);
+        if (colors != null) {
+            vboIds.put(
+                    BufferObjectType.COLORS_BUFFER,
+                    new PersistentMappedVBO(
+                            colors.length,
+                            flagsHint
+                    ).update(colors).attribute(AttributeType.COLOR)
+            );
+        }
+
+        if (textures != null) {
+            vboIds.put(
+                    BufferObjectType.TEXTURE_BUFFER,
+                    new PersistentMappedVBO(
+                            textures.length,
+                            flagsHint
+                    ).update(textures).attribute(AttributeType.TEXTURE)
+            );
+        }
+
+        if (normals != null) {
+            vboIds.put(
+                    BufferObjectType.NORMALS_BUFFER,
+                    new PersistentMappedVBO(
+                            normals.length,
+                            flagsHint
+                    ).update(normals).attribute(AttributeType.NORMAL_3D)
+            );
+        }
 
         if (useIndirect) {
             createIndirectBuffer();
@@ -297,10 +337,5 @@ public class Mesh implements AutoCloseable {
     private void uploadIndirectBuffer() {
         iboId = new PersistentMappedIBO(drawCommands.size(), flagsHint)
                 .update(drawCommands);
-    }
-
-    @Override
-    public void close() {
-        cleanup();
     }
 }
