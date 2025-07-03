@@ -2,19 +2,13 @@ package me.hannsi.test;
 
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.renderers.model.ModelRender;
-import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.render.system.model.Entity;
-import me.hannsi.lfjg.render.system.model.Material;
-import me.hannsi.lfjg.render.system.model.Model;
 import me.hannsi.lfjg.render.system.model.ModelCache;
+import me.hannsi.lfjg.render.system.model.ModelLoader;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.utils.reflection.location.Location;
-import me.hannsi.lfjg.utils.type.types.MaterialType;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Test3D1 implements IScene {
     Scene scene;
@@ -139,43 +133,31 @@ public class Test3D1 implements IScene {
                 // Back face
                 4, 6, 7, 5, 4, 7,};
 
-        List<Material> materials = new ArrayList<>();
-        Location cubeTexture = Location.fromResource("model/cube/cube.png");
-        TextureCache textureCache = TextureCache.createTextureCache()
-                .createCache(cubeTexture);
-        Material material = Material.createMaterial()
-                .materialType(MaterialType.TEXTURE)
-                .texturePath(cubeTexture)
-                .createMesh(
-                        Mesh.initMesh()
-                                .createBufferObject3D(positions, indices, colors, textCoords, null)
-                                .builderClose()
-                );
-        materials.add(material);
+        TextureCache textureCache = TextureCache.createTextureCache();
 
         modelRender = ModelRender.createModelRender()
                 .modelCache(
                         ModelCache.createModelCache()
-                                .createModelCache(
-                                        Model
-                                                .createModel("cube-model", materials)
-                                                .addEntity(
-                                                        entity = Entity.createEntity("cube-entity")
-                                                                .setPosition(0, 0, -2)
-                                                                .updateModelMatrix()
-                                                )
-                                )
 //                                .createModelCache(
-//                                        ModelLoader.createModelLoader("cube-model")
-//                                                .textureCache(textureCache)
-//                                                .modelLocation(Location.fromResource("model/cube/cube.obj"))
-//                                                .loadModel()
+//                                        Model
+//                                                .createModel("cube-model", materials)
 //                                                .addEntity(
 //                                                        entity = Entity.createEntity("cube-entity")
 //                                                                .setPosition(0, 0, -2)
 //                                                                .updateModelMatrix()
 //                                                )
 //                                )
+                                .createModelCache(
+                                        ModelLoader.createModelLoader("cube-model")
+                                                .textureCache(textureCache)
+                                                .modelLocation(Location.fromResource("model/tripo/tripo_pbr_model_2412d272-991e-418d-adb2-6cfe4820dc81.obj"))
+                                                .loadModel()
+                                                .addEntity(
+                                                        entity = Entity.createEntity("cube-entity")
+                                                                .setPosition(0, 0, -2)
+                                                                .updateModelMatrix()
+                                                )
+                                )
                 )
                 .textureCache(textureCache);
     }
