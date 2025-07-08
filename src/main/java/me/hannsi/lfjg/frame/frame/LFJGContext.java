@@ -15,7 +15,8 @@ public class LFJGContext {
     public static Vector2i windowSize;
     public static Vector2i frameBufferSize;
     public static float devicePixelRatio;
-    public static Projection projection;
+    public static Projection projection2D;
+    public static Projection projection3D;
     public static long nanoVGContext;
 
     public static MouseInfo mouseInfo;

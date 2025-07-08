@@ -115,7 +115,7 @@ public class EffectBase {
     }
 
     public void create(GLObject glObject) {
-        frameBuffer = new FrameBuffer(glObject.getX(), glObject.getY(), glObject.getWidth(), glObject.getHeight());
+        frameBuffer = new FrameBuffer(glObject.getTransform().getX(), glObject.getTransform().getY(), glObject.getTransform().getWidth(), glObject.getTransform().getHeight());
 
         if (vertexPath != null) {
             frameBuffer.setVertexShaderFBO(vertexPath);

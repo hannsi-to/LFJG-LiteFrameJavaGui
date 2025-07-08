@@ -50,7 +50,7 @@ public class GLShader extends GLPolygon {
     @Override
     public void draw() {
         getShaderProgram().bind();
-        setUniform("resolution", getWidth(), getHeight());
+        setUniform("resolution", getTransform().getWidth(), getTransform().getHeight());
         setUniform("time", (System.currentTimeMillis() - initTime) / 1000f);
         getShaderProgram().unbind();
 

@@ -44,11 +44,6 @@ public class GLObject implements Cloneable {
     private float lineWidth;
     private float pointSize;
 
-    private float x;
-    private float y;
-    private float width;
-    private float height;
-
     private Transform transform;
 
     /**
@@ -65,7 +60,7 @@ public class GLObject implements Cloneable {
         this.shaderProgram = null;
 
         this.viewMatrix = null;
-        this.transform = new Transform();
+        this.transform = new Transform(this);
 
         this.lineWidth = -1f;
         this.pointSize = -1f;
@@ -178,7 +173,7 @@ public class GLObject implements Cloneable {
     }
 
     private void uploadUniforms() {
-        shaderProgram.setUniformMatrix4fv("projectionMatrix", LFJGContext.projection.getProjMatrix());
+        shaderProgram.setUniformMatrix4fv("projectionMatrix", LFJGContext.projection2D.getProjMatrix());
         shaderProgram.setUniformMatrix4fv("modelMatrix", transform.getModelMatrix());
         shaderProgram.setUniformMatrix4fv("viewMatrix", viewMatrix);
         shaderProgram.setUniform2i("resolution", LFJGContext.frameBufferSize);

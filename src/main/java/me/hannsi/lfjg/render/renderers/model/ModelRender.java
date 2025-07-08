@@ -12,15 +12,13 @@ import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.utils.graphics.image.TextureLoader;
-import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.toolkit.Camera;
-import me.hannsi.lfjg.utils.type.types.ProjectionType;
 
 import java.util.Collection;
 import java.util.List;
 
-import static me.hannsi.lfjg.frame.frame.LFJGContext.windowSize;
+import static me.hannsi.lfjg.frame.frame.LFJGContext.projection3D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL13.*;
 
@@ -29,7 +27,6 @@ public class ModelRender {
     private final ShaderProgram shaderProgram;
     private final VAORendering vaoRendering;
 
-    private Projection projection;
     private ModelCache modelCache;
     private TextureCache textureCache;
     private Camera camera;
@@ -42,17 +39,11 @@ public class ModelRender {
 
         vaoRendering = new VAORendering();
 
-        projection = new Projection(ProjectionType.PERSPECTIVE_PROJECTION, Projection.DEFAULT_FOV, windowSize.x(), windowSize.y(), Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
         camera = new Camera();
     }
 
     public static ModelRender createModelRender() {
         return new ModelRender();
-    }
-
-    public ModelRender projection(Projection projection) {
-        this.projection = projection;
-        return this;
     }
 
     public ModelRender modelCache(ModelCache modelCache) {
@@ -76,7 +67,7 @@ public class ModelRender {
         shaderProgram.bind();
 
         shaderProgram.setUniform("textureSampler", 0);
-        shaderProgram.setUniform("projectionMatrix", projection.getProjMatrix());
+        shaderProgram.setUniform("projectionMatrix", projection3D.getProjMatrix());
         shaderProgram.setUniform("viewMatrix", camera.getViewMatrix());
 
         Collection<Model> models = modelCache.getModels().values();

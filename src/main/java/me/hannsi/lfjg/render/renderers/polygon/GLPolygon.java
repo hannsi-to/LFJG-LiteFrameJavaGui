@@ -10,6 +10,7 @@ import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.type.types.BufferObjectType;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 
 import java.util.Arrays;
 
@@ -194,13 +195,9 @@ public class GLPolygon extends GLObject {
     }
 
     private void setGLObjectParameter() {
-        float[] bounds = getBounds();
-        setX(bounds[0]);
-        setY(bounds[1]);
-        setWidth(bounds[2] - bounds[0]);
-        setHeight(bounds[3] - bounds[1]);
+        getTransform().setBound(getBounds());
 
-        Vector2f center = new Vector2f(bounds[0] + getWidth() / 2f, bounds[1] + getHeight() / 2f);
+        Vector2f center = new Vector2f(getTransform().getX() + getTransform().getWidth() / 2f, getTransform().getY() + getTransform().getHeight() / 2f);
         getTransform().setCenterX(center.x());
         getTransform().setCenterY(center.y());
 
@@ -213,35 +210,35 @@ public class GLPolygon extends GLObject {
         getTransform().setScaleZ(1);
     }
 
-    private float[] getBounds() {
-        if (vertex == null || vertex.length < 2) {
-            throw new IllegalArgumentException("Vertex array is null or invalid.");
+    private Vector4f getBounds() {
+        if (vertex == null || vertex.length == 0) {
+            return new Vector4f(0, 0, 0, 0);
         }
 
         float minX = vertex[0];
-        float maxX = vertex[0];
         float minY = vertex[1];
+        float maxX = vertex[0];
         float maxY = vertex[1];
 
-        for (int i = 2; i < vertex.length; i += 2) {
-            float x = vertex[i];
-            float y = vertex[i + 1];
 
-            if (x < minX) {
-                minX = x;
-            }
-            if (x > maxX) {
-                maxX = x;
-            }
-            if (y < minY) {
-                minY = y;
-            }
-            if (y > maxY) {
-                maxY = y;
-            }
+        for (int v = 0; v < vertex.length; v += 2) {
+            minX = Math.min(minX, vertex[v]);
+            minY = Math.min(minY, vertex[v]);
+            maxX = Math.max(maxX, vertex[v]);
+            maxY = Math.max(maxY, vertex[v]);
         }
 
-        return new float[]{minX, minY, maxX, maxY};
+        float expandLine = getLineWidth() / 2.0f;
+        float expandPoint = getPointSize() / 2.0f;
+
+        float expand = Math.max(expandLine, expandPoint);
+
+        minX -= expand;
+        minY -= expand;
+        maxX += expand;
+        maxY += expand;
+
+        return new Vector4f(minX, minY, maxX, maxY);
     }
 
     public boolean isUpdate() {

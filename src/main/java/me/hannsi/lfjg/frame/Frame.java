@@ -258,7 +258,18 @@ public class Frame implements IFrame {
         float devicePixelRatioX = (float) frameBufferWidth / windowWidth;
         float devicePixelRatioY = (float) frameBufferHeight / windowHeight;
         LFJGContext.devicePixelRatio = MathHelper.max(devicePixelRatioX, devicePixelRatioY);
-        LFJGContext.projection = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, getFrameBufferWidth(), getFrameBufferHeight());
+        
+        if (LFJGContext.projection2D == null) {
+            LFJGContext.projection2D = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, getFrameBufferWidth(), getFrameBufferHeight());
+        } else {
+            LFJGContext.projection2D.updateProjMatrix(Projection.DEFAULT_FOV, getFrameBufferWidth(), getFrameBufferHeight(), Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
+        }
+
+        if (LFJGContext.projection3D == null) {
+            LFJGContext.projection3D = new Projection(ProjectionType.PERSPECTIVE_PROJECTION, getFrameBufferWidth(), getFrameBufferHeight());
+        } else {
+            LFJGContext.projection3D.updateProjMatrix(Projection.DEFAULT_FOV, getFrameBufferWidth(), getFrameBufferHeight(), Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
+        }
     }
 
     /**

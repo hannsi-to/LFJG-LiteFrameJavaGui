@@ -2,10 +2,17 @@ package me.hannsi.lfjg.render.renderers;
 
 import lombok.Data;
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 @Data
 public class Transform {
+    private final GLObject glObject;
     private final Matrix4f modelMatrix;
+
+    private float x;
+    private float y;
+    private float width;
+    private float height;
 
     private float centerX;
     private float centerY;
@@ -19,12 +26,25 @@ public class Transform {
     private float scaleY;
     private float scaleZ;
 
-    public Transform() {
-        this(new Matrix4f());
+    public Transform(GLObject glObject) {
+        this(new Matrix4f(), glObject);
     }
 
-    public Transform(Matrix4f modelMatrix) {
+    public Transform(Matrix4f modelMatrix, GLObject glObject) {
+        this.glObject = glObject;
         this.modelMatrix = modelMatrix;
+    }
+
+    public Transform setBound(Vector4f vector4f) {
+        return setBound(vector4f.x(), vector4f.y(), vector4f.z(), vector4f.w());
+    }
+
+    public Transform setBound(float x, float y, float width, float height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        return this;
     }
 
     public Transform translate(float x, float y, float z) {

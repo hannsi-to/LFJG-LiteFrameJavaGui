@@ -47,6 +47,7 @@ public class TestPhysic1 implements IScene {
     public void drawFrame() {
         glGround.draw();
         glRect.draw();
+//        System.out.println(glRect.getTransform().getY() + " : " + glRect.getTransform().getY());
         physicWorld.simulate(1f / frame.getFps());
     }
 
