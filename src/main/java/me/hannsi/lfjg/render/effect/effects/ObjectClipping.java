@@ -60,8 +60,8 @@ public class ObjectClipping extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform1i("clippingTextureSampler", 1);
-        getFrameBuffer().getShaderProgramFBO().setUniformB("invert", invert);
+        getFrameBuffer().getShaderProgramFBO().setUniform("clippingTextureSampler", 1);
+        getFrameBuffer().getShaderProgramFBO().setUniform("invert", invert);
 
         super.setUniform(baseGLObject);
     }

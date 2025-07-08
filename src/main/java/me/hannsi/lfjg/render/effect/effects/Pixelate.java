@@ -89,8 +89,8 @@ public class Pixelate extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform2i("resolution", LFJGContext.frameBufferSize);
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("mosaicSize", mosaicSize);
+        getFrameBuffer().getShaderProgramFBO().setUniform("resolution", LFJGContext.frameBufferSize);
+        getFrameBuffer().getShaderProgramFBO().setUniform("mosaicSize", mosaicSize);
 
         super.setUniform(baseGLObject);
     }

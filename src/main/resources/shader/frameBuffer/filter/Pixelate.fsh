@@ -8,7 +8,7 @@ out vec4 fragColor;
 uniform sampler2D textureSampler;
 
 uniform float mosaicSize = 0;
-uniform vec2 resolution;
+uniform ivec2 resolution;
 
 vec4 pixelate(float size, vec2 uv){
     float dx = size / resolution.x;

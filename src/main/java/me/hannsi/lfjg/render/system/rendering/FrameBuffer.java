@@ -188,10 +188,10 @@ public class FrameBuffer {
     public void drawFrameBuffer(int textureUnit) {
         shaderProgramFBO.bind();
 
-        shaderProgramFBO.setUniformMatrix4fv("projectionMatrix", LFJGContext.projection2D.getProjMatrix());
-        shaderProgramFBO.setUniformMatrix4fv("modelMatrix", modelMatrix);
-        shaderProgramFBO.setUniformMatrix4fv("viewMatrix", viewMatrix);
-        shaderProgramFBO.setUniform1i("textureSampler", textureUnit);
+        shaderProgramFBO.setUniform("projectionMatrix", LFJGContext.projection2D.getProjMatrix());
+        shaderProgramFBO.setUniform("modelMatrix", modelMatrix);
+        shaderProgramFBO.setUniform("viewMatrix", viewMatrix);
+        shaderProgramFBO.setUniform("textureSampler", textureUnit);
 
         GLStateCache.enable(GL_BLEND);
         GLStateCache.disable(GL_DEPTH_TEST);

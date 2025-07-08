@@ -39,7 +39,7 @@ public class VideoFrameSystem {
     @Setter
     private boolean paused = false;
     private boolean doVideo = true;
-    private boolean doAudio = true;
+    private boolean doAudio = false;
     @Setter
     private long startSystemNanos = -1;
     @Setter
@@ -182,7 +182,7 @@ public class VideoFrameSystem {
         if (!paused && actualVideoTimestamp < expectedVideoTimestamp) {
             do {
                 try {
-                    frame = grabber.grabFrame(true, true, true, false, true);
+                    frame = grabber.grabFrame(doAudio, doVideo, true, false, true);
                 } catch (FFmpegFrameGrabber.Exception e) {
                     throw new RuntimeException(e);
                 }

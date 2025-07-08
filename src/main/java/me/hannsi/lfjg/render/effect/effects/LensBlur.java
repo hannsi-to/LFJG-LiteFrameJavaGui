@@ -100,8 +100,8 @@ public class LensBlur extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("range", range);
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("intensity", intensity);
+        getFrameBuffer().getShaderProgramFBO().setUniform("range", range);
+        getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
 
         super.setUniform(baseGLObject);
     }

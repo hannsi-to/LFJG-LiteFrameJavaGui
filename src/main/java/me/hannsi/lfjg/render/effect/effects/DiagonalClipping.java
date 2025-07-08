@@ -150,10 +150,10 @@ public class DiagonalClipping extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform2f("clipCenter", new Vector2f((centerX / LFJGContext.frameBufferSize.x) * 2.0f - 1.0f, (centerY / LFJGContext.frameBufferSize.y) * 2.0f - 1.0f));
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("clipAngle", clipAngle);
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("blurWidth", blurWidth);
-        getFrameBuffer().getShaderProgramFBO().setUniformB("invertClip", invertClip);
+        getFrameBuffer().getShaderProgramFBO().setUniform("clipCenter", new Vector2f((centerX / LFJGContext.frameBufferSize.x) * 2.0f - 1.0f, (centerY / LFJGContext.frameBufferSize.y) * 2.0f - 1.0f));
+        getFrameBuffer().getShaderProgramFBO().setUniform("clipAngle", clipAngle);
+        getFrameBuffer().getShaderProgramFBO().setUniform("blurWidth", blurWidth);
+        getFrameBuffer().getShaderProgramFBO().setUniform("invertClip", invertClip);
 
         super.setUniform(baseGLObject);
     }

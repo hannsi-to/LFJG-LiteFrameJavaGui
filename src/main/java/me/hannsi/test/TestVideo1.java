@@ -4,13 +4,12 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.event.events.user.KeyEvent;
 import me.hannsi.lfjg.frame.event.events.user.MouseButtonEvent;
 import me.hannsi.lfjg.frame.event.system.EventHandler;
+import me.hannsi.lfjg.render.effect.effects.ColorCorrection;
 import me.hannsi.lfjg.render.effect.effects.DrawObject;
-import me.hannsi.lfjg.render.effect.effects.Monochrome;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.video.GLVideo;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
-import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.reflection.location.Location;
 
 import static me.hannsi.lfjg.frame.frame.IFrame.eventManager;
@@ -35,7 +34,7 @@ public class TestVideo1 implements IScene {
 
         effectCache = EffectCache.initEffectCache();
         effectCache.createCache("DrawObject1", new DrawObject());
-        effectCache.createCache("Monochrome", new Monochrome(1f, new Color(255, 255, 255, 0), true));
+        effectCache.createCache("Monochrome", new ColorCorrection(0f, 0, 0, 0.5));
         effectCache.create(glVideo);
         glVideo.setEffectCache(effectCache);
     }

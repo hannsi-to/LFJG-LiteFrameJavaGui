@@ -69,9 +69,9 @@ public class ColorChanger extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniformB("alpha", alpha);
-        getFrameBuffer().getShaderProgramFBO().setUniform4f("targetColor", targetColor);
-        getFrameBuffer().getShaderProgramFBO().setUniform4f("newColor", newColor);
+        getFrameBuffer().getShaderProgramFBO().setUniform("alpha", alpha);
+        getFrameBuffer().getShaderProgramFBO().setUniform("targetColor", targetColor);
+        getFrameBuffer().getShaderProgramFBO().setUniform("newColor", newColor);
 
         super.setUniform(baseGLObject);
     }

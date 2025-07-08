@@ -100,8 +100,8 @@ public class DirectionalBlur extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("radius", radius * 10);
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("angle", angle);
+        getFrameBuffer().getShaderProgramFBO().setUniform("radius", radius * 10);
+        getFrameBuffer().getShaderProgramFBO().setUniform("angle", angle);
 
         super.setUniform(baseGLObject);
     }

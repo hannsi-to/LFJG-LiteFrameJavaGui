@@ -131,10 +131,10 @@ public class ChromaticAberration extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("offsetAmount", offsetAmount);
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("angle", angle);
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("strength", strength);
-        getFrameBuffer().getShaderProgramFBO().setUniform1i("aberrationType", aberrationType.getId());
+        getFrameBuffer().getShaderProgramFBO().setUniform("offsetAmount", offsetAmount);
+        getFrameBuffer().getShaderProgramFBO().setUniform("angle", angle);
+        getFrameBuffer().getShaderProgramFBO().setUniform("strength", strength);
+        getFrameBuffer().getShaderProgramFBO().setUniform("aberrationType", aberrationType.getId());
         super.setUniform(baseGLObject);
     }
 

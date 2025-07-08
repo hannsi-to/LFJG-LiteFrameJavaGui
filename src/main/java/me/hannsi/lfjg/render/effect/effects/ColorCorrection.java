@@ -133,10 +133,10 @@ public class ColorCorrection extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("brightness", brightness);
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("contrast", contrast);
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("saturation", saturation);
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("hue", hue);
+        getFrameBuffer().getShaderProgramFBO().setUniform("brightness", brightness);
+        getFrameBuffer().getShaderProgramFBO().setUniform("contrast", contrast);
+        getFrameBuffer().getShaderProgramFBO().setUniform("saturation", saturation);
+        getFrameBuffer().getShaderProgramFBO().setUniform("hue", hue);
 
         super.setUniform(baseGLObject);
     }

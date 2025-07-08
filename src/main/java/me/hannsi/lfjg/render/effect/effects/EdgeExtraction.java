@@ -150,11 +150,11 @@ public class EdgeExtraction extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("edgeStrength", edgeStrength);
-        getFrameBuffer().getShaderProgramFBO().setUniform1f("threshold", threshold);
-        getFrameBuffer().getShaderProgramFBO().setUniformB("enableLuminanceEdge", enableLuminanceEdge);
-        getFrameBuffer().getShaderProgramFBO().setUniformB("enableAlphaEdge", enableAlphaEdge);
-        getFrameBuffer().getShaderProgramFBO().setUniform4f("edgeColor", new Vector4f(edgeColor.getRedF(), edgeColor.getGreenF(), edgeColor.getBlueF(), edgeColor.getAlphaF()));
+        getFrameBuffer().getShaderProgramFBO().setUniform("edgeStrength", edgeStrength);
+        getFrameBuffer().getShaderProgramFBO().setUniform("threshold", threshold);
+        getFrameBuffer().getShaderProgramFBO().setUniform("enableLuminanceEdge", enableLuminanceEdge);
+        getFrameBuffer().getShaderProgramFBO().setUniform("enableAlphaEdge", enableAlphaEdge);
+        getFrameBuffer().getShaderProgramFBO().setUniform("edgeColor", new Vector4f(edgeColor.getRedF(), edgeColor.getGreenF(), edgeColor.getBlueF(), edgeColor.getAlphaF()));
 
         super.setUniform(baseGLObject);
     }

@@ -132,11 +132,11 @@ public class Inversion extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniformB("flipVertical", flipVertical);
-        getFrameBuffer().getShaderProgramFBO().setUniformB("flipHorizontal", flipHorizontal);
-        getFrameBuffer().getShaderProgramFBO().setUniformB("invertBrightness", invertBrightness);
-        getFrameBuffer().getShaderProgramFBO().setUniformB("invertHue", invertHue);
-        getFrameBuffer().getShaderProgramFBO().setUniformB("invertAlpha", invertAlpha);
+        getFrameBuffer().getShaderProgramFBO().setUniform("flipVertical", flipVertical);
+        getFrameBuffer().getShaderProgramFBO().setUniform("flipHorizontal", flipHorizontal);
+        getFrameBuffer().getShaderProgramFBO().setUniform("invertBrightness", invertBrightness);
+        getFrameBuffer().getShaderProgramFBO().setUniform("invertHue", invertHue);
+        getFrameBuffer().getShaderProgramFBO().setUniform("invertAlpha", invertAlpha);
 
         super.setUniform(baseGLObject);
     }

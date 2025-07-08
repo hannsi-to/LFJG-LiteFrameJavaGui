@@ -43,10 +43,10 @@ public class SVGRenderer {
     public void flush(int textureId, int textureUnit) {
         shaderProgramFBO.bind();
 
-        shaderProgramFBO.setUniformMatrix4fv("projectionMatrix", LFJGContext.projection2D.getProjMatrix());
-        shaderProgramFBO.setUniformMatrix4fv("modelMatrix", new Matrix4f());
-        shaderProgramFBO.setUniformMatrix4fv("viewMatrix", new Matrix4f());
-        shaderProgramFBO.setUniform1i("textureSampler", textureUnit);
+        shaderProgramFBO.setUniform("projectionMatrix", LFJGContext.projection2D.getProjMatrix());
+        shaderProgramFBO.setUniform("modelMatrix", new Matrix4f());
+        shaderProgramFBO.setUniform("viewMatrix", new Matrix4f());
+        shaderProgramFBO.setUniform("textureSampler", textureUnit);
 
         GLStateCache.enable(GL_BLEND);
         GLStateCache.disable(GL_DEPTH_TEST);
