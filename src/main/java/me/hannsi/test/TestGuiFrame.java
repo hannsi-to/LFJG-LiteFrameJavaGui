@@ -84,7 +84,7 @@ public class TestGuiFrame implements LFJGFrame {
                 .addScene(new TestVideo1(frame).getScene())
                 .addScene(new TestPhysic1(frame).getScene())
                 .addScene(new Test3D1(frame, this).getScene())
-                .setCurrentScene("TestPhysic1")
+                .setCurrentScene("TestVideo1")
                 .initScenes();
 
 //        if (!CefApp.startup(args)) {
@@ -216,7 +216,7 @@ public class TestGuiFrame implements LFJGFrame {
 
     @Override
     public void setFrameSetting() {
-        frame.setFrameSettingValue(RefreshRateSetting.class, 60);
+        frame.setFrameSettingValue(RefreshRateSetting.class, -1);
         frame.setFrameSettingValue(MonitorSetting.class, MonitorType.BORDERLESS);
         frame.setFrameSettingValue(VSyncSetting.class, VSyncType.V_SYNC_OFF);
         frame.setFrameSettingValue(FloatingSetting.class, false);

@@ -180,31 +180,34 @@ public class VideoFrameSystem {
         long actualVideoTimestamp = grabber.getTimestamp();
 
         if (!paused && actualVideoTimestamp < expectedVideoTimestamp) {
-            try {
-                frame = grabber.grabFrame(true, true, true, false, true);
-                if (frame != null && doVideo && frame.image != null) {
-                    BufferedImage image = java2DFrameConverter.convert(frame);
+            do {
+                try {
+                    frame = grabber.grabFrame(true, true, true, false, true);
+                } catch (FFmpegFrameGrabber.Exception e) {
+                    throw new RuntimeException(e);
+                }
+            } while (frame != null && grabber.getTimestamp() < expectedVideoTimestamp);
 
-                    ByteBuffer byteImage = IOUtil.convertBufferedImageToByteBuffer(image, true);
-                    width = image.getWidth();
-                    height = image.getHeight();
+            if (frame != null && doVideo && frame.image != null) {
+                BufferedImage image = java2DFrameConverter.convert(frame);
 
-                    if (textureId == -1) {
-                        textureId = glGenTextures();
+                ByteBuffer byteImage = IOUtil.convertBufferedImageToByteBuffer(image, true);
+                width = image.getWidth();
+                height = image.getHeight();
 
-                        glBindTexture(GL_TEXTURE_2D, textureId);
-                        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-                        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-                        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, byteImage);
-                        glBindTexture(GL_TEXTURE_2D, 0);
-                    }
+                if (textureId == -1) {
+                    textureId = glGenTextures();
 
                     glBindTexture(GL_TEXTURE_2D, textureId);
-                    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, byteImage);
+                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+                    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, byteImage);
                     glBindTexture(GL_TEXTURE_2D, 0);
                 }
-            } catch (FFmpegFrameGrabber.Exception e) {
-                throw new RuntimeException(e);
+
+                glBindTexture(GL_TEXTURE_2D, textureId);
+                glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, byteImage);
+                glBindTexture(GL_TEXTURE_2D, 0);
             }
         }
     }

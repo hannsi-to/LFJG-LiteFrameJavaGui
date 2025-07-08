@@ -42,7 +42,6 @@ public class TestVideo1 implements IScene {
 
     @Override
     public void drawFrame() {
-        System.out.println(frame.getFps());
         glVideo.draw();
     }
 
