@@ -1,19 +1,23 @@
 package me.hannsi.test;
 
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.render.renderers.polygon.GLLine;
+import me.hannsi.lfjg.render.effect.effects.DrawObject;
+import me.hannsi.lfjg.render.effect.effects.Texture;
+import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
-import me.hannsi.lfjg.render.renderers.polygon.GLTriangle;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
 import me.hannsi.lfjg.utils.graphics.color.Color;
+import me.hannsi.lfjg.utils.graphics.image.TextureCache;
+import me.hannsi.lfjg.utils.reflection.location.Location;
+import me.hannsi.lfjg.utils.type.types.BlendType;
 
 public class TestScene4 implements IScene {
     public Scene scene;
 
-    public GLLine glLine;
-    public GLTriangle glTriangle;
     public GLRect glRect;
+    public EffectCache effectCache;
+    public TextureCache textureCache;
 
     public TestScene4(Frame frame) {
         this.scene = new Scene("TestScene4", this);
@@ -21,26 +25,30 @@ public class TestScene4 implements IScene {
 
     @Override
     public void init() {
-        glTriangle = new GLTriangle("glTriangle");
-        glTriangle.triangleOutLine(0, 0, 100, 100, 300, 200, 0.1f, Color.of(255, 0, 0, 255));
-
-        glLine = new GLLine("glLine");
-        glLine.line(0, 0, 100, 100, 1f, Color.of(255, 0, 255, 255));
-
         glRect = new GLRect("glRect");
-        glRect.rectWHOutLine(100, 100, 200, 200, 0.1f, Color.of(100, 100, 100, 255));
+        glRect.uv(0, 1, 1, 0);
+        glRect.rect(0, 0, 1920, 1080, Color.of(0, 0, 0, 0));
+
+        Location location = Location.fromResource("texture/test/test_image_3840x2160.jpg");
+        textureCache = TextureCache.createTextureCache()
+                .createCache("Texture1", location);
+
+        effectCache = EffectCache.initEffectCache()
+                .createCache("Texture", new Texture(textureCache, "Texture1", BlendType.NORMAL))
+                .createCache("DrawObject", new DrawObject())
+                .create(glRect);
+
+        glRect.setEffectCache(effectCache);
     }
 
     @Override
     public void drawFrame() {
-        glTriangle.draw();
-        glLine.draw();
         glRect.draw();
     }
 
     @Override
     public void stopFrame() {
-
+        glRect.cleanup();
     }
 
     @Override

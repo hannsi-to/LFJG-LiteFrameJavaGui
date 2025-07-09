@@ -88,7 +88,7 @@ public class ModelRender {
                         glActiveTexture(GL_TEXTURE0);
                         GLStateCache.enable(GL_TEXTURE_2D);
 
-                        TextureLoader textureLoader = textureCache.getTexture(material.getTextureLocation());
+                        TextureLoader textureLoader = textureCache.getTexture(material.getTextureLocation().path());
                         if (textureLoader == null) {
                             throw new ModelException("Not found texture: " + material.getTextureLocation().path());
                         }

@@ -86,6 +86,8 @@ public class EffectCache {
             effectBase.getKey().create(glObject);
         }
 
+        glObject.setEffectCache(this);
+
         return this;
     }
 

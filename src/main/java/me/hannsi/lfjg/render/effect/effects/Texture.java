@@ -7,7 +7,6 @@ import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.utils.graphics.image.TextureLoader;
-import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.type.types.BlendType;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
@@ -33,7 +32,6 @@ public class Texture extends EffectBase {
      * @param textureCache the texture cache
      */
     private TextureCache textureCache;
-    private Location path;
     private BlendType blendType;
     /**
      * -- GETTER --
@@ -49,19 +47,12 @@ public class Texture extends EffectBase {
     private TextureLoader textureLoader;
     private int textureId;
 
-    /**
-     * Constructs a new Texture effect with the specified parameters.
-     *
-     * @param textureCache the texture cache to be used
-     * @param path         the location of the resources
-     */
-    public Texture(TextureCache textureCache, Location path, BlendType blendType) {
+    public Texture(TextureCache textureCache, String name, BlendType blendType) {
         super(3, "Texture");
 
         this.textureCache = textureCache;
-        this.path = path;
         this.blendType = blendType;
-        this.textureLoader = textureCache.getTexture(path);
+        this.textureLoader = textureCache.getTexture(name);
     }
 
     /**
@@ -156,9 +147,4 @@ public class Texture extends EffectBase {
 
         super.setUniform(baseGLObject);
     }
-
-    public Location getFileLocation() {
-        return path;
-    }
-
 }

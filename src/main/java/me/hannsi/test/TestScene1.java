@@ -142,7 +142,7 @@ public class TestScene1 implements IScene {
     public void effectCacheInit() {
         textureCache = TextureCache.createTextureCache();
         Location image = Location.fromResource("texture/test/test_image_1920x1080.jpg");
-        textureCache.createCache(image);
+        textureCache.createCache("Name1", image);
 
         gl1EffectCache = EffectCache.initEffectCache();
         gl1SplitObjectEffectCache = EffectCache.initEffectCache();
@@ -154,7 +154,7 @@ public class TestScene1 implements IScene {
 
         gl1SplitObjectEffectCache.createCache("Rotate1", new Rotate(0, 0, MathHelper.toRadians(0), true));
 
-        gl1EffectCache.createCache("Texture1", new Texture(textureCache, image, BlendType.NORMAL));
+        gl1EffectCache.createCache("Texture1", new Texture(textureCache, "Name1", BlendType.NORMAL));
         gl1EffectCache.createCache("DrawObject1", new DrawObject());
 //        gl1EffectCache.createCache("SplitObject1", new SplitObject(4, 5, 5, 5, gl1SplitObjectEffectCache));
 //        gl1EffectCache.createCache("Gradation1",new Gradation(resolution.x / 2, resolution.y / 2, (float) Math.toRadians(90), 0.2f, Gradation.ShapeMode.Rectangle, BlendType.Screen, new Color(50, 100, 200, 100), new Color(255, 255, 255, 255), 1f));

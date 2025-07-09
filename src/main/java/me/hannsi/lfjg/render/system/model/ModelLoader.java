@@ -171,7 +171,7 @@ public class ModelLoader {
             if (!texturePath.isEmpty()) {
                 material.setMaterialType(MaterialType.TEXTURE);
                 material.setTextureLocation(Location.fromFile(modelDir + File.separator + new File(texturePath).getName()));
-                textureCache.createCache(material.getTextureLocation());
+                textureCache.createCache(material.getTextureLocation().path(), material.getTextureLocation());
                 material.setDiffuseColor(Material.DEFAULT_COLOR);
             }
 

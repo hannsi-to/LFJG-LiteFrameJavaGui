@@ -66,39 +66,26 @@ public class TextureCache {
         ).logging(DebugLevel.DEBUG);
     }
 
-    /**
-     * Creates a cache entry for the specified texture path.
-     *
-     * @param path the path to the texture resource
-     */
-    public TextureCache createCache(Location path) {
+    public TextureCache createCache(String name, Location path) {
         TextureLoader textureLoader = new TextureLoader(path, ImageLoaderType.STB_IMAGE);
-        textureMap.put(path.path(), textureLoader);
+        textureMap.put(name, textureLoader);
 
         new LogGenerator(
                 LogGenerateType.CREATE_CACHE,
                 getClass(),
-                textureLoader.getTextureId(),
+                name,
                 path.path()
         ).logging(DebugLevel.DEBUG);
 
         return this;
     }
 
-    /**
-     * Retrieves the texture loader for the specified texture path.
-     * If the texture path is null or not found, the default texture loader is returned.
-     *
-     * @param path the path to the texture resource
-     * @return the texture loader for the specified path, or the default texture loader if not found
-     */
-    public TextureLoader getTexture(Location path) {
-        TextureLoader texture = null;
-        if (path != null) {
-            texture = textureMap.get(path.path());
+    public TextureLoader getTexture(String name) {
+        TextureLoader textureLoader = textureMap.get(name);
+        if (textureLoader == null) {
+            throw new RuntimeException("Texture path not found: " + name);
         }
 
-        return texture;
+        return textureLoader;
     }
-
 }
