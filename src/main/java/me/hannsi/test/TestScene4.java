@@ -1,6 +1,7 @@
 package me.hannsi.test;
 
 import me.hannsi.lfjg.frame.Frame;
+import me.hannsi.lfjg.render.effect.effects.Bloom;
 import me.hannsi.lfjg.render.effect.effects.DrawObject;
 import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
@@ -16,7 +17,6 @@ public class TestScene4 implements IScene {
     public Scene scene;
 
     public GLRect glRect;
-    public EffectCache effectCache;
     public TextureCache textureCache;
 
     public TestScene4(Frame frame) {
@@ -26,19 +26,17 @@ public class TestScene4 implements IScene {
     @Override
     public void init() {
         glRect = new GLRect("glRect");
-        glRect.uv(0, 1, 1, 0);
+        glRect.uv(0, 1f, 1f, 0);
         glRect.rect(0, 0, 1920, 1080, Color.of(0, 0, 0, 0));
 
-        Location location = Location.fromResource("texture/test/test_image_3840x2160.jpg");
         textureCache = TextureCache.createTextureCache()
-                .createCache("Texture1", location);
+                .createCache("Texture1", Location.fromResource("texture/test/test_image_3840x2160.jpg"));
 
-        effectCache = EffectCache.initEffectCache()
+        EffectCache.initEffectCache()
                 .createCache("Texture", new Texture(textureCache, "Texture1", BlendType.NORMAL))
                 .createCache("DrawObject", new DrawObject())
+                .createCache("Bloom", new Bloom(1f, 0f, 1f))
                 .create(glRect);
-
-        glRect.setEffectCache(effectCache);
     }
 
     @Override
