@@ -75,15 +75,6 @@ public class ChromaKey extends EffectBase {
      */
     private Color colorAdjustment = Color.of(0, 0, 0, 0);
 
-    /**
-     * Constructs a new ChromaKey effect with the specified parameters.
-     *
-     * @param chromaKeyColor     the chroma key color
-     * @param hueRange           the hue range for the chroma key
-     * @param saturationRange    the saturation range for the chroma key
-     * @param boundarySmoothness the smoothness of the boundary
-     * @param colorAdjustment    the color adjustment
-     */
     ChromaKey() {
         super(Location.fromResource("shader/frameBuffer/filter/ChromaKey.fsh"), true, 12, "ChromaKey");
     }

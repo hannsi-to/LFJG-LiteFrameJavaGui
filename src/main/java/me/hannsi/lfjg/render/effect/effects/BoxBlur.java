@@ -37,12 +37,6 @@ public class BoxBlur extends EffectBase {
      */
     private int kernelY = 10;
 
-    /**
-     * Constructs a new BoxBlur effect with the specified parameters.
-     *
-     * @param kernelX the kernel size in the x-direction
-     * @param kernelY the kernel size in the y-direction
-     */
     BoxBlur() {
         super(Location.fromResource("shader/frameBuffer/filter/BoxBlur.fsh"), true, 16, "BoxBlur");
     }

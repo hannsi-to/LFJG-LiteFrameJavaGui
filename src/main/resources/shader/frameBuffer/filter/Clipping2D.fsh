@@ -9,7 +9,7 @@ uniform sampler2D textureSampler;
 
 uniform bool clippingRect2DInvert = false;
 uniform vec4 clippingRect2DSize;
-uniform vec2 resolution;
+uniform ivec2 resolution;
 
 void main() {
     vec2 screenPos = ((outPosition.xy / outPosition.w) * 0.5 + 0.5) * resolution;

@@ -49,13 +49,6 @@ public class Bloom extends EffectBase {
      */
     private float threshold = 1f;
 
-    /**
-     * Constructs a new Bloom effect with the specified parameters.
-     *
-     * @param intensity the intensity of the bloom
-     * @param spread    the spread of the bloom
-     * @param threshold the threshold for the bloom
-     */
     Bloom() {
         super(Location.fromResource("shader/frameBuffer/filter/Bloom.fsh"), true, 9, "Bloom");
     }

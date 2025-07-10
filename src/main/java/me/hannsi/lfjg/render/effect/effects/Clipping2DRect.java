@@ -25,7 +25,7 @@ public class Clipping2DRect extends EffectBase {
      * @param x1 the x-coordinate of the first corner
      * @return the x-coordinate of the first corner
      */
-    private float x1;
+    private float x1 = 0f;
     /**
      * -- SETTER --
      * Sets the y-coordinate of the first corner.
@@ -37,7 +37,7 @@ public class Clipping2DRect extends EffectBase {
      * @param y1 the y-coordinate of the first corner
      * @return the y-coordinate of the first corner
      */
-    private float y1;
+    private float y1 = 0f;
     /**
      * -- SETTER --
      * Sets the x-coordinate of the opposite corner.
@@ -49,7 +49,7 @@ public class Clipping2DRect extends EffectBase {
      * @param x2 the x-coordinate of the opposite corner
      * @return the x-coordinate of the opposite corner
      */
-    private float x2;
+    private float x2 = 0f;
     /**
      * -- SETTER --
      * Sets the y-coordinate of the opposite corner.
@@ -61,7 +61,7 @@ public class Clipping2DRect extends EffectBase {
      * @param y2 the y-coordinate of the opposite corner
      * @return the y-coordinate of the opposite corner
      */
-    private float y2;
+    private float y2 = 0f;
     /**
      * -- SETTER --
      * Sets whether the clipping region is inverted.
@@ -73,68 +73,79 @@ public class Clipping2DRect extends EffectBase {
      * @param invert true to invert the clipping region, false otherwise
      * @return true if the clipping region is inverted, false otherwise
      */
-    private boolean invert;
+    private boolean invert = false;
 
-    /**
-     * Constructs a new Clipping2DRect effect with the specified parameters.
-     *
-     * @param x1     the x-coordinate of the first corner
-     * @param y1     the y-coordinate of the first corner
-     * @param x2     the x-coordinate of the opposite corner
-     * @param y2     the y-coordinate of the opposite corner
-     * @param invert whether to invert the clipping region
-     */
-    public Clipping2DRect(float x1, float y1, float x2, float y2, boolean invert) {
+    Clipping2DRect() {
         super(Location.fromResource("shader/frameBuffer/filter/Clipping2D.fsh"), true, 5, "Clipping2DRect");
+    }
 
+    public static Clipping2DRect createClipping2DRect() {
+        return new Clipping2DRect();
+    }
+
+    public Clipping2DRect x1(float x1) {
         this.x1 = x1;
-        this.y1 = y1;
-        this.x2 = x2;
-        this.y2 = y2;
-        this.invert = invert;
+        return this;
     }
 
-    /**
-     * Constructs a new Clipping2DRect effect with the specified parameters.
-     *
-     * @param x1 the x-coordinate of the first corner
-     * @param y1 the y-coordinate of the first corner
-     * @param x2 the x-coordinate of the opposite corner
-     * @param y2 the y-coordinate of the opposite corner
-     */
-    public Clipping2DRect(float x1, float y1, float x2, float y2) {
-        this(x1, y1, x2, y2, false);
-    }
-
-    /**
-     * Constructs a new Clipping2DRect effect with the specified parameters.
-     *
-     * @param x1     the x-coordinate of the first corner
-     * @param y1     the y-coordinate of the first corner
-     * @param x2     the x-coordinate of the opposite corner
-     * @param y2     the y-coordinate of the opposite corner
-     * @param invert whether to invert the clipping region
-     */
-    public Clipping2DRect(double x1, double y1, double x2, double y2, boolean invert) {
-        super(Location.fromResource("shader/frameBuffer/filter/Clipping2D.fsh"), true, 5, "Clipping2DRect");
-
+    public Clipping2DRect x1(double x1) {
         this.x1 = (float) x1;
-        this.y1 = (float) y1;
-        this.x2 = (float) x2;
-        this.y2 = (float) y2;
-        this.invert = invert;
+        return this;
     }
 
-    /**
-     * Constructs a new Clipping2DRect effect with the specified parameters.
-     *
-     * @param x1 the x-coordinate of the first corner
-     * @param y1 the y-coordinate of the first corner
-     * @param x2 the x-coordinate of the opposite corner
-     * @param y2 the y-coordinate of the opposite corner
-     */
-    public Clipping2DRect(double x1, double y1, double x2, double y2) {
-        this(x1, y1, x2, y2, false);
+    public Clipping2DRect x1(int x1) {
+        this.x1 = x1;
+        return this;
+    }
+
+    public Clipping2DRect y1(float y1) {
+        this.y1 = y1;
+        return this;
+    }
+
+    public Clipping2DRect y1(double y1) {
+        this.y1 = (float) y1;
+        return this;
+    }
+
+    public Clipping2DRect y1(int y1) {
+        this.y1 = y1;
+        return this;
+    }
+
+    public Clipping2DRect x2(float x2) {
+        this.x2 = x2;
+        return this;
+    }
+
+    public Clipping2DRect x2(double x2) {
+        this.x2 = (float) x2;
+        return this;
+    }
+
+    public Clipping2DRect x2(int x2) {
+        this.x2 = x2;
+        return this;
+    }
+
+    public Clipping2DRect y2(float y2) {
+        this.y2 = y2;
+        return this;
+    }
+
+    public Clipping2DRect y2(double y2) {
+        this.y2 = (float) y2;
+        return this;
+    }
+
+    public Clipping2DRect y2(int y2) {
+        this.y2 = y2;
+        return this;
+    }
+
+    public Clipping2DRect invert(boolean invert) {
+        this.invert = invert;
+        return this;
     }
 
     /**
