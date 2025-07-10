@@ -23,7 +23,7 @@ public class BoxBlur extends EffectBase {
      * @return the kernel size in the x-direction
      * @param kernelX the kernel size in the x-direction
      */
-    private int kernelX;
+    private int kernelX = 10;
     /**
      * -- GETTER --
      * Gets the kernel size in the y-direction.
@@ -35,7 +35,7 @@ public class BoxBlur extends EffectBase {
      * @return the kernel size in the y-direction
      * @param kernelY the kernel size in the y-direction
      */
-    private int kernelY;
+    private int kernelY = 10;
 
     /**
      * Constructs a new BoxBlur effect with the specified parameters.
@@ -43,11 +43,22 @@ public class BoxBlur extends EffectBase {
      * @param kernelX the kernel size in the x-direction
      * @param kernelY the kernel size in the y-direction
      */
-    public BoxBlur(int kernelX, int kernelY) {
+    BoxBlur() {
         super(Location.fromResource("shader/frameBuffer/filter/BoxBlur.fsh"), true, 16, "BoxBlur");
+    }
 
+    public static BoxBlur createBoxBlur() {
+        return new BoxBlur();
+    }
+
+    public BoxBlur kernelX(int kernelX) {
         this.kernelX = kernelX;
+        return this;
+    }
+
+    public BoxBlur kernelY(int kernelY) {
         this.kernelY = kernelY;
+        return this;
     }
 
     /**
