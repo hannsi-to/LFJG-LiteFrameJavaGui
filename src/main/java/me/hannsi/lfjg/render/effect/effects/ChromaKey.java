@@ -25,7 +25,7 @@ public class ChromaKey extends EffectBase {
      * @return the chroma key color
      * @param chromaKeyColor the chroma key color
      */
-    private Color chromaKeyColor;
+    private Color chromaKeyColor = Color.GREEN;
     /**
      * -- GETTER --
      * Gets the hue range for the chroma key.
@@ -37,7 +37,7 @@ public class ChromaKey extends EffectBase {
      * @return the hue range for the chroma key
      * @param hueRange the hue range for the chroma key
      */
-    private float hueRange;
+    private float hueRange = 0.1f;
     /**
      * -- GETTER --
      * Gets the saturation range for the chroma key.
@@ -49,7 +49,7 @@ public class ChromaKey extends EffectBase {
      * @return the saturation range for the chroma key
      * @param saturationRange the saturation range for the chroma key
      */
-    private float saturationRange;
+    private float saturationRange = 0.3f;
     /**
      * -- GETTER --
      * Gets the boundary smoothness.
@@ -61,7 +61,7 @@ public class ChromaKey extends EffectBase {
      * @return the boundary smoothness
      * @param boundarySmoothness the boundary smoothness
      */
-    private float boundarySmoothness;
+    private float boundarySmoothness = 0.05f;
     /**
      * -- GETTER --
      * Gets the color adjustment.
@@ -73,7 +73,7 @@ public class ChromaKey extends EffectBase {
      * @return the color adjustment
      * @param colorAdjustment the color adjustment
      */
-    private Color colorAdjustment;
+    private Color colorAdjustment = Color.of(0, 0, 0, 0);
 
     /**
      * Constructs a new ChromaKey effect with the specified parameters.
@@ -84,27 +84,62 @@ public class ChromaKey extends EffectBase {
      * @param boundarySmoothness the smoothness of the boundary
      * @param colorAdjustment    the color adjustment
      */
-    public ChromaKey(Color chromaKeyColor, float hueRange, float saturationRange, float boundarySmoothness, Color colorAdjustment) {
+    ChromaKey() {
         super(Location.fromResource("shader/frameBuffer/filter/ChromaKey.fsh"), true, 12, "ChromaKey");
-
-        this.chromaKeyColor = chromaKeyColor;
-        this.hueRange = hueRange;
-        this.saturationRange = saturationRange;
-        this.boundarySmoothness = boundarySmoothness;
-        this.colorAdjustment = colorAdjustment;
     }
 
-    /**
-     * Constructs a new ChromaKey effect with the specified parameters.
-     *
-     * @param chromaKeyColor     the chroma key color
-     * @param hueRange           the hue range for the chroma key
-     * @param saturationRange    the saturation range for the chroma key
-     * @param boundarySmoothness the smoothness of the boundary
-     * @param colorAdjustment    the color adjustment
-     */
-    public ChromaKey(Color chromaKeyColor, double hueRange, double saturationRange, double boundarySmoothness, Color colorAdjustment) {
-        this(chromaKeyColor, (float) hueRange, (float) saturationRange, (float) boundarySmoothness, colorAdjustment);
+    public static ChromaKey createChromaKey() {
+        return new ChromaKey();
+    }
+
+    public ChromaKey chromaKeyColor(Color chromaKeyColor) {
+        this.chromaKeyColor = chromaKeyColor;
+        return this;
+    }
+
+    public ChromaKey hueRange(float hueRange) {
+        this.hueRange = hueRange;
+        return this;
+    }
+
+    public ChromaKey hueRange(double hueRange) {
+        this.hueRange = (float) hueRange;
+        return this;
+    }
+
+    public ChromaKey hueRange(int hueRange) {
+        this.hueRange = hueRange / 255f;
+        return this;
+    }
+
+    public ChromaKey saturationRange(float saturationRange) {
+        this.saturationRange = saturationRange;
+        return this;
+    }
+
+    public ChromaKey saturationRange(double saturationRange) {
+        this.saturationRange = (float) saturationRange;
+        return this;
+    }
+
+    public ChromaKey saturationRange(int saturationRange) {
+        this.saturationRange = saturationRange / 255f;
+        return this;
+    }
+
+    public ChromaKey boundarySmoothness(float boundarySmoothness) {
+        this.boundarySmoothness = boundarySmoothness;
+        return this;
+    }
+
+    public ChromaKey boundarySmoothness(double boundarySmoothness) {
+        this.boundarySmoothness = (float) boundarySmoothness;
+        return this;
+    }
+
+    public ChromaKey colorAdjustment(Color colorAdjustment) {
+        this.chromaKeyColor = colorAdjustment;
+        return this;
     }
 
     /**
