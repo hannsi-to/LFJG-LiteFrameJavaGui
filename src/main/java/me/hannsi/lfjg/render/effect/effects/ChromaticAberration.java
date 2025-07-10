@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.utils.math.MathHelper;
 import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
 
@@ -24,7 +25,7 @@ public class ChromaticAberration extends EffectBase {
      * @param offsetAmount the offset amount
      * @return the offset amount
      */
-    private float offsetAmount;
+    private float offsetAmount = 0.008f;
     /**
      * -- SETTER --
      * Sets the angle of the chromatic aberration.
@@ -36,7 +37,7 @@ public class ChromaticAberration extends EffectBase {
      * @param angle the angle
      * @return the angle
      */
-    private float angle;
+    private float angle = MathHelper.toRadians(90);
     /**
      * -- SETTER --
      * Sets the strength of the chromatic aberration.
@@ -48,7 +49,7 @@ public class ChromaticAberration extends EffectBase {
      * @param strength the strength
      * @return the strength
      */
-    private float strength;
+    private float strength = 0.7f;
     /**
      * -- SETTER --
      * Sets the type of chromatic aberration.
@@ -60,35 +61,59 @@ public class ChromaticAberration extends EffectBase {
      * @param aberrationType the type of chromatic aberration
      * @return the type of chromatic aberration
      */
-    private AberrationType aberrationType;
+    private AberrationType aberrationType = AberrationType.RedBlueA;
 
-    /**
-     * Constructs a new ChromaticAberration effect with the specified parameters.
-     *
-     * @param offsetAmount   the offset amount for the chromatic aberration
-     * @param angle          the angle of the chromatic aberration
-     * @param strength       the strength of the chromatic aberration
-     * @param aberrationType the type of chromatic aberration
-     */
-    public ChromaticAberration(float offsetAmount, float angle, float strength, AberrationType aberrationType) {
+    ChromaticAberration() {
         super(Location.fromResource("shader/frameBuffer/filter/ChromaticAberration.fsh"), true, 22, "ChromaticAberration");
-
-        this.offsetAmount = offsetAmount;
-        this.angle = angle;
-        this.strength = strength;
-        this.aberrationType = aberrationType;
     }
 
-    /**
-     * Constructs a new ChromaticAberration effect with the specified parameters.
-     *
-     * @param offsetAmount   the offset amount for the chromatic aberration
-     * @param angle          the angle of the chromatic aberration
-     * @param strength       the strength of the chromatic aberration
-     * @param aberrationType the type of chromatic aberration
-     */
-    public ChromaticAberration(double offsetAmount, double angle, double strength, AberrationType aberrationType) {
-        this((float) offsetAmount, (float) angle, (float) strength, aberrationType);
+    public static ChromaticAberration createChromaticAberration() {
+        return new ChromaticAberration();
+    }
+
+    public ChromaticAberration offsetAmount(float offsetAmount) {
+        this.offsetAmount = offsetAmount;
+        return this;
+    }
+
+    public ChromaticAberration offsetAmount(double offsetAmount) {
+        this.offsetAmount = (float) offsetAmount;
+        return this;
+    }
+
+    public ChromaticAberration angleRadian(float angle) {
+        this.angle = angle;
+        return this;
+    }
+
+    public ChromaticAberration angleRadian(double angle) {
+        this.angle = (float) angle;
+        return this;
+    }
+
+    public ChromaticAberration angleDegree(float angle) {
+        this.angle = MathHelper.toRadians(angle);
+        return this;
+    }
+
+    public ChromaticAberration angleDegree(double angle) {
+        this.angle = (float) MathHelper.toRadians(angle);
+        return this;
+    }
+
+    public ChromaticAberration strength(float strength) {
+        this.strength = strength;
+        return this;
+    }
+
+    public ChromaticAberration strength(double strength) {
+        this.strength = (float) strength;
+        return this;
+    }
+
+    public ChromaticAberration aberrationType(AberrationType aberrationType) {
+        this.aberrationType = aberrationType;
+        return this;
     }
 
     /**

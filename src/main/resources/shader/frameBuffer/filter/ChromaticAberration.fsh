@@ -15,34 +15,40 @@ vec2 getOffset(float offset, float angle) {
     return vec2(cos(angle), sin(angle)) * offset;
 }
 
+vec2 clampUV(vec2 uv) {
+    return clamp(uv, vec2(0.0), vec2(1.0));
+}
+
 vec4 applyChromaticAberration(vec2 texCoords, float offset, float angle, int type) {
     vec2 offsetVec = getOffset(offset, angle);
     vec4 baseColor = texture(textureSampler, texCoords);
     vec4 color;
+    vec2 uvP = clampUV(texCoords + offsetVec);
+    vec2 uvM = clampUV(texCoords - offsetVec);
 
     if (type == 0) {
-        vec2 redCoords = texCoords + offsetVec;
-        vec2 greenCoords = texCoords - offsetVec;
+        vec2 redCoords = uvP;
+        vec2 greenCoords = uvM;
         color = vec4(texture(textureSampler, redCoords).r, texture(textureSampler, greenCoords).g, baseColor.b, baseColor.a);
     } else if (type == 1) {
-        vec2 redCoords = texCoords + offsetVec;
-        vec2 blueCoords = texCoords - offsetVec;
+        vec2 redCoords = uvP;
+        vec2 blueCoords = uvM;
         color = vec4(texture(textureSampler, redCoords).r, baseColor.g, texture(textureSampler, blueCoords).b, baseColor.a);
     } else if (type == 2) {
-        vec2 greenCoords = texCoords + offsetVec;
-        vec2 blueCoords = texCoords - offsetVec;
+        vec2 greenCoords = uvP;
+        vec2 blueCoords = uvM;
         color = vec4(baseColor.r, texture(textureSampler, greenCoords).g, texture(textureSampler, blueCoords).b, baseColor.a);
     } else if (type == 3) {
-        vec2 redCoords = texCoords - offsetVec;
-        vec2 greenCoords = texCoords + offsetVec;
+        vec2 redCoords = uvP;
+        vec2 greenCoords = uvM;
         color = vec4(texture(textureSampler, redCoords).r, texture(textureSampler, greenCoords).g, baseColor.b, baseColor.a);
     } else if (type == 4) {
-        vec2 redCoords = texCoords - offsetVec;
-        vec2 blueCoords = texCoords + offsetVec;
+        vec2 redCoords = uvP;
+        vec2 blueCoords = uvM;
         color = vec4(texture(textureSampler, redCoords).r, baseColor.g, texture(textureSampler, blueCoords).b, baseColor.a);
     } else if (type == 5) {
-        vec2 greenCoords = texCoords - offsetVec;
-        vec2 blueCoords = texCoords + offsetVec;
+        vec2 greenCoords = uvP;
+        vec2 blueCoords = uvM;
         color = vec4(baseColor.r, texture(textureSampler, greenCoords).g, texture(textureSampler, blueCoords).b, baseColor.a);
     }
 
