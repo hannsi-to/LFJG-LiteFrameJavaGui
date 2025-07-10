@@ -14,9 +14,8 @@ uniform float hue = 0.0;
 
 #include "shader/frameBuffer/util/MathUtil.glsl"
 
-vec3 applyBrightness(vec3 color,float value){
-    vec3 rgb = color.rgb + value;
-    return rgb;
+vec3 applyBrightness(vec3 color, float value) {
+    return color + value;
 }
 
 vec3 applyContrast(vec3 color, float value) {
@@ -37,20 +36,24 @@ vec3 applySaturation(vec3 color, float value) {
 
 vec3 applyHue(vec3 color, float value){
     vec3 hsb = rgb2hsb(color);
-    hsb[0] = hsb[0] + value;
+    hsb[0] = mod(hsb[0] + value, 1.0);
+    if (hsb[0] < 0.0) {
+        hsb[0] += 1.0;
+    }
+
     return hsb2rgb(hsb);
 }
 
 vec3 applyColorCorrection(vec3 color) {
+    color = applyHue(color, hue);
+    color = applySaturation(color, saturation);
     color = applyBrightness(color, brightness);
     color = applyContrast(color, contrast);
-    color = applySaturation(color, saturation);
-    color = applyHue(color, hue);
 
     return color;
 }
 
 void main(){
     vec4 textureColor = texture(textureSampler, outTexture);
-    fragColor = vec4(applyColorCorrection(textureColor.rgb),textureColor.a);
+    fragColor = vec4(applyColorCorrection(textureColor.rgb), textureColor.a);
 }

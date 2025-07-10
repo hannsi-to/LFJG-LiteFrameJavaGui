@@ -1,7 +1,7 @@
 package me.hannsi.test;
 
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.render.effect.effects.ColorChanger;
+import me.hannsi.lfjg.render.effect.effects.ColorCorrection;
 import me.hannsi.lfjg.render.effect.effects.DrawObject;
 import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
@@ -40,7 +40,8 @@ public class TestScene4 implements IScene {
 //                .createCache("ChromaKey", ChromaKey.createChromaKey().chromaKeyColor(Color.YELLOW))
 //                .createCache("ChromaticAberration", ChromaticAberration.createChromaticAberration())
 //                .createCache("Clipping2DRect", Clipping2DRect.createClipping2DRect().x1(100).y1(100).x2(500).y2(500))
-                .createCache("ColorChanger", ColorChanger.createColorChanger().targetColor(Color.of(251, 232, 44, 255)))
+//                .createCache("ColorChanger", ColorChanger.createColorChanger().targetColor(Color.of(251, 232, 44, 255)))
+                .createCache("ColorCorrection", ColorCorrection.createColorCorrection())
                 .create(glRect);
     }
 

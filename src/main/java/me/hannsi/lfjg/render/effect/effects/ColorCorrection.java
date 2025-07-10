@@ -23,7 +23,7 @@ public class ColorCorrection extends EffectBase {
      * @param brightness the brightness level
      * @return the brightness level
      */
-    private float brightness;
+    private float brightness = 0.5f;
     /**
      * -- SETTER --
      * Sets the contrast level.
@@ -35,7 +35,7 @@ public class ColorCorrection extends EffectBase {
      * @param contrast the contrast level
      * @return the contrast level
      */
-    private float contrast;
+    private float contrast = 0.5f;
     /**
      * -- SETTER --
      * Sets the saturation level.
@@ -47,7 +47,7 @@ public class ColorCorrection extends EffectBase {
      * @param saturation the saturation level
      * @return the saturation level
      */
-    private float saturation;
+    private float saturation = 0.5f;
     /**
      * -- SETTER --
      * Sets the hue level.
@@ -59,35 +59,74 @@ public class ColorCorrection extends EffectBase {
      * @param hue the hue level
      * @return the hue level
      */
-    private float hue;
+    private float hue = 0.5f;
 
-    /**
-     * Constructs a new ColorCorrection effect with the specified parameters.
-     *
-     * @param brightness the brightness level
-     * @param contrast   the contrast level
-     * @param saturation the saturation level
-     * @param hue        the hue level
-     */
-    public ColorCorrection(float brightness, float contrast, float saturation, float hue) {
+    public ColorCorrection() {
         super(Location.fromResource("shader/frameBuffer/filter/ColorCorrection.fsh"), true, 4, "ColorCorrection");
-
-        this.brightness = brightness;
-        this.contrast = contrast;
-        this.saturation = saturation;
-        this.hue = hue;
     }
 
-    /**
-     * Constructs a new ColorCorrection effect with the specified parameters.
-     *
-     * @param brightness the brightness level
-     * @param contrast   the contrast level
-     * @param saturation the saturation level
-     * @param hue        the hue level
-     */
-    public ColorCorrection(double brightness, double contrast, double saturation, double hue) {
-        this((float) brightness, (float) contrast, (float) saturation, (float) hue);
+    public static ColorCorrection createColorCorrection() {
+        return new ColorCorrection();
+    }
+
+    public ColorCorrection brightness(float brightness) {
+        this.brightness = brightness;
+        return this;
+    }
+
+    public ColorCorrection brightness(double brightness) {
+        this.brightness = (float) brightness;
+        return this;
+    }
+
+    public ColorCorrection brightness(int brightness) {
+        this.brightness = brightness / 255f;
+        return this;
+    }
+
+    public ColorCorrection contrast(float contrast) {
+        this.contrast = contrast;
+        return this;
+    }
+
+    public ColorCorrection contrast(double contrast) {
+        this.contrast = (float) contrast;
+        return this;
+    }
+
+    public ColorCorrection contrast(int contrast) {
+        this.contrast = contrast / 255f;
+        return this;
+    }
+
+    public ColorCorrection saturation(float saturation) {
+        this.saturation = saturation;
+        return this;
+    }
+
+    public ColorCorrection saturation(double saturation) {
+        this.saturation = (float) saturation;
+        return this;
+    }
+
+    public ColorCorrection saturation(int saturation) {
+        this.saturation = saturation / 255f;
+        return this;
+    }
+
+    public ColorCorrection hue(float hue) {
+        this.hue = hue;
+        return this;
+    }
+
+    public ColorCorrection hue(double hue) {
+        this.hue = (float) hue;
+        return this;
+    }
+
+    public ColorCorrection hue(int hue) {
+        this.hue = hue / 255f;
+        return this;
     }
 
     /**
