@@ -41,17 +41,12 @@ public class GLShader extends GLPolygon {
         shader(fragmentShaderPath, x, y, x + width, y + height);
     }
 
-    public void setUniform(String name, Object... value) {
-        getShaderProgram().bind();
-        getShaderProgram().setUniform(name, value);
-        getShaderProgram().unbind();
-    }
-
     @Override
     public void draw() {
         getShaderProgram().bind();
-        setUniform("resolution", getTransform().getWidth(), getTransform().getHeight());
-        setUniform("time", (System.currentTimeMillis() - initTime) / 1000f);
+        getShaderProgram().setUniform("offset", new Vector2f(getTransform().getX(), getTransform().getY()));
+        getShaderProgram().setUniform("resolution", new Vector2f(getTransform().getWidth(), getTransform().getHeight()));
+        getShaderProgram().setUniform("time", (System.currentTimeMillis() - initTime) / 1000f);
         getShaderProgram().unbind();
 
         super.draw();

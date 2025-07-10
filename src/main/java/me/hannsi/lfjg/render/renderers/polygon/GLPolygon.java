@@ -223,20 +223,22 @@ public class GLPolygon extends GLObject {
 
         for (int v = 0; v < vertex.length; v += 2) {
             minX = Math.min(minX, vertex[v]);
-            minY = Math.min(minY, vertex[v]);
+            minY = Math.min(minY, vertex[v + 1]);
             maxX = Math.max(maxX, vertex[v]);
-            maxY = Math.max(maxY, vertex[v]);
+            maxY = Math.max(maxY, vertex[v + 1]);
         }
 
-        float expandLine = getLineWidth() / 2.0f;
-        float expandPoint = getPointSize() / 2.0f;
+        if (getLineWidth() != -1 || getPointSize() != -1) {
+            float expandLine = getLineWidth() / 2.0f;
+            float expandPoint = getPointSize() / 2.0f;
 
-        float expand = Math.max(expandLine, expandPoint);
+            float expand = Math.max(expandLine, expandPoint);
 
-        minX -= expand;
-        minY -= expand;
-        maxX += expand;
-        maxY += expand;
+            minX -= expand;
+            minY -= expand;
+            maxX += expand;
+            maxY += expand;
+        }
 
         return new Vector4f(minX, minY, maxX, maxY);
     }
