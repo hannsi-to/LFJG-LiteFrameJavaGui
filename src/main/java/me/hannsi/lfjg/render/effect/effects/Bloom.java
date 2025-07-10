@@ -23,7 +23,7 @@ public class Bloom extends EffectBase {
      * @return the intensity of the bloom
      * @param intensity the intensity of the bloom
      */
-    private float intensity;
+    private float intensity = 1f;
     /**
      * -- GETTER --
      * Gets the spread of the bloom.
@@ -35,7 +35,7 @@ public class Bloom extends EffectBase {
      * @return the spread of the bloom
      * @param spread the spread of the bloom
      */
-    private float spread;
+    private float spread = 0f;
     /**
      * -- GETTER --
      * Gets the threshold for the bloom.
@@ -47,7 +47,7 @@ public class Bloom extends EffectBase {
      * @return the threshold for the bloom
      * @param threshold the threshold for the bloom
      */
-    private float threshold;
+    private float threshold = 1f;
 
     /**
      * Constructs a new Bloom effect with the specified parameters.
@@ -56,23 +56,42 @@ public class Bloom extends EffectBase {
      * @param spread    the spread of the bloom
      * @param threshold the threshold for the bloom
      */
-    public Bloom(float intensity, float spread, float threshold) {
+    Bloom() {
         super(Location.fromResource("shader/frameBuffer/filter/Bloom.fsh"), true, 9, "Bloom");
-
-        this.intensity = intensity;
-        this.spread = spread;
-        this.threshold = threshold;
     }
 
-    /**
-     * Constructs a new Bloom effect with the specified parameters.
-     *
-     * @param intensity the intensity of the bloom
-     * @param spread    the spread of the bloom
-     * @param threshold the threshold for the bloom
-     */
-    public Bloom(double intensity, double spread, double threshold) {
-        this((float) intensity, (float) spread, (float) threshold);
+    public static Bloom createBloom() {
+        return new Bloom();
+    }
+
+    public Bloom intensity(float intensity) {
+        this.intensity = intensity;
+        return this;
+    }
+
+    public Bloom intensity(double intensity) {
+        this.intensity = (float) intensity;
+        return this;
+    }
+
+    public Bloom spread(float spread) {
+        this.spread = spread;
+        return this;
+    }
+
+    public Bloom spread(double spread) {
+        this.spread = (float) spread;
+        return this;
+    }
+
+    public Bloom threshold(float threshold) {
+        this.threshold = threshold;
+        return this;
+    }
+
+    public Bloom threshold(double threshold) {
+        this.threshold = (float) threshold;
+        return this;
     }
 
     /**
