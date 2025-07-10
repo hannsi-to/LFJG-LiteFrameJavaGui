@@ -10,20 +10,31 @@ import me.hannsi.lfjg.utils.reflection.location.Location;
 @Getter
 @Setter
 public class ColorChanger extends EffectBase {
-    private boolean alpha;
-    private Color targetColor;
-    private Color newColor;
+    private boolean alpha = false;
+    private Color targetColor = Color.YELLOW;
+    private Color newColor = Color.RED;
 
-    public ColorChanger(boolean alpha, Color targetColor, Color newColor) {
+    public ColorChanger() {
         super(Location.fromResource("shader/frameBuffer/filter/ColorChanger.fsh"), true, 28, "ColorChanger");
-
-        this.alpha = alpha;
-        this.targetColor = targetColor;
-        this.newColor = newColor;
     }
 
-    public ColorChanger(Color targetColor, Color newColor) {
-        this(false, targetColor, newColor);
+    public static ColorChanger createColorChanger() {
+        return new ColorChanger();
+    }
+
+    public ColorChanger alpha(boolean alpha) {
+        this.alpha = alpha;
+        return this;
+    }
+
+    public ColorChanger targetColor(Color targetColor) {
+        this.targetColor = targetColor;
+        return this;
+    }
+
+    public ColorChanger newColor(Color newColor) {
+        this.newColor = newColor;
+        return this;
     }
 
     /**

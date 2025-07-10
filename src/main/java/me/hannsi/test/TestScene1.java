@@ -189,7 +189,7 @@ public class TestScene1 implements IScene {
 //        glShaderEffectCache.createCache("SplitObject1", new SplitObject(20, 20, 5, 5, glShaderSplitObjectEffectCache));
 
         glSVGEffectCache.createCache("DrawObject1", new DrawObject());
-        glSVGEffectCache.createCache("ColorChanger1", new ColorChanger(Color.of(227, 227, 227), Color.RED));
+        glSVGEffectCache.createCache("ColorChanger1", ColorChanger.createColorChanger().targetColor(Color.of(227, 227, 227)).newColor(Color.RED));
 
         gl1EffectCache.create(gl1);
 //        gl1SplitObjectEffectCache.create(gl1);
