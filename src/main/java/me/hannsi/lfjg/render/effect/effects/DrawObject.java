@@ -8,11 +8,12 @@ import me.hannsi.lfjg.render.renderers.GLObject;
  */
 public class DrawObject extends EffectBase {
 
-    /**
-     * Constructs a new DrawObject effect with the specified resolution.
-     */
-    public DrawObject() {
+    DrawObject() {
         super(Integer.MAX_VALUE, "DrawObject");
+    }
+
+    public static DrawObject createDrawObject() {
+        return new DrawObject();
     }
 
     /**

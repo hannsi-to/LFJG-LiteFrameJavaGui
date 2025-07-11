@@ -39,7 +39,7 @@ public class TestGuiFrame2 implements LFJGFrame {
         glRect1.rect(500, 500, 1000, 1000, Color.RED);
 
         glRect1EffectCache = EffectCache.initEffectCache();
-        glRect1EffectCache.createCache("DrawObject1", new DrawObject());
+        glRect1EffectCache.createCache("DrawObject1", DrawObject.createDrawObject());
         glRect1EffectCache.createCache("Rotate1", new Rotate(0, 0, MathHelper.toRadians(45), 500, 500));
 
         glRect1.setEffectCache(glRect1EffectCache);

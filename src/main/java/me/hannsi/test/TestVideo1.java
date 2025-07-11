@@ -32,7 +32,7 @@ public class TestVideo1 implements IScene {
         glVideo.video(Location.fromResource("video/[FMV] world.execute(me); - MILI [cn4M-fH08XY].webm"), 0, 0, frame.getWindowWidth(), frame.getWindowHeight());
 
         effectCache = EffectCache.initEffectCache();
-        effectCache.createCache("DrawObject1", new DrawObject());
+        effectCache.createCache("DrawObject1", DrawObject.createDrawObject());
         effectCache.create(glVideo);
         glVideo.setEffectCache(effectCache);
     }

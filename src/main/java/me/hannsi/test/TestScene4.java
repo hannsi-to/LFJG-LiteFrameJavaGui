@@ -1,7 +1,6 @@
 package me.hannsi.test;
 
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.render.effect.effects.DrawFrameBuffer;
 import me.hannsi.lfjg.render.effect.effects.DrawObject;
 import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
@@ -34,7 +33,7 @@ public class TestScene4 implements IScene {
 
         EffectCache.initEffectCache()
                 .createCache("Texture", new Texture(textureCache, "Texture1", BlendType.NORMAL))
-                .createCache("DrawObject", new DrawObject())
+                .createCache("DrawObject", DrawObject.createDrawObject())
 //                .createCache("Bloom", Bloom.createBloom())
 //                .createCache("BoxBlur", BoxBlur.createBoxBlur())
 //                .createCache("ChromaKey", ChromaKey.createChromaKey().chromaKeyColor(Color.YELLOW))
@@ -44,7 +43,7 @@ public class TestScene4 implements IScene {
 //                .createCache("ColorCorrection", ColorCorrection.createColorCorrection())
 //                .createCache("DiagonalClipping", DiagonalClipping.createDiagonalClipping())
 //                .createCache("DirectionalBlur", DirectionalBlur.createDirectionBlur())
-                .createCache("DrawFrameBuffer", DrawFrameBuffer.createDrawFrameBuffer().translateX(100))
+//                .createCache("DrawFrameBuffer", DrawFrameBuffer.createDrawFrameBuffer().translateX(100))
                 .create(glRect);
     }
 
