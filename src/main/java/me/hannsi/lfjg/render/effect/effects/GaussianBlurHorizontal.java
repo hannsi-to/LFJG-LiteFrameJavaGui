@@ -29,26 +29,24 @@ public class GaussianBlurHorizontal extends EffectBase {
      * @param radiusX the radius of the blur in the x-direction
      * @return the radius of the blur in the x-direction
      */
-    private float radiusX;
+    private float radiusX = 10f;
 
-    /**
-     * Constructs a new GaussianBlurHorizontal effect with the specified resolution and radius.
-     *
-     * @param radiusX the radius of the blur in the x-direction
-     */
-    public GaussianBlurHorizontal(float radiusX) {
+    GaussianBlurHorizontal() {
         super(Location.fromResource("shader/frameBuffer/filter/GaussianBlur.fsh"), true, 6, "GaussianBlurHorizontal");
-
-        this.radiusX = radiusX;
     }
 
-    /**
-     * Constructs a new GaussianBlurHorizontal effect with the specified resolution and radius.
-     *
-     * @param radiusX the radius of the blur in the x-direction
-     */
-    public GaussianBlurHorizontal(double radiusX) {
-        this((float) radiusX);
+    public static GaussianBlurHorizontal createGaussianBlurHorizontal() {
+        return new GaussianBlurHorizontal();
+    }
+
+    public GaussianBlurHorizontal radiusX(float radiusX) {
+        this.radiusX = radiusX;
+        return this;
+    }
+
+    public GaussianBlurHorizontal radiusX(double radiusX) {
+        this.radiusX = (float) radiusX;
+        return this;
     }
 
     /**

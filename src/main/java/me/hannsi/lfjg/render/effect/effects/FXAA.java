@@ -25,7 +25,7 @@ public class FXAA extends EffectBase {
      * @param useAlpha true to use alpha, false otherwise
      * @return true if alpha is used, false otherwise
      */
-    private boolean useAlpha;
+    private boolean useAlpha = false;
 
     FXAA() {
         super(Location.fromResource("shader/frameBuffer/filter/FXAA.fsh"), true, 17, "FastApproximateAntiAliasing");
