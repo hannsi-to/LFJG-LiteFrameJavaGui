@@ -28,7 +28,7 @@ public class Flash extends EffectBase {
      * @param intensity the intensity of the flash
      * @return the intensity of the flash
      */
-    private float intensity;
+    private float intensity = 0.08f;
     /**
      * -- SETTER --
      * Sets the x-coordinate of the flash position.
@@ -40,7 +40,7 @@ public class Flash extends EffectBase {
      * @param x the x-coordinate of the flash position
      * @return the x-coordinate of the flash position
      */
-    private float x;
+    private float x = 1920 / 2f;
     /**
      * -- SETTER --
      * Sets the y-coordinate of the flash position.
@@ -52,7 +52,7 @@ public class Flash extends EffectBase {
      * @param y the y-coordinate of the flash position
      * @return the y-coordinate of the flash position
      */
-    private float y;
+    private float y = 1080 / 2f;
     /**
      * -- SETTER --
      * Sets the blend mode of the flash.
@@ -64,7 +64,7 @@ public class Flash extends EffectBase {
      * @param flashBlendMode the blend mode of the flash
      * @return the blend mode of the flash
      */
-    private FlashBlendMode flashBlendMode;
+    private FlashBlendMode flashBlendMode = FlashBlendMode.BackwardSynthesis;
     /**
      * -- SETTER --
      * Sets the color of the light.
@@ -76,38 +76,54 @@ public class Flash extends EffectBase {
      * @param lightColor the color of the light
      * @return the color of the light
      */
-    private Color lightColor;
+    private Color lightColor = Color.FOREST_GREEN;
 
-    /**
-     * Constructs a new Flash effect with the specified parameters.
-     *
-     * @param intensity      the intensity of the flash
-     * @param x              the x-coordinate of the flash position
-     * @param y              the y-coordinate of the flash position
-     * @param flashBlendMode the blend mode of the flash
-     * @param lightColor     the color of the light
-     */
-    public Flash(float intensity, float x, float y, FlashBlendMode flashBlendMode, Color lightColor) {
+    Flash() {
         super(Location.fromResource("shader/frameBuffer/filter/Flash.fsh"), true, 10, "Flash");
-
-        this.intensity = intensity;
-        this.x = x;
-        this.y = y;
-        this.flashBlendMode = flashBlendMode;
-        this.lightColor = lightColor;
     }
 
-    /**
-     * Constructs a new Flash effect with the specified parameters.
-     *
-     * @param intensity      the intensity of the flash
-     * @param x              the x-coordinate of the flash position
-     * @param y              the y-coordinate of the flash position
-     * @param flashBlendMode the blend mode of the flash
-     * @param lightColor     the color of the light
-     */
-    public Flash(double intensity, double x, double y, FlashBlendMode flashBlendMode, Color lightColor) {
-        this((float) intensity, (float) x, (float) y, flashBlendMode, lightColor);
+    public static Flash createFlash() {
+        return new Flash();
+    }
+
+    public Flash intensity(float intensity) {
+        this.intensity = intensity;
+        return this;
+    }
+
+    public Flash intensity(double intensity) {
+        this.intensity = (float) intensity;
+        return this;
+    }
+
+    public Flash x(float x) {
+        this.x = x;
+        return this;
+    }
+
+    public Flash x(double x) {
+        this.x = (float) x;
+        return this;
+    }
+
+    public Flash y(float y) {
+        this.y = y;
+        return this;
+    }
+
+    public Flash y(double y) {
+        this.y = (float) y;
+        return this;
+    }
+
+    public Flash flashBlendMode(FlashBlendMode flashBlendMode) {
+        this.flashBlendMode = flashBlendMode;
+        return this;
+    }
+
+    public Flash lightColor(Color lightColor) {
+        this.lightColor = lightColor;
+        return this;
     }
 
     /**
@@ -166,7 +182,10 @@ public class Flash extends EffectBase {
      * Enum representing the blend modes for the Flash effect.
      */
     public enum FlashBlendMode implements IEnumTypeBase {
-        ForwardSynthesis("ForwardSynthesis", 0), BackwardSynthesis("BackwardSynthesis", 1), LightComponentOnly("LightComponentOnly", 2), OriginalColor("OriginalColor", 3);
+        ForwardSynthesis("ForwardSynthesis", 0),
+        BackwardSynthesis("BackwardSynthesis", 1),
+        LightComponentOnly("LightComponentOnly", 2),
+        OriginalColor("OriginalColor", 3);
 
         final String name;
         final int id;
