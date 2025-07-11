@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.reflection.location.Location;
@@ -7,13 +9,38 @@ import me.hannsi.lfjg.utils.reflection.location.Location;
 /**
  * Class representing a Frame Buffer Contents effect in OpenGL.
  */
+@Setter
+@Getter
 public class FrameBufferContents extends EffectBase {
+    private float translateX = 0f;
+    private float translateY = 0f;
 
-    /**
-     * Constructs a new FrameBufferContents effect with the specified resolution.
-     */
-    public FrameBufferContents() {
+    FrameBufferContents() {
         super(Location.fromResource("shader/frameBuffer/filter/FrameBufferContents.fsh"), true, 25, "FrameBufferContents");
+    }
+
+    public static FrameBufferContents createFrameBufferContents() {
+        return new FrameBufferContents();
+    }
+
+    public FrameBufferContents translateX(float translateX) {
+        this.translateX = translateX;
+        return this;
+    }
+
+    public FrameBufferContents translateX(double translateX) {
+        this.translateX = (float) translateX;
+        return this;
+    }
+
+    public FrameBufferContents translateY(float translateY) {
+        this.translateY = translateY;
+        return this;
+    }
+
+    public FrameBufferContents translateY(double translateY) {
+        this.translateY = (float) translateY;
+        return this;
     }
 
     /**
@@ -45,7 +72,10 @@ public class FrameBufferContents extends EffectBase {
      */
     @Override
     public void frameBuffer(GLObject baseGLObject) {
+        getFrameBuffer().getModelMatrix().translate(translateX, translateY, 0);
         getFrameBuffer().drawFrameBuffer();
+        getFrameBuffer().getModelMatrix().translate(-translateX, -translateY, 0);
+
         super.frameBuffer(baseGLObject);
     }
 
@@ -57,6 +87,7 @@ public class FrameBufferContents extends EffectBase {
     @Override
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().drawFrameBuffer();
+
         super.setUniform(baseGLObject);
     }
 }

@@ -220,7 +220,7 @@ public class EffectCache {
      * @param glObject   the GL object
      */
     public void applyEffect(int index, int maxSize, EffectBase effectBase, GLObject glObject) {
-        if (index == maxSize || effectBase.getName().equals("FrameBufferContents")) {
+        if (index == maxSize) {
             effectBase.getFrameBuffer().getShaderProgramFBO().bind();
             effectBase.setUniform(glObject);
             effectBase.getFrameBuffer().getShaderProgramFBO().unbind();
@@ -228,17 +228,15 @@ public class EffectCache {
             endFrameBuffer.bindFrameBuffer();
             effectBase.frameBuffer(glObject);
             endFrameBuffer.unbindFrameBuffer();
-        }
-        if (index != maxSize || effectBase.getName().equals("FrameBufferContents")) {
+        } else {
             Map.Entry<EffectBase, Identifier> nextEffectBase = getLinkedHashMapEntry(effectBases, index + 1);
-
-            nextEffectBase.getKey().frameBufferPush(glObject);
 
             effectBase.getFrameBuffer().getShaderProgramFBO().bind();
             effectBase.setUniform(glObject);
             effectBase.getFrameBuffer().getShaderProgramFBO().unbind();
-            effectBase.frameBuffer(glObject);
 
+            nextEffectBase.getKey().frameBufferPush(glObject);
+            effectBase.frameBuffer(glObject);
             nextEffectBase.getKey().frameBufferPop(glObject);
         }
 
