@@ -29,26 +29,24 @@ public class GaussianBlurVertical extends EffectBase {
      * @param radiusY the radius of the blur in the y-direction
      * @return the radius of the blur in the y-direction
      */
-    private float radiusY;
+    private float radiusY = 30f;
 
-    /**
-     * Constructs a new GaussianBlurVertical effect with the specified resolution and radius.
-     *
-     * @param radiusY the radius of the blur in the y-direction
-     */
-    public GaussianBlurVertical(float radiusY) {
+    GaussianBlurVertical() {
         super(Location.fromResource("shader/frameBuffer/filter/GaussianBlur.fsh"), true, 6, "GaussianBlurVertical");
-
-        this.radiusY = radiusY;
     }
 
-    /**
-     * Constructs a new GaussianBlurVertical effect with the specified resolution and radius.
-     *
-     * @param radiusY the radius of the blur in the y-direction
-     */
-    public GaussianBlurVertical(double radiusY) {
-        this((float) radiusY);
+    public static GaussianBlurVertical createGaussianBlurVertical() {
+        return new GaussianBlurVertical();
+    }
+
+    public GaussianBlurVertical radiusY(float radiusY) {
+        this.radiusY = radiusY;
+        return this;
+    }
+
+    public GaussianBlurVertical radiusY(double radiusY) {
+        this.radiusY = (float) radiusY;
+        return this;
     }
 
     /**
