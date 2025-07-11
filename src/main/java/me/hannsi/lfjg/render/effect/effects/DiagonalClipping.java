@@ -5,6 +5,7 @@ import lombok.Setter;
 import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.utils.math.MathHelper;
 import me.hannsi.lfjg.utils.reflection.location.Location;
 import org.joml.Vector2f;
 
@@ -25,7 +26,7 @@ public class DiagonalClipping extends EffectBase {
      * @param centerX the x-coordinate of the clipping center
      * @return the x-coordinate of the clipping center
      */
-    private float centerX;
+    private float centerX = 500;
     /**
      * -- SETTER --
      * Sets the y-coordinate of the clipping center.
@@ -37,7 +38,7 @@ public class DiagonalClipping extends EffectBase {
      * @param centerY the y-coordinate of the clipping center
      * @return the y-coordinate of the clipping center
      */
-    private float centerY;
+    private float centerY = 500;
     /**
      * -- SETTER --
      * Sets the angle of the clipping.
@@ -49,7 +50,7 @@ public class DiagonalClipping extends EffectBase {
      * @param clipAngle the angle of the clipping
      * @return the angle of the clipping
      */
-    private float clipAngle;
+    private float clipAngle = MathHelper.toRadians(45);
     /**
      * -- SETTER --
      * Sets the width of the blur.
@@ -61,7 +62,7 @@ public class DiagonalClipping extends EffectBase {
      * @param blurWidth the width of the blur
      * @return the width of the blur
      */
-    private float blurWidth;
+    private float blurWidth = 0f;
     /**
      * -- SETTER --
      * Sets whether the clipping is inverted.
@@ -73,38 +74,64 @@ public class DiagonalClipping extends EffectBase {
      * @param invertClip true to invert the clipping, false otherwise
      * @return true if the clipping is inverted, false otherwise
      */
-    private boolean invertClip;
+    private boolean invertClip = false;
 
-    /**
-     * Constructs a new DiagonalClipping effect with the specified parameters.
-     *
-     * @param centerX    the x-coordinate of the clipping center
-     * @param centerY    the y-coordinate of the clipping center
-     * @param clipAngle  the angle of the clipping
-     * @param blurWidth  the width of the blur
-     * @param invertClip whether to invert the clipping
-     */
-    public DiagonalClipping(float centerX, float centerY, float clipAngle, float blurWidth, boolean invertClip) {
+    DiagonalClipping() {
         super(Location.fromResource("shader/frameBuffer/filter/DiagonalClipping.fsh"), true, 15, "DiagonalClipping");
-
-        this.centerX = centerX;
-        this.centerY = centerY;
-        this.clipAngle = clipAngle;
-        this.blurWidth = blurWidth;
-        this.invertClip = invertClip;
     }
 
-    /**
-     * Constructs a new DiagonalClipping effect with the specified parameters.
-     *
-     * @param centerX    the x-coordinate of the clipping center
-     * @param centerY    the y-coordinate of the clipping center
-     * @param clipAngle  the angle of the clipping
-     * @param blurWidth  the width of the blur
-     * @param invertClip whether to invert the clipping
-     */
-    public DiagonalClipping(double centerX, double centerY, double clipAngle, double blurWidth, boolean invertClip) {
-        this((float) centerX, (float) centerY, (float) clipAngle, (float) blurWidth, invertClip);
+    public static DiagonalClipping createDiagonalClipping() {
+        return new DiagonalClipping();
+    }
+
+    public DiagonalClipping centerX(float centerX) {
+        this.centerX = centerX;
+        return this;
+    }
+
+    public DiagonalClipping centerX(double centerX) {
+        this.centerX = (float) centerX;
+        return this;
+    }
+
+    public DiagonalClipping centerY(float centerY) {
+        this.centerY = centerY;
+        return this;
+    }
+
+    public DiagonalClipping centerY(double centerY) {
+        this.centerY = (float) centerY;
+        return this;
+    }
+
+    public DiagonalClipping clipAngleRadian(float clipAngleRadian) {
+        this.clipAngle = clipAngleRadian;
+        return this;
+    }
+
+    public DiagonalClipping clipAngleRadian(double clipAngleRadian) {
+        this.clipAngle = (float) clipAngleRadian;
+        return this;
+    }
+
+    public DiagonalClipping clipAngleDegree(float clipAngleDegree) {
+        this.clipAngle = MathHelper.toRadians(clipAngleDegree);
+        return this;
+    }
+
+    public DiagonalClipping blurWidth(float blurWidth) {
+        this.blurWidth = blurWidth;
+        return this;
+    }
+
+    public DiagonalClipping blurWidth(double blurWidth) {
+        this.blurWidth = (float) blurWidth;
+        return this;
+    }
+
+    public DiagonalClipping invertClip(boolean invertClip) {
+        this.invertClip = invertClip;
+        return this;
     }
 
     /**

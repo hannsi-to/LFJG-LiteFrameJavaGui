@@ -61,7 +61,7 @@ public class ColorCorrection extends EffectBase {
      */
     private float hue = 0.5f;
 
-    public ColorCorrection() {
+    ColorCorrection() {
         super(Location.fromResource("shader/frameBuffer/filter/ColorCorrection.fsh"), true, 4, "ColorCorrection");
     }
 

@@ -14,7 +14,7 @@ public class ColorChanger extends EffectBase {
     private Color targetColor = Color.YELLOW;
     private Color newColor = Color.RED;
 
-    public ColorChanger() {
+    ColorChanger() {
         super(Location.fromResource("shader/frameBuffer/filter/ColorChanger.fsh"), true, 28, "ColorChanger");
     }
 
