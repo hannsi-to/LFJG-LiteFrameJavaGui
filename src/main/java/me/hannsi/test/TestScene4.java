@@ -1,7 +1,7 @@
 package me.hannsi.test;
 
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.render.effect.effects.DirectionalBlur;
+import me.hannsi.lfjg.render.effect.effects.DrawFrameBuffer;
 import me.hannsi.lfjg.render.effect.effects.DrawObject;
 import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
@@ -43,7 +43,8 @@ public class TestScene4 implements IScene {
 //                .createCache("ColorChanger", ColorChanger.createColorChanger().targetColor(Color.of(251, 232, 44, 255)))
 //                .createCache("ColorCorrection", ColorCorrection.createColorCorrection())
 //                .createCache("DiagonalClipping", DiagonalClipping.createDiagonalClipping())
-                .createCache("DirectionalBlur", DirectionalBlur.createDirectionBlur())
+//                .createCache("DirectionalBlur", DirectionalBlur.createDirectionBlur())
+                .createCache("DrawFrameBuffer", DrawFrameBuffer.createDrawFrameBuffer().translateX(100))
                 .create(glRect);
     }
 

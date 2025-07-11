@@ -35,7 +35,7 @@ public class SplitObject extends EffectBase {
         this.offsetY = offsetY;
         this.effectCache = effectCache;
         if (this.effectCache != null) {
-            this.effectCache.createCache("DrawFrameBuffer1", new DrawFrameBuffer(null), 0);
+            this.effectCache.createCache("DrawFrameBuffer1", DrawFrameBuffer.createDrawFrameBuffer(), 0);
         }
     }
 

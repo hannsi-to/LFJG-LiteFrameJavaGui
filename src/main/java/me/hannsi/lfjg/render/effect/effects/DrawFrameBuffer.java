@@ -8,16 +8,43 @@ import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 
 @Getter
 public class DrawFrameBuffer extends EffectBase {
-    private FrameBuffer frameBuffer2;
+    private FrameBuffer frameBuffer2 = null;
     @Setter
-    private float translateX;
+    private float translateX = 0f;
     @Setter
-    private float translateY;
+    private float translateY = 0f;
 
-    public DrawFrameBuffer(FrameBuffer frameBuffer) {
+    DrawFrameBuffer() {
         super(Integer.MAX_VALUE - 1, "DrawFrameBuffer");
+    }
 
-        this.frameBuffer2 = frameBuffer;
+    public static DrawFrameBuffer createDrawFrameBuffer() {
+        return new DrawFrameBuffer();
+    }
+
+    public DrawFrameBuffer frameBuffer2(FrameBuffer frameBuffer2) {
+        this.frameBuffer2 = frameBuffer2;
+        return this;
+    }
+
+    public DrawFrameBuffer translateX(float translateX) {
+        this.translateX = translateX;
+        return this;
+    }
+
+    public DrawFrameBuffer translateX(double translateX) {
+        this.translateX = (float) translateX;
+        return this;
+    }
+
+    public DrawFrameBuffer translateY(float translateY) {
+        this.translateY = translateY;
+        return this;
+    }
+
+    public DrawFrameBuffer translateY(double translateY) {
+        this.translateY = (float) translateY;
+        return this;
     }
 
     @Override
