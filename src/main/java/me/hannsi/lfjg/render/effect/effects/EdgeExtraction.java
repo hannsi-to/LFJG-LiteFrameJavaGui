@@ -25,7 +25,7 @@ public class EdgeExtraction extends EffectBase {
      * @param edgeStrength the strength of the edges
      * @return the strength of the edges
      */
-    private float edgeStrength;
+    private float edgeStrength = 0.5f;
     /**
      * -- SETTER --
      * Sets the threshold for edge detection.
@@ -37,7 +37,7 @@ public class EdgeExtraction extends EffectBase {
      * @param threshold the threshold for edge detection
      * @return the threshold for edge detection
      */
-    private float threshold;
+    private float threshold = 0.1f;
     /**
      * -- SETTER --
      * Sets whether luminance edge detection is enabled.
@@ -49,7 +49,7 @@ public class EdgeExtraction extends EffectBase {
      * @param enableLuminanceEdge true to enable luminance edge detection, false otherwise
      * @return true if luminance edge detection is enabled, false otherwise
      */
-    private boolean enableLuminanceEdge;
+    private boolean enableLuminanceEdge = false;
     /**
      * -- SETTER --
      * Sets whether alpha edge detection is enabled.
@@ -61,7 +61,7 @@ public class EdgeExtraction extends EffectBase {
      * @param enableAlphaEdge true to enable alpha edge detection, false otherwise
      * @return true if alpha edge detection is enabled, false otherwise
      */
-    private boolean enableAlphaEdge;
+    private boolean enableAlphaEdge = true;
     /**
      * -- SETTER --
      * Sets the color of the edges.
@@ -73,38 +73,49 @@ public class EdgeExtraction extends EffectBase {
      * @param edgeColor the color of the edges
      * @return the color of the edges
      */
-    private Color edgeColor;
+    private Color edgeColor = Color.BLUE;
 
-    /**
-     * Constructs a new EdgeExtraction effect with the specified parameters.
-     *
-     * @param edgeStrength        the strength of the edges
-     * @param threshold           the threshold for edge detection
-     * @param enableLuminanceEdge whether to enable luminance edge detection
-     * @param enableAlphaEdge     whether to enable alpha edge detection
-     * @param edgeColor           the color of the edges
-     */
-    public EdgeExtraction(float edgeStrength, float threshold, boolean enableLuminanceEdge, boolean enableAlphaEdge, Color edgeColor) {
+    EdgeExtraction() {
         super(Location.fromResource("shader/frameBuffer/filter/EdgeExtraction.fsh"), true, 14, "EdgeExtraction");
-
-        this.edgeStrength = edgeStrength;
-        this.threshold = threshold;
-        this.enableLuminanceEdge = enableLuminanceEdge;
-        this.enableAlphaEdge = enableAlphaEdge;
-        this.edgeColor = edgeColor;
     }
 
-    /**
-     * Constructs a new EdgeExtraction effect with the specified parameters.
-     *
-     * @param edgeStrength        the strength of the edges
-     * @param threshold           the threshold for edge detection
-     * @param enableLuminanceEdge whether to enable luminance edge detection
-     * @param enableAlphaEdge     whether to enable alpha edge detection
-     * @param edgeColor           the color of the edges
-     */
-    public EdgeExtraction(double edgeStrength, double threshold, boolean enableLuminanceEdge, boolean enableAlphaEdge, Color edgeColor) {
-        this((float) edgeStrength, (float) threshold, enableLuminanceEdge, enableAlphaEdge, edgeColor);
+    public static EdgeExtraction createEdgeExtraction() {
+        return new EdgeExtraction();
+    }
+
+    public EdgeExtraction edgeStrength(float edgeStrength) {
+        this.edgeStrength = edgeStrength;
+        return this;
+    }
+
+    public EdgeExtraction edgeStrength(double edgeStrength) {
+        this.edgeStrength = (float) edgeStrength;
+        return this;
+    }
+
+    public EdgeExtraction threshold(float threshold) {
+        this.threshold = threshold;
+        return this;
+    }
+
+    public EdgeExtraction threshold(double threshold) {
+        this.threshold = (float) threshold;
+        return this;
+    }
+
+    public EdgeExtraction enableLuminanceEdge(boolean enableLuminanceEdge) {
+        this.enableLuminanceEdge = enableLuminanceEdge;
+        return this;
+    }
+
+    public EdgeExtraction enableAlphaEdge(boolean enableAlphaEdge) {
+        this.enableAlphaEdge = enableAlphaEdge;
+        return this;
+    }
+
+    public EdgeExtraction edgeColor(Color edgeColor) {
+        this.edgeColor = edgeColor;
+        return this;
     }
 
     /**

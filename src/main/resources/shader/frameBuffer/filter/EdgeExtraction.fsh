@@ -17,7 +17,9 @@ void main() {
     vec2 texCoord = outTexture;
 
     float offset = 1.0 / 512.0;
-    vec3 center = texture(textureSampler, texCoord).rgb;
+
+    vec4 texCenter = texture(textureSampler, texCoord);
+    vec3 center = texCenter.rgb;
     vec3 left = texture(textureSampler, texCoord + vec2(-offset, 0.0)).rgb;
     vec3 right = texture(textureSampler, texCoord + vec2(offset, 0.0)).rgb;
     vec3 up = texture(textureSampler, texCoord + vec2(0.0, offset)).rgb;
@@ -32,18 +34,17 @@ void main() {
     float edgeX = luminanceRight - luminanceLeft;
     float edgeY = luminanceUp - luminanceDown;
     float edgeMagnitude = sqrt(edgeX * edgeX + edgeY * edgeY);
-
     edgeMagnitude *= edgeStrength;
 
-    float edge = edgeMagnitude > threshold ? 1.0 : 0.0;
-    vec4 edgeOutput = edge * edgeColor;
+    float edge = step(threshold, edgeMagnitude);
+
+    fragColor = texCenter;
 
     if (enableLuminanceEdge) {
-        fragColor = edgeOutput;
+        fragColor = edge * edgeColor;
     }
 
     if (enableAlphaEdge) {
-        float alpha = texture(textureSampler, texCoord).a;
-        fragColor.a *= step(threshold, alpha);
+        fragColor.a *= edge;
     }
 }

@@ -2,6 +2,7 @@ package me.hannsi.test;
 
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.effect.effects.DrawObject;
+import me.hannsi.lfjg.render.effect.effects.EdgeExtraction;
 import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
@@ -44,6 +45,7 @@ public class TestScene4 implements IScene {
 //                .createCache("DiagonalClipping", DiagonalClipping.createDiagonalClipping())
 //                .createCache("DirectionalBlur", DirectionalBlur.createDirectionBlur())
 //                .createCache("DrawFrameBuffer", DrawFrameBuffer.createDrawFrameBuffer().translateX(100))
+                .createCache("EdgeExtraction", EdgeExtraction.createEdgeExtraction())
                 .create(glRect);
     }
 
