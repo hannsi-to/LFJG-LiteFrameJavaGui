@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.utils.math.MathHelper;
 import me.hannsi.lfjg.utils.reflection.location.Location;
 
 /**
@@ -23,7 +24,7 @@ public class DirectionalBlur extends EffectBase {
      * @param radius the radius of the blur
      * @return the radius of the blur
      */
-    private float radius;
+    private float radius = 10f;
     /**
      * -- SETTER --
      * Sets the angle of the blur.
@@ -35,29 +36,39 @@ public class DirectionalBlur extends EffectBase {
      * @param angle the angle of the blur
      * @return the angle of the blur
      */
-    private float angle;
+    private float angle = MathHelper.toRadians(45);
 
-    /**
-     * Constructs a new DirectionalBlur effect with the specified parameters.
-     *
-     * @param radius the radius of the blur
-     * @param angle  the angle of the blur
-     */
-    public DirectionalBlur(float radius, float angle) {
+    DirectionalBlur() {
         super(Location.fromResource("shader/frameBuffer/filter/DirectionalBlur.fsh"), true, 19, "DirectionalBlur");
-
-        this.radius = radius;
-        this.angle = angle;
     }
 
-    /**
-     * Constructs a new DirectionalBlur effect with the specified parameters.
-     *
-     * @param radius the radius of the blur
-     * @param angle  the angle of the blur
-     */
-    public DirectionalBlur(double radius, double angle) {
-        this((float) radius, (float) angle);
+    public static DirectionalBlur createDirectionBlur() {
+        return new DirectionalBlur();
+    }
+
+    public DirectionalBlur radius(float radius) {
+        this.radius = radius;
+        return this;
+    }
+
+    public DirectionalBlur radius(double radius) {
+        this.radius = (float) radius;
+        return this;
+    }
+
+    public DirectionalBlur angleRadian(float angleRadian) {
+        this.angle = angleRadian;
+        return this;
+    }
+
+    public DirectionalBlur angleRadian(double angleRadian) {
+        this.angle = (float) angleRadian;
+        return this;
+    }
+
+    public DirectionalBlur angleDegree(float angleDegree) {
+        this.angle = MathHelper.toRadians(angleDegree);
+        return this;
     }
 
     /**
