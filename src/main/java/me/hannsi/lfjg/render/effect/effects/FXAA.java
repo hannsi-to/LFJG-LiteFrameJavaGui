@@ -27,15 +27,17 @@ public class FXAA extends EffectBase {
      */
     private boolean useAlpha;
 
-    /**
-     * Constructs a new FXAA effect with the specified resolution and alpha usage.
-     *
-     * @param useAlpha whether to use alpha in the effect
-     */
-    public FXAA(boolean useAlpha) {
+    FXAA() {
         super(Location.fromResource("shader/frameBuffer/filter/FXAA.fsh"), true, 17, "FastApproximateAntiAliasing");
+    }
 
+    public static FXAA createFXAA() {
+        return new FXAA();
+    }
+
+    public FXAA useAlpha(boolean useAlpha) {
         this.useAlpha = useAlpha;
+        return this;
     }
 
     /**

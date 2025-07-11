@@ -2,7 +2,7 @@ package me.hannsi.test;
 
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.effect.effects.DrawObject;
-import me.hannsi.lfjg.render.effect.effects.FrameBufferContents;
+import me.hannsi.lfjg.render.effect.effects.FXAA;
 import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
@@ -47,7 +47,8 @@ public class TestScene4 implements IScene {
 //                .createCache("DrawFrameBuffer", DrawFrameBuffer.createDrawFrameBuffer().translateX(100))
 //                .createCache("EdgeExtraction", EdgeExtraction.createEdgeExtraction())
 //                .createCache("Flash", Flash.createFlash())
-                .createCache("FrameBufferContents", FrameBufferContents.createFrameBufferContents().translateX(500))
+//                .createCache("FrameBufferContents", FrameBufferContents.createFrameBufferContents().translateX(500))
+                .createCache("FXAA", FXAA.createFXAA())
                 .create(glRect);
     }
 
