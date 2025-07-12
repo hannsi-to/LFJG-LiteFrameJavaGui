@@ -2,6 +2,7 @@ package me.hannsi.lfjg.render.effect.effects;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.color.Color;
@@ -25,7 +26,7 @@ public class Glow extends EffectBase {
      * @param intensity the intensity of the glow
      * @return the intensity of the glow
      */
-    private float intensity;
+    private float intensity = 1.0f;
     /**
      * -- SETTER --
      * Sets the threshold for the glow effect.
@@ -37,7 +38,7 @@ public class Glow extends EffectBase {
      * @param threshold the threshold for the glow effect
      * @return the threshold for the glow effect
      */
-    private float threshold;
+    private float threshold = 0.7f;
     /**
      * -- SETTER --
      * Sets the spread of the glow.
@@ -49,7 +50,7 @@ public class Glow extends EffectBase {
      * @param spread the spread of the glow
      * @return the spread of the glow
      */
-    private float spread;
+    private float spread = 3.0f;
     /**
      * -- SETTER --
      * Sets whether to use the original color.
@@ -61,7 +62,7 @@ public class Glow extends EffectBase {
      * @param useOriginalColor true to use the original color, false otherwise
      * @return true if the original color is used, false otherwise
      */
-    private boolean useOriginalColor;
+    private boolean useOriginalColor = true;
     /**
      * -- SETTER --
      * Sets the color of the glow.
@@ -73,7 +74,7 @@ public class Glow extends EffectBase {
      * @param glowColor the color of the glow
      * @return the color of the glow
      */
-    private Color glowColor;
+    private Color glowColor = Color.GOLD;
     /**
      * -- SETTER --
      * Sets whether to apply only the glow effect.
@@ -85,72 +86,59 @@ public class Glow extends EffectBase {
      * @param glowOnly true to apply only the glow effect, false otherwise
      * @return true if only the glow effect is applied, false otherwise
      */
-    private boolean glowOnly;
+    private boolean glowOnly = false;
 
-    /**
-     * Constructs a new Glow effect with the specified parameters.
-     *
-     * @param intensity        the intensity of the glow
-     * @param threshold        the threshold for the glow effect
-     * @param spread           the spread of the glow
-     * @param useOriginalColor whether to use the original color
-     * @param glowColor        the color of the glow
-     * @param glowOnly         whether to apply only the glow effect
-     */
-    public Glow(float intensity, float threshold, float spread, boolean useOriginalColor, Color glowColor, boolean glowOnly) {
+    Glow() {
         super(Location.fromResource("shader/frameBuffer/filter/Glow.fsh"), true, 11, "Glow");
+    }
 
+    public static Glow createGlow() {
+        return new Glow();
+    }
+
+    public Glow intensity(float intensity) {
         this.intensity = intensity;
-        this.spread = spread;
-        this.threshold = threshold;
-        this.useOriginalColor = useOriginalColor;
-        this.glowColor = glowColor;
-        this.glowOnly = glowOnly;
+        return this;
     }
 
-    /**
-     * Constructs a new Glow effect with the specified parameters.
-     *
-     * @param intensity the intensity of the glow
-     * @param threshold the threshold for the glow effect
-     * @param spread    the spread of the glow
-     * @param glowOnly  whether to apply only the glow effect
-     */
-    public Glow(float intensity, float threshold, float spread, boolean glowOnly) {
-        this(intensity, threshold, spread, true, new Color(0, 0, 0, 0), glowOnly);
-    }
-
-    /**
-     * Constructs a new Glow effect with the specified parameters.
-     *
-     * @param intensity        the intensity of the glow
-     * @param threshold        the threshold for the glow effect
-     * @param spread           the spread of the glow
-     * @param useOriginalColor whether to use the original color
-     * @param glowColor        the color of the glow
-     * @param glowOnly         whether to apply only the glow effect
-     */
-    public Glow(double intensity, double threshold, double spread, boolean useOriginalColor, Color glowColor, boolean glowOnly) {
-        super(Location.fromResource("shader/frameBuffer/filter/Glow.fsh"), true, 11, "Glow");
-
+    public Glow intensity(double intensity) {
         this.intensity = (float) intensity;
-        this.spread = (float) spread;
-        this.threshold = (float) threshold;
-        this.useOriginalColor = useOriginalColor;
-        this.glowColor = glowColor;
-        this.glowOnly = glowOnly;
+        return this;
     }
 
-    /**
-     * Constructs a new Glow effect with the specified parameters.
-     *
-     * @param intensity the intensity of the glow
-     * @param threshold the threshold for the glow effect
-     * @param spread    the spread of the glow
-     * @param glowOnly  whether to apply only the glow effect
-     */
-    public Glow(double intensity, double threshold, double spread, boolean glowOnly) {
-        this(intensity, threshold, spread, true, new Color(0, 0, 0, 0), glowOnly);
+    public Glow threshold(float threshold) {
+        this.threshold = threshold;
+        return this;
+    }
+
+    public Glow threshold(double threshold) {
+        this.threshold = (float) threshold;
+        return this;
+    }
+
+    public Glow spread(float spread) {
+        this.spread = spread;
+        return this;
+    }
+
+    public Glow spread(double spread) {
+        this.spread = (float) spread;
+        return this;
+    }
+
+    public Glow useOriginalColor(boolean useOriginalColor) {
+        this.useOriginalColor = useOriginalColor;
+        return this;
+    }
+
+    public Glow glowColor(Color glowColor) {
+        this.glowColor = glowColor;
+        return this;
+    }
+
+    public Glow glowOnly(boolean glowOnly) {
+        this.glowOnly = glowOnly;
+        return this;
     }
 
     /**
@@ -202,6 +190,7 @@ public class Glow extends EffectBase {
         getFrameBuffer().getShaderProgramFBO().setUniform("glowColor", new Vector3f(glowColor.getRedF(), glowColor.getGreenF(), glowColor.getBlueF()));
         getFrameBuffer().getShaderProgramFBO().setUniform("useOriginalColor", useOriginalColor);
         getFrameBuffer().getShaderProgramFBO().setUniform("glowOnly", glowOnly);
+        getFrameBuffer().getShaderProgramFBO().setUniform("texelSize", LFJGContext.frameBufferSize);
 
         super.setUniform(baseGLObject);
     }
