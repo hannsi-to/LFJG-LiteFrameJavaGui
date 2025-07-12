@@ -45,5 +45,12 @@ public class GLVideo extends GLRect {
             glBindTexture(GL_TEXTURE_2D, 0);
         }
     }
+
+    @Override
+    public void cleanup() {
+        videoFrameSystem.cleanup();
+
+        super.cleanup();
+    }
 }
 
