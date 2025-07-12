@@ -25,7 +25,7 @@ public class Translate extends EffectBase {
      */
     @Getter
     @Setter
-    private float x;
+    private float x = 0f;
     /**
      * -- SETTER --
      * Sets the translation distance along the Y axis.
@@ -39,7 +39,7 @@ public class Translate extends EffectBase {
      */
     @Getter
     @Setter
-    private float y;
+    private float y = 0f;
     /**
      * -- SETTER --
      * Sets the translation distance along the Z axis.
@@ -53,51 +53,44 @@ public class Translate extends EffectBase {
      */
     @Getter
     @Setter
-    private float z;
+    private float z = 0f;
 
-    /**
-     * Constructs a new Translate effect with the specified parameters.
-     *
-     * @param x the translation distance along the X axis
-     * @param y the translation distance along the Y axis
-     * @param z the translation distance along the Z axis
-     */
-    public Translate(float x, float y, float z) {
+    Translate() {
         super(2, "Translate", (Class<GLObject>) null);
+    }
+
+    public static Translate createTranslate() {
+        return new Translate();
+    }
+
+    public Translate x(float x) {
         this.x = x;
+        return this;
+    }
+
+    public Translate x(double x) {
+        this.x = (float) x;
+        return this;
+    }
+
+    public Translate y(float y) {
         this.y = y;
+        return this;
+    }
+
+    public Translate y(double y) {
+        this.y = (float) y;
+        return this;
+    }
+
+    public Translate z(float z) {
         this.z = z;
+        return this;
     }
 
-    /**
-     * Constructs a new Translate effect with the specified parameters.
-     *
-     * @param x the translation distance along the X axis
-     * @param y the translation distance along the Y axis
-     * @param z the translation distance along the Z axis
-     */
-    public Translate(double x, double y, double z) {
-        this((float) x, (float) y, (float) z);
-    }
-
-    /**
-     * Constructs a new Translate effect with the specified parameters.
-     *
-     * @param x the translation distance along the X axis
-     * @param y the translation distance along the Y axis
-     */
-    public Translate(float x, float y) {
-        this(x, y, 0.0f);
-    }
-
-    /**
-     * Constructs a new Translate effect with the specified parameters.
-     *
-     * @param x the translation distance along the X axis
-     * @param y the translation distance along the Y axis
-     */
-    public Translate(double x, double y) {
-        this(x, y, 0.0f);
+    public Translate z(double z) {
+        this.z = (float) z;
+        return this;
     }
 
     /**

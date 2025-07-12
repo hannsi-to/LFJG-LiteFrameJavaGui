@@ -176,7 +176,7 @@ public class TestScene1 implements IScene {
 //        gl1EffectCache.createCache(new Clipping2DRect(resolution, 0, 0, 500, 500), gl1);
 
         glFontEffectCache.createCache("DrawObject1", DrawObject.createDrawObject());
-        glFontEffectCache.createCache("Translate1", new Translate(200, 0));
+        glFontEffectCache.createCache("Translate1", Translate.createTranslate().x(200));
 
         glTriangleEffectCache.createCache("DrawObject1", DrawObject.createDrawObject());
 

@@ -4,6 +4,7 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.effect.effects.DrawFrameBuffer;
 import me.hannsi.lfjg.render.effect.effects.DrawObject;
 import me.hannsi.lfjg.render.effect.effects.Texture;
+import me.hannsi.lfjg.render.effect.effects.Translate;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.renderers.polygon.GLTriangle;
@@ -75,6 +76,7 @@ public class TestScene4 implements IScene {
 //                .createCache("Rotate", Rotate.createRotate())
 //                .createCache("Scale", Scale.createScale())
 //                .createCache("SplitObject", SplitObject.createSplitObject())
+                .createCache("Translate", Translate.createTranslate().x(100))
                 .create(glRect);
     }
 
