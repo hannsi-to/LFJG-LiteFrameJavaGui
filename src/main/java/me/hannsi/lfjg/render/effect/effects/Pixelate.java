@@ -24,26 +24,24 @@ public class Pixelate extends EffectBase {
      * @param mosaicSize the size of the mosaic
      * @return the size of the mosaic
      */
-    private float mosaicSize;
+    private float mosaicSize = 10f;
 
-    /**
-     * Constructs a new Pixelate effect with the specified parameters.
-     *
-     * @param mosaicSize the size of the mosaic
-     */
-    public Pixelate(float mosaicSize) {
+    Pixelate() {
         super(Location.fromResource("shader/frameBuffer/filter/Pixelate.fsh"), true, 8, "Pixelate");
-
-        this.mosaicSize = mosaicSize;
     }
 
-    /**
-     * Constructs a new Pixelate effect with the specified parameters.
-     *
-     * @param mosaicSize the size of the mosaic
-     */
-    public Pixelate(double mosaicSize) {
-        this((float) mosaicSize);
+    public static Pixelate createPixelate() {
+        return new Pixelate();
+    }
+
+    public Pixelate mosaicSize(float mosaicSize) {
+        this.mosaicSize = mosaicSize;
+        return this;
+    }
+
+    public Pixelate mosaicSize(double mosaicSize) {
+        this.mosaicSize = (float) mosaicSize;
+        return this;
     }
 
     /**
