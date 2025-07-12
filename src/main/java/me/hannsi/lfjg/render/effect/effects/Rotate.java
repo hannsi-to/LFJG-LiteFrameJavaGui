@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.utils.math.MathHelper;
 
 /**
  * Class representing a Rotate effect in OpenGL.
@@ -25,7 +26,7 @@ public class Rotate extends EffectBase {
      */
     @Getter
     @Setter
-    private float x;
+    private float x = 0f;
     /**
      * -- SETTER --
      * Sets the rotation angle around the Y axis.
@@ -39,7 +40,7 @@ public class Rotate extends EffectBase {
      */
     @Getter
     @Setter
-    private float y;
+    private float y = 0f;
     /**
      * -- SETTER --
      * Sets the rotation angle around the Z axis.
@@ -53,10 +54,10 @@ public class Rotate extends EffectBase {
      */
     @Getter
     @Setter
-    private float z;
+    private float z = MathHelper.toRadians(45);
     @Getter
     @Setter
-    private boolean autoCenter;
+    private boolean autoCenter = true;
     /**
      * -- SETTER --
      * Sets the X coordinate of the rotation center.
@@ -70,7 +71,7 @@ public class Rotate extends EffectBase {
      */
     @Getter
     @Setter
-    private float cx;
+    private float cx = 500f;
     /**
      * -- SETTER --
      * Sets the Y coordinate of the rotation center.
@@ -84,7 +85,7 @@ public class Rotate extends EffectBase {
      */
     @Getter
     @Setter
-    private float cy;
+    private float cy = 500f;
     /**
      * -- SETTER --
      * Sets the Z coordinate of the rotation center.
@@ -98,98 +99,94 @@ public class Rotate extends EffectBase {
      */
     @Getter
     @Setter
-    private float cz;
+    private float cz = 0f;
 
-    /**
-     * Constructs a new Rotate effect with the specified parameters.
-     *
-     * @param x the rotation angle around the X axis
-     * @param y the rotation angle around the Y axis
-     * @param z the rotation angle around the Z axis
-     */
-    public Rotate(float x, float y, float z) {
-        this(x, y, z, 0, 0, 0);
-    }
-
-    public Rotate(float x, float y, float z, boolean autoCenter) {
-        this(x, y, z, 0, 0, 0, autoCenter);
-    }
-
-    /**
-     * Constructs a new Rotate effect with the specified parameters.
-     *
-     * @param x the rotation angle around the X axis
-     * @param y the rotation angle around the Y axis
-     * @param z the rotation angle around the Z axis
-     */
-    public Rotate(double x, double y, double z) {
-        this((float) x, (float) y, (float) z, 0, 0, 0);
-    }
-
-    public Rotate(double x, double y, double z, boolean autoCenter) {
-        this((float) x, (float) y, (float) z, 0, 0, 0, autoCenter);
-    }
-
-    /**
-     * Constructs a new Rotate effect with the specified parameters.
-     *
-     * @param x  the rotation angle around the X axis
-     * @param y  the rotation angle around the Y axis
-     * @param z  the rotation angle around the Z axis
-     * @param cx the X coordinate of the rotation center
-     * @param cy the Y coordinate of the rotation center
-     */
-    public Rotate(float x, float y, float z, float cx, float cy) {
-        this(x, y, z, cx, cy, 0);
-    }
-
-    /**
-     * Constructs a new Rotate effect with the specified parameters.
-     *
-     * @param x  the rotation angle around the X axis
-     * @param y  the rotation angle around the Y axis
-     * @param z  the rotation angle around the Z axis
-     * @param cx the X coordinate of the rotation center
-     * @param cy the Y coordinate of the rotation center
-     */
-    public Rotate(double x, double y, double z, double cx, double cy) {
-        this((float) x, (float) y, (float) z, (float) cx, (float) cy, 0);
-    }
-
-    /**
-     * Constructs a new Rotate effect with the specified parameters.
-     *
-     * @param x  the rotation angle around the X axis
-     * @param y  the rotation angle around the Y axis
-     * @param z  the rotation angle around the Z axis
-     * @param cx the X coordinate of the rotation center
-     * @param cy the Y coordinate of the rotation center
-     * @param cz the Z coordinate of the rotation center
-     */
-    public Rotate(float x, float y, float z, float cx, float cy, float cz, boolean autoCenter) {
+    Rotate() {
         super(1, "Rotate", (Class<GLObject>) null);
-
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.autoCenter = autoCenter;
-        this.cx = cx;
-        this.cy = cy;
-        this.cz = cz;
     }
 
-    /**
-     * Constructs a new Rotate effect with the specified parameters.
-     *
-     * @param x  the rotation angle around the X axis
-     * @param y  the rotation angle around the Y axis
-     * @param z  the rotation angle around the Z axis
-     * @param cx the X coordinate of the rotation center
-     * @param cy the Y coordinate of the rotation center
-     * @param cz the Z coordinate of the rotation center
-     */
-    public Rotate(double x, double y, double z, double cx, double cy, double cz) {
-        this((float) x, (float) y, (float) z, (float) cx, (float) cy, (float) cz, false);
+    public static Rotate createRotate() {
+        return new Rotate();
+    }
+
+    public Rotate xRadian(float xRadian) {
+        this.x = xRadian;
+        return this;
+    }
+
+    public Rotate xRadian(double xRadian) {
+        this.x = (float) xRadian;
+        return this;
+    }
+
+    public Rotate xDegree(int xDegree) {
+        this.x = MathHelper.toRadians(xDegree);
+        return this;
+    }
+
+    public Rotate yRadian(float yRadian) {
+        this.y = yRadian;
+        return this;
+    }
+
+    public Rotate yRadian(double yRadian) {
+        this.y = (float) yRadian;
+        return this;
+    }
+
+    public Rotate yDegree(int yDegree) {
+        this.y = MathHelper.toRadians(yDegree);
+        return this;
+    }
+
+    public Rotate zRadian(float zRadian) {
+        this.z = zRadian;
+        return this;
+    }
+
+    public Rotate zRadian(double zRadian) {
+        this.z = (float) zRadian;
+        return this;
+    }
+
+    public Rotate zDegree(int zDegree) {
+        this.z = MathHelper.toRadians(zDegree);
+        return this;
+    }
+
+    public Rotate autoCenter(boolean autoCenter) {
+        this.autoCenter = autoCenter;
+        return this;
+    }
+
+    public Rotate cx(float cx) {
+        this.cx = cx;
+        return this;
+    }
+
+    public Rotate cx(double cx) {
+        this.cx = (float) cx;
+        return this;
+    }
+
+    public Rotate cy(float cy) {
+        this.cy = cy;
+        return this;
+    }
+
+    public Rotate cy(double cy) {
+        this.cy = (float) cy;
+        return this;
+    }
+
+    public Rotate cz(float cz) {
+        this.cz = cz;
+        return this;
+    }
+
+    public Rotate cz(double cz) {
+        this.cz = (float) cz;
+        return this;
     }
 
     /**

@@ -19,7 +19,6 @@ import me.hannsi.lfjg.render.system.scene.Scene;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.graphics.image.ImageCapture;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
-import me.hannsi.lfjg.utils.math.MathHelper;
 import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.type.types.BlendType;
 import me.hannsi.lfjg.utils.type.types.SoundLoaderType;
@@ -152,7 +151,7 @@ public class TestScene1 implements IScene {
         glShaderSplitObjectEffectCache = EffectCache.initEffectCache();
         glSVGEffectCache = EffectCache.initEffectCache();
 
-        gl1SplitObjectEffectCache.createCache("Rotate1", new Rotate(0, 0, MathHelper.toRadians(0), true));
+        gl1SplitObjectEffectCache.createCache("Rotate1", Rotate.createRotate().zDegree(0).autoCenter(true));
 
         gl1EffectCache.createCache("Texture1", new Texture(textureCache, "Name1", BlendType.NORMAL));
         gl1EffectCache.createCache("DrawObject1", DrawObject.createDrawObject());
@@ -182,7 +181,7 @@ public class TestScene1 implements IScene {
 
         glTriangleEffectCache.createCache("DrawObject1", DrawObject.createDrawObject());
 
-        glShaderSplitObjectEffectCache.createCache("Rotate1", new Rotate(0, 0, MathHelper.toRadians(0), true));
+        glShaderSplitObjectEffectCache.createCache("Rotate1", Rotate.createRotate().zDegree(0).autoCenter(true));
 
         glShaderEffectCache.createCache("DrawObject1", DrawObject.createDrawObject());
 //        glShaderEffectCache.createCache("ObjectClipping1", new ObjectClipping(glObjectCache, "test3", true));
