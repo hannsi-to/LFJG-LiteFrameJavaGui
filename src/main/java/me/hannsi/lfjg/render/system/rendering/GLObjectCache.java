@@ -33,7 +33,7 @@ public class GLObjectCache {
         frameBuffer.createFrameBuffer();
     }
 
-    public static GLObjectCache initGLObjectCache() {
+    public static GLObjectCache createGLObjectCache() {
         return new GLObjectCache();
     }
 

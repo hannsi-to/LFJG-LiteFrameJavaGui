@@ -185,7 +185,7 @@ public class TestScene1 implements IScene {
         glShaderSplitObjectEffectCache.createCache("Rotate1", new Rotate(0, 0, MathHelper.toRadians(0), true));
 
         glShaderEffectCache.createCache("DrawObject1", DrawObject.createDrawObject());
-        glShaderEffectCache.createCache("ObjectClipping1", new ObjectClipping(glObjectCache, "test3", true));
+//        glShaderEffectCache.createCache("ObjectClipping1", new ObjectClipping(glObjectCache, "test3", true));
 //        glShaderEffectCache.createCache("SplitObject1", new SplitObject(20, 20, 5, 5, glShaderSplitObjectEffectCache));
 
         glSVGEffectCache.createCache("DrawObject1", DrawObject.createDrawObject());

@@ -31,7 +31,7 @@ public class ObjectCacheExample implements LFJGFrame {
         glTriangle1 = new GLTriangle("Triangle1");
         glTriangle1.triangle(100, 100, 200, 100, 150, 200, Color.GREEN);
 
-        glObjectCache = GLObjectCache.initGLObjectCache()
+        glObjectCache = GLObjectCache.createGLObjectCache()
                 .createCache(glRect1)
                 .createCache(glRect2)
                 .createCache(glTriangle1);

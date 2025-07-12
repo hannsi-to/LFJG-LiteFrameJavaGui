@@ -2,10 +2,12 @@ package me.hannsi.test;
 
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.effect.effects.DrawObject;
-import me.hannsi.lfjg.render.effect.effects.Monochrome;
+import me.hannsi.lfjg.render.effect.effects.ObjectClipping;
 import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
+import me.hannsi.lfjg.render.renderers.polygon.GLTriangle;
+import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
 import me.hannsi.lfjg.utils.graphics.color.Color;
@@ -19,6 +21,8 @@ public class TestScene4 implements IScene {
     public GLRect glRect;
     public TextureCache textureCache;
 
+    public GLObjectCache clippingCache;
+
     public TestScene4(Frame frame) {
         this.scene = new Scene("TestScene4", this);
     }
@@ -31,6 +35,12 @@ public class TestScene4 implements IScene {
 
         textureCache = TextureCache.createTextureCache()
                 .createCache("Texture1", Location.fromResource("texture/test/test_image_3840x2160.jpg"));
+
+        GLTriangle triangleClipping = new GLTriangle("TriangleClipping");
+        triangleClipping.triangle(200, 200, 500, 500, 700, 200, Color.of(0, 0, 0, 0));
+
+        clippingCache = GLObjectCache.createGLObjectCache()
+                .createCache(triangleClipping);
 
         EffectCache.initEffectCache()
                 .createCache("Texture", new Texture(textureCache, "Texture1", BlendType.NORMAL))
@@ -56,7 +66,8 @@ public class TestScene4 implements IScene {
 //                .createCache("Inversion", Inversion.createInversion())
 //                .createCache("LensBlur", LensBlur.createLensBlur())
 //                .createCache("LuminanceKey", LuminanceKey.createLuminanceKey())
-                .createCache("Monochrome", Monochrome.createMonochrome())
+//                .createCache("Monochrome", Monochrome.createMonochrome())
+                .createCache("ObjectClipping", ObjectClipping.createObjectClipping(clippingCache, "TriangleClipping"))
                 .create(glRect);
     }
 

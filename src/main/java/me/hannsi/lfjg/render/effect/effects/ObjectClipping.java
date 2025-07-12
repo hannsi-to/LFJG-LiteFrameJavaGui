@@ -9,10 +9,10 @@ import me.hannsi.lfjg.utils.reflection.location.Location;
 public class ObjectClipping extends EffectBase {
     private final GLObjectCache glObjectCache;
     private final String clippingObjectName;
-    private final boolean invert;
     protected FrameBuffer clippingFrameBuffer;
+    private boolean invert = false;
 
-    public ObjectClipping(GLObjectCache glObjectCache, String clippingObjectName, boolean invert) {
+    ObjectClipping(GLObjectCache glObjectCache, String clippingObjectName) {
         super(Location.fromResource("shader/frameBuffer/filter/ObjectClipping.fsh"), true, 27, "ObjectClipping");
 
         this.clippingFrameBuffer = new FrameBuffer();
@@ -21,7 +21,15 @@ public class ObjectClipping extends EffectBase {
 
         this.glObjectCache = glObjectCache;
         this.clippingObjectName = clippingObjectName;
+    }
+
+    public static ObjectClipping createObjectClipping(GLObjectCache glObjectCache, String clippingObjectName) {
+        return new ObjectClipping(glObjectCache, clippingObjectName);
+    }
+
+    public ObjectClipping invert(boolean invert) {
         this.invert = invert;
+        return this;
     }
 
     @Override
