@@ -2,7 +2,7 @@ package me.hannsi.test;
 
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.effect.effects.DrawObject;
-import me.hannsi.lfjg.render.effect.effects.Glow;
+import me.hannsi.lfjg.render.effect.effects.Gradation;
 import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
@@ -51,7 +51,8 @@ public class TestScene4 implements IScene {
 //                .createCache("FXAA", FXAA.createFXAA())
 //                .createCache("GaussianBlurHorizontal", GaussianBlurHorizontal.createGaussianBlurHorizontal())
 //                .createCache("GaussianBlurVertical", GaussianBlurVertical.createGaussianBlurVertical())
-                .createCache("Glow", Glow.createGlow())
+//                .createCache("Glow", Glow.createGlow())
+                .createCache("Gradation", Gradation.createGradation())
                 .create(glRect);
     }
 

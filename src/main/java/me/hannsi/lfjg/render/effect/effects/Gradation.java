@@ -6,6 +6,7 @@ import me.hannsi.lfjg.frame.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.utils.graphics.color.Color;
+import me.hannsi.lfjg.utils.math.MathHelper;
 import me.hannsi.lfjg.utils.reflection.location.Location;
 import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
 import me.hannsi.lfjg.utils.type.types.BlendType;
@@ -29,7 +30,7 @@ public class Gradation extends EffectBase {
      * @param centerX the x-coordinate of the center
      * @return the x-coordinate of the center
      */
-    private float centerX;
+    private float centerX = 500f;
     /**
      * -- SETTER --
      * Sets the y-coordinate of the center.
@@ -41,7 +42,7 @@ public class Gradation extends EffectBase {
      * @param centerY the y-coordinate of the center
      * @return the y-coordinate of the center
      */
-    private float centerY;
+    private float centerY = 500f;
     /**
      * -- SETTER --
      * Sets the angle of the gradation.
@@ -53,7 +54,7 @@ public class Gradation extends EffectBase {
      * @param angle the angle of the gradation
      * @return the angle of the gradation
      */
-    private float angle;
+    private float angle = MathHelper.toRadians(45);
     /**
      * -- SETTER --
      * Sets the width of the gradation.
@@ -65,7 +66,7 @@ public class Gradation extends EffectBase {
      * @param width the width of the gradation
      * @return the width of the gradation
      */
-    private float width;
+    private float width = 0.1f;
     /**
      * -- SETTER --
      * Sets the shape mode of the gradation.
@@ -77,7 +78,7 @@ public class Gradation extends EffectBase {
      * @param shapeMode the shape mode of the gradation
      * @return the shape mode of the gradation
      */
-    private ShapeMode shapeMode;
+    private ShapeMode shapeMode = ShapeMode.Rectangle;
     /**
      * -- SETTER --
      * Sets the blend type of the gradation.
@@ -89,7 +90,7 @@ public class Gradation extends EffectBase {
      * @param blendType the blend type of the gradation
      * @return the blend type of the gradation
      */
-    private BlendType blendType;
+    private BlendType blendType = BlendType.ADD;
     /**
      * -- SETTER --
      * Sets the start color of the gradation.
@@ -101,7 +102,7 @@ public class Gradation extends EffectBase {
      * @param startColor the start color of the gradation
      * @return the start color of the gradation
      */
-    private Color startColor;
+    private Color startColor = Color.RED;
     /**
      * -- SETTER --
      * Sets the end color of the gradation.
@@ -113,7 +114,7 @@ public class Gradation extends EffectBase {
      * @param endColor the end color of the gradation
      * @return the end color of the gradation
      */
-    private Color endColor;
+    private Color endColor = Color.BLUE;
     /**
      * -- SETTER --
      * Sets the intensity of the gradation.
@@ -125,50 +126,89 @@ public class Gradation extends EffectBase {
      * @param intensity the intensity of the gradation
      * @return the intensity of the gradation
      */
-    private float intensity;
+    private float intensity = 1f;
 
-    /**
-     * Constructs a new Gradation effect with the specified parameters.
-     *
-     * @param centerX    the x-coordinate of the center
-     * @param centerY    the y-coordinate of the center
-     * @param angle      the angle of the gradation
-     * @param width      the width of the gradation
-     * @param shapeMode  the shape mode of the gradation
-     * @param blendType  the blend type of the gradation
-     * @param startColor the start color of the gradation
-     * @param endColor   the end color of the gradation
-     * @param intensity  the intensity of the gradation
-     */
-    public Gradation(float centerX, float centerY, float angle, float width, ShapeMode shapeMode, BlendType blendType, Color startColor, Color endColor, float intensity) {
+    Gradation() {
         super(Location.fromResource("shader/frameBuffer/filter/Gradation.fsh"), true, 24, "Gradation");
-
-        this.centerX = centerX;
-        this.centerY = centerY;
-        this.angle = angle;
-        this.width = width;
-        this.shapeMode = shapeMode;
-        this.blendType = blendType;
-        this.startColor = startColor;
-        this.endColor = endColor;
-        this.intensity = intensity;
     }
 
-    /**
-     * Constructs a new Gradation effect with the specified parameters.
-     *
-     * @param centerX    the x-coordinate of the center
-     * @param centerY    the y-coordinate of the center
-     * @param angle      the angle of the gradation
-     * @param width      the width of the gradation
-     * @param shapeMode  the shape mode of the gradation
-     * @param blendType  the blend type of the gradation
-     * @param startColor the start color of the gradation
-     * @param endColor   the end color of the gradation
-     * @param intensity  the intensity of the gradation
-     */
-    public Gradation(double centerX, double centerY, double angle, double width, ShapeMode shapeMode, BlendType blendType, Color startColor, Color endColor, double intensity) {
-        this((float) centerX, (float) centerY, (float) angle, (float) width, shapeMode, blendType, startColor, endColor, (float) intensity);
+    public static Gradation createGradation() {
+        return new Gradation();
+    }
+
+    public Gradation centerX(float centerX) {
+        this.centerX = centerX;
+        return this;
+    }
+
+    public Gradation centerX(double centerX) {
+        this.centerX = (float) centerX;
+        return this;
+    }
+
+    public Gradation centerY(float centerY) {
+        this.centerY = centerY;
+        return this;
+    }
+
+    public Gradation centerY(double centerY) {
+        this.centerY = (float) centerY;
+        return this;
+    }
+
+    public Gradation angleRadian(float angleRadian) {
+        this.angle = angleRadian;
+        return this;
+    }
+
+    public Gradation angleRadian(double angleRadian) {
+        this.angle = (float) angleRadian;
+        return this;
+    }
+
+    public Gradation angleDegree(int angleDegree) {
+        this.angle = MathHelper.toRadians(angleDegree);
+        return this;
+    }
+
+    public Gradation width(float width) {
+        this.width = width;
+        return this;
+    }
+
+    public Gradation width(double width) {
+        this.width = (float) width;
+        return this;
+    }
+
+    public Gradation shapeMode(ShapeMode shapeMode) {
+        this.shapeMode = shapeMode;
+        return this;
+    }
+
+    public Gradation blendType(BlendType blendType) {
+        this.blendType = blendType;
+        return this;
+    }
+
+    public Gradation startColor(Color startColor) {
+        this.startColor = startColor;
+        return this;
+    }
+
+    public Gradation endColor(Color endColor) {
+        this.endColor = endColor;
+        return this;
+    }
+
+    public Gradation intensity(float intensity) {
+        this.intensity = intensity;
+        return this;
+    }
+
+    public Gradation intensity(double intensity) {
+        this.intensity = (float) intensity;
+        return this;
     }
 
     /**
@@ -219,6 +259,8 @@ public class Gradation extends EffectBase {
         getFrameBuffer().getShaderProgramFBO().setUniform("startColor", new Vector4f(startColor.getRedF(), startColor.getGreenF(), startColor.getBlueF(), startColor.getAlphaF()));
         getFrameBuffer().getShaderProgramFBO().setUniform("endColor", new Vector4f(endColor.getRedF(), endColor.getGreenF(), endColor.getBlueF(), endColor.getAlphaF()));
         getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
+        float aspectRatio = (float) LFJGContext.frameBufferSize.x() / (float) LFJGContext.frameBufferSize.y();
+        getFrameBuffer().getShaderProgramFBO().setUniform("aspectRatio", aspectRatio);
 
         super.setUniform(baseGLObject);
     }
