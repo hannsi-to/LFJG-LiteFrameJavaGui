@@ -9,11 +9,9 @@ import me.hannsi.lfjg.render.renderers.GLObject;
  * Class representing a Size effect in OpenGL.
  */
 public class Scale extends EffectBase {
-    @Getter
-    private final boolean autoCenter;
-    protected float latestX;
-    protected float latestY;
-    protected float latestZ;
+    protected float latestX = 1f;
+    protected float latestY = 1f;
+    protected float latestZ = 1f;
     /**
      * -- SETTER --
      * Sets the scaling factor along the X axis.
@@ -27,7 +25,7 @@ public class Scale extends EffectBase {
      */
     @Getter
     @Setter
-    private float x;
+    private float x = 2f;
     /**
      * -- SETTER --
      * Sets the scaling factor along the Y axis.
@@ -41,7 +39,7 @@ public class Scale extends EffectBase {
      */
     @Getter
     @Setter
-    private float y;
+    private float y = 2f;
     /**
      * -- SETTER --
      * Sets the scaling factor along the Z axis.
@@ -55,7 +53,7 @@ public class Scale extends EffectBase {
      */
     @Getter
     @Setter
-    private float z;
+    private float z = 2f;
     /**
      * -- SETTER --
      * Sets the X coordinate of the scaling center.
@@ -69,7 +67,10 @@ public class Scale extends EffectBase {
      */
     @Getter
     @Setter
-    private float cx;
+    private boolean autoCenter = true;
+    @Getter
+    @Setter
+    private float cx = 500f;
     /**
      * -- SETTER --
      * Sets the Y coordinate of the scaling center.
@@ -83,7 +84,7 @@ public class Scale extends EffectBase {
      */
     @Getter
     @Setter
-    private float cy;
+    private float cy = 500f;
     /**
      * -- SETTER --
      * Sets the Z coordinate of the scaling center.
@@ -97,127 +98,79 @@ public class Scale extends EffectBase {
      */
     @Getter
     @Setter
-    private float cz;
+    private float cz = 0f;
 
-    /**
-     * Constructs a new Size effect with the specified parameters.
-     *
-     * @param x  the scaling factor along the X axis
-     * @param y  the scaling factor along the Y axis
-     * @param z  the scaling factor along the Z axis
-     * @param cx the X coordinate of the scaling center
-     * @param cy the Y coordinate of the scaling center
-     * @param cz the Z coordinate of the scaling center
-     */
-    public Scale(float x, float y, float z, float cx, float cy, float cz, boolean autoCenter) {
+    Scale() {
         super(0, "Scale", (Class<GLObject>) null);
+    }
+
+    public static Scale createScale() {
+        return new Scale();
+    }
+
+    public Scale x(float x) {
         this.x = x;
+        return this;
+    }
+
+    public Scale x(double x) {
+        this.x = (float) x;
+        return this;
+    }
+
+    public Scale y(float y) {
         this.y = y;
+        return this;
+    }
+
+    public Scale y(double y) {
+        this.y = (float) y;
+        return this;
+    }
+
+    public Scale z(float z) {
         this.z = z;
+        return this;
+    }
+
+    public Scale z(double z) {
+        this.z = (float) z;
+        return this;
+    }
+
+    public Scale autoCenter(boolean autoCenter) {
         this.autoCenter = autoCenter;
+        return this;
+    }
+
+    public Scale cx(float cx) {
         this.cx = cx;
+        return this;
+    }
+
+    public Scale cx(double cx) {
+        this.cx = (float) cx;
+        return this;
+    }
+
+    public Scale cy(float cy) {
         this.cy = cy;
+        return this;
+    }
+
+    public Scale cy(double cy) {
+        this.cy = (float) cy;
+        return this;
+    }
+
+    public Scale cz(float cz) {
         this.cz = cz;
-
-        this.latestX = 1;
-        this.latestY = 1;
-        this.latestZ = 1;
+        return this;
     }
 
-    /**
-     * Constructs a new Size effect with the specified parameters.
-     *
-     * @param x  the scaling factor along the X axis
-     * @param y  the scaling factor along the Y axis
-     * @param z  the scaling factor along the Z axis
-     * @param cx the X coordinate of the scaling center
-     * @param cy the Y coordinate of the scaling center
-     * @param cz the Z coordinate of the scaling center
-     */
-    public Scale(double x, double y, double z, double cx, double cy, double cz) {
-        this((float) x, (float) y, (float) z, (float) cx, (float) cy, (float) cz, false);
-    }
-
-    /**
-     * Constructs a new Size effect with the specified parameters.
-     *
-     * @param x the scaling factor along the X axis
-     * @param y the scaling factor along the Y axis
-     */
-    public Scale(float x, float y) {
-        this(x, y, 1.0f);
-    }
-
-    public Scale(float x, float y, boolean autoCenter) {
-        this(x, y, 1.0f, autoCenter);
-    }
-
-    /**
-     * Constructs a new Size effect with the specified parameters.
-     *
-     * @param x the scaling factor along the X axis
-     * @param y the scaling factor along the Y axis
-     */
-    public Scale(double x, double y) {
-        this((float) x, (float) y, 1.0f);
-    }
-
-    public Scale(double x, double y, boolean autoCenter) {
-        this((float) x, (float) y, 1.0f, autoCenter);
-    }
-
-    /**
-     * Constructs a new Size effect with the specified parameters.
-     *
-     * @param x the scaling factor along the X axis
-     * @param y the scaling factor along the Y axis
-     * @param z the scaling factor along the Z axis
-     */
-    public Scale(float x, float y, float z) {
-        this(x, y, z, 0, 0, 0);
-    }
-
-    public Scale(float x, float y, float z, boolean autoCenter) {
-        this(x, y, z, 0, 0, 0, autoCenter);
-    }
-
-    /**
-     * Constructs a new Size effect with the specified parameters.
-     *
-     * @param x the scaling factor along the X axis
-     * @param y the scaling factor along the Y axis
-     * @param z the scaling factor along the Z axis
-     */
-    public Scale(double x, double y, double z) {
-        this(x, y, z, 0, 0, 0);
-    }
-
-    public Scale(double x, double y, double z, boolean autoCenter) {
-        this((float) x, (float) y, (float) z, 0, 0, 0, autoCenter);
-    }
-
-    /**
-     * Constructs a new Size effect with the specified parameters.
-     *
-     * @param x  the scaling factor along the X axis
-     * @param y  the scaling factor along the Y axis
-     * @param cx the X coordinate of the scaling center
-     * @param cy the Y coordinate of the scaling center
-     */
-    public Scale(float x, float y, float cx, float cy) {
-        this(x, y, 1.0f, cx, cy, 0);
-    }
-
-    /**
-     * Constructs a new Size effect with the specified parameters.
-     *
-     * @param x  the scaling factor along the X axis
-     * @param y  the scaling factor along the Y axis
-     * @param cx the X coordinate of the scaling center
-     * @param cy the Y coordinate of the scaling center
-     */
-    public Scale(double x, double y, double cx, double cy) {
-        this(x, y, 1.0f, cx, cy, 0);
+    public Scale cz(double cz) {
+        this.cz = (float) cz;
+        return this;
     }
 
     /**
@@ -246,7 +199,10 @@ public class Scale extends EffectBase {
             cy = baseGLObject.getTransform().getCenterY();
         }
 
-        baseGLObject.getTransform().translate(cx, cy, cz).scale(1 / latestX, 1 / latestY, 1 / latestZ).scale(x, y, z).translate(-cx, -cy, -cz);
+        baseGLObject.getTransform()
+                .translate(cx, cy, cz)
+                .scale(x / latestX, y / latestY, z / latestZ)
+                .translate(-cx, -cy, -cz);
 
         super.push(baseGLObject);
     }

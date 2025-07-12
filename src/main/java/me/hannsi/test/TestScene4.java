@@ -2,7 +2,7 @@ package me.hannsi.test;
 
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.effect.effects.DrawObject;
-import me.hannsi.lfjg.render.effect.effects.Rotate;
+import me.hannsi.lfjg.render.effect.effects.Scale;
 import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
@@ -70,7 +70,8 @@ public class TestScene4 implements IScene {
 //                .createCache("ObjectClipping", ObjectClipping.createObjectClipping(clippingCache, "TriangleClipping")
 //                .createCache("Pixelate", Pixelate.createPixelate())
 //                .createCache("RadialBlur", RadialBlur.createRadialBlur())
-                .createCache("Rotate", Rotate.createRotate())
+//                .createCache("Rotate", Rotate.createRotate())
+                .createCache("Scale", Scale.createScale())
                 .create(glRect);
     }
 
