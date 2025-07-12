@@ -61,7 +61,7 @@ public class ChromaticAberration extends EffectBase {
      * @param aberrationType the type of chromatic aberration
      * @return the type of chromatic aberration
      */
-    private AberrationType aberrationType = AberrationType.RedBlueA;
+    private AberrationType aberrationType = AberrationType.RED_BLUE_A;
 
     ChromaticAberration() {
         super(Location.fromResource("shader/frameBuffer/filter/ChromaticAberration.fsh"), true, 22, "ChromaticAberration");
@@ -167,7 +167,12 @@ public class ChromaticAberration extends EffectBase {
      * Enum representing the types of chromatic aberration.
      */
     public enum AberrationType implements IEnumTypeBase {
-        RedGreenA("RedGreenA", 0), RedBlueA("RedBlueA", 1), GreenBlueA("GreenBlueA", 2), RedGreenB("RedGreenB", 3), RedBlueB("RedBlueB", 4), GreenBlueB("GreenBlueB", 5);
+        RED_GREEN_A("RedGreenA", 0),
+        RED_BLUE_A("RedBlueA", 1),
+        GREEN_BLUE_A("GreenBlueA", 2),
+        RED_GREEN_B("RedGreenB", 3),
+        RED_BLUE_B("RedBlueB", 4),
+        GREEN_BLUE_B("GreenBlueB", 5);
 
         final String name;
         final int id;

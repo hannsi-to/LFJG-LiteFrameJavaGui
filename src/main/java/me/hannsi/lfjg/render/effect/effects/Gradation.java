@@ -78,7 +78,7 @@ public class Gradation extends EffectBase {
      * @param shapeMode the shape mode of the gradation
      * @return the shape mode of the gradation
      */
-    private ShapeMode shapeMode = ShapeMode.Rectangle;
+    private ShapeMode shapeMode = ShapeMode.RECTANGLE;
     /**
      * -- SETTER --
      * Sets the blend type of the gradation.
@@ -269,7 +269,9 @@ public class Gradation extends EffectBase {
      * Enum representing the shape mode of the gradation.
      */
     public enum ShapeMode implements IEnumTypeBase {
-        Line("Line", 0), Circle("Circle", 1), Rectangle("Rectangle", 2);
+        LINE("Line", 0),
+        CIRCLE("Circle", 1),
+        RECTANGLE("Rectangle", 2);
 
         final String name;
         final int id;

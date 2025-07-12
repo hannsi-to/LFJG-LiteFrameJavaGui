@@ -48,7 +48,7 @@ public class LuminanceKey extends EffectBase {
      * @param luminanceMode the mode of the luminance key
      * @return the mode of the luminance key
      */
-    private LuminanceMode luminanceMode = LuminanceMode.Both;
+    private LuminanceMode luminanceMode = LuminanceMode.BOTH;
 
     LuminanceKey() {
         super(Location.fromResource("shader/frameBuffer/filter/LuminanceKey.fsh"), true, 13, "LuminanceKey");
@@ -137,7 +137,9 @@ public class LuminanceKey extends EffectBase {
      * Enum representing the mode of the luminance key.
      */
     public enum LuminanceMode implements IEnumTypeBase {
-        OnlyDark("OnlyDark", 0), OnlyLight("OnlyLight", 1), Both("Both", 2);
+        ONLY_DARK("OnlyDark", 0),
+        ONLY_Light("OnlyLight", 1),
+        BOTH("Both", 2);
 
         final String name;
         final int id;

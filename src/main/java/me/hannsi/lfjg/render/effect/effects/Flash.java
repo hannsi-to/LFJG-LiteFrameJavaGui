@@ -64,7 +64,7 @@ public class Flash extends EffectBase {
      * @param flashBlendMode the blend mode of the flash
      * @return the blend mode of the flash
      */
-    private FlashBlendMode flashBlendMode = FlashBlendMode.BackwardSynthesis;
+    private FlashBlendMode flashBlendMode = FlashBlendMode.BACKWARD_SYNTHESIS;
     /**
      * -- SETTER --
      * Sets the color of the light.
@@ -182,10 +182,10 @@ public class Flash extends EffectBase {
      * Enum representing the blend modes for the Flash effect.
      */
     public enum FlashBlendMode implements IEnumTypeBase {
-        ForwardSynthesis("ForwardSynthesis", 0),
-        BackwardSynthesis("BackwardSynthesis", 1),
-        LightComponentOnly("LightComponentOnly", 2),
-        OriginalColor("OriginalColor", 3);
+        FORWARD_SYNTHESIS("ForwardSynthesis", 0),
+        BACKWARD_SYNTHESIS("BackwardSynthesis", 1),
+        LIGHT_COMPONENT_ONLY("LightComponentOnly", 2),
+        ORIGINAL_COLOR("OriginalColor", 3);
 
         final String name;
         final int id;
