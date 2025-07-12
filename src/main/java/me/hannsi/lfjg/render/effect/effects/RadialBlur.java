@@ -24,7 +24,7 @@ public class RadialBlur extends EffectBase {
      * @param range the range of the blur
      * @return the range of the blur
      */
-    private float range;
+    private float range = 1f;
     /**
      * -- SETTER --
      * Sets the X coordinate of the blur center.
@@ -36,7 +36,7 @@ public class RadialBlur extends EffectBase {
      * @param centerX the X coordinate of the blur center
      * @return the X coordinate of the blur center
      */
-    private float centerX;
+    private float centerX = 500f;
     /**
      * -- SETTER --
      * Sets the Y coordinate of the blur center.
@@ -48,36 +48,44 @@ public class RadialBlur extends EffectBase {
      * @param centerY the Y coordinate of the blur center
      * @return the Y coordinate of the blur center
      */
-    private float centerY;
+    private float centerY = 500f;
 
-    /**
-     * Constructs a new RadialBlur effect with the specified parameters.
-     *
-     * @param range   the range of the blur
-     * @param centerX the X coordinate of the blur center
-     * @param centerY the Y coordinate of the blur center
-     */
-    public RadialBlur(float range, float centerX, float centerY) {
+    RadialBlur() {
         super(Location.fromResource("shader/frameBuffer/filter/RadialBlur.fsh"), true, 18, "RadialBlur");
-
-        this.range = range;
-        this.centerX = centerX;
-        this.centerY = centerY;
     }
 
-    /**
-     * Constructs a new RadialBlur effect with the specified parameters.
-     *
-     * @param range   the range of the blur
-     * @param centerX the X coordinate of the blur center
-     * @param centerY the Y coordinate of the blur center
-     */
-    public RadialBlur(double range, double centerX, double centerY) {
-        super(Location.fromResource("shader/frameBuffer/filter/RadialBlur.fsh"), true, 18, "RadialBlur");
+    public static RadialBlur createRadialBlur() {
+        return new RadialBlur();
+    }
 
+    public RadialBlur range(float range) {
+        this.range = range;
+        return this;
+    }
+
+    public RadialBlur range(double range) {
         this.range = (float) range;
+        return this;
+    }
+
+    public RadialBlur centerX(float centerX) {
+        this.centerX = centerX;
+        return this;
+    }
+
+    public RadialBlur centerX(double centerX) {
         this.centerX = (float) centerX;
+        return this;
+    }
+
+    public RadialBlur centerY(float centerY) {
+        this.centerY = centerY;
+        return this;
+    }
+
+    public RadialBlur centerY(double centerY) {
         this.centerY = (float) centerY;
+        return this;
     }
 
     /**
