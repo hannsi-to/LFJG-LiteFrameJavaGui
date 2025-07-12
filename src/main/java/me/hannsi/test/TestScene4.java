@@ -1,7 +1,6 @@
 package me.hannsi.test;
 
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.render.effect.effects.DrawFrameBuffer;
 import me.hannsi.lfjg.render.effect.effects.DrawObject;
 import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.effects.Translate;
@@ -41,9 +40,6 @@ public class TestScene4 implements IScene {
 
         clippingCache = GLObjectCache.createGLObjectCache()
                 .createCache(triangleClipping);
-
-        EffectCache splitFrameBuffer = EffectCache.initEffectCache()
-                .createCache("DrawFrameBuffer", DrawFrameBuffer.createDrawFrameBuffer());
 
         EffectCache.initEffectCache()
                 .createCache("Texture", Texture.createTexture(textureCache, "Texture1"))
