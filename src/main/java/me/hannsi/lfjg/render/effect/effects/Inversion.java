@@ -23,7 +23,7 @@ public class Inversion extends EffectBase {
      * @param flipVertical true to flip the image vertically, false otherwise
      * @return true if the image is flipped vertically, false otherwise
      */
-    private boolean flipVertical;
+    private boolean flipVertical = true;
     /**
      * -- SETTER --
      * Sets whether to flip the image horizontally.
@@ -35,7 +35,7 @@ public class Inversion extends EffectBase {
      * @param flipHorizontal true to flip the image horizontally, false otherwise
      * @return true if the image is flipped horizontally, false otherwise
      */
-    private boolean flipHorizontal;
+    private boolean flipHorizontal = true;
     /**
      * -- SETTER --
      * Sets whether to invert the brightness.
@@ -47,7 +47,7 @@ public class Inversion extends EffectBase {
      * @param invertBrightness true to invert the brightness, false otherwise
      * @return true if the brightness is inverted, false otherwise
      */
-    private boolean invertBrightness;
+    private boolean invertBrightness = true;
     /**
      * -- SETTER --
      * Sets whether to invert the hue.
@@ -59,7 +59,7 @@ public class Inversion extends EffectBase {
      * @param invertHue true to invert the hue, false otherwise
      * @return true if the hue is inverted, false otherwise
      */
-    private boolean invertHue;
+    private boolean invertHue = true;
     /**
      * -- SETTER --
      * Sets whether to invert the alpha.
@@ -71,25 +71,39 @@ public class Inversion extends EffectBase {
      * @param invertAlpha true to invert the alpha, false otherwise
      * @return true if the alpha is inverted, false otherwise
      */
-    private boolean invertAlpha;
+    private boolean invertAlpha = false;
 
-    /**
-     * Constructs a new Inversion effect with the specified parameters.
-     *
-     * @param flipVertical     whether to flip the image vertically
-     * @param flipHorizontal   whether to flip the image horizontally
-     * @param invertBrightness whether to invert the brightness
-     * @param invertHue        whether to invert the hue
-     * @param invertAlpha      whether to invert the alpha
-     */
-    public Inversion(boolean flipVertical, boolean flipHorizontal, boolean invertBrightness, boolean invertHue, boolean invertAlpha) {
+    Inversion() {
         super(Location.fromResource("shader/frameBuffer/filter/Inversion.fsh"), true, 21, "Inversion");
+    }
 
+    public static Inversion createInversion() {
+        return new Inversion();
+    }
+
+    public Inversion flipVertical(boolean flipVertical) {
         this.flipVertical = flipVertical;
+        return this;
+    }
+
+    public Inversion flipHorizontal(boolean flipHorizontal) {
         this.flipHorizontal = flipHorizontal;
+        return this;
+    }
+
+    public Inversion invertBrightness(boolean invertBrightness) {
         this.invertBrightness = invertBrightness;
+        return this;
+    }
+
+    public Inversion invertHue(boolean invertHue) {
         this.invertHue = invertHue;
+        return this;
+    }
+
+    public Inversion invertAlpha(boolean invertAlpha) {
         this.invertAlpha = invertAlpha;
+        return this;
     }
 
     /**
