@@ -24,7 +24,7 @@ public class LuminanceKey extends EffectBase {
      * @param threshold the threshold for the luminance key
      * @return the threshold for the luminance key
      */
-    private float threshold;
+    private float threshold = 0.6f;
     /**
      * -- SETTER --
      * Sets the amount of blur to apply.
@@ -36,7 +36,7 @@ public class LuminanceKey extends EffectBase {
      * @param blurAmount the amount of blur to apply
      * @return the amount of blur to apply
      */
-    private float blurAmount;
+    private float blurAmount = 0.1f;
     /**
      * -- SETTER --
      * Sets the mode of the luminance key.
@@ -48,32 +48,39 @@ public class LuminanceKey extends EffectBase {
      * @param luminanceMode the mode of the luminance key
      * @return the mode of the luminance key
      */
-    private LuminanceMode luminanceMode;
+    private LuminanceMode luminanceMode = LuminanceMode.Both;
 
-    /**
-     * Constructs a new LuminanceKey effect with the specified parameters.
-     *
-     * @param threshold     the threshold for the luminance key
-     * @param blurAmount    the amount of blur to apply
-     * @param luminanceMode the mode of the luminance key
-     */
-    public LuminanceKey(float threshold, float blurAmount, LuminanceMode luminanceMode) {
+    LuminanceKey() {
         super(Location.fromResource("shader/frameBuffer/filter/LuminanceKey.fsh"), true, 13, "LuminanceKey");
-
-        this.threshold = threshold;
-        this.blurAmount = blurAmount;
-        this.luminanceMode = luminanceMode;
     }
 
-    /**
-     * Constructs a new LuminanceKey effect with the specified parameters.
-     *
-     * @param threshold     the threshold for the luminance key
-     * @param blurAmount    the amount of blur to apply
-     * @param luminanceMode the mode of the luminance key
-     */
-    public LuminanceKey(double threshold, double blurAmount, LuminanceMode luminanceMode) {
-        this((float) threshold, (float) blurAmount, luminanceMode);
+    public static LuminanceKey createLuminanceKey() {
+        return new LuminanceKey();
+    }
+
+    public LuminanceKey threshold(float threshold) {
+        this.threshold = threshold;
+        return this;
+    }
+
+    public LuminanceKey threshold(double threshold) {
+        this.threshold = (float) threshold;
+        return this;
+    }
+
+    public LuminanceKey blurAmount(float blurAmount) {
+        this.blurAmount = blurAmount;
+        return this;
+    }
+
+    public LuminanceKey blurAmount(double blurAmount) {
+        this.blurAmount = (float) blurAmount;
+        return this;
+    }
+
+    public LuminanceKey luminanceMode(LuminanceMode luminanceMode) {
+        this.luminanceMode = luminanceMode;
+        return this;
     }
 
     /**
