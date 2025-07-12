@@ -1,8 +1,9 @@
 package me.hannsi.test;
 
 import me.hannsi.lfjg.frame.Frame;
+import me.hannsi.lfjg.render.effect.effects.DrawFrameBuffer;
 import me.hannsi.lfjg.render.effect.effects.DrawObject;
-import me.hannsi.lfjg.render.effect.effects.Scale;
+import me.hannsi.lfjg.render.effect.effects.SplitObject;
 import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
@@ -42,6 +43,9 @@ public class TestScene4 implements IScene {
         clippingCache = GLObjectCache.createGLObjectCache()
                 .createCache(triangleClipping);
 
+        EffectCache splitFrameBuffer = EffectCache.initEffectCache()
+                .createCache("DrawFrameBuffer", DrawFrameBuffer.createDrawFrameBuffer());
+
         EffectCache.initEffectCache()
                 .createCache("Texture", new Texture(textureCache, "Texture1", BlendType.NORMAL))
                 .createCache("DrawObject", DrawObject.createDrawObject())
@@ -71,7 +75,8 @@ public class TestScene4 implements IScene {
 //                .createCache("Pixelate", Pixelate.createPixelate())
 //                .createCache("RadialBlur", RadialBlur.createRadialBlur())
 //                .createCache("Rotate", Rotate.createRotate())
-                .createCache("Scale", Scale.createScale())
+//                .createCache("Scale", Scale.createScale())
+                .createCache("SplitObject", SplitObject.createSplitObject())
                 .create(glRect);
     }
 

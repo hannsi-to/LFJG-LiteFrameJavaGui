@@ -129,6 +129,21 @@ public class EffectBase {
         frameBuffer.createShaderProgram();
     }
 
+    public void create(FrameBuffer frameBuffer) {
+        this.frameBuffer = frameBuffer;
+
+        if (vertexPath != null) {
+            frameBuffer.setVertexShaderFBO(vertexPath);
+        }
+
+        if (fragmentPath != null) {
+            frameBuffer.setFragmentShaderFBO(fragmentPath);
+        }
+
+        frameBuffer.createFrameBuffer();
+        frameBuffer.createShaderProgram();
+    }
+
     public void cleanup() {
         frameBuffer.cleanup();
         ignoreGLObject = null;

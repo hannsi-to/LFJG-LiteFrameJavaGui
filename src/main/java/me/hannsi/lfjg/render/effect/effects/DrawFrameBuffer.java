@@ -7,7 +7,7 @@ import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 
 @Getter
-class DrawFrameBuffer extends EffectBase {
+public class DrawFrameBuffer extends EffectBase {
     private FrameBuffer frameBuffer2 = null;
     @Setter
     private float translateX = 0f;

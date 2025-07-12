@@ -3,40 +3,46 @@ package me.hannsi.lfjg.render.effect.effects;
 import lombok.Getter;
 import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
-import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.rendering.SplitFrameBuffer;
 
+@Setter
 @Getter
 public class SplitObject extends EffectBase {
-    private final EffectCache effectCache;
-    @Setter
-    private int rows;
-    @Setter
-    private int cols;
-    @Setter
-    private int offsetX;
-    @Setter
-    private int offsetY;
-    @Setter
+    private int rows = 5;
+    private int cols = 5;
+    private int offsetX = 5;
+    private int offsetY = 5;
+
     private SplitFrameBuffer splitFrameBuffer;
 
-    public SplitObject(int rows, int cols, int offsetX, int offsetY) {
-        this(rows, cols, offsetX, offsetY, null);
+    SplitObject() {
+        super(26, "SplitObject");
     }
 
-    public SplitObject(int rows, int cols, int offsetX, int offsetY, EffectCache effectCache) {
-        super(26, "SplitObject");
+    public static SplitObject createSplitObject() {
+        return new SplitObject();
+    }
 
-        this.cols = cols;
+    public SplitObject rows(int rows) {
         this.rows = rows;
+        return this;
+    }
+
+    public SplitObject cols(int cols) {
+        this.cols = cols;
+        return this;
+    }
+
+    public SplitObject offsetX(int offsetX) {
         this.offsetX = offsetX;
+        return this;
+    }
+
+    public SplitObject offsetY(int offsetY) {
         this.offsetY = offsetY;
-        this.effectCache = effectCache;
-        if (this.effectCache != null) {
-            this.effectCache.createCache("DrawFrameBuffer1", DrawFrameBuffer.createDrawFrameBuffer(), 0);
-        }
+        return this;
     }
 
     /**
@@ -83,19 +89,9 @@ public class SplitObject extends EffectBase {
             for (int x = 0; x < cols; x++) {
                 FrameBuffer smallFrameBuffer = smallFrameBuffers[y][x];
 
-                if (effectCache == null) {
-                    smallFrameBuffer.getModelMatrix().translate(ox, oy, 0);
-                    smallFrameBuffer.drawFrameBuffer();
-                    smallFrameBuffer.getModelMatrix().translate(-ox, -oy, 0);
-                } else {
-                    effectCache.updateFrameBufferSize(smallFrameBuffer);
-
-                    DrawFrameBuffer drawFrameBuffer = (DrawFrameBuffer) effectCache.getEffectBase("DrawFrameBuffer1");
-                    drawFrameBuffer.setFrameBuffer(smallFrameBuffer);
-                    drawFrameBuffer.setTranslateX(ox);
-                    drawFrameBuffer.setTranslateY(oy);
-                    effectCache.frameBuffer(baseGLObject);
-                }
+                smallFrameBuffer.getModelMatrix().translate(ox, oy, 0);
+                smallFrameBuffer.drawFrameBuffer();
+                smallFrameBuffer.getModelMatrix().translate(-ox, -oy, 0);
 
                 ox += offsetX;
             }

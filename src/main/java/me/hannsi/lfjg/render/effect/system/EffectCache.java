@@ -91,6 +91,14 @@ public class EffectCache {
         return this;
     }
 
+    public EffectCache create(FrameBuffer frameBuffer) {
+        for (Map.Entry<EffectBase, Identifier> effectBase : effectBases.entrySet()) {
+            effectBase.getKey().create(frameBuffer);
+        }
+
+        return this;
+    }
+
     public void updateFrameBufferSize(FrameBuffer frameBuffer) {
         for (Map.Entry<EffectBase, Identifier> effectBase : effectBases.entrySet()) {
             effectBase.getKey().getFrameBuffer().setX(frameBuffer.getX());

@@ -5,7 +5,6 @@ import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLevel;
 import me.hannsi.lfjg.debug.LogGenerateType;
 import me.hannsi.lfjg.debug.LogGenerator;
-import me.hannsi.lfjg.frame.frame.LFJGContext;
 import org.joml.Vector2f;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
@@ -19,54 +18,54 @@ import static org.lwjgl.opengl.GL30.glBlitFramebuffer;
 public class SplitFrameBuffer {
     /**
      * -- GETTER --
-     *  Gets the number of columns.
+     * Gets the number of columns.
      *
      * @return the number of columns
      */
     private final int cols;
     /**
      * -- GETTER --
-     *  Gets the number of rows.
+     * Gets the number of rows.
      *
      * @return the number of rows
      */
     private final int rows;
     /**
      * -- SETTER --
-     *  Sets the main frame buffer.
-     *
-     *
+     * Sets the main frame buffer.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the main frame buffer.
+     * Gets the main frame buffer.
      *
-     @param mainFrameBuffer the new main frame buffer
-      * @return the main frame buffer
+     * @param mainFrameBuffer the new main frame buffer
+     * @return the main frame buffer
      */
     @Setter
     private FrameBuffer mainFrameBuffer;
     /**
      * -- SETTER --
-     *  Sets the small frame buffers.
-     *
-     *
+     * Sets the small frame buffers.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the small frame buffers.
+     * Gets the small frame buffers.
      *
-     @param smallFrameBuffers the new small frame buffers
-      * @return the small frame buffers
+     * @param smallFrameBuffers the new small frame buffers
+     * @return the small frame buffers
      */
     @Setter
     private FrameBuffer[][] smallFrameBuffers;
     /**
      * -- SETTER --
-     *  Sets the resolution of the small frame buffers.
-     *
-     *
+     * Sets the resolution of the small frame buffers.
+     * <p>
+     * <p>
      * -- GETTER --
-     *  Gets the resolution of the small frame buffers.
+     * Gets the resolution of the small frame buffers.
      *
-     @param smallResolution the new resolution of the small frame buffers
-      * @return the resolution of the small frame buffers
+     * @param smallResolution the new resolution of the small frame buffers
+     * @return the resolution of the small frame buffers
      */
     @Setter
     private Vector2f smallResolution;
@@ -164,8 +163,8 @@ public class SplitFrameBuffer {
 
                 int distX0 = 0;
                 int distY0 = 0;
-                int distX1 = LFJGContext.frameBufferSize.x();
-                int distY1 = LFJGContext.frameBufferSize.y();
+                int distX1 = (int) smallResolution.x();
+                int distY1 = (int) smallResolution.y();
 
                 glBlitFramebuffer(srcX0, srcY0, srcX1, srcY1, distX0, distY0, distX1, distY1, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
@@ -196,16 +195,5 @@ public class SplitFrameBuffer {
         indexX = 0;
         indexY = 0;
     }
-
-    /**
-     * Gets the small frame buffer at the specified column and row.
-     *
-     * @param x the column index
-     * @param y the row index
-     * @return the small frame buffer at the specified column and row
-     */
-    public FrameBuffer getSmallFrameBuffer(int x, int y) {
-        return smallFrameBuffers[y][x];
-    }
-
 }
+
