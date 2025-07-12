@@ -25,7 +25,7 @@ public class Monochrome extends EffectBase {
      * @param intensity the intensity of the monochrome effect
      * @return the intensity of the monochrome effect
      */
-    private float intensity;
+    private float intensity = 0.8f;
     /**
      * -- SETTER --
      * Sets the color to be used for the monochrome effect.
@@ -37,7 +37,7 @@ public class Monochrome extends EffectBase {
      * @param color the color to be used for the monochrome effect
      * @return the color to be used for the monochrome effect
      */
-    private Color color;
+    private Color color = Color.DARK_GRAY;
     /**
      * -- SETTER --
      * Sets whether to preserve the brightness.
@@ -49,32 +49,34 @@ public class Monochrome extends EffectBase {
      * @param preserveBrightness true to preserve the brightness, false otherwise
      * @return true if the brightness is preserved, false otherwise
      */
-    private boolean preserveBrightness;
+    private boolean preserveBrightness = true;
 
-    /**
-     * Constructs a new Monochrome effect with the specified parameters.
-     *
-     * @param intensity          the intensity of the monochrome effect
-     * @param color              the color to be used for the monochrome effect
-     * @param preserveBrightness whether to preserve the brightness
-     */
-    public Monochrome(float intensity, Color color, boolean preserveBrightness) {
+    Monochrome() {
         super(Location.fromResource("shader/frameBuffer/filter/Monochrome.fsh"), true, 23, "Monochrome");
-
-        this.intensity = intensity;
-        this.color = color;
-        this.preserveBrightness = preserveBrightness;
     }
 
-    /**
-     * Constructs a new Monochrome effect with the specified parameters.
-     *
-     * @param intensity          the intensity of the monochrome effect
-     * @param color              the color to be used for the monochrome effect
-     * @param preserveBrightness whether to preserve the brightness
-     */
-    public Monochrome(double intensity, Color color, boolean preserveBrightness) {
-        this((float) intensity, color, preserveBrightness);
+    public static Monochrome createMonochrome() {
+        return new Monochrome();
+    }
+
+    public Monochrome intensity(float intensity) {
+        this.intensity = intensity;
+        return this;
+    }
+
+    public Monochrome intensity(double intensity) {
+        this.intensity = (float) intensity;
+        return this;
+    }
+
+    public Monochrome color(Color color) {
+        this.color = color;
+        return this;
+    }
+
+    public Monochrome preserveBrightness(boolean preserveBrightness) {
+        this.preserveBrightness = preserveBrightness;
+        return this;
     }
 
     /**
