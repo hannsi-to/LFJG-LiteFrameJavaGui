@@ -746,6 +746,11 @@ public class MathHelper {
         return Math.roundLongUsing(v, mode);
     }
 
+    public static float interpolateHue(float h1, float h2, float t) {
+        float delta = ((h2 - h1 + 540f) % 360f) - 180f;
+        return (h1 + delta * t + 360f) % 360f;
+    }
+
     /**
      * Performs a linear interpolation between two float values.
      *
