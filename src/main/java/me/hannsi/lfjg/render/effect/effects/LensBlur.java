@@ -12,52 +12,58 @@ import me.hannsi.lfjg.utils.reflection.location.Location;
 @Getter
 @Setter
 public class LensBlur extends EffectBase {
-    /**
-     * -- SETTER --
-     * Sets the range of the blur.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the range of the blur.
-     *
-     * @param range the range of the blur
-     * @return the range of the blur
-     */
-    private float range;
-    /**
-     * -- SETTER --
-     * Sets the intensity of the blur.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the intensity of the blur.
-     *
-     * @param intensity the intensity of the blur
-     * @return the intensity of the blur
-     */
-    private float intensity;
+    private float range = 20f;
+    private float intensity = 1.5f;
+    private float sigma = 10f;
+    private int radialSteps = 8;
+    private int angularSamples = 64;
 
-    /**
-     * Constructs a new LensBlur effect with the specified parameters.
-     *
-     * @param range     the range of the blur
-     * @param intensity the intensity of the blur
-     */
-    public LensBlur(float range, float intensity) {
+    LensBlur() {
         super(Location.fromResource("shader/frameBuffer/filter/LensBlur.fsh"), true, 20, "LensBlur");
-
-        this.range = range;
-        this.intensity = intensity;
     }
 
-    /**
-     * Constructs a new LensBlur effect with the specified parameters.
-     *
-     * @param range     the range of the blur
-     * @param intensity the intensity of the blur
-     */
-    public LensBlur(double range, double intensity) {
-        this((float) range, (float) intensity);
+    public static LensBlur createLensBlur() {
+        return new LensBlur();
+    }
+
+    public LensBlur range(float range) {
+        this.range = range;
+        return this;
+    }
+
+    public LensBlur range(double range) {
+        this.range = (float) range;
+        return this;
+    }
+
+    public LensBlur intensity(float intensity) {
+        this.intensity = intensity;
+        return this;
+    }
+
+    public LensBlur intensity(double intensity) {
+        this.intensity = (float) intensity;
+        return this;
+    }
+
+    public LensBlur sigma(float sigma) {
+        this.sigma = sigma;
+        return this;
+    }
+
+    public LensBlur sigma(double sigma) {
+        this.sigma = (float) sigma;
+        return this;
+    }
+
+    public LensBlur radialSteps(int radialSteps) {
+        this.radialSteps = radialSteps;
+        return this;
+    }
+
+    public LensBlur angularSamples(int angularSamples) {
+        this.angularSamples = angularSamples;
+        return this;
     }
 
     /**
@@ -102,6 +108,9 @@ public class LensBlur extends EffectBase {
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().setUniform("range", range);
         getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
+        getFrameBuffer().getShaderProgramFBO().setUniform("sigma", sigma);
+        getFrameBuffer().getShaderProgramFBO().setUniform("radialSteps", radialSteps);
+        getFrameBuffer().getShaderProgramFBO().setUniform("angularSamples", angularSamples);
 
         super.setUniform(baseGLObject);
     }
