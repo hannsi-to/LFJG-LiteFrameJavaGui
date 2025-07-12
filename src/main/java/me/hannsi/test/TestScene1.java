@@ -20,7 +20,6 @@ import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.graphics.image.ImageCapture;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.utils.reflection.location.Location;
-import me.hannsi.lfjg.utils.type.types.BlendType;
 import me.hannsi.lfjg.utils.type.types.SoundLoaderType;
 import org.joml.Vector3f;
 import org.lwjgl.openal.AL11;
@@ -153,7 +152,7 @@ public class TestScene1 implements IScene {
 
         gl1SplitObjectEffectCache.createCache("Rotate1", Rotate.createRotate().zDegree(0).autoCenter(true));
 
-        gl1EffectCache.createCache("Texture1", new Texture(textureCache, "Name1", BlendType.NORMAL));
+        gl1EffectCache.createCache("Texture1", Texture.createTexture(textureCache, "Name1"));
         gl1EffectCache.createCache("DrawObject1", DrawObject.createDrawObject());
 //        gl1EffectCache.createCache("SplitObject1", new SplitObject(4, 5, 5, 5, gl1SplitObjectEffectCache));
 //        gl1EffectCache.createCache("Gradation1",new Gradation(resolution.x / 2, resolution.y / 2, (float) Math.toRadians(90), 0.2f, Gradation.ShapeMode.Rectangle, BlendType.Screen, new Color(50, 100, 200, 100), new Color(255, 255, 255, 255), 1f));

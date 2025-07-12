@@ -20,38 +20,16 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 @Setter
 @Getter
 public class Texture extends EffectBase {
-    /**
-     * -- GETTER --
-     * Gets the texture cache.
-     * <p>
-     * <p>
-     * -- SETTER --
-     * Sets the texture cache.
-     *
-     * @return the texture cache
-     * @param textureCache the texture cache
-     */
     private TextureCache textureCache;
-    private BlendType blendType;
-    /**
-     * -- GETTER --
-     * Gets the texture loader.
-     * <p>
-     * <p>
-     * -- SETTER --
-     * Sets the texture loader.
-     *
-     * @return the texture loader
-     * @param textureLoader the texture loader
-     */
     private TextureLoader textureLoader;
     private int textureId;
 
-    public Texture(TextureCache textureCache, String name, BlendType blendType) {
+    private BlendType blendType = BlendType.NORMAL;
+
+    Texture(TextureCache textureCache, String name) {
         super(3, "Texture");
 
         this.textureCache = textureCache;
-        this.blendType = blendType;
         this.textureLoader = textureCache.getTexture(name);
     }
 
@@ -64,6 +42,15 @@ public class Texture extends EffectBase {
         super(3, "Texture", (Class<GLObject>) null);
 
         this.textureId = textureId;
+    }
+
+    public static Texture createTexture(TextureCache textureCache, String name) {
+        return new Texture(textureCache, name);
+    }
+
+    public Texture blendType(BlendType blendType) {
+        this.blendType = blendType;
+        return this;
     }
 
     /**

@@ -3,7 +3,6 @@ package me.hannsi.test;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.effect.effects.DrawFrameBuffer;
 import me.hannsi.lfjg.render.effect.effects.DrawObject;
-import me.hannsi.lfjg.render.effect.effects.SplitObject;
 import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
@@ -14,7 +13,6 @@ import me.hannsi.lfjg.render.system.scene.Scene;
 import me.hannsi.lfjg.utils.graphics.color.Color;
 import me.hannsi.lfjg.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.utils.reflection.location.Location;
-import me.hannsi.lfjg.utils.type.types.BlendType;
 
 public class TestScene4 implements IScene {
     public Scene scene;
@@ -47,7 +45,7 @@ public class TestScene4 implements IScene {
                 .createCache("DrawFrameBuffer", DrawFrameBuffer.createDrawFrameBuffer());
 
         EffectCache.initEffectCache()
-                .createCache("Texture", new Texture(textureCache, "Texture1", BlendType.NORMAL))
+                .createCache("Texture", Texture.createTexture(textureCache, "Texture1"))
                 .createCache("DrawObject", DrawObject.createDrawObject())
 //                .createCache("Bloom", Bloom.createBloom())
 //                .createCache("BoxBlur", BoxBlur.createBoxBlur())
@@ -76,7 +74,7 @@ public class TestScene4 implements IScene {
 //                .createCache("RadialBlur", RadialBlur.createRadialBlur())
 //                .createCache("Rotate", Rotate.createRotate())
 //                .createCache("Scale", Scale.createScale())
-                .createCache("SplitObject", SplitObject.createSplitObject())
+//                .createCache("SplitObject", SplitObject.createSplitObject())
                 .create(glRect);
     }
 
