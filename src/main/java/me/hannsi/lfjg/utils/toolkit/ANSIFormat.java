@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.utils.math;
+package me.hannsi.lfjg.utils.toolkit;
 
 /**
  * Utility class for ANSI escape codes for text formatting.

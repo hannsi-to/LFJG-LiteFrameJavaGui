@@ -2,7 +2,7 @@ package me.hannsi.lfjg.frame.manager;
 
 import lombok.Setter;
 import me.hannsi.lfjg.debug.DebugLog;
-import me.hannsi.lfjg.utils.math.ANSIFormat;
+import me.hannsi.lfjg.utils.toolkit.ANSIFormat;
 
 import java.io.File;
 import java.io.IOException;

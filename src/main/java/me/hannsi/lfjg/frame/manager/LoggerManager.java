@@ -9,7 +9,7 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.event.events.system.LoggingEvent;
 import me.hannsi.lfjg.frame.event.system.EventHandler;
 import me.hannsi.lfjg.frame.frame.IFrame;
-import me.hannsi.lfjg.utils.math.ANSIFormat;
+import me.hannsi.lfjg.utils.toolkit.ANSIFormat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

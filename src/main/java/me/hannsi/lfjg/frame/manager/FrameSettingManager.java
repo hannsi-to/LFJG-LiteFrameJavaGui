@@ -10,10 +10,10 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
-import me.hannsi.lfjg.utils.math.ANSIFormat;
 import me.hannsi.lfjg.utils.reflection.ClassUtil;
 import me.hannsi.lfjg.utils.reflection.PackagePath;
 import me.hannsi.lfjg.utils.time.TimeCalculator;
+import me.hannsi.lfjg.utils.toolkit.ANSIFormat;
 import me.hannsi.lfjg.utils.type.types.SeverityType;
 
 import java.util.ArrayList;

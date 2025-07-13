@@ -13,11 +13,11 @@ import me.hannsi.lfjg.frame.manager.WorkspaceManager;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.utils.graphics.GLFWUtil;
-import me.hannsi.lfjg.utils.math.ANSIFormat;
 import me.hannsi.lfjg.utils.math.MathHelper;
 import me.hannsi.lfjg.utils.math.Projection;
 import me.hannsi.lfjg.utils.time.TimeCalculator;
 import me.hannsi.lfjg.utils.time.TimeSourceUtil;
+import me.hannsi.lfjg.utils.toolkit.ANSIFormat;
 import me.hannsi.lfjg.utils.toolkit.RuntimeUtil;
 import me.hannsi.lfjg.utils.type.types.AntiAliasingType;
 import me.hannsi.lfjg.utils.type.types.ProjectionType;
@@ -258,7 +258,7 @@ public class Frame implements IFrame {
         float devicePixelRatioX = (float) frameBufferWidth / windowWidth;
         float devicePixelRatioY = (float) frameBufferHeight / windowHeight;
         LFJGContext.devicePixelRatio = MathHelper.max(devicePixelRatioX, devicePixelRatioY);
-        
+
         if (LFJGContext.projection2D == null) {
             LFJGContext.projection2D = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, getFrameBufferWidth(), getFrameBufferHeight());
         } else {
