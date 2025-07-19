@@ -44,7 +44,7 @@ public class MouseEventAdapter {
         return switch (action) {
             case GLFW_PRESS -> MouseEvent.MOUSE_PRESSED;
             case GLFW_RELEASE -> MouseEvent.MOUSE_RELEASED;
-            default -> MouseEvent.MOUSE_MOVED; // GLFWには明確なMOVE定義がない
+            default -> MouseEvent.MOUSE_MOVED;
         };
     }
 

@@ -43,7 +43,7 @@ public class WorkspaceManager {
             throw new RuntimeException(e);
         }
 
-        currentWorkspace = nestedDirPath.toString(); // スラッシュ追加は不要
+        currentWorkspace = nestedDirPath.toString();
         DebugLog.debug(getClass(), "Workspace initialized at: " + currentWorkspace);
     }
 
@@ -65,21 +65,27 @@ public class WorkspaceManager {
             } else {
                 try (ZipInputStream zip = new ZipInputStream(Files.newInputStream(jarPath))) {
                     ZipEntry entry;
+                    StringBuilder debugBuilder = new StringBuilder();
                     while ((entry = zip.getNextEntry()) != null) {
                         String name = entry.getName();
-                        if (name.startsWith("resources/") && !entry.isDirectory()) {
-                            Path path = outputPath.resolve(name.substring("resources/".length()));
+                        if (isTargetResource(name) && !entry.isDirectory()) {
+                            Path path = outputPath.resolve(name);
                             Files.createDirectories(path.getParent());
                             Files.copy(zip, path, StandardCopyOption.REPLACE_EXISTING);
-                            DebugLog.debug(getClass(), "Copied: " + name + " -> " + path);
+                            debugBuilder.append("\tCopied: ").append(name).append(" -> ").append(path).append("\n");
                         }
                     }
+                    DebugLog.debug(getClass(), debugBuilder.toString());
                     DebugLog.debug(getClass(), "Resources copied from JAR.");
                 }
             }
         } catch (Exception e) {
             throw new RuntimeException("Failed to copy resources to workspace", e);
         }
+    }
+
+    private boolean isTargetResource(String name) {
+        return name.startsWith("shader/");
     }
 
     private String copyDirectory(Path srcDir, Path dstDir) throws IOException {
