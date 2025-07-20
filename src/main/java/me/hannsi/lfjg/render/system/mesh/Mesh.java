@@ -59,15 +59,15 @@ public class Mesh {
 
         if (useElementBufferObject) {
             int id = eboId.getBufferId();
-            ids.append("ElementBufferObject: ").append(id).append(" | ");
+            ids.append("ElementBufferObject: [").append(id).append("] | ");
         }
 
         if (useIndirect) {
             int id = iboId.getBufferId();
-            ids.append("IndirectBufferObject: ").append(id).append(" | ");
+            ids.append("IndirectBufferObject: [").append(id).append("] | ");
         }
 
-        ids.append("VertexArrayObject: ").append(vaoId);
+        ids.append("VertexArrayObject: [").append(vaoId).append("]");
 
         return ids.toString();
     }

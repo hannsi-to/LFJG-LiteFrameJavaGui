@@ -145,7 +145,9 @@ public class EffectBase {
     }
 
     public void cleanup() {
-        frameBuffer.cleanup();
+        if (frameBuffer != null) {
+            frameBuffer.cleanup();
+        }
         ignoreGLObject = null;
 
         new LogGenerator(

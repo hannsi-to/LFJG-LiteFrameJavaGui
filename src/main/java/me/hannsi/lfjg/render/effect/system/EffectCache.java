@@ -10,7 +10,6 @@ import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Class representing a cache for OpenGL effects.
@@ -269,18 +268,20 @@ public class EffectCache {
      * Cleans up the effect cache.
      */
     public void cleanup() {
-        AtomicReference<String> ids = new AtomicReference<>();
-        effectBases.forEach((effectBase, id) -> {
+        StringBuilder ids = new StringBuilder();
+        for (Map.Entry<EffectBase, Identifier> entry : effectBases.entrySet()) {
+            EffectBase effectBase = entry.getKey();
+            Identifier id = entry.getValue();
             effectBase.cleanup();
-            ids.set(ids.get() + id + ", ");
-        });
-        effectBases.clear();
+            ids.append(id).append(", ");
+        }
         endFrameBuffer.cleanup();
+        effectBases.clear();
 
         new LogGenerator(
                 LogGenerateType.CLEANUP,
                 getClass(),
-                ids.get().substring(0, ids.get().length() - 2),
+                ids.isEmpty() ? "" : ids.substring(0, ids.toString().length() - 2),
                 ""
         ).logging(DebugLevel.DEBUG);
     }
