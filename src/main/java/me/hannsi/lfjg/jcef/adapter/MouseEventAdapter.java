@@ -1,11 +1,11 @@
 package me.hannsi.lfjg.jcef.adapter;
 
+import me.hannsi.lfjg.core.Core;
 import org.cef.browser.CefBrowserOsr;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-import static org.lwjgl.glfw.GLFW.*;
 
 public class MouseEventAdapter {
     private final Component dummyComponent;
@@ -32,20 +32,25 @@ public class MouseEventAdapter {
     }
 
     private int mapGLFWToAWTButton(int glfwButton) {
-        return switch (glfwButton) {
-            case GLFW_MOUSE_BUTTON_LEFT -> MouseEvent.BUTTON1;
-            case GLFW_MOUSE_BUTTON_MIDDLE -> MouseEvent.BUTTON2;
-            case GLFW_MOUSE_BUTTON_RIGHT -> MouseEvent.BUTTON3;
-            default -> MouseEvent.NOBUTTON;
-        };
+        if (glfwButton == Core.GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            return MouseEvent.BUTTON1;
+        } else if (glfwButton == Core.GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            return MouseEvent.BUTTON2;
+        } else if (glfwButton == Core.GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            return MouseEvent.BUTTON3;
+        } else {
+            return MouseEvent.NOBUTTON;
+        }
     }
 
     private int mapGLFWActionToAWTEventID(int action) {
-        return switch (action) {
-            case GLFW_PRESS -> MouseEvent.MOUSE_PRESSED;
-            case GLFW_RELEASE -> MouseEvent.MOUSE_RELEASED;
-            default -> MouseEvent.MOUSE_MOVED;
-        };
+        if (action == Core.GLFW.GLFW_PRESS) {
+            return MouseEvent.MOUSE_PRESSED;
+        } else if (action == Core.GLFW.GLFW_RELEASE) {
+            return MouseEvent.MOUSE_RELEASED;
+        } else {
+            return MouseEvent.MOUSE_MOVED;
+        }
     }
 
     public MouseEvent createMouseMovedEvent(double xpos, double ypos) {

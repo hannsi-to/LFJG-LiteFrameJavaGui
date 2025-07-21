@@ -1,11 +1,12 @@
 package me.hannsi.lfjg.jcef.adapter;
 
+import me.hannsi.lfjg.core.Core;
 import org.cef.browser.CefBrowserOsr;
-import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
+@SuppressWarnings("ALL")
 public class KeyEventAdapter {
     private final Component dummyComponent;
 
@@ -17,7 +18,7 @@ public class KeyEventAdapter {
         char keyChar = '\u0000';
 
         KeyEvent keyEvent = null;
-        if (action == GLFW.GLFW_PRESS) {
+        if (action == Core.GLFW.GLFW_PRESS) {
             keyEvent = new KeyEvent(
                     dummyComponent,
                     KeyEvent.KEY_PRESSED,
@@ -26,7 +27,7 @@ public class KeyEventAdapter {
                     unicodeToAWTKeyCode(glfwKey),
                     keyChar
             );
-        } else if (action == GLFW.GLFW_RELEASE) {
+        } else if (action == Core.GLFW.GLFW_RELEASE) {
             keyEvent = new KeyEvent(
                     dummyComponent,
                     KeyEvent.KEY_RELEASED,
@@ -42,16 +43,16 @@ public class KeyEventAdapter {
 
     private int getAWTModifiers(int glfwMods) {
         int mods = 0;
-        if ((glfwMods & GLFW.GLFW_MOD_SHIFT) != 0) {
+        if ((glfwMods & Core.GLFW.GLFW_MOD_SHIFT) != 0) {
             mods |= KeyEvent.SHIFT_DOWN_MASK;
         }
-        if ((glfwMods & GLFW.GLFW_MOD_CONTROL) != 0) {
+        if ((glfwMods & Core.GLFW.GLFW_MOD_CONTROL) != 0) {
             mods |= KeyEvent.CTRL_DOWN_MASK;
         }
-        if ((glfwMods & GLFW.GLFW_MOD_ALT) != 0) {
+        if ((glfwMods & Core.GLFW.GLFW_MOD_ALT) != 0) {
             mods |= KeyEvent.ALT_DOWN_MASK;
         }
-        if ((glfwMods & GLFW.GLFW_MOD_SUPER) != 0) {
+        if ((glfwMods & Core.GLFW.GLFW_MOD_SUPER) != 0) {
             mods |= KeyEvent.META_DOWN_MASK;
         }
         return mods;
@@ -130,91 +131,161 @@ public class KeyEventAdapter {
         };
     }
 
-    private int glfwToAWTKeyCode(int glfwKey) {
-        return switch (glfwKey) {
-            case GLFW.GLFW_KEY_ENTER -> KeyEvent.VK_ENTER;
-            case GLFW.GLFW_KEY_BACKSPACE -> KeyEvent.VK_BACK_SPACE;
-            case GLFW.GLFW_KEY_TAB -> KeyEvent.VK_TAB;
-            case GLFW.GLFW_KEY_ESCAPE -> KeyEvent.VK_ESCAPE;
-            case GLFW.GLFW_KEY_SPACE -> KeyEvent.VK_SPACE;
-            case GLFW.GLFW_KEY_LEFT -> KeyEvent.VK_LEFT;
-            case GLFW.GLFW_KEY_RIGHT -> KeyEvent.VK_RIGHT;
-            case GLFW.GLFW_KEY_UP -> KeyEvent.VK_UP;
-            case GLFW.GLFW_KEY_DOWN -> KeyEvent.VK_DOWN;
-            case GLFW.GLFW_KEY_DELETE -> KeyEvent.VK_DELETE;
-            case GLFW.GLFW_KEY_HOME -> KeyEvent.VK_HOME;
-            case GLFW.GLFW_KEY_END -> KeyEvent.VK_END;
-            case GLFW.GLFW_KEY_PAGE_UP -> KeyEvent.VK_PAGE_UP;
-            case GLFW.GLFW_KEY_PAGE_DOWN -> KeyEvent.VK_PAGE_DOWN;
-            case GLFW.GLFW_KEY_INSERT -> KeyEvent.VK_INSERT;
-
-            case GLFW.GLFW_KEY_A -> KeyEvent.VK_A;
-            case GLFW.GLFW_KEY_B -> KeyEvent.VK_B;
-            case GLFW.GLFW_KEY_C -> KeyEvent.VK_C;
-            case GLFW.GLFW_KEY_D -> KeyEvent.VK_D;
-            case GLFW.GLFW_KEY_E -> KeyEvent.VK_E;
-            case GLFW.GLFW_KEY_F -> KeyEvent.VK_F;
-            case GLFW.GLFW_KEY_G -> KeyEvent.VK_G;
-            case GLFW.GLFW_KEY_H -> KeyEvent.VK_H;
-            case GLFW.GLFW_KEY_I -> KeyEvent.VK_I;
-            case GLFW.GLFW_KEY_J -> KeyEvent.VK_J;
-            case GLFW.GLFW_KEY_K -> KeyEvent.VK_K;
-            case GLFW.GLFW_KEY_L -> KeyEvent.VK_L;
-            case GLFW.GLFW_KEY_M -> KeyEvent.VK_M;
-            case GLFW.GLFW_KEY_N -> KeyEvent.VK_N;
-            case GLFW.GLFW_KEY_O -> KeyEvent.VK_O;
-            case GLFW.GLFW_KEY_P -> KeyEvent.VK_P;
-            case GLFW.GLFW_KEY_Q -> KeyEvent.VK_Q;
-            case GLFW.GLFW_KEY_R -> KeyEvent.VK_R;
-            case GLFW.GLFW_KEY_S -> KeyEvent.VK_S;
-            case GLFW.GLFW_KEY_T -> KeyEvent.VK_T;
-            case GLFW.GLFW_KEY_U -> KeyEvent.VK_U;
-            case GLFW.GLFW_KEY_V -> KeyEvent.VK_V;
-            case GLFW.GLFW_KEY_W -> KeyEvent.VK_W;
-            case GLFW.GLFW_KEY_X -> KeyEvent.VK_X;
-            case GLFW.GLFW_KEY_Y -> KeyEvent.VK_Y;
-            case GLFW.GLFW_KEY_Z -> KeyEvent.VK_Z;
-
-            case GLFW.GLFW_KEY_0 -> KeyEvent.VK_0;
-            case GLFW.GLFW_KEY_1 -> KeyEvent.VK_1;
-            case GLFW.GLFW_KEY_2 -> KeyEvent.VK_2;
-            case GLFW.GLFW_KEY_3 -> KeyEvent.VK_3;
-            case GLFW.GLFW_KEY_4 -> KeyEvent.VK_4;
-            case GLFW.GLFW_KEY_5 -> KeyEvent.VK_5;
-            case GLFW.GLFW_KEY_6 -> KeyEvent.VK_6;
-            case GLFW.GLFW_KEY_7 -> KeyEvent.VK_7;
-            case GLFW.GLFW_KEY_8 -> KeyEvent.VK_8;
-            case GLFW.GLFW_KEY_9 -> KeyEvent.VK_9;
-
-            case GLFW.GLFW_KEY_F1 -> KeyEvent.VK_F1;
-            case GLFW.GLFW_KEY_F2 -> KeyEvent.VK_F2;
-            case GLFW.GLFW_KEY_F3 -> KeyEvent.VK_F3;
-            case GLFW.GLFW_KEY_F4 -> KeyEvent.VK_F4;
-            case GLFW.GLFW_KEY_F5 -> KeyEvent.VK_F5;
-            case GLFW.GLFW_KEY_F6 -> KeyEvent.VK_F6;
-            case GLFW.GLFW_KEY_F7 -> KeyEvent.VK_F7;
-            case GLFW.GLFW_KEY_F8 -> KeyEvent.VK_F8;
-            case GLFW.GLFW_KEY_F9 -> KeyEvent.VK_F9;
-            case GLFW.GLFW_KEY_F10 -> KeyEvent.VK_F10;
-            case GLFW.GLFW_KEY_F11 -> KeyEvent.VK_F11;
-            case GLFW.GLFW_KEY_F12 -> KeyEvent.VK_F12;
-
-            case GLFW.GLFW_KEY_LEFT_SHIFT, GLFW.GLFW_KEY_RIGHT_SHIFT -> KeyEvent.VK_SHIFT;
-            case GLFW.GLFW_KEY_LEFT_CONTROL, GLFW.GLFW_KEY_RIGHT_CONTROL -> KeyEvent.VK_CONTROL;
-            case GLFW.GLFW_KEY_LEFT_ALT, GLFW.GLFW_KEY_RIGHT_ALT -> KeyEvent.VK_ALT;
-            case GLFW.GLFW_KEY_LEFT_SUPER, GLFW.GLFW_KEY_RIGHT_SUPER -> KeyEvent.VK_META;
-
-            case GLFW.GLFW_KEY_MINUS -> KeyEvent.VK_MINUS;
-            case GLFW.GLFW_KEY_EQUAL -> KeyEvent.VK_EQUALS;
-            case GLFW.GLFW_KEY_BACKSLASH -> KeyEvent.VK_BACK_SLASH;
-            case GLFW.GLFW_KEY_SEMICOLON -> KeyEvent.VK_SEMICOLON;
-            case GLFW.GLFW_KEY_APOSTROPHE -> KeyEvent.VK_QUOTE;
-            case GLFW.GLFW_KEY_COMMA -> KeyEvent.VK_COMMA;
-            case GLFW.GLFW_KEY_PERIOD -> KeyEvent.VK_PERIOD;
-            case GLFW.GLFW_KEY_SLASH -> KeyEvent.VK_SLASH;
-            case GLFW.GLFW_KEY_GRAVE_ACCENT -> KeyEvent.VK_BACK_QUOTE;
-
-            default -> KeyEvent.VK_UNDEFINED;
-        };
+    public int glfwToAWTKeyCode(int glfwKey) {
+        if (glfwKey == Core.GLFW.GLFW_KEY_ENTER) {
+            return KeyEvent.VK_ENTER;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_BACKSPACE) {
+            return KeyEvent.VK_BACK_SPACE;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_TAB) {
+            return KeyEvent.VK_TAB;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_ESCAPE) {
+            return KeyEvent.VK_ESCAPE;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_SPACE) {
+            return KeyEvent.VK_SPACE;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_LEFT) {
+            return KeyEvent.VK_LEFT;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_RIGHT) {
+            return KeyEvent.VK_RIGHT;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_UP) {
+            return KeyEvent.VK_UP;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_DOWN) {
+            return KeyEvent.VK_DOWN;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_DELETE) {
+            return KeyEvent.VK_DELETE;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_HOME) {
+            return KeyEvent.VK_HOME;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_END) {
+            return KeyEvent.VK_END;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_PAGE_UP) {
+            return KeyEvent.VK_PAGE_UP;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_PAGE_DOWN) {
+            return KeyEvent.VK_PAGE_DOWN;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_INSERT) {
+            return KeyEvent.VK_INSERT;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_A) {
+            return KeyEvent.VK_A;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_B) {
+            return KeyEvent.VK_B;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_C) {
+            return KeyEvent.VK_C;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_D) {
+            return KeyEvent.VK_D;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_E) {
+            return KeyEvent.VK_E;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_F) {
+            return KeyEvent.VK_F;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_G) {
+            return KeyEvent.VK_G;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_H) {
+            return KeyEvent.VK_H;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_I) {
+            return KeyEvent.VK_I;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_J) {
+            return KeyEvent.VK_J;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_K) {
+            return KeyEvent.VK_K;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_L) {
+            return KeyEvent.VK_L;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_M) {
+            return KeyEvent.VK_M;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_N) {
+            return KeyEvent.VK_N;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_O) {
+            return KeyEvent.VK_O;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_P) {
+            return KeyEvent.VK_P;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_Q) {
+            return KeyEvent.VK_Q;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_R) {
+            return KeyEvent.VK_R;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_S) {
+            return KeyEvent.VK_S;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_T) {
+            return KeyEvent.VK_T;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_U) {
+            return KeyEvent.VK_U;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_V) {
+            return KeyEvent.VK_V;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_W) {
+            return KeyEvent.VK_W;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_X) {
+            return KeyEvent.VK_X;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_Y) {
+            return KeyEvent.VK_Y;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_Z) {
+            return KeyEvent.VK_Z;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_0) {
+            return KeyEvent.VK_0;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_1) {
+            return KeyEvent.VK_1;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_2) {
+            return KeyEvent.VK_2;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_3) {
+            return KeyEvent.VK_3;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_4) {
+            return KeyEvent.VK_4;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_5) {
+            return KeyEvent.VK_5;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_6) {
+            return KeyEvent.VK_6;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_7) {
+            return KeyEvent.VK_7;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_8) {
+            return KeyEvent.VK_8;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_9) {
+            return KeyEvent.VK_9;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_F1) {
+            return KeyEvent.VK_F1;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_F2) {
+            return KeyEvent.VK_F2;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_F3) {
+            return KeyEvent.VK_F3;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_F4) {
+            return KeyEvent.VK_F4;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_F5) {
+            return KeyEvent.VK_F5;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_F6) {
+            return KeyEvent.VK_F6;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_F7) {
+            return KeyEvent.VK_F7;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_F8) {
+            return KeyEvent.VK_F8;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_F9) {
+            return KeyEvent.VK_F9;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_F10) {
+            return KeyEvent.VK_F10;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_F11) {
+            return KeyEvent.VK_F11;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_F12) {
+            return KeyEvent.VK_F12;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_LEFT_SHIFT || glfwKey == Core.GLFW.GLFW_KEY_RIGHT_SHIFT) {
+            return KeyEvent.VK_SHIFT;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_LEFT_CONTROL || glfwKey == Core.GLFW.GLFW_KEY_RIGHT_CONTROL) {
+            return KeyEvent.VK_CONTROL;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_LEFT_ALT || glfwKey == Core.GLFW.GLFW_KEY_RIGHT_ALT) {
+            return KeyEvent.VK_ALT;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_LEFT_SUPER || glfwKey == Core.GLFW.GLFW_KEY_RIGHT_SUPER) {
+            return KeyEvent.VK_META;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_MINUS) {
+            return KeyEvent.VK_MINUS;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_EQUAL) {
+            return KeyEvent.VK_EQUALS;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_BACKSLASH) {
+            return KeyEvent.VK_BACK_SLASH;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_SEMICOLON) {
+            return KeyEvent.VK_SEMICOLON;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_APOSTROPHE) {
+            return KeyEvent.VK_QUOTE;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_COMMA) {
+            return KeyEvent.VK_COMMA;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_PERIOD) {
+            return KeyEvent.VK_PERIOD;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_SLASH) {
+            return KeyEvent.VK_SLASH;
+        } else if (glfwKey == Core.GLFW.GLFW_KEY_GRAVE_ACCENT) {
+            return KeyEvent.VK_BACK_QUOTE;
+        } else {
+            return KeyEvent.VK_UNDEFINED;
+        }
     }
 }
