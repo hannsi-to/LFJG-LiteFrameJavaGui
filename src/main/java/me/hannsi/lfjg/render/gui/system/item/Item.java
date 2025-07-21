@@ -5,8 +5,8 @@ import me.hannsi.lfjg.frame.event.events.user.CharEvent;
 import me.hannsi.lfjg.frame.event.events.user.KeyEvent;
 import me.hannsi.lfjg.frame.event.events.user.MouseButtonEvent;
 import me.hannsi.lfjg.render.Id;
-import me.hannsi.lfjg.utils.toolkit.KeyboardInfo;
-import me.hannsi.lfjg.utils.toolkit.MouseInfo;
+import me.hannsi.lfjg.core.utils.toolkit.KeyboardInfo;
+import me.hannsi.lfjg.core.utils.toolkit.MouseInfo;
 
 
 @Getter

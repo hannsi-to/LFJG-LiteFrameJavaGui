@@ -1,13 +1,13 @@
 package me.hannsi.lfjg.render.system.model;
 
 import lombok.Data;
-import me.hannsi.lfjg.debug.DebugLevel;
-import me.hannsi.lfjg.debug.LogGenerator;
+import me.hannsi.lfjg.core.debug.DebugLevel;
+import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.render.debug.exceptions.model.MaterialException;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
-import me.hannsi.lfjg.utils.reflection.location.Location;
-import me.hannsi.lfjg.utils.type.types.BufferObjectType;
-import me.hannsi.lfjg.utils.type.types.MaterialType;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
+import me.hannsi.lfjg.core.utils.type.types.BufferObjectType;
+import me.hannsi.lfjg.core.utils.type.types.MaterialType;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;

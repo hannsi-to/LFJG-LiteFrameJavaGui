@@ -6,7 +6,7 @@ import me.hannsi.lfjg.frame.event.events.user.CharEvent;
 import me.hannsi.lfjg.frame.event.events.user.KeyEvent;
 import me.hannsi.lfjg.frame.event.events.user.MouseButtonEvent;
 import me.hannsi.lfjg.render.gui.system.item.ItemRect;
-import me.hannsi.lfjg.utils.toolkit.StringUtil;
+import me.hannsi.lfjg.core.utils.toolkit.StringUtil;
 
 import static org.lwjgl.glfw.GLFW.*;
 

@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.render.system.mesh;
 
-import me.hannsi.lfjg.utils.type.types.ProjectionType;
+import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 
 import static org.lwjgl.opengl.GL30.GL_MAP_WRITE_BIT;
 import static org.lwjgl.opengl.GL44.GL_MAP_COHERENT_BIT;

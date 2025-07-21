@@ -1,11 +1,11 @@
 package me.hannsi.lfjg.render.debug;
 
-import me.hannsi.lfjg.debug.DebugLevel;
-import me.hannsi.lfjg.debug.DebugLog;
-import me.hannsi.lfjg.debug.LogGenerator;
+import me.hannsi.lfjg.core.debug.DebugLevel;
+import me.hannsi.lfjg.core.debug.DebugLog;
+import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
-import me.hannsi.lfjg.utils.reflection.StackTraceUtil;
-import me.hannsi.lfjg.utils.type.types.SeverityType;
+import me.hannsi.lfjg.core.utils.reflection.StackTraceUtil;
+import me.hannsi.lfjg.core.utils.type.types.SeverityType;
 import org.lwjgl.opengl.GLDebugMessageCallback;
 
 import static org.lwjgl.opengl.GL.getCapabilities;

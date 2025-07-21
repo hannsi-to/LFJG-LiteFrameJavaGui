@@ -1,12 +1,19 @@
 package me.hannsi.test;
 
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
+import me.hannsi.lfjg.core.utils.toolkit.Camera;
+import me.hannsi.lfjg.core.utils.toolkit.KeyboardInfo;
+import me.hannsi.lfjg.core.utils.toolkit.MouseInfo;
+import me.hannsi.lfjg.core.utils.type.types.AntiAliasingType;
+import me.hannsi.lfjg.core.utils.type.types.MonitorType;
+import me.hannsi.lfjg.core.utils.type.types.VSyncType;
 import me.hannsi.lfjg.frame.Frame;
+import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.frame.event.events.user.*;
 import me.hannsi.lfjg.frame.event.system.EventHandler;
-import me.hannsi.lfjg.frame.frame.IFrame;
-import me.hannsi.lfjg.frame.frame.LFJGContext;
-import me.hannsi.lfjg.frame.frame.LFJGFrame;
 import me.hannsi.lfjg.frame.setting.settings.*;
+import me.hannsi.lfjg.frame.system.IFrame;
+import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.jcef.adapter.KeyEventAdapter;
 import me.hannsi.lfjg.jcef.adapter.MouseEventAdapter;
 import me.hannsi.lfjg.jcef.adapter.MouseWheelEventAdapter;
@@ -14,13 +21,6 @@ import me.hannsi.lfjg.jcef.handler.RenderHandler;
 import me.hannsi.lfjg.render.system.font.Font;
 import me.hannsi.lfjg.render.system.font.FontCache;
 import me.hannsi.lfjg.render.system.scene.SceneSystem;
-import me.hannsi.lfjg.utils.reflection.location.Location;
-import me.hannsi.lfjg.utils.toolkit.Camera;
-import me.hannsi.lfjg.utils.toolkit.KeyboardInfo;
-import me.hannsi.lfjg.utils.toolkit.MouseInfo;
-import me.hannsi.lfjg.utils.type.types.AntiAliasingType;
-import me.hannsi.lfjg.utils.type.types.MonitorType;
-import me.hannsi.lfjg.utils.type.types.VSyncType;
 import org.cef.CefApp;
 import org.cef.CefClient;
 import org.cef.browser.CefBrowser;
@@ -30,7 +30,7 @@ import org.joml.Vector2f;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
-import static me.hannsi.lfjg.frame.frame.LFJGContext.*;
+import static me.hannsi.lfjg.frame.LFJGContext.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class TestGuiFrame implements LFJGFrame {

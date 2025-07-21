@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.renderers.font;
 
-import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.type.types.TextFormatType;
+import me.hannsi.lfjg.core.utils.graphics.color.Color;
+import me.hannsi.lfjg.core.utils.type.types.TextFormatType;
 
 public class CharState {
     public Color defaultColor;

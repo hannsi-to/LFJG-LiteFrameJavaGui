@@ -2,16 +2,16 @@ package me.hannsi.lfjg.render.system.shader;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.hannsi.lfjg.debug.DebugLevel;
-import me.hannsi.lfjg.debug.DebugLog;
-import me.hannsi.lfjg.debug.LogGenerateType;
-import me.hannsi.lfjg.debug.LogGenerator;
+import me.hannsi.lfjg.core.debug.DebugLevel;
+import me.hannsi.lfjg.core.debug.DebugLog;
+import me.hannsi.lfjg.core.debug.LogGenerateType;
+import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.render.debug.exceptions.shader.CompilingShaderException;
 import me.hannsi.lfjg.render.debug.exceptions.shader.CreatingShaderException;
 import me.hannsi.lfjg.render.debug.exceptions.shader.CreatingShaderProgramException;
 import me.hannsi.lfjg.render.debug.exceptions.shader.LinkingShaderException;
-import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.reflection.location.Location;
+import me.hannsi.lfjg.core.utils.graphics.color.Color;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import org.joml.*;
 import org.lwjgl.system.MemoryStack;
 

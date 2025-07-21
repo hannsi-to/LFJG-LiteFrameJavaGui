@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.frame.event.events.system;
 
 import lombok.Getter;
-import me.hannsi.lfjg.debug.DebugLog;
+import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.frame.event.system.Event;
 
 /**

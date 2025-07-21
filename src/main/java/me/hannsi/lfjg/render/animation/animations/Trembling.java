@@ -4,11 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import me.hannsi.lfjg.render.animation.system.AnimationBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.utils.math.animation.Easing;
-import me.hannsi.lfjg.utils.math.animation.EasingUtil;
+import me.hannsi.lfjg.core.utils.math.animation.Easing;
+import me.hannsi.lfjg.core.utils.math.animation.EasingUtil;
 
-import static me.hannsi.lfjg.utils.math.MathHelper.sin;
-import static me.hannsi.lfjg.utils.math.MathHelper.toRadians;
+import static me.hannsi.lfjg.core.utils.math.MathHelper.sin;
+import static me.hannsi.lfjg.core.utils.math.MathHelper.toRadians;
 
 public class Trembling extends AnimationBase {
     protected EasingUtil easingUtil;

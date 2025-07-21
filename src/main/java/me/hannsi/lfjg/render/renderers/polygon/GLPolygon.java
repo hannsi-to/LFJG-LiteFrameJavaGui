@@ -5,10 +5,10 @@ import lombok.Setter;
 import me.hannsi.lfjg.render.debug.exceptions.render.meshBuilder.MeshBuilderException;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
-import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.reflection.location.Location;
-import me.hannsi.lfjg.utils.type.types.BufferObjectType;
-import me.hannsi.lfjg.utils.type.types.ProjectionType;
+import me.hannsi.lfjg.core.utils.graphics.color.Color;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
+import me.hannsi.lfjg.core.utils.type.types.BufferObjectType;
+import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 

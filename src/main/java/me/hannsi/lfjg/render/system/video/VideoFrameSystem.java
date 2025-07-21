@@ -2,12 +2,12 @@ package me.hannsi.lfjg.render.system.video;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.hannsi.lfjg.debug.DebugLog;
-import me.hannsi.lfjg.debug.LogGenerateType;
-import me.hannsi.lfjg.debug.LogGenerator;
-import me.hannsi.lfjg.utils.math.io.IOUtil;
-import me.hannsi.lfjg.utils.reflection.location.Location;
-import me.hannsi.lfjg.utils.type.types.LocationType;
+import me.hannsi.lfjg.core.debug.DebugLog;
+import me.hannsi.lfjg.core.debug.LogGenerateType;
+import me.hannsi.lfjg.core.debug.LogGenerator;
+import me.hannsi.lfjg.core.utils.math.io.IOUtil;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
+import me.hannsi.lfjg.core.utils.type.types.LocationType;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.Java2DFrameConverter;

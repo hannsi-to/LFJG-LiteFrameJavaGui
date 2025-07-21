@@ -3,6 +3,11 @@ package me.hannsi.test;
 import me.hannsi.lfjg.audio.SoundCache;
 import me.hannsi.lfjg.audio.SoundData;
 import me.hannsi.lfjg.audio.SoundListener;
+import me.hannsi.lfjg.core.utils.graphics.color.Color;
+import me.hannsi.lfjg.core.utils.graphics.image.ImageCapture;
+import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
+import me.hannsi.lfjg.core.utils.type.types.SoundLoaderType;
 import me.hannsi.lfjg.render.animation.animations.Bounce;
 import me.hannsi.lfjg.render.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.effect.effects.*;
@@ -16,16 +21,11 @@ import me.hannsi.lfjg.render.system.font.FontCache;
 import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
-import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.graphics.image.ImageCapture;
-import me.hannsi.lfjg.utils.graphics.image.TextureCache;
-import me.hannsi.lfjg.utils.reflection.location.Location;
-import me.hannsi.lfjg.utils.type.types.SoundLoaderType;
 import org.joml.Vector3f;
 import org.lwjgl.openal.AL11;
 
-import static me.hannsi.lfjg.frame.frame.LFJGContext.frame;
-import static me.hannsi.lfjg.frame.frame.LFJGContext.frameBufferSize;
+import static me.hannsi.lfjg.frame.LFJGContext.frame;
+import static me.hannsi.lfjg.frame.LFJGContext.frameBufferSize;
 
 public class TestScene1 implements IScene {
     public Scene scene;

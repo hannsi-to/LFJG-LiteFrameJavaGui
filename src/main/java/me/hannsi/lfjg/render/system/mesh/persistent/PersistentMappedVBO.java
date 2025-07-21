@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.system.mesh.persistent;
 
 import lombok.Getter;
-import me.hannsi.lfjg.utils.type.types.AttributeType;
+import me.hannsi.lfjg.core.utils.type.types.AttributeType;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;

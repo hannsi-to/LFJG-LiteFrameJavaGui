@@ -1,17 +1,17 @@
 package me.hannsi.test.test1;
 
+import me.hannsi.lfjg.core.utils.graphics.color.Color;
+import me.hannsi.lfjg.core.utils.math.MathHelper;
+import me.hannsi.lfjg.core.utils.math.Projection;
+import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.frame.frame.LFJGContext;
-import me.hannsi.lfjg.frame.frame.LFJGFrame;
+import me.hannsi.lfjg.frame.LFJGContext;
+import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.effect.effects.DrawObject;
 import me.hannsi.lfjg.render.effect.effects.Rotate;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
-import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.math.MathHelper;
-import me.hannsi.lfjg.utils.math.Projection;
-import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.joml.Vector2i;
 
 public class TestGuiFrame2 implements LFJGFrame {

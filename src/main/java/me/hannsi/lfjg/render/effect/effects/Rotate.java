@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.utils.math.MathHelper;
+import me.hannsi.lfjg.core.utils.math.MathHelper;
 
 /**
  * Class representing a Rotate effect in OpenGL.

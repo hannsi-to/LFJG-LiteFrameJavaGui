@@ -10,9 +10,9 @@ import me.hannsi.lfjg.render.renderers.polygon.GLTriangle;
 import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
-import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.graphics.image.TextureCache;
-import me.hannsi.lfjg.utils.reflection.location.Location;
+import me.hannsi.lfjg.core.utils.graphics.color.Color;
+import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
 
 public class TestScene4 implements IScene {
     public Scene scene;

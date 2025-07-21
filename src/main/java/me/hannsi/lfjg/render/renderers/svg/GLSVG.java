@@ -2,19 +2,19 @@ package me.hannsi.lfjg.render.renderers.svg;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.hannsi.lfjg.core.utils.graphics.color.Color;
+import me.hannsi.lfjg.core.utils.math.MathHelper;
+import me.hannsi.lfjg.core.utils.math.io.IOUtil;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
-import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.math.MathHelper;
-import me.hannsi.lfjg.utils.math.io.IOUtil;
 import org.lwjgl.nanovg.NSVGImage;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.ByteBuffer;
 
-import static me.hannsi.lfjg.frame.frame.LFJGContext.svgCache;
+import static me.hannsi.lfjg.frame.LFJGContext.svgCache;
 import static org.lwjgl.nanovg.NanoSVG.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;

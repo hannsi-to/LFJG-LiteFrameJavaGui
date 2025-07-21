@@ -2,9 +2,9 @@ package me.hannsi.lfjg.render.system.rendering;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.hannsi.lfjg.debug.DebugLevel;
-import me.hannsi.lfjg.debug.LogGenerateType;
-import me.hannsi.lfjg.debug.LogGenerator;
+import me.hannsi.lfjg.core.debug.DebugLevel;
+import me.hannsi.lfjg.core.debug.LogGenerateType;
+import me.hannsi.lfjg.core.debug.LogGenerator;
 import org.joml.Vector2f;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;

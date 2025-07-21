@@ -2,7 +2,7 @@ package me.hannsi.lfjg.jcef;
 
 import me.hannsi.lfjg.jcef.exceptions.JCefInitializationException;
 import me.hannsi.lfjg.jcef.handler.RenderHandler;
-import me.hannsi.lfjg.utils.graphics.color.Color;
+import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import org.cef.CefApp;
 import org.cef.CefClient;
 import org.cef.CefSettings;

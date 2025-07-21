@@ -2,12 +2,12 @@ package me.hannsi.lfjg.render.effect.system;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.hannsi.lfjg.debug.DebugLevel;
-import me.hannsi.lfjg.debug.LogGenerateType;
-import me.hannsi.lfjg.debug.LogGenerator;
+import me.hannsi.lfjg.core.debug.DebugLevel;
+import me.hannsi.lfjg.core.debug.LogGenerateType;
+import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
-import me.hannsi.lfjg.utils.reflection.location.Location;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
 
 /**
  * Base class for effects in OpenGL.

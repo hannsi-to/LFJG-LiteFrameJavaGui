@@ -1,10 +1,14 @@
 package me.hannsi.lfjg.render.renderers;
 
 import lombok.Data;
-import me.hannsi.lfjg.debug.DebugLevel;
-import me.hannsi.lfjg.debug.LogGenerateType;
-import me.hannsi.lfjg.debug.LogGenerator;
-import me.hannsi.lfjg.frame.frame.LFJGContext;
+import me.hannsi.lfjg.core.debug.DebugLevel;
+import me.hannsi.lfjg.core.debug.LogGenerateType;
+import me.hannsi.lfjg.core.debug.LogGenerator;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
+import me.hannsi.lfjg.core.utils.type.types.BlendType;
+import me.hannsi.lfjg.core.utils.type.types.BufferObjectType;
+import me.hannsi.lfjg.core.utils.type.types.DrawType;
+import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.Id;
 import me.hannsi.lfjg.render.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
@@ -14,10 +18,6 @@ import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
-import me.hannsi.lfjg.utils.reflection.location.Location;
-import me.hannsi.lfjg.utils.type.types.BlendType;
-import me.hannsi.lfjg.utils.type.types.BufferObjectType;
-import me.hannsi.lfjg.utils.type.types.DrawType;
 import org.joml.Matrix4f;
 
 import static org.lwjgl.opengl.GL11.*;

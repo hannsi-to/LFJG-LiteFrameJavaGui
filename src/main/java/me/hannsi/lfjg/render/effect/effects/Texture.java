@@ -5,9 +5,9 @@ import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
-import me.hannsi.lfjg.utils.graphics.image.TextureCache;
-import me.hannsi.lfjg.utils.graphics.image.TextureLoader;
-import me.hannsi.lfjg.utils.type.types.BlendType;
+import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
+import me.hannsi.lfjg.core.utils.graphics.image.TextureLoader;
+import me.hannsi.lfjg.core.utils.type.types.BlendType;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBindTexture;

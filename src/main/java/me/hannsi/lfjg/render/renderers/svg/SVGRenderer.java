@@ -1,13 +1,13 @@
 package me.hannsi.lfjg.render.renderers.svg;
 
 import lombok.Getter;
-import me.hannsi.lfjg.frame.frame.LFJGContext;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
+import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
+import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
-import me.hannsi.lfjg.utils.reflection.location.Location;
-import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.joml.Matrix4f;
 
 import static org.lwjgl.opengl.GL11.*;

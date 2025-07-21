@@ -2,19 +2,19 @@ package me.hannsi.lfjg.render.system.font;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.hannsi.lfjg.debug.DebugLevel;
-import me.hannsi.lfjg.debug.LogGenerateType;
-import me.hannsi.lfjg.debug.LogGenerator;
-import me.hannsi.lfjg.utils.math.io.IOUtil;
-import me.hannsi.lfjg.utils.reflection.location.Location;
-import me.hannsi.lfjg.utils.type.types.LocationType;
+import me.hannsi.lfjg.core.debug.DebugLevel;
+import me.hannsi.lfjg.core.debug.LogGenerateType;
+import me.hannsi.lfjg.core.debug.LogGenerator;
+import me.hannsi.lfjg.core.utils.math.io.IOUtil;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
+import me.hannsi.lfjg.core.utils.type.types.LocationType;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.ByteBuffer;
 
-import static me.hannsi.lfjg.utils.graphics.NanoVGUtil.nvgCreateFontMem;
+import static me.hannsi.lfjg.core.utils.graphics.NanoVGUtil.nvgCreateFontMem;
 
 @Getter
 public class Font {

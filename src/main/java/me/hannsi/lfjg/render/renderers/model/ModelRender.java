@@ -1,6 +1,10 @@
 package me.hannsi.lfjg.render.renderers.model;
 
 import lombok.Getter;
+import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
+import me.hannsi.lfjg.core.utils.graphics.image.TextureLoader;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
+import me.hannsi.lfjg.core.utils.toolkit.Camera;
 import me.hannsi.lfjg.render.debug.exceptions.model.ModelException;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.render.system.model.Entity;
@@ -10,15 +14,11 @@ import me.hannsi.lfjg.render.system.model.ModelCache;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
-import me.hannsi.lfjg.utils.graphics.image.TextureCache;
-import me.hannsi.lfjg.utils.graphics.image.TextureLoader;
-import me.hannsi.lfjg.utils.reflection.location.Location;
-import me.hannsi.lfjg.utils.toolkit.Camera;
 
 import java.util.Collection;
 import java.util.List;
 
-import static me.hannsi.lfjg.frame.frame.LFJGContext.projection3D;
+import static me.hannsi.lfjg.frame.LFJGContext.projection3D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL13.*;
 

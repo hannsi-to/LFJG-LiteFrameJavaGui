@@ -2,14 +2,14 @@ package me.hannsi.lfjg.render.effect.effects;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.hannsi.lfjg.frame.frame.LFJGContext;
+import me.hannsi.lfjg.core.utils.graphics.color.Color;
+import me.hannsi.lfjg.core.utils.math.MathHelper;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
+import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
+import me.hannsi.lfjg.core.utils.type.types.BlendType;
+import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.math.MathHelper;
-import me.hannsi.lfjg.utils.reflection.location.Location;
-import me.hannsi.lfjg.utils.type.system.IEnumTypeBase;
-import me.hannsi.lfjg.utils.type.types.BlendType;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 

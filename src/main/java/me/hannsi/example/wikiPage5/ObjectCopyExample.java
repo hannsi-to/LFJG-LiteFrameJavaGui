@@ -1,10 +1,10 @@
 package me.hannsi.example.wikiPage5;
 
+import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.frame.frame.LFJGFrame;
+import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
-import me.hannsi.lfjg.utils.graphics.color.Color;
 
 public class ObjectCopyExample implements LFJGFrame {
     GLRect glRect1;

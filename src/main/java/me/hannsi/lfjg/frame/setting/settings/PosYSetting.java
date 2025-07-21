@@ -3,8 +3,8 @@ package me.hannsi.lfjg.frame.setting.settings;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
-import me.hannsi.lfjg.utils.graphics.GLFWUtil;
-import me.hannsi.lfjg.utils.type.types.MonitorType;
+import me.hannsi.lfjg.core.utils.graphics.GLFWUtil;
+import me.hannsi.lfjg.core.utils.type.types.MonitorType;
 
 /**
  * Represents a setting for the Y position of a frame.

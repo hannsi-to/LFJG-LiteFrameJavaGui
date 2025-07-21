@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.jcef.util;
 
-import me.hannsi.lfjg.utils.graphics.color.Color;
+import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import org.cef.CefSettings;
 
 public class JCefUtil {

@@ -2,9 +2,9 @@ package me.hannsi.lfjg.render.system.scene;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.hannsi.lfjg.debug.DebugLevel;
-import me.hannsi.lfjg.debug.LogGenerateType;
-import me.hannsi.lfjg.debug.LogGenerator;
+import me.hannsi.lfjg.core.debug.DebugLevel;
+import me.hannsi.lfjg.core.debug.LogGenerateType;
+import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.render.debug.exceptions.render.scene.ChangeSceneException;
 import me.hannsi.lfjg.render.debug.exceptions.render.scene.SetSceneException;
 

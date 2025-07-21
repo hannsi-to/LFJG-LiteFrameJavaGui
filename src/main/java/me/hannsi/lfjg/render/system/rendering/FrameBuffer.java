@@ -1,10 +1,12 @@
 package me.hannsi.lfjg.render.system.rendering;
 
 import lombok.Data;
-import me.hannsi.lfjg.debug.DebugLevel;
-import me.hannsi.lfjg.debug.LogGenerateType;
-import me.hannsi.lfjg.debug.LogGenerator;
-import me.hannsi.lfjg.frame.frame.LFJGContext;
+import me.hannsi.lfjg.core.debug.DebugLevel;
+import me.hannsi.lfjg.core.debug.LogGenerateType;
+import me.hannsi.lfjg.core.debug.LogGenerator;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
+import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
+import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.debug.exceptions.frameBuffer.CompleteFrameBufferException;
 import me.hannsi.lfjg.render.debug.exceptions.frameBuffer.CreatingFrameBufferException;
 import me.hannsi.lfjg.render.debug.exceptions.render.scene.CreatingRenderBufferException;
@@ -12,8 +14,6 @@ import me.hannsi.lfjg.render.debug.exceptions.texture.CreatingTextureException;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
-import me.hannsi.lfjg.utils.reflection.location.Location;
-import me.hannsi.lfjg.utils.type.types.ProjectionType;
 import org.joml.Matrix4f;
 
 import java.nio.ByteBuffer;

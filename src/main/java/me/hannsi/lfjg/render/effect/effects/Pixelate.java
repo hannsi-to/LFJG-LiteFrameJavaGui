@@ -2,10 +2,10 @@ package me.hannsi.lfjg.render.effect.effects;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.hannsi.lfjg.frame.frame.LFJGContext;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
+import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.utils.reflection.location.Location;
 
 /**
  * Class representing a Pixelate effect in OpenGL.

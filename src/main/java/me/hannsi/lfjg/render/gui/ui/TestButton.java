@@ -3,9 +3,9 @@ package me.hannsi.lfjg.render.gui.ui;
 import me.hannsi.lfjg.frame.event.events.user.MouseButtonEvent;
 import me.hannsi.lfjg.render.gui.system.item.items.Button;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
-import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.toolkit.KeyboardInfo;
-import me.hannsi.lfjg.utils.toolkit.MouseInfo;
+import me.hannsi.lfjg.core.utils.graphics.color.Color;
+import me.hannsi.lfjg.core.utils.toolkit.KeyboardInfo;
+import me.hannsi.lfjg.core.utils.toolkit.MouseInfo;
 
 public class TestButton extends Button {
     GLRect glRect;

@@ -1,11 +1,11 @@
 package me.hannsi.lfjg.render.system.shader;
 
 import lombok.Getter;
-import me.hannsi.lfjg.debug.DebugLevel;
-import me.hannsi.lfjg.debug.LogGenerateType;
-import me.hannsi.lfjg.debug.LogGenerator;
-import me.hannsi.lfjg.utils.math.io.IOUtil;
-import me.hannsi.lfjg.utils.reflection.location.Location;
+import me.hannsi.lfjg.core.debug.DebugLevel;
+import me.hannsi.lfjg.core.debug.LogGenerateType;
+import me.hannsi.lfjg.core.debug.LogGenerator;
+import me.hannsi.lfjg.core.utils.math.io.IOUtil;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
 
 import java.io.IOException;
 import java.util.regex.Matcher;

@@ -2,12 +2,12 @@ package me.hannsi.lfjg.render.animation.animations;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.hannsi.lfjg.core.utils.math.animation.Easing;
+import me.hannsi.lfjg.core.utils.math.animation.EasingUtil;
 import me.hannsi.lfjg.render.animation.system.AnimationBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.utils.math.animation.Easing;
-import me.hannsi.lfjg.utils.math.animation.EasingUtil;
 
-import static me.hannsi.lfjg.utils.math.MathHelper.*;
+import static me.hannsi.lfjg.core.utils.math.MathHelper.*;
 
 public class Bounce extends AnimationBase {
     protected EasingUtil easingUtil;

@@ -2,10 +2,10 @@ package me.hannsi.lfjg.render.gui.ui;
 
 import me.hannsi.lfjg.render.gui.system.item.items.Label;
 import me.hannsi.lfjg.render.renderers.font.GLText;
-import me.hannsi.lfjg.utils.graphics.color.Color;
-import me.hannsi.lfjg.utils.toolkit.KeyboardInfo;
-import me.hannsi.lfjg.utils.toolkit.MouseInfo;
-import me.hannsi.lfjg.utils.type.types.AlignType;
+import me.hannsi.lfjg.core.utils.graphics.color.Color;
+import me.hannsi.lfjg.core.utils.toolkit.KeyboardInfo;
+import me.hannsi.lfjg.core.utils.toolkit.MouseInfo;
+import me.hannsi.lfjg.core.utils.type.types.AlignType;
 
 public class TestLabel extends Label {
     GLText glText;

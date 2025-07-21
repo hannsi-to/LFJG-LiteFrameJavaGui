@@ -1,5 +1,6 @@
 package me.hannsi.test;
 
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.event.events.user.KeyEvent;
 import me.hannsi.lfjg.frame.event.events.user.MouseButtonEvent;
@@ -9,9 +10,8 @@ import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.video.GLVideo;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
-import me.hannsi.lfjg.utils.reflection.location.Location;
 
-import static me.hannsi.lfjg.frame.frame.IFrame.eventManager;
+import static me.hannsi.lfjg.frame.system.IFrame.eventManager;
 
 public class TestVideo1 implements IScene {
     public Scene scene;

@@ -1,13 +1,13 @@
 package me.hannsi.lfjg.render.gui.system;
 
+import me.hannsi.lfjg.core.utils.toolkit.KeyboardInfo;
+import me.hannsi.lfjg.core.utils.toolkit.MouseInfo;
 import me.hannsi.lfjg.frame.event.events.user.CharEvent;
 import me.hannsi.lfjg.frame.event.events.user.KeyEvent;
 import me.hannsi.lfjg.frame.event.events.user.MouseButtonEvent;
 import me.hannsi.lfjg.frame.event.system.EventHandler;
-import me.hannsi.lfjg.frame.frame.IFrame;
+import me.hannsi.lfjg.frame.system.IFrame;
 import me.hannsi.lfjg.render.gui.system.item.Item;
-import me.hannsi.lfjg.utils.toolkit.KeyboardInfo;
-import me.hannsi.lfjg.utils.toolkit.MouseInfo;
 
 import java.util.ArrayList;
 import java.util.List;

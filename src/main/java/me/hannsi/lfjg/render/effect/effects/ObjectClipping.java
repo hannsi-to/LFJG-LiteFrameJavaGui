@@ -4,7 +4,7 @@ import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
-import me.hannsi.lfjg.utils.reflection.location.Location;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
 
 public class ObjectClipping extends EffectBase {
     private final GLObjectCache glObjectCache;

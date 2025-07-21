@@ -4,7 +4,7 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.renderers.polygon.GLBezierLine;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
-import me.hannsi.lfjg.utils.graphics.color.Color;
+import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import org.joml.Vector2f;
 
 public class TestScene2 implements IScene {
