@@ -1,9 +1,9 @@
 package me.hannsi.example.wikiPage5;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
-import me.hannsi.lfjg.core.utils.type.types.MonitorType;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.MonitorSetting;
+import me.hannsi.lfjg.frame.setting.settings.MonitorType;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;

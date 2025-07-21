@@ -1,13 +1,10 @@
 package me.hannsi.test;
 
 import me.hannsi.lfjg.audio.*;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
-import me.hannsi.lfjg.core.utils.reflection.location.Location;
-import me.hannsi.lfjg.core.utils.type.types.SoundEffectType;
-import me.hannsi.lfjg.core.utils.type.types.SoundFilterType;
-import me.hannsi.lfjg.core.utils.type.types.SoundLoaderType;
 import org.joml.Vector3f;
 
 import static org.lwjgl.openal.AL11.AL_EXPONENT_DISTANCE;

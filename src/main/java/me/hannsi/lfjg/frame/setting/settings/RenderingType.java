@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.core.utils.type.types;
+package me.hannsi.lfjg.frame.setting.settings;
 
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 
@@ -9,9 +9,8 @@ import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 @Deprecated
 public enum RenderingType implements IEnumTypeBase {
     OPEN_GL(0, "OpenGL"),
-    NANO_VG(1, "NanoVG"),
-    VULKAN(2, "Vulkan"),
-    LIB_GDX(3, "LibGDX");
+    VULKAN(1, "Vulkan"),
+    LIB_GDX(2, "LibGDX");
 
     final int id;
     final String name;
@@ -19,7 +18,7 @@ public enum RenderingType implements IEnumTypeBase {
     /**
      * Constructs a new RenderingType enumeration value.
      *
-     * @param id the unique identifier of the rendering type
+     * @param id   the unique identifier of the rendering type
      * @param name the name of the rendering type
      */
     RenderingType(int id, String name) {

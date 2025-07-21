@@ -1,14 +1,17 @@
 package me.hannsi.lfjg.frame.event.system;
 
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.event.events.monitor.MonitorEvent;
 import me.hannsi.lfjg.frame.event.events.monitor.window.*;
 import me.hannsi.lfjg.frame.event.events.user.*;
 import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
 import me.hannsi.lfjg.frame.setting.settings.OpenGLDebugSetting;
+import me.hannsi.lfjg.frame.setting.settings.SeverityType;
 import me.hannsi.lfjg.frame.system.IFrame;
-import me.hannsi.lfjg.render.debug.OpenGLDebug;
 import org.lwjgl.glfw.*;
+
+import java.util.Arrays;
 
 import static me.hannsi.lfjg.frame.LFJGContext.windowSize;
 import static org.lwjgl.glfw.GLFW.*;
@@ -202,7 +205,9 @@ public class GLFWCallback implements IFrame {
         glfwSetJoystickCallback(joystickCallback);
 
         if (frame.getFrameSettingValue(OpenGLDebugSetting.class)) {
-            OpenGLDebug.getOpenGLDebug(frame.getThreadName(), frame.getFrameSettingValue(CheckSeveritiesSetting.class));
+            int[] ids = Arrays.stream((SeverityType[]) frame.getFrameSettingValue(CheckSeveritiesSetting.class)).mapToInt(SeverityType::getId).toArray();
+
+            Core.OpenGLDebug_getOpenGLDebug(frame.getThreadName(), ids);
         }
     }
 }

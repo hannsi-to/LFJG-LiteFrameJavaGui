@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.renderers.polygon;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
-import me.hannsi.lfjg.core.utils.type.types.DrawType;
+import me.hannsi.lfjg.render.system.rendering.DrawType;
 import org.joml.Vector2f;
 
 public class GLTriangle extends GLPolygon {

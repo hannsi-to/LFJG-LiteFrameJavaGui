@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.core.utils.type.types;
+package me.hannsi.lfjg.audio;
 
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 
@@ -16,7 +16,7 @@ public enum SoundLoaderType implements IEnumTypeBase {
      * Constructs a new SoundLoaderType enumeration value.
      *
      * @param name the name of the sound loader type
-     * @param id the unique identifier of the sound loader type
+     * @param id   the unique identifier of the sound loader type
      */
     SoundLoaderType(String name, int id) {
         this.name = name;

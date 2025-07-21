@@ -7,12 +7,11 @@ import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.reflection.ClassUtil;
-import me.hannsi.lfjg.core.utils.reflection.PackagePath;
 import me.hannsi.lfjg.core.utils.time.TimeCalculator;
 import me.hannsi.lfjg.core.utils.toolkit.ANSIFormat;
-import me.hannsi.lfjg.core.utils.type.types.SeverityType;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
+import me.hannsi.lfjg.frame.setting.settings.SeverityType;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -102,9 +101,8 @@ public class FrameSettingManager {
      */
     @SuppressWarnings("unchecked")
     public void loadFrameSettings() {
-        Set<Class<? extends FrameSettingBase<?>>> subTypes = (Set<Class<? extends FrameSettingBase<?>>>) (Set<?>) ClassUtil.getClassesFormPackage(PackagePath.frameSettings, FrameSettingBase.class);
+        Set<Class<? extends FrameSettingBase<?>>> subTypes = (Set<Class<? extends FrameSettingBase<?>>>) (Set<?>) ClassUtil.getClassesFromPackage("me.hannsi.lfjg.frame.setting.settings", FrameSettingBase.class);
         List<Class<? extends FrameSettingBase<?>>> sortedClasses = new ArrayList<>(subTypes);
-
         sortedClasses.sort(Comparator.comparingInt(clazz -> {
             ReflectionsLevel reflectionsLevel = clazz.getAnnotation(ReflectionsLevel.class);
             return reflectionsLevel != null ? reflectionsLevel.level() : Integer.MAX_VALUE;
@@ -120,6 +118,7 @@ public class FrameSettingManager {
                     register(frameSettingBase);
                 }
 
+                assert frameSettingBase != null;
                 sb.append("\n\t").append(count).append(".\t").append("Loaded FrameSetting: ").append(frameSettingBase.getName());
 
                 count++;
@@ -151,5 +150,4 @@ public class FrameSettingManager {
     public void register(FrameSettingBase<?> frameSetting) {
         frameSettings.add(frameSetting);
     }
-
 }

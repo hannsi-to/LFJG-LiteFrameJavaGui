@@ -3,10 +3,12 @@ package me.hannsi.lfjg.render.debug;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerator;
-import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.core.utils.reflection.StackTraceUtil;
-import me.hannsi.lfjg.core.utils.type.types.SeverityType;
+import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.lwjgl.opengl.GLDebugMessageCallback;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.lwjgl.opengl.GL.getCapabilities;
 import static org.lwjgl.opengl.GL43.*;
@@ -16,7 +18,16 @@ import static org.lwjgl.system.MemoryUtil.memUTF8;
  * Provides debugging utilities for OpenGL.
  */
 public class OpenGLDebug {
-    public static void getOpenGLDebug(String mainThreadName, SeverityType[] severityTypes) {
+    public static final Map<Integer, Integer> SEVERITY_MAP = new HashMap<>();
+
+    static {
+        SEVERITY_MAP.put(0, GL_DEBUG_SEVERITY_NOTIFICATION);
+        SEVERITY_MAP.put(1, GL_DEBUG_SEVERITY_LOW);
+        SEVERITY_MAP.put(2, GL_DEBUG_SEVERITY_MEDIUM);
+        SEVERITY_MAP.put(3, GL_DEBUG_SEVERITY_HIGH);
+    }
+
+    public static void getOpenGLDebug(String mainThreadName, int[] severityTypes) {
         if (getCapabilities().OpenGL43) {
             GLStateCache.enable(GL_DEBUG_OUTPUT);
             GLStateCache.enable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -24,15 +35,15 @@ public class OpenGLDebug {
                 @Override
                 public void invoke(int source, int type, int id, int severity, int length, long message, long userParam) {
                     String errorMessage = memUTF8(message);
-
                     String stackTrace = StackTraceUtil.getStackTraceWithInsert(mainThreadName, "\t\t", "invoke", "callback", "getStackTraceWithInsert", "getStackTrace");
-
                     String sourceString = getSourceString(source);
                     String typeString = getTypeString(type);
                     String severityString = getSeverityString(severity);
 
-                    for (SeverityType checkSeverity : severityTypes) {
-                        if (checkSeverity.getId() == severity) {
+                    for (int checkSeverity : severityTypes) {
+                        checkSeverity = SEVERITY_MAP.get(checkSeverity);
+
+                        if (checkSeverity == severity) {
                             LogGenerator logGenerator = new LogGenerator(
                                     "OpenGL Debug Message",
                                     "Source: " + sourceString,

@@ -7,8 +7,9 @@ import lombok.Getter;
  */
 @Getter
 public enum DebugType {
-    EXCEPTION("Exception"), // Represents an exception debug message
-    TEXT("Text"); // Represents a text debug message
+    ERROR("Error"),
+    EXCEPTION("Exception"),
+    TEXT("Text");
 
     /**
      * -- GETTER --

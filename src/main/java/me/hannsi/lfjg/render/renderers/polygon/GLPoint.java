@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.renderers.polygon;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
-import me.hannsi.lfjg.core.utils.type.types.DrawType;
+import me.hannsi.lfjg.render.system.rendering.DrawType;
 import org.joml.Vector2f;
 
 /**
@@ -21,10 +21,10 @@ public class GLPoint extends GLPolygon {
     /**
      * Draws a point with the specified parameters.
      *
-     * @param x the x-coordinate of the point
-     * @param y the y-coordinate of the point
+     * @param x         the x-coordinate of the point
+     * @param y         the y-coordinate of the point
      * @param pointSize the size of the point
-     * @param color the color of the point
+     * @param color     the color of the point
      */
     public void point(float x, float y, float pointSize, Color color) {
         put().vertex(new Vector2f(x, y)).color(color).end();
@@ -36,10 +36,10 @@ public class GLPoint extends GLPolygon {
     /**
      * Draws a point with the specified parameters.
      *
-     * @param x the x-coordinate of the point
-     * @param y the y-coordinate of the point
+     * @param x         the x-coordinate of the point
+     * @param y         the y-coordinate of the point
      * @param pointSize the size of the point
-     * @param color the color of the point
+     * @param color     the color of the point
      */
     public void point(double x, double y, double pointSize, Color color) {
         point((float) x, (float) y, (float) pointSize, color);

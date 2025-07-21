@@ -47,6 +47,7 @@ public class DebugLog {
      * @param exception The exception to set.
      */
     private Exception exception;
+    private Error error;
     /**
      * -- GETTER --
      * Retrieves the text message to log.
@@ -85,6 +86,26 @@ public class DebugLog {
         this.debugType = debugType;
         this.exception = exception;
         this.debugText = null;
+        this.error = null;
+        this.debugLevel = debugLevel;
+
+        IFrame.eventManager.call(new LoggingEvent(this));
+    }
+
+    /**
+     * Constructs a DebugLog object with the specified class, debug type, exception, and debug level.
+     *
+     * @param clazz      The class where the debug log is generated.
+     * @param debugType  The type of debug log (EXCEPTION or TEXT).
+     * @param error      The error to log (if applicable).
+     * @param debugLevel The debug level (DEBUG, INFO, WARNING, ERROR).
+     */
+    public DebugLog(Class<?> clazz, DebugType debugType, Error error, DebugLevel debugLevel) {
+        this.clazz = clazz;
+        this.debugType = debugType;
+        this.error = error;
+        this.exception = null;
+        this.debugText = null;
         this.debugLevel = debugLevel;
 
         IFrame.eventManager.call(new LoggingEvent(this));
@@ -102,6 +123,7 @@ public class DebugLog {
         this.clazz = clazz;
         this.debugType = debugType;
         this.exception = null;
+        this.error = null;
         this.debugText = debugText;
         this.debugLevel = debugLevel;
 
@@ -128,6 +150,10 @@ public class DebugLog {
         new DebugLog(clazz, DebugType.EXCEPTION, exception, DebugLevel.DEBUG);
     }
 
+    public static void debug(Class<?> clazz, Error error) {
+        new DebugLog(clazz, DebugType.ERROR, error, DebugLevel.DEBUG);
+    }
+
     /**
      * Logs an info message with the specified class and text.
      *
@@ -146,6 +172,10 @@ public class DebugLog {
      */
     public static void info(Class<?> clazz, Exception exception) {
         new DebugLog(clazz, DebugType.EXCEPTION, exception, DebugLevel.INFO);
+    }
+
+    public static void info(Class<?> clazz, Error error) {
+        new DebugLog(clazz, DebugType.ERROR, error, DebugLevel.INFO);
     }
 
     /**
@@ -169,6 +199,16 @@ public class DebugLog {
     }
 
     /**
+     * Logs an error message with the specified class and exception.
+     *
+     * @param clazz The class where the error log is generated.
+     * @param error The error to log.
+     */
+    public static void error(Class<?> clazz, Error error) {
+        new DebugLog(clazz, DebugType.ERROR, error, DebugLevel.ERROR);
+    }
+
+    /**
      * Logs a warning message with the specified class and text.
      *
      * @param clazz The class where the warning log is generated.
@@ -186,5 +226,9 @@ public class DebugLog {
      */
     public static void warning(Class<?> clazz, Exception exception) {
         new DebugLog(clazz, DebugType.EXCEPTION, exception, DebugLevel.WARNING);
+    }
+
+    public static void warning(Class<?> clazz, Error error) {
+        new DebugLog(clazz, DebugType.ERROR, error, DebugLevel.WARNING);
     }
 }

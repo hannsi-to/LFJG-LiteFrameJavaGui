@@ -3,8 +3,6 @@ package me.hannsi.lfjg.audio;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
-import me.hannsi.lfjg.core.utils.type.types.SoundEffectType;
-import me.hannsi.lfjg.core.utils.type.types.SoundFilterType;
 
 import static org.lwjgl.openal.AL10.alSourcei;
 import static org.lwjgl.openal.AL11.alSource3i;

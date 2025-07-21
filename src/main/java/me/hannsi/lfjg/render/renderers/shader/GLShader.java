@@ -1,8 +1,8 @@
 package me.hannsi.lfjg.render.renderers.shader;
 
-import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
-import me.hannsi.lfjg.core.utils.type.types.DrawType;
+import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
+import me.hannsi.lfjg.render.system.rendering.DrawType;
 import org.joml.Vector2f;
 
 public class GLShader extends GLPolygon {

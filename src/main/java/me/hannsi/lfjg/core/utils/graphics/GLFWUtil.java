@@ -1,9 +1,9 @@
 package me.hannsi.lfjg.core.utils.graphics;
 
-import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.core.utils.Util;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
-import me.hannsi.lfjg.core.utils.type.types.MonitorType;
+import me.hannsi.lfjg.frame.Frame;
+import me.hannsi.lfjg.frame.setting.settings.MonitorType;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.lwjgl.PointerBuffer;

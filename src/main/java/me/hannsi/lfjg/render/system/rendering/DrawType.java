@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.core.utils.type.types;
+package me.hannsi.lfjg.render.system.rendering;
 
 import lombok.Getter;
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
@@ -23,7 +23,7 @@ public enum DrawType implements IEnumTypeBase {
     final String name;
     /**
      * -- GETTER --
-     *  Gets the number of vertices required for the drawing mode.
+     * Gets the number of vertices required for the drawing mode.
      *
      * @return the number of vertices required for the drawing mode
      */
@@ -33,8 +33,8 @@ public enum DrawType implements IEnumTypeBase {
     /**
      * Constructs a new DrawType enumeration value.
      *
-     * @param id the unique identifier of the drawing mode
-     * @param name the name of the drawing mode
+     * @param id       the unique identifier of the drawing mode
+     * @param name     the name of the drawing mode
      * @param vertices the number of vertices required for the drawing mode
      */
     DrawType(int id, String name, int vertices) {

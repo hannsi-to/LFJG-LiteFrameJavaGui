@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.core.utils.type.types;
+package me.hannsi.lfjg.audio;
 
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 

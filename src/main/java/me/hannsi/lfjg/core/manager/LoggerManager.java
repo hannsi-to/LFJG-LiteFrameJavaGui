@@ -44,18 +44,28 @@ public class LoggerManager {
     }
 
     private static String getDescription(DebugLog debugLog) {
-        String description = "";
+        String description;
         DebugType debugType = debugLog.getDebugType();
         Exception exception = debugLog.getException();
+        Error error = debugLog.getError();
         String debugText = debugLog.getDebugText();
 
-        if (debugType == DebugType.EXCEPTION) {
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            exception.printStackTrace(pw);
-            description = "\n" + sw;
-        } else if (debugType == DebugType.TEXT) {
-            description = debugText;
+        switch (debugType) {
+            case EXCEPTION -> {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                exception.printStackTrace(pw);
+                description = "\n" + sw;
+            }
+            case ERROR -> {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                error.printStackTrace(pw);
+                description = "\n" + sw;
+            }
+            case TEXT -> description = debugText;
+
+            default -> throw new IllegalStateException("Unexpected value: " + debugType);
         }
         return description;
     }

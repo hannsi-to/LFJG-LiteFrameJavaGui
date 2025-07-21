@@ -7,8 +7,6 @@ import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.math.AlignExtractor;
 import me.hannsi.lfjg.core.utils.toolkit.StringUtil;
-import me.hannsi.lfjg.core.utils.type.types.AlignType;
-import me.hannsi.lfjg.core.utils.type.types.TextFormatType;
 import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.system.font.Font;

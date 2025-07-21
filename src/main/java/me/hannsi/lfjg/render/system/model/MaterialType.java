@@ -1,17 +1,20 @@
-package me.hannsi.lfjg.core.utils.type.types;
+package me.hannsi.lfjg.render.system.model;
 
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 
-public enum TextButtonType implements IEnumTypeBase {
-    NORMAL(0, "Normal");
+public enum MaterialType implements IEnumTypeBase {
+    NO_MATERIAL(0, "NoMaterial"),
+    COLOR(1, "Color"),
+    TEXTURE(2, "Texture");
 
     final int id;
     final String name;
 
-    TextButtonType(int id, String name) {
+    MaterialType(int id, String name) {
         this.id = id;
         this.name = name;
     }
+
 
     @Override
     public int getId() {

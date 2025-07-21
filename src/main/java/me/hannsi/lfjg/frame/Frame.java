@@ -10,10 +10,7 @@ import me.hannsi.lfjg.core.utils.time.TimeCalculator;
 import me.hannsi.lfjg.core.utils.time.TimeSourceUtil;
 import me.hannsi.lfjg.core.utils.toolkit.ANSIFormat;
 import me.hannsi.lfjg.core.utils.toolkit.RuntimeUtil;
-import me.hannsi.lfjg.core.utils.type.types.AntiAliasingType;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
-import me.hannsi.lfjg.core.utils.type.types.RenderingType;
-import me.hannsi.lfjg.core.utils.type.types.VSyncType;
 import me.hannsi.lfjg.frame.event.events.render.DrawFrameWithOpenGLEvent;
 import me.hannsi.lfjg.frame.event.system.EventHandler;
 import me.hannsi.lfjg.frame.event.system.GLFWCallback;
@@ -156,10 +153,7 @@ public class Frame implements IFrame {
                     throw new RuntimeException("Failed to create NanoVG context");
                 }
             }
-            case NANO_VG, LIB_GDX -> {
-            }
-            case VULKAN -> {
-
+            case LIB_GDX, VULKAN -> {
             }
             default ->
                     throw new IllegalStateException("Unexpected value: " + getFrameSettingValue(RenderingTypeSetting.class));
@@ -277,7 +271,7 @@ public class Frame implements IFrame {
     private void draw() {
         switch ((RenderingType) getFrameSettingValue(RenderingTypeSetting.class)) {
             case OPEN_GL -> eventManager.call(new DrawFrameWithOpenGLEvent());
-            case NANO_VG, LIB_GDX, VULKAN -> {
+            case LIB_GDX, VULKAN -> {
             }
             default ->
                     throw new IllegalStateException("Unexpected value: " + getFrameSettingValue(RenderingTypeSetting.class));

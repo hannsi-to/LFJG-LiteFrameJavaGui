@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.core.utils.type.types;
+package me.hannsi.lfjg.frame.setting.settings;
 
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 
@@ -16,7 +16,7 @@ public enum MonitorType implements IEnumTypeBase {
     /**
      * Constructs a new MonitorType enumeration value.
      *
-     * @param id the unique identifier of the monitor type
+     * @param id   the unique identifier of the monitor type
      * @param name the name of the monitor type
      */
     MonitorType(int id, String name) {

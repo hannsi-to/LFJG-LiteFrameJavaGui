@@ -3,7 +3,6 @@ package me.hannsi.lfjg.frame.setting.settings;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
-import me.hannsi.lfjg.core.utils.type.types.MonitorType;
 import org.lwjgl.glfw.GLFW;
 
 /**

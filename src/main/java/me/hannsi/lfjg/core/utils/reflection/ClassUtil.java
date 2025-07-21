@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.core.utils.reflection;
 
+import me.hannsi.lfjg.core.Core;
+import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.utils.Util;
 import org.reflections.Reflections;
 
@@ -13,6 +15,26 @@ import java.util.*;
  * Utility class for reflection-based operations.
  */
 public class ClassUtil extends Util {
+    private static final Map<Class<?>, Class<?>> PRIMITIVE_MAP = Map.ofEntries(
+            Map.entry(Boolean.class, boolean.class),
+            Map.entry(Byte.class, byte.class),
+            Map.entry(Character.class, char.class),
+            Map.entry(Double.class, double.class),
+            Map.entry(Float.class, float.class),
+            Map.entry(Integer.class, int.class),
+            Map.entry(Long.class, long.class),
+            Map.entry(Short.class, short.class)
+    );
+
+    private static Class<?> wrapPrimitive(Class<?> clazz) {
+        return PRIMITIVE_MAP.getOrDefault(clazz, clazz);
+    }
+
+    private static Class<?>[] getParameterTypes(Object... args) {
+        return Arrays.stream(args)
+                .map(arg -> arg != null ? wrapPrimitive(arg.getClass()) : Object.class)
+                .toArray(Class<?>[]::new);
+    }
 
     /**
      * Retrieves a set of classes from a specified package that are subclasses of a given class.
@@ -22,7 +44,7 @@ public class ClassUtil extends Util {
      * @param <T>         the type of the superclass
      * @return a set of classes that are subclasses of the specified class
      */
-    public static <T> Set<Class<? extends T>> getClassesFormPackage(String packagePath, Class<T> clazz) {
+    public static <T> Set<Class<? extends T>> getClassesFromPackage(String packagePath, Class<T> clazz) {
         return new HashSet<>(new Reflections(packagePath).getSubTypesOf(clazz));
     }
 
@@ -78,21 +100,71 @@ public class ClassUtil extends Util {
         }
     }
 
-    public static Object invokeMethod(Object instance, String methodName, Object... args) {
+    /**
+     * Strictly invokes a method with exact parameter types.
+     */
+    public static Object invokeMethodExact(Object instance, String methodName, Object... args) {
         try {
             Class<?> clazz = instance.getClass();
             Method method = clazz.getDeclaredMethod(methodName, getParameterTypes(args));
             method.setAccessible(true);
             return method.invoke(instance, args);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException("Could not invoke method: " + methodName + " on class: " + instance.getClass().getName(), e);
+            throw new RuntimeException("Could not invoke exact method: " + methodName + " on class: " + instance.getClass().getName(), e);
         }
     }
 
-    private static Class<?>[] getParameterTypes(Object... args) {
-        return Arrays.stream(args)
-                .map(arg -> arg != null ? arg.getClass() : Object.class)
-                .toArray(Class<?>[]::new);
+    /**
+     * Flexibly invokes a method with assignable or null parameters.
+     */
+    public static Object invokeMethodFlexible(Object instance, String methodName, Object... args) {
+        try {
+            Class<?> clazz = instance.getClass();
+            Method method = findMethod(clazz, methodName, args);
+            if (method == null) {
+                throw new NoSuchMethodException("No suitable method named " + methodName + " found in " + clazz.getName());
+            }
+            method.setAccessible(true);
+
+            return method.invoke(instance, args);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException("Could not flexibly invoke method: " + methodName + " on class: " + instance.getClass().getName(), e);
+        }
+    }
+
+    /**
+     * Invokes a static method from a class name.
+     */
+    public static Object invokeStaticMethod(String className, String methodName, Object... args) {
+        try {
+            Class<?> clazz = Class.forName(className);
+            Method method = findMethod(clazz, methodName, args);
+            if (method == null) {
+                throw new NoSuchMethodException("No static method named " + methodName + " found in " + className);
+            }
+            method.setAccessible(true);
+
+            return method.invoke(null, args);
+        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
+                 InvocationTargetException e) {
+            throw new RuntimeException("Could not invoke static method: " + methodName + " on class: " + className, e);
+        }
+    }
+
+    /**
+     * Safely invokes a method only if it exists.
+     */
+    public static Optional<Object> invokeMethodIfExists(Object instance, String methodName, Object... args) {
+        try {
+            Method method = findMethod(instance.getClass(), methodName, args);
+            if (method != null) {
+                method.setAccessible(true);
+                return Optional.ofNullable(method.invoke(instance, args));
+            }
+        } catch (Exception e) {
+            DebugLog.warning(ClassUtil.class, "Optional method call failed: " + e.getMessage());
+        }
+        return Optional.empty();
     }
 
     public static Object getFieldValue(Object instance, String fieldName) {
@@ -114,5 +186,48 @@ public class ClassUtil extends Util {
             throw new RuntimeException("Could not set field: " + fieldName + " on class: " + instance.getClass().getName(), e);
         }
     }
-}
 
+    public static boolean isClassAvailable(String className) {
+        try {
+            Class.forName(className, false, Thread.currentThread().getContextClassLoader());
+            return true;
+        } catch (ClassNotFoundException | NoClassDefFoundError e) {
+            return false;
+        } catch (LinkageError e) {
+            DebugLog.error(Core.class, e);
+            return false;
+        } catch (Throwable t) {
+            DebugLog.error(Core.class, "Unexpected error while checking class: " + t.getMessage());
+            return false;
+        }
+    }
+
+    private static Method findMethod(Class<?> clazz, String methodName, Object... args) {
+        for (Method method : clazz.getDeclaredMethods()) {
+            if (!method.getName().equals(methodName)) {
+                continue;
+            }
+            if (method.getParameterCount() != args.length) {
+                continue;
+            }
+
+            Class<?>[] paramTypes = method.getParameterTypes();
+            boolean matches = true;
+
+            for (int i = 0; i < args.length; i++) {
+                if (args[i] == null) {
+                    continue;
+                }
+                if (!paramTypes[i].isAssignableFrom(args[i].getClass())) {
+                    matches = false;
+                    break;
+                }
+            }
+
+            if (matches) {
+                return method;
+            }
+        }
+        return null;
+    }
+}

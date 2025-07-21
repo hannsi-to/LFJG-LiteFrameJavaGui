@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.core.utils.type.types;
+package me.hannsi.lfjg.frame.setting.settings;
 
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 
@@ -18,7 +18,7 @@ public enum VSyncType implements IEnumTypeBase {
     /**
      * Constructs a new VSyncType enumeration value.
      *
-     * @param id the unique identifier of the VSync type
+     * @param id   the unique identifier of the VSync type
      * @param name the name of the VSync type
      */
     VSyncType(int id, String name) {

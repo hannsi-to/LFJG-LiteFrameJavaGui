@@ -4,13 +4,11 @@ import lombok.Getter;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
+import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.debug.exceptions.render.meshBuilder.MeshBuilderException;
 import me.hannsi.lfjg.render.system.mesh.persistent.PersistentMappedEBO;
 import me.hannsi.lfjg.render.system.mesh.persistent.PersistentMappedIBO;
 import me.hannsi.lfjg.render.system.mesh.persistent.PersistentMappedVBO;
-import me.hannsi.lfjg.core.utils.type.types.AttributeType;
-import me.hannsi.lfjg.core.utils.type.types.BufferObjectType;
-import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 
 import java.util.*;
 
