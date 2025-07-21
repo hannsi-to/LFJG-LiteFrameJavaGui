@@ -7,7 +7,7 @@ import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.math.AlignExtractor;
 import me.hannsi.lfjg.core.utils.toolkit.StringUtil;
-import me.hannsi.lfjg.frame.LFJGContext;
+import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.system.font.Font;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
@@ -99,7 +99,7 @@ public class GLText extends GLRect {
     }
 
     public void text(String fontName, String text, float x, float y, float fontSize, boolean blur, float blurSize, Color color, AlignType align) {
-        this.font = LFJGContext.fontCache.getFont(fontName);
+        this.font = LFJGRenderContext.fontCache.getFont(fontName);
         this.text = text;
         this.fontSize = fontSize;
         this.blur = blur;
