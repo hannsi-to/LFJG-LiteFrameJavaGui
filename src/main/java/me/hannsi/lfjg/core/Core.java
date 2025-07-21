@@ -32,19 +32,183 @@ public class Core {
         enableLFJGRenderSystem = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_CORE_CLASS_NAME);
     }
 
-    public static void OpenGLDebug_getOpenGLDebug(String mainThreadName, int[] severitiesId) {
-        if (!enableLFJGRenderSystem) {
-            return;
-        }
-
+    public static Object invokeStaticMethod(String className, String methodName, Object... args) {
+        Object result = null;
         try {
-            Object ignore = ClassUtil.invokeStaticMethod(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + ".debug.OpenGLDebug", "getOpenGLDebug", mainThreadName, severitiesId);
+            result = ClassUtil.invokeStaticMethod(className, methodName, args);
         } catch (Exception e) {
             if (!CORE_SYSTEM_DEBUG) {
-                return;
+                return null;
             }
 
             DebugLog.warning(Core.class, e);
+        }
+
+        return result;
+    }
+
+    public static Object getStaticFieldValue(String className, String fieldName) {
+        Object result = null;
+        try {
+            result = ClassUtil.getStaticFieldValue(className, fieldName);
+        } catch (Exception e) {
+            if (!CORE_SYSTEM_DEBUG) {
+                return null;
+            }
+
+            DebugLog.warning(Core.class, e);
+        }
+
+        return result;
+    }
+
+    public static int getStaticIntField(String className, String fieldName) {
+        Object value = getStaticFieldValue(className, fieldName);
+        if (value == null) {
+            throw new NullPointerException("Static int field: " + fieldName + " value: null");
+        }
+
+        return (int) value;
+    }
+
+    public static class NanoVGGL3 {
+        public static final String PACKAGE = "org.lwjgl.nanovg.NanoVGGL3";
+
+        public static final int NVG_ANTIALIAS;
+
+        static {
+            NVG_ANTIALIAS = getStaticIntField(PACKAGE, "NVG_ANTIALIAS");
+        }
+
+        public static long nvgCreate(int flags) {
+            if (!enableLFJGRenderSystem) {
+                return -1L;
+            }
+
+            Object result = invokeStaticMethod(PACKAGE, "nvgCreate", flags);
+            if (result == null) {
+                return -1L;
+            }
+
+            return (long) result;
+        }
+
+        public static void nvgDelete(long ctx) {
+            Object ignore = invokeStaticMethod(PACKAGE, "nvgDelete", ctx);
+        }
+    }
+
+
+    public static class GL13 {
+        public static final int GL_MULTISAMPLE;
+        private static final String PACKAGE = "org.lwjgl.opengl.GL13";
+
+        static {
+            GL_MULTISAMPLE = getStaticIntField(PACKAGE, "GL_MULTISAMPLE");
+        }
+    }
+
+    public static class GL11 {
+        public static final String PACKAGE = "org.lwjgl.opengl.GL11";
+
+        public static final int GL_COLOR_BUFFER_BIT;
+        public static final int GL_DEPTH_BUFFER_BIT;
+
+        public static final int GL_PROJECTION;
+        public static final int GL_MODELVIEW;
+
+        static {
+            GL_COLOR_BUFFER_BIT = getStaticIntField(PACKAGE, "GL_COLOR_BUFFER_BIT");
+            GL_DEPTH_BUFFER_BIT = getStaticIntField(PACKAGE, "GL_DEPTH_BUFFER_BIT");
+
+            GL_PROJECTION = getStaticIntField(PACKAGE, "GL_PROJECTION");
+            GL_MODELVIEW = getStaticIntField(PACKAGE, "GL_MODELVIEW");
+        }
+
+        public static void glClearColor(float red, float green, float blue, float alpha) {
+            if (!enableLFJGRenderSystem) {
+                return;
+            }
+
+            Object ignore = invokeStaticMethod(PACKAGE, "glClearColor", red, green, blue, alpha);
+        }
+
+        public static void glClear(int mask) {
+            if (!enableLFJGRenderSystem) {
+                return;
+            }
+
+            Object ignore = invokeStaticMethod(PACKAGE, "glClear", mask);
+        }
+
+        public static void glEnable(int target) {
+            if (!enableLFJGRenderSystem) {
+                return;
+            }
+
+            Object ignore = invokeStaticMethod(PACKAGE, "glEnable", target);
+        }
+
+        public static void glDisable(int target) {
+            if (!enableLFJGRenderSystem) {
+                return;
+            }
+
+            Object ignore = invokeStaticMethod(PACKAGE, "glDisable", target);
+        }
+
+        public static void glViewport(int x, int y, int w, int h) {
+            if (!enableLFJGRenderSystem) {
+                return;
+            }
+
+            Object ignore = invokeStaticMethod(PACKAGE, "glViewport", x, y, w, h);
+        }
+
+        public static void glMatrixMode(int mode) {
+            if (!enableLFJGRenderSystem) {
+                return;
+            }
+
+            Object ignore = invokeStaticMethod(PACKAGE, "glMatrixMode", mode);
+        }
+
+        public static void glLoadIdentity() {
+            if (!enableLFJGRenderSystem) {
+                return;
+            }
+
+            Object ignore = invokeStaticMethod(PACKAGE, "glLoadIdentity");
+        }
+
+        public static void glOrtho(double l, double r, double b, double t, double n, double f) {
+            if (!enableLFJGRenderSystem) {
+                return;
+            }
+
+            Object ignore = invokeStaticMethod(PACKAGE, "glOrtho", l, r, b, t, n, f);
+        }
+    }
+
+    public static class GL {
+        public static final String PACKAGE = "org.lwjgl.opengl.GL";
+
+        public static void createCapabilities() {
+            if (!enableLFJGRenderSystem) {
+                return;
+            }
+
+            Object ignore = invokeStaticMethod(PACKAGE, "createCapabilities");
+        }
+    }
+
+    public static class OpenGLDebug {
+        public static void getOpenGLDebug(String mainThreadName, int[] severitiesId) {
+            if (!enableLFJGRenderSystem) {
+                return;
+            }
+
+            Object ignore = invokeStaticMethod(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + ".debug.OpenGLDebug", "getOpenGLDebug", mainThreadName, severitiesId);
         }
     }
 }

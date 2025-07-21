@@ -207,7 +207,7 @@ public class GLFWCallback implements IFrame {
         if (frame.getFrameSettingValue(OpenGLDebugSetting.class)) {
             int[] ids = Arrays.stream((SeverityType[]) frame.getFrameSettingValue(CheckSeveritiesSetting.class)).mapToInt(SeverityType::getId).toArray();
 
-            Core.OpenGLDebug_getOpenGLDebug(frame.getThreadName(), ids);
+            Core.OpenGLDebug.getOpenGLDebug(frame.getThreadName(), ids);
         }
     }
 }

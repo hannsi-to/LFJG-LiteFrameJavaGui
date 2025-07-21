@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.frame;
 
 import lombok.Data;
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.manager.WorkspaceManager;
 import me.hannsi.lfjg.core.utils.graphics.GLFWUtil;
@@ -25,12 +26,7 @@ import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWNativeWin32;
-import org.lwjgl.nanovg.NanoVGGL3;
-import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryUtil;
-
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
 
 /**
  * The Frame class is responsible for creating and managing the main application window, handling rendering, and managing frame settings.
@@ -147,8 +143,8 @@ public class Frame implements IFrame {
     private void initRendering() {
         switch ((RenderingType) getFrameSettingValue(RenderingTypeSetting.class)) {
             case OPEN_GL -> {
-                GL.createCapabilities();
-                LFJGContext.nanoVGContext = NanoVGGL3.nvgCreate(NanoVGGL3.NVG_ANTIALIAS);
+                Core.GL.createCapabilities();
+                LFJGContext.nanoVGContext = Core.NanoVGGL3.nvgCreate(Core.NanoVGGL3.NVG_ANTIALIAS);
                 if (LFJGContext.nanoVGContext == MemoryUtil.NULL) {
                     throw new RuntimeException("Failed to create NanoVG context");
                 }
@@ -194,8 +190,8 @@ public class Frame implements IFrame {
             if (deltaTime2 >= targetTime) {
                 updateViewport();
                 updateLFJGLContext();
-                glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                Core.GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+                Core.GL11.glClear(Core.GL11.GL_COLOR_BUFFER_BIT | Core.GL11.GL_DEPTH_BUFFER_BIT);
                 draw();
 
                 GLFW.glfwSwapBuffers(windowID);
@@ -300,8 +296,8 @@ public class Frame implements IFrame {
      */
     private void setAntiAliasing() {
         switch (((AntiAliasingType) getFrameSettingValue(AntiAliasingSetting.class))) {
-            case MSAA -> glEnable(GL_MULTISAMPLE);
-            case OFF -> glDisable(GL_MULTISAMPLE);
+            case MSAA -> Core.GL11.glEnable(Core.GL13.GL_MULTISAMPLE);
+            case OFF -> Core.GL11.glDisable(Core.GL13.GL_MULTISAMPLE);
         }
     }
 
@@ -312,7 +308,7 @@ public class Frame implements IFrame {
         Callbacks.glfwFreeCallbacks(windowID);
 
         switch ((RenderingType) getFrameSettingValue(RenderingTypeSetting.class)) {
-            case OPEN_GL -> NanoVGGL3.nvgDelete(LFJGContext.nanoVGContext);
+            case OPEN_GL -> Core.NanoVGGL3.nvgDelete(LFJGContext.nanoVGContext);
             case VULKAN -> {
 
             }
@@ -336,14 +332,14 @@ public class Frame implements IFrame {
      * Updates the viewport based on the window size and content scale.
      */
     public void updateViewport() {
-        glViewport(0, 0, frameBufferWidth, frameBufferHeight);
+        Core.GL11.glViewport(0, 0, frameBufferWidth, frameBufferHeight);
 
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        glOrtho(0, frameBufferWidth / contentScaleX, 0, frameBufferHeight / contentScaleY, -1, 1);
+        Core.GL11.glMatrixMode(Core.GL11.GL_PROJECTION);
+        Core.GL11.glLoadIdentity();
+        Core.GL11.glOrtho(0, frameBufferWidth / contentScaleX, 0, frameBufferHeight / contentScaleY, -1, 1);
 
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
+        Core.GL11.glMatrixMode(Core.GL11.GL_MODELVIEW);
+        Core.GL11.glLoadIdentity();
     }
 
     public long getWin32Window() {

@@ -203,7 +203,9 @@ public class ClassUtil extends Util {
     }
 
     private static Method findMethod(Class<?> clazz, String methodName, Object... args) {
-        for (Method method : clazz.getDeclaredMethods()) {
+        Method[] methods = clazz.getDeclaredMethods();
+        outer:
+        for (Method method : methods) {
             if (!method.getName().equals(methodName)) {
                 continue;
             }
@@ -212,22 +214,42 @@ public class ClassUtil extends Util {
             }
 
             Class<?>[] paramTypes = method.getParameterTypes();
-            boolean matches = true;
-
             for (int i = 0; i < args.length; i++) {
-                if (args[i] == null) {
+                Object arg = args[i];
+                if (arg == null) {
                     continue;
                 }
-                if (!paramTypes[i].isAssignableFrom(args[i].getClass())) {
-                    matches = false;
-                    break;
+
+                Class<?> expected = wrapPrimitive(paramTypes[i]);
+                Class<?> actual = wrapPrimitive(arg.getClass());
+                if (!expected.isAssignableFrom(actual)) {
+                    continue outer;
                 }
             }
-
-            if (matches) {
-                return method;
-            }
+            return method;
         }
         return null;
+    }
+
+    public static Object getStaticFieldValue(String className, String fieldName) {
+        try {
+            Class<?> clazz = Class.forName(className);
+            Field field = clazz.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            return field.get(null);
+        } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("Could not access static field: " + fieldName + " on class: " + className, e);
+        }
+    }
+
+    public static void setStaticFieldValue(String className, String fieldName, Object value) {
+        try {
+            Class<?> clazz = Class.forName(className);
+            Field field = clazz.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            field.set(null, value);
+        } catch (NoSuchFieldException | ClassNotFoundException | IllegalAccessException e) {
+            throw new RuntimeException("Could not set static field: " + fieldName + " on class: " + className, e);
+        }
     }
 }
