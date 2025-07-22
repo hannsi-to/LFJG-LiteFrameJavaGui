@@ -4,10 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
-import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
@@ -18,6 +18,7 @@ import java.nio.FloatBuffer;
 @Getter
 @Setter
 public class GaussianBlurVertical extends EffectBase {
+    public Vector2i resolution = new Vector2i();
     /**
      * -- SETTER --
      * Sets the radius of the blur in the y-direction.
@@ -37,6 +38,11 @@ public class GaussianBlurVertical extends EffectBase {
 
     public static GaussianBlurVertical createGaussianBlurVertical() {
         return new GaussianBlurVertical();
+    }
+
+    public GaussianBlurVertical resolution(Vector2i resolution) {
+        this.resolution = resolution;
+        return this;
     }
 
     public GaussianBlurVertical radiusY(float radiusY) {
@@ -91,7 +97,7 @@ public class GaussianBlurVertical extends EffectBase {
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().setUniform("direction", new Vector2f(0, 1));
         getFrameBuffer().getShaderProgramFBO().setUniform("radius", radiusY);
-        getFrameBuffer().getShaderProgramFBO().setUniform("texelSize", new Vector2f(1.0f / LFJGContext.frameBufferSize.x(), 1.0f / LFJGContext.frameBufferSize.y()));
+        getFrameBuffer().getShaderProgramFBO().setUniform("texelSize", new Vector2f(1.0f / resolution.x(), 1.0f / resolution.y()));
 
         final FloatBuffer weightBuffer = BufferUtils.createFloatBuffer(256);
         for (int i = 0; i < radiusY; i++) {

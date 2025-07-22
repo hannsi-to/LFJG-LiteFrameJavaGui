@@ -3,9 +3,9 @@ package me.hannsi.lfjg.render.effect.effects;
 import lombok.Getter;
 import lombok.Setter;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
-import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import org.joml.Vector2i;
 import org.joml.Vector4f;
 
 /**
@@ -14,6 +14,7 @@ import org.joml.Vector4f;
 @Getter
 @Setter
 public class Clipping2DRect extends EffectBase {
+    private Vector2i resolution = new Vector2i();
     /**
      * -- SETTER --
      * Sets the x-coordinate of the first corner.
@@ -81,6 +82,11 @@ public class Clipping2DRect extends EffectBase {
 
     public static Clipping2DRect createClipping2DRect() {
         return new Clipping2DRect();
+    }
+
+    public Clipping2DRect resolution(Vector2i resolution) {
+        this.resolution = resolution;
+        return this;
     }
 
     public Clipping2DRect x1(float x1) {
@@ -191,7 +197,7 @@ public class Clipping2DRect extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("resolution", LFJGContext.frameBufferSize);
+        getFrameBuffer().getShaderProgramFBO().setUniform("resolution", resolution);
         getFrameBuffer().getShaderProgramFBO().setUniform("clippingRect2DBool", true);
         getFrameBuffer().getShaderProgramFBO().setUniform("clippingRect2DInvert", invert);
         getFrameBuffer().getShaderProgramFBO().setUniform("clippingRect2DSize", new Vector4f(x1, y1, x2, y2));

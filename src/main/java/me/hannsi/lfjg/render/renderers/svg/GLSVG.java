@@ -14,7 +14,7 @@ import org.lwjgl.system.MemoryStack;
 
 import java.nio.ByteBuffer;
 
-import static me.hannsi.lfjg.frame.LFJGContext.svgCache;
+import static me.hannsi.lfjg.render.LFJGRenderContext.svgCache;
 import static org.lwjgl.nanovg.NanoSVG.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;

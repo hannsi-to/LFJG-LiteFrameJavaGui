@@ -4,10 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
-import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 
 /**
  * Class representing a Diagonal Clipping effect in OpenGL.
@@ -15,6 +15,7 @@ import org.joml.Vector2f;
 @Getter
 @Setter
 public class DiagonalClipping extends EffectBase {
+    private Vector2i resolution = new Vector2i();
     /**
      * -- SETTER --
      * Sets the x-coordinate of the clipping center.
@@ -82,6 +83,11 @@ public class DiagonalClipping extends EffectBase {
 
     public static DiagonalClipping createDiagonalClipping() {
         return new DiagonalClipping();
+    }
+
+    public DiagonalClipping resolution(Vector2i resolution) {
+        this.resolution = resolution;
+        return this;
     }
 
     public DiagonalClipping centerX(float centerX) {
@@ -177,7 +183,7 @@ public class DiagonalClipping extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("clipCenter", new Vector2f((centerX / LFJGContext.frameBufferSize.x) * 2.0f - 1.0f, (centerY / LFJGContext.frameBufferSize.y) * 2.0f - 1.0f));
+        getFrameBuffer().getShaderProgramFBO().setUniform("clipCenter", new Vector2f((centerX / resolution.x) * 2.0f - 1.0f, (centerY / resolution.y) * 2.0f - 1.0f));
         getFrameBuffer().getShaderProgramFBO().setUniform("clipAngle", clipAngle);
         getFrameBuffer().getShaderProgramFBO().setUniform("blurWidth", blurWidth);
         getFrameBuffer().getShaderProgramFBO().setUniform("invertClip", invertClip);

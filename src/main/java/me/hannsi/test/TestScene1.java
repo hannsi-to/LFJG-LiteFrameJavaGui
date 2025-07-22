@@ -24,8 +24,8 @@ import me.hannsi.lfjg.render.system.scene.Scene;
 import org.joml.Vector3f;
 import org.lwjgl.openal.AL11;
 
+import static me.hannsi.lfjg.core.Core.frameBufferSize;
 import static me.hannsi.lfjg.frame.LFJGContext.frame;
-import static me.hannsi.lfjg.frame.LFJGContext.frameBufferSize;
 
 public class TestScene1 implements IScene {
     public Scene scene;

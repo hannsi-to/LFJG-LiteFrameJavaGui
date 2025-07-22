@@ -4,9 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
-import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import org.joml.Vector2i;
 import org.joml.Vector3f;
 
 /**
@@ -15,6 +15,7 @@ import org.joml.Vector3f;
 @Getter
 @Setter
 public class Glow extends EffectBase {
+    public Vector2i resolution = new Vector2i();
     /**
      * -- SETTER --
      * Sets the intensity of the glow.
@@ -94,6 +95,11 @@ public class Glow extends EffectBase {
 
     public static Glow createGlow() {
         return new Glow();
+    }
+
+    public Glow resolution(Vector2i resolution) {
+        this.resolution = resolution;
+        return this;
     }
 
     public Glow intensity(float intensity) {
@@ -190,7 +196,7 @@ public class Glow extends EffectBase {
         getFrameBuffer().getShaderProgramFBO().setUniform("glowColor", new Vector3f(glowColor.getRedF(), glowColor.getGreenF(), glowColor.getBlueF()));
         getFrameBuffer().getShaderProgramFBO().setUniform("useOriginalColor", useOriginalColor);
         getFrameBuffer().getShaderProgramFBO().setUniform("glowOnly", glowOnly);
-        getFrameBuffer().getShaderProgramFBO().setUniform("texelSize", LFJGContext.frameBufferSize);
+        getFrameBuffer().getShaderProgramFBO().setUniform("texelSize", resolution);
 
         super.setUniform(baseGLObject);
     }

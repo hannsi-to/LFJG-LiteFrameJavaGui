@@ -1,18 +1,17 @@
 package me.hannsi.test.test1;
 
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.math.Projection;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.effect.effects.DrawObject;
 import me.hannsi.lfjg.render.effect.effects.Rotate;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
-import org.joml.Vector2i;
 
 public class TestGuiFrame2 implements LFJGFrame {
     GLObjectCache glObjectCache;
@@ -32,8 +31,8 @@ public class TestGuiFrame2 implements LFJGFrame {
 
     @Override
     public void init() {
-        LFJGContext.projection2D = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, frame.getFrameBufferWidth(), frame.getFrameBufferHeight());
-        LFJGContext.frameBufferSize = new Vector2i(frame.getFrameBufferWidth(), frame.getFrameBufferHeight());
+        frame.updateLFJGLContext();
+        Core.projection2D = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, frame.getFrameBufferWidth(), frame.getFrameBufferHeight());
 
         glRect1 = new GLRect("Rect1");
         glRect1.rect(500, 500, 1000, 1000, Color.RED);

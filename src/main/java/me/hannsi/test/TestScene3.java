@@ -1,10 +1,6 @@
 package me.hannsi.test;
 
-import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.frame.LFJGContext;
-import me.hannsi.lfjg.render.gui.system.Gui;
-import me.hannsi.lfjg.render.gui.ui.TestTextField;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
@@ -13,7 +9,6 @@ public class TestScene3 implements IScene {
     public Scene scene;
     public Frame frame;
 
-    public Gui gui;
 
     public GLRect glRect;
 
@@ -26,37 +21,16 @@ public class TestScene3 implements IScene {
 
     @Override
     public void init() {
-        gui = new Gui()
-                .initGui()
-//                .addItem(new TestButton(0, 0, 100, 100, 4))
-//                .addItem(
-//                        new TestLabel(500, 500, 1)
-//                                .labelText("TestLabel")
-//                )
-                .addItem(
-                        new TestTextField(0, 0, 100, 20, 1)
-                                .typedField("GGGGG")
-                )
-                .setEventHandler();
-        gui.init();
 
-        x = 0;
-        glRect = new GLRect("GLRect1");
-        glRect.rectWH(x, 0, 200, 200, Color.of(100, 100, 100, 255));
     }
 
     @Override
     public void drawFrame() {
-        gui.renderItems(LFJGContext.mouseInfo, LFJGContext.keyboardInfo);
 
-        glRect.rectWH(x, 0, 200, 200, Color.of(100, 100, 100, 255));
-        glRect.draw();
-        x++;
     }
 
     @Override
     public void stopFrame() {
-        gui.cleanup();
     }
 
     @Override

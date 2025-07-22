@@ -3,9 +3,9 @@ package me.hannsi.lfjg.render.effect.effects;
 import lombok.Getter;
 import lombok.Setter;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
-import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import org.joml.Vector2i;
 
 /**
  * Class representing a Radial Blur effect in OpenGL.
@@ -13,6 +13,7 @@ import me.hannsi.lfjg.render.renderers.GLObject;
 @Getter
 @Setter
 public class RadialBlur extends EffectBase {
+    public Vector2i resolution = new Vector2i();
     /**
      * -- SETTER --
      * Sets the range of the blur.
@@ -56,6 +57,11 @@ public class RadialBlur extends EffectBase {
 
     public static RadialBlur createRadialBlur() {
         return new RadialBlur();
+    }
+
+    public RadialBlur resolution(Vector2i resolution) {
+        this.resolution = resolution;
+        return this;
     }
 
     public RadialBlur range(float range) {
@@ -129,8 +135,8 @@ public class RadialBlur extends EffectBase {
     @Override
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().setUniform("range", range);
-        getFrameBuffer().getShaderProgramFBO().setUniform("centerX", centerX / LFJGContext.frameBufferSize.x);
-        getFrameBuffer().getShaderProgramFBO().setUniform("centerY", centerY / LFJGContext.frameBufferSize.y);
+        getFrameBuffer().getShaderProgramFBO().setUniform("centerX", centerX / resolution.x);
+        getFrameBuffer().getShaderProgramFBO().setUniform("centerY", centerY / resolution.y);
 
         super.setUniform(baseGLObject);
     }

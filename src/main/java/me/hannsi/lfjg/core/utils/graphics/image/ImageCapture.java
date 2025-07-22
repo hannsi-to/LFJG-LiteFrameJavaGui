@@ -10,7 +10,6 @@ import me.hannsi.lfjg.core.utils.type.types.ColorFormatType;
 import me.hannsi.lfjg.core.utils.type.types.ImageLoaderType;
 import me.hannsi.lfjg.core.utils.type.types.JavaCVImageFormat;
 import me.hannsi.lfjg.core.utils.type.types.STBImageFormat;
-import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import org.bytedeco.opencv.global.opencv_core;
 import org.bytedeco.opencv.global.opencv_imgcodecs;
@@ -20,6 +19,7 @@ import org.lwjgl.stb.STBImageWrite;
 
 import java.nio.ByteBuffer;
 
+import static me.hannsi.lfjg.core.Core.frameBufferSize;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
 import static org.lwjgl.opengl.GL11.glReadPixels;
 
@@ -55,8 +55,8 @@ public class ImageCapture {
     public ImageCapture(Location filePath) {
         this.filePath = filePath;
 
-        this.width = LFJGContext.frameBufferSize.x();
-        this.height = LFJGContext.frameBufferSize.y();
+        this.width = frameBufferSize.x();
+        this.height = frameBufferSize.y();
         this.imageLoaderType = ImageLoaderType.STB_IMAGE;
         this.javaCVImageFormat = JavaCVImageFormat.PNG;
         this.colorFormatType = ColorFormatType.RGB;

@@ -28,6 +28,8 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWNativeWin32;
 import org.lwjgl.system.MemoryUtil;
 
+import static me.hannsi.lfjg.core.Core.nanoVGContext;
+
 /**
  * The Frame class is responsible for creating and managing the main application window, handling rendering, and managing frame settings.
  */
@@ -144,8 +146,8 @@ public class Frame implements IFrame {
         switch ((RenderingType) getFrameSettingValue(RenderingTypeSetting.class)) {
             case OPEN_GL -> {
                 Core.GL.createCapabilities();
-                LFJGContext.nanoVGContext = Core.NanoVGGL3.nvgCreate(Core.NanoVGGL3.NVG_ANTIALIAS);
-                if (LFJGContext.nanoVGContext == MemoryUtil.NULL) {
+                nanoVGContext = Core.NanoVGGL3.nvgCreate(Core.NanoVGGL3.NVG_ANTIALIAS);
+                if (nanoVGContext == MemoryUtil.NULL) {
                     throw new RuntimeException("Failed to create NanoVG context");
                 }
             }
@@ -242,22 +244,22 @@ public class Frame implements IFrame {
     }
 
     public void updateLFJGLContext() {
-        LFJGContext.frameBufferSize = new Vector2i(getFrameBufferWidth(), getFrameBufferHeight());
+        Core.frameBufferSize = new Vector2i(getFrameBufferWidth(), getFrameBufferHeight());
         LFJGContext.windowSize = new Vector2i(getWindowWidth(), getWindowHeight());
         float devicePixelRatioX = (float) frameBufferWidth / windowWidth;
         float devicePixelRatioY = (float) frameBufferHeight / windowHeight;
         LFJGContext.devicePixelRatio = MathHelper.max(devicePixelRatioX, devicePixelRatioY);
 
-        if (LFJGContext.projection2D == null) {
-            LFJGContext.projection2D = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, getFrameBufferWidth(), getFrameBufferHeight());
+        if (Core.projection2D == null) {
+            Core.projection2D = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, getFrameBufferWidth(), getFrameBufferHeight());
         } else {
-            LFJGContext.projection2D.updateProjMatrix(Projection.DEFAULT_FOV, getFrameBufferWidth(), getFrameBufferHeight(), Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
+            Core.projection2D.updateProjMatrix(Projection.DEFAULT_FOV, getFrameBufferWidth(), getFrameBufferHeight(), Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
         }
 
-        if (LFJGContext.projection3D == null) {
-            LFJGContext.projection3D = new Projection(ProjectionType.PERSPECTIVE_PROJECTION, getFrameBufferWidth(), getFrameBufferHeight());
+        if (Core.projection3D == null) {
+            Core.projection3D = new Projection(ProjectionType.PERSPECTIVE_PROJECTION, getFrameBufferWidth(), getFrameBufferHeight());
         } else {
-            LFJGContext.projection3D.updateProjMatrix(Projection.DEFAULT_FOV, getFrameBufferWidth(), getFrameBufferHeight(), Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
+            Core.projection3D.updateProjMatrix(Projection.DEFAULT_FOV, getFrameBufferWidth(), getFrameBufferHeight(), Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
         }
     }
 
@@ -308,7 +310,7 @@ public class Frame implements IFrame {
         Callbacks.glfwFreeCallbacks(windowID);
 
         switch ((RenderingType) getFrameSettingValue(RenderingTypeSetting.class)) {
-            case OPEN_GL -> Core.NanoVGGL3.nvgDelete(LFJGContext.nanoVGContext);
+            case OPEN_GL -> Core.NanoVGGL3.nvgDelete(nanoVGContext);
             case VULKAN -> {
 
             }

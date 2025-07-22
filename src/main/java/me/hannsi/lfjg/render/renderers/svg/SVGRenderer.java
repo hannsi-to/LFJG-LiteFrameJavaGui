@@ -1,9 +1,9 @@
 package me.hannsi.lfjg.render.renderers.svg;
 
 import lombok.Getter;
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
-import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
@@ -43,7 +43,7 @@ public class SVGRenderer {
     public void flush(int textureId, int textureUnit) {
         shaderProgramFBO.bind();
 
-        shaderProgramFBO.setUniform("projectionMatrix", LFJGContext.projection2D.getProjMatrix());
+        shaderProgramFBO.setUniform("projectionMatrix", Core.projection2D.getProjMatrix());
         shaderProgramFBO.setUniform("modelMatrix", new Matrix4f());
         shaderProgramFBO.setUniform("viewMatrix", new Matrix4f());
         shaderProgramFBO.setUniform("textureSampler", textureUnit);

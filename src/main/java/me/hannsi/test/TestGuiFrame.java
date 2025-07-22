@@ -1,5 +1,6 @@
 package me.hannsi.test;
 
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.toolkit.Camera;
 import me.hannsi.lfjg.core.utils.toolkit.KeyboardInfo;
@@ -28,7 +29,7 @@ import org.joml.Vector2f;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
-import static me.hannsi.lfjg.frame.LFJGContext.*;
+import static me.hannsi.lfjg.frame.LFJGContext.frame;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class TestGuiFrame implements LFJGFrame {
@@ -65,8 +66,8 @@ public class TestGuiFrame implements LFJGFrame {
         IFrame.eventManager.register(this);
 
         frame.updateLFJGLContext();
-        mouseInfo = new MouseInfo();
-        keyboardInfo = new KeyboardInfo();
+        Core.mouseInfo = new MouseInfo();
+        Core.keyboardInfo = new KeyboardInfo();
         camera = new Camera();
 
         LFJGRenderContext.fontCache = FontCache.initFontCache()
@@ -185,12 +186,12 @@ public class TestGuiFrame implements LFJGFrame {
 
         float MOUSE_SENSITIVITY = 0.1f;
 
-        if (mouseInfo.isRightButtonPressed()) {
-            Vector2f displVec = mouseInfo.getDisplaySize();
+        if (Core.mouseInfo.isRightButtonPressed()) {
+            Vector2f displVec = Core.mouseInfo.getDisplaySize();
             camera.addRotation((float) Math.toRadians(-displVec.x * MOUSE_SENSITIVITY), (float) Math.toRadians(-displVec.y * MOUSE_SENSITIVITY));
         }
 
-        mouseInfo.input();
+        Core.mouseInfo.input();
     }
 
     public boolean isKeyPressed(int keyCode) {
@@ -231,15 +232,15 @@ public class TestGuiFrame implements LFJGFrame {
 
     @EventHandler
     public void mouseButtonCallbackEvent(MouseButtonEvent event) {
-        mouseInfo.updateMouseButton(event.getButton(), event.getAction());
+        Core.mouseInfo.updateMouseButton(event.getButton(), event.getAction());
 
-        MouseEvent mouseEvent = mouseEventAdapter.convertGLFWMouseEvent(event.getButton(), event.getAction(), event.getMods(), mouseInfo.getCurrentPos().x() - x, mouseInfo.getCurrentPos().y() - y);
+        MouseEvent mouseEvent = mouseEventAdapter.convertGLFWMouseEvent(event.getButton(), event.getAction(), event.getMods(), Core.mouseInfo.getCurrentPos().x() - x, Core.mouseInfo.getCurrentPos().y() - y);
         ((CefBrowserOsr) browser).sendMouseEvent(mouseEvent);
     }
 
     @EventHandler
     public void keyCallbackEvent(KeyEvent event) {
-        keyboardInfo.updateKeyState(event.getKey(), event.getAction());
+        Core.keyboardInfo.updateKeyState(event.getKey(), event.getAction());
 
         java.awt.event.KeyEvent keyEvent = keyEventAdapter.convertGLFWKey(event.getKey(), event.getScancode(), event.getAction(), event.getMods());
         if (keyEvent != null) {
@@ -257,7 +258,7 @@ public class TestGuiFrame implements LFJGFrame {
 
     @EventHandler
     public void cursorEnterEvent(CursorEnterEvent event) {
-        mouseInfo.updateInWindow(event.isEntered());
+        Core.mouseInfo.updateInWindow(event.isEntered());
     }
 
     @EventHandler
@@ -267,7 +268,7 @@ public class TestGuiFrame implements LFJGFrame {
 
     @EventHandler
     public void cursorPosEvent(CursorPosEvent event) {
-        mouseInfo.updateCursorPos((float) event.getXPos(), (float) event.getYPos());
+        Core.mouseInfo.updateCursorPos((float) event.getXPos(), (float) event.getYPos());
 
         MouseEvent moveEvent = mouseEventAdapter.createMouseMovedEvent(event.getXPos() - x, event.getYPos() - y);
         ((CefBrowserOsr) browser).sendMouseEvent(moveEvent);
@@ -275,7 +276,7 @@ public class TestGuiFrame implements LFJGFrame {
 
     @EventHandler
     public void scrollEvent(ScrollEvent event) {
-        MouseWheelEvent mouseWheelEvent = mouseWheelEventAdapter.convertGLFWScroll(event.getXoffset(), event.getYoffset(), mouseInfo.getCurrentPos().x() - x, mouseInfo.getCurrentPos().y() - y);
+        MouseWheelEvent mouseWheelEvent = mouseWheelEventAdapter.convertGLFWScroll(event.getXoffset(), event.getYoffset(), Core.mouseInfo.getCurrentPos().x() - x, Core.mouseInfo.getCurrentPos().y() - y);
         ((CefBrowserOsr) browser).sendMouseWheelEvent(mouseWheelEvent);
     }
 

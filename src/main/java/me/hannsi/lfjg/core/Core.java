@@ -1,7 +1,11 @@
 package me.hannsi.lfjg.core;
 
 import me.hannsi.lfjg.core.debug.DebugLog;
+import me.hannsi.lfjg.core.utils.math.Projection;
 import me.hannsi.lfjg.core.utils.reflection.ClassUtil;
+import me.hannsi.lfjg.core.utils.toolkit.KeyboardInfo;
+import me.hannsi.lfjg.core.utils.toolkit.MouseInfo;
+import org.joml.Vector2i;
 
 public class Core {
     public static final String DEFAULT_LFJG_PATH = "me.hannsi.lfjg";
@@ -17,12 +21,20 @@ public class Core {
     public static final String DEFAULT_LFJG_JCEF_CORE_CLASS_NAME = ".JCefCore";
     public static final String DEFAULT_LFJG_PHYSIC_CORE_CLASS_NAME = ".PhysicCore";
     public static final String DEFAULT_LFJG_RENDER_CORE_CLASS_NAME = ".RenderCore";
+
     private static final boolean enableLFJGAudioSystem;
     private static final boolean enableLFJGFrameSystem;
     private static final boolean enableLFJGJCefSystem;
     private static final boolean enableLFJGPhysicSystem;
     private static final boolean enableLFJGRenderSystem;
     public static boolean CORE_SYSTEM_DEBUG = true;
+
+    public static Projection projection2D;
+    public static Projection projection3D;
+    public static Vector2i frameBufferSize;
+    public static long nanoVGContext;
+    public static MouseInfo mouseInfo;
+    public static KeyboardInfo keyboardInfo;
 
     static {
         enableLFJGAudioSystem = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_AUDIO_SYSTEM_PATH + DEFAULT_LFJG_AUDIO_CORE_CLASS_NAME);

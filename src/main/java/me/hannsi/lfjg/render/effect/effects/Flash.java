@@ -5,10 +5,10 @@ import lombok.Setter;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
-import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 import org.joml.Vector3f;
 
 /**
@@ -17,6 +17,7 @@ import org.joml.Vector3f;
 @Getter
 @Setter
 public class Flash extends EffectBase {
+    public Vector2i resolution = new Vector2i();
     /**
      * -- SETTER --
      * Sets the intensity of the flash.
@@ -84,6 +85,11 @@ public class Flash extends EffectBase {
 
     public static Flash createFlash() {
         return new Flash();
+    }
+
+    public Flash resolution(Vector2i resolution) {
+        this.resolution = resolution;
+        return this;
     }
 
     public Flash intensity(float intensity) {
@@ -169,7 +175,7 @@ public class Flash extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("screenSize", LFJGContext.frameBufferSize);
+        getFrameBuffer().getShaderProgramFBO().setUniform("screenSize", resolution);
         getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
         getFrameBuffer().getShaderProgramFBO().setUniform("screenPosition", new Vector2f(x, y));
         getFrameBuffer().getShaderProgramFBO().setUniform("blendMode", flashBlendMode.getId());

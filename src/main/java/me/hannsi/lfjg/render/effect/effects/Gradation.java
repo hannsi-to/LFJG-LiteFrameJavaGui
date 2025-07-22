@@ -6,11 +6,11 @@ import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
-import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 import org.joml.Vector4f;
 
 /**
@@ -19,6 +19,7 @@ import org.joml.Vector4f;
 @Getter
 @Setter
 public class Gradation extends EffectBase {
+    private Vector2i resolution = new Vector2i();
     /**
      * -- SETTER --
      * Sets the x-coordinate of the center.
@@ -136,6 +137,11 @@ public class Gradation extends EffectBase {
         return new Gradation();
     }
 
+    public Gradation resolution(Vector2i resolution) {
+        this.resolution = resolution;
+        return this;
+    }
+
     public Gradation centerX(float centerX) {
         this.centerX = centerX;
         return this;
@@ -251,7 +257,7 @@ public class Gradation extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("center", new Vector2f(centerX / LFJGContext.frameBufferSize.x, centerY / LFJGContext.frameBufferSize.y));
+        getFrameBuffer().getShaderProgramFBO().setUniform("center", new Vector2f(centerX / resolution.x, centerY / resolution.y));
         getFrameBuffer().getShaderProgramFBO().setUniform("angle", angle);
         getFrameBuffer().getShaderProgramFBO().setUniform("width", width);
         getFrameBuffer().getShaderProgramFBO().setUniform("gradientShape", shapeMode.getId());
@@ -259,7 +265,7 @@ public class Gradation extends EffectBase {
         getFrameBuffer().getShaderProgramFBO().setUniform("startColor", new Vector4f(startColor.getRedF(), startColor.getGreenF(), startColor.getBlueF(), startColor.getAlphaF()));
         getFrameBuffer().getShaderProgramFBO().setUniform("endColor", new Vector4f(endColor.getRedF(), endColor.getGreenF(), endColor.getBlueF(), endColor.getAlphaF()));
         getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
-        float aspectRatio = (float) LFJGContext.frameBufferSize.x() / (float) LFJGContext.frameBufferSize.y();
+        float aspectRatio = (float) resolution.x() / (float) resolution.y();
         getFrameBuffer().getShaderProgramFBO().setUniform("aspectRatio", aspectRatio);
 
         super.setUniform(baseGLObject);

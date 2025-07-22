@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.render.renderers.model;
 
 import lombok.Getter;
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureLoader;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
@@ -18,7 +19,6 @@ import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import java.util.Collection;
 import java.util.List;
 
-import static me.hannsi.lfjg.frame.LFJGContext.projection3D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL13.*;
 
@@ -67,7 +67,7 @@ public class ModelRender {
         shaderProgram.bind();
 
         shaderProgram.setUniform("textureSampler", 0);
-        shaderProgram.setUniform("projectionMatrix", projection3D.getProjMatrix());
+        shaderProgram.setUniform("projectionMatrix", Core.projection3D.getProjMatrix());
         shaderProgram.setUniform("viewMatrix", camera.getViewMatrix());
 
         Collection<Model> models = modelCache.getModels().values();

@@ -1,12 +1,12 @@
 package me.hannsi.lfjg.render.system.rendering;
 
 import lombok.Data;
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
-import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.debug.exceptions.frameBuffer.CompleteFrameBufferException;
 import me.hannsi.lfjg.render.debug.exceptions.frameBuffer.CreatingFrameBufferException;
 import me.hannsi.lfjg.render.debug.exceptions.render.scene.CreatingRenderBufferException;
@@ -18,6 +18,7 @@ import org.joml.Matrix4f;
 
 import java.nio.ByteBuffer;
 
+import static me.hannsi.lfjg.core.Core.frameBufferSize;
 import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL30.*;
 
@@ -58,7 +59,7 @@ public class FrameBuffer {
     }
 
     public FrameBuffer(boolean uesStencil, GLObject glObject) {
-        this(uesStencil, glObject, 0, 0, LFJGContext.frameBufferSize.x(), LFJGContext.frameBufferSize.y());
+        this(uesStencil, glObject, 0, 0, frameBufferSize.x(), frameBufferSize.y());
     }
 
     /**
@@ -188,7 +189,7 @@ public class FrameBuffer {
     public void drawFrameBuffer(int textureUnit) {
         shaderProgramFBO.bind();
 
-        shaderProgramFBO.setUniform("projectionMatrix", LFJGContext.projection2D.getProjMatrix());
+        shaderProgramFBO.setUniform("projectionMatrix", Core.projection2D.getProjMatrix());
         shaderProgramFBO.setUniform("modelMatrix", modelMatrix);
         shaderProgramFBO.setUniform("viewMatrix", viewMatrix);
         shaderProgramFBO.setUniform("textureSampler", textureUnit);

@@ -8,7 +8,9 @@ import org.lwjgl.nanovg.NanoVG;
 
 import java.nio.ByteBuffer;
 
-import static me.hannsi.lfjg.frame.LFJGContext.*;
+import static me.hannsi.lfjg.core.Core.frameBufferSize;
+import static me.hannsi.lfjg.core.Core.nanoVGContext;
+import static me.hannsi.lfjg.frame.LFJGContext.devicePixelRatio;
 import static org.lwjgl.opengl.GL11.*;
 
 public class NanoVGUtil extends Util {

@@ -1,11 +1,11 @@
 package me.hannsi.lfjg.render.renderers;
 
 import lombok.Data;
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
-import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.Id;
 import me.hannsi.lfjg.render.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
@@ -174,7 +174,7 @@ public class GLObject implements Cloneable {
     }
 
     private void uploadUniforms() {
-        shaderProgram.setUniform("projectionMatrix", LFJGContext.projection2D.getProjMatrix());
+        shaderProgram.setUniform("projectionMatrix", Core.projection2D.getProjMatrix());
         shaderProgram.setUniform("modelMatrix", transform.getModelMatrix());
         shaderProgram.setUniform("viewMatrix", viewMatrix);
         if (mesh.getVboIds().get(BufferObjectType.TEXTURE_BUFFER) != null) {

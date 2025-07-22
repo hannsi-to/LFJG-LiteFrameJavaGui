@@ -3,10 +3,10 @@ package me.hannsi.lfjg.render.effect.effects;
 import lombok.Getter;
 import lombok.Setter;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
-import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 
 /**
  * Class representing a Fast Approximate Anti-Aliasing (FXAA) effect in OpenGL.
@@ -14,6 +14,7 @@ import org.joml.Vector2f;
 @Getter
 @Setter
 public class FXAA extends EffectBase {
+    public Vector2i resolution = new Vector2i();
     /**
      * -- SETTER --
      * Sets whether to use alpha in the effect.
@@ -33,6 +34,11 @@ public class FXAA extends EffectBase {
 
     public static FXAA createFXAA() {
         return new FXAA();
+    }
+
+    public FXAA resolution(Vector2i resolution) {
+        this.resolution = resolution;
+        return this;
     }
 
     public FXAA useAlpha(boolean useAlpha) {
@@ -80,7 +86,7 @@ public class FXAA extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("texelStep", new Vector2f(1.0f / LFJGContext.frameBufferSize.x(), 1.0f / LFJGContext.frameBufferSize.y()));
+        getFrameBuffer().getShaderProgramFBO().setUniform("texelStep", new Vector2f(1.0f / resolution.x(), 1.0f / resolution.y()));
         getFrameBuffer().getShaderProgramFBO().setUniform("useAlpha", useAlpha);
 
         super.setUniform(baseGLObject);
