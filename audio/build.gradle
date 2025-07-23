@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+    id "java-library"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
+}
+
+group = 'me.hannsi.lfjg'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(":core")
+
+    // OpenAL
+    api "org.lwjgl:lwjgl-openal"
+    runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+    options.compilerArgs << "-Xlint:deprecation"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(javaVersion)
+    }
+}
+
+configurations {
+    runtimeElements {
+        extendsFrom runtimeOnly
+    }
+}
+
+shadowJar {
+    mergeServiceFiles()
+}
