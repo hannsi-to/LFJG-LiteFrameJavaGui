@@ -23,63 +23,12 @@ repositories {
 }
 
 dependencies {
-    // JOGL & GlueGen
-    implementation 'org.jogamp.jogl:jogl-all-main:2.3.2'
-    implementation 'org.jogamp.gluegen:gluegen-rt-main:2.3.2'
-
-    // JNA
-    implementation "net.java.dev.jna:jna:5.13.0"
-    implementation "net.java.dev.jna:jna-platform:5.13.0"
-
-    // Annotations
-    api "org.jetbrains:annotations:24.0.0"
-
-    // Testing
-    testImplementation platform("org.junit:junit-bom:5.9.1")
-    testImplementation "org.junit.jupiter:junit-jupiter"
-
-    // Reflection
-    api "org.reflections:reflections:0.10.2"
-
-    // Logging
-    implementation "org.slf4j:slf4j-api:2.0.12"
-    implementation "org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1"
-    implementation "org.apache.logging.log4j:log4j-core:2.23.1"
-    annotationProcessor "org.apache.logging.log4j:log4j-core:2.23.1"
-
-    // XML graphics
-    api("org.apache.xmlgraphics:xmlgraphics-commons:2.9") {
-        exclude module: "commons-io"
-    }
-    api "commons-io:commons-io:2.14.0"
-    api "org.apache.xmlgraphics:batik-transcoder:1.17"
-
-    // LWJGL (BOM + modules)
-    api platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
-    def lwjglModules = [
-            "lwjgl", "lwjgl-assimp", "lwjgl-glfw", "lwjgl-nanovg",
-            "lwjgl-openal", "lwjgl-opengl", "lwjgl-stb"
-    ]
-    lwjglModules.each { module ->
-        implementation "org.lwjgl:$module"
-        runtimeOnly "org.lwjgl:$module::$lwjglNatives"
-    }
-
-    // Math & AWT
-    api "org.joml:joml:$jomlVersion"
-    api "org.joml:joml-primitives:$jomlprimitivesVersion"
-    api "org.lwjglx:lwjgl3-awt:$lwjgl3awtVersion"
-
-    // Steamworks
-    api "com.code-disaster.steamworks4j:steamworks4j:$steamworks4jVersion"
-    api "com.code-disaster.steamworks4j:steamworks4j-server:$steamworks4jserverVersion"
-
-    // JavaCV
-    api "org.bytedeco:javacv-platform:1.5.10"
-
-    // Lombok
-    compileOnly "org.projectlombok:lombok:1.18.32"
-    annotationProcessor "org.projectlombok:lombok:1.18.32"
+    implementation project(":core")
+    implementation project(":audio")
+    implementation project(":frame")
+    implementation project(":jcef")
+    implementation project(":physic")
+    implementation project(":render")
 }
 
 tasks.withType(JavaCompile).configureEach {

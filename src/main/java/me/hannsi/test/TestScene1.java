@@ -10,7 +10,6 @@ import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.animation.animations.Bounce;
 import me.hannsi.lfjg.render.animation.system.AnimationCache;
-import me.hannsi.lfjg.render.effect.effects.*;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.font.GLText;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;

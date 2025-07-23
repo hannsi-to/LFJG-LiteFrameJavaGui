@@ -7,9 +7,6 @@ import me.hannsi.lfjg.core.utils.toolkit.KeyboardInfo;
 import me.hannsi.lfjg.core.utils.toolkit.MouseInfo;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.LFJGContext;
-import me.hannsi.lfjg.frame.event.events.user.*;
-import me.hannsi.lfjg.frame.event.system.EventHandler;
-import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.system.IFrame;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.jcef.adapter.KeyEventAdapter;
@@ -30,7 +27,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
 import static me.hannsi.lfjg.frame.LFJGContext.frame;
-import static org.lwjgl.glfw.GLFW.*;
 
 public class TestGuiFrame implements LFJGFrame {
     private static final String URL = "https://google.com";
