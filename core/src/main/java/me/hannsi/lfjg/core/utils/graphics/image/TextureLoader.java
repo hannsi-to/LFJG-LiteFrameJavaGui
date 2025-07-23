@@ -1,14 +1,9 @@
 package me.hannsi.lfjg.core.utils.graphics.image;
 
 import me.hannsi.lfjg.core.Core;
-import me.hannsi.lfjg.core.debug.DebugLog;
-import me.hannsi.lfjg.core.utils.math.io.IOUtil;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.type.types.ImageLoaderType;
 import me.hannsi.lfjg.core.utils.type.types.LocationType;
-import org.bytedeco.opencv.global.opencv_imgcodecs;
-import org.bytedeco.opencv.global.opencv_imgproc;
-import org.bytedeco.opencv.opencv_core.Mat;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
@@ -21,8 +16,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-
-import static org.bytedeco.opencv.global.opencv_imgproc.cvtColor;
 
 public class TextureLoader {
     private final Location texturePath;
@@ -96,17 +89,17 @@ public class TextureLoader {
                     }
                 }
                 case JAVA_CV -> {
-                    Mat bgrMat = opencv_imgcodecs.imdecode(new Mat(texturePath.getBytes()), opencv_imgcodecs.IMREAD_COLOR);
-
-                    if (bgrMat.empty()) {
-                        DebugLog.error(getClass(), "Image file [" + texturePath + "] not loaded.");
-                        return;
-                    }
-
-                    Mat mat = new Mat();
-                    cvtColor(bgrMat, mat, opencv_imgproc.COLOR_BGR2RGBA);
-
-                    generateTexture(mat.cols(), mat.rows(), IOUtil.matToByteBufferRGBA(mat));
+//                    Mat bgrMat = opencv_imgcodecs.imdecode(new Mat(texturePath.getBytes()), opencv_imgcodecs.IMREAD_COLOR);
+//
+//                    if (bgrMat.empty()) {
+//                        DebugLog.error(getClass(), "Image file [" + texturePath + "] not loaded.");
+//                        return;
+//                    }
+//
+//                    Mat mat = new Mat();
+//                    cvtColor(bgrMat, mat, opencv_imgproc.COLOR_BGR2RGBA);
+//
+//                    generateTexture(mat.cols(), mat.rows(), IOUtil.matToByteBufferRGBA(mat));
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + imageLoaderType);
             }

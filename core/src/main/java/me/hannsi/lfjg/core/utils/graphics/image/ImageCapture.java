@@ -8,9 +8,6 @@ import me.hannsi.lfjg.core.utils.type.types.ColorFormatType;
 import me.hannsi.lfjg.core.utils.type.types.ImageLoaderType;
 import me.hannsi.lfjg.core.utils.type.types.JavaCVImageFormat;
 import me.hannsi.lfjg.core.utils.type.types.STBImageFormat;
-import org.bytedeco.opencv.global.opencv_core;
-import org.bytedeco.opencv.global.opencv_imgcodecs;
-import org.bytedeco.opencv.opencv_core.Mat;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImageWrite;
 
@@ -75,25 +72,25 @@ public class ImageCapture {
     }
 
     private LogGenerator writeJavaCV(String path, ByteBuffer imageBuffer) {
-        Mat mat = new Mat(height, width, opencv_core.CV_8UC(colorFormatType.getChannels()));
-        imageBuffer.flip();
-        mat.data().put(imageBuffer.slice().get());
-
-        boolean success = false;
-
-        switch (javaCVImageFormat) {
-            case PNG, BMP, TGA, PBM, PGM, PPM, GIF -> {
-                success = opencv_imgcodecs.imwrite(path, mat);
-            }
-            case JPG, JPEG -> {
-                int[] params = new int[]{opencv_imgcodecs.IMWRITE_JPEG_QUALITY, jpgQuality};
-                success = opencv_imgcodecs.imwrite(path, mat, params);
-            }
-        }
-
-        if (!success) {
-            throw new RuntimeException("Failed to save screenshot to image: " + path);
-        }
+//        Mat mat = new Mat(height, width, opencv_core.CV_8UC(colorFormatType.getChannels()));
+//        imageBuffer.flip();
+//        mat.data().put(imageBuffer.slice().get());
+//
+//        boolean success = false;
+//
+//        switch (javaCVImageFormat) {
+//            case PNG, BMP, TGA, PBM, PGM, PPM, GIF -> {
+//                success = opencv_imgcodecs.imwrite(path, mat);
+//            }
+//            case JPG, JPEG -> {
+//                int[] params = new int[]{opencv_imgcodecs.IMWRITE_JPEG_QUALITY, jpgQuality};
+//                success = opencv_imgcodecs.imwrite(path, mat, params);
+//            }
+//        }
+//
+//        if (!success) {
+//            throw new RuntimeException("Failed to save screenshot to image: " + path);
+//        }
 
         return new LogGenerator("ImageCapture Info Message", "Source: ImageCapture", "Type: Save image", "Severity: Info", "Message: Saved " + saveType + " to image.", "Path: " + path);
     }

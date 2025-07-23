@@ -4,15 +4,11 @@ import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
-import org.bytedeco.javacv.FFmpegFrameGrabber;
-import org.bytedeco.javacv.Frame;
 import org.joml.Vector3f;
 import org.lwjgl.stb.STBVorbisInfo;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
@@ -45,16 +41,16 @@ public class SoundData {
                 }
             }
             case JAVA_CV -> {
-                try (FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(fileLocation.path())) {
-                    pcm = readAudio(grabber, fileLocation.path());
-
-                    int sampleRate = grabber.getSampleRate();
-                    int channels = grabber.getAudioChannels();
-                    int format = (channels == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
-                    updatePCMData(sampleRate, format);
-                } catch (Exception e) {
-                    throw new RuntimeException("Failed to load audio file: " + fileLocation.path(), e);
-                }
+//                try (FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(fileLocation.path())) {
+//                    pcm = readAudio(grabber, fileLocation.path());
+//
+//                    int sampleRate = grabber.getSampleRate();
+//                    int channels = grabber.getAudioChannels();
+//                    int format = (channels == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
+//                    updatePCMData(sampleRate, format);
+//                } catch (Exception e) {
+//                    throw new RuntimeException("Failed to load audio file: " + fileLocation.path(), e);
+//                }
 
             }
             default -> throw new IllegalStateException("Unexpected value: " + soundLoaderType);
@@ -152,35 +148,35 @@ public class SoundData {
         return this;
     }
 
-    private ShortBuffer readAudio(FFmpegFrameGrabber grabber, String filePath) throws FFmpegFrameGrabber.Exception {
-        grabber.start();
-
-        int channels = grabber.getAudioChannels();
-        if (channels == 0) {
-            throw new RuntimeException("No audio channels found in file: " + filePath);
-        }
-
-        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(1024 * 1024).order(ByteOrder.LITTLE_ENDIAN);
-        ShortBuffer shortBuffer = byteBuffer.asShortBuffer();
-
-        Frame frame;
-        while ((frame = grabber.grabSamples()) != null) {
-            ShortBuffer audioBuffer = (ShortBuffer) frame.samples[0];
-            if (shortBuffer.remaining() < audioBuffer.remaining()) {
-                int newCapacity = Math.max(shortBuffer.capacity() * 2, shortBuffer.capacity() + audioBuffer.remaining());
-                ByteBuffer newByteBuffer = ByteBuffer.allocateDirect(newCapacity * 2);
-                ShortBuffer newShortBuffer = newByteBuffer.asShortBuffer();
-                shortBuffer.flip();
-                newShortBuffer.put(shortBuffer);
-                shortBuffer = newShortBuffer;
-            }
-            shortBuffer.put(audioBuffer);
-        }
-
-        grabber.stop();
-        shortBuffer.flip();
-        return shortBuffer;
-    }
+//    private ShortBuffer readAudio(FFmpegFrameGrabber grabber, String filePath) throws FFmpegFrameGrabber.Exception {
+//        grabber.start();
+//
+//        int channels = grabber.getAudioChannels();
+//        if (channels == 0) {
+//            throw new RuntimeException("No audio channels found in file: " + filePath);
+//        }
+//
+//        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(1024 * 1024).order(ByteOrder.LITTLE_ENDIAN);
+//        ShortBuffer shortBuffer = byteBuffer.asShortBuffer();
+//
+//        Frame frame;
+//        while ((frame = grabber.grabSamples()) != null) {
+//            ShortBuffer audioBuffer = (ShortBuffer) frame.samples[0];
+//            if (shortBuffer.remaining() < audioBuffer.remaining()) {
+//                int newCapacity = Math.max(shortBuffer.capacity() * 2, shortBuffer.capacity() + audioBuffer.remaining());
+//                ByteBuffer newByteBuffer = ByteBuffer.allocateDirect(newCapacity * 2);
+//                ShortBuffer newShortBuffer = newByteBuffer.asShortBuffer();
+//                shortBuffer.flip();
+//                newShortBuffer.put(shortBuffer);
+//                shortBuffer = newShortBuffer;
+//            }
+//            shortBuffer.put(audioBuffer);
+//        }
+//
+//        grabber.stop();
+//        shortBuffer.flip();
+//        return shortBuffer;
+//    }
 
     private ShortBuffer readVorbis(String filePath, STBVorbisInfo info) {
         try (MemoryStack stack = MemoryStack.stackPush()) {

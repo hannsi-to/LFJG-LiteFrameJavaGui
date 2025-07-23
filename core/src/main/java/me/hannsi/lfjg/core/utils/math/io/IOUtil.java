@@ -3,7 +3,6 @@ package me.hannsi.lfjg.core.utils.math.io;
 import me.hannsi.lfjg.core.utils.Util;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
-import org.bytedeco.opencv.opencv_core.Mat;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -126,29 +125,29 @@ public class IOUtil extends Util {
         return rgbaBuffer;
     }
 
-    public static ByteBuffer matToByteBufferRGBA(Mat mat) {
-        int width = mat.cols();
-        int height = mat.rows();
-        int channels = mat.channels();
-        int bufferSize = width * height * channels;
-
-        ByteBuffer buffer = mat.createBuffer();
-
-        if (channels == 3) {
-            for (int i = 0; i < bufferSize; i += 3) {
-                byte b = buffer.get(i);
-                byte g = buffer.get(i + 1);
-                byte r = buffer.get(i + 2);
-
-                buffer.put(i, b);
-                buffer.put(i + 1, g);
-                buffer.put(i + 2, r);
-                buffer.put((byte) 255);
-            }
-        }
-
-        return buffer;
-    }
+//    public static ByteBuffer matToByteBufferRGBA(Mat mat) {
+//        int width = mat.cols();
+//        int height = mat.rows();
+//        int channels = mat.channels();
+//        int bufferSize = width * height * channels;
+//
+//        ByteBuffer buffer = mat.createBuffer();
+//
+//        if (channels == 3) {
+//            for (int i = 0; i < bufferSize; i += 3) {
+//                byte b = buffer.get(i);
+//                byte g = buffer.get(i + 1);
+//                byte r = buffer.get(i + 2);
+//
+//                buffer.put(i, b);
+//                buffer.put(i + 1, g);
+//                buffer.put(i + 2, r);
+//                buffer.put((byte) 255);
+//            }
+//        }
+//
+//        return buffer;
+//    }
 
     public static InputStream convertStringToInputStream(String value) {
         return new ByteArrayInputStream(value.getBytes(StandardCharsets.UTF_8));

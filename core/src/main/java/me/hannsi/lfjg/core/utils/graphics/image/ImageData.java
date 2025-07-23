@@ -1,17 +1,16 @@
 package me.hannsi.lfjg.core.utils.graphics.image;
 
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
-import org.bytedeco.opencv.opencv_core.Mat;
 
 import java.nio.ByteBuffer;
 
 public class ImageData {
     private Location imagePath;
-    private Mat mat;
+    //    private Mat mat;
     private ByteBuffer byteBuffer;
 
     public void cleanup() {
-        mat = null;
+//        mat = null;
         byteBuffer.clear();
     }
 
@@ -23,13 +22,13 @@ public class ImageData {
         this.imagePath = imagePath;
     }
 
-    public Mat getMat() {
-        return mat;
-    }
-
-    public void setMat(Mat mat) {
-        this.mat = mat;
-    }
+//    public Mat getMat() {
+//        return mat;
+//    }
+//
+//    public void setMat(Mat mat) {
+//        this.mat = mat;
+//    }
 
     public ByteBuffer getByteBuffer() {
         return byteBuffer;

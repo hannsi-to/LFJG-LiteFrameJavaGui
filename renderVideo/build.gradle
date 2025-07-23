@@ -1,22 +1,11 @@
 plugins {
-    id "java"
+    id 'java'
     id "java-library"
     id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
-group = "me.hannsi.lfjg"
-version = "1.0-SNAPSHOT"
-
-ext {
-    lwjglVersion = "3.3.4"
-    jomlVersion = "1.10.7"
-    lwjgl3awtVersion = "0.1.8"
-    steamworks4jVersion = "1.9.0"
-    steamworks4jserverVersion = "1.9.0"
-    jomlprimitivesVersion = "1.10.0"
-    lwjglNatives = "natives-windows"
-    javaVersion = 19
-}
+group = 'me.hannsi.lfjg'
+version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -24,12 +13,14 @@ repositories {
 
 dependencies {
     implementation project(":core")
-    implementation project(":audio")
-    implementation project(":frame")
-    implementation project(":jcef")
-    implementation project(":physic")
     implementation project(":render")
-    implementation project(":renderVideo")
+
+    // JavaCV
+    api "org.bytedeco:javacv-platform:1.5.10"
+}
+
+test {
+    useJUnitPlatform()
 }
 
 tasks.withType(JavaCompile).configureEach {

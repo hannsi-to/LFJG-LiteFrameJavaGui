@@ -5,4 +5,5 @@ include 'frame'
 include 'jcef'
 include 'physic'
 include 'render'
+include 'renderVideo'
 

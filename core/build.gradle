@@ -12,10 +12,6 @@ repositories {
 }
 
 dependencies {
-    // JNA
-    implementation "net.java.dev.jna:jna:5.13.0"
-    implementation "net.java.dev.jna:jna-platform:5.13.0"
-
     // Logging
     implementation "org.slf4j:slf4j-api:2.0.12"
     implementation "org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1"
@@ -38,14 +34,8 @@ dependencies {
     api "org.joml:joml-primitives:$jomlprimitivesVersion"
     api "org.lwjglx:lwjgl3-awt:$lwjgl3awtVersion"
 
-    // JavaCV
-    api "org.bytedeco:javacv-platform:1.5.10"
-
     // Reflection
     implementation "org.reflections:reflections:0.10.2"
-
-    // Annotations
-    api "org.jetbrains:annotations:24.0.0"
 }
 
 tasks.withType(JavaCompile).configureEach {
