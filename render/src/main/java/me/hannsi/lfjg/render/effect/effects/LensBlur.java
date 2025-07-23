@@ -1,16 +1,9 @@
 package me.hannsi.lfjg.render.effect.effects;
 
-import lombok.Getter;
-import lombok.Setter;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.core.utils.reflection.location.Location;
 
-/**
- * Class representing a Lens Blur effect in OpenGL.
- */
-@Getter
-@Setter
 public class LensBlur extends EffectBase {
     private float range = 20f;
     private float intensity = 1.5f;
@@ -66,44 +59,24 @@ public class LensBlur extends EffectBase {
         return this;
     }
 
-    /**
-     * Pushes the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();
         super.frameBufferPush(baseGLObject);
     }
 
-    /**
-     * Pops the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPop(GLObject baseGLObject) {
         getFrameBuffer().unbindFrameBuffer();
         super.frameBufferPop(baseGLObject);
     }
 
-    /**
-     * Draws the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBuffer(GLObject baseGLObject) {
         getFrameBuffer().drawFrameBuffer();
         super.frameBuffer(baseGLObject);
     }
 
-    /**
-     * Sets the uniform variables for the shader program.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().setUniform("range", range);
@@ -115,4 +88,43 @@ public class LensBlur extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
+    public float getRange() {
+        return range;
+    }
+
+    public void setRange(float range) {
+        this.range = range;
+    }
+
+    public float getIntensity() {
+        return intensity;
+    }
+
+    public void setIntensity(float intensity) {
+        this.intensity = intensity;
+    }
+
+    public float getSigma() {
+        return sigma;
+    }
+
+    public void setSigma(float sigma) {
+        this.sigma = sigma;
+    }
+
+    public int getRadialSteps() {
+        return radialSteps;
+    }
+
+    public void setRadialSteps(int radialSteps) {
+        this.radialSteps = radialSteps;
+    }
+
+    public int getAngularSamples() {
+        return angularSamples;
+    }
+
+    public void setAngularSamples(int angularSamples) {
+        this.angularSamples = angularSamples;
+    }
 }

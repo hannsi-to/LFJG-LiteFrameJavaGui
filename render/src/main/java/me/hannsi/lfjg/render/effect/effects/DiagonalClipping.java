@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.render.effect.effects;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
@@ -9,72 +7,12 @@ import me.hannsi.lfjg.render.renderers.GLObject;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 
-/**
- * Class representing a Diagonal Clipping effect in OpenGL.
- */
-@Getter
-@Setter
 public class DiagonalClipping extends EffectBase {
     private Vector2i resolution = new Vector2i();
-    /**
-     * -- SETTER --
-     * Sets the x-coordinate of the clipping center.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the x-coordinate of the clipping center.
-     *
-     * @param centerX the x-coordinate of the clipping center
-     * @return the x-coordinate of the clipping center
-     */
     private float centerX = 500;
-    /**
-     * -- SETTER --
-     * Sets the y-coordinate of the clipping center.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the y-coordinate of the clipping center.
-     *
-     * @param centerY the y-coordinate of the clipping center
-     * @return the y-coordinate of the clipping center
-     */
     private float centerY = 500;
-    /**
-     * -- SETTER --
-     * Sets the angle of the clipping.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the angle of the clipping.
-     *
-     * @param clipAngle the angle of the clipping
-     * @return the angle of the clipping
-     */
     private float clipAngle = MathHelper.toRadians(45);
-    /**
-     * -- SETTER --
-     * Sets the width of the blur.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the width of the blur.
-     *
-     * @param blurWidth the width of the blur
-     * @return the width of the blur
-     */
     private float blurWidth = 0f;
-    /**
-     * -- SETTER --
-     * Sets whether the clipping is inverted.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Checks if the clipping is inverted.
-     *
-     * @param invertClip true to invert the clipping, false otherwise
-     * @return true if the clipping is inverted, false otherwise
-     */
     private boolean invertClip = false;
 
     DiagonalClipping() {
@@ -140,11 +78,6 @@ public class DiagonalClipping extends EffectBase {
         return this;
     }
 
-    /**
-     * Pushes the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();
@@ -152,11 +85,6 @@ public class DiagonalClipping extends EffectBase {
         super.frameBufferPush(baseGLObject);
     }
 
-    /**
-     * Pops the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPop(GLObject baseGLObject) {
         getFrameBuffer().unbindFrameBuffer();
@@ -164,11 +92,6 @@ public class DiagonalClipping extends EffectBase {
         super.frameBufferPop(baseGLObject);
     }
 
-    /**
-     * Draws the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBuffer(GLObject baseGLObject) {
         getFrameBuffer().drawFrameBuffer();
@@ -176,11 +99,6 @@ public class DiagonalClipping extends EffectBase {
         super.frameBuffer(baseGLObject);
     }
 
-    /**
-     * Sets the uniform variables for the shader program.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().setUniform("clipCenter", new Vector2f((centerX / resolution.x) * 2.0f - 1.0f, (centerY / resolution.y) * 2.0f - 1.0f));
@@ -191,4 +109,51 @@ public class DiagonalClipping extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
+    public Vector2i getResolution() {
+        return resolution;
+    }
+
+    public void setResolution(Vector2i resolution) {
+        this.resolution = resolution;
+    }
+
+    public float getCenterX() {
+        return centerX;
+    }
+
+    public void setCenterX(float centerX) {
+        this.centerX = centerX;
+    }
+
+    public float getCenterY() {
+        return centerY;
+    }
+
+    public void setCenterY(float centerY) {
+        this.centerY = centerY;
+    }
+
+    public float getClipAngle() {
+        return clipAngle;
+    }
+
+    public void setClipAngle(float clipAngle) {
+        this.clipAngle = clipAngle;
+    }
+
+    public float getBlurWidth() {
+        return blurWidth;
+    }
+
+    public void setBlurWidth(float blurWidth) {
+        this.blurWidth = blurWidth;
+    }
+
+    public boolean isInvertClip() {
+        return invertClip;
+    }
+
+    public void setInvertClip(boolean invertClip) {
+        this.invertClip = invertClip;
+    }
 }

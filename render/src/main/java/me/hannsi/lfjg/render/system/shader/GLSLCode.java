@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.system.shader;
 
-import lombok.Getter;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
@@ -16,13 +15,6 @@ import java.util.regex.Pattern;
  * This class handles the inclusion of other shader files within a shader code.
  */
 public class GLSLCode {
-    /**
-     * -- GETTER --
-     * Gets the resource location of the shader.
-     *
-     * @return the resource location of the shader
-     */
-    @Getter
     private final Location fileLocation;
     private boolean checkInclude;
 
@@ -94,4 +86,15 @@ public class GLSLCode {
         return shaderCode;
     }
 
+    public Location getFileLocation() {
+        return fileLocation;
+    }
+
+    public boolean isCheckInclude() {
+        return checkInclude;
+    }
+
+    public void setCheckInclude(boolean checkInclude) {
+        this.checkInclude = checkInclude;
+    }
 }

@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.renderers.model;
 
-import lombok.Getter;
 import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureLoader;
@@ -22,7 +21,6 @@ import java.util.List;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL13.*;
 
-@Getter
 public class ModelRender {
     private final ShaderProgram shaderProgram;
     private final VAORendering vaoRendering;
@@ -111,5 +109,37 @@ public class ModelRender {
 
     public Model getModel(String id) {
         return getModelCache().getModels().get(id);
+    }
+
+    public ShaderProgram getShaderProgram() {
+        return shaderProgram;
+    }
+
+    public VAORendering getVaoRendering() {
+        return vaoRendering;
+    }
+
+    public ModelCache getModelCache() {
+        return modelCache;
+    }
+
+    public void setModelCache(ModelCache modelCache) {
+        this.modelCache = modelCache;
+    }
+
+    public TextureCache getTextureCache() {
+        return textureCache;
+    }
+
+    public void setTextureCache(TextureCache textureCache) {
+        this.textureCache = textureCache;
+    }
+
+    public Camera getCamera() {
+        return camera;
+    }
+
+    public void setCamera(Camera camera) {
+        this.camera = camera;
     }
 }

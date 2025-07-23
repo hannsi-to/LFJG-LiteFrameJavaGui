@@ -1,10 +1,10 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
-import me.hannsi.lfjg.core.utils.reflection.location.Location;
 
 public class ObjectClipping extends EffectBase {
     private final GLObjectCache glObjectCache;
@@ -78,5 +78,29 @@ public class ObjectClipping extends EffectBase {
     public void cleanup() {
         clippingFrameBuffer.cleanup();
         super.cleanup();
+    }
+
+    public GLObjectCache getGlObjectCache() {
+        return glObjectCache;
+    }
+
+    public String getClippingObjectName() {
+        return clippingObjectName;
+    }
+
+    public FrameBuffer getClippingFrameBuffer() {
+        return clippingFrameBuffer;
+    }
+
+    public void setClippingFrameBuffer(FrameBuffer clippingFrameBuffer) {
+        this.clippingFrameBuffer = clippingFrameBuffer;
+    }
+
+    public boolean isInvert() {
+        return invert;
+    }
+
+    public void setInvert(boolean invert) {
+        this.invert = invert;
     }
 }

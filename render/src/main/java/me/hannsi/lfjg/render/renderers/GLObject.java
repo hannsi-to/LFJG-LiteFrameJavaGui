@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.renderers;
 
-import lombok.Data;
 import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
@@ -24,7 +23,6 @@ import static org.lwjgl.opengl.GL11.*;
 /**
  * Represents an OpenGL object with various properties and methods for rendering.
  */
-@Data
 public class GLObject implements Cloneable {
     private String name;
     private long objectId;
@@ -240,9 +238,26 @@ public class GLObject implements Cloneable {
         return effectCache.getEffectBase(index);
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Deprecated
     public void setName(String name) {
         this.name = name;
+    }
+
+    public long getObjectId() {
+        return objectId;
+    }
+
+    @Deprecated
+    public void setObjectId(long objectId) {
+        this.objectId = objectId;
+    }
+
+    public VAORendering getVaoRendering() {
+        return vaoRendering;
     }
 
     /**
@@ -257,6 +272,10 @@ public class GLObject implements Cloneable {
         return this;
     }
 
+    public Mesh getMesh() {
+        return mesh;
+    }
+
     /**
      * Sets the Mesh of the GLObject.
      *
@@ -267,6 +286,18 @@ public class GLObject implements Cloneable {
         this.mesh = mesh;
 
         return this;
+    }
+
+    public FrameBuffer getFrameBuffer() {
+        return frameBuffer;
+    }
+
+    public void setFrameBuffer(FrameBuffer frameBuffer) {
+        this.frameBuffer = frameBuffer;
+    }
+
+    public ShaderProgram getShaderProgram() {
+        return shaderProgram;
     }
 
     /**
@@ -281,6 +312,34 @@ public class GLObject implements Cloneable {
         return this;
     }
 
+    public Matrix4f getViewMatrix() {
+        return viewMatrix;
+    }
+
+    public void setViewMatrix(Matrix4f viewMatrix) {
+        this.viewMatrix = viewMatrix;
+    }
+
+    public EffectCache getEffectCache() {
+        return effectCache;
+    }
+
+    public void setEffectCache(EffectCache effectCache) {
+        this.effectCache = effectCache;
+    }
+
+    public AnimationCache getAnimationCache() {
+        return animationCache;
+    }
+
+    public void setAnimationCache(AnimationCache animationCache) {
+        this.animationCache = animationCache;
+    }
+
+    public BlendType getBlendType() {
+        return blendType;
+    }
+
     /**
      * Sets the blend type of the GLObject.
      *
@@ -291,6 +350,10 @@ public class GLObject implements Cloneable {
         this.blendType = blendType;
 
         return this;
+    }
+
+    public DrawType getDrawType() {
+        return drawType;
     }
 
     /**
@@ -305,6 +368,10 @@ public class GLObject implements Cloneable {
         return this;
     }
 
+    public float getLineWidth() {
+        return lineWidth;
+    }
+
     /**
      * Sets the line width of the GLObject.
      *
@@ -315,6 +382,10 @@ public class GLObject implements Cloneable {
         this.lineWidth = lineWidth;
 
         return this;
+    }
+
+    public float getPointSize() {
+        return pointSize;
     }
 
     /**
@@ -329,8 +400,11 @@ public class GLObject implements Cloneable {
         return this;
     }
 
-    @Deprecated
-    public void setObjectId(long objectId) {
-        this.objectId = objectId;
+    public Transform getTransform() {
+        return transform;
+    }
+
+    public void setTransform(Transform transform) {
+        this.transform = transform;
     }
 }

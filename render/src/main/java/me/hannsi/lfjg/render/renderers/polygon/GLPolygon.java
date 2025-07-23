@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.render.renderers.polygon;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
@@ -18,18 +16,13 @@ import java.util.Arrays;
  * Class representing a polygon renderer in OpenGL.
  */
 public class GLPolygon extends GLObject {
-    @Getter
-    @Setter
+    protected float[] latestVertex;
+    protected float[] latestColor;
+    protected float[] latestTexture;
+
     private float[] vertex;
-    private float[] latestVertex;
-    @Getter
-    @Setter
     private float[] color;
-    private float[] latestColor;
-    @Getter
-    @Setter
     private float[] texture;
-    private float[] latestTexture;
 
     private boolean isUpdate;
 
@@ -249,5 +242,29 @@ public class GLPolygon extends GLObject {
 
     public void setUpdate(boolean update) {
         isUpdate = update;
+    }
+
+    public float[] getVertex() {
+        return vertex;
+    }
+
+    public void setVertex(float[] vertex) {
+        this.vertex = vertex;
+    }
+
+    public float[] getColor() {
+        return color;
+    }
+
+    public void setColor(float[] color) {
+        this.color = color;
+    }
+
+    public float[] getTexture() {
+        return texture;
+    }
+
+    public void setTexture(float[] texture) {
+        this.texture = texture;
     }
 }

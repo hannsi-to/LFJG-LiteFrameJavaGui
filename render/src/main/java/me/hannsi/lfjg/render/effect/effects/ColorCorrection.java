@@ -1,64 +1,13 @@
 package me.hannsi.lfjg.render.effect.effects;
 
-import lombok.Getter;
-import lombok.Setter;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.core.utils.reflection.location.Location;
 
-/**
- * Class representing a Color Correction effect in OpenGL.
- */
-@Getter
-@Setter
 public class ColorCorrection extends EffectBase {
-    /**
-     * -- SETTER --
-     * Sets the brightness level.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the brightness level.
-     *
-     * @param brightness the brightness level
-     * @return the brightness level
-     */
     private float brightness = 0.5f;
-    /**
-     * -- SETTER --
-     * Sets the contrast level.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the contrast level.
-     *
-     * @param contrast the contrast level
-     * @return the contrast level
-     */
     private float contrast = 0.5f;
-    /**
-     * -- SETTER --
-     * Sets the saturation level.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the saturation level.
-     *
-     * @param saturation the saturation level
-     * @return the saturation level
-     */
     private float saturation = 0.5f;
-    /**
-     * -- SETTER --
-     * Sets the hue level.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the hue level.
-     *
-     * @param hue the hue level
-     * @return the hue level
-     */
     private float hue = 0.5f;
 
     ColorCorrection() {
@@ -129,11 +78,6 @@ public class ColorCorrection extends EffectBase {
         return this;
     }
 
-    /**
-     * Pushes the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();
@@ -141,11 +85,6 @@ public class ColorCorrection extends EffectBase {
         super.frameBufferPush(baseGLObject);
     }
 
-    /**
-     * Pops the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPop(GLObject baseGLObject) {
         getFrameBuffer().unbindFrameBuffer();
@@ -153,11 +92,6 @@ public class ColorCorrection extends EffectBase {
         super.frameBufferPop(baseGLObject);
     }
 
-    /**
-     * Draws the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBuffer(GLObject baseGLObject) {
         getFrameBuffer().drawFrameBuffer();
@@ -165,11 +99,6 @@ public class ColorCorrection extends EffectBase {
         super.frameBuffer(baseGLObject);
     }
 
-    /**
-     * Sets the uniform variables for the shader program.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().setUniform("brightness", brightness);
@@ -180,4 +109,35 @@ public class ColorCorrection extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
+    public float getBrightness() {
+        return brightness;
+    }
+
+    public void setBrightness(float brightness) {
+        this.brightness = brightness;
+    }
+
+    public float getContrast() {
+        return contrast;
+    }
+
+    public void setContrast(float contrast) {
+        this.contrast = contrast;
+    }
+
+    public float getSaturation() {
+        return saturation;
+    }
+
+    public void setSaturation(float saturation) {
+        this.saturation = saturation;
+    }
+
+    public float getHue() {
+        return hue;
+    }
+
+    public void setHue(float hue) {
+        this.hue = hue;
+    }
 }

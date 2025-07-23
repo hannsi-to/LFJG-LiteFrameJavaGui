@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.render.system.font;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
@@ -9,8 +7,6 @@ import me.hannsi.lfjg.core.debug.LogGenerator;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
-@Getter
-@Setter
 public class FontCache {
     private HashMap<String, Font> fontCache;
 
@@ -85,4 +81,11 @@ public class FontCache {
         ).logging(DebugLevel.DEBUG);
     }
 
+    public HashMap<String, Font> getFontCache() {
+        return fontCache;
+    }
+
+    public void setFontCache(HashMap<String, Font> fontCache) {
+        this.fontCache = fontCache;
+    }
 }

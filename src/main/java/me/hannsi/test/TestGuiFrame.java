@@ -1,12 +1,15 @@
 package me.hannsi.test;
 
 import me.hannsi.lfjg.core.Core;
+import me.hannsi.lfjg.core.event.EventHandler;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.toolkit.Camera;
 import me.hannsi.lfjg.core.utils.toolkit.KeyboardInfo;
 import me.hannsi.lfjg.core.utils.toolkit.MouseInfo;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.LFJGContext;
+import me.hannsi.lfjg.frame.event.events.user.*;
+import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.system.IFrame;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.jcef.adapter.KeyEventAdapter;
@@ -27,6 +30,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
 import static me.hannsi.lfjg.frame.LFJGContext.frame;
+import static org.lwjgl.glfw.GLFW.*;
 
 public class TestGuiFrame implements LFJGFrame {
     private static final String URL = "https://google.com";
@@ -215,7 +219,7 @@ public class TestGuiFrame implements LFJGFrame {
         frame.setFrameSettingValue(MonitorSetting.class, MonitorType.BORDERLESS);
         frame.setFrameSettingValue(VSyncSetting.class, VSyncType.V_SYNC_OFF);
         frame.setFrameSettingValue(FloatingSetting.class, false);
-        frame.setFrameSettingValue(IconSetting.class, Location.fromResource("salad_x32.png"));
+        frame.setFrameSettingValue(IconSetting.class, Location.fromResource("icon/salad_x32.png"));
         frame.setFrameSettingValue(AntiAliasingSetting.class, AntiAliasingType.OFF);
         frame.setFrameSettingValue(WidthSetting.class, 1920);
         frame.setFrameSettingValue(HeightSetting.class, 1080);

@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.render.system.rendering;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
@@ -14,68 +12,16 @@ import static org.lwjgl.opengl.GL30.glBlitFramebuffer;
 /**
  * Represents a split frame buffer in the OpenGL rendering system.
  */
-@Getter
 public class SplitFrameBuffer {
-    /**
-     * -- GETTER --
-     * Gets the number of columns.
-     *
-     * @return the number of columns
-     */
     private final int cols;
-    /**
-     * -- GETTER --
-     * Gets the number of rows.
-     *
-     * @return the number of rows
-     */
     private final int rows;
-    /**
-     * -- SETTER --
-     * Sets the main frame buffer.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the main frame buffer.
-     *
-     * @param mainFrameBuffer the new main frame buffer
-     * @return the main frame buffer
-     */
-    @Setter
+
     private FrameBuffer mainFrameBuffer;
-    /**
-     * -- SETTER --
-     * Sets the small frame buffers.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the small frame buffers.
-     *
-     * @param smallFrameBuffers the new small frame buffers
-     * @return the small frame buffers
-     */
-    @Setter
     private FrameBuffer[][] smallFrameBuffers;
-    /**
-     * -- SETTER --
-     * Sets the resolution of the small frame buffers.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the resolution of the small frame buffers.
-     *
-     * @param smallResolution the new resolution of the small frame buffers
-     * @return the resolution of the small frame buffers
-     */
-    @Setter
     private Vector2f smallResolution;
-    @Setter
     private int offsetX;
-    @Setter
     private int offsetY;
-    @Setter
     private int indexX;
-    @Setter
     private int indexY;
 
     /**
@@ -194,6 +140,70 @@ public class SplitFrameBuffer {
     public void reset() {
         indexX = 0;
         indexY = 0;
+    }
+
+    public int getCols() {
+        return cols;
+    }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public FrameBuffer getMainFrameBuffer() {
+        return mainFrameBuffer;
+    }
+
+    public void setMainFrameBuffer(FrameBuffer mainFrameBuffer) {
+        this.mainFrameBuffer = mainFrameBuffer;
+    }
+
+    public FrameBuffer[][] getSmallFrameBuffers() {
+        return smallFrameBuffers;
+    }
+
+    public void setSmallFrameBuffers(FrameBuffer[][] smallFrameBuffers) {
+        this.smallFrameBuffers = smallFrameBuffers;
+    }
+
+    public Vector2f getSmallResolution() {
+        return smallResolution;
+    }
+
+    public void setSmallResolution(Vector2f smallResolution) {
+        this.smallResolution = smallResolution;
+    }
+
+    public int getOffsetX() {
+        return offsetX;
+    }
+
+    public void setOffsetX(int offsetX) {
+        this.offsetX = offsetX;
+    }
+
+    public int getOffsetY() {
+        return offsetY;
+    }
+
+    public void setOffsetY(int offsetY) {
+        this.offsetY = offsetY;
+    }
+
+    public int getIndexX() {
+        return indexX;
+    }
+
+    public void setIndexX(int indexX) {
+        this.indexX = indexX;
+    }
+
+    public int getIndexY() {
+        return indexY;
+    }
+
+    public void setIndexY(int indexY) {
+        this.indexY = indexY;
     }
 }
 

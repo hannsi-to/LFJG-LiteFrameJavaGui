@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.render.system.scene;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
@@ -11,11 +9,8 @@ import me.hannsi.lfjg.render.debug.exceptions.render.scene.SetSceneException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
 public class SceneSystem {
-    @Setter
     private List<Scene> scenes;
-    @Setter
     private String currentSceneName;
     private Scene currentScene;
 
@@ -121,6 +116,26 @@ public class SceneSystem {
                 ids.substring(0, ids.length() - 2),
                 ""
         ).logging(DebugLevel.DEBUG);
+    }
+
+    public List<Scene> getScenes() {
+        return scenes;
+    }
+
+    public void setScenes(List<Scene> scenes) {
+        this.scenes = scenes;
+    }
+
+    public String getCurrentSceneName() {
+        return currentSceneName;
+    }
+
+    public void setCurrentSceneName(String currentSceneName) {
+        this.currentSceneName = currentSceneName;
+    }
+
+    public Scene getCurrentScene() {
+        return currentScene;
     }
 
     public SceneSystem setCurrentScene(String currentSceneName) {

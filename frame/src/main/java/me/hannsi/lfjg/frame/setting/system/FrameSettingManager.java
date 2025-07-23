@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.frame.setting.system;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
@@ -18,33 +16,15 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Manages frame settings for a given frame.
- */
-@Getter
 public class FrameSettingManager {
-    /**
-     * -- GETTER --
-     * Retrieves all frame settings.
-     *
-     * @return a list of all frame settings
-     */
     private final List<FrameSettingBase<?>> frameSettings;
-    @Setter
+
     private Frame frame;
 
-    /**
-     * Constructs a new FrameSettingManager for the specified frame.
-     */
     public FrameSettingManager() {
         this.frameSettings = new ArrayList<>();
     }
 
-    /**
-     * Updates the frame settings.
-     *
-     * @param windowHint a flag indicating whether to update window hint settings
-     */
     public void updateFrameSettings(boolean windowHint) {
         StringBuilder sb = new StringBuilder().append("\n\nFrameSettings Updating...\n\n");
         long tookTime = TimeCalculator.calculateMillis(() -> {
@@ -76,12 +56,6 @@ public class FrameSettingManager {
         DebugLog.debug(getClass(), sb.toString());
     }
 
-    /**
-     * Retrieves a frame setting by its class.
-     *
-     * @param frameSettingBase the class of the frame setting to retrieve
-     * @return the frame setting, or null if not found
-     */
     public FrameSettingBase<?> getFrameSetting(Class<? extends FrameSettingBase<?>> frameSettingBase) {
         FrameSettingBase<?> result = null;
 
@@ -96,9 +70,6 @@ public class FrameSettingManager {
         return result;
     }
 
-    /**
-     * Loads all frame settings.
-     */
     @SuppressWarnings("unchecked")
     public void loadFrameSettings() {
         Set<Class<? extends FrameSettingBase<?>>> subTypes = (Set<Class<? extends FrameSettingBase<?>>>) (Set<?>) ClassUtil.getClassesFromPackage("me.hannsi.lfjg.frame.setting.settings", FrameSettingBase.class);
@@ -142,12 +113,19 @@ public class FrameSettingManager {
         ).logging(DebugLevel.DEBUG);
     }
 
-    /**
-     * Registers a frame setting.
-     *
-     * @param frameSetting the frame setting to register
-     */
     public void register(FrameSettingBase<?> frameSetting) {
         frameSettings.add(frameSetting);
+    }
+
+    public List<FrameSettingBase<?>> getFrameSettings() {
+        return frameSettings;
+    }
+
+    public Frame getFrame() {
+        return frame;
+    }
+
+    public void setFrame(Frame frame) {
+        this.frame = frame;
     }
 }

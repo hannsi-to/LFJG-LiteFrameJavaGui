@@ -1,15 +1,11 @@
 package me.hannsi.lfjg.render.system.svg;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 
 import java.util.HashMap;
 
-@Getter
-@Setter
 public class SVGCache {
     private HashMap<String, SVG> svgCache;
 
@@ -76,4 +72,11 @@ public class SVGCache {
         new LogGenerator("SVGCache Debug Message", "Source: SVGCache", "Type: Cache Cleanup", "ID: All", "Severity: Info", "Message: Cleanup svg cache").logging(DebugLevel.DEBUG);
     }
 
+    public HashMap<String, SVG> getSvgCache() {
+        return svgCache;
+    }
+
+    public void setSvgCache(HashMap<String, SVG> svgCache) {
+        this.svgCache = svgCache;
+    }
 }

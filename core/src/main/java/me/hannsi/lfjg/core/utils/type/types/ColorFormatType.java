@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.core.utils.type.types;
 
-import lombok.Getter;
 import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 
@@ -22,7 +21,6 @@ public enum ColorFormatType implements IEnumTypeBase {
 
     final int id;
     final String name;
-    @Getter
     final int channels;
 
     ColorFormatType(int id, String name, int channels) {
@@ -41,4 +39,7 @@ public enum ColorFormatType implements IEnumTypeBase {
         return name;
     }
 
+    public int getChannels() {
+        return channels;
+    }
 }

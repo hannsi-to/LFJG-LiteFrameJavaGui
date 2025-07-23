@@ -1,11 +1,9 @@
 package me.hannsi.lfjg.render.system.model;
 
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
 public class Model {
     private final String id;
     private final List<Entity> entities;
@@ -28,5 +26,17 @@ public class Model {
 
     public void cleanup() {
         materials.forEach(Material::cleanup);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public List<Entity> getEntities() {
+        return entities;
+    }
+
+    public List<Material> getMaterials() {
+        return materials;
     }
 }

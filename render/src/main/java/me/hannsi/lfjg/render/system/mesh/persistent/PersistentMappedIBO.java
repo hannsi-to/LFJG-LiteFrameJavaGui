@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.system.mesh.persistent;
 
-import lombok.Getter;
 import me.hannsi.lfjg.render.system.mesh.DrawCommand;
 
 import java.nio.ByteBuffer;
@@ -16,7 +15,6 @@ import static org.lwjgl.opengl.GL42.glMemoryBarrier;
 import static org.lwjgl.opengl.GL44.GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT;
 import static org.lwjgl.opengl.GL44.glBufferStorage;
 
-@Getter
 public class PersistentMappedIBO implements PersistentMappedBuffer {
     private final int bufferId;
     private final IntBuffer mappedBuffer;
@@ -89,5 +87,25 @@ public class PersistentMappedIBO implements PersistentMappedBuffer {
             fenceSync = 0L;
         }
         glDeleteBuffers(bufferId);
+    }
+
+    public int getBufferId() {
+        return bufferId;
+    }
+
+    public IntBuffer getMappedBuffer() {
+        return mappedBuffer;
+    }
+
+    public int getSizeInBytes() {
+        return sizeInBytes;
+    }
+
+    public int getMaxCommands() {
+        return maxCommands;
+    }
+
+    public long getFenceSync() {
+        return fenceSync;
     }
 }

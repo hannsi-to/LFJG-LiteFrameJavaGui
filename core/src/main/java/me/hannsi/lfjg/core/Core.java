@@ -28,11 +28,11 @@ public class Core {
     public static final String DEFAULT_LFJG_PHYSIC_CORE_CLASS_NAME = ".PhysicCore";
     public static final String DEFAULT_LFJG_RENDER_CORE_CLASS_NAME = ".RenderCore";
 
-    private static final boolean enableLFJGAudioSystem;
-    private static final boolean enableLFJGFrameSystem;
-    private static final boolean enableLFJGJCefSystem;
-    private static final boolean enableLFJGPhysicSystem;
-    private static final boolean enableLFJGRenderSystem;
+    public static final boolean enableLFJGAudioSystem;
+    public static final boolean enableLFJGFrameSystem;
+    public static final boolean enableLFJGJCefSystem;
+    public static final boolean enableLFJGPhysicSystem;
+    public static final boolean enableLFJGRenderSystem;
     public static boolean CORE_SYSTEM_DEBUG = true;
 
     public static Projection projection2D;
@@ -460,11 +460,18 @@ public class Core {
 
         public static final int GL_MULTISAMPLE;
 
+        static {
+            GL_MULTISAMPLE = getStaticIntField(PACKAGE, "GL_MULTISAMPLE");
+        }
+    }
+
+    public static class GL12 {
+        public static final String PACKAGE = "org.lwjgl.opengl.GL12";
+
+
         public static final int GL_CLAMP_TO_EDGE;
 
         static {
-            GL_MULTISAMPLE = getStaticIntField(PACKAGE, "GL_MULTISAMPLE");
-
             GL_CLAMP_TO_EDGE = getStaticIntField(PACKAGE, "GL_CLAMP_TO_EDGE");
         }
     }
@@ -677,6 +684,7 @@ public class Core {
 
         public static final int GLFW_MOUSE_BUTTON_1;
         public static final int GLFW_MOUSE_BUTTON_2;
+        public static final int GLFW_MOUSE_BUTTON_3;
         public static final int GLFW_MOUSE_BUTTON_LEFT;
         public static final int GLFW_MOUSE_BUTTON_MIDDLE;
         public static final int GLFW_MOUSE_BUTTON_RIGHT;
@@ -819,9 +827,10 @@ public class Core {
         static {
             GLFW_MOUSE_BUTTON_1 = getStaticIntField(PACKAGE, "GLFW_MOUSE_BUTTON_1");
             GLFW_MOUSE_BUTTON_2 = getStaticIntField(PACKAGE, "GLFW_MOUSE_BUTTON_2");
-            GLFW_MOUSE_BUTTON_LEFT = getStaticIntField(PACKAGE, "GLFW_MOUSE_BUTTON_LEFT");
-            GLFW_MOUSE_BUTTON_MIDDLE = getStaticIntField(PACKAGE, "GLFW_MOUSE_BUTTON_MIDDLE");
-            GLFW_MOUSE_BUTTON_RIGHT = getStaticIntField(PACKAGE, "GLFW_MOUSE_BUTTON_RIGHT ");
+            GLFW_MOUSE_BUTTON_3 = getStaticIntField(PACKAGE, "GLFW_MOUSE_BUTTON_3");
+            GLFW_MOUSE_BUTTON_LEFT = GLFW_MOUSE_BUTTON_1;
+            GLFW_MOUSE_BUTTON_RIGHT = GLFW_MOUSE_BUTTON_2;
+            GLFW_MOUSE_BUTTON_MIDDLE = GLFW_MOUSE_BUTTON_3;
 
             GLFW_PRESS = getStaticIntField(PACKAGE, "GLFW_PRESS");
             GLFW_RELEASE = getStaticIntField(PACKAGE, "GLFW_RELEASE");

@@ -1,53 +1,13 @@
 package me.hannsi.lfjg.render.effect.effects;
 
-import lombok.Getter;
-import lombok.Setter;
-import me.hannsi.lfjg.render.effect.system.EffectBase;
-import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
+import me.hannsi.lfjg.render.effect.system.EffectBase;
+import me.hannsi.lfjg.render.renderers.GLObject;
 
-/**
- * Class representing a Luminance Key effect in OpenGL.
- */
-@Getter
-@Setter
 public class LuminanceKey extends EffectBase {
-    /**
-     * -- SETTER --
-     * Sets the threshold for the luminance key.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the threshold for the luminance key.
-     *
-     * @param threshold the threshold for the luminance key
-     * @return the threshold for the luminance key
-     */
     private float threshold = 0.6f;
-    /**
-     * -- SETTER --
-     * Sets the amount of blur to apply.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the amount of blur to apply.
-     *
-     * @param blurAmount the amount of blur to apply
-     * @return the amount of blur to apply
-     */
     private float blurAmount = 0.1f;
-    /**
-     * -- SETTER --
-     * Sets the mode of the luminance key.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the mode of the luminance key.
-     *
-     * @param luminanceMode the mode of the luminance key
-     * @return the mode of the luminance key
-     */
     private LuminanceMode luminanceMode = LuminanceMode.BOTH;
 
     LuminanceKey() {
@@ -83,11 +43,6 @@ public class LuminanceKey extends EffectBase {
         return this;
     }
 
-    /**
-     * Pushes the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();
@@ -95,11 +50,6 @@ public class LuminanceKey extends EffectBase {
         super.frameBufferPush(baseGLObject);
     }
 
-    /**
-     * Pops the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPop(GLObject baseGLObject) {
         getFrameBuffer().unbindFrameBuffer();
@@ -107,11 +57,6 @@ public class LuminanceKey extends EffectBase {
         super.frameBufferPop(baseGLObject);
     }
 
-    /**
-     * Draws the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBuffer(GLObject baseGLObject) {
         getFrameBuffer().drawFrameBuffer();
@@ -119,11 +64,6 @@ public class LuminanceKey extends EffectBase {
         super.frameBuffer(baseGLObject);
     }
 
-    /**
-     * Sets the uniform variables for the shader program.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().setUniform("threshold", threshold);
@@ -133,9 +73,30 @@ public class LuminanceKey extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Enum representing the mode of the luminance key.
-     */
+    public float getThreshold() {
+        return threshold;
+    }
+
+    public void setThreshold(float threshold) {
+        this.threshold = threshold;
+    }
+
+    public float getBlurAmount() {
+        return blurAmount;
+    }
+
+    public void setBlurAmount(float blurAmount) {
+        this.blurAmount = blurAmount;
+    }
+
+    public LuminanceMode getLuminanceMode() {
+        return luminanceMode;
+    }
+
+    public void setLuminanceMode(LuminanceMode luminanceMode) {
+        this.luminanceMode = luminanceMode;
+    }
+
     public enum LuminanceMode implements IEnumTypeBase {
         ONLY_DARK("OnlyDark", 0),
         ONLY_Light("OnlyLight", 1),
@@ -149,21 +110,11 @@ public class LuminanceKey extends EffectBase {
             this.id = id;
         }
 
-        /**
-         * Gets the ID of the luminance mode.
-         *
-         * @return the ID of the luminance mode
-         */
         @Override
         public int getId() {
             return id;
         }
 
-        /**
-         * Gets the name of the luminance mode.
-         *
-         * @return the name of the luminance mode
-         */
         @Override
         public String getName() {
             return name;

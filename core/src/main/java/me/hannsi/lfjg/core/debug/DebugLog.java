@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.core.debug;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.utils.toolkit.ANSIFormat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,84 +7,15 @@ import org.apache.logging.log4j.Logger;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-/**
- * The DebugLog class is responsible for logging debug information, including exceptions and text messages, with different debug levels.
- */
-@Setter
-@Getter
 public class DebugLog {
     public static final Logger logger = LogManager.getLogger();
-
-    /**
-     * -- GETTER --
-     * Retrieves the class where the debug log is generated.
-     * <p>
-     * <p>
-     * -- SETTER --
-     * Sets the class where the debug log is generated.
-     *
-     * @return The class where the debug log is generated.
-     * @param clazz The class to set.
-     */
     private Class<?> clazz;
-    /**
-     * -- GETTER --
-     * Retrieves the type of debug log (EXCEPTION or TEXT).
-     * <p>
-     * <p>
-     * -- SETTER --
-     * Sets the type of debug log (EXCEPTION or TEXT).
-     *
-     * @return The type of debug log.
-     * @param debugType The type of debug log to set.
-     */
     private DebugType debugType;
-    /**
-     * -- GETTER --
-     * Retrieves the exception to log (if applicable).
-     * <p>
-     * <p>
-     * -- SETTER --
-     * Sets the exception to log.
-     *
-     * @return The exception to log.
-     * @param exception The exception to set.
-     */
     private Exception exception;
     private Error error;
-    /**
-     * -- GETTER --
-     * Retrieves the text message to log.
-     * <p>
-     * <p>
-     * -- SETTER --
-     * Sets the text message to log.
-     *
-     * @return The text message to log.
-     * @param debugText The text message to set.
-     */
     private String debugText;
-    /**
-     * -- GETTER --
-     * Retrieves the debug level (DEBUG, INFO, WARNING, ERROR).
-     * <p>
-     * <p>
-     * -- SETTER --
-     * Sets the debug level (DEBUG, INFO, WARNING, ERROR).
-     *
-     * @return The debug level.
-     * @param debugLevel The debug level to set.
-     */
     private DebugLevel debugLevel;
 
-    /**
-     * Constructs a DebugLog object with the specified class, debug type, exception, and debug level.
-     *
-     * @param clazz      The class where the debug log is generated.
-     * @param debugType  The type of debug log (EXCEPTION or TEXT).
-     * @param exception  The exception to log (if applicable).
-     * @param debugLevel The debug level (DEBUG, INFO, WARNING, ERROR).
-     */
     public DebugLog(Class<?> clazz, DebugType debugType, Exception exception, DebugLevel debugLevel) {
         this.clazz = clazz;
         this.debugType = debugType;
@@ -98,14 +27,6 @@ public class DebugLog {
         logging();
     }
 
-    /**
-     * Constructs a DebugLog object with the specified class, debug type, exception, and debug level.
-     *
-     * @param clazz      The class where the debug log is generated.
-     * @param debugType  The type of debug log (EXCEPTION or TEXT).
-     * @param error      The error to log (if applicable).
-     * @param debugLevel The debug level (DEBUG, INFO, WARNING, ERROR).
-     */
     public DebugLog(Class<?> clazz, DebugType debugType, Error error, DebugLevel debugLevel) {
         this.clazz = clazz;
         this.debugType = debugType;
@@ -117,14 +38,6 @@ public class DebugLog {
         logging();
     }
 
-    /**
-     * Constructs a DebugLog object with the specified class, debug type, text message, and debug level.
-     *
-     * @param clazz      The class where the debug log is generated.
-     * @param debugType  The type of debug log (EXCEPTION or TEXT).
-     * @param debugText  The text message to log.
-     * @param debugLevel The debug level (DEBUG, INFO, WARNING, ERROR).
-     */
     public DebugLog(Class<?> clazz, DebugType debugType, String debugText, DebugLevel debugLevel) {
         this.clazz = clazz;
         this.debugType = debugType;
@@ -136,22 +49,10 @@ public class DebugLog {
         logging();
     }
 
-    /**
-     * Logs a debug message with the specified class and text.
-     *
-     * @param clazz The class where the debug log is generated.
-     * @param text  The text message to log.
-     */
     public static void debug(Class<?> clazz, String text) {
         new DebugLog(clazz, DebugType.TEXT, text, DebugLevel.DEBUG);
     }
 
-    /**
-     * Logs a debug message with the specified class and exception.
-     *
-     * @param clazz     The class where the debug log is generated.
-     * @param exception The exception to log.
-     */
     public static void debug(Class<?> clazz, Exception exception) {
         new DebugLog(clazz, DebugType.EXCEPTION, exception, DebugLevel.DEBUG);
     }
@@ -160,22 +61,10 @@ public class DebugLog {
         new DebugLog(clazz, DebugType.ERROR, error, DebugLevel.DEBUG);
     }
 
-    /**
-     * Logs an info message with the specified class and text.
-     *
-     * @param clazz The class where the info log is generated.
-     * @param text  The text message to log.
-     */
     public static void info(Class<?> clazz, String text) {
         new DebugLog(clazz, DebugType.TEXT, text, DebugLevel.INFO);
     }
 
-    /**
-     * Logs an info message with the specified class and exception.
-     *
-     * @param clazz     The class where the info log is generated.
-     * @param exception The exception to log.
-     */
     public static void info(Class<?> clazz, Exception exception) {
         new DebugLog(clazz, DebugType.EXCEPTION, exception, DebugLevel.INFO);
     }
@@ -184,52 +73,22 @@ public class DebugLog {
         new DebugLog(clazz, DebugType.ERROR, error, DebugLevel.INFO);
     }
 
-    /**
-     * Logs an error message with the specified class and text.
-     *
-     * @param clazz The class where the error log is generated.
-     * @param text  The text message to log.
-     */
     public static void error(Class<?> clazz, String text) {
         new DebugLog(clazz, DebugType.TEXT, text, DebugLevel.ERROR);
     }
 
-    /**
-     * Logs an error message with the specified class and exception.
-     *
-     * @param clazz     The class where the error log is generated.
-     * @param exception The exception to log.
-     */
     public static void error(Class<?> clazz, Exception exception) {
         new DebugLog(clazz, DebugType.EXCEPTION, exception, DebugLevel.ERROR);
     }
 
-    /**
-     * Logs an error message with the specified class and exception.
-     *
-     * @param clazz The class where the error log is generated.
-     * @param error The error to log.
-     */
     public static void error(Class<?> clazz, Error error) {
         new DebugLog(clazz, DebugType.ERROR, error, DebugLevel.ERROR);
     }
 
-    /**
-     * Logs a warning message with the specified class and text.
-     *
-     * @param clazz The class where the warning log is generated.
-     * @param text  The text message to log.
-     */
     public static void warning(Class<?> clazz, String text) {
         new DebugLog(clazz, DebugType.TEXT, text, DebugLevel.WARNING);
     }
 
-    /**
-     * Logs a warning message with the specified class and exception.
-     *
-     * @param clazz     The class where the warning log is generated.
-     * @param exception The exception to log.
-     */
     public static void warning(Class<?> clazz, Exception exception) {
         new DebugLog(clazz, DebugType.EXCEPTION, exception, DebugLevel.WARNING);
     }
@@ -283,5 +142,53 @@ public class DebugLog {
                 logger.warn("{}{}{}", ANSIFormat.YELLOW, description, ANSIFormat.RESET);
                 break;
         }
+    }
+
+    public Class<?> getClazz() {
+        return clazz;
+    }
+
+    public void setClazz(Class<?> clazz) {
+        this.clazz = clazz;
+    }
+
+    public DebugType getDebugType() {
+        return debugType;
+    }
+
+    public void setDebugType(DebugType debugType) {
+        this.debugType = debugType;
+    }
+
+    public Exception getException() {
+        return exception;
+    }
+
+    public void setException(Exception exception) {
+        this.exception = exception;
+    }
+
+    public Error getError() {
+        return error;
+    }
+
+    public void setError(Error error) {
+        this.error = error;
+    }
+
+    public String getDebugText() {
+        return debugText;
+    }
+
+    public void setDebugText(String debugText) {
+        this.debugText = debugText;
+    }
+
+    public DebugLevel getDebugLevel() {
+        return debugLevel;
+    }
+
+    public void setDebugLevel(DebugLevel debugLevel) {
+        this.debugLevel = debugLevel;
     }
 }

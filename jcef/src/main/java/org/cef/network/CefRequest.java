@@ -4,8 +4,6 @@
 
 package org.cef.network;
 
-import lombok.Getter;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -234,7 +232,6 @@ public abstract class CefRequest implements AutoCloseable {
      * Transition type for a request. Made up of one source value and 0 or more
      * qualifiers.
      */
-    @Getter
     public enum TransitionType {
         /**
          * Source is a link click or the JavaScript window.open function. This is
@@ -284,8 +281,8 @@ public abstract class CefRequest implements AutoCloseable {
 
         /**
          * -- GETTER --
-         *  Returns the integer representation of this enum, containing the source
-         *  and the qualifier as one value.
+         * Returns the integer representation of this enum, containing the source
+         * and the qualifier as one value.
          *
          * @return The integer value of the enum with all its qualifiers.
          */
@@ -350,6 +347,10 @@ public abstract class CefRequest implements AutoCloseable {
          */
         public boolean isRedirect() {
             return (value & 0xC0000000) != 0;
+        }
+
+        public int getValue() {
+            return value;
         }
     }
 

@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.system.rendering;
 
-import lombok.Getter;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
@@ -14,7 +13,6 @@ import java.util.function.Predicate;
 /**
  * Caches OpenGL objects for rendering.
  */
-@Getter
 public class GLObjectCache {
     /**
      * Maps objectId to GLObject.
@@ -134,5 +132,13 @@ public class GLObjectCache {
             }
         }
         return null;
+    }
+
+    public Map<Long, GLObject> getGlObjects() {
+        return glObjects;
+    }
+
+    public FrameBuffer getFrameBuffer() {
+        return frameBuffer;
     }
 }

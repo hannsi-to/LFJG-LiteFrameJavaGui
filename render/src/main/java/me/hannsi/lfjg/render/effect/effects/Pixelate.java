@@ -1,30 +1,12 @@
 package me.hannsi.lfjg.render.effect.effects;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import org.joml.Vector2i;
 
-/**
- * Class representing a Pixelate effect in OpenGL.
- */
-@Getter
-@Setter
 public class Pixelate extends EffectBase {
     private Vector2i resolution = new Vector2i();
-    /**
-     * -- SETTER --
-     * Sets the size of the mosaic.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the size of the mosaic.
-     *
-     * @param mosaicSize the size of the mosaic
-     * @return the size of the mosaic
-     */
     private float mosaicSize = 10f;
 
     Pixelate() {
@@ -50,11 +32,6 @@ public class Pixelate extends EffectBase {
         return this;
     }
 
-    /**
-     * Pushes the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();
@@ -62,11 +39,6 @@ public class Pixelate extends EffectBase {
         super.frameBufferPush(baseGLObject);
     }
 
-    /**
-     * Pops the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPop(GLObject baseGLObject) {
         getFrameBuffer().unbindFrameBuffer();
@@ -74,11 +46,6 @@ public class Pixelate extends EffectBase {
         super.frameBufferPop(baseGLObject);
     }
 
-    /**
-     * Draws the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBuffer(GLObject baseGLObject) {
         getFrameBuffer().drawFrameBuffer();
@@ -86,11 +53,6 @@ public class Pixelate extends EffectBase {
         super.frameBuffer(baseGLObject);
     }
 
-    /**
-     * Sets the uniform variables for the shader program.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().setUniform("resolution", resolution);
@@ -99,4 +61,19 @@ public class Pixelate extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
+    public Vector2i getResolution() {
+        return resolution;
+    }
+
+    public void setResolution(Vector2i resolution) {
+        this.resolution = resolution;
+    }
+
+    public float getMosaicSize() {
+        return mosaicSize;
+    }
+
+    public void setMosaicSize(float mosaicSize) {
+        this.mosaicSize = mosaicSize;
+    }
 }

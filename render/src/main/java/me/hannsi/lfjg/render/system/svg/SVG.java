@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.render.system.svg;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
@@ -11,11 +9,10 @@ import me.hannsi.lfjg.core.utils.type.types.LocationType;
 
 import java.nio.ByteBuffer;
 
-@Getter
 public class SVG {
     private final String name;
     private final Location location;
-    @Setter
+
     private ByteBuffer byteBuffer;
 
     public SVG(String name, Location location) {
@@ -58,4 +55,19 @@ public class SVG {
         ).logging(DebugLevel.DEBUG);
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public ByteBuffer getByteBuffer() {
+        return byteBuffer;
+    }
+
+    public void setByteBuffer(ByteBuffer byteBuffer) {
+        this.byteBuffer = byteBuffer;
+    }
 }

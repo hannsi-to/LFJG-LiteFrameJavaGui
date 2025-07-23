@@ -1,78 +1,16 @@
 package me.hannsi.lfjg.render.effect.effects;
 
-import lombok.Getter;
-import lombok.Setter;
-import me.hannsi.lfjg.render.effect.system.EffectBase;
-import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
+import me.hannsi.lfjg.render.effect.system.EffectBase;
+import me.hannsi.lfjg.render.renderers.GLObject;
 import org.joml.Vector3f;
 
-/**
- * Class representing a Chroma Key effect in OpenGL.
- */
-@Setter
-@Getter
 public class ChromaKey extends EffectBase {
-    /**
-     * -- GETTER --
-     * Gets the chroma key color.
-     * <p>
-     * <p>
-     * -- SETTER --
-     * Sets the chroma key color.
-     *
-     * @return the chroma key color
-     * @param chromaKeyColor the chroma key color
-     */
     private Color chromaKeyColor = Color.GREEN;
-    /**
-     * -- GETTER --
-     * Gets the hue range for the chroma key.
-     * <p>
-     * <p>
-     * -- SETTER --
-     * Sets the hue range for the chroma key.
-     *
-     * @return the hue range for the chroma key
-     * @param hueRange the hue range for the chroma key
-     */
     private float hueRange = 0.1f;
-    /**
-     * -- GETTER --
-     * Gets the saturation range for the chroma key.
-     * <p>
-     * <p>
-     * -- SETTER --
-     * Sets the saturation range for the chroma key.
-     *
-     * @return the saturation range for the chroma key
-     * @param saturationRange the saturation range for the chroma key
-     */
     private float saturationRange = 0.3f;
-    /**
-     * -- GETTER --
-     * Gets the boundary smoothness.
-     * <p>
-     * <p>
-     * -- SETTER --
-     * Sets the boundary smoothness.
-     *
-     * @return the boundary smoothness
-     * @param boundarySmoothness the boundary smoothness
-     */
     private float boundarySmoothness = 0.05f;
-    /**
-     * -- GETTER --
-     * Gets the color adjustment.
-     * <p>
-     * <p>
-     * -- SETTER --
-     * Sets the color adjustment.
-     *
-     * @return the color adjustment
-     * @param colorAdjustment the color adjustment
-     */
     private Color colorAdjustment = Color.of(0, 0, 0, 0);
 
     ChromaKey() {
@@ -185,4 +123,43 @@ public class ChromaKey extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
+    public Color getChromaKeyColor() {
+        return chromaKeyColor;
+    }
+
+    public void setChromaKeyColor(Color chromaKeyColor) {
+        this.chromaKeyColor = chromaKeyColor;
+    }
+
+    public float getHueRange() {
+        return hueRange;
+    }
+
+    public void setHueRange(float hueRange) {
+        this.hueRange = hueRange;
+    }
+
+    public float getSaturationRange() {
+        return saturationRange;
+    }
+
+    public void setSaturationRange(float saturationRange) {
+        this.saturationRange = saturationRange;
+    }
+
+    public float getBoundarySmoothness() {
+        return boundarySmoothness;
+    }
+
+    public void setBoundarySmoothness(float boundarySmoothness) {
+        this.boundarySmoothness = boundarySmoothness;
+    }
+
+    public Color getColorAdjustment() {
+        return colorAdjustment;
+    }
+
+    public void setColorAdjustment(Color colorAdjustment) {
+        this.colorAdjustment = colorAdjustment;
+    }
 }

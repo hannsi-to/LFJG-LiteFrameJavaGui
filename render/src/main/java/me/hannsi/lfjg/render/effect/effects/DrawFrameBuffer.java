@@ -1,17 +1,12 @@
 package me.hannsi.lfjg.render.effect.effects;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 
-@Getter
 class DrawFrameBuffer extends EffectBase {
     private FrameBuffer frameBuffer2 = null;
-    @Setter
     private float translateX = 0f;
-    @Setter
     private float translateY = 0f;
 
     DrawFrameBuffer() {
@@ -60,4 +55,27 @@ class DrawFrameBuffer extends EffectBase {
         this.frameBuffer2 = frameBuffer;
     }
 
+    public FrameBuffer getFrameBuffer2() {
+        return frameBuffer2;
+    }
+
+    public void setFrameBuffer2(FrameBuffer frameBuffer2) {
+        this.frameBuffer2 = frameBuffer2;
+    }
+
+    public float getTranslateX() {
+        return translateX;
+    }
+
+    public void setTranslateX(float translateX) {
+        this.translateX = translateX;
+    }
+
+    public float getTranslateY() {
+        return translateY;
+    }
+
+    public void setTranslateY(float translateY) {
+        this.translateY = translateY;
+    }
 }

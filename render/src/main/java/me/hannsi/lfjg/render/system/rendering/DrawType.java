@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.system.rendering;
 
-import lombok.Getter;
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 import org.lwjgl.opengl.GL11;
 
@@ -21,13 +20,6 @@ public enum DrawType implements IEnumTypeBase {
 
     final int id;
     final String name;
-    /**
-     * -- GETTER --
-     * Gets the number of vertices required for the drawing mode.
-     *
-     * @return the number of vertices required for the drawing mode
-     */
-    @Getter
     final int vertices;
 
     /**
@@ -63,4 +55,7 @@ public enum DrawType implements IEnumTypeBase {
         return name;
     }
 
+    public int getVertices() {
+        return vertices;
+    }
 }

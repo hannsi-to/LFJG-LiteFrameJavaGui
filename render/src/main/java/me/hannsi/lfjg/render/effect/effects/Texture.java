@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.render.effect.effects;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureLoader;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
@@ -14,11 +12,6 @@ import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
-/**
- * Class representing a Texture effect in OpenGL.
- */
-@Setter
-@Getter
 public class Texture extends EffectBase {
     private TextureCache textureCache;
     private TextureLoader textureLoader;
@@ -33,11 +26,6 @@ public class Texture extends EffectBase {
         this.textureLoader = textureCache.getTexture(name);
     }
 
-    /**
-     * Constructs a new Texture effect with the specified parameters.
-     *
-     * @param textureId the ID of the texture
-     */
     public Texture(int textureId) {
         super(3, "Texture", (Class<GLObject>) null);
 
@@ -53,11 +41,6 @@ public class Texture extends EffectBase {
         return this;
     }
 
-    /**
-     * Pops the transformation from the stack and unbinds the texture.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void pop(GLObject baseGLObject) {
         if (textureLoader != null) {
@@ -69,11 +52,6 @@ public class Texture extends EffectBase {
         super.pop(baseGLObject);
     }
 
-    /**
-     * Pushes the transformation onto the stack and binds the texture.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void push(GLObject baseGLObject) {
         GLStateCache.enable(GL_TEXTURE_2D);
@@ -87,11 +65,6 @@ public class Texture extends EffectBase {
         super.push(baseGLObject);
     }
 
-    /**
-     * Pushes the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();
@@ -99,11 +72,6 @@ public class Texture extends EffectBase {
         super.frameBufferPush(baseGLObject);
     }
 
-    /**
-     * Pops the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPop(GLObject baseGLObject) {
         getFrameBuffer().unbindFrameBuffer();
@@ -111,11 +79,6 @@ public class Texture extends EffectBase {
         super.frameBufferPop(baseGLObject);
     }
 
-    /**
-     * Draws the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBuffer(GLObject baseGLObject) {
         getFrameBuffer().drawFrameBuffer();
@@ -123,15 +86,42 @@ public class Texture extends EffectBase {
         super.frameBuffer(baseGLObject);
     }
 
-    /**
-     * Sets the uniform variables for the shader program.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().setUniform("blendMode", blendType.getId());
 
         super.setUniform(baseGLObject);
+    }
+
+    public TextureCache getTextureCache() {
+        return textureCache;
+    }
+
+    public void setTextureCache(TextureCache textureCache) {
+        this.textureCache = textureCache;
+    }
+
+    public TextureLoader getTextureLoader() {
+        return textureLoader;
+    }
+
+    public void setTextureLoader(TextureLoader textureLoader) {
+        this.textureLoader = textureLoader;
+    }
+
+    public int getTextureId() {
+        return textureId;
+    }
+
+    public void setTextureId(int textureId) {
+        this.textureId = textureId;
+    }
+
+    public BlendType getBlendType() {
+        return blendType;
+    }
+
+    public void setBlendType(BlendType blendType) {
+        this.blendType = blendType;
     }
 }

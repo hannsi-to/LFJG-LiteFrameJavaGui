@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.render.effect.effects;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
@@ -11,72 +9,12 @@ import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.joml.Vector3f;
 
-/**
- * Class representing a Flash effect in OpenGL.
- */
-@Getter
-@Setter
 public class Flash extends EffectBase {
-    public Vector2i resolution = new Vector2i();
-    /**
-     * -- SETTER --
-     * Sets the intensity of the flash.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the intensity of the flash.
-     *
-     * @param intensity the intensity of the flash
-     * @return the intensity of the flash
-     */
+    private Vector2i resolution = new Vector2i();
     private float intensity = 0.08f;
-    /**
-     * -- SETTER --
-     * Sets the x-coordinate of the flash position.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the x-coordinate of the flash position.
-     *
-     * @param x the x-coordinate of the flash position
-     * @return the x-coordinate of the flash position
-     */
     private float x = 1920 / 2f;
-    /**
-     * -- SETTER --
-     * Sets the y-coordinate of the flash position.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the y-coordinate of the flash position.
-     *
-     * @param y the y-coordinate of the flash position
-     * @return the y-coordinate of the flash position
-     */
     private float y = 1080 / 2f;
-    /**
-     * -- SETTER --
-     * Sets the blend mode of the flash.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the blend mode of the flash.
-     *
-     * @param flashBlendMode the blend mode of the flash
-     * @return the blend mode of the flash
-     */
     private FlashBlendMode flashBlendMode = FlashBlendMode.BACKWARD_SYNTHESIS;
-    /**
-     * -- SETTER --
-     * Sets the color of the light.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the color of the light.
-     *
-     * @param lightColor the color of the light
-     * @return the color of the light
-     */
     private Color lightColor = Color.FOREST_GREEN;
 
     Flash() {
@@ -132,11 +70,6 @@ public class Flash extends EffectBase {
         return this;
     }
 
-    /**
-     * Pushes the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();
@@ -144,11 +77,6 @@ public class Flash extends EffectBase {
         super.frameBufferPush(baseGLObject);
     }
 
-    /**
-     * Pops the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPop(GLObject baseGLObject) {
         getFrameBuffer().unbindFrameBuffer();
@@ -156,11 +84,6 @@ public class Flash extends EffectBase {
         super.frameBufferPop(baseGLObject);
     }
 
-    /**
-     * Draws the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBuffer(GLObject baseGLObject) {
         getFrameBuffer().drawFrameBuffer();
@@ -168,11 +91,6 @@ public class Flash extends EffectBase {
         super.frameBuffer(baseGLObject);
     }
 
-    /**
-     * Sets the uniform variables for the shader program.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().setUniform("screenSize", resolution);
@@ -184,9 +102,54 @@ public class Flash extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
-    /**
-     * Enum representing the blend modes for the Flash effect.
-     */
+    public Vector2i getResolution() {
+        return resolution;
+    }
+
+    public void setResolution(Vector2i resolution) {
+        this.resolution = resolution;
+    }
+
+    public float getIntensity() {
+        return intensity;
+    }
+
+    public void setIntensity(float intensity) {
+        this.intensity = intensity;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public FlashBlendMode getFlashBlendMode() {
+        return flashBlendMode;
+    }
+
+    public void setFlashBlendMode(FlashBlendMode flashBlendMode) {
+        this.flashBlendMode = flashBlendMode;
+    }
+
+    public Color getLightColor() {
+        return lightColor;
+    }
+
+    public void setLightColor(Color lightColor) {
+        this.lightColor = lightColor;
+    }
+
     public enum FlashBlendMode implements IEnumTypeBase {
         FORWARD_SYNTHESIS("ForwardSynthesis", 0),
         BACKWARD_SYNTHESIS("BackwardSynthesis", 1),
@@ -201,21 +164,11 @@ public class Flash extends EffectBase {
             this.id = id;
         }
 
-        /**
-         * Gets the ID of the blend mode.
-         *
-         * @return the ID of the blend mode
-         */
         @Override
         public int getId() {
             return id;
         }
 
-        /**
-         * Gets the name of the blend mode.
-         *
-         * @return the name of the blend mode
-         */
         @Override
         public String getName() {
             return name;

@@ -1,21 +1,14 @@
 package me.hannsi.lfjg.render.system.scene;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.render.Id;
 
 public class Scene {
-    @Getter
     private final int sceneId;
-    @Getter
-    @Setter
     private String sceneName;
     private boolean isInitialize;
-    @Getter
-    @Setter
     private IScene iScene;
 
     public Scene(String sceneName, IScene iScene) {
@@ -49,4 +42,23 @@ public class Scene {
         isInitialize = initialize;
     }
 
+    public int getSceneId() {
+        return sceneId;
+    }
+
+    public String getSceneName() {
+        return sceneName;
+    }
+
+    public void setSceneName(String sceneName) {
+        this.sceneName = sceneName;
+    }
+
+    public IScene getIScene() {
+        return iScene;
+    }
+
+    public void setIScene(IScene iScene) {
+        this.iScene = iScene;
+    }
 }

@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.system.mesh.persistent;
 
-import lombok.Getter;
 import me.hannsi.lfjg.render.system.mesh.AttributeType;
 
 import java.nio.ByteBuffer;
@@ -10,7 +9,6 @@ import static me.hannsi.lfjg.render.system.mesh.MeshConstants.DEFAULT_BUFFER_COU
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL44.*;
 
-@Getter
 public class PersistentMappedVBO implements PersistentMappedBuffer {
     private final int[] bufferIds = new int[DEFAULT_BUFFER_COUNT];
     private final FloatBuffer[] mappedBuffers = new FloatBuffer[DEFAULT_BUFFER_COUNT];
@@ -93,5 +91,25 @@ public class PersistentMappedVBO implements PersistentMappedBuffer {
             }
             glDeleteBuffers(bufferIds[i]);
         }
+    }
+
+    public int[] getBufferIds() {
+        return bufferIds;
+    }
+
+    public FloatBuffer[] getMappedBuffers() {
+        return mappedBuffers;
+    }
+
+    public long[] getFenceSyncs() {
+        return fenceSyncs;
+    }
+
+    public int getSizeInBytes() {
+        return sizeInBytes;
+    }
+
+    public int getCurrentIndex() {
+        return currentIndex;
     }
 }

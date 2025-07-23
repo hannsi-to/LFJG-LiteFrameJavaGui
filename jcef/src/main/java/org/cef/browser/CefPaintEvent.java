@@ -4,22 +4,16 @@
 
 package org.cef.browser;
 
-import lombok.Getter;
 
 import java.awt.*;
 import java.nio.ByteBuffer;
 
 public class CefPaintEvent {
-    @Getter
     private final CefBrowser browser;
     private final boolean popup;
-    @Getter
     private final Rectangle[] dirtyRects;
-    @Getter
     private final ByteBuffer renderedFrame;
-    @Getter
     private final int width;
-    @Getter
     private final int height;
 
     public CefPaintEvent(CefBrowser browser, boolean popup, Rectangle[] dirtyRects, ByteBuffer renderedFrame, int width, int height) {
@@ -35,4 +29,27 @@ public class CefPaintEvent {
         return popup;
     }
 
+    public CefBrowser getBrowser() {
+        return browser;
+    }
+
+    public boolean isPopup() {
+        return popup;
+    }
+
+    public Rectangle[] getDirtyRects() {
+        return dirtyRects;
+    }
+
+    public ByteBuffer getRenderedFrame() {
+        return renderedFrame;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
 }

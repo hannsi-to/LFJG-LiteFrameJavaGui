@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.renderers.font;
 
-import lombok.Getter;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.toolkit.StringUtil;
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
@@ -36,7 +35,6 @@ public enum TextFormatType implements IEnumTypeBase {
 
     final String name;
     final int id;
-    @Getter
     final String code;
 
     TextFormatType(String name, int id, String code) {
@@ -92,4 +90,7 @@ public enum TextFormatType implements IEnumTypeBase {
         return id;
     }
 
+    public String getCode() {
+        return code;
+    }
 }

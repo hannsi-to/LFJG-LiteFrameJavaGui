@@ -1,11 +1,9 @@
 package me.hannsi.lfjg.render.system.model;
 
-import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter
 public class ModelCache {
     private final Map<String, Model> models;
 
@@ -24,5 +22,9 @@ public class ModelCache {
 
     public void cleanup() {
         models.values().forEach(Model::cleanup);
+    }
+
+    public Map<String, Model> getModels() {
+        return models;
     }
 }

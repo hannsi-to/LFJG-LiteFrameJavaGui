@@ -9,17 +9,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * The AudioDevices class is responsible for managing audio devices and their corresponding ByteBuffer representations.
- */
 public class AudioDevices {
     public static final String DEFAULT = null;
 
     private Map<Mixer.Info, Boolean> deviceMap;
 
-    /**
-     * Constructs an AudioDevices object and initializes the device map with available audio devices.
-     */
     public AudioDevices() {
         this.deviceMap = new HashMap<>();
 

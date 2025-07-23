@@ -22,9 +22,6 @@ import java.util.zip.GZIPInputStream;
 
 import static org.lwjgl.system.MemoryUtil.*;
 
-/**
- * Utility class for byte operations.
- */
 public class IOUtil extends Util {
     public static ByteBuffer convertBufferedImageToByteBuffer(BufferedImage image, boolean flipVertically) {
         int width = image.getWidth();
@@ -129,12 +126,6 @@ public class IOUtil extends Util {
         return rgbaBuffer;
     }
 
-    /**
-     * Converts an OpenCV Mat object to a ByteBuffer in RGBA format.
-     *
-     * @param mat the OpenCV Mat object to convert
-     * @return a ByteBuffer containing the RGBA data
-     */
     public static ByteBuffer matToByteBufferRGBA(Mat mat) {
         int width = mat.cols();
         int height = mat.rows();
@@ -159,23 +150,10 @@ public class IOUtil extends Util {
         return buffer;
     }
 
-    /**
-     * Converts a string to an InputStream using UTF-8 encoding.
-     *
-     * @param value the string to convert
-     * @return an InputStream containing the string data
-     */
     public static InputStream convertStringToInputStream(String value) {
         return new ByteArrayInputStream(value.getBytes(StandardCharsets.UTF_8));
     }
 
-    /**
-     * Converts a file path or resource path to an InputStream.
-     *
-     * @param path the path to the file or resource
-     * @return an InputStream for the file or resource
-     * @throws IllegalArgumentException if the file or resource is not found
-     */
     public static InputStream convertStringPathToInputStream(String path) {
         InputStream inputStream = IOUtil.class.getClassLoader().getResourceAsStream(path);
 
@@ -195,12 +173,6 @@ public class IOUtil extends Util {
         return inputStream;
     }
 
-    /**
-     * Converts an InputStream to a byte array.
-     *
-     * @param inputStream the InputStream to convert
-     * @return a byte array containing the InputStream data
-     */
     public static byte[] convertInputStreamToByteArray(InputStream inputStream) {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         int nRead;
@@ -234,13 +206,6 @@ public class IOUtil extends Util {
         return data;
     }
 
-    /**
-     * Reads an InputStream and converts it to a string using UTF-8 encoding.
-     *
-     * @param inputStream the InputStream to read
-     * @return a string containing the InputStream data
-     * @throws RuntimeException if an I/O error occurs
-     */
     public static String readInputStreamToString(InputStream inputStream) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         byte[] buffer = new byte[512];

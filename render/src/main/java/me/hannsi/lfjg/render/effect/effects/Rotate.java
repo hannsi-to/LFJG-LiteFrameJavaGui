@@ -1,10 +1,8 @@
 package me.hannsi.lfjg.render.effect.effects;
 
-import lombok.Getter;
-import lombok.Setter;
+import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.core.utils.math.MathHelper;
 
 /**
  * Class representing a Rotate effect in OpenGL.
@@ -13,92 +11,13 @@ public class Rotate extends EffectBase {
     protected float latestX;
     protected float latestY;
     protected float latestZ;
-    /**
-     * -- SETTER --
-     * Sets the rotation angle around the X axis.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the rotation angle around the X axis.
-     *
-     * @param x the rotation angle around the X axis
-     * @return the rotation angle around the X axis
-     */
-    @Getter
-    @Setter
+
     private float x = 0f;
-    /**
-     * -- SETTER --
-     * Sets the rotation angle around the Y axis.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the rotation angle around the Y axis.
-     *
-     * @param y the rotation angle around the Y axis
-     * @return the rotation angle around the Y axis
-     */
-    @Getter
-    @Setter
     private float y = 0f;
-    /**
-     * -- SETTER --
-     * Sets the rotation angle around the Z axis.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the rotation angle around the Z axis.
-     *
-     * @param z the rotation angle around the Z axis
-     * @return the rotation angle around the Z axis
-     */
-    @Getter
-    @Setter
     private float z = MathHelper.toRadians(45);
-    @Getter
-    @Setter
     private boolean autoCenter = true;
-    /**
-     * -- SETTER --
-     * Sets the X coordinate of the rotation center.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the X coordinate of the rotation center.
-     *
-     * @param cx the X coordinate of the rotation center
-     * @return the X coordinate of the rotation center
-     */
-    @Getter
-    @Setter
     private float cx = 500f;
-    /**
-     * -- SETTER --
-     * Sets the Y coordinate of the rotation center.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the Y coordinate of the rotation center.
-     *
-     * @param cy the Y coordinate of the rotation center
-     * @return the Y coordinate of the rotation center
-     */
-    @Getter
-    @Setter
     private float cy = 500f;
-    /**
-     * -- SETTER --
-     * Sets the Z coordinate of the rotation center.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the Z coordinate of the rotation center.
-     *
-     * @param cz the Z coordinate of the rotation center
-     * @return the Z coordinate of the rotation center
-     */
-    @Getter
-    @Setter
     private float cz = 0f;
 
     Rotate() {
@@ -189,11 +108,6 @@ public class Rotate extends EffectBase {
         return this;
     }
 
-    /**
-     * Pops the transformation from the stack and applies the inverse rotation to the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void pop(GLObject baseGLObject) {
         latestX = x;
@@ -203,11 +117,6 @@ public class Rotate extends EffectBase {
         super.pop(baseGLObject);
     }
 
-    /**
-     * Pushes the transformation onto the stack and applies the rotation to the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void push(GLObject baseGLObject) {
         if (autoCenter) {
@@ -220,47 +129,82 @@ public class Rotate extends EffectBase {
         super.push(baseGLObject);
     }
 
-    /**
-     * Pushes the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();
         super.frameBufferPush(baseGLObject);
     }
 
-    /**
-     * Pops the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPop(GLObject baseGLObject) {
         getFrameBuffer().unbindFrameBuffer();
         super.frameBufferPop(baseGLObject);
     }
 
-    /**
-     * Draws the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBuffer(GLObject baseGLObject) {
         getFrameBuffer().drawFrameBuffer();
         super.frameBuffer(baseGLObject);
     }
 
-    /**
-     * Sets the uniform variables for the shader program.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void setUniform(GLObject baseGLObject) {
         super.setUniform(baseGLObject);
     }
 
+    public float getX() {
+        return x;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public float getZ() {
+        return z;
+    }
+
+    public void setZ(float z) {
+        this.z = z;
+    }
+
+    public boolean isAutoCenter() {
+        return autoCenter;
+    }
+
+    public void setAutoCenter(boolean autoCenter) {
+        this.autoCenter = autoCenter;
+    }
+
+    public float getCx() {
+        return cx;
+    }
+
+    public void setCx(float cx) {
+        this.cx = cx;
+    }
+
+    public float getCy() {
+        return cy;
+    }
+
+    public void setCy(float cy) {
+        this.cy = cy;
+    }
+
+    public float getCz() {
+        return cz;
+    }
+
+    public void setCz(float cz) {
+        this.cz = cz;
+    }
 }

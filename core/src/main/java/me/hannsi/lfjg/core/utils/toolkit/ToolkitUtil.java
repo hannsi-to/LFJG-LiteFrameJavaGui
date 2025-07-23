@@ -9,27 +9,11 @@ import java.awt.datatransfer.*;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * Utility class for interacting with the AWT Toolkit.
- */
 public class ToolkitUtil extends Util {
-
-    /**
-     * Gets the default toolkit.
-     *
-     * @return the default toolkit
-     */
     public static Toolkit getDefaultToolkit() {
         return Toolkit.getDefaultToolkit();
     }
 
-    /**
-     * Gets the property value associated with the specified key.
-     *
-     * @param key          the key of the property
-     * @param defaultValue the default value to return if the property is not found
-     * @return the property value associated with the specified key, or the default value if the property is not found
-     */
     public static String get(String key, String defaultValue) {
         return Toolkit.getProperty(key, defaultValue);
     }

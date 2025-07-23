@@ -11,9 +11,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-/**
- * Utility class for reflection-based operations.
- */
 public class ClassUtil extends Util {
     private static final Map<Class<?>, Class<?>> PRIMITIVE_MAP = Map.ofEntries(
             Map.entry(Boolean.class, boolean.class),
@@ -36,27 +33,10 @@ public class ClassUtil extends Util {
                 .toArray(Class<?>[]::new);
     }
 
-    /**
-     * Retrieves a set of classes from a specified package that are subclasses of a given class.
-     *
-     * @param packagePath the package path to search for classes
-     * @param clazz       the superclass to match subclasses against
-     * @param <T>         the type of the superclass
-     * @return a set of classes that are subclasses of the specified class
-     */
     public static <T> Set<Class<? extends T>> getClassesFromPackage(String packagePath, Class<T> clazz) {
         return new HashSet<>(new Reflections(packagePath).getSubTypesOf(clazz));
     }
 
-    /**
-     * Creates an instance of a specified class using the provided arguments.
-     *
-     * @param clazz the class to instantiate
-     * @param args  the arguments to pass to the constructor
-     * @param <T>   the type of the class
-     * @return an instance of the specified class
-     * @throws RuntimeException if the class cannot be instantiated
-     */
     public static <T> T createInstance(Class<T> clazz, Object... args) {
         T instance;
         List<Class<?>> parameterTypes = new ArrayList<>();
@@ -100,9 +80,6 @@ public class ClassUtil extends Util {
         }
     }
 
-    /**
-     * Strictly invokes a method with exact parameter types.
-     */
     public static Object invokeMethodExact(Object instance, String methodName, Object... args) {
         try {
             Class<?> clazz = instance.getClass();
@@ -114,9 +91,6 @@ public class ClassUtil extends Util {
         }
     }
 
-    /**
-     * Flexibly invokes a method with assignable or null parameters.
-     */
     public static Object invokeMethodFlexible(Object instance, String methodName, Object... args) {
         try {
             Class<?> clazz = instance.getClass();
@@ -132,9 +106,6 @@ public class ClassUtil extends Util {
         }
     }
 
-    /**
-     * Invokes a static method from a class name.
-     */
     public static Object invokeStaticMethod(String className, String methodName, Object... args) {
         try {
             Class<?> clazz = Class.forName(className);
@@ -151,9 +122,6 @@ public class ClassUtil extends Util {
         }
     }
 
-    /**
-     * Safely invokes a method only if it exists.
-     */
     public static Optional<Object> invokeMethodIfExists(Object instance, String methodName, Object... args) {
         try {
             Method method = findMethod(instance.getClass(), methodName, args);

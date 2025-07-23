@@ -1,10 +1,5 @@
 package me.hannsi.lfjg.core.utils.reflection.reference;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
 public class Ref<T> {
     private T value;
 
@@ -15,5 +10,13 @@ public class Ref<T> {
     @Override
     public String toString() {
         return String.valueOf(value);
+    }
+
+    public T getValue() {
+        return value;
+    }
+
+    public void setValue(T value) {
+        this.value = value;
     }
 }

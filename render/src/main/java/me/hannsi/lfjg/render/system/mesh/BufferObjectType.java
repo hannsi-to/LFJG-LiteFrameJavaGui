@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.system.mesh;
 
-import lombok.Getter;
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
@@ -17,7 +16,6 @@ public enum BufferObjectType implements IEnumTypeBase {
     NORMALS_BUFFER(8, GL_ARRAY_BUFFER, "NormalsBuffer");
 
     final int id;
-    @Getter
     final int glId;
     final String name;
 
@@ -35,5 +33,9 @@ public enum BufferObjectType implements IEnumTypeBase {
     @Override
     public String getName() {
         return name;
+    }
+
+    public int getGlId() {
+        return glId;
     }
 }

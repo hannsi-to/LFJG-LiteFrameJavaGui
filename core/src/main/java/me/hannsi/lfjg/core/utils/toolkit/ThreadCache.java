@@ -1,43 +1,17 @@
 package me.hannsi.lfjg.core.utils.toolkit;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 
 import java.util.HashMap;
 
-/**
- * Utility class for managing a cache of threads.
- */
-@Getter
-@Setter
 public class ThreadCache {
-    /**
-     * -- SETTER --
-     *  Sets the thread cache.
-     *
-     *
-     * -- GETTER --
-     *  Gets the current thread cache.
-     *
-     @param threadCache the new thread cache
-      * @return the current thread cache
-     */
     private HashMap<Long, Thread> threadCache;
 
-    /**
-     * Constructs a new ThreadCache instance.
-     */
     public ThreadCache() {
         threadCache = new HashMap<>();
     }
 
-    /**
-     * Creates a cache entry for the specified thread.
-     *
-     * @param thread the thread to cache
-     */
     public void createCache(Thread thread) {
         threadCache.put(thread.threadId(), thread);
 
@@ -45,29 +19,18 @@ public class ThreadCache {
         logGenerator.logging(DebugLevel.DEBUG);
     }
 
-    /**
-     * Starts all threads in the cache.
-     */
     public void run() {
         threadCache.forEach((key, value) -> {
             threadRun(value);
         });
     }
 
-    /**
-     * Interrupts all threads in the cache.
-     */
     public void stop() {
         threadCache.forEach((key, value) -> {
             threadStop(value);
         });
     }
 
-    /**
-     * Starts the threads with the specified IDs.
-     *
-     * @param threadId the IDs of the threads to start
-     */
     public void run(long... threadId) {
         threadCache.forEach((key, value) -> {
             for (long l : threadId) {
@@ -78,11 +41,6 @@ public class ThreadCache {
         });
     }
 
-    /**
-     * Interrupts the threads with the specified IDs.
-     *
-     * @param threadId the IDs of the threads to interrupt
-     */
     public void stop(long... threadId) {
         threadCache.forEach((key, value) -> {
             for (long l : threadId) {
@@ -107,13 +65,17 @@ public class ThreadCache {
         logGenerator.logging(DebugLevel.DEBUG);
     }
 
-    /**
-     * Interrupts all threads in the cache and clears the cache.
-     */
     public void cleanup() {
         stop();
 
         threadCache.clear();
     }
 
+    public HashMap<Long, Thread> getThreadCache() {
+        return threadCache;
+    }
+
+    public void setThreadCache(HashMap<Long, Thread> threadCache) {
+        this.threadCache = threadCache;
+    }
 }

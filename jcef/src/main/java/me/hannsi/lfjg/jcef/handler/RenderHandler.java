@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.jcef.handler;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefPaintEvent;
 import org.cef.callback.CefNative;
@@ -17,22 +15,14 @@ import java.util.function.Consumer;
 public class RenderHandler extends CefRenderHandlerAdapter implements CefNative {
     private final Map<String, Long> nativeRefs = new HashMap<>();
 
-    @Getter
     private volatile ByteBuffer latestFrame;
-    private int texWidth, texHeight;
-    @Getter
     private volatile boolean frameUpdated = false;
-    @Getter
-    @Setter
+
+    private int texWidth;
+    private int texHeight;
     private int x;
-    @Getter
-    @Setter
     private int y;
-    @Getter
-    @Setter
     private int width;
-    @Getter
-    @Setter
     private int height;
 
     private int frameCount = 0;
@@ -120,4 +110,95 @@ public class RenderHandler extends CefRenderHandlerAdapter implements CefNative 
         return currentFPS;
     }
 
+    public Map<String, Long> getNativeRefs() {
+        return nativeRefs;
+    }
+
+    public ByteBuffer getLatestFrame() {
+        return latestFrame;
+    }
+
+    public void setLatestFrame(ByteBuffer latestFrame) {
+        this.latestFrame = latestFrame;
+    }
+
+    public boolean isFrameUpdated() {
+        return frameUpdated;
+    }
+
+    public void setFrameUpdated(boolean frameUpdated) {
+        this.frameUpdated = frameUpdated;
+    }
+
+    public int getTexWidth() {
+        return texWidth;
+    }
+
+    public void setTexWidth(int texWidth) {
+        this.texWidth = texWidth;
+    }
+
+    public int getTexHeight() {
+        return texHeight;
+    }
+
+    public void setTexHeight(int texHeight) {
+        this.texHeight = texHeight;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getFrameCount() {
+        return frameCount;
+    }
+
+    public void setFrameCount(int frameCount) {
+        this.frameCount = frameCount;
+    }
+
+    public long getLastTime() {
+        return lastTime;
+    }
+
+    public void setLastTime(long lastTime) {
+        this.lastTime = lastTime;
+    }
+
+    public int getCurrentFPS() {
+        return currentFPS;
+    }
+
+    public void setCurrentFPS(int currentFPS) {
+        this.currentFPS = currentFPS;
+    }
 }

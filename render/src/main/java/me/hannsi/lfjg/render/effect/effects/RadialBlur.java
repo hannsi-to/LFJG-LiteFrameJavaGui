@@ -1,54 +1,14 @@
 package me.hannsi.lfjg.render.effect.effects;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import org.joml.Vector2i;
 
-/**
- * Class representing a Radial Blur effect in OpenGL.
- */
-@Getter
-@Setter
 public class RadialBlur extends EffectBase {
-    public Vector2i resolution = new Vector2i();
-    /**
-     * -- SETTER --
-     * Sets the range of the blur.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the range of the blur.
-     *
-     * @param range the range of the blur
-     * @return the range of the blur
-     */
+    private Vector2i resolution = new Vector2i();
     private float range = 1f;
-    /**
-     * -- SETTER --
-     * Sets the X coordinate of the blur center.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the X coordinate of the blur center.
-     *
-     * @param centerX the X coordinate of the blur center
-     * @return the X coordinate of the blur center
-     */
     private float centerX = 500f;
-    /**
-     * -- SETTER --
-     * Sets the Y coordinate of the blur center.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the Y coordinate of the blur center.
-     *
-     * @param centerY the Y coordinate of the blur center
-     * @return the Y coordinate of the blur center
-     */
     private float centerY = 500f;
 
     RadialBlur() {
@@ -94,44 +54,24 @@ public class RadialBlur extends EffectBase {
         return this;
     }
 
-    /**
-     * Pushes the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();
         super.frameBufferPush(baseGLObject);
     }
 
-    /**
-     * Pops the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPop(GLObject baseGLObject) {
         getFrameBuffer().unbindFrameBuffer();
         super.frameBufferPop(baseGLObject);
     }
 
-    /**
-     * Draws the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBuffer(GLObject baseGLObject) {
         getFrameBuffer().drawFrameBuffer();
         super.frameBuffer(baseGLObject);
     }
 
-    /**
-     * Sets the uniform variables for the shader program.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().setUniform("range", range);
@@ -141,4 +81,35 @@ public class RadialBlur extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
+    public Vector2i getResolution() {
+        return resolution;
+    }
+
+    public void setResolution(Vector2i resolution) {
+        this.resolution = resolution;
+    }
+
+    public float getRange() {
+        return range;
+    }
+
+    public void setRange(float range) {
+        this.range = range;
+    }
+
+    public float getCenterX() {
+        return centerX;
+    }
+
+    public void setCenterX(float centerX) {
+        this.centerX = centerX;
+    }
+
+    public float getCenterY() {
+        return centerY;
+    }
+
+    public void setCenterY(float centerY) {
+        this.centerY = centerY;
+    }
 }

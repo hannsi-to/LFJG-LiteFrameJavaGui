@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.core.utils.graphics.image;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.math.io.IOUtil;
@@ -21,32 +19,16 @@ import java.nio.ByteBuffer;
 import static me.hannsi.lfjg.core.Core.frameBufferSize;
 
 public class ImageCapture {
-    @Getter
     private final Location filePath;
-    @Getter
-    @Setter
+
     private int width;
-    @Getter
-    @Setter
     private int height;
-    @Getter
-    @Setter
     private ImageLoaderType imageLoaderType;
-    @Getter
-    @Setter
     private ColorFormatType colorFormatType;
-    @Getter
-    @Setter
     private STBImageFormat stbImageFormat;
     private JavaCVImageFormat javaCVImageFormat;
-    @Getter
-    @Setter
     private boolean flip;
-    @Getter
-    @Setter
     private int jpgQuality;
-    @Getter
-    @Setter
     private String saveType;
 
     public ImageCapture(Location filePath) {
@@ -164,4 +146,71 @@ public class ImageCapture {
         this.javaCVImageFormat = javaCVImageFormat;
     }
 
+    public Location getFilePath() {
+        return filePath;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public ImageLoaderType getImageLoaderType() {
+        return imageLoaderType;
+    }
+
+    public void setImageLoaderType(ImageLoaderType imageLoaderType) {
+        this.imageLoaderType = imageLoaderType;
+    }
+
+    public ColorFormatType getColorFormatType() {
+        return colorFormatType;
+    }
+
+    public void setColorFormatType(ColorFormatType colorFormatType) {
+        this.colorFormatType = colorFormatType;
+    }
+
+    public STBImageFormat getStbImageFormat() {
+        return stbImageFormat;
+    }
+
+    public void setStbImageFormat(STBImageFormat stbImageFormat) {
+        this.stbImageFormat = stbImageFormat;
+    }
+
+    public boolean isFlip() {
+        return flip;
+    }
+
+    public void setFlip(boolean flip) {
+        this.flip = flip;
+    }
+
+    public int getJpgQuality() {
+        return jpgQuality;
+    }
+
+    public void setJpgQuality(int jpgQuality) {
+        this.jpgQuality = jpgQuality;
+    }
+
+    public String getSaveType() {
+        return saveType;
+    }
+
+    public void setSaveType(String saveType) {
+        this.saveType = saveType;
+    }
 }

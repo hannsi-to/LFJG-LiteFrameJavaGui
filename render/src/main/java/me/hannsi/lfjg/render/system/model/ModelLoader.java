@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.system.model;
 
-import lombok.Getter;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.debug.exceptions.model.ModelLoaderException;
@@ -18,7 +17,6 @@ import java.util.Objects;
 
 import static org.lwjgl.assimp.Assimp.*;
 
-@Getter
 public class ModelLoader {
     private final String modelId;
     private Location modelLocation;
@@ -176,5 +174,21 @@ public class ModelLoader {
 
             return material;
         }
+    }
+
+    public String getModelId() {
+        return modelId;
+    }
+
+    public Location getModelLocation() {
+        return modelLocation;
+    }
+
+    public TextureCache getTextureCache() {
+        return textureCache;
+    }
+
+    public int getFlags() {
+        return flags;
     }
 }

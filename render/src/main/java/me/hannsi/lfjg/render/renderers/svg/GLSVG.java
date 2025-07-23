@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.render.renderers.svg;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.math.io.IOUtil;
@@ -24,10 +22,8 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 public class GLSVG extends GLRect {
     private FrameBuffer frameBuffer;
-    @Getter
-    @Setter
     private SVGRenderer svgRenderer;
-    private int texture;
+    private int textureId;
 
     /**
      * Constructs a new GLPolygon with the specified name.
@@ -78,7 +74,7 @@ public class GLSVG extends GLRect {
     public void draw() {
         frameBuffer.bindFrameBuffer();
 
-        svgRenderer.flush(texture, 0);
+        svgRenderer.flush(textureId, 0);
 
         frameBuffer.unbindFrameBuffer();
 
@@ -103,9 +99,9 @@ public class GLSVG extends GLRect {
         nsvgRasterize(rasterizer, svg, 0, 0, MathHelper.min(contentScaleX, contentScaleY), image, width, height, width * 4);
         nsvgDeleteRasterizer(rasterizer);
 
-        texture = glGenTextures();
+        textureId = glGenTextures();
 
-        glBindTexture(GL_TEXTURE_2D, texture);
+        glBindTexture(GL_TEXTURE_2D, textureId);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -141,9 +137,33 @@ public class GLSVG extends GLRect {
 
     @Override
     public void cleanup() {
-        glDeleteTextures(texture);
+        glDeleteTextures(textureId);
 
         super.cleanup();
+    }
+
+    public FrameBuffer getFrameBuffer() {
+        return frameBuffer;
+    }
+
+    public void setFrameBuffer(FrameBuffer frameBuffer) {
+        this.frameBuffer = frameBuffer;
+    }
+
+    public SVGRenderer getSvgRenderer() {
+        return svgRenderer;
+    }
+
+    public void setSvgRenderer(SVGRenderer svgRenderer) {
+        this.svgRenderer = svgRenderer;
+    }
+
+    public int getTextureId() {
+        return textureId;
+    }
+
+    public void setTextureId(int textureId) {
+        this.textureId = textureId;
     }
 }
 

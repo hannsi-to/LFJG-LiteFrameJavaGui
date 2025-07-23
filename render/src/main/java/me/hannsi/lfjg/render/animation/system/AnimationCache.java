@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.render.animation.system;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
@@ -11,8 +9,6 @@ import me.hannsi.lfjg.render.renderers.GLObject;
 import java.util.LinkedHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
-@Getter
-@Setter
 public class AnimationCache {
     private LinkedHashMap<AnimationBase, Long> animationBases;
 
@@ -65,5 +61,13 @@ public class AnimationCache {
                 ids.get().substring(0, ids.get().length() - 2),
                 ""
         ).logging(DebugLevel.DEBUG);
+    }
+
+    public LinkedHashMap<AnimationBase, Long> getAnimationBases() {
+        return animationBases;
+    }
+
+    public void setAnimationBases(LinkedHashMap<AnimationBase, Long> animationBases) {
+        this.animationBases = animationBases;
     }
 }

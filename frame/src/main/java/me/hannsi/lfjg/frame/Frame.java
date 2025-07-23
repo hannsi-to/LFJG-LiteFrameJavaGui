@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.frame;
 
-import lombok.Data;
 import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.event.EventHandler;
@@ -30,10 +29,6 @@ import org.lwjgl.system.MemoryUtil;
 
 import static me.hannsi.lfjg.core.Core.nanoVGContext;
 
-/**
- * The Frame class is responsible for creating and managing the main application window, handling rendering, and managing frame settings.
- */
-@Data
 public class Frame implements IFrame {
     private final LFJGFrame lfjgFrame;
     private final String threadName;
@@ -51,12 +46,6 @@ public class Frame implements IFrame {
     private long startTime;
     private long finishTime;
 
-    /**
-     * Constructs a Frame object with the specified LFJGFrame and thread name.
-     *
-     * @param lfjgFrame  The LFJGFrame associated with this Frame.
-     * @param threadName The name of the thread to create for the frame.
-     */
     public Frame(LFJGFrame lfjgFrame, String threadName) {
         this.lfjgFrame = lfjgFrame;
 
@@ -69,9 +58,6 @@ public class Frame implements IFrame {
         new Thread(this::createFrame, threadName).start();
     }
 
-    /**
-     * Creates the frame, initializes GLFW, sets up rendering, and starts the main loop.
-     */
     public void createFrame() {
         workspaceManager.createDirectories();
         workspaceManager.copyResourcesToWorkspace();
@@ -95,9 +81,6 @@ public class Frame implements IFrame {
         mainLoop();
     }
 
-    /**
-     * Initializes GLFW, creates the window, and sets up the context.
-     */
     private void initGLFW() {
         GLFWDebug.getGLFWDebug(this);
 
@@ -127,9 +110,6 @@ public class Frame implements IFrame {
         GLFW.glfwShowWindow(windowID);
     }
 
-    /**
-     * Registers the managers required for the frame.
-     */
     private void registerManagers() {
         DebugLog.debug(getClass(), "Managers loading...\n");
         long tookTime = TimeCalculator.calculateMillis(() -> {
@@ -139,9 +119,6 @@ public class Frame implements IFrame {
         DebugLog.debug(getClass(), ANSIFormat.GREEN + "Managers took " + tookTime + "ms to load!\n");
     }
 
-    /**
-     * Initializes the rendering context based on the selected rendering type.
-     */
     private void initRendering() {
         switch ((RenderingType) getFrameSettingValue(RenderingTypeSetting.class)) {
             case OPEN_GL -> {
@@ -158,9 +135,6 @@ public class Frame implements IFrame {
         }
     }
 
-    /**
-     * Sets GLFW window hints based on the frame settings.
-     */
     private void glfwWindowHints() {
         GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED, GLFW.GLFW_FALSE);
         GLFW.glfwWindowHint(GLFW.GLFW_CENTER_CURSOR, GLFW.GLFW_FALSE);
@@ -169,9 +143,6 @@ public class Frame implements IFrame {
         frameSettingManager.updateFrameSettings(true);
     }
 
-    /**
-     * The main loop of the frame, responsible for rendering and handling events.
-     */
     private void mainLoop() {
         long lastTime2 = TimeSourceUtil.getNanoTime(getFrameSettingValue(TimeSourceSetting.class));
         double deltaTime2 = 0;
@@ -263,9 +234,6 @@ public class Frame implements IFrame {
         }
     }
 
-    /**
-     * Draws the frame based on the selected rendering type.
-     */
     private void draw() {
         switch ((RenderingType) getFrameSettingValue(RenderingTypeSetting.class)) {
             case OPEN_GL -> eventManager.call(new DrawFrameWithOpenGLEvent());
@@ -276,26 +244,15 @@ public class Frame implements IFrame {
         }
     }
 
-    /**
-     * Event handler for drawing a frame with OpenGL.
-     *
-     * @param event The DrawFrameWithOpenGLEvent.
-     */
     @EventHandler
     public void drawFrameWidthOpenGLEvent(DrawFrameWithOpenGLEvent event) {
         lfjgFrame.drawFrame();
     }
 
-    /**
-     * Stops the frame by setting the window should close flag.
-     */
     public void stopFrame() {
         GLFW.glfwSetWindowShouldClose(windowID, true);
     }
 
-    /**
-     * Sets the anti-aliasing mode based on the frame settings.
-     */
     private void setAntiAliasing() {
         switch (((AntiAliasingType) getFrameSettingValue(AntiAliasingSetting.class))) {
             case MSAA -> Core.GL11.glEnable(Core.GL13.GL_MULTISAMPLE);
@@ -303,9 +260,6 @@ public class Frame implements IFrame {
         }
     }
 
-    /**
-     * Cleans up resources and terminates GLFW.
-     */
     private void breakFrame() {
         Callbacks.glfwFreeCallbacks(windowID);
 
@@ -330,9 +284,6 @@ public class Frame implements IFrame {
         }
     }
 
-    /**
-     * Updates the viewport based on the window size and content scale.
-     */
     public void updateViewport() {
         Core.GL11.glViewport(0, 0, frameBufferWidth, frameBufferHeight);
 
@@ -348,78 +299,149 @@ public class Frame implements IFrame {
         return GLFWNativeWin32.glfwGetWin32Window(windowID);
     }
 
-    /**
-     * Retrieves the maximum memory available to the JVM.
-     *
-     * @return The maximum memory in MB.
-     */
     public String getMaxMemory() {
         return "MaxMemory: " + Math.round(RuntimeUtil.getMaxMemoryMB()) + "MB";
     }
 
-    /**
-     * Retrieves the allocated memory in the JVM.
-     *
-     * @return The allocated memory in MB.
-     */
     public String getAllocatedMemory() {
         return "AllocatedMemory: " + Math.round(RuntimeUtil.getAllocatedMemoryMB()) + "MB";
     }
 
-    /**
-     * Retrieves the free memory in the JVM.
-     *
-     * @return The free memory in MB.
-     */
     public String getFreeMemory() {
         return "FreeMemory: " + Math.round(RuntimeUtil.getFreeMemoryMB()) + "MB";
     }
 
-    /**
-     * Retrieves the used memory in the JVM.
-     *
-     * @return The used memory in MB.
-     */
     public String getUseMemory() {
         return "UsedMemory: " + Math.round(RuntimeUtil.getUseMemoryMB()) + "MB";
     }
 
-    /**
-     * Retrieves the frame setting base for the specified frame setting class.
-     *
-     * @param frameSettingBase The frame setting class.
-     * @param <T>              The type of the frame setting value.
-     * @return The frame setting base.
-     */
     @SuppressWarnings("unchecked")
     public <T> FrameSettingBase<T> getFrameSettingBase(Class<? extends FrameSettingBase<?>> frameSettingBase) {
         return ((FrameSettingBase<T>) frameSettingManager.getFrameSetting(frameSettingBase));
     }
 
-    /**
-     * Retrieves the frame setting value for the specified frame setting class.
-     *
-     * @param frameSettingBase The frame setting class.
-     * @param <T>              The type of the frame setting value.
-     * @return The frame setting value.
-     */
     @SuppressWarnings("unchecked")
     public <T> T getFrameSettingValue(Class<? extends FrameSettingBase<?>> frameSettingBase) {
         return (T) getFrameSettingBase(frameSettingBase).getValue();
     }
 
-    /**
-     * Sets the frame setting value for the specified frame setting class.
-     *
-     * @param frameSettingBase The frame setting class.
-     * @param value            The value to set.
-     * @param <T>              The type of the frame setting value.
-     */
     public <T> void setFrameSettingValue(Class<? extends FrameSettingBase<?>> frameSettingBase, T value) {
         getFrameSettingBase(frameSettingBase).setValue(value);
     }
 
     public WorkspaceManager getWorkspaceManager() {
         return workspaceManager;
+    }
+
+    public LFJGFrame getLfjgFrame() {
+        return lfjgFrame;
+    }
+
+    public String getThreadName() {
+        return threadName;
+    }
+
+    public boolean isShouldCleanup() {
+        return shouldCleanup;
+    }
+
+    public void setShouldCleanup(boolean shouldCleanup) {
+        this.shouldCleanup = shouldCleanup;
+    }
+
+    public long getWindowID() {
+        return windowID;
+    }
+
+    public void setWindowID(long windowID) {
+        this.windowID = windowID;
+    }
+
+    public int getFps() {
+        return fps;
+    }
+
+    public void setFps(int fps) {
+        this.fps = fps;
+    }
+
+    public int getWindowWidth() {
+        return windowWidth;
+    }
+
+    public void setWindowWidth(int windowWidth) {
+        this.windowWidth = windowWidth;
+    }
+
+    public int getWindowHeight() {
+        return windowHeight;
+    }
+
+    public void setWindowHeight(int windowHeight) {
+        this.windowHeight = windowHeight;
+    }
+
+    public int getFrameBufferWidth() {
+        return frameBufferWidth;
+    }
+
+    public void setFrameBufferWidth(int frameBufferWidth) {
+        this.frameBufferWidth = frameBufferWidth;
+    }
+
+    public int getFrameBufferHeight() {
+        return frameBufferHeight;
+    }
+
+    public void setFrameBufferHeight(int frameBufferHeight) {
+        this.frameBufferHeight = frameBufferHeight;
+    }
+
+    public float getContentScaleX() {
+        return contentScaleX;
+    }
+
+    public void setContentScaleX(float contentScaleX) {
+        this.contentScaleX = contentScaleX;
+    }
+
+    public float getContentScaleY() {
+        return contentScaleY;
+    }
+
+    public void setContentScaleY(float contentScaleY) {
+        this.contentScaleY = contentScaleY;
+    }
+
+    public long getCurrentTime() {
+        return currentTime;
+    }
+
+    public void setCurrentTime(long currentTime) {
+        this.currentTime = currentTime;
+    }
+
+    public long getLastTime() {
+        return lastTime;
+    }
+
+    public void setLastTime(long lastTime) {
+        this.lastTime = lastTime;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public long getFinishTime() {
+        return finishTime;
+    }
+
+    public void setFinishTime(long finishTime) {
+        this.finishTime = finishTime;
     }
 }

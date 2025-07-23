@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.renderers.svg;
 
-import lombok.Getter;
 import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
@@ -14,7 +13,6 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
-@Getter
 public class SVGRenderer {
     private final VAORendering vaoRendering;
     private final ShaderProgram shaderProgramFBO;
@@ -68,5 +66,29 @@ public class SVGRenderer {
                 .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
                 .createBufferObject2D(positions, null, uvs)
                 .builderClose();
+    }
+
+    public VAORendering getVaoRendering() {
+        return vaoRendering;
+    }
+
+    public ShaderProgram getShaderProgramFBO() {
+        return shaderProgramFBO;
+    }
+
+    public Location getVertexShaderFBO() {
+        return vertexShaderFBO;
+    }
+
+    public Location getFragmentShaderFBO() {
+        return fragmentShaderFBO;
+    }
+
+    public Mesh getMesh() {
+        return mesh;
+    }
+
+    public void setMesh(Mesh mesh) {
+        this.mesh = mesh;
     }
 }

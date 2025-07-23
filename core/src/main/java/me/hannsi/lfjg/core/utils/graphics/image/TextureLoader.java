@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.core.utils.graphics.image;
 
-import lombok.Getter;
 import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.utils.math.io.IOUtil;
@@ -25,34 +24,11 @@ import java.nio.IntBuffer;
 
 import static org.bytedeco.opencv.global.opencv_imgproc.cvtColor;
 
-/**
- * Class for loading textures from various sources.
- */
 public class TextureLoader {
-    /**
-     * -- GETTER --
-     * Gets the texture path.
-     *
-     * @return the texture path
-     */
-    @Getter
     private final Location texturePath;
     private final ImageLoaderType imageLoaderType;
-    /**
-     * -- GETTER --
-     * Gets the texture ID.
-     *
-     * @return the texture ID
-     */
-    @Getter
     private int textureId;
 
-    /**
-     * Constructs a TextureLoader instance with the specified texture path and loader type.
-     *
-     * @param texturePath     the path to the texture resource
-     * @param imageLoaderType the type of texture loader to use
-     */
     public TextureLoader(Location texturePath, ImageLoaderType imageLoaderType) {
         this.imageLoaderType = imageLoaderType;
         this.texturePath = texturePath;
@@ -60,15 +36,6 @@ public class TextureLoader {
         loadTexture();
     }
 
-    /**
-     * Loads an image using STBImage and returns it as a ByteBuffer.
-     *
-     * @param location       the location of the resource
-     * @param widthBuffer    the buffer to store the image width
-     * @param heightBuffer   the buffer to store the image height
-     * @param channelsBuffer the buffer to store the number of channels
-     * @return the ByteBuffer containing the image data
-     */
     public static ByteBuffer loadImageInSTBImage(Location location, IntBuffer widthBuffer, IntBuffer heightBuffer, IntBuffer channelsBuffer) {
         ByteBuffer image;
         ByteBuffer buffer = null;
@@ -105,16 +72,10 @@ public class TextureLoader {
         }
     }
 
-    /**
-     * Cleans up the texture resources.
-     */
     public void cleanup() {
         Core.GL11.glDeleteTextures(textureId);
     }
 
-    /**
-     * Loads the texture based on the specified loader type.
-     */
     private void loadTexture() {
         if (texturePath.locationType() == LocationType.FILE || texturePath.locationType() == LocationType.RESOURCE) {
             switch (imageLoaderType) {
@@ -185,13 +146,6 @@ public class TextureLoader {
         }
     }
 
-    /**
-     * Generates an OpenGL texture from the given image data.
-     *
-     * @param width  the width of the image
-     * @param height the height of the image
-     * @param buf    the ByteBuffer containing the image data
-     */
     private void generateTexture(int width, int height, ByteBuffer buf) {
         textureId = Core.GL11.glGenTextures();
         if (textureId == 0) {
@@ -203,8 +157,8 @@ public class TextureLoader {
 
         Core.GL11.glTexImage2D(Core.GL11.GL_TEXTURE_2D, 0, Core.GL11.GL_RGBA, width, height, 0, Core.GL11.GL_RGBA, Core.GL11.GL_UNSIGNED_BYTE, buf);
 
-        Core.GL11.glTexParameteri(Core.GL11.GL_TEXTURE_2D, Core.GL11.GL_TEXTURE_WRAP_S, Core.GL13.GL_CLAMP_TO_EDGE);
-        Core.GL11.glTexParameteri(Core.GL11.GL_TEXTURE_2D, Core.GL11.GL_TEXTURE_WRAP_T, Core.GL13.GL_CLAMP_TO_EDGE);
+        Core.GL11.glTexParameteri(Core.GL11.GL_TEXTURE_2D, Core.GL11.GL_TEXTURE_WRAP_S, Core.GL12.GL_CLAMP_TO_EDGE);
+        Core.GL11.glTexParameteri(Core.GL11.GL_TEXTURE_2D, Core.GL11.GL_TEXTURE_WRAP_T, Core.GL12.GL_CLAMP_TO_EDGE);
         Core.GL11.glTexParameteri(Core.GL11.GL_TEXTURE_2D, Core.GL11.GL_TEXTURE_MIN_FILTER, Core.GL11.GL_NEAREST);
         Core.GL11.glTexParameteri(Core.GL11.GL_TEXTURE_2D, Core.GL11.GL_TEXTURE_MAG_FILTER, Core.GL11.GL_NEAREST);
         Core.GL30.glGenerateMipmap(Core.GL11.GL_TEXTURE_2D);
@@ -212,27 +166,31 @@ public class TextureLoader {
         Core.GL11.glBindTexture(Core.GL11.GL_TEXTURE_2D, 0);
     }
 
-    /**
-     * Binds the texture for rendering.
-     */
     public void bind() {
         Core.GL11.glBindTexture(Core.GL11.GL_TEXTURE_2D, textureId);
     }
 
-    /**
-     * Unbinds the texture.
-     */
     public void unbind() {
         Core.GL11.glBindTexture(Core.GL11.GL_TEXTURE_2D, 0);
     }
 
-    /**
-     * Gets the texture loader type.
-     *
-     * @return the texture loader type
-     */
     public ImageLoaderType getTextureLoaderType() {
         return imageLoaderType;
     }
 
+    public Location getTexturePath() {
+        return texturePath;
+    }
+
+    public ImageLoaderType getImageLoaderType() {
+        return imageLoaderType;
+    }
+
+    public int getTextureId() {
+        return textureId;
+    }
+
+    public void setTextureId(int textureId) {
+        this.textureId = textureId;
+    }
 }

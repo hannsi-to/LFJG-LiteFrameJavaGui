@@ -1,81 +1,19 @@
 package me.hannsi.lfjg.frame.setting.system;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.frame.Frame;
 
-/**
- * Base class for frame settings.
- *
- * @param <T> the type of the setting value
- */
-@Getter
-@Setter
 public class FrameSettingBase<T> {
-    /**
-     * -- GETTER --
-     *  Returns the frame associated with this setting.
-     *
-     * @return the frame
-     */
     private final Frame frame;
-    /**
-     * -- GETTER --
-     *  Returns the default value of the setting.
-     *
-     * @return the default value
-     */
     private final T defaultValue;
-    /**
-     * -- GETTER --
-     *  Returns whether the setting is a window hint.
-     *
-     * @return true if the setting is a window hint, false otherwise
-     */
     private final boolean windowHint;
-    /**
-     * -- GETTER --
-     *  Returns the name of the setting.
-     *
-     * @return the name
-     */
     private String name;
-    /**
-     * -- GETTER --
-     *  Returns the identifier of the setting.
-     *
-     * @return the identifier
-     */
     private int id;
-    /**
-     * -- GETTER --
-     *  Returns the current value of the setting.
-     *
-     * @return the current value
-     */
     private T value;
 
-    /**
-     * Constructs a new FrameSettingBase with the specified parameters.
-     *
-     * @param frame        the frame to associate with this setting
-     * @param name         the name of the setting
-     * @param id           the identifier of the setting
-     * @param defaultValue the default value of the setting
-     */
     public FrameSettingBase(Frame frame, String name, int id, T defaultValue) {
         this(frame, name, id, defaultValue, false);
     }
 
-    /**
-     * Constructs a new FrameSettingBase with the specified parameters.
-     *
-     * @param frame        the frame to associate with this setting
-     * @param name         the name of the setting
-     * @param id           the identifier of the setting
-     * @param defaultValue the default value of the setting
-     * @param windowHint   whether the setting is a window hint
-     */
     public FrameSettingBase(Frame frame, String name, int id, T defaultValue, boolean windowHint) {
         this.frame = frame;
         this.name = name;
@@ -85,9 +23,42 @@ public class FrameSettingBase<T> {
         this.windowHint = windowHint;
     }
 
-    /**
-     * Updates the setting. This method should be overridden by subclasses.
-     */
     public void updateSetting() {
+    }
+
+    public Frame getFrame() {
+        return frame;
+    }
+
+    public T getDefaultValue() {
+        return defaultValue;
+    }
+
+    public boolean isWindowHint() {
+        return windowHint;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public T getValue() {
+        return value;
+    }
+
+    public void setValue(T value) {
+        this.value = value;
     }
 }

@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.render.animation.animations;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.utils.math.animation.Easing;
 import me.hannsi.lfjg.core.utils.math.animation.EasingUtil;
 import me.hannsi.lfjg.render.animation.system.AnimationBase;
@@ -14,14 +12,8 @@ public class Bounce extends AnimationBase {
     protected float lastX;
     protected float lastY;
 
-    @Getter
-    @Setter
     private long millis;
-    @Getter
-    @Setter
     private float height;
-    @Getter
-    @Setter
     private float degrees;
 
     public Bounce(long pauseTime, long millis, float height, float degrees) {
@@ -48,7 +40,7 @@ public class Bounce extends AnimationBase {
 
         if (easingUtil.done(easeValue)) {
             easingUtil.reset();
-            easingUtil.setReverse(!easingUtil.isReverse());
+            easingUtil.reverse = !easingUtil.reverse;
         }
 
         lastX = x;
@@ -57,4 +49,27 @@ public class Bounce extends AnimationBase {
         super.loop(currentTime, glObject);
     }
 
+    public long getMillis() {
+        return millis;
+    }
+
+    public void setMillis(long millis) {
+        this.millis = millis;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
+    }
+
+    public float getDegrees() {
+        return degrees;
+    }
+
+    public void setDegrees(float degrees) {
+        this.degrees = degrees;
+    }
 }

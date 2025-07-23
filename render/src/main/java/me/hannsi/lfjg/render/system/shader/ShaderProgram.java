@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.render.system.shader;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
@@ -22,40 +20,10 @@ import static org.lwjgl.opengl.GL20.*;
 /**
  * Represents a shader program in the OpenGL rendering system.
  */
-@Getter
 public class ShaderProgram {
-    /**
-     * -- GETTER --
-     * Gets the program ID.
-     *
-     * @return the program ID
-     */
     private final int programId;
-    /**
-     * -- SETTER --
-     * Sets the vertex shader ID.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the vertex shader ID.
-     *
-     * @param vertexShaderId the new vertex shader ID
-     * @return the vertex shader ID
-     */
-    @Setter
+
     private int vertexShaderId;
-    /**
-     * -- SETTER --
-     * Sets the fragment shader ID.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the fragment shader ID.
-     *
-     * @param fragmentShaderId the new fragment shader ID
-     * @return the fragment shader ID
-     */
-    @Setter
     private int fragmentShaderId;
 
     /**
@@ -427,4 +395,23 @@ public class ShaderProgram {
 //        glUseProgram(0);
     }
 
+    public int getProgramId() {
+        return programId;
+    }
+
+    public int getVertexShaderId() {
+        return vertexShaderId;
+    }
+
+    public void setVertexShaderId(int vertexShaderId) {
+        this.vertexShaderId = vertexShaderId;
+    }
+
+    public int getFragmentShaderId() {
+        return fragmentShaderId;
+    }
+
+    public void setFragmentShaderId(int fragmentShaderId) {
+        this.fragmentShaderId = fragmentShaderId;
+    }
 }

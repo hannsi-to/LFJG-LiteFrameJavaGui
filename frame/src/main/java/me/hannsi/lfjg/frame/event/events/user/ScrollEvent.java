@@ -1,9 +1,7 @@
 package me.hannsi.lfjg.frame.event.events.user;
 
-import lombok.Getter;
 import me.hannsi.lfjg.core.event.Event;
 
-@Getter
 public class ScrollEvent extends Event {
     private final long window;
     private final double xoffset;
@@ -15,4 +13,15 @@ public class ScrollEvent extends Event {
         this.yoffset = yoffset;
     }
 
+    public long getWindow() {
+        return window;
+    }
+
+    public double getXoffset() {
+        return xoffset;
+    }
+
+    public double getYoffset() {
+        return yoffset;
+    }
 }

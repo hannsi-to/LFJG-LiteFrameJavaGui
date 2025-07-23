@@ -16,25 +16,14 @@ import java.util.Arrays;
 import static me.hannsi.lfjg.frame.LFJGContext.windowSize;
 import static org.lwjgl.glfw.GLFW.*;
 
-/**
- * The GLFWCallback class is responsible for handling GLFW callbacks and managing events related to window focus, framebuffer size, content scale, key input, cursor position, cursor enter, and mouse button input.
- */
 public class GLFWCallback implements IFrame {
     private final Frame frame;
 
-    /**
-     * Constructs a GLFWCallback object and registers it with the event manager.
-     *
-     * @param frame The Frame object associated with this callback.
-     */
     public GLFWCallback(Frame frame) {
         eventManager.register(this);
         this.frame = frame;
     }
 
-    /**
-     * Sets up GLFW callbacks for window focus, framebuffer size, content scale, key input, cursor position, cursor enter, and mouse button input.
-     */
     public void glfwInvoke() {
         GLFWWindowSizeCallback windowSizeCallback = new GLFWWindowSizeCallback() {
             @Override

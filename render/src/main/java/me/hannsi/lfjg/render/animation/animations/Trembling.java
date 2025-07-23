@@ -1,11 +1,9 @@
 package me.hannsi.lfjg.render.animation.animations;
 
-import lombok.Getter;
-import lombok.Setter;
-import me.hannsi.lfjg.render.animation.system.AnimationBase;
-import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.core.utils.math.animation.Easing;
 import me.hannsi.lfjg.core.utils.math.animation.EasingUtil;
+import me.hannsi.lfjg.render.animation.system.AnimationBase;
+import me.hannsi.lfjg.render.renderers.GLObject;
 
 import static me.hannsi.lfjg.core.utils.math.MathHelper.sin;
 import static me.hannsi.lfjg.core.utils.math.MathHelper.toRadians;
@@ -14,23 +12,12 @@ public class Trembling extends AnimationBase {
     protected EasingUtil easingUtil;
     protected float latestRadians;
     protected float degreesValue;
-    @Getter
-    @Setter
+
     private long millis;
-    @Getter
-    @Setter
     private float degrees;
-    @Getter
-    @Setter
     private boolean random;
-    @Getter
-    @Setter
     private float cx;
-    @Getter
-    @Setter
     private float cy;
-    @Getter
-    @Setter
     private float cz;
 
     public Trembling(long pauseTime, long millis, float degrees, boolean random, float cx, float cy, float cz) {
@@ -62,13 +49,13 @@ public class Trembling extends AnimationBase {
         }
 
         float easeValue = easingUtil.get(millis);
-        float radian = (easingUtil.isReverse() ? -1 : 1) * (toRadians(sin(toRadians(easeValue * 180)) * degreesValue));
+        float radian = (easingUtil.reverse ? -1 : 1) * (toRadians(sin(toRadians(easeValue * 180)) * degreesValue));
 
         glObject.getTransform().translate(cx, cy, cz).rotateXYZ(0, 0, -latestRadians).rotateXYZ(0, 0, radian).translate(-cx, -cy, -cz);
 
         if (easingUtil.done(easeValue)) {
             easingUtil.reset();
-            easingUtil.setReverse(!easingUtil.isReverse());
+            easingUtil.reverse = !easingUtil.reverse;
             setDegreesValue();
         }
 
@@ -81,4 +68,51 @@ public class Trembling extends AnimationBase {
         degreesValue = random ? (float) (Math.random() * degrees) : degrees;
     }
 
+    public long getMillis() {
+        return millis;
+    }
+
+    public void setMillis(long millis) {
+        this.millis = millis;
+    }
+
+    public float getDegrees() {
+        return degrees;
+    }
+
+    public void setDegrees(float degrees) {
+        this.degrees = degrees;
+    }
+
+    public boolean isRandom() {
+        return random;
+    }
+
+    public void setRandom(boolean random) {
+        this.random = random;
+    }
+
+    public float getCx() {
+        return cx;
+    }
+
+    public void setCx(float cx) {
+        this.cx = cx;
+    }
+
+    public float getCy() {
+        return cy;
+    }
+
+    public void setCy(float cy) {
+        this.cy = cy;
+    }
+
+    public float getCz() {
+        return cz;
+    }
+
+    public void setCz(float cz) {
+        this.cz = cz;
+    }
 }

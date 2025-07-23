@@ -1,11 +1,9 @@
 package me.hannsi.lfjg.core.utils.math.io;
 
-import lombok.Getter;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.*;
 
-@Getter
 public class BufferHolder<T extends Buffer> {
     private final T buffer;
     private final int size;
@@ -71,5 +69,13 @@ public class BufferHolder<T extends Buffer> {
 
     public void memFree() {
         MemoryUtil.memFree(buffer);
+    }
+
+    public T getBuffer() {
+        return buffer;
+    }
+
+    public int getSize() {
+        return size;
     }
 }

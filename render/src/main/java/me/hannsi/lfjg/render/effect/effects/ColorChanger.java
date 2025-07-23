@@ -1,14 +1,10 @@
 package me.hannsi.lfjg.render.effect.effects;
 
-import lombok.Getter;
-import lombok.Setter;
-import me.hannsi.lfjg.render.effect.system.EffectBase;
-import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
+import me.hannsi.lfjg.render.effect.system.EffectBase;
+import me.hannsi.lfjg.render.renderers.GLObject;
 
-@Getter
-@Setter
 public class ColorChanger extends EffectBase {
     private boolean alpha = false;
     private Color targetColor = Color.YELLOW;
@@ -37,11 +33,6 @@ public class ColorChanger extends EffectBase {
         return this;
     }
 
-    /**
-     * Pushes the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();
@@ -49,11 +40,6 @@ public class ColorChanger extends EffectBase {
         super.frameBufferPush(baseGLObject);
     }
 
-    /**
-     * Pops the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPop(GLObject baseGLObject) {
         getFrameBuffer().unbindFrameBuffer();
@@ -61,11 +47,6 @@ public class ColorChanger extends EffectBase {
         super.frameBufferPop(baseGLObject);
     }
 
-    /**
-     * Draws the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBuffer(GLObject baseGLObject) {
         getFrameBuffer().drawFrameBuffer();
@@ -73,11 +54,6 @@ public class ColorChanger extends EffectBase {
         super.frameBuffer(baseGLObject);
     }
 
-    /**
-     * Sets the uniform variables for the shader program.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().setUniform("alpha", alpha);
@@ -87,4 +63,27 @@ public class ColorChanger extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
+    public boolean isAlpha() {
+        return alpha;
+    }
+
+    public void setAlpha(boolean alpha) {
+        this.alpha = alpha;
+    }
+
+    public Color getTargetColor() {
+        return targetColor;
+    }
+
+    public void setTargetColor(Color targetColor) {
+        this.targetColor = targetColor;
+    }
+
+    public Color getNewColor() {
+        return newColor;
+    }
+
+    public void setNewColor(Color newColor) {
+        this.newColor = newColor;
+    }
 }

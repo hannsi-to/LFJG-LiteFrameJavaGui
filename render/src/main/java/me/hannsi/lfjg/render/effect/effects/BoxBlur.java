@@ -1,40 +1,11 @@
 package me.hannsi.lfjg.render.effect.effects;
 
-import lombok.Getter;
-import lombok.Setter;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.core.utils.reflection.location.Location;
 
-/**
- * Class representing a Box Blur effect in OpenGL.
- */
-@Setter
-@Getter
 public class BoxBlur extends EffectBase {
-    /**
-     * -- GETTER --
-     * Gets the kernel size in the x-direction.
-     * <p>
-     * <p>
-     * -- SETTER --
-     * Sets the kernel size in the x-direction.
-     *
-     * @return the kernel size in the x-direction
-     * @param kernelX the kernel size in the x-direction
-     */
     private int kernelX = 10;
-    /**
-     * -- GETTER --
-     * Gets the kernel size in the y-direction.
-     * <p>
-     * <p>
-     * -- SETTER --
-     * Sets the kernel size in the y-direction.
-     *
-     * @return the kernel size in the y-direction
-     * @param kernelY the kernel size in the y-direction
-     */
     private int kernelY = 10;
 
     BoxBlur() {
@@ -55,11 +26,6 @@ public class BoxBlur extends EffectBase {
         return this;
     }
 
-    /**
-     * Pushes the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();
@@ -67,11 +33,6 @@ public class BoxBlur extends EffectBase {
         super.frameBufferPush(baseGLObject);
     }
 
-    /**
-     * Pops the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPop(GLObject baseGLObject) {
         getFrameBuffer().unbindFrameBuffer();
@@ -79,11 +40,6 @@ public class BoxBlur extends EffectBase {
         super.frameBufferPop(baseGLObject);
     }
 
-    /**
-     * Draws the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBuffer(GLObject baseGLObject) {
         getFrameBuffer().drawFrameBuffer();
@@ -91,11 +47,6 @@ public class BoxBlur extends EffectBase {
         super.frameBuffer(baseGLObject);
     }
 
-    /**
-     * Sets the uniform variables for the shader program.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().setUniform("kernelX", kernelX);
@@ -104,4 +55,19 @@ public class BoxBlur extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
+    public int getKernelX() {
+        return kernelX;
+    }
+
+    public void setKernelX(int kernelX) {
+        this.kernelX = kernelX;
+    }
+
+    public int getKernelY() {
+        return kernelY;
+    }
+
+    public void setKernelY(int kernelY) {
+        this.kernelY = kernelY;
+    }
 }

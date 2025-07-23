@@ -1,9 +1,7 @@
 package me.hannsi.lfjg.render.system.mesh;
 
-import lombok.Getter;
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 
-@Getter
 public enum AttributeType implements IEnumTypeBase {
     POSITION_2D(0, "Position2D", 0, 2),
     POSITION_3D(1, "Position3D", 0, 3),
@@ -32,5 +30,13 @@ public enum AttributeType implements IEnumTypeBase {
     @Override
     public String getName() {
         return "";
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public int getSize() {
+        return size;
     }
 }

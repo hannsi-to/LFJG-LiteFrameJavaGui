@@ -1,8 +1,5 @@
 package me.hannsi.lfjg.core.debug;
 
-import lombok.Getter;
-
-@Getter
 public enum LogGenerateType {
     CREATE_CACHE(0, "CreateCache"),
     CLEANUP(1, "Cleanup"),
@@ -14,5 +11,13 @@ public enum LogGenerateType {
     LogGenerateType(int id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getId() {
+        return id;
     }
 }

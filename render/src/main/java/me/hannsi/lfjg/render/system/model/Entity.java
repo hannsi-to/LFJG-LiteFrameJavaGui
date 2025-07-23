@@ -1,18 +1,14 @@
 package me.hannsi.lfjg.render.system.model;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-@Getter
 public class Entity {
     private final String id;
     private final Matrix4f modelMatrix;
     private final Vector3f position;
     private final Quaternionf rotation;
-    @Setter
     private float scale;
 
     Entity(String id) {
@@ -42,5 +38,29 @@ public class Entity {
     public Entity updateModelMatrix() {
         modelMatrix.translationRotateScale(position, rotation, scale);
         return this;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public Matrix4f getModelMatrix() {
+        return modelMatrix;
+    }
+
+    public Vector3f getPosition() {
+        return position;
+    }
+
+    public Quaternionf getRotation() {
+        return rotation;
+    }
+
+    public float getScale() {
+        return scale;
+    }
+
+    public void setScale(float scale) {
+        this.scale = scale;
     }
 }

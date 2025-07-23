@@ -1,16 +1,9 @@
 package me.hannsi.lfjg.render.effect.effects;
 
-import lombok.Getter;
-import lombok.Setter;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.core.utils.reflection.location.Location;
 
-/**
- * Class representing a Frame Buffer Contents effect in OpenGL.
- */
-@Setter
-@Getter
 public class FrameBufferContents extends EffectBase {
     private float translateX = 0f;
     private float translateY = 0f;
@@ -43,33 +36,18 @@ public class FrameBufferContents extends EffectBase {
         return this;
     }
 
-    /**
-     * Pushes the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();
         super.frameBufferPush(baseGLObject);
     }
 
-    /**
-     * Pops the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPop(GLObject baseGLObject) {
         getFrameBuffer().unbindFrameBuffer();
         super.frameBufferPop(baseGLObject);
     }
 
-    /**
-     * Draws the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBuffer(GLObject baseGLObject) {
         getFrameBuffer().getModelMatrix().translate(translateX, translateY, 0);
@@ -79,15 +57,26 @@ public class FrameBufferContents extends EffectBase {
         super.frameBuffer(baseGLObject);
     }
 
-    /**
-     * Sets the uniform variables for the shader program.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().drawFrameBuffer();
 
         super.setUniform(baseGLObject);
+    }
+
+    public float getTranslateX() {
+        return translateX;
+    }
+
+    public void setTranslateX(float translateX) {
+        this.translateX = translateX;
+    }
+
+    public float getTranslateY() {
+        return translateY;
+    }
+
+    public void setTranslateY(float translateY) {
+        this.translateY = translateY;
     }
 }

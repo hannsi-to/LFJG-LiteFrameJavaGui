@@ -1,10 +1,8 @@
 package me.hannsi.lfjg.render.renderers;
 
-import lombok.Data;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
-@Data
 public class Transform {
     private final GLObject glObject;
     private final Matrix4f modelMatrix;
@@ -72,5 +70,117 @@ public class Transform {
         modelMatrix.scale(scaleX, scaleY, scaleZ);
 
         return this;
+    }
+
+    public GLObject getGlObject() {
+        return glObject;
+    }
+
+    public Matrix4f getModelMatrix() {
+        return modelMatrix;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public void setWidth(float width) {
+        this.width = width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
+    }
+
+    public float getCenterX() {
+        return centerX;
+    }
+
+    public void setCenterX(float centerX) {
+        this.centerX = centerX;
+    }
+
+    public float getCenterY() {
+        return centerY;
+    }
+
+    public void setCenterY(float centerY) {
+        this.centerY = centerY;
+    }
+
+    public float getCenterZ() {
+        return centerZ;
+    }
+
+    public void setCenterZ(float centerZ) {
+        this.centerZ = centerZ;
+    }
+
+    public float getAngleX() {
+        return angleX;
+    }
+
+    public void setAngleX(float angleX) {
+        this.angleX = angleX;
+    }
+
+    public float getAngleY() {
+        return angleY;
+    }
+
+    public void setAngleY(float angleY) {
+        this.angleY = angleY;
+    }
+
+    public float getAngleZ() {
+        return angleZ;
+    }
+
+    public void setAngleZ(float angleZ) {
+        this.angleZ = angleZ;
+    }
+
+    public float getScaleX() {
+        return scaleX;
+    }
+
+    public void setScaleX(float scaleX) {
+        this.scaleX = scaleX;
+    }
+
+    public float getScaleY() {
+        return scaleY;
+    }
+
+    public void setScaleY(float scaleY) {
+        this.scaleY = scaleY;
+    }
+
+    public float getScaleZ() {
+        return scaleZ;
+    }
+
+    public void setScaleZ(float scaleZ) {
+        this.scaleZ = scaleZ;
     }
 }

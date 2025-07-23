@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.render.effect.effects;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
@@ -9,84 +7,13 @@ import me.hannsi.lfjg.render.renderers.GLObject;
 import org.joml.Vector2i;
 import org.joml.Vector3f;
 
-/**
- * Class representing a Glow effect in OpenGL.
- */
-@Getter
-@Setter
 public class Glow extends EffectBase {
-    public Vector2i resolution = new Vector2i();
-    /**
-     * -- SETTER --
-     * Sets the intensity of the glow.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the intensity of the glow.
-     *
-     * @param intensity the intensity of the glow
-     * @return the intensity of the glow
-     */
+    private Vector2i resolution = new Vector2i();
     private float intensity = 1.0f;
-    /**
-     * -- SETTER --
-     * Sets the threshold for the glow effect.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the threshold for the glow effect.
-     *
-     * @param threshold the threshold for the glow effect
-     * @return the threshold for the glow effect
-     */
     private float threshold = 0.7f;
-    /**
-     * -- SETTER --
-     * Sets the spread of the glow.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the spread of the glow.
-     *
-     * @param spread the spread of the glow
-     * @return the spread of the glow
-     */
     private float spread = 3.0f;
-    /**
-     * -- SETTER --
-     * Sets whether to use the original color.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Checks if the original color is used.
-     *
-     * @param useOriginalColor true to use the original color, false otherwise
-     * @return true if the original color is used, false otherwise
-     */
     private boolean useOriginalColor = true;
-    /**
-     * -- SETTER --
-     * Sets the color of the glow.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the color of the glow.
-     *
-     * @param glowColor the color of the glow
-     * @return the color of the glow
-     */
     private Color glowColor = Color.GOLD;
-    /**
-     * -- SETTER --
-     * Sets whether to apply only the glow effect.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Checks if only the glow effect is applied.
-     *
-     * @param glowOnly true to apply only the glow effect, false otherwise
-     * @return true if only the glow effect is applied, false otherwise
-     */
     private boolean glowOnly = false;
 
     Glow() {
@@ -147,11 +74,6 @@ public class Glow extends EffectBase {
         return this;
     }
 
-    /**
-     * Pushes the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();
@@ -159,11 +81,6 @@ public class Glow extends EffectBase {
         super.frameBufferPush(baseGLObject);
     }
 
-    /**
-     * Pops the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPop(GLObject baseGLObject) {
         getFrameBuffer().unbindFrameBuffer();
@@ -171,11 +88,6 @@ public class Glow extends EffectBase {
         super.frameBufferPop(baseGLObject);
     }
 
-    /**
-     * Draws the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBuffer(GLObject baseGLObject) {
         getFrameBuffer().drawFrameBuffer();
@@ -183,11 +95,6 @@ public class Glow extends EffectBase {
         super.frameBuffer(baseGLObject);
     }
 
-    /**
-     * Sets the uniform variables for the shader program.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
@@ -201,4 +108,59 @@ public class Glow extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
+    public Vector2i getResolution() {
+        return resolution;
+    }
+
+    public void setResolution(Vector2i resolution) {
+        this.resolution = resolution;
+    }
+
+    public float getIntensity() {
+        return intensity;
+    }
+
+    public void setIntensity(float intensity) {
+        this.intensity = intensity;
+    }
+
+    public float getThreshold() {
+        return threshold;
+    }
+
+    public void setThreshold(float threshold) {
+        this.threshold = threshold;
+    }
+
+    public float getSpread() {
+        return spread;
+    }
+
+    public void setSpread(float spread) {
+        this.spread = spread;
+    }
+
+    public boolean isUseOriginalColor() {
+        return useOriginalColor;
+    }
+
+    public void setUseOriginalColor(boolean useOriginalColor) {
+        this.useOriginalColor = useOriginalColor;
+    }
+
+    public Color getGlowColor() {
+        return glowColor;
+    }
+
+    public void setGlowColor(Color glowColor) {
+        this.glowColor = glowColor;
+    }
+
+    public boolean isGlowOnly() {
+        return glowOnly;
+    }
+
+    public void setGlowOnly(boolean glowOnly) {
+        this.glowOnly = glowOnly;
+    }
 }

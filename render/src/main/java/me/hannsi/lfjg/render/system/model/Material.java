@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.system.model;
 
-import lombok.Data;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
@@ -12,7 +11,6 @@ import org.joml.Vector4f;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 public class Material {
     public static final Vector4f DEFAULT_COLOR = new Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
     private final List<Mesh> meshes;
@@ -114,5 +112,33 @@ public class Material {
 
     public void cleanup() {
         meshes.forEach(Mesh::cleanup);
+    }
+
+    public List<Mesh> getMeshes() {
+        return meshes;
+    }
+
+    public Vector4f getDiffuseColor() {
+        return diffuseColor;
+    }
+
+    public void setDiffuseColor(Vector4f diffuseColor) {
+        this.diffuseColor = diffuseColor;
+    }
+
+    public MaterialType getMaterialType() {
+        return materialType;
+    }
+
+    public void setMaterialType(MaterialType materialType) {
+        this.materialType = materialType;
+    }
+
+    public Location getTextureLocation() {
+        return textureLocation;
+    }
+
+    public void setTextureLocation(Location textureLocation) {
+        this.textureLocation = textureLocation;
     }
 }

@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.render.renderers.font;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerator;
@@ -42,29 +40,17 @@ import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 
-/**
- * Class representing a font renderer in OpenGL.
- */
 public class GLText extends GLRect {
     private FrameBuffer frameBuffer;
 
     private Font font;
-    @Getter
-    @Setter
     private String text;
-    @Getter
-    @Setter
     private float textX;
-    @Getter
-    @Setter
     private float textY;
-    @Getter
-    @Setter
     private float fontSize;
     private boolean blur;
     private float blurSize;
-    @Setter
-    private Color color;
+    private Color textColor;
     private AlignType align;
 
     /**
@@ -104,7 +90,7 @@ public class GLText extends GLRect {
         this.fontSize = fontSize;
         this.blur = blur;
         this.blurSize = blurSize;
-        this.color = color;
+        this.textColor = color;
         this.align = align;
         this.textX = x;
         this.textY = y;
@@ -149,7 +135,7 @@ public class GLText extends GLRect {
     public void draw() {
         frameBuffer.bindFrameBuffer();
 
-        drawTextFormat(font.getName(), color, align.getId());
+        drawTextFormat(font.getName(), textColor, align.getId());
 
         frameBuffer.unbindFrameBuffer();
 
@@ -328,5 +314,85 @@ public class GLText extends GLRect {
         if (blur) {
             nvgFontBlur(0f);
         }
+    }
+
+    public FrameBuffer getFrameBuffer() {
+        return frameBuffer;
+    }
+
+    public void setFrameBuffer(FrameBuffer frameBuffer) {
+        this.frameBuffer = frameBuffer;
+    }
+
+    public Font getFont() {
+        return font;
+    }
+
+    public void setFont(Font font) {
+        this.font = font;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public float getTextX() {
+        return textX;
+    }
+
+    public void setTextX(float textX) {
+        this.textX = textX;
+    }
+
+    public float getTextY() {
+        return textY;
+    }
+
+    public void setTextY(float textY) {
+        this.textY = textY;
+    }
+
+    public float getFontSize() {
+        return fontSize;
+    }
+
+    public void setFontSize(float fontSize) {
+        this.fontSize = fontSize;
+    }
+
+    public boolean isBlur() {
+        return blur;
+    }
+
+    public void setBlur(boolean blur) {
+        this.blur = blur;
+    }
+
+    public float getBlurSize() {
+        return blurSize;
+    }
+
+    public void setBlurSize(float blurSize) {
+        this.blurSize = blurSize;
+    }
+
+    public Color getTextColor() {
+        return textColor;
+    }
+
+    public void setTextColor(Color textColor) {
+        this.textColor = textColor;
+    }
+
+    public AlignType getAlign() {
+        return align;
+    }
+
+    public void setAlign(AlignType align) {
+        this.align = align;
     }
 }

@@ -1,41 +1,12 @@
 package me.hannsi.lfjg.render.effect.effects;
 
-import lombok.Getter;
-import lombok.Setter;
-import me.hannsi.lfjg.render.effect.system.EffectBase;
-import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
+import me.hannsi.lfjg.render.effect.system.EffectBase;
+import me.hannsi.lfjg.render.renderers.GLObject;
 
-/**
- * Class representing a Directional Blur effect in OpenGL.
- */
-@Getter
-@Setter
 public class DirectionalBlur extends EffectBase {
-    /**
-     * -- SETTER --
-     * Sets the radius of the blur.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the radius of the blur.
-     *
-     * @param radius the radius of the blur
-     * @return the radius of the blur
-     */
     private float radius = 10f;
-    /**
-     * -- SETTER --
-     * Sets the angle of the blur.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the angle of the blur.
-     *
-     * @param angle the angle of the blur
-     * @return the angle of the blur
-     */
     private float angle = MathHelper.toRadians(45);
 
     DirectionalBlur() {
@@ -71,44 +42,24 @@ public class DirectionalBlur extends EffectBase {
         return this;
     }
 
-    /**
-     * Pushes the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPush(GLObject baseGLObject) {
         getFrameBuffer().bindFrameBuffer();
         super.frameBufferPush(baseGLObject);
     }
 
-    /**
-     * Pops the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBufferPop(GLObject baseGLObject) {
         getFrameBuffer().unbindFrameBuffer();
         super.frameBufferPop(baseGLObject);
     }
 
-    /**
-     * Draws the frame buffer for the base GL object.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void frameBuffer(GLObject baseGLObject) {
         getFrameBuffer().drawFrameBuffer();
         super.frameBuffer(baseGLObject);
     }
 
-    /**
-     * Sets the uniform variables for the shader program.
-     *
-     * @param baseGLObject the base GL object
-     */
     @Override
     public void setUniform(GLObject baseGLObject) {
         getFrameBuffer().getShaderProgramFBO().setUniform("radius", radius * 10);
@@ -117,4 +68,19 @@ public class DirectionalBlur extends EffectBase {
         super.setUniform(baseGLObject);
     }
 
+    public float getRadius() {
+        return radius;
+    }
+
+    public void setRadius(float radius) {
+        this.radius = radius;
+    }
+
+    public float getAngle() {
+        return angle;
+    }
+
+    public void setAngle(float angle) {
+        this.angle = angle;
+    }
 }

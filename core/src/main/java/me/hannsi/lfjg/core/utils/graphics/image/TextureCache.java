@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.core.utils.graphics.image;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
@@ -11,28 +9,9 @@ import me.hannsi.lfjg.core.utils.type.types.ImageLoaderType;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Class for managing a cache of textures.
- */
-@Getter
-@Setter
 public class TextureCache {
-    /**
-     * -- SETTER --
-     * Sets the texture map.
-     * <p>
-     * <p>
-     * -- GETTER --
-     * Gets the texture map.
-     *
-     * @param textureMap the new texture map
-     * @return the texture map
-     */
-    private Map<String, TextureLoader> textureMap;
+    private final Map<String, TextureLoader> textureMap;
 
-    /**
-     * Constructs a TextureCache instance and initializes the cache with the default texture.
-     */
     TextureCache() {
         this.textureMap = new HashMap<>();
     }
@@ -41,9 +20,6 @@ public class TextureCache {
         return new TextureCache();
     }
 
-    /**
-     * Cleans up all textures in the cache.
-     */
     public void cleanup() {
         StringBuilder ids = new StringBuilder();
         int index = 0;
@@ -87,5 +63,9 @@ public class TextureCache {
         }
 
         return textureLoader;
+    }
+
+    public Map<String, TextureLoader> getTextureMap() {
+        return textureMap;
     }
 }

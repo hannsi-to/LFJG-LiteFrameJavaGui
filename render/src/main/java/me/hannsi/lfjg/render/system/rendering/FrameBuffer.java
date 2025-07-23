@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.system.rendering;
 
-import lombok.Data;
 import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
@@ -22,10 +21,6 @@ import static me.hannsi.lfjg.core.Core.frameBufferSize;
 import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL30.*;
 
-/**
- * Represents a frame buffer in the OpenGL rendering system.
- */
-@Data
 public class FrameBuffer {
     private static float lastClearR = -1f, lastClearG = -1f, lastClearB = -1f, lastClearA = -1f;
 
@@ -106,6 +101,38 @@ public class FrameBuffer {
 
         this.uesStencil = uesStencil;
         this.glObject = glObject;
+    }
+
+    public static float getLastClearR() {
+        return lastClearR;
+    }
+
+    public static void setLastClearR(float lastClearR) {
+        FrameBuffer.lastClearR = lastClearR;
+    }
+
+    public static float getLastClearG() {
+        return lastClearG;
+    }
+
+    public static void setLastClearG(float lastClearG) {
+        FrameBuffer.lastClearG = lastClearG;
+    }
+
+    public static float getLastClearB() {
+        return lastClearB;
+    }
+
+    public static void setLastClearB(float lastClearB) {
+        FrameBuffer.lastClearB = lastClearB;
+    }
+
+    public static float getLastClearA() {
+        return lastClearA;
+    }
+
+    public static void setLastClearA(float lastClearA) {
+        FrameBuffer.lastClearA = lastClearA;
     }
 
     /**
@@ -301,5 +328,117 @@ public class FrameBuffer {
      */
     public void unbindTexture(int textureUnit) {
 //        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
+    public int getFrameBufferId() {
+        return frameBufferId;
+    }
+
+    public int getTextureId() {
+        return textureId;
+    }
+
+    public int getRenderBufferId() {
+        return renderBufferId;
+    }
+
+    public VAORendering getVaoRendering() {
+        return vaoRendering;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public void setWidth(float width) {
+        this.width = width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
+    }
+
+    public Mesh getMesh() {
+        return mesh;
+    }
+
+    public void setMesh(Mesh mesh) {
+        this.mesh = mesh;
+    }
+
+    public ShaderProgram getShaderProgramFBO() {
+        return shaderProgramFBO;
+    }
+
+    public void setShaderProgramFBO(ShaderProgram shaderProgramFBO) {
+        this.shaderProgramFBO = shaderProgramFBO;
+    }
+
+    public Location getVertexShaderFBO() {
+        return vertexShaderFBO;
+    }
+
+    public void setVertexShaderFBO(Location vertexShaderFBO) {
+        this.vertexShaderFBO = vertexShaderFBO;
+    }
+
+    public Location getFragmentShaderFBO() {
+        return fragmentShaderFBO;
+    }
+
+    public void setFragmentShaderFBO(Location fragmentShaderFBO) {
+        this.fragmentShaderFBO = fragmentShaderFBO;
+    }
+
+    public Matrix4f getModelMatrix() {
+        return modelMatrix;
+    }
+
+    public void setModelMatrix(Matrix4f modelMatrix) {
+        this.modelMatrix = modelMatrix;
+    }
+
+    public Matrix4f getViewMatrix() {
+        return viewMatrix;
+    }
+
+    public void setViewMatrix(Matrix4f viewMatrix) {
+        this.viewMatrix = viewMatrix;
+    }
+
+    public boolean isUesStencil() {
+        return uesStencil;
+    }
+
+    public void setUesStencil(boolean uesStencil) {
+        this.uesStencil = uesStencil;
+    }
+
+    public GLObject getGlObject() {
+        return glObject;
+    }
+
+    public void setGlObject(GLObject glObject) {
+        this.glObject = glObject;
     }
 }

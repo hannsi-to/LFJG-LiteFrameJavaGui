@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.core.manager;
 
-import lombok.Setter;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.utils.toolkit.ANSIFormat;
 
@@ -17,9 +16,8 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-@Setter
 public class WorkspaceManager {
-    public static final String DEFAULT_WORKSPACE_NAME = "lfjg/workspace";
+    public static String DEFAULT_WORKSPACE_NAME = "lfjg/workspace";
     public static String currentWorkspace;
 
     private String workspace;
@@ -32,6 +30,10 @@ public class WorkspaceManager {
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String getCurrentWorkspace() {
+        return currentWorkspace;
     }
 
     public void createDirectories() {
@@ -55,7 +57,7 @@ public class WorkspaceManager {
             Path outputPath = Paths.get(currentWorkspace);
 
             if (Files.isDirectory(jarPath)) {
-                Path resourceRoot = Paths.get("src/main/resources");
+                Path resourceRoot = Paths.get("core/src/main/resources");
                 if (Files.exists(resourceRoot)) {
                     DebugLog.debug(getClass(), copyDirectory(resourceRoot, outputPath));
                     DebugLog.debug(getClass(), "Resources copied from development directory.");
@@ -85,7 +87,7 @@ public class WorkspaceManager {
     }
 
     private boolean isTargetResource(String name) {
-        return name.startsWith("shader/");
+        return name.startsWith("shader/") || name.startsWith("icon/") || name.startsWith("texture/") || name.startsWith("font/");
     }
 
     private String copyDirectory(Path srcDir, Path dstDir) throws IOException {
@@ -126,5 +128,13 @@ public class WorkspaceManager {
         }
 
         return debugBuilder.toString();
+    }
+
+    public String getWorkspace() {
+        return workspace;
+    }
+
+    public void setWorkspace(String workspace) {
+        this.workspace = workspace;
     }
 }

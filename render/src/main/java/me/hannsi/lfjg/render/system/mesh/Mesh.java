@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.system.mesh;
 
-import lombok.Getter;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
@@ -14,7 +13,6 @@ import java.util.*;
 
 import static org.lwjgl.opengl.GL30.*;
 
-@Getter
 public class Mesh {
     private final int vaoId;
     private final HashMap<BufferObjectType, PersistentMappedVBO> vboIds;
@@ -335,5 +333,49 @@ public class Mesh {
     private void uploadIndirectBuffer() {
         iboId = new PersistentMappedIBO(drawCommands.size(), flagsHint)
                 .update(drawCommands);
+    }
+
+    public int getVaoId() {
+        return vaoId;
+    }
+
+    public HashMap<BufferObjectType, PersistentMappedVBO> getVboIds() {
+        return vboIds;
+    }
+
+    public List<DrawCommand> getDrawCommands() {
+        return drawCommands;
+    }
+
+    public PersistentMappedEBO getEboId() {
+        return eboId;
+    }
+
+    public PersistentMappedIBO getIboId() {
+        return iboId;
+    }
+
+    public int getNumVertices() {
+        return numVertices;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public ProjectionType getProjectionType() {
+        return projectionType;
+    }
+
+    public int getFlagsHint() {
+        return flagsHint;
+    }
+
+    public boolean isUseElementBufferObject() {
+        return useElementBufferObject;
+    }
+
+    public boolean isUseIndirect() {
+        return useIndirect;
     }
 }

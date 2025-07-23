@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.render.effect.system;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
@@ -11,29 +9,10 @@ import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 
 import java.util.*;
 
-/**
- * Class representing a cache for OpenGL effects.
- */
-@Setter
-@Getter
 public class EffectCache {
-    /**
-     * -- GETTER --
-     * Gets the effect bases.
-     * <p>
-     * <p>
-     * -- SETTER --
-     * Sets the effect bases.
-     *
-     * @return the effect bases
-     * @param effectBases the effect bases
-     */
     private LinkedHashMap<EffectBase, Identifier> effectBases;
     private FrameBuffer endFrameBuffer;
 
-    /**
-     * Constructs a new EffectCache.
-     */
     EffectCache() {
         this.effectBases = new LinkedHashMap<>();
 
@@ -46,28 +25,11 @@ public class EffectCache {
         return new EffectCache();
     }
 
-    /**
-     * Gets the entry at the specified index from the LinkedHashMap.
-     *
-     * @param originalMap the original LinkedHashMap
-     * @param index       the index of the entry to get
-     * @param <K>         the type of keys in the map
-     * @param <V>         the type of values in the map
-     * @return the entry at the specified index
-     */
     private static <K, V> Map.Entry<K, V> getLinkedHashMapEntry(LinkedHashMap<K, V> originalMap, int index) {
         List<Map.Entry<K, V>> entryList = new ArrayList<>(originalMap.entrySet());
         return entryList.get(index);
     }
 
-    /**
-     * Reverses the order of the entries in the LinkedHashMap.
-     *
-     * @param originalMap the original LinkedHashMap
-     * @param <K>         the type of keys in the map
-     * @param <V>         the type of values in the map
-     * @return a new LinkedHashMap with the entries in reverse order
-     */
     private static <K, V> LinkedHashMap<K, V> reverseLinkedHashMap(LinkedHashMap<K, V> originalMap) {
         List<Map.Entry<K, V>> entryList = new ArrayList<>(originalMap.entrySet());
         Collections.reverse(entryList);
@@ -107,11 +69,6 @@ public class EffectCache {
         }
     }
 
-    /**
-     * Creates a cache for the specified effect and GL object.
-     *
-     * @param effectBase the effect to cache
-     */
     public EffectCache createCache(String name, EffectBase effectBase) {
         this.effectBases.put(effectBase, new Identifier(name, Id.latestEffectCacheId++));
 
@@ -151,11 +108,6 @@ public class EffectCache {
         return this;
     }
 
-    /**
-     * Pushes the transformations for all effects onto the stack for the specified GL object.
-     *
-     * @param glObject the GL object
-     */
     public void push(GLObject glObject) {
         for (Map.Entry<EffectBase, Identifier> effectBase : effectBases.entrySet()) {
             effectBase.getKey().push(glObject);
@@ -164,11 +116,6 @@ public class EffectCache {
         effectBases = reverseLinkedHashMap(effectBases);
     }
 
-    /**
-     * Pops the transformations for all effects from the stack for the specified GL object.
-     *
-     * @param glObject the GL object
-     */
     public void pop(GLObject glObject) {
         for (Map.Entry<EffectBase, Identifier> effectBase : effectBases.entrySet()) {
             effectBase.getKey().pop(glObject);
@@ -177,11 +124,6 @@ public class EffectCache {
         effectBases = reverseLinkedHashMap(effectBases);
     }
 
-    /**
-     * Pushes the frame buffer for all effects onto the stack for the specified GL object.
-     *
-     * @param glObject the GL object
-     */
     public void frameBufferPush(GLObject glObject) {
         for (Map.Entry<EffectBase, Identifier> effectBase : effectBases.entrySet()) {
             effectBase.getKey().frameBufferPush(glObject);
@@ -190,11 +132,6 @@ public class EffectCache {
         effectBases = reverseLinkedHashMap(effectBases);
     }
 
-    /**
-     * Pops the frame buffer for all effects from the stack for the specified GL object.
-     *
-     * @param glObject the GL object
-     */
     public void frameBufferPop(GLObject glObject) {
         for (Map.Entry<EffectBase, Identifier> effectBase : effectBases.entrySet()) {
             effectBase.getKey().frameBufferPop(glObject);
@@ -203,11 +140,6 @@ public class EffectCache {
         effectBases = reverseLinkedHashMap(effectBases);
     }
 
-    /**
-     * Draws the frame buffer for all effects for the specified GL object.
-     *
-     * @param glObject the GL object
-     */
     public void frameBuffer(GLObject glObject) {
         int index = 0;
         int maxSize = new ArrayList<>(effectBases.entrySet()).size() - 1;
@@ -218,14 +150,6 @@ public class EffectCache {
         }
     }
 
-    /**
-     * Applies the effect to the frame buffer for the specified GL object.
-     *
-     * @param index      the index of the effect
-     * @param maxSize    the maximum size of the effect list
-     * @param effectBase the effect to apply
-     * @param glObject   the GL object
-     */
     public void applyEffect(int index, int maxSize, EffectBase effectBase, GLObject glObject) {
         if (index == maxSize) {
             effectBase.getFrameBuffer().getShaderProgramFBO().bind();
@@ -249,12 +173,6 @@ public class EffectCache {
 
     }
 
-    /**
-     * Gets the effect at the specified index.
-     *
-     * @param index the index of the effect
-     * @return the effect at the specified index
-     */
     public EffectBase getEffectBase(int index) {
         List<EffectBase> keys = new ArrayList<>(effectBases.keySet());
         return keys.get(index);
@@ -264,9 +182,6 @@ public class EffectCache {
         return effectBases.entrySet().stream().filter(entry -> entry.getValue().name().equals(name)).findFirst().map(Map.Entry::getKey).orElse(null);
     }
 
-    /**
-     * Cleans up the effect cache.
-     */
     public void cleanup() {
         StringBuilder ids = new StringBuilder();
         for (Map.Entry<EffectBase, Identifier> entry : effectBases.entrySet()) {
@@ -284,6 +199,22 @@ public class EffectCache {
                 ids.isEmpty() ? "" : ids.substring(0, ids.toString().length() - 2),
                 ""
         ).logging(DebugLevel.DEBUG);
+    }
+
+    public LinkedHashMap<EffectBase, Identifier> getEffectBases() {
+        return effectBases;
+    }
+
+    public void setEffectBases(LinkedHashMap<EffectBase, Identifier> effectBases) {
+        this.effectBases = effectBases;
+    }
+
+    public FrameBuffer getEndFrameBuffer() {
+        return endFrameBuffer;
+    }
+
+    public void setEndFrameBuffer(FrameBuffer endFrameBuffer) {
+        this.endFrameBuffer = endFrameBuffer;
     }
 
     public record Identifier(String name, long id) {

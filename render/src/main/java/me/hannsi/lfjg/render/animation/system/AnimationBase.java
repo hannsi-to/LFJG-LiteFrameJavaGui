@@ -1,26 +1,16 @@
 package me.hannsi.lfjg.render.animation.system;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.render.renderers.GLObject;
 
 public class AnimationBase {
-    @Getter
     private final String name;
-    @Getter
-    @Setter
+
     private int id;
     private boolean isLooping;
-    @Getter
-    @Setter
     private long initTime;
-    @Getter
-    @Setter
     private long currentTime;
-    @Getter
-    @Setter
     private long pauseTime;
 
     public AnimationBase(String name, int id, long pauseTime) {
@@ -89,4 +79,39 @@ public class AnimationBase {
         isLooping = looping;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public long getInitTime() {
+        return initTime;
+    }
+
+    public void setInitTime(long initTime) {
+        this.initTime = initTime;
+    }
+
+    public long getCurrentTime() {
+        return currentTime;
+    }
+
+    public void setCurrentTime(long currentTime) {
+        this.currentTime = currentTime;
+    }
+
+    public long getPauseTime() {
+        return pauseTime;
+    }
+
+    public void setPauseTime(long pauseTime) {
+        this.pauseTime = pauseTime;
+    }
 }
