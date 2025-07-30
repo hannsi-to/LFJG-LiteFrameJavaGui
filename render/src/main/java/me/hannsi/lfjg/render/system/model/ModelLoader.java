@@ -91,7 +91,7 @@ public class ModelLoader {
             textCoords = new float[numElements];
         }
 
-        return Mesh.initMesh().createBufferObject3D(vertices, indices, null, textCoords, null);
+        return Mesh.createMesh().createBufferObject3D(vertices, indices, null, textCoords, null);
     }
 
     public ModelLoader modelLocation(Location modelLocation) {

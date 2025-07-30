@@ -17,7 +17,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public record Location(String path, LocationType locationType) {
-
     public static Location fromFile(String absolutePath) {
         return new Location(absolutePath, LocationType.FILE);
     }

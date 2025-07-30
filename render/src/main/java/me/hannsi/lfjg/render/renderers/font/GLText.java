@@ -1,39 +1,39 @@
 package me.hannsi.lfjg.render.renderers.font;
 
-import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
-import me.hannsi.lfjg.core.utils.math.AlignExtractor;
 import me.hannsi.lfjg.core.utils.toolkit.StringUtil;
 import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
+import me.hannsi.lfjg.render.system.font.AlignExtractor;
 import me.hannsi.lfjg.render.system.font.Font;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
+import org.lwjgl.nanovg.NVGColor;
 
 import java.util.List;
 
-import static me.hannsi.lfjg.core.utils.graphics.NanoVGUtil.nvgBeginPath;
-import static me.hannsi.lfjg.core.utils.graphics.NanoVGUtil.nvgClosePath;
-import static me.hannsi.lfjg.core.utils.graphics.NanoVGUtil.nvgFill;
-import static me.hannsi.lfjg.core.utils.graphics.NanoVGUtil.nvgFillColor;
-import static me.hannsi.lfjg.core.utils.graphics.NanoVGUtil.nvgFontBlur;
-import static me.hannsi.lfjg.core.utils.graphics.NanoVGUtil.nvgFontFace;
-import static me.hannsi.lfjg.core.utils.graphics.NanoVGUtil.nvgFontSize;
-import static me.hannsi.lfjg.core.utils.graphics.NanoVGUtil.nvgLineTo;
-import static me.hannsi.lfjg.core.utils.graphics.NanoVGUtil.nvgMoveTo;
-import static me.hannsi.lfjg.core.utils.graphics.NanoVGUtil.nvgRestore;
-import static me.hannsi.lfjg.core.utils.graphics.NanoVGUtil.nvgSave;
-import static me.hannsi.lfjg.core.utils.graphics.NanoVGUtil.nvgStroke;
-import static me.hannsi.lfjg.core.utils.graphics.NanoVGUtil.nvgStrokeColor;
-import static me.hannsi.lfjg.core.utils.graphics.NanoVGUtil.nvgStrokeWidth;
-import static me.hannsi.lfjg.core.utils.graphics.NanoVGUtil.nvgText;
-import static me.hannsi.lfjg.core.utils.graphics.NanoVGUtil.nvgTextAlign;
-import static me.hannsi.lfjg.core.utils.graphics.NanoVGUtil.nvgTextBounds;
-import static me.hannsi.lfjg.core.utils.graphics.NanoVGUtil.nvgTextMetrics;
-import static me.hannsi.lfjg.core.utils.graphics.NanoVGUtil.nvgTransform;
-import static me.hannsi.lfjg.core.utils.graphics.NanoVGUtil.*;
+import static me.hannsi.lfjg.render.system.NanoVGUtil.nvgBeginPath;
+import static me.hannsi.lfjg.render.system.NanoVGUtil.nvgClosePath;
+import static me.hannsi.lfjg.render.system.NanoVGUtil.nvgFill;
+import static me.hannsi.lfjg.render.system.NanoVGUtil.nvgFillColor;
+import static me.hannsi.lfjg.render.system.NanoVGUtil.nvgFontBlur;
+import static me.hannsi.lfjg.render.system.NanoVGUtil.nvgFontFace;
+import static me.hannsi.lfjg.render.system.NanoVGUtil.nvgFontSize;
+import static me.hannsi.lfjg.render.system.NanoVGUtil.nvgLineTo;
+import static me.hannsi.lfjg.render.system.NanoVGUtil.nvgMoveTo;
+import static me.hannsi.lfjg.render.system.NanoVGUtil.nvgRestore;
+import static me.hannsi.lfjg.render.system.NanoVGUtil.nvgSave;
+import static me.hannsi.lfjg.render.system.NanoVGUtil.nvgStroke;
+import static me.hannsi.lfjg.render.system.NanoVGUtil.nvgStrokeColor;
+import static me.hannsi.lfjg.render.system.NanoVGUtil.nvgStrokeWidth;
+import static me.hannsi.lfjg.render.system.NanoVGUtil.nvgText;
+import static me.hannsi.lfjg.render.system.NanoVGUtil.nvgTextAlign;
+import static me.hannsi.lfjg.render.system.NanoVGUtil.nvgTextBounds;
+import static me.hannsi.lfjg.render.system.NanoVGUtil.nvgTextMetrics;
+import static me.hannsi.lfjg.render.system.NanoVGUtil.nvgTransform;
+import static me.hannsi.lfjg.render.system.NanoVGUtil.*;
 import static org.lwjgl.nanovg.NanoVG.*;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBindTexture;
@@ -62,22 +62,22 @@ public class GLText extends GLRect {
         super(name);
     }
 
+    private static void drawLineWH(float x, float y, float width, float height, float lineWidth, Color color) {
+        drawLine(x, y, x + width, y + height, lineWidth, color);
+    }
+
     private static void drawLine(float x, float y, float x1, float y1, float lineWidth, Color color) {
         nvgBeginPath();
 
         nvgMoveTo(x, y);
         nvgLineTo(x1, y1);
 
-        Core.NVGColor nvgColor = colorToNVG(color);
+        NVGColor nvgColor = colorToNVG(color);
         nvgStrokeColor(nvgColor);
         nvgStrokeWidth(lineWidth);
         nvgStroke();
 
         nvgClosePath();
-    }
-
-    private static void drawLineWH(float x, float y, float width, float height, float lineWidth, Color color) {
-        drawLine(x, y, x + width, y + height, lineWidth, color);
     }
 
     public void text(String fontName, String text, float x, float y, float fontSize, Color color, AlignType align) {
@@ -95,12 +95,17 @@ public class GLText extends GLRect {
         this.textX = x;
         this.textY = y;
 
-        this.frameBuffer = new FrameBuffer(0, 0, getWidth(), getHeight());
-        this.frameBuffer.createFrameBuffer();
+        float width = getTextWidth(text);
+        float height = getTextHeight();
+
+        System.out.println("Text size: " + width + " x " + height);
+
+        this.frameBuffer = new FrameBuffer(0, 0, width, height);
         this.frameBuffer.createShaderProgram();
+        this.frameBuffer.createFrameBuffer();
 
         uv(0, 0, 1, 1);
-        rectWH(x, y, getWidth(), getHeight(), new Color(0, 0, 0, 0));
+        rectWH(x, y, width, height, new Color(0, 0, 0, 0));
     }
 
     public float getWidth() {
@@ -112,9 +117,15 @@ public class GLText extends GLRect {
     }
 
     public float getTextWidth(String str) {
+        if (str == null || str.isEmpty()) {
+            return 0f;
+        }
+
         nvgFontFace(font.getName());
         nvgFontSize(fontSize);
-        return nvgTextBounds(0, 0, str, new float[4]);
+
+        float[] bounds = new float[4];
+        return nvgTextBounds(0f, 0f, str, bounds);
     }
 
     public float getHeight() {
@@ -292,7 +303,7 @@ public class GLText extends GLRect {
             nvgFontBlur(blurSize);
         }
 
-        Core.NVGColor nvgColor = colorToNVG(color);
+        NVGColor nvgColor = colorToNVG(color);
         nvgFillColor(nvgColor);
 
         nvgFontSize(fontSize + plusSize);

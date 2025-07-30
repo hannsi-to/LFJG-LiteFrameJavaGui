@@ -83,7 +83,7 @@ public class TestGuiFrame implements LFJGFrame {
                 .addScene(new TestVideo1(frame).getScene())
                 .addScene(new TestPhysic1(frame).getScene())
                 .addScene(new Test3D1(frame, this).getScene())
-                .setCurrentScene("TestScene2")
+                .setCurrentScene("TestVideo1")
                 .initScenes();
 
 //        if (!CefApp.startup(args)) {

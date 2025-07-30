@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.ByteBuffer;
 
-import static me.hannsi.lfjg.core.utils.graphics.NanoVGUtil.nvgCreateFontMem;
+import static me.hannsi.lfjg.render.system.NanoVGUtil.nvgCreateFontMem;
 
 public class Font {
     private final String name;

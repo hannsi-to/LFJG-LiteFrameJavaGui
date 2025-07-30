@@ -30,6 +30,8 @@ dependencies {
     implementation project(":physic")
     implementation project(":render")
     implementation project(":renderVideo")
+
+    implementation 'com.google.code.gson:gson:2.13.1'
 }
 
 tasks.withType(JavaCompile).configureEach {

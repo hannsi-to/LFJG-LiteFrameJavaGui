@@ -3,7 +3,7 @@ package me.hannsi.lfjg.core.debug;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 
 public class LogGenerator {
-    private int barCount = 30;
+    public static int barCount = 30;
     private String title;
     private String[] texts;
 
@@ -84,7 +84,7 @@ public class LogGenerator {
     }
 
     public void setBarCount(int barCount) {
-        this.barCount = barCount;
+        LogGenerator.barCount = barCount;
     }
 
     public String getTitle() {

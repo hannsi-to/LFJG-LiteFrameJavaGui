@@ -25,7 +25,7 @@ public class VAORendering {
      * @param glObject the GLObject to draw
      */
     public void draw(GLObject glObject) {
-        drawMesh(glObject.getMesh(), glObject.getDrawType().getId());
+        draw(glObject.getMesh(), glObject.getDrawType().getId());
     }
 
     /**
@@ -34,10 +34,10 @@ public class VAORendering {
      * @param mesh the Mesh to draw;
      */
     public void draw(Mesh mesh) {
-        drawMesh(mesh, GL30.GL_POLYGON);
+        draw(mesh, GL30.GL_POLYGON);
     }
 
-    public void drawMesh(Mesh mesh, int drawType) {
+    public void draw(Mesh mesh, int drawType) {
         glBindVertexArray(mesh.getVaoId());
         try {
             mesh.startFrame();

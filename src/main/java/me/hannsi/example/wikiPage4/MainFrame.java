@@ -1,12 +1,17 @@
 package me.hannsi.example.wikiPage4;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.renderers.polygon.GLRect;
+import me.hannsi.lfjg.render.LFJGRenderContext;
+import me.hannsi.lfjg.render.renderers.font.AlignType;
+import me.hannsi.lfjg.render.renderers.font.GLText;
+import me.hannsi.lfjg.render.system.font.Font;
+import me.hannsi.lfjg.render.system.font.FontCache;
 
 public class MainFrame implements LFJGFrame {
-    GLRect glRect1;
+    GLText glText;
     private Frame frame;
 
     public static void main(String[] args) {
@@ -17,18 +22,22 @@ public class MainFrame implements LFJGFrame {
     public void init() {
         frame.updateLFJGLContext();
 
-        glRect1 = new GLRect("Rect1");
-        glRect1.rect(0, 0, 500, 500, Color.of(255, 0, 255, 255));
+        LFJGRenderContext.fontCache = FontCache.initFontCache()
+                .createCache(new Font("Font1", Location.fromResource("font/default.ttf")))
+                .loadFonts();
+        
+        glText = new GLText("Text1");
+        glText.text("Font1", "Hello World!!", 450, 450, 64f, Color.of(255, 0, 255, 255), AlignType.LEFT_BOTTOM);
     }
 
     @Override
     public void drawFrame() {
-        glRect1.draw();
+        glText.draw();
     }
 
     @Override
     public void stopFrame() {
-        glRect1.cleanup();
+        glText.cleanup();
     }
 
     @Override

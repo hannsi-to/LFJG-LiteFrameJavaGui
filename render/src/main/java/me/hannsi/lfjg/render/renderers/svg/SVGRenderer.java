@@ -62,7 +62,7 @@ public class SVGRenderer {
         float[] positions = new float[]{x, y, x + width, y, x + width, y + height, x, y + height};
         float[] uvs = new float[]{1, 1, 0, 1, 0, 0, 1, 0};
 
-        mesh = Mesh.initMesh()
+        mesh = Mesh.createMesh()
                 .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
                 .createBufferObject2D(positions, null, uvs)
                 .builderClose();

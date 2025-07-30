@@ -98,7 +98,7 @@ public class ModelRender {
                 for (Mesh mesh : material.getMeshes()) {
                     for (Entity entity : entities) {
                         shaderProgram.setUniform("modelMatrix", entity.getModelMatrix());
-                        vaoRendering.drawMesh(mesh, GL_TRIANGLES);
+                        vaoRendering.draw(mesh, GL_TRIANGLES);
                     }
                 }
             }

@@ -39,7 +39,7 @@ public class Mesh {
         glBindVertexArray(vaoId);
     }
 
-    public static Mesh initMesh() {
+    public static Mesh createMesh() {
         return new Mesh();
     }
 
@@ -160,6 +160,53 @@ public class Mesh {
                         ).update(textures).attribute(AttributeType.TEXTURE)
                 );
             }
+        }
+
+        if (useIndirect) {
+            createIndirectBuffer();
+        }
+
+        return this;
+    }
+
+    public Mesh createBufferObject2D(float[] positions, float[] colors, float[] textures, int[] indices) {
+        vboIds.put(
+                BufferObjectType.POSITIONS_BUFFER,
+                new PersistentMappedVBO(
+                        positions.length,
+                        flagsHint
+                ).update(positions).attribute(AttributeType.POSITION_3D)
+        );
+        count = positions.length / projectionType.getStride();
+
+        if (indices != null) {
+            this.useElementBufferObject = true;
+            numVertices = indices.length;
+
+            eboId = new PersistentMappedEBO(
+                    numVertices,
+                    flagsHint
+            ).update(indices);
+        }
+
+        if (colors != null) {
+            vboIds.put(
+                    BufferObjectType.COLORS_BUFFER,
+                    new PersistentMappedVBO(
+                            colors.length,
+                            flagsHint
+                    ).update(colors).attribute(AttributeType.COLOR)
+            );
+        }
+
+        if (textures != null) {
+            vboIds.put(
+                    BufferObjectType.TEXTURE_BUFFER,
+                    new PersistentMappedVBO(
+                            textures.length,
+                            flagsHint
+                    ).update(textures).attribute(AttributeType.TEXTURE)
+            );
         }
 
         if (useIndirect) {

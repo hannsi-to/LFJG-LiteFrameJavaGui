@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 public class DebugLog {
-    public static final Logger logger = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(DebugLog.class);
     private Class<?> clazz;
     private DebugType debugType;
     private Exception exception;
@@ -98,22 +98,22 @@ public class DebugLog {
     }
 
     private String getDescription() {
-        String description;
+        String description = "[" + clazz.getSimpleName() + "] ";
 
         switch (debugType) {
             case EXCEPTION -> {
                 StringWriter sw = new StringWriter();
                 PrintWriter pw = new PrintWriter(sw);
                 exception.printStackTrace(pw);
-                description = "\n" + sw;
+                description += "\n" + sw;
             }
             case ERROR -> {
                 StringWriter sw = new StringWriter();
                 PrintWriter pw = new PrintWriter(sw);
                 error.printStackTrace(pw);
-                description = "\n" + sw;
+                description += "\n" + sw;
             }
-            case TEXT -> description = debugText;
+            case TEXT -> description += debugText;
 
             default -> throw new IllegalStateException("Unexpected value: " + debugType);
         }
@@ -127,19 +127,19 @@ public class DebugLog {
         switch (debugLevel) {
             case DEBUG:
                 System.out.print(ANSIFormat.RESET);
-                logger.debug("{}{}{}", ANSIFormat.RESET, description, ANSIFormat.RESET);
+                LOGGER.debug("{}{}{}", ANSIFormat.RESET, description, ANSIFormat.RESET);
                 break;
             case INFO:
                 System.out.print(ANSIFormat.BLUE);
-                logger.info("{}{}{}", ANSIFormat.BLUE, description, ANSIFormat.RESET);
+                LOGGER.info("{}{}{}", ANSIFormat.BLUE, description, ANSIFormat.RESET);
                 break;
             case ERROR:
                 System.out.print(ANSIFormat.RED);
-                logger.error("{}{}{}", ANSIFormat.RED, description, ANSIFormat.RESET);
+                LOGGER.error("{}{}{}", ANSIFormat.RED, description, ANSIFormat.RESET);
                 break;
             case WARNING:
                 System.out.print(ANSIFormat.YELLOW);
-                logger.warn("{}{}{}", ANSIFormat.YELLOW, description, ANSIFormat.RESET);
+                LOGGER.warn("{}{}{}", ANSIFormat.YELLOW, description, ANSIFormat.RESET);
                 break;
         }
     }

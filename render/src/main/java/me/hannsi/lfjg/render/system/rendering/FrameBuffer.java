@@ -94,7 +94,7 @@ public class FrameBuffer {
 
         float[] uvs = new float[]{0, 0, 1, 0, 1, 1, 0, 1};
 
-        mesh = Mesh.initMesh()
+        mesh = Mesh.createMesh()
                 .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
                 .createBufferObject2D(positions, null, uvs)
                 .builderClose();
@@ -175,25 +175,25 @@ public class FrameBuffer {
      * Creates the frame buffer and its associated texture and render buffer.
      */
     public void createFrameBuffer() {
+        if (width <= 0 || height <= 0) {
+            throw new IllegalArgumentException("Framebuffer size must be > 0: width=" + width + ", height=" + height);
+        }
+
         glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
         glBindTexture(GL_TEXTURE_2D, textureId);
-        glBindRenderbuffer(GL_RENDERBUFFER, renderBufferId);
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (int) width, (int) height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureId, 0);
 
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-            throw new CompleteFrameBufferException("Frame Buffer not complete");
-        }
-
+        glBindRenderbuffer(GL_RENDERBUFFER, renderBufferId);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH32F_STENCIL8, (int) width, (int) height);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, renderBufferId);
 
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-            throw new RuntimeException("Frame Buffer not complete");
+        int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        if (status != GL_FRAMEBUFFER_COMPLETE) {
+            throw new CompleteFrameBufferException("Frame Buffer not complete: 0x" + Integer.toHexString(status));
         }
 
         glBindRenderbuffer(GL_RENDERBUFFER, 0);

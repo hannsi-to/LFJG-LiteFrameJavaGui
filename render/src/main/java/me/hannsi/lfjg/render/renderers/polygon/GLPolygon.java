@@ -169,7 +169,7 @@ public class GLPolygon extends GLObject {
         } else {
             isUpdate = true;
 
-            Mesh mesh = Mesh.initMesh()
+            Mesh mesh = Mesh.createMesh()
                     .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
                     .createBufferObject2D(vertex, color, texture)
                     .builderClose();

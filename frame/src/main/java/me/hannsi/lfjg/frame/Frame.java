@@ -75,9 +75,9 @@ public class Frame implements IFrame {
         GLFWCallback glfwCallback = new GLFWCallback(this);
         glfwCallback.glfwInvoke();
 
-        lfjgFrame.init();
         eventManager.register(this);
 
+        lfjgFrame.init();
         mainLoop();
     }
 
