@@ -2,6 +2,7 @@ package me.hannsi.test.sdf;
 
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
+import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.test.sdf.msdf.*;
 
@@ -33,8 +34,8 @@ public class MSDFMain implements LFJGFrame {
             MSDFGenerator generator = MSDFGenerator.createMSDFGenerator()
                     .type(AtlasType.MSDF)
                     .ttfPath(fontFilePath)
-                    .unicodeBlock(UnicodeBlocks.getBlocks(characters))
-//                    .charset(characters)
+//                    .unicodeBlock(UnicodeBlocks.getBlocks(characters))
+                    .charset(characters)
 //                    .allGlyphs(true)
                     .outputName(outputFileName)
                     .atlasSize(AtlasSizeType.SQUARE, true);
@@ -74,7 +75,7 @@ public class MSDFMain implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-        textBatch.draw();
+//        textBatch.draw();
     }
 
     @Override
@@ -84,6 +85,6 @@ public class MSDFMain implements LFJGFrame {
 
     @Override
     public void setFrameSetting() {
-
+        frame.setFrameSettingValue(RefreshRateSetting.class, -1);
     }
 }

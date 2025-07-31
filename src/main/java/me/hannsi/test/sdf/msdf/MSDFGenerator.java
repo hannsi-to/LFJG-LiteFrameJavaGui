@@ -6,6 +6,7 @@ import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.type.types.STBImageFormat;
 
+import java.awt.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -22,6 +23,7 @@ public class MSDFGenerator {
     protected Location jsonOutputLocation;
 
     private Location ttfPath;
+    private Font font;
     private String outputName;
 
     MSDFGenerator() throws IOException {
@@ -57,6 +59,11 @@ public class MSDFGenerator {
 
     public MSDFGenerator ttfPath(Location ttfPath) {
         this.ttfPath = ttfPath;
+        try {
+            this.font = Font.createFont(Font.TRUETYPE_FONT, ttfPath.getFile()).deriveFont(Font.PLAIN, 1f);
+        } catch (FontFormatException | IOException e) {
+            throw new RuntimeException(e);
+        }
 
         command.add("-font");
         command.add(ttfPath.path());
@@ -79,20 +86,27 @@ public class MSDFGenerator {
 
         for (UnicodeBlock unicodeBlock : unicodeBlocks) {
             for (int codePoint = unicodeBlock.startCodePoint; codePoint <= unicodeBlock.endCodePoint; codePoint++) {
-                if (Character.isValidCodePoint(codePoint) && Character.isDefined(codePoint)) {
-                    charsetBuilder.append(Character.toChars(codePoint));
+                if (!Character.isValidCodePoint(codePoint) || !Character.isDefined(codePoint)) {
+                    continue;
                 }
+                if (!charCheck(codePoint)) {
+                    continue;
+                }
+                charsetBuilder.append(Character.toChars(codePoint));
             }
         }
-        
+
         String charset = charsetBuilder.toString();
         try {
             charsetFile = File.createTempFile("charset-", ".txt");
 
             try (BufferedWriter writer = Files.newBufferedWriter(charsetFile.toPath(), StandardCharsets.US_ASCII)) {
-                for (int i = 0; i < charset.length(); i++) {
-                    writer.write(String.format("0x%x", (int) charset.charAt(i)));
+                int offset = 0;
+                while (offset < charset.length()) {
+                    int codePoint = charset.codePointAt(offset);
+                    writer.write(String.format("0x%x", codePoint));
                     writer.newLine();
+                    offset += Character.charCount(codePoint);
                 }
             } catch (IOException e) {
                 DebugLog.error(getClass(), e);
@@ -268,13 +282,26 @@ public class MSDFGenerator {
     }
 
     public MSDFGenerator charset(String charset) {
+        StringBuilder newCharset = new StringBuilder();
+        for (char c : charset.toCharArray()) {
+            if (!charCheck(c)) {
+                continue;
+            }
+
+            newCharset.append(c);
+        }
+        charset = newCharset.toString();
+
         try {
             charsetFile = File.createTempFile("charset-", ".txt");
 
             try (BufferedWriter writer = Files.newBufferedWriter(charsetFile.toPath(), StandardCharsets.US_ASCII)) {
-                for (int i = 0; i < charset.length(); i++) {
-                    writer.write(String.format("0x%x", (int) charset.charAt(i)));
+                int offset = 0;
+                while (offset < charset.length()) {
+                    int codePoint = charset.codePointAt(offset);
+                    writer.write(String.format("0x%x", codePoint));
                     writer.newLine();
+                    offset += Character.charCount(codePoint);
                 }
             } catch (IOException e) {
                 DebugLog.error(getClass(), e);
@@ -314,6 +341,22 @@ public class MSDFGenerator {
             return resourcePath + "msdf-atlas-gen-macos";
         }
         throw new UnsupportedOperationException("Unsupported Operating System: " + os);
+    }
+
+    private boolean charCheck(int codePoint) {
+        if (Character.isISOControl(codePoint)) {
+            return false;
+        }
+
+        return font.canDisplay(codePoint);
+    }
+
+    private boolean charCheck(char c) {
+        if (Character.isISOControl(c)) {
+            return false;
+        }
+
+        return font.canDisplay(c);
     }
 
     public boolean generate() {
@@ -403,5 +446,13 @@ public class MSDFGenerator {
 
     public void setOutputName(String outputName) {
         this.outputName = outputName;
+    }
+
+    public Font getFont() {
+        return font;
+    }
+
+    public void setFont(Font font) {
+        this.font = font;
     }
 }

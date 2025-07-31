@@ -61,22 +61,24 @@ public class UnicodeBlocks {
             throw new RuntimeException(e);
         }
 
-        StringBuilder unicodeDebug = new StringBuilder();
-        for (UnicodeBlock block : BLOCKS) {
-            String name = String.format("%-35s", block.name + ":");
-            String range = String.format("U+%04X - U+%04X", block.startCodePoint, block.endCodePoint);
-            unicodeDebug.append("\t").append(name).append(" ").append(range).append("\n");
-        }
-        if (unicodeDebug.length() >= 2) {
-            unicodeDebug.delete(unicodeDebug.length() - 2, unicodeDebug.length());
-        } else {
-            unicodeDebug.append("NULL");
-        }
+        if (DEBUG_UNICODE) {
+            StringBuilder unicodeDebug = new StringBuilder();
+            for (UnicodeBlock block : BLOCKS) {
+                String name = String.format("%-35s", block.name + ":");
+                String range = String.format("U+%04X - U+%04X", block.startCodePoint, block.endCodePoint);
+                unicodeDebug.append("\t").append(name).append(" ").append(range).append("\n");
+            }
+            if (unicodeDebug.length() >= 2) {
+                unicodeDebug.delete(unicodeDebug.length() - 2, unicodeDebug.length());
+            } else {
+                unicodeDebug.append("NULL");
+            }
 
-        new LogGenerator(
-                "Unicode",
-                unicodeDebug.toString()
-        ).logging(DebugLevel.DEBUG);
+            new LogGenerator(
+                    "Unicode",
+                    unicodeDebug.toString()
+            ).logging(DebugLevel.DEBUG);
+        }
     }
 
     public static ArrayList<UnicodeBlock> getBlocks(String text) {

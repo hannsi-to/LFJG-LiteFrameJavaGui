@@ -10,8 +10,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ClassUtil extends Util {
+    private static final Map<String, Method> METHOD_HANDLE_CACHE = new ConcurrentHashMap<>();
+
     private static final Map<Class<?>, Class<?>> PRIMITIVE_MAP = Map.ofEntries(
             Map.entry(Boolean.class, boolean.class),
             Map.entry(Byte.class, byte.class),
@@ -108,17 +111,22 @@ public class ClassUtil extends Util {
 
     public static Object invokeStaticMethod(String className, String methodName, Object... args) {
         try {
-            Class<?> clazz = Class.forName(className);
-            Method method = findMethod(clazz, methodName, args);
+            String cacheKey = className + "#" + methodName + "#" + getParamTypesKey(args);
+            Method method = METHOD_HANDLE_CACHE.get(cacheKey);
+
             if (method == null) {
-                throw new NoSuchMethodException("No static method named " + methodName + " found in " + className);
+                Class<?> clazz = Class.forName(className);
+                method = findMethod(clazz, methodName, args);
+                if (method == null) {
+                    throw new NoSuchMethodException("No static method named " + methodName + " found in " + className);
+                }
+                method.setAccessible(true);
+                METHOD_HANDLE_CACHE.put(cacheKey, method);
             }
-            method.setAccessible(true);
 
             return method.invoke(null, args);
-        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
-                 InvocationTargetException e) {
-            throw new RuntimeException("Could not invoke static method: " + methodName + " on class: " + className, e);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -170,7 +178,16 @@ public class ClassUtil extends Util {
         }
     }
 
-    private static Method findMethod(Class<?> clazz, String methodName, Object... args) {
+    private static String getParamTypesKey(Object... args) {
+        if (args == null || args.length == 0) return "";
+        StringBuilder key = new StringBuilder();
+        for (Object arg : args) {
+            key.append(arg == null ? "null" : arg.getClass().getName()).append(",");
+        }
+        return key.toString();
+    }
+
+    public static Method findMethod(Class<?> clazz, String methodName, Object... args) {
         Method[] methods = clazz.getDeclaredMethods();
         outer:
         for (Method method : methods) {

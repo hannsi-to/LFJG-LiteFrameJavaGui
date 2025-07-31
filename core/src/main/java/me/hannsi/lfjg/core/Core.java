@@ -25,7 +25,6 @@ public class Core {
     public static final String DEFAULT_LFJG_JCEF_CORE_CLASS_NAME = ".JCefCore";
     public static final String DEFAULT_LFJG_PHYSIC_CORE_CLASS_NAME = ".PhysicCore";
     public static final String DEFAULT_LFJG_RENDER_CORE_CLASS_NAME = ".RenderCore";
-
     public static final boolean enableLFJGAudioSystem;
     public static final boolean enableLFJGFrameSystem;
     public static final boolean enableLFJGJCefSystem;
@@ -62,6 +61,19 @@ public class Core {
         }
 
         return result;
+    }
+
+    private static String getParamTypesKey(Class<?>[] paramTypes) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Class<?> clazz : paramTypes) {
+            stringBuilder.append(clazz.getName()).append(".");
+        }
+
+        return stringBuilder.toString();
+    }
+
+    private static Class<?> getReturnType(Class<?> clazz, String methodName, Class<?> paramTypes) throws NoSuchMethodException {
+        return clazz.getDeclaredMethod(methodName, paramTypes).getReturnType();
     }
 
     public static Object getStaticFieldValue(String className, String fieldName) {

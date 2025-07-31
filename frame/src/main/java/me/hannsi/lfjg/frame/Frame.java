@@ -11,6 +11,7 @@ import me.hannsi.lfjg.core.utils.time.TimeSourceUtil;
 import me.hannsi.lfjg.core.utils.toolkit.ANSIFormat;
 import me.hannsi.lfjg.core.utils.toolkit.RuntimeUtil;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
+import me.hannsi.lfjg.frame.event.events.monitor.window.FramebufferSizeEvent;
 import me.hannsi.lfjg.frame.event.events.render.DrawFrameWithOpenGLEvent;
 import me.hannsi.lfjg.frame.event.system.GLFWCallback;
 import me.hannsi.lfjg.frame.setting.settings.*;
@@ -153,6 +154,7 @@ public class Frame implements IFrame {
         startTime = TimeSourceUtil.getTimeMills(getFrameSettingValue(TimeSourceSetting.class));
 
         setAntiAliasing();
+        Core.GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         while (!GLFW.glfwWindowShouldClose(windowID)) {
             currentTime = TimeSourceUtil.getTimeMills(getFrameSettingValue(TimeSourceSetting.class));
 
@@ -161,9 +163,7 @@ public class Frame implements IFrame {
             lastTime2 = currentTime2;
 
             if (deltaTime2 >= targetTime) {
-                updateViewport();
                 updateLFJGLContext();
-                Core.GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
                 Core.GL11.glClear(Core.GL11.GL_COLOR_BUFFER_BIT | Core.GL11.GL_DEPTH_BUFFER_BIT);
                 draw();
 
@@ -180,6 +180,7 @@ public class Frame implements IFrame {
 
                 deltaTime2 -= targetTime;
             }
+            System.out.println(fps);
 
             double sleepTime = (targetTime - deltaTime2) / 1_000_000_000.0;
             if (sleepTime > 0) {
@@ -200,6 +201,11 @@ public class Frame implements IFrame {
         finishTime = TimeSourceUtil.getTimeMills(getFrameSettingValue(TimeSourceSetting.class));
 
         finished();
+    }
+
+    @EventHandler
+    public void framebufferSizeEvent(FramebufferSizeEvent event) {
+        updateViewport();
     }
 
     private void finished() {
