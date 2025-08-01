@@ -3,6 +3,7 @@ package me.hannsi.lfjg.render.renderers.shader;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector2f;
 
 public class GLShader extends GLPolygon {
@@ -44,9 +45,9 @@ public class GLShader extends GLPolygon {
     @Override
     public void draw() {
         getShaderProgram().bind();
-        getShaderProgram().setUniform("offset", new Vector2f(getTransform().getX(), getTransform().getY()));
-        getShaderProgram().setUniform("resolution", new Vector2f(getTransform().getWidth(), getTransform().getHeight()));
-        getShaderProgram().setUniform("time", (System.currentTimeMillis() - initTime) / 1000f);
+        getShaderProgram().setUniform("offset", UploadUniformType.ON_CHANGE, new Vector2f(getTransform().getX(), getTransform().getY()));
+        getShaderProgram().setUniform("resolution", UploadUniformType.ON_CHANGE, new Vector2f(getTransform().getWidth(), getTransform().getHeight()));
+        getShaderProgram().setUniform("time", UploadUniformType.ON_CHANGE, (System.currentTimeMillis() - initTime) / 1000f);
         getShaderProgram().unbind();
 
         super.draw();

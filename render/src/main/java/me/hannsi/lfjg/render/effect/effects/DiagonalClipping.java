@@ -4,6 +4,7 @@ import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 
@@ -101,10 +102,10 @@ public class DiagonalClipping extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("clipCenter", new Vector2f((centerX / resolution.x) * 2.0f - 1.0f, (centerY / resolution.y) * 2.0f - 1.0f));
-        getFrameBuffer().getShaderProgramFBO().setUniform("clipAngle", clipAngle);
-        getFrameBuffer().getShaderProgramFBO().setUniform("blurWidth", blurWidth);
-        getFrameBuffer().getShaderProgramFBO().setUniform("invertClip", invertClip);
+        getFrameBuffer().getShaderProgramFBO().setUniform("clipCenter", UploadUniformType.ON_CHANGE, new Vector2f((centerX / resolution.x) * 2.0f - 1.0f, (centerY / resolution.y) * 2.0f - 1.0f));
+        getFrameBuffer().getShaderProgramFBO().setUniform("clipAngle", UploadUniformType.ON_CHANGE, clipAngle);
+        getFrameBuffer().getShaderProgramFBO().setUniform("blurWidth", UploadUniformType.ON_CHANGE, blurWidth);
+        getFrameBuffer().getShaderProgramFBO().setUniform("invertClip", UploadUniformType.ON_CHANGE, invertClip);
 
         super.setUniform(baseGLObject);
     }

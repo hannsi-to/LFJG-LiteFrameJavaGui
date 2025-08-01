@@ -4,6 +4,7 @@ import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector3f;
 
 public class ChromaKey extends EffectBase {
@@ -114,11 +115,11 @@ public class ChromaKey extends EffectBase {
      */
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("chromaKeyColor", new Vector3f(chromaKeyColor.getRedF(), chromaKeyColor.getGreenF(), chromaKeyColor.getBlueF()));
-        getFrameBuffer().getShaderProgramFBO().setUniform("hueRange", hueRange);
-        getFrameBuffer().getShaderProgramFBO().setUniform("saturationRange", saturationRange);
-        getFrameBuffer().getShaderProgramFBO().setUniform("boundarySmoothness", boundarySmoothness);
-        getFrameBuffer().getShaderProgramFBO().setUniform("colorAdjustment", new Vector3f(colorAdjustment.getRedF(), colorAdjustment.getGreenF(), colorAdjustment.getBlueF()));
+        getFrameBuffer().getShaderProgramFBO().setUniform("chromaKeyColor", UploadUniformType.ON_CHANGE, new Vector3f(chromaKeyColor.getRedF(), chromaKeyColor.getGreenF(), chromaKeyColor.getBlueF()));
+        getFrameBuffer().getShaderProgramFBO().setUniform("hueRange", UploadUniformType.ON_CHANGE, hueRange);
+        getFrameBuffer().getShaderProgramFBO().setUniform("saturationRange", UploadUniformType.ON_CHANGE, saturationRange);
+        getFrameBuffer().getShaderProgramFBO().setUniform("boundarySmoothness", UploadUniformType.ON_CHANGE, boundarySmoothness);
+        getFrameBuffer().getShaderProgramFBO().setUniform("colorAdjustment", UploadUniformType.ON_CHANGE, new Vector3f(colorAdjustment.getRedF(), colorAdjustment.getGreenF(), colorAdjustment.getBlueF()));
 
         super.setUniform(baseGLObject);
     }

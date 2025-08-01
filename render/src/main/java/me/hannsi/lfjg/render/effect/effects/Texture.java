@@ -6,6 +6,7 @@ import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBindTexture;
@@ -88,7 +89,7 @@ public class Texture extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("blendMode", blendType.getId());
+        getFrameBuffer().getShaderProgramFBO().setUniform("blendMode", UploadUniformType.ON_CHANGE, blendType.getId());
 
         super.setUniform(baseGLObject);
     }

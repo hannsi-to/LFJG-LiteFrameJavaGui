@@ -3,6 +3,7 @@ package me.hannsi.lfjg.render.effect.effects;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
 public class BoxBlur extends EffectBase {
     private int kernelX = 10;
@@ -49,8 +50,8 @@ public class BoxBlur extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("kernelX", kernelX);
-        getFrameBuffer().getShaderProgramFBO().setUniform("kernelY", kernelY);
+        getFrameBuffer().getShaderProgramFBO().setUniform("kernelX", UploadUniformType.ON_CHANGE, kernelX);
+        getFrameBuffer().getShaderProgramFBO().setUniform("kernelY", UploadUniformType.ON_CHANGE, kernelY);
 
         super.setUniform(baseGLObject);
     }

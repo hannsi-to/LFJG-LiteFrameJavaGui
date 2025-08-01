@@ -16,6 +16,7 @@ import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -172,11 +173,11 @@ public class GLObject implements Cloneable {
     }
 
     private void uploadUniforms() {
-        shaderProgram.setUniform("projectionMatrix", Core.projection2D.getProjMatrix());
-        shaderProgram.setUniform("modelMatrix", transform.getModelMatrix());
-        shaderProgram.setUniform("viewMatrix", viewMatrix);
+        shaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());
+        shaderProgram.setUniform("modelMatrix", UploadUniformType.ON_CHANGE, transform.getModelMatrix());
+        shaderProgram.setUniform("viewMatrix", UploadUniformType.ON_CHANGE, viewMatrix);
         if (mesh.getVboIds().get(BufferObjectType.TEXTURE_BUFFER) != null) {
-            shaderProgram.setUniform("textureSampler", 0);
+            shaderProgram.setUniform("textureSampler", UploadUniformType.ONCE, 0);
         }
     }
 

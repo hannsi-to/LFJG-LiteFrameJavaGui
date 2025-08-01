@@ -3,6 +3,7 @@ package me.hannsi.lfjg.render.effect.effects;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 
@@ -48,8 +49,8 @@ public class FXAA extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("texelStep", new Vector2f(1.0f / resolution.x(), 1.0f / resolution.y()));
-        getFrameBuffer().getShaderProgramFBO().setUniform("useAlpha", useAlpha);
+        getFrameBuffer().getShaderProgramFBO().setUniform("texelStep", UploadUniformType.ON_CHANGE, new Vector2f(1.0f / resolution.x(), 1.0f / resolution.y()));
+        getFrameBuffer().getShaderProgramFBO().setUniform("useAlpha", UploadUniformType.ON_CHANGE, useAlpha);
 
         super.setUniform(baseGLObject);
     }

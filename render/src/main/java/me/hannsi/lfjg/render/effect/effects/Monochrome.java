@@ -4,6 +4,7 @@ import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector3f;
 
 public class Monochrome extends EffectBase {
@@ -59,9 +60,9 @@ public class Monochrome extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
-        getFrameBuffer().getShaderProgramFBO().setUniform("color", new Vector3f(color.getRedF(), color.getGreenF(), color.getBlueF()));
-        getFrameBuffer().getShaderProgramFBO().setUniform("preserveBrightness", preserveBrightness);
+        getFrameBuffer().getShaderProgramFBO().setUniform("intensity", UploadUniformType.ON_CHANGE, intensity);
+        getFrameBuffer().getShaderProgramFBO().setUniform("color", UploadUniformType.ON_CHANGE, new Vector3f(color.getRedF(), color.getGreenF(), color.getBlueF()));
+        getFrameBuffer().getShaderProgramFBO().setUniform("preserveBrightness", UploadUniformType.ON_CHANGE, preserveBrightness);
 
         super.setUniform(baseGLObject);
     }

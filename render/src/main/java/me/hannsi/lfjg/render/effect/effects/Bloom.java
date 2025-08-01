@@ -3,6 +3,7 @@ package me.hannsi.lfjg.render.effect.effects;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
 public class Bloom extends EffectBase {
     private float intensity = 1f;
@@ -70,9 +71,9 @@ public class Bloom extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
-        getFrameBuffer().getShaderProgramFBO().setUniform("spread", spread);
-        getFrameBuffer().getShaderProgramFBO().setUniform("threshold", threshold);
+        getFrameBuffer().getShaderProgramFBO().setUniform("intensity", UploadUniformType.ON_CHANGE, intensity);
+        getFrameBuffer().getShaderProgramFBO().setUniform("spread", UploadUniformType.ON_CHANGE, spread);
+        getFrameBuffer().getShaderProgramFBO().setUniform("threshold", UploadUniformType.ON_CHANGE, threshold);
 
         super.setUniform(baseGLObject);
     }

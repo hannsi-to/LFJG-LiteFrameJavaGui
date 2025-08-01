@@ -4,6 +4,7 @@ import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector2i;
 import org.joml.Vector3f;
 
@@ -97,13 +98,13 @@ public class Glow extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
-        getFrameBuffer().getShaderProgramFBO().setUniform("threshold", threshold);
-        getFrameBuffer().getShaderProgramFBO().setUniform("spread", spread);
-        getFrameBuffer().getShaderProgramFBO().setUniform("glowColor", new Vector3f(glowColor.getRedF(), glowColor.getGreenF(), glowColor.getBlueF()));
-        getFrameBuffer().getShaderProgramFBO().setUniform("useOriginalColor", useOriginalColor);
-        getFrameBuffer().getShaderProgramFBO().setUniform("glowOnly", glowOnly);
-        getFrameBuffer().getShaderProgramFBO().setUniform("texelSize", resolution);
+        getFrameBuffer().getShaderProgramFBO().setUniform("intensity", UploadUniformType.ON_CHANGE, intensity);
+        getFrameBuffer().getShaderProgramFBO().setUniform("threshold", UploadUniformType.ON_CHANGE, threshold);
+        getFrameBuffer().getShaderProgramFBO().setUniform("spread", UploadUniformType.ON_CHANGE, spread);
+        getFrameBuffer().getShaderProgramFBO().setUniform("glowColor", UploadUniformType.ON_CHANGE, new Vector3f(glowColor.getRedF(), glowColor.getGreenF(), glowColor.getBlueF()));
+        getFrameBuffer().getShaderProgramFBO().setUniform("useOriginalColor", UploadUniformType.ON_CHANGE, useOriginalColor);
+        getFrameBuffer().getShaderProgramFBO().setUniform("glowOnly", UploadUniformType.ON_CHANGE, glowOnly);
+        getFrameBuffer().getShaderProgramFBO().setUniform("texelSize", UploadUniformType.ON_CHANGE, resolution);
 
         super.setUniform(baseGLObject);
     }

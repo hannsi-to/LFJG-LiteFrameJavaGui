@@ -7,6 +7,7 @@ import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -41,10 +42,10 @@ public class SVGRenderer {
     public void flush(int textureId, int textureUnit) {
         shaderProgramFBO.bind();
 
-        shaderProgramFBO.setUniform("projectionMatrix", Core.projection2D.getProjMatrix());
-        shaderProgramFBO.setUniform("modelMatrix", new Matrix4f());
-        shaderProgramFBO.setUniform("viewMatrix", new Matrix4f());
-        shaderProgramFBO.setUniform("textureSampler", textureUnit);
+        shaderProgramFBO.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());
+        shaderProgramFBO.setUniform("modelMatrix", UploadUniformType.PER_FRAME, new Matrix4f());
+        shaderProgramFBO.setUniform("viewMatrix", UploadUniformType.PER_FRAME, new Matrix4f());
+        shaderProgramFBO.setUniform("textureSampler", UploadUniformType.ONCE, textureUnit);
 
         GLStateCache.enable(GL_BLEND);
         GLStateCache.disable(GL_DEPTH_TEST);

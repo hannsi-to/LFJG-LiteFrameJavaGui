@@ -7,6 +7,7 @@ import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -110,12 +111,12 @@ public class TextRenderer {
     public TextRenderer draw() {
         shaderProgram.bind();
 
-        shaderProgram.setUniform("projectionMatrix", Core.projection2D.getProjMatrix());
-        shaderProgram.setUniform("viewMatrix", viewMatrix);
-        shaderProgram.setUniform("modelMatrix", modelMatrix.translate(pos.x(), pos.y(), 0).scale(size, size, 1));
-        shaderProgram.setUniform("uFontAtlas", 0);
-        shaderProgram.setUniform("uFontColor", fontColor);
-        shaderProgram.setUniform("uDistanceRange", (float) textMeshBuilder.getMsdfFont().getAtlas().getDistanceRange());
+        shaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());
+        shaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, viewMatrix);
+        shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix.translate(pos.x(), pos.y(), 0).scale(size, size, 1));
+        shaderProgram.setUniform("uFontAtlas", UploadUniformType.ONCE, 0);
+        shaderProgram.setUniform("uFontColor", UploadUniformType.ON_CHANGE, fontColor);
+        shaderProgram.setUniform("uDistanceRange", UploadUniformType.ONCE, (float) textMeshBuilder.getMsdfFont().getAtlas().getDistanceRange());
 
         GLStateCache.enable(GL_BLEND);
         GLStateCache.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

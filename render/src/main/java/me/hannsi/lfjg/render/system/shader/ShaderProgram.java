@@ -4,7 +4,6 @@ import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
-import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.debug.exceptions.shader.CompilingShaderException;
 import me.hannsi.lfjg.render.debug.exceptions.shader.CreatingShaderException;
@@ -14,7 +13,7 @@ import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.joml.*;
 import org.lwjgl.system.MemoryStack;
 
-import java.nio.FloatBuffer;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +24,7 @@ import static org.lwjgl.opengl.GL20.*;
  */
 public class ShaderProgram {
     private final Map<String, Integer> uniformCache = new HashMap<>();
+    private final Map<String, UniformValue> uniformValues = new HashMap<>();
     private final int programId;
 
     private int vertexShaderId;
@@ -38,6 +38,19 @@ public class ShaderProgram {
         if (programId == 0) {
             throw new CreatingShaderProgramException("Could not create Shader");
         }
+    }
+
+    private static float[] toFloatArray(Object[] values) {
+        float[] result = new float[values.length];
+        for (int i = 0; i < values.length; i++) {
+            Object v = values[i];
+            if (v instanceof Number) {
+                result[i] = ((Number) v).floatValue();
+            } else {
+                throw new IllegalArgumentException("Value is not a number: " + v);
+            }
+        }
+        return result;
     }
 
     /**
@@ -120,156 +133,56 @@ public class ShaderProgram {
         return uniformCache.computeIfAbsent(name, n -> glGetUniformLocation(programId, n));
     }
 
-    /**
-     * Sets a boolean uniform in the shader program.
-     *
-     * @param name  the name of the uniform
-     * @param value the boolean value to set
-     */
-    public void setUniform(String name, boolean value) {
-        glUniform1i(getUniformLocation(name), value ? 1 : 0);
-    }
+    @SuppressWarnings("unchecked")
+    public <T> void setUniform(String name, UploadUniformType updateType, T... values) {
+        UniformValue existing = uniformValues.get(name);
 
-    /**
-     * Sets a Matrix4f uniform in the shader program.
-     *
-     * @param name  the name of the uniform
-     * @param value the Matrix4f value to set
-     */
-    public void setUniform(String name, Matrix4f value) {
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            glUniformMatrix4fv(getUniformLocation(name), false, value.get(stack.mallocFloat(16)));
+        if (existing != null && updateType != UploadUniformType.PER_FRAME && (updateType != UploadUniformType.ON_CHANGE || existing.equalsValues((Object[]) values))) {
+            return;
         }
-    }
 
-    /**
-     * Sets a FloatBuffer uniform in the shader program.
-     *
-     * @param name  the name of the uniform
-     * @param value the FloatBuffer value to set
-     */
-    public void setUniform(String name, FloatBuffer value) {
-        glUniform1fv(getUniformLocation(name), value);
-    }
+        uniformValues.put(name, new UniformValue(updateType, (Object[]) values));
 
-    /**
-     * Sets a float uniform in the shader program.
-     *
-     * @param name  the name of the uniform
-     * @param value the float value to set
-     */
-    public void setUniform(String name, float value) {
-        glUniform1f(getUniformLocation(name), value);
-    }
+        int location = getUniformLocation(name);
 
-    /**
-     * Sets a Vector2f uniform in the shader program.
-     *
-     * @param name  the name of the uniform
-     * @param value the Vector2f value to set
-     */
-    public void setUniform(String name, Vector2f value) {
-        glUniform2f(getUniformLocation(name), value.x, value.y);
-    }
-
-    /**
-     * Sets a 2-component float uniform in the shader program.
-     *
-     * @param name   the name of the uniform
-     * @param value1 the first float value
-     * @param value2 the second float value
-     */
-    public void setUniform(String name, float value1, float value2) {
-        glUniform2f(getUniformLocation(name), value1, value2);
-    }
-
-    /**
-     * Sets a Vector3f uniform in the shader program.
-     *
-     * @param name  the name of the uniform
-     * @param value the Vector3f value to set
-     */
-    public void setUniform(String name, Vector3f value) {
-        glUniform3f(getUniformLocation(name), value.x, value.y, value.z);
-    }
-
-    /**
-     * Sets a 3-component float uniform in the shader program.
-     *
-     * @param name   the name of the uniform
-     * @param value1 the first float value
-     * @param value2 the second float value
-     * @param value3 the third float value
-     */
-    public void setUniform(String name, float value1, float value2, float value3) {
-        glUniform3f(getUniformLocation(name), value1, value2, value3);
-    }
-
-    /**
-     * Sets an integer uniform in the shader program.
-     *
-     * @param name  the name of the uniform
-     * @param value the integer value to set
-     */
-    public void setUniform(String name, int value) {
-        glUniform1i(getUniformLocation(name), value);
-    }
-
-    public void setUniform(String name, int value1, int value2) {
-        glUniform2i(getUniformLocation(name), value1, value2);
-    }
-
-    public void setUniform(String name, int value1, int value2, int value3) {
-        glUniform3i(getUniformLocation(name), value1, value2, value3);
-    }
-
-    public void setUniform(String name, int value1, int value2, int value3, int value4) {
-        glUniform4i(getUniformLocation(name), value1, value2, value3, value4);
-    }
-
-    public void setUniform(String name, Vector2i value) {
-        glUniform2i(getUniformLocation(name), value.x, value.y);
-    }
-
-    public void setUniform(String name, Vector3i value) {
-        glUniform3i(getUniformLocation(name), value.x, value.y, value.z);
-    }
-
-    public void setUniform(String name, Vector4i value) {
-        glUniform4i(getUniformLocation(name), value.x, value.y, value.z, value.w);
-    }
-
-    /**
-     * Sets a Vector4f uniform in the shader program.
-     *
-     * @param name  the name of the uniform
-     * @param value the Vector4f value to set
-     */
-    public void setUniform(String name, Vector4f value) {
-        glUniform4f(getUniformLocation(name), value.x, value.y, value.z, value.w);
-    }
-
-    /**
-     * Sets a 4-component float uniform in the shader program.
-     *
-     * @param name   the name of the uniform
-     * @param value1 the first float value
-     * @param value2 the second float value
-     * @param value3 the third float value
-     * @param value4 the fourth float value
-     */
-    public void setUniform(String name, float value1, float value2, float value3, float value4) {
-        glUniform4f(getUniformLocation(name), value1, value2, value3, value4);
-    }
-
-    /**
-     * Sets a Color uniform in the shader program.
-     *
-     * @param name  the name of the uniform
-     * @param color the Color value to set
-     */
-    public void setUniform(String name, Color color) {
-        glUniform4f(getUniformLocation(name), color.getRedF(), color.getGreenF(), color.getBlueF(), color.getAlphaF());
+        Object first = values[0];
+        if (first instanceof Float) {
+            float[] floatValues = toFloatArray(values);
+            switch (floatValues.length) {
+                case 1 -> glUniform1f(location, floatValues[0]);
+                case 2 -> glUniform2f(location, floatValues[0], floatValues[1]);
+                case 3 -> glUniform3f(location, floatValues[0], floatValues[1], floatValues[2]);
+                case 4 -> glUniform4f(location, floatValues[0], floatValues[1], floatValues[2], floatValues[3]);
+                default -> throw new IllegalArgumentException("Unsupported float uniform size: " + floatValues.length);
+            }
+        } else if (first instanceof Integer) {
+            int[] intValues = Arrays.stream(values).mapToInt(v -> (Integer) v).toArray();
+            switch (intValues.length) {
+                case 1 -> glUniform1i(location, intValues[0]);
+                case 2 -> glUniform2i(location, intValues[0], intValues[1]);
+                case 3 -> glUniform3i(location, intValues[0], intValues[1], intValues[2]);
+                case 4 -> glUniform4i(location, intValues[0], intValues[1], intValues[2], intValues[3]);
+                default -> throw new IllegalArgumentException("Unsupported int uniform size: " + intValues.length);
+            }
+        } else if (first instanceof Matrix4f mat) {
+            try (MemoryStack stack = MemoryStack.stackPush()) {
+                glUniformMatrix4fv(location, false, mat.get(stack.mallocFloat(16)));
+            }
+        } else if (first instanceof Vector2f vec) {
+            glUniform2f(location, vec.x, vec.y);
+        } else if (first instanceof Vector3f vec) {
+            glUniform3f(location, vec.x, vec.y, vec.z);
+        } else if (first instanceof Vector4f vec) {
+            glUniform4f(location, vec.x, vec.y, vec.z, vec.w);
+        } else if (first instanceof Vector2i vec) {
+            glUniform2i(location, vec.x, vec.y);
+        } else if (first instanceof Vector3i vec) {
+            glUniform3i(location, vec.x, vec.y, vec.z);
+        } else if (first instanceof Vector4i vec) {
+            glUniform4i(location, vec.x, vec.y, vec.z, vec.w);
+        } else {
+            throw new IllegalArgumentException("Unsupported uniform value type: " + first.getClass());
+        }
     }
 
     /**

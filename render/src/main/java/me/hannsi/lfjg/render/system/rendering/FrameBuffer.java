@@ -13,6 +13,7 @@ import me.hannsi.lfjg.render.debug.exceptions.texture.CreatingTextureException;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
 
 import java.nio.ByteBuffer;
@@ -216,10 +217,10 @@ public class FrameBuffer {
     public void drawFrameBuffer(int textureUnit) {
         shaderProgramFBO.bind();
 
-        shaderProgramFBO.setUniform("projectionMatrix", Core.projection2D.getProjMatrix());
-        shaderProgramFBO.setUniform("modelMatrix", modelMatrix);
-        shaderProgramFBO.setUniform("viewMatrix", viewMatrix);
-        shaderProgramFBO.setUniform("textureSampler", textureUnit);
+        shaderProgramFBO.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());
+        shaderProgramFBO.setUniform("modelMatrix", UploadUniformType.ON_CHANGE, modelMatrix);
+        shaderProgramFBO.setUniform("viewMatrix", UploadUniformType.ON_CHANGE, viewMatrix);
+        shaderProgramFBO.setUniform("textureSampler", UploadUniformType.ONCE, textureUnit);
 
         GLStateCache.enable(GL_BLEND);
         GLStateCache.disable(GL_DEPTH_TEST);

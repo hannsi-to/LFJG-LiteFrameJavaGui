@@ -3,6 +3,7 @@ package me.hannsi.lfjg.render.effect.effects;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector2i;
 import org.joml.Vector4f;
 
@@ -115,10 +116,10 @@ public class Clipping2DRect extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("resolution", resolution);
-        getFrameBuffer().getShaderProgramFBO().setUniform("clippingRect2DBool", true);
-        getFrameBuffer().getShaderProgramFBO().setUniform("clippingRect2DInvert", invert);
-        getFrameBuffer().getShaderProgramFBO().setUniform("clippingRect2DSize", new Vector4f(x1, y1, x2, y2));
+        getFrameBuffer().getShaderProgramFBO().setUniform("resolution", UploadUniformType.ON_CHANGE, resolution);
+        getFrameBuffer().getShaderProgramFBO().setUniform("clippingRect2DBool", UploadUniformType.ON_CHANGE, true);
+        getFrameBuffer().getShaderProgramFBO().setUniform("clippingRect2DInvert", UploadUniformType.ON_CHANGE, invert);
+        getFrameBuffer().getShaderProgramFBO().setUniform("clippingRect2DSize", UploadUniformType.ON_CHANGE, new Vector4f(x1, y1, x2, y2));
 
         super.setUniform(baseGLObject);
     }
