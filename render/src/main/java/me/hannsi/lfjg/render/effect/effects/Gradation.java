@@ -7,6 +7,7 @@ import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.joml.Vector4f;
@@ -131,16 +132,16 @@ public class Gradation extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("center", new Vector2f(centerX / resolution.x, centerY / resolution.y));
-        getFrameBuffer().getShaderProgramFBO().setUniform("angle", angle);
-        getFrameBuffer().getShaderProgramFBO().setUniform("width", width);
-        getFrameBuffer().getShaderProgramFBO().setUniform("gradientShape", shapeMode.getId());
-        getFrameBuffer().getShaderProgramFBO().setUniform("blendMode", blendType.getId());
-        getFrameBuffer().getShaderProgramFBO().setUniform("startColor", new Vector4f(startColor.getRedF(), startColor.getGreenF(), startColor.getBlueF(), startColor.getAlphaF()));
-        getFrameBuffer().getShaderProgramFBO().setUniform("endColor", new Vector4f(endColor.getRedF(), endColor.getGreenF(), endColor.getBlueF(), endColor.getAlphaF()));
-        getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
+        getFrameBuffer().getShaderProgramFBO().setUniform("center", UploadUniformType.ON_CHANGE, new Vector2f(centerX / resolution.x, centerY / resolution.y));
+        getFrameBuffer().getShaderProgramFBO().setUniform("angle", UploadUniformType.ON_CHANGE, angle);
+        getFrameBuffer().getShaderProgramFBO().setUniform("width", UploadUniformType.ON_CHANGE, width);
+        getFrameBuffer().getShaderProgramFBO().setUniform("gradientShape", UploadUniformType.ON_CHANGE, shapeMode.getId());
+        getFrameBuffer().getShaderProgramFBO().setUniform("blendMode", UploadUniformType.ON_CHANGE, blendType.getId());
+        getFrameBuffer().getShaderProgramFBO().setUniform("startColor", UploadUniformType.ON_CHANGE, new Vector4f(startColor.getRedF(), startColor.getGreenF(), startColor.getBlueF(), startColor.getAlphaF()));
+        getFrameBuffer().getShaderProgramFBO().setUniform("endColor", UploadUniformType.ON_CHANGE, new Vector4f(endColor.getRedF(), endColor.getGreenF(), endColor.getBlueF(), endColor.getAlphaF()));
+        getFrameBuffer().getShaderProgramFBO().setUniform("intensity", UploadUniformType.ON_CHANGE, intensity);
         float aspectRatio = (float) resolution.x() / (float) resolution.y();
-        getFrameBuffer().getShaderProgramFBO().setUniform("aspectRatio", aspectRatio);
+        getFrameBuffer().getShaderProgramFBO().setUniform("aspectRatio", UploadUniformType.ON_CHANGE, aspectRatio);
 
         super.setUniform(baseGLObject);
     }

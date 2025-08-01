@@ -8,6 +8,7 @@ public class TextMeshBuilder {
     private MSDFFont msdfFont;
     private Map<Integer, MSDFFont.Glyph> glyphMap;
     private TextMeshBuilder.TextMesh textMesh;
+    private String text;
 
     TextMeshBuilder() {
 
@@ -25,6 +26,8 @@ public class TextMeshBuilder {
     }
 
     public TextMeshBuilder generateMeshData(String text) {
+        this.text = text;
+
         List<Float> positionList = new ArrayList<>();
         List<Float> uvList = new ArrayList<>();
         float cursorX = 0.0f;
@@ -120,6 +123,14 @@ public class TextMeshBuilder {
 
     public void setTextMesh(TextMesh textMesh) {
         this.textMesh = textMesh;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     public record TextMesh(float[] positions, float[] uvs) {

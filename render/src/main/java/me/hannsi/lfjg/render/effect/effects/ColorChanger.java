@@ -4,6 +4,7 @@ import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
 public class ColorChanger extends EffectBase {
     private boolean alpha = false;
@@ -56,9 +57,9 @@ public class ColorChanger extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("alpha", alpha);
-        getFrameBuffer().getShaderProgramFBO().setUniform("targetColor", targetColor);
-        getFrameBuffer().getShaderProgramFBO().setUniform("newColor", newColor);
+        getFrameBuffer().getShaderProgramFBO().setUniform("alpha", UploadUniformType.ON_CHANGE, alpha);
+        getFrameBuffer().getShaderProgramFBO().setUniform("targetColor", UploadUniformType.ON_CHANGE, targetColor);
+        getFrameBuffer().getShaderProgramFBO().setUniform("newColor", UploadUniformType.ON_CHANGE, newColor);
 
         super.setUniform(baseGLObject);
     }

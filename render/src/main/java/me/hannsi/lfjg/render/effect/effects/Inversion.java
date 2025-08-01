@@ -3,6 +3,7 @@ package me.hannsi.lfjg.render.effect.effects;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
 public class Inversion extends EffectBase {
     private boolean flipVertical = true;
@@ -64,11 +65,11 @@ public class Inversion extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("flipVertical", flipVertical);
-        getFrameBuffer().getShaderProgramFBO().setUniform("flipHorizontal", flipHorizontal);
-        getFrameBuffer().getShaderProgramFBO().setUniform("invertBrightness", invertBrightness);
-        getFrameBuffer().getShaderProgramFBO().setUniform("invertHue", invertHue);
-        getFrameBuffer().getShaderProgramFBO().setUniform("invertAlpha", invertAlpha);
+        getFrameBuffer().getShaderProgramFBO().setUniform("flipVertical", UploadUniformType.ON_CHANGE, flipVertical);
+        getFrameBuffer().getShaderProgramFBO().setUniform("flipHorizontal", UploadUniformType.ON_CHANGE, flipHorizontal);
+        getFrameBuffer().getShaderProgramFBO().setUniform("invertBrightness", UploadUniformType.ON_CHANGE, invertBrightness);
+        getFrameBuffer().getShaderProgramFBO().setUniform("invertHue", UploadUniformType.ON_CHANGE, invertHue);
+        getFrameBuffer().getShaderProgramFBO().setUniform("invertAlpha", UploadUniformType.ON_CHANGE, invertAlpha);
 
         super.setUniform(baseGLObject);
     }

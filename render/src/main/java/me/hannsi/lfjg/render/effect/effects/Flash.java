@@ -5,6 +5,7 @@ import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.joml.Vector3f;
@@ -93,11 +94,11 @@ public class Flash extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("screenSize", resolution);
-        getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
-        getFrameBuffer().getShaderProgramFBO().setUniform("screenPosition", new Vector2f(x, y));
-        getFrameBuffer().getShaderProgramFBO().setUniform("blendMode", flashBlendMode.getId());
-        getFrameBuffer().getShaderProgramFBO().setUniform("lightColor", new Vector3f(lightColor.getRedF(), lightColor.getGreenF(), lightColor.getBlueF()));
+        getFrameBuffer().getShaderProgramFBO().setUniform("screenSize", UploadUniformType.ON_CHANGE, resolution);
+        getFrameBuffer().getShaderProgramFBO().setUniform("intensity", UploadUniformType.ON_CHANGE, intensity);
+        getFrameBuffer().getShaderProgramFBO().setUniform("screenPosition", UploadUniformType.ON_CHANGE, new Vector2f(x, y));
+        getFrameBuffer().getShaderProgramFBO().setUniform("blendMode", UploadUniformType.ON_CHANGE, flashBlendMode.getId());
+        getFrameBuffer().getShaderProgramFBO().setUniform("lightColor", UploadUniformType.ON_CHANGE, new Vector3f(lightColor.getRedF(), lightColor.getGreenF(), lightColor.getBlueF()));
 
         super.setUniform(baseGLObject);
     }

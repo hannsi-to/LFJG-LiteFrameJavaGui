@@ -3,6 +3,7 @@ package me.hannsi.lfjg.render.effect.effects;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
 public class ColorCorrection extends EffectBase {
     private float brightness = 0.5f;
@@ -101,10 +102,10 @@ public class ColorCorrection extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("brightness", brightness);
-        getFrameBuffer().getShaderProgramFBO().setUniform("contrast", contrast);
-        getFrameBuffer().getShaderProgramFBO().setUniform("saturation", saturation);
-        getFrameBuffer().getShaderProgramFBO().setUniform("hue", hue);
+        getFrameBuffer().getShaderProgramFBO().setUniform("brightness", UploadUniformType.ON_CHANGE, brightness);
+        getFrameBuffer().getShaderProgramFBO().setUniform("contrast", UploadUniformType.ON_CHANGE, contrast);
+        getFrameBuffer().getShaderProgramFBO().setUniform("saturation", UploadUniformType.ON_CHANGE, saturation);
+        getFrameBuffer().getShaderProgramFBO().setUniform("hue", UploadUniformType.ON_CHANGE, hue);
 
         super.setUniform(baseGLObject);
     }

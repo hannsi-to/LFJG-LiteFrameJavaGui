@@ -5,6 +5,7 @@ import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
 public class ChromaticAberration extends EffectBase {
     private float offsetAmount = 0.008f;
@@ -85,10 +86,10 @@ public class ChromaticAberration extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("offsetAmount", offsetAmount);
-        getFrameBuffer().getShaderProgramFBO().setUniform("angle", angle);
-        getFrameBuffer().getShaderProgramFBO().setUniform("strength", strength);
-        getFrameBuffer().getShaderProgramFBO().setUniform("aberrationType", aberrationType.getId());
+        getFrameBuffer().getShaderProgramFBO().setUniform("offsetAmount", UploadUniformType.ON_CHANGE, offsetAmount);
+        getFrameBuffer().getShaderProgramFBO().setUniform("angle", UploadUniformType.ON_CHANGE, angle);
+        getFrameBuffer().getShaderProgramFBO().setUniform("strength", UploadUniformType.ON_CHANGE, strength);
+        getFrameBuffer().getShaderProgramFBO().setUniform("aberrationType", UploadUniformType.ON_CHANGE, aberrationType.getId());
         super.setUniform(baseGLObject);
     }
 

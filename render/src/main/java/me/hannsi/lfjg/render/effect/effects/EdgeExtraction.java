@@ -4,6 +4,7 @@ import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector4f;
 
 public class EdgeExtraction extends EffectBase {
@@ -79,11 +80,11 @@ public class EdgeExtraction extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("edgeStrength", edgeStrength);
-        getFrameBuffer().getShaderProgramFBO().setUniform("threshold", threshold);
-        getFrameBuffer().getShaderProgramFBO().setUniform("enableLuminanceEdge", enableLuminanceEdge);
-        getFrameBuffer().getShaderProgramFBO().setUniform("enableAlphaEdge", enableAlphaEdge);
-        getFrameBuffer().getShaderProgramFBO().setUniform("edgeColor", new Vector4f(edgeColor.getRedF(), edgeColor.getGreenF(), edgeColor.getBlueF(), edgeColor.getAlphaF()));
+        getFrameBuffer().getShaderProgramFBO().setUniform("edgeStrength", UploadUniformType.ON_CHANGE, edgeStrength);
+        getFrameBuffer().getShaderProgramFBO().setUniform("threshold", UploadUniformType.ON_CHANGE, threshold);
+        getFrameBuffer().getShaderProgramFBO().setUniform("enableLuminanceEdge", UploadUniformType.ON_CHANGE, enableLuminanceEdge);
+        getFrameBuffer().getShaderProgramFBO().setUniform("enableAlphaEdge", UploadUniformType.ON_CHANGE, enableAlphaEdge);
+        getFrameBuffer().getShaderProgramFBO().setUniform("edgeColor", UploadUniformType.ON_CHANGE, new Vector4f(edgeColor.getRedF(), edgeColor.getGreenF(), edgeColor.getBlueF(), edgeColor.getAlphaF()));
 
         super.setUniform(baseGLObject);
     }

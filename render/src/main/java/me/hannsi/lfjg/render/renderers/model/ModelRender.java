@@ -14,6 +14,7 @@ import me.hannsi.lfjg.render.system.model.ModelCache;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
 import java.util.Collection;
 import java.util.List;
@@ -64,16 +65,16 @@ public class ModelRender {
 
         shaderProgram.bind();
 
-        shaderProgram.setUniform("textureSampler", 0);
-        shaderProgram.setUniform("projectionMatrix", Core.projection3D.getProjMatrix());
-        shaderProgram.setUniform("viewMatrix", camera.getViewMatrix());
+        shaderProgram.setUniform("textureSampler", UploadUniformType.ONCE, 0);
+        shaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection3D.getProjMatrix());
+        shaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, camera.getViewMatrix());
 
         Collection<Model> models = modelCache.getModels().values();
         for (Model model : models) {
             List<Entity> entities = model.getEntities();
 
             for (Material material : model.getMaterials()) {
-                shaderProgram.setUniform("materialType", material.getMaterialType().getId());
+                shaderProgram.setUniform("materialType", UploadUniformType.PER_FRAME, material.getMaterialType().getId());
 
                 switch (material.getMaterialType()) {
                     case NO_MATERIAL, COLOR -> {
@@ -97,7 +98,7 @@ public class ModelRender {
 
                 for (Mesh mesh : material.getMeshes()) {
                     for (Entity entity : entities) {
-                        shaderProgram.setUniform("modelMatrix", entity.getModelMatrix());
+                        shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, entity.getModelMatrix());
                         vaoRendering.draw(mesh, GL_TRIANGLES);
                     }
                 }

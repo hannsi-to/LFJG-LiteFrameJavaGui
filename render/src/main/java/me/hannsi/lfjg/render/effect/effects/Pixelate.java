@@ -3,6 +3,7 @@ package me.hannsi.lfjg.render.effect.effects;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector2i;
 
 public class Pixelate extends EffectBase {
@@ -55,8 +56,8 @@ public class Pixelate extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("resolution", resolution);
-        getFrameBuffer().getShaderProgramFBO().setUniform("mosaicSize", mosaicSize);
+        getFrameBuffer().getShaderProgramFBO().setUniform("resolution", UploadUniformType.ON_CHANGE, resolution);
+        getFrameBuffer().getShaderProgramFBO().setUniform("mosaicSize", UploadUniformType.ON_CHANGE, mosaicSize);
 
         super.setUniform(baseGLObject);
     }

@@ -5,6 +5,7 @@ import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
 public class ObjectClipping extends EffectBase {
     private final GLObjectCache glObjectCache;
@@ -68,8 +69,8 @@ public class ObjectClipping extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("clippingTextureSampler", 1);
-        getFrameBuffer().getShaderProgramFBO().setUniform("invert", invert);
+        getFrameBuffer().getShaderProgramFBO().setUniform("clippingTextureSampler", UploadUniformType.ON_CHANGE, 1);
+        getFrameBuffer().getShaderProgramFBO().setUniform("invert", UploadUniformType.ON_CHANGE, invert);
 
         super.setUniform(baseGLObject);
     }

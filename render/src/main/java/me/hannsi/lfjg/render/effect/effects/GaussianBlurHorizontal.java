@@ -4,6 +4,7 @@ import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.lwjgl.BufferUtils;
@@ -60,16 +61,16 @@ public class GaussianBlurHorizontal extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("direction", new Vector2f(1, 0));
-        getFrameBuffer().getShaderProgramFBO().setUniform("radius", radiusX);
-        getFrameBuffer().getShaderProgramFBO().setUniform("texelSize", new Vector2f(1.0f / resolution.x(), 1.0f / resolution.y()));
+        getFrameBuffer().getShaderProgramFBO().setUniform("direction", UploadUniformType.ON_CHANGE, new Vector2f(1, 0));
+        getFrameBuffer().getShaderProgramFBO().setUniform("radius", UploadUniformType.ON_CHANGE, radiusX);
+        getFrameBuffer().getShaderProgramFBO().setUniform("texelSize", UploadUniformType.ON_CHANGE, new Vector2f(1.0f / resolution.x(), 1.0f / resolution.y()));
 
         final FloatBuffer weightBuffer = BufferUtils.createFloatBuffer(256);
         for (int i = 0; i < radiusX; i++) {
             weightBuffer.put(MathHelper.calculateGaussianValue(i, radiusX / 2));
         }
         weightBuffer.rewind();
-        getFrameBuffer().getShaderProgramFBO().setUniform("values", weightBuffer);
+        getFrameBuffer().getShaderProgramFBO().setUniform("values", UploadUniformType.ON_CHANGE, weightBuffer);
 
         super.setUniform(baseGLObject);
     }

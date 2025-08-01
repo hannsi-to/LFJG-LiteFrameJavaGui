@@ -7,6 +7,7 @@ import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -71,35 +72,12 @@ public class TextRenderer {
     }
 
     public TextRenderer init() {
-        MSDFFont.Glyph glyph = textMeshBuilder.getGlyphMap().get((int) c);
-        if (glyph == null) {
-            throw new IllegalArgumentException(c + " glyph not found in map!");
+        if (textMeshBuilder.getTextMesh() == null) {
+            throw new IllegalStateException("TextMesh not generated. Call generateMeshData(text) first.");
         }
 
-        var plane = glyph.getPlaneBounds();
-        var atlas = glyph.getAtlasBounds();
-        int texWidth = textMeshBuilder.getMsdfFont().getAtlas().getWidth();
-        int texHeight = textMeshBuilder.getMsdfFont().getAtlas().getHeight();
-
-        float x0 = (float) plane.getLeft();
-        float y0 = (float) plane.getBottom();
-        float x1 = (float) plane.getRight();
-        float y1 = (float) plane.getTop();
-
-        float u0 = (float) (atlas.getLeft() / texWidth);
-        float v0 = (float) (atlas.getBottom() / texHeight);
-        float u1 = (float) (atlas.getRight() / texWidth);
-        float v1 = (float) (atlas.getTop() / texHeight);
-
-        float[] positions = {
-                x0, y0, x1, y0, x1, y1,
-                x1, y1, x0, y1, x0, y0
-        };
-
-        float[] uvs = {
-                u0, v0, u1, v0, u1, v1,
-                u1, v1, u0, v1, u0, v0
-        };
+        float[] positions = textMeshBuilder.getTextMesh().positions();
+        float[] uvs = textMeshBuilder.getTextMesh().uvs();
 
         mesh.createBufferObject2D(positions, null, uvs)
                 .builderClose();
@@ -110,12 +88,12 @@ public class TextRenderer {
     public TextRenderer draw() {
         shaderProgram.bind();
 
-        shaderProgram.setUniform("projectionMatrix", Core.projection2D.getProjMatrix());
-        shaderProgram.setUniform("viewMatrix", viewMatrix);
-        shaderProgram.setUniform("modelMatrix", modelMatrix.translate(pos.x(), pos.y(), 0).scale(size, size, 1));
-        shaderProgram.setUniform("uFontAtlas", 0);
-        shaderProgram.setUniform("uFontColor", fontColor);
-        shaderProgram.setUniform("uDistanceRange", (float) textMeshBuilder.getMsdfFont().getAtlas().getDistanceRange());
+        shaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());
+        shaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, viewMatrix);
+        shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix.translate(pos.x(), pos.y(), 0).scale(size, size, 1));
+        shaderProgram.setUniform("uFontAtlas", UploadUniformType.ONCE, 0);
+        shaderProgram.setUniform("uFontColor", UploadUniformType.ON_CHANGE, fontColor);
+        shaderProgram.setUniform("uDistanceRange", UploadUniformType.ONCE, (float) textMeshBuilder.getMsdfFont().getAtlas().getDistanceRange());
 
         GLStateCache.enable(GL_BLEND);
         GLStateCache.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

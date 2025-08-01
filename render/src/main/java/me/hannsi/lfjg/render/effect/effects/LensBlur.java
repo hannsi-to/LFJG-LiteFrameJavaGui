@@ -3,6 +3,7 @@ package me.hannsi.lfjg.render.effect.effects;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
 public class LensBlur extends EffectBase {
     private float range = 20f;
@@ -79,11 +80,11 @@ public class LensBlur extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("range", range);
-        getFrameBuffer().getShaderProgramFBO().setUniform("intensity", intensity);
-        getFrameBuffer().getShaderProgramFBO().setUniform("sigma", sigma);
-        getFrameBuffer().getShaderProgramFBO().setUniform("radialSteps", radialSteps);
-        getFrameBuffer().getShaderProgramFBO().setUniform("angularSamples", angularSamples);
+        getFrameBuffer().getShaderProgramFBO().setUniform("range", UploadUniformType.ON_CHANGE, range);
+        getFrameBuffer().getShaderProgramFBO().setUniform("intensity", UploadUniformType.ON_CHANGE, intensity);
+        getFrameBuffer().getShaderProgramFBO().setUniform("sigma", UploadUniformType.ON_CHANGE, sigma);
+        getFrameBuffer().getShaderProgramFBO().setUniform("radialSteps", UploadUniformType.ON_CHANGE, radialSteps);
+        getFrameBuffer().getShaderProgramFBO().setUniform("angularSamples", UploadUniformType.ON_CHANGE, angularSamples);
 
         super.setUniform(baseGLObject);
     }

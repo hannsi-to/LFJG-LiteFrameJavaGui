@@ -6,7 +6,11 @@ import java.util.Map;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL14.glBlendEquation;
+import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL20.glUseProgram;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 
 public class GLStateCache {
     private static final Map<Integer, Boolean> STATE_CACHE = new HashMap<>();
@@ -16,6 +20,9 @@ public class GLStateCache {
     private static int lastActiveTexture = -1;
     private static int lastTextureId = -1;
     private static int lastShaderProgram = -1;
+    private static int lastVertexArray = -1;
+    private static int lastDrawIndirectBuffer = -1;
+    private static int lastElementArrayBuffer = -1;
 
     public static void enable(int cap) {
         Boolean enabled = STATE_CACHE.get(cap);
@@ -66,6 +73,27 @@ public class GLStateCache {
         if (lastShaderProgram != program) {
             glUseProgram(program);
             lastShaderProgram = program;
+        }
+    }
+
+    public static void bindVertexArray(int array) {
+        if (lastVertexArray != array) {
+            glBindVertexArray(array);
+            lastVertexArray = array;
+        }
+    }
+
+    public static void bindIndirectBuffer(int buffer) {
+        if (lastDrawIndirectBuffer != buffer) {
+            glBindBuffer(GL_DRAW_INDIRECT_BUFFER, buffer);
+            lastDrawIndirectBuffer = buffer;
+        }
+    }
+
+    public static void bindElementArrayBuffer(int buffer) {
+        if (lastElementArrayBuffer != buffer) {
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+            lastElementArrayBuffer = buffer;
         }
     }
 }

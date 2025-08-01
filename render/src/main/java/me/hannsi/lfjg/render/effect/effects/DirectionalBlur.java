@@ -4,6 +4,7 @@ import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
 public class DirectionalBlur extends EffectBase {
     private float radius = 10f;
@@ -62,8 +63,8 @@ public class DirectionalBlur extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("radius", radius * 10);
-        getFrameBuffer().getShaderProgramFBO().setUniform("angle", angle);
+        getFrameBuffer().getShaderProgramFBO().setUniform("radius", UploadUniformType.ON_CHANGE, radius * 10);
+        getFrameBuffer().getShaderProgramFBO().setUniform("angle", UploadUniformType.ON_CHANGE, angle);
 
         super.setUniform(baseGLObject);
     }

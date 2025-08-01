@@ -4,6 +4,7 @@ import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
 public class LuminanceKey extends EffectBase {
     private float threshold = 0.6f;
@@ -66,9 +67,9 @@ public class LuminanceKey extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("threshold", threshold);
-        getFrameBuffer().getShaderProgramFBO().setUniform("blurAmount", blurAmount);
-        getFrameBuffer().getShaderProgramFBO().setUniform("mode", luminanceMode.getId());
+        getFrameBuffer().getShaderProgramFBO().setUniform("threshold", UploadUniformType.ON_CHANGE, threshold);
+        getFrameBuffer().getShaderProgramFBO().setUniform("blurAmount", UploadUniformType.ON_CHANGE, blurAmount);
+        getFrameBuffer().getShaderProgramFBO().setUniform("mode", UploadUniformType.ON_CHANGE, luminanceMode.getId());
 
         super.setUniform(baseGLObject);
     }

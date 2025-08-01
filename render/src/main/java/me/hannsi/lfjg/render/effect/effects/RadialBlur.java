@@ -3,6 +3,7 @@ package me.hannsi.lfjg.render.effect.effects;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector2i;
 
 public class RadialBlur extends EffectBase {
@@ -74,9 +75,9 @@ public class RadialBlur extends EffectBase {
 
     @Override
     public void setUniform(GLObject baseGLObject) {
-        getFrameBuffer().getShaderProgramFBO().setUniform("range", range);
-        getFrameBuffer().getShaderProgramFBO().setUniform("centerX", centerX / resolution.x);
-        getFrameBuffer().getShaderProgramFBO().setUniform("centerY", centerY / resolution.y);
+        getFrameBuffer().getShaderProgramFBO().setUniform("range", UploadUniformType.ON_CHANGE, range);
+        getFrameBuffer().getShaderProgramFBO().setUniform("centerX", UploadUniformType.ON_CHANGE, centerX / resolution.x);
+        getFrameBuffer().getShaderProgramFBO().setUniform("centerY", UploadUniformType.ON_CHANGE, centerY / resolution.y);
 
         super.setUniform(baseGLObject);
     }
