@@ -165,7 +165,7 @@ public class GLObject implements Cloneable {
             glPointSize(pointSize);
         }
 
-        GLStateCache.setBlendFunc(blendType.getSfactor(), blendType.getDfactor());
+        GLStateCache.blendFunc(blendType.getSfactor(), blendType.getDfactor());
         GLStateCache.setBlendEquation(blendType.getEquation());
         GLStateCache.enable(GL_BLEND);
         GLStateCache.disable(GL_DEPTH_TEST);

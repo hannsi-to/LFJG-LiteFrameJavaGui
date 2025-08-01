@@ -4,13 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL14.glBlendEquation;
+import static org.lwjgl.opengl.GL20.glUseProgram;
 
 public class GLStateCache {
     private static final Map<Integer, Boolean> STATE_CACHE = new HashMap<>();
     private static int lastBlendSrc = -1;
     private static int lastBlendDst = -1;
     private static int lastBlendEquation = -1;
+    private static int lastActiveTexture = -1;
+    private static int lastTextureId = -1;
+    private static int lastShaderProgram = -1;
 
     public static void enable(int cap) {
         Boolean enabled = STATE_CACHE.get(cap);
@@ -28,7 +33,7 @@ public class GLStateCache {
         }
     }
 
-    public static void setBlendFunc(int sFactor, int dFactor) {
+    public static void blendFunc(int sFactor, int dFactor) {
         if (lastBlendSrc != sFactor || lastBlendDst != dFactor) {
             glBlendFunc(sFactor, dFactor);
             lastBlendSrc = sFactor;
@@ -40,6 +45,27 @@ public class GLStateCache {
         if (lastBlendEquation != equation) {
             glBlendEquation(equation);
             lastBlendEquation = equation;
+        }
+    }
+
+    public static void activeTexture(int texture) {
+        if (lastActiveTexture != texture) {
+            glActiveTexture(texture);
+            lastActiveTexture = texture;
+        }
+    }
+
+    public static void bindTexture(int target, int texture) {
+        if (lastTextureId != texture) {
+            glBindTexture(target, texture);
+            lastTextureId = texture;
+        }
+    }
+
+    public static void useProgram(int program) {
+        if (lastShaderProgram != program) {
+            glUseProgram(program);
+            lastShaderProgram = program;
         }
     }
 }

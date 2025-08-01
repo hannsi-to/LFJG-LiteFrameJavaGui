@@ -13,7 +13,6 @@ import org.joml.Vector3f;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 public class TextRenderer {
     protected ShaderProgram shaderProgram;
@@ -118,13 +117,17 @@ public class TextRenderer {
         shaderProgram.setUniform("uFontColor", fontColor);
         shaderProgram.setUniform("uDistanceRange", (float) textMeshBuilder.getMsdfFont().getAtlas().getDistanceRange());
 
+        GLStateCache.enable(GL_BLEND);
+        GLStateCache.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         GLStateCache.enable(GL_TEXTURE_2D);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, msdfTextureLoader.textureId);
+        GLStateCache.activeTexture(GL_TEXTURE0);
+        GLStateCache.bindTexture(GL_TEXTURE_2D, msdfTextureLoader.textureId);
 
         vaoRendering.draw(mesh, GL_TRIANGLES);
 
         shaderProgram.unbind();
+
+        modelMatrix.identity();
 
         return this;
     }

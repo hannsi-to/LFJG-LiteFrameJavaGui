@@ -19,58 +19,59 @@ import static org.lwjgl.opengl.GL43.glMultiDrawElementsIndirect;
  * Handles rendering of VAOs (Vertex Array Objects) in the OpenGL rendering system.
  */
 public class VAORendering {
-    /**
-     * Draws the specified GLObject using its associated VAO.
-     *
-     * @param glObject the GLObject to draw
-     */
     public void draw(GLObject glObject) {
         draw(glObject.getMesh(), glObject.getDrawType().getId());
     }
 
-    /**
-     * Draws the specified Mesh using its associated VAO.
-     *
-     * @param mesh the Mesh to draw;
-     */
     public void draw(Mesh mesh) {
         draw(mesh, GL30.GL_POLYGON);
     }
 
     public void draw(Mesh mesh, int drawType) {
-        glBindVertexArray(mesh.getVaoId());
+        int vaoId = mesh.getVaoId();
+        glBindVertexArray(vaoId);
+
         mesh.startFrame();
+
         if (mesh.isUseIndirect()) {
             drawIndirect(mesh, drawType);
         } else {
             drawDirect(mesh, drawType);
         }
+
         mesh.endFrame();
     }
 
     private void drawIndirect(Mesh mesh, int drawType) {
-        glBindBuffer(GL_DRAW_INDIRECT_BUFFER, mesh.getIboId().getBufferId());
+        int indirectBufferId = mesh.getIboId().getBufferId();
+        glBindBuffer(GL_DRAW_INDIRECT_BUFFER, indirectBufferId);
 
         if (mesh.isUseElementBufferObject()) {
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.getEboId().getBufferId());
+            int eboId = mesh.getEboId().getBufferId();
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboId);
 
-            if (mesh.getDrawCommandCount() > 1) {
-                glMultiDrawElementsIndirect(drawType, GL_UNSIGNED_INT, 0, mesh.getDrawCommandCount(), 0);
+            int commandCount = mesh.getDrawCommandCount();
+            if (commandCount > 1) {
+                glMultiDrawElementsIndirect(drawType, GL_UNSIGNED_INT, 0, commandCount, 0);
             } else {
                 glDrawElementsIndirect(drawType, GL_UNSIGNED_INT, 0);
             }
         } else {
-            if (mesh.getDrawCommandCount() > 1) {
-                glMultiDrawArraysIndirect(drawType, 0, mesh.getDrawCommandCount(), 0);
+            int commandCount = mesh.getDrawCommandCount();
+            if (commandCount > 1) {
+                glMultiDrawArraysIndirect(drawType, 0, commandCount, 0);
             } else {
                 glDrawArraysIndirect(drawType, 0);
             }
         }
+
+        glBindBuffer(GL_DRAW_INDIRECT_BUFFER, 0);
     }
 
     private void drawDirect(Mesh mesh, int drawType) {
         if (mesh.isUseElementBufferObject()) {
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.getEboId().getBufferId());
+            int eboId = mesh.getEboId().getBufferId();
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboId);
             glDrawElements(drawType, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
         } else {
             glDrawArrays(drawType, 0, mesh.getCount());
@@ -78,10 +79,7 @@ public class VAORendering {
     }
 
     public void cleanup() {
-        new LogGenerator(
-                LogGenerateType.CLEANUP,
-                getClass(),
-                hashCode(), ""
-        ).logging(DebugLevel.DEBUG);
+        new LogGenerator(LogGenerateType.CLEANUP, getClass(), hashCode(), "")
+                .logging(DebugLevel.DEBUG);
     }
 }
