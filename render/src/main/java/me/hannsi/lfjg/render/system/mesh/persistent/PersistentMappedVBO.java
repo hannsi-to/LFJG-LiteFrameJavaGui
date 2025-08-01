@@ -12,7 +12,6 @@ import static org.lwjgl.opengl.GL44.*;
 public class PersistentMappedVBO implements PersistentMappedBuffer {
     private final int[] bufferIds = new int[DEFAULT_BUFFER_COUNT];
     private final FloatBuffer[] mappedBuffers = new FloatBuffer[DEFAULT_BUFFER_COUNT];
-    private final long[] fenceSyncs = new long[DEFAULT_BUFFER_COUNT];
     private final int sizeInBytes;
 
     private int currentIndex = 0;
@@ -38,8 +37,6 @@ public class PersistentMappedVBO implements PersistentMappedBuffer {
     }
 
     public PersistentMappedVBO update(float[] newData) {
-        waitForGPU(currentIndex);
-
         FloatBuffer buffer = mappedBuffers[currentIndex];
         if (newData.length > buffer.capacity()) {
             throw new IllegalArgumentException("Data exceeds buffer capacity.");
@@ -53,18 +50,6 @@ public class PersistentMappedVBO implements PersistentMappedBuffer {
         return this;
     }
 
-    private void waitForGPU(int index) {
-        long fence = fenceSyncs[index];
-        if (fence != 0L) {
-            int waitResult = glClientWaitSync(fence, GL_SYNC_FLUSH_COMMANDS_BIT, 1_000_000);
-            if (waitResult == GL_TIMEOUT_EXPIRED) {
-                System.err.println("GPU still processing buffer " + index + ", consider blocking or skipping.");
-            }
-            glDeleteSync(fence);
-            fenceSyncs[index] = 0L;
-        }
-    }
-
     public PersistentMappedVBO attribute(AttributeType attributeType) {
         int bufferId = bufferIds[currentIndex];
         glBindBuffer(GL_ARRAY_BUFFER, bufferId);
@@ -74,21 +59,12 @@ public class PersistentMappedVBO implements PersistentMappedBuffer {
     }
 
     public void finishFrame() {
-        if (fenceSyncs[currentIndex] != 0L) {
-            glDeleteSync(fenceSyncs[currentIndex]);
-        }
-
-        fenceSyncs[currentIndex] = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
-
         currentIndex = (currentIndex + 1) % DEFAULT_BUFFER_COUNT;
     }
 
     @Override
     public void cleanup() {
         for (int i = 0; i < DEFAULT_BUFFER_COUNT; i++) {
-            if (fenceSyncs[i] != 0L) {
-                glDeleteSync(fenceSyncs[i]);
-            }
             glDeleteBuffers(bufferIds[i]);
         }
     }
@@ -99,10 +75,6 @@ public class PersistentMappedVBO implements PersistentMappedBuffer {
 
     public FloatBuffer[] getMappedBuffers() {
         return mappedBuffers;
-    }
-
-    public long[] getFenceSyncs() {
-        return fenceSyncs;
     }
 
     public int getSizeInBytes() {

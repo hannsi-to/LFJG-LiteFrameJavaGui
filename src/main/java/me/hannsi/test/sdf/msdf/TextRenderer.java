@@ -19,6 +19,11 @@ public class TextRenderer {
     protected ShaderProgram shaderProgram;
     protected Mesh mesh;
     protected VAORendering vaoRendering;
+
+    private Matrix4f viewMatrix = new Matrix4f();
+    private Vector3f fontColor = new Vector3f(1, 1, 1);
+    private Matrix4f modelMatrix = new Matrix4f();
+
     private MSDFTextureLoader msdfTextureLoader;
     private TextMeshBuilder textMeshBuilder;
     private char c;
@@ -32,7 +37,9 @@ public class TextRenderer {
         this.shaderProgram.link();
 
         this.vaoRendering = new VAORendering();
-        this.mesh = Mesh.createMesh();
+        this.mesh = Mesh.createMesh()
+                .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
+                .useElementBufferObject(false);
     }
 
     public static TextRenderer createTextRender() {
@@ -70,42 +77,32 @@ public class TextRenderer {
             throw new IllegalArgumentException(c + " glyph not found in map!");
         }
 
-        float x0 = (float) glyph.getPlaneBounds().getLeft();
-        float y0 = (float) glyph.getPlaneBounds().getBottom();
-        float x1 = (float) glyph.getPlaneBounds().getRight();
-        float y1 = (float) glyph.getPlaneBounds().getTop();
-
+        var plane = glyph.getPlaneBounds();
+        var atlas = glyph.getAtlasBounds();
         int texWidth = textMeshBuilder.getMsdfFont().getAtlas().getWidth();
         int texHeight = textMeshBuilder.getMsdfFont().getAtlas().getHeight();
 
-        float u0 = (float) (glyph.getAtlasBounds().getLeft() / texWidth);
-        float v0 = (float) (glyph.getAtlasBounds().getBottom() / texHeight);
-        float u1 = (float) (glyph.getAtlasBounds().getRight() / texWidth);
-        float v1 = (float) (glyph.getAtlasBounds().getTop() / texHeight);
+        float x0 = (float) plane.getLeft();
+        float y0 = (float) plane.getBottom();
+        float x1 = (float) plane.getRight();
+        float y1 = (float) plane.getTop();
+
+        float u0 = (float) (atlas.getLeft() / texWidth);
+        float v0 = (float) (atlas.getBottom() / texHeight);
+        float u1 = (float) (atlas.getRight() / texWidth);
+        float v1 = (float) (atlas.getTop() / texHeight);
 
         float[] positions = {
-                x0, y0,
-                x1, y0,
-                x1, y1,
-
-                x1, y1,
-                x0, y1,
-                x0, y0
+                x0, y0, x1, y0, x1, y1,
+                x1, y1, x0, y1, x0, y0
         };
 
         float[] uvs = {
-                u0, v0,
-                u1, v0,
-                u1, v1,
-
-                u1, v1,
-                u0, v1,
-                u0, v0
+                u0, v0, u1, v0, u1, v1,
+                u1, v1, u0, v1, u0, v0
         };
 
-        mesh.projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
-                .useElementBufferObject(false)
-                .createBufferObject2D(positions, null, uvs)
+        mesh.createBufferObject2D(positions, null, uvs)
                 .builderClose();
 
         return this;
@@ -115,24 +112,84 @@ public class TextRenderer {
         shaderProgram.bind();
 
         shaderProgram.setUniform("projectionMatrix", Core.projection2D.getProjMatrix());
-        shaderProgram.setUniform("viewMatrix", new Matrix4f());
-        shaderProgram.setUniform("modelMatrix", new Matrix4f().translate(pos.x(), pos.y(), 0).scale(size, size, 1));
+        shaderProgram.setUniform("viewMatrix", viewMatrix);
+        shaderProgram.setUniform("modelMatrix", modelMatrix.translate(pos.x(), pos.y(), 0).scale(size, size, 1));
         shaderProgram.setUniform("uFontAtlas", 0);
-        shaderProgram.setUniform("uFontColor", new Vector3f(1, 1, 1));
+        shaderProgram.setUniform("uFontColor", fontColor);
         shaderProgram.setUniform("uDistanceRange", (float) textMeshBuilder.getMsdfFont().getAtlas().getDistanceRange());
 
-        GLStateCache.enable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         GLStateCache.enable(GL_TEXTURE_2D);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, msdfTextureLoader.textureId);
 
         vaoRendering.draw(mesh, GL_TRIANGLES);
 
-        glBindTexture(GL_TEXTURE_2D, 0);
-
         shaderProgram.unbind();
 
         return this;
+    }
+
+    public Matrix4f getViewMatrix() {
+        return viewMatrix;
+    }
+
+    public void setViewMatrix(Matrix4f viewMatrix) {
+        this.viewMatrix = viewMatrix;
+    }
+
+    public Vector3f getFontColor() {
+        return fontColor;
+    }
+
+    public void setFontColor(Vector3f fontColor) {
+        this.fontColor = fontColor;
+    }
+
+    public Matrix4f getModelMatrix() {
+        return modelMatrix;
+    }
+
+    public void setModelMatrix(Matrix4f modelMatrix) {
+        this.modelMatrix = modelMatrix;
+    }
+
+    public MSDFTextureLoader getMsdfTextureLoader() {
+        return msdfTextureLoader;
+    }
+
+    public void setMsdfTextureLoader(MSDFTextureLoader msdfTextureLoader) {
+        this.msdfTextureLoader = msdfTextureLoader;
+    }
+
+    public TextMeshBuilder getTextMeshBuilder() {
+        return textMeshBuilder;
+    }
+
+    public void setTextMeshBuilder(TextMeshBuilder textMeshBuilder) {
+        this.textMeshBuilder = textMeshBuilder;
+    }
+
+    public char getC() {
+        return c;
+    }
+
+    public void setC(char c) {
+        this.c = c;
+    }
+
+    public Vector2f getPos() {
+        return pos;
+    }
+
+    public void setPos(Vector2f pos) {
+        this.pos = pos;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 }

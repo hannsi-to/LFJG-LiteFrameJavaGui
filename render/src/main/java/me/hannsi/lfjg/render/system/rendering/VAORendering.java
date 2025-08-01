@@ -39,17 +39,13 @@ public class VAORendering {
 
     public void draw(Mesh mesh, int drawType) {
         glBindVertexArray(mesh.getVaoId());
-        try {
-            mesh.startFrame();
-            if (mesh.isUseIndirect()) {
-                drawIndirect(mesh, drawType);
-            } else {
-                drawDirect(mesh, drawType);
-            }
-            mesh.endFrame();
-        } finally {
-            glBindVertexArray(0);
+        mesh.startFrame();
+        if (mesh.isUseIndirect()) {
+            drawIndirect(mesh, drawType);
+        } else {
+            drawDirect(mesh, drawType);
         }
+        mesh.endFrame();
     }
 
     private void drawIndirect(Mesh mesh, int drawType) {
@@ -63,8 +59,6 @@ public class VAORendering {
             } else {
                 glDrawElementsIndirect(drawType, GL_UNSIGNED_INT, 0);
             }
-
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         } else {
             if (mesh.getDrawCommandCount() > 1) {
                 glMultiDrawArraysIndirect(drawType, 0, mesh.getDrawCommandCount(), 0);
@@ -72,15 +66,12 @@ public class VAORendering {
                 glDrawArraysIndirect(drawType, 0);
             }
         }
-
-        glBindBuffer(GL_DRAW_INDIRECT_BUFFER, 0);
     }
 
     private void drawDirect(Mesh mesh, int drawType) {
         if (mesh.isUseElementBufferObject()) {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.getEboId().getBufferId());
             glDrawElements(drawType, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         } else {
             glDrawArrays(drawType, 0, mesh.getCount());
         }

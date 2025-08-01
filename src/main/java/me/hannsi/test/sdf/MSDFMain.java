@@ -1,5 +1,6 @@
 package me.hannsi.test.sdf;
 
+import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
@@ -75,7 +76,8 @@ public class MSDFMain implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-//        textBatch.draw();
+        textBatch.draw();
+        DebugLog.debug(getClass(), "FPS:" + frame.getFps());
     }
 
     @Override

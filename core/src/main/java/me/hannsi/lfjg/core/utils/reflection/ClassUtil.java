@@ -5,6 +5,8 @@ import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.utils.Util;
 import org.reflections.Reflections;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -13,7 +15,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ClassUtil extends Util {
-    private static final Map<String, Method> METHOD_HANDLE_CACHE = new ConcurrentHashMap<>();
+    private static final Map<String, MethodHandle> METHOD_HANDLE_CACHE = new ConcurrentHashMap<>();
 
     private static final Map<Class<?>, Class<?>> PRIMITIVE_MAP = Map.ofEntries(
             Map.entry(Boolean.class, boolean.class),
@@ -111,20 +113,21 @@ public class ClassUtil extends Util {
 
     public static Object invokeStaticMethod(String className, String methodName, Object... args) {
         try {
-            String cacheKey = className + "#" + methodName + "#" + getParamTypesKey(args);
-            Method method = METHOD_HANDLE_CACHE.get(cacheKey);
+            StringBuilder cacheKey = new StringBuilder().append(className).append("#").append(methodName).append("#").append(getParamTypesKey(args));
+            MethodHandle handle = METHOD_HANDLE_CACHE.get(cacheKey.toString());
 
-            if (method == null) {
+            if (handle == null) {
                 Class<?> clazz = Class.forName(className);
-                method = findMethod(clazz, methodName, args);
+                Method method = findMethod(clazz, methodName, args);
                 if (method == null) {
                     throw new NoSuchMethodException("No static method named " + methodName + " found in " + className);
                 }
-                method.setAccessible(true);
-                METHOD_HANDLE_CACHE.put(cacheKey, method);
+                MethodHandles.Lookup lookup = MethodHandles.lookup();
+                handle = lookup.unreflect(method);
+                METHOD_HANDLE_CACHE.put(cacheKey.toString(), handle);
             }
 
-            return method.invoke(null, args);
+            return handle.invokeWithArguments(args);
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
@@ -179,7 +182,9 @@ public class ClassUtil extends Util {
     }
 
     private static String getParamTypesKey(Object... args) {
-        if (args == null || args.length == 0) return "";
+        if (args == null || args.length == 0) {
+            return "";
+        }
         StringBuilder key = new StringBuilder();
         for (Object arg : args) {
             key.append(arg == null ? "null" : arg.getClass().getName()).append(",");

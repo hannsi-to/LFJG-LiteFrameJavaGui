@@ -11,6 +11,7 @@ import me.hannsi.lfjg.core.utils.time.TimeSourceUtil;
 import me.hannsi.lfjg.core.utils.toolkit.ANSIFormat;
 import me.hannsi.lfjg.core.utils.toolkit.RuntimeUtil;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
+import me.hannsi.lfjg.core.utils.type.types.TimeSourceType;
 import me.hannsi.lfjg.frame.event.events.monitor.window.FramebufferSizeEvent;
 import me.hannsi.lfjg.frame.event.events.render.DrawFrameWithOpenGLEvent;
 import me.hannsi.lfjg.frame.event.system.GLFWCallback;
@@ -23,16 +24,20 @@ import me.hannsi.lfjg.frame.system.LFJGFrame;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.Callbacks;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWNativeWin32;
 import org.lwjgl.system.MemoryUtil;
 
+import java.util.concurrent.locks.LockSupport;
+
 import static me.hannsi.lfjg.core.Core.nanoVGContext;
+import static org.lwjgl.glfw.GLFW.*;
 
 public class Frame implements IFrame {
     private final LFJGFrame lfjgFrame;
     private final String threadName;
+    protected RenderingType renderingType;
+    protected TimeSourceType timeSourceType;
     private boolean shouldCleanup = false;
     private long windowID = -1L;
     private int fps;
@@ -52,7 +57,7 @@ public class Frame implements IFrame {
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             shouldCleanup = true;
-            GLFW.glfwPostEmptyEvent();
+            glfwPostEmptyEvent();
         }));
 
         this.threadName = threadName;
@@ -67,6 +72,7 @@ public class Frame implements IFrame {
 
         lfjgFrame.setFrameSetting();
 
+        initFrameSettingValue();
         initGLFW();
         initRendering();
         updateViewport();
@@ -82,16 +88,21 @@ public class Frame implements IFrame {
         mainLoop();
     }
 
+    private void initFrameSettingValue() {
+        renderingType = getFrameSettingValue(RenderingTypeSetting.class);
+        timeSourceType = getFrameSettingValue(TimeSourceSetting.class);
+    }
+
     private void initGLFW() {
         GLFWDebug.getGLFWDebug(this);
 
-        if (!GLFW.glfwInit()) {
+        if (!glfwInit()) {
             throw new IllegalStateException("Unable to initialize GLFW");
         }
 
         glfwWindowHints();
 
-        windowID = GLFW.glfwCreateWindow(getFrameSettingValue(WidthSetting.class), getFrameSettingValue(HeightSetting.class), getFrameSettingValue(TitleSetting.class).toString(), GLFWUtil.getMonitorTypeCode(getFrameSettingValue(MonitorSetting.class)), MemoryUtil.NULL);
+        windowID = glfwCreateWindow(getFrameSettingValue(WidthSetting.class), getFrameSettingValue(HeightSetting.class), getFrameSettingValue(TitleSetting.class).toString(), GLFWUtil.getMonitorTypeCode(getFrameSettingValue(MonitorSetting.class)), MemoryUtil.NULL);
         if (windowID == MemoryUtil.NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
         }
@@ -106,9 +117,9 @@ public class Frame implements IFrame {
         contentScaleX = contentScale.x();
         contentScaleY = contentScale.y();
 
-        GLFW.glfwMakeContextCurrent(windowID);
-        GLFW.glfwSwapInterval(((VSyncType) getFrameSettingValue(VSyncSetting.class)).getId());
-        GLFW.glfwShowWindow(windowID);
+        glfwMakeContextCurrent(windowID);
+        glfwSwapInterval(((VSyncType) getFrameSettingValue(VSyncSetting.class)).getId());
+        glfwShowWindow(windowID);
     }
 
     private void registerManagers() {
@@ -121,7 +132,7 @@ public class Frame implements IFrame {
     }
 
     private void initRendering() {
-        switch ((RenderingType) getFrameSettingValue(RenderingTypeSetting.class)) {
+        switch (renderingType) {
             case OPEN_GL -> {
                 Core.GL.createCapabilities();
                 nanoVGContext = Core.NanoVGGL3.nvgCreate(Core.NanoVGGL3.NVG_ANTIALIAS);
@@ -131,44 +142,42 @@ public class Frame implements IFrame {
             }
             case LIB_GDX, VULKAN -> {
             }
-            default ->
-                    throw new IllegalStateException("Unexpected value: " + getFrameSettingValue(RenderingTypeSetting.class));
+            default -> throw new IllegalStateException("Unexpected value: " + renderingType);
         }
     }
 
     private void glfwWindowHints() {
-        GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED, GLFW.GLFW_FALSE);
-        GLFW.glfwWindowHint(GLFW.GLFW_CENTER_CURSOR, GLFW.GLFW_FALSE);
-        GLFW.glfwWindowHint(GLFW.GLFW_FOCUS_ON_SHOW, GLFW.GLFW_TRUE);
+        glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE);
+        glfwWindowHint(GLFW_CENTER_CURSOR, GLFW_FALSE);
+        glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_TRUE);
 
         frameSettingManager.updateFrameSettings(true);
     }
 
     private void mainLoop() {
-        long lastTime2 = TimeSourceUtil.getNanoTime(getFrameSettingValue(TimeSourceSetting.class));
+        long lastTime2 = TimeSourceUtil.getNanoTime(timeSourceType);
         double deltaTime2 = 0;
         double targetTime = 1_000_000_000.0 / (int) getFrameSettingValue(RefreshRateSetting.class);
         int frames2 = 0;
-        long fpsLsatTime = TimeSourceUtil.getNanoTime(getFrameSettingValue(TimeSourceSetting.class));
+        long fpsLsatTime = TimeSourceUtil.getNanoTime(timeSourceType);
 
-        startTime = TimeSourceUtil.getTimeMills(getFrameSettingValue(TimeSourceSetting.class));
+        startTime = TimeSourceUtil.getTimeMills(timeSourceType);
 
         setAntiAliasing();
         Core.GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        while (!GLFW.glfwWindowShouldClose(windowID)) {
-            currentTime = TimeSourceUtil.getTimeMills(getFrameSettingValue(TimeSourceSetting.class));
+        while (!glfwWindowShouldClose(windowID)) {
+            currentTime = TimeSourceUtil.getTimeMills(timeSourceType);
 
-            long currentTime2 = TimeSourceUtil.getNanoTime(getFrameSettingValue(TimeSourceSetting.class));
+            long currentTime2 = TimeSourceUtil.getNanoTime(timeSourceType);
             deltaTime2 += currentTime2 - lastTime2;
             lastTime2 = currentTime2;
 
             if (deltaTime2 >= targetTime) {
-                updateLFJGLContext();
                 Core.GL11.glClear(Core.GL11.GL_COLOR_BUFFER_BIT | Core.GL11.GL_DEPTH_BUFFER_BIT);
                 draw();
 
-                GLFW.glfwSwapBuffers(windowID);
-                GLFW.glfwPollEvents();
+                glfwSwapBuffers(windowID);
+                glfwPollEvents();
 
                 frames2++;
 
@@ -180,31 +189,28 @@ public class Frame implements IFrame {
 
                 deltaTime2 -= targetTime;
             }
-            System.out.println(fps);
 
             double sleepTime = (targetTime - deltaTime2) / 1_000_000_000.0;
             if (sleepTime > 0) {
-                try {
-                    Thread.sleep((long) sleepTime);
-                } catch (InterruptedException e) {
-                    DebugLog.warning(Frame.class, e);
-                }
+                long sleepNanos = (long) (sleepTime * 1_000_000_000L);
+                LockSupport.parkNanos(sleepNanos);
             }
 
-            lastTime = TimeSourceUtil.getTimeMills(getFrameSettingValue(TimeSourceSetting.class));
+            lastTime = TimeSourceUtil.getTimeMills(timeSourceType);
 
             if (shouldCleanup) {
                 stopFrame();
             }
         }
 
-        finishTime = TimeSourceUtil.getTimeMills(getFrameSettingValue(TimeSourceSetting.class));
+        finishTime = TimeSourceUtil.getTimeMills(timeSourceType);
 
         finished();
     }
 
     @EventHandler
     public void framebufferSizeEvent(FramebufferSizeEvent event) {
+        updateLFJGLContext();
         updateViewport();
     }
 
@@ -241,12 +247,11 @@ public class Frame implements IFrame {
     }
 
     private void draw() {
-        switch ((RenderingType) getFrameSettingValue(RenderingTypeSetting.class)) {
+        switch (renderingType) {
             case OPEN_GL -> eventManager.call(new DrawFrameWithOpenGLEvent());
             case LIB_GDX, VULKAN -> {
             }
-            default ->
-                    throw new IllegalStateException("Unexpected value: " + getFrameSettingValue(RenderingTypeSetting.class));
+            default -> throw new IllegalStateException("Unexpected value: " + renderingType);
         }
     }
 
@@ -256,7 +261,7 @@ public class Frame implements IFrame {
     }
 
     public void stopFrame() {
-        GLFW.glfwSetWindowShouldClose(windowID, true);
+        glfwSetWindowShouldClose(windowID, true);
     }
 
     private void setAntiAliasing() {
@@ -269,22 +274,21 @@ public class Frame implements IFrame {
     private void breakFrame() {
         Callbacks.glfwFreeCallbacks(windowID);
 
-        switch ((RenderingType) getFrameSettingValue(RenderingTypeSetting.class)) {
+        switch (renderingType) {
             case OPEN_GL -> Core.NanoVGGL3.nvgDelete(nanoVGContext);
             case VULKAN -> {
 
             }
             case LIB_GDX -> {
             }
-            default ->
-                    throw new IllegalStateException("Unexpected value: " + getFrameSettingValue(RenderingTypeSetting.class));
+            default -> throw new IllegalStateException("Unexpected value: " + renderingType);
         }
 
-        GLFW.glfwDestroyWindow(windowID);
+        glfwDestroyWindow(windowID);
 
-        GLFW.glfwTerminate();
+        glfwTerminate();
 
-        GLFWErrorCallback callback = GLFW.glfwSetErrorCallback(null);
+        GLFWErrorCallback callback = glfwSetErrorCallback(null);
         if (callback != null) {
             callback.free();
         }
