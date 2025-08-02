@@ -40,7 +40,9 @@ public class WorkspaceManager {
         Path nestedDirPath = Paths.get(workspace, DEFAULT_WORKSPACE_NAME);
 
         try {
-            Files.createDirectories(nestedDirPath);
+            if (Files.notExists(nestedDirPath)) {
+                Files.createDirectories(nestedDirPath);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

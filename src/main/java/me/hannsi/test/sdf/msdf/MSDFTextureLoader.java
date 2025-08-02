@@ -10,7 +10,6 @@ import java.nio.IntBuffer;
 import static me.hannsi.lfjg.core.Core.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL13.GL_CLAMP_TO_BORDER;
-import static org.lwjgl.stb.STBImage.stbi_set_flip_vertically_on_load;
 
 public class MSDFTextureLoader {
     protected int textureId;
@@ -43,7 +42,6 @@ public class MSDFTextureLoader {
             IntBuffer height = stack.mallocInt(1);
             IntBuffer channels = stack.mallocInt(1);
 
-            stbi_set_flip_vertically_on_load(true);
             ByteBuffer image = STBImage.stbi_load_from_memory(textureLocation.getByteBuffer(), width, height, channels, 4);
             if (image == null) {
                 throw new RuntimeException("Failed to load image: " + textureLocation.path());

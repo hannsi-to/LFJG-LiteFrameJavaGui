@@ -6,6 +6,7 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.test.sdf.msdf.*;
+import org.joml.Vector2f;
 
 import java.io.IOException;
 
@@ -28,7 +29,7 @@ public class MSDFMain implements LFJGFrame {
         try {
             Location fontFilePath = Location.fromFile("C:\\Users\\hanns\\idea-project\\LFJG-LiteFrameJavaGui\\core\\src\\main\\resources\\font\\GenZenGothic.ttf");
 
-            String characters = "H";
+            String characters = "Hello world!!感じるなあ";
             String outputFileName = "my-sdf-font-final";
             int textureResolution = 512;
 
@@ -64,7 +65,9 @@ public class MSDFMain implements LFJGFrame {
 
             textRenderer = TextRenderer.createTextRender()
                     .textMeshBuilder(textMeshBuilder)
-                    .msdfTextureLoader(msdfTextureLoader);
+                    .msdfTextureLoader(msdfTextureLoader)
+                    .pos(new Vector2f(100, 100))
+                    .size(64);
         } catch (IOException e) {
             System.err.println("\nFATAL: Failed to initialize SDFGenerator.");
         }
@@ -74,7 +77,7 @@ public class MSDFMain implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-        textRenderer.draw();
+        textRenderer.draw("Hello world!!感じるなあ");
         DebugLog.debug(getClass(), "FPS:" + frame.getFps());
     }
 

@@ -1,17 +1,20 @@
 package me.hannsi.test.sdf.msdf;
 
-import java.util.ArrayList;
-import java.util.List;
+import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
+import me.hannsi.lfjg.render.system.mesh.Mesh;
+
+import java.util.HashMap;
 import java.util.Map;
 
 public class TextMeshBuilder {
+    protected Map<Integer, TextMesh> textMeshMap;
+
     private MSDFFont msdfFont;
     private Map<Integer, MSDFFont.Glyph> glyphMap;
-    private TextMeshBuilder.TextMesh textMesh;
     private String text;
 
     TextMeshBuilder() {
-
+        textMeshMap = new HashMap<>();
     }
 
     public static TextMeshBuilder createTextMeshBuilder() {
@@ -28,11 +31,6 @@ public class TextMeshBuilder {
     public TextMeshBuilder generateMeshData(String text) {
         this.text = text;
 
-        List<Float> positionList = new ArrayList<>();
-        List<Float> uvList = new ArrayList<>();
-        float cursorX = 0.0f;
-        float cursorY = 0.0f;
-
         float atlasWidth = msdfFont.getAtlas().getWidth();
         float atlasHeight = msdfFont.getAtlas().getHeight();
 
@@ -42,21 +40,15 @@ public class TextMeshBuilder {
             int charCode = text.codePointAt(i);
             i += Character.charCount(charCode);
 
-            if (charCode == '\n') {
-                cursorY -= (float) msdfFont.getMetrics().getLineHeight();
-                cursorX = 0;
-                continue;
-            }
-
             MSDFFont.Glyph glyph = glyphMap.get(charCode);
             if (glyph == null || glyph.getPlaneBounds() == null) {
                 continue;
             }
 
-            float x0 = cursorX + (float) glyph.getPlaneBounds().getLeft();
-            float y0 = cursorY + (float) glyph.getPlaneBounds().getBottom();
-            float x1 = cursorX + (float) glyph.getPlaneBounds().getRight();
-            float y1 = cursorY + (float) glyph.getPlaneBounds().getTop();
+            float x0 = (float) glyph.getPlaneBounds().getLeft();
+            float y0 = (float) glyph.getPlaneBounds().getBottom();
+            float x1 = (float) glyph.getPlaneBounds().getRight();
+            float y1 = (float) glyph.getPlaneBounds().getTop();
 
             float u0 = (float) (glyph.getAtlasBounds().getLeft() / atlasWidth);
             float v0 = (float) (glyph.getAtlasBounds().getBottom() / atlasHeight);
@@ -77,28 +69,14 @@ public class TextMeshBuilder {
                     u1, v1, u0, v1, u0, v0
             };
 
-            for (float v : px) {
-                positionList.add(v);
-            }
-            for (float v : uv) {
-                uvList.add(v);
-            }
-
-            cursorX += (float) glyph.getAdvance();
+            textMeshMap.put(charCode, new TextMesh(px, uv).createMesh());
         }
-
-        float[] positions = new float[positionList.size()];
-        float[] uvs = new float[uvList.size()];
-        for (int i = 0; i < positions.length; i++) {
-            positions[i] = positionList.get(i);
-        }
-        for (int i = 0; i < uvs.length; i++) {
-            uvs[i] = uvList.get(i);
-        }
-
-        textMesh = new TextMesh(positions, uvs);
 
         return this;
+    }
+
+    public Map<Integer, TextMesh> getTextMeshMap() {
+        return textMeshMap;
     }
 
     public MSDFFont getMsdfFont() {
@@ -117,14 +95,6 @@ public class TextMeshBuilder {
         this.glyphMap = glyphMap;
     }
 
-    public TextMesh getTextMesh() {
-        return textMesh;
-    }
-
-    public void setTextMesh(TextMesh textMesh) {
-        this.textMesh = textMesh;
-    }
-
     public String getText() {
         return text;
     }
@@ -133,6 +103,23 @@ public class TextMeshBuilder {
         this.text = text;
     }
 
-    public record TextMesh(float[] positions, float[] uvs) {
+    public static class TextMesh {
+        public Mesh mesh;
+        public float[] positions;
+        public float[] uvs;
+
+        public TextMesh(float[] positions, float[] uvs) {
+            this.positions = positions;
+            this.uvs = uvs;
+        }
+
+        public TextMesh createMesh() {
+            mesh = Mesh.createMesh()
+                    .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
+                    .useElementBufferObject(false)
+                    .createBufferObject2D(positions, null, uvs);
+
+            return this;
+        }
     }
 }
