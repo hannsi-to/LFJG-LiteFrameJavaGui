@@ -170,9 +170,11 @@ public class TextRenderer {
         float cursorY = pos.y();
         float spaseX = 0f;
         float spaseY = 0f;
+        StringBuilder value = null;
         LineData underLineData = null;
         LineData doubleUnderLineData = null;
         LineData strikethroughLineData = null;
+        LineData doubleStrikethrough = null;
         for (int i = 0; i < text.length(); i++) {
             char ch = text.toCharArray()[i];
             if (ch == TextFormatType.PREFIX_CODE) {
@@ -205,9 +207,12 @@ public class TextRenderer {
             if (charState.spaseX || charState.spaseY) {
                 if (ch == '{') {
                     charState.spaseCheck = true;
+                    value = new StringBuilder();
                     continue;
                 } else if (ch == '}') {
                     charState.spaseCheck = false;
+                    assert value != null;
+                    charState.value = value.toString();
 
                     if (charState.spaseX) {
                         spaseX = Float.parseFloat(charState.value);
@@ -221,7 +226,9 @@ public class TextRenderer {
                     }
                     continue;
                 } else if (charState.spaseCheck) {
-                    charState.value += StringUtil.getStringFromChar(ch);
+                    if (value != null) {
+                        value.append(StringUtil.getStringFromChar(ch));
+                    }
                     continue;
                 }
             }

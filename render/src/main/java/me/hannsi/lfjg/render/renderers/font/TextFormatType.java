@@ -37,7 +37,8 @@ public enum TextFormatType implements IEnumTypeBase {
     SKIP_PUSH("SkipPush", 29, "t"),
     SKIP_POP("SkipPop", 30, "u"),
     OUTLINE("OutLine", 31, "v"),
-    DOUBLE_UNDERLINE("DoubleUnderLine", 32, "w");
+    DOUBLE_UNDERLINE("DoubleUnderLine", 32, "w"),
+    DOUBLE_STRIKETHROUGH("DoubleSTRIKETHROUGH", 33, "x");
 
     public static final char PREFIX_CODE = '§';
 
