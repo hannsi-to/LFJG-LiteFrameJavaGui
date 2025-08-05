@@ -174,7 +174,7 @@ public class TextRenderer {
         LineData underLineData = null;
         LineData doubleUnderLineData = null;
         LineData strikethroughLineData = null;
-        LineData doubleStrikethrough = null;
+        LineData doubleStrikethroughData = null;
         for (int i = 0; i < text.length(); i++) {
             char ch = text.toCharArray()[i];
             if (ch == TextFormatType.PREFIX_CODE) {
@@ -264,6 +264,10 @@ public class TextRenderer {
                     strikethroughLineData = new LineData(LineData.LineType.STRIKETHROUGH, cursorX, cursorX, cursorY, charState.color);
                 }
 
+                if (charState.doubleStrikethrough) {
+                    doubleStrikethroughData = new LineData(LineData.LineType.DOUBLE_STRIKETHROUGH, cursorX, cursorX, cursorY, charState.color);
+                }
+
                 if (charState.italic) {
                     msdfFontShaderProgram.setUniform("italicSkew", UploadUniformType.ON_CHANGE, 0.4f);
                 } else {
@@ -320,6 +324,15 @@ public class TextRenderer {
                 lineDatum.add(strikethroughLineData.newInstance());
                 strikethroughLineData = null;
             }
+            if (doubleStrikethroughData != null) {
+                doubleStrikethroughData.endX = cursorX;
+                doubleStrikethroughData.baseY += textMeshBuilder.getMsdfFont().getMetrics().getUnderlineThickness() * 1.5f * size;
+                lineDatum.add(doubleStrikethroughData.newInstance());
+                doubleStrikethroughData.baseY -= textMeshBuilder.getMsdfFont().getMetrics().getUnderlineThickness() * 1.5f * size * 2;
+                lineDatum.add(doubleStrikethroughData.newInstance());
+                doubleStrikethroughData = null;
+            }
+
             modelMatrix.identity();
         }
 
@@ -347,7 +360,7 @@ public class TextRenderer {
 
                     width = data.endX - data.startX;
                 }
-                case STRIKETHROUGH -> {
+                case STRIKETHROUGH, DOUBLE_STRIKETHROUGH -> {
                     float offsetY = metrics.getAscender() * 0.3f * size;
                     thickness = metrics.getUnderlineThickness() * 1.5f * size;
 
@@ -459,7 +472,8 @@ public class TextRenderer {
         public enum LineType {
             UNDERLINE,
             STRIKETHROUGH,
-            DOUBLE_UNDERLINE
+            DOUBLE_UNDERLINE,
+            DOUBLE_STRIKETHROUGH
         }
     }
 }
