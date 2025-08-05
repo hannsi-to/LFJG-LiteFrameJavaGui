@@ -11,7 +11,7 @@ public class TextMeshBuilder {
 
     private MSDFFont msdfFont;
     private Map<Integer, MSDFFont.Glyph> glyphMap;
-    private String text;
+    private char[] chars;
 
     TextMeshBuilder() {
         textMeshMap = new HashMap<>();
@@ -28,79 +28,77 @@ public class TextMeshBuilder {
         return this;
     }
 
-    public TextMeshBuilder generateMeshData(String text) {
-        this.text = text;
+    public TextMeshBuilder chars(char[] chars) {
+        this.chars = chars;
 
+        return this;
+    }
+
+    public TextMeshBuilder generateMeshData() {
         float atlasWidth = msdfFont.getAtlas().getWidth();
         float atlasHeight = msdfFont.getAtlas().getHeight();
 
         boolean flipY = "bottom".equalsIgnoreCase(msdfFont.getAtlas().getyOrigin());
 
-        for (int i = 0; i < text.length(); ) {
-            int charCode = text.codePointAt(i);
-            i += Character.charCount(charCode);
-
-            MSDFFont.Glyph glyph = glyphMap.get(charCode);
+        for (char aChar : chars) {
+            MSDFFont.Glyph glyph = glyphMap.get((int) aChar);
             if (glyph == null || glyph.getPlaneBounds() == null) {
                 continue;
             }
 
-            float x0 = (float) glyph.getPlaneBounds().getLeft();
-            float y0 = (float) glyph.getPlaneBounds().getBottom();
-            float x1 = (float) glyph.getPlaneBounds().getRight();
-            float y1 = (float) glyph.getPlaneBounds().getTop();
+            float x0d = glyph.getPlaneBounds().getLeft();
+            float y0d = glyph.getPlaneBounds().getBottom();
+            float x1d = glyph.getPlaneBounds().getRight();
+            float y1d = glyph.getPlaneBounds().getTop();
 
-            float u0 = (float) (glyph.getAtlasBounds().getLeft() / atlasWidth);
-            float v0 = (float) (glyph.getAtlasBounds().getBottom() / atlasHeight);
-            float u1 = (float) (glyph.getAtlasBounds().getRight() / atlasWidth);
-            float v1 = (float) (glyph.getAtlasBounds().getTop() / atlasHeight);
+            float u0d = glyph.getAtlasBounds().getLeft() / atlasWidth;
+            float v0d = glyph.getAtlasBounds().getBottom() / atlasHeight;
+            float u1d = glyph.getAtlasBounds().getRight() / atlasWidth;
+            float v1d = glyph.getAtlasBounds().getTop() / atlasHeight;
 
             if (flipY) {
-                v0 = (float) ((atlasHeight - glyph.getAtlasBounds().getBottom()) / atlasHeight);
-                v1 = (float) ((atlasHeight - glyph.getAtlasBounds().getTop()) / atlasHeight);
+                v0d = (atlasHeight - glyph.getAtlasBounds().getBottom()) / atlasHeight;
+                v1d = (atlasHeight - glyph.getAtlasBounds().getTop()) / atlasHeight;
             }
 
             float[] px = {
-                    x0, y0, x1, y0, x1, y1,
-                    x1, y1, x0, y1, x0, y0
-            };
-            float[] uv = {
-                    u0, v0, u1, v0, u1, v1,
-                    u1, v1, u0, v1, u0, v0
+                    x0d, y0d,
+                    x1d, y0d,
+                    x1d, y1d,
+                    x1d, y1d,
+                    x0d, y1d,
+                    x0d, y0d
             };
 
-            textMeshMap.put(charCode, new TextMesh(px, uv).createMesh());
+            float[] uv = {
+                    u0d, v0d,
+                    u1d, v0d,
+                    u1d, v1d,
+                    u1d, v1d,
+                    u0d, v1d,
+                    u0d, v0d
+            };
+
+            textMeshMap.put((int) aChar, new TextMesh(px, uv).createMesh());
         }
 
         return this;
-    }
-
-    public Map<Integer, TextMesh> getTextMeshMap() {
-        return textMeshMap;
     }
 
     public MSDFFont getMsdfFont() {
         return msdfFont;
     }
 
-    public void setMsdfFont(MSDFFont msdfFont) {
-        this.msdfFont = msdfFont;
-    }
-
     public Map<Integer, MSDFFont.Glyph> getGlyphMap() {
         return glyphMap;
     }
 
-    public void setGlyphMap(Map<Integer, MSDFFont.Glyph> glyphMap) {
-        this.glyphMap = glyphMap;
+    public char[] getChars() {
+        return chars;
     }
 
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
+    public Map<Integer, TextMesh> getTextMeshMap() {
+        return textMeshMap;
     }
 
     public static class TextMesh {

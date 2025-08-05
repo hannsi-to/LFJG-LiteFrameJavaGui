@@ -1,16 +1,6 @@
 package me.hannsi.test.sdf.msdf;
 
-public class UnicodeBlock {
-    public final String name;
-    public final int startCodePoint;
-    public final int endCodePoint;
-
-    public UnicodeBlock(String name, int startCodePoint, int endCodePoint) {
-        this.name = name;
-        this.startCodePoint = startCodePoint;
-        this.endCodePoint = endCodePoint;
-    }
-
+public record UnicodeBlock(String name, int startCodePoint, int endCodePoint) {
     public boolean contains(int codePoint) {
         return codePoint >= startCodePoint && codePoint <= endCodePoint;
     }

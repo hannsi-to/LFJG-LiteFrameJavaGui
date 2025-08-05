@@ -19,6 +19,8 @@ public class MSDFJsonLoader {
     }
 
     public MSDFFont parseFile() throws IOException {
+
+
         String jsonString = new String(Files.readAllBytes(jsonLocation.getFile().toPath()));
         return parseJson(jsonString);
     }

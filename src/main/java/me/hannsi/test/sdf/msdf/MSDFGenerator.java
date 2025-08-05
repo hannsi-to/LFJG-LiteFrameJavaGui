@@ -22,6 +22,7 @@ public class MSDFGenerator {
     protected Location textureOutputLocation;
     protected Location jsonOutputLocation;
 
+    private char[] chars;
     private Location ttfPath;
     private Font font;
     private String outputName;
@@ -85,7 +86,7 @@ public class MSDFGenerator {
         StringBuilder charsetBuilder = new StringBuilder();
 
         for (UnicodeBlock unicodeBlock : unicodeBlocks) {
-            for (int codePoint = unicodeBlock.startCodePoint; codePoint <= unicodeBlock.endCodePoint; codePoint++) {
+            for (int codePoint = unicodeBlock.startCodePoint(); codePoint <= unicodeBlock.endCodePoint(); codePoint++) {
                 if (!Character.isValidCodePoint(codePoint) || !Character.isDefined(codePoint)) {
                     continue;
                 }
@@ -97,6 +98,7 @@ public class MSDFGenerator {
         }
 
         String charset = charsetBuilder.toString();
+        chars = charset.toCharArray();
         try {
             charsetFile = File.createTempFile("charset-", ".txt");
 
@@ -291,6 +293,7 @@ public class MSDFGenerator {
             newCharset.append(c);
         }
         charset = newCharset.toString();
+        chars = charset.toCharArray();
 
         try {
             charsetFile = File.createTempFile("charset-", ".txt");
@@ -436,23 +439,15 @@ public class MSDFGenerator {
         return ttfPath;
     }
 
-    public void setTtfPath(Location ttfPath) {
-        this.ttfPath = ttfPath;
-    }
-
     public String getOutputName() {
         return outputName;
-    }
-
-    public void setOutputName(String outputName) {
-        this.outputName = outputName;
     }
 
     public Font getFont() {
         return font;
     }
 
-    public void setFont(Font font) {
-        this.font = font;
+    public char[] getChars() {
+        return chars;
     }
 }

@@ -4,7 +4,7 @@ import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 
 public enum AtlasYOriginType implements IEnumTypeBase {
     BOTTOM("bottom", 0),
-    top("top", 1);
+    TOP("top", 1);
 
     final String name;
     final int id;

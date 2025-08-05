@@ -9,7 +9,7 @@ import java.nio.IntBuffer;
 
 import static me.hannsi.lfjg.core.Core.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
-import static org.lwjgl.opengl.GL13.GL_CLAMP_TO_BORDER;
+import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 
 public class MSDFTextureLoader {
     protected int textureId;
@@ -32,8 +32,8 @@ public class MSDFTextureLoader {
     public MSDFTextureLoader loadTexture() {
         glBindTexture(GL_TEXTURE_2D, textureId);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 

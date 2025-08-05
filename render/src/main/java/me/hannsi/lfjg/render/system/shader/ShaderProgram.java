@@ -4,6 +4,7 @@ import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
+import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.debug.exceptions.shader.CompilingShaderException;
 import me.hannsi.lfjg.render.debug.exceptions.shader.CreatingShaderException;
@@ -146,7 +147,10 @@ public class ShaderProgram {
         int location = getUniformLocation(name);
 
         Object first = values[0];
-        if (first instanceof Float) {
+        if (first instanceof Boolean) {
+            int booleanValue = ((boolean) first) ? 1 : 0;
+            glUniform1i(location, booleanValue);
+        } else if (first instanceof Float) {
             float[] floatValues = toFloatArray(values);
             switch (floatValues.length) {
                 case 1 -> glUniform1f(location, floatValues[0]);
@@ -180,6 +184,8 @@ public class ShaderProgram {
             glUniform3i(location, vec.x, vec.y, vec.z);
         } else if (first instanceof Vector4i vec) {
             glUniform4i(location, vec.x, vec.y, vec.z, vec.w);
+        } else if (first instanceof Color color) {
+            glUniform4f(location, color.getRedF(), color.getGreenF(), color.getBlueF(), color.getAlphaF());
         } else {
             throw new IllegalArgumentException("Unsupported uniform value type: " + first.getClass());
         }

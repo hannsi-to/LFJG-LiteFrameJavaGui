@@ -48,39 +48,23 @@ public class MSDFFont {
         return atlas;
     }
 
-    public void setAtlas(Atlas atlas) {
-        this.atlas = atlas;
-    }
-
     public Metrics getMetrics() {
         return metrics;
-    }
-
-    public void setMetrics(Metrics metrics) {
-        this.metrics = metrics;
     }
 
     public List<Glyph> getGlyphs() {
         return glyphs;
     }
 
-    public void setGlyphs(List<Glyph> glyphs) {
-        this.glyphs = glyphs;
-    }
-
     public List<Object> getKerning() {
         return kerning;
-    }
-
-    public void setKerning(List<Object> kerning) {
-        this.kerning = kerning;
     }
 
     public static class Atlas {
         private String type;
         private int distanceRange;
-        private double distanceRangeMiddle;
-        private double size;
+        private float distanceRangeMiddle;
+        private float size;
         private int width;
         private int height;
         private String yOrigin;
@@ -94,125 +78,73 @@ public class MSDFFont {
             return type;
         }
 
-        public void setType(String type) {
-            this.type = type;
-        }
-
         public int getDistanceRange() {
             return distanceRange;
         }
 
-        public void setDistanceRange(int distanceRange) {
-            this.distanceRange = distanceRange;
-        }
-
-        public double getDistanceRangeMiddle() {
+        public float getDistanceRangeMiddle() {
             return distanceRangeMiddle;
         }
 
-        public void setDistanceRangeMiddle(double distanceRangeMiddle) {
-            this.distanceRangeMiddle = distanceRangeMiddle;
-        }
-
-        public double getSize() {
+        public float getSize() {
             return size;
-        }
-
-        public void setSize(double size) {
-            this.size = size;
         }
 
         public int getWidth() {
             return width;
         }
 
-        public void setWidth(int width) {
-            this.width = width;
-        }
-
         public int getHeight() {
             return height;
-        }
-
-        public void setHeight(int height) {
-            this.height = height;
         }
 
         public String getyOrigin() {
             return yOrigin;
         }
-
-        public void setyOrigin(String yOrigin) {
-            this.yOrigin = yOrigin;
-        }
     }
 
 
     public static class Metrics {
-        private double emSize;
-        private double lineHeight;
-        private double ascender;
-        private double descender;
-        private double underlineY;
-        private double underlineThickness;
+        private float emSize;
+        private float lineHeight;
+        private float ascender;
+        private float descender;
+        private float underlineY;
+        private float underlineThickness;
 
         @Override
         public String toString() {
             return String.format("Metrics {\n\t\temSize=%.2f, lineHeight=%.2f, ascender=%.2f, descender=%.2f, underlineY=%.2f, underlineThickness=%.2f\n\t}", emSize, lineHeight, ascender, descender, underlineY, underlineThickness);
         }
 
-        public double getEmSize() {
+        public float getEmSize() {
             return emSize;
         }
 
-        public void setEmSize(double emSize) {
-            this.emSize = emSize;
-        }
-
-        public double getLineHeight() {
+        public float getLineHeight() {
             return lineHeight;
         }
 
-        public void setLineHeight(double lineHeight) {
-            this.lineHeight = lineHeight;
-        }
-
-        public double getAscender() {
+        public float getAscender() {
             return ascender;
         }
 
-        public void setAscender(double ascender) {
-            this.ascender = ascender;
-        }
-
-        public double getDescender() {
+        public float getDescender() {
             return descender;
         }
 
-        public void setDescender(double descender) {
-            this.descender = descender;
-        }
-
-        public double getUnderlineY() {
+        public float getUnderlineY() {
             return underlineY;
         }
 
-        public void setUnderlineY(double underlineY) {
-            this.underlineY = underlineY;
-        }
-
-        public double getUnderlineThickness() {
+        public float getUnderlineThickness() {
             return underlineThickness;
-        }
-
-        public void setUnderlineThickness(double underlineThickness) {
-            this.underlineThickness = underlineThickness;
         }
     }
 
     public static class Glyph {
         private int unicode;
-        private double advance;
+        private float advance;
         private PlaneBounds planeBounds;
         private AtlasBounds atlasBounds;
 
@@ -225,120 +157,72 @@ public class MSDFFont {
             return unicode;
         }
 
-        public void setUnicode(int unicode) {
-            this.unicode = unicode;
-        }
-
-        public double getAdvance() {
+        public float getAdvance() {
             return advance;
-        }
-
-        public void setAdvance(double advance) {
-            this.advance = advance;
         }
 
         public PlaneBounds getPlaneBounds() {
             return planeBounds;
         }
 
-        public void setPlaneBounds(PlaneBounds planeBounds) {
-            this.planeBounds = planeBounds;
-        }
-
         public AtlasBounds getAtlasBounds() {
             return atlasBounds;
-        }
-
-        public void setAtlasBounds(AtlasBounds atlasBounds) {
-            this.atlasBounds = atlasBounds;
         }
     }
 
     public static class PlaneBounds {
-        private double left;
-        private double bottom;
-        private double right;
-        private double top;
+        private float left;
+        private float bottom;
+        private float right;
+        private float top;
 
         @Override
         public String toString() {
             return String.format("PlaneBounds {\n\t\tleft=%.2f, bottom=%.2f, right=%.2f, top=%.2f\n\t}", left, bottom, right, top);
         }
 
-        public double getLeft() {
+        public float getLeft() {
             return left;
         }
 
-        public void setLeft(double left) {
-            this.left = left;
-        }
-
-        public double getBottom() {
+        public float getBottom() {
             return bottom;
         }
 
-        public void setBottom(double bottom) {
-            this.bottom = bottom;
-        }
-
-        public double getRight() {
+        public float getRight() {
             return right;
         }
 
-        public void setRight(double right) {
-            this.right = right;
-        }
-
-        public double getTop() {
+        public float getTop() {
             return top;
-        }
-
-        public void setTop(double top) {
-            this.top = top;
         }
     }
 
     public static class AtlasBounds {
-        private double left;
-        private double bottom;
-        private double right;
-        private double top;
+        private float left;
+        private float bottom;
+        private float right;
+        private float top;
 
         @Override
         public String toString() {
             return String.format("AtlasBounds {\n\t\tleft=%.2f, bottom=%.2f, right=%.2f, top=%.2f\n\t}", left, bottom, right, top);
         }
 
-        public double getLeft() {
+        public float getLeft() {
             return left;
         }
 
-        public void setLeft(double left) {
-            this.left = left;
-        }
-
-        public double getBottom() {
+        public float getBottom() {
             return bottom;
         }
 
-        public void setBottom(double bottom) {
-            this.bottom = bottom;
-        }
-
-        public double getRight() {
+        public float getRight() {
             return right;
         }
 
-        public void setRight(double right) {
-            this.right = right;
-        }
-
-        public double getTop() {
+        public float getTop() {
             return top;
-        }
-
-        public void setTop(double top) {
-            this.top = top;
         }
     }
 }

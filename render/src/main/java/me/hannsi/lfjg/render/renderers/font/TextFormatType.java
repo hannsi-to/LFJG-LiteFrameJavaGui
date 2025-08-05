@@ -21,15 +21,23 @@ public enum TextFormatType implements IEnumTypeBase {
     LIGHT_PURPLE("LightPurple", 13, "d"),
     YELLOW("Yellow", 14, "e"),
     WHITE("White", 15, "f"),
-    OBFUSCATED("Obfuscated", 16, "g"),
-    BOLD("Bold", 17, "h"),
-    STRIKETHROUGH("Strikethrough", 18, "i"),
-    UNDERLINE("UnderLine", 19, "j"),
-    ITALIC("Italic", 20, "k"),
-    REST("Rest", 21, "r"),
-    NEWLINE("NewLine", 22, "l"),
-    SPASE_X("SpaceX", 23, "m"),
-    SPASE_Y("SpaceY", 24, "n");
+    DEFAULT_COLOR("DefaultColor", 16, "g"),
+    OBFUSCATED("Obfuscated", 17, "h"),
+    BOLD("Bold", 18, "i"),
+    STRIKETHROUGH("Strikethrough", 19, "j"),
+    UNDERLINE("UnderLine", 20, "k"),
+    ITALIC("Italic", 21, "l"),
+    GHOST("Ghost", 22, "m"),
+    HIDE_BOX("HideBox", 23, "n"),
+    SHADOW("Shadow", 24, "o"),
+    RESET("Reset", 25, "p"),
+    NEWLINE("NewLine", 26, "q"),
+    SPASE_X("SpaceX", 27, "r"),
+    SPASE_Y("SpaceY", 28, "s"),
+    SKIP_PUSH("SkipPush", 29, "t"),
+    SKIP_POP("SkipPop", 30, "u"),
+    OUTLINE("OutLine", 31, "v"),
+    DOUBLE_UNDERLINE("DoubleUnderLine", 32, "w");
 
     public static final char PREFIX_CODE = '§';
 
@@ -43,7 +51,7 @@ public enum TextFormatType implements IEnumTypeBase {
         this.code = code;
     }
 
-    public static Color getColor(TextFormatType textFormatType) {
+    public static Color getColor(TextFormatType textFormatType, Color defaultColor) {
         return switch (textFormatType) {
             case BLACK -> new Color(0, 0, 0);
             case DARK_BLUE -> new Color(0, 0, 170);
@@ -61,6 +69,7 @@ public enum TextFormatType implements IEnumTypeBase {
             case LIGHT_PURPLE -> new Color(255, 85, 255);
             case YELLOW -> new Color(255, 255, 85);
             case WHITE -> new Color(255, 255, 255);
+            case DEFAULT_COLOR -> defaultColor;
             default -> null;
         };
     }

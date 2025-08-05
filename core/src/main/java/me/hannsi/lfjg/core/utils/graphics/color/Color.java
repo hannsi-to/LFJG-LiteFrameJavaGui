@@ -397,6 +397,10 @@ public class Color {
         return new Color(this.value.brighter());
     }
 
+    public Color newInstance() {
+        return new Color(this.value);
+    }
+
     public Color darker() {
         return new Color(this.value.darker());
     }
@@ -451,5 +455,18 @@ public class Color {
 
     public java.awt.Color ofAwtColor() {
         return value;
+    }
+
+    public float[] getFloatArray(int loopCount) {
+        int indexSize = 4 * loopCount;
+        float[] colors = new float[indexSize];
+        for (int i = 0; i < indexSize; i += 4) {
+            colors[i] = getRedF();
+            colors[i + 1] = getGreenF();
+            colors[i + 2] = getBlueF();
+            colors[i + 3] = getAlphaF();
+        }
+
+        return colors;
     }
 }

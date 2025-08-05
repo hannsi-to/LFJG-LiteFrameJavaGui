@@ -268,16 +268,16 @@ public class GLText extends GLRect {
                     charState.spaseCheck = false;
                     continue;
                 } else if (charState.spaseCheck) {
-                    charState.spase = charState.spase + StringUtil.getStringFromChar(ch);
+                    charState.value = charState.value + StringUtil.getStringFromChar(ch);
                     continue;
                 }
                 if (charState.spaseX) {
-                    spaseX = Float.parseFloat(charState.spase);
-                    charState.spase = "";
+                    spaseX = Float.parseFloat(charState.value);
+                    charState.value = "";
                     charState.spaseX = false;
                 }
                 if (charState.spaseY) {
-                    spaseY = Float.parseFloat(charState.spase);
+                    spaseY = Float.parseFloat(charState.value);
                     offsetY -= spaseY;
                     charState.spaseY = false;
                 }
