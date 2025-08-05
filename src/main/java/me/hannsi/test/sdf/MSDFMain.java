@@ -77,7 +77,7 @@ public class MSDFMain implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-        textRenderer.draw(TextFormatType.SPASE_X + "{40}しるT" + TextFormatType.OUTLINE + "しるT" + TextFormatType.RESET + TextFormatType.SPASE_Y + "{-40}" + TextFormatType.NEWLINE + "ばは" + TextFormatType.DARK_BLUE + TextFormatType.STRIKETHROUGH + "あ" + TextFormatType.GOLD + "ほ");
+        textRenderer.draw(TextFormatType.SPASE_X + "{40}しるT" + TextFormatType.DOUBLE_UNDERLINE + "しるT" + TextFormatType.RESET + TextFormatType.SPASE_Y + "{-40}" + TextFormatType.NEWLINE + "ばは" + TextFormatType.DARK_BLUE + TextFormatType.STRIKETHROUGH + "あ" + TextFormatType.GOLD + "ほ");
 //        textRenderer.draw("しるT" + "しるT" + TextFormatType.RESET + "ばは" + TextFormatType.DARK_BLUE + TextFormatType.STRIKETHROUGH + "あ" + TextFormatType.GOLD + "ほ");
 //        DebugLog.debug(getClass(), "FPS:" + frame.getFps());
     }

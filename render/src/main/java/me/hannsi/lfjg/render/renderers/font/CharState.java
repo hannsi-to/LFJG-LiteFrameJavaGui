@@ -8,6 +8,7 @@ public class CharState {
     public boolean obfuscated;
     public boolean strikethrough;
     public boolean underLine;
+    public boolean doubleUnderLine;
     public boolean italic;
     public boolean bold;
     public boolean ghost;
@@ -30,6 +31,7 @@ public class CharState {
         this.obfuscated = false;
         this.strikethrough = false;
         this.underLine = false;
+        this.doubleUnderLine = false;
         this.italic = false;
         this.bold = false;
         this.ghost = false;
@@ -52,6 +54,7 @@ public class CharState {
             case BOLD -> bold = true;
             case STRIKETHROUGH -> strikethrough = true;
             case UNDERLINE -> underLine = true;
+            case DOUBLE_UNDERLINE -> doubleUnderLine = true;
             case ITALIC -> italic = true;
             case GHOST -> ghost = true;
             case HIDE_BOX -> box = true;

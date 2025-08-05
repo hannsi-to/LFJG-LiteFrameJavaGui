@@ -171,6 +171,7 @@ public class TextRenderer {
         float spaseX = 0f;
         float spaseY = 0f;
         LineData underLineData = null;
+        LineData doubleUnderLineData = null;
         LineData strikethroughLineData = null;
         for (int i = 0; i < text.length(); i++) {
             char ch = text.toCharArray()[i];
@@ -248,6 +249,10 @@ public class TextRenderer {
                     underLineData = new LineData(LineData.LineType.UNDERLINE, cursorX, cursorX, cursorY, charState.color);
                 }
 
+                if (charState.doubleUnderLine) {
+                    doubleUnderLineData = new LineData(LineData.LineType.DOUBLE_UNDERLINE, cursorX, cursorX, cursorY, charState.color);
+                }
+
                 if (charState.strikethrough) {
                     strikethroughLineData = new LineData(LineData.LineType.STRIKETHROUGH, cursorX, cursorX, cursorY, charState.color);
                 }
@@ -296,6 +301,13 @@ public class TextRenderer {
                 lineDatum.add(underLineData.newInstance());
                 underLineData = null;
             }
+            if (doubleUnderLineData != null) {
+                doubleUnderLineData.endX = cursorX;
+                lineDatum.add(doubleUnderLineData.newInstance());
+                doubleUnderLineData.baseY = doubleUnderLineData.baseY - textMeshBuilder.getMsdfFont().getMetrics().getUnderlineThickness() * size * 2;
+                lineDatum.add(doubleUnderLineData.newInstance());
+                doubleUnderLineData = null;
+            }
             if (strikethroughLineData != null) {
                 strikethroughLineData.endX = cursorX;
                 lineDatum.add(strikethroughLineData.newInstance());
@@ -319,7 +331,7 @@ public class TextRenderer {
 
             MSDFFont.Metrics metrics = textMeshBuilder.getMsdfFont().getMetrics();
             switch (data.lineType) {
-                case UNDERLINE -> {
+                case UNDERLINE, DOUBLE_UNDERLINE -> {
                     float offsetY = metrics.getUnderlineY() * size;
                     thickness = metrics.getUnderlineThickness() * size;
 
@@ -439,7 +451,8 @@ public class TextRenderer {
 
         public enum LineType {
             UNDERLINE,
-            STRIKETHROUGH
+            STRIKETHROUGH,
+            DOUBLE_UNDERLINE
         }
     }
 }
