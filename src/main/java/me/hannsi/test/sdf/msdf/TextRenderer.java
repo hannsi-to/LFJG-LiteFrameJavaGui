@@ -175,6 +175,7 @@ public class TextRenderer {
         LineData doubleUnderLineData = null;
         LineData strikethroughLineData = null;
         LineData doubleStrikethroughData = null;
+        LineData overLineData = null;
         for (int i = 0; i < text.length(); i++) {
             char ch = text.toCharArray()[i];
             if (ch == TextFormatType.PREFIX_CODE) {
@@ -268,6 +269,10 @@ public class TextRenderer {
                     doubleStrikethroughData = new LineData(LineData.LineType.DOUBLE_STRIKETHROUGH, cursorX, cursorX, cursorY, charState.color);
                 }
 
+                if (charState.overLine) {
+                    overLineData = new LineData(LineData.LineType.OVERLINE, cursorX, cursorX, cursorY, charState.color);
+                }
+
                 if (charState.italic) {
                     msdfFontShaderProgram.setUniform("italicSkew", UploadUniformType.ON_CHANGE, 0.4f);
                 } else {
@@ -332,6 +337,11 @@ public class TextRenderer {
                 lineDatum.add(doubleStrikethroughData.newInstance());
                 doubleStrikethroughData = null;
             }
+            if (overLineData != null) {
+                overLineData.endX = cursorX;
+                lineDatum.add(overLineData);
+                overLineData = null;
+            }
 
             modelMatrix.identity();
         }
@@ -363,6 +373,15 @@ public class TextRenderer {
                 case STRIKETHROUGH, DOUBLE_STRIKETHROUGH -> {
                     float offsetY = metrics.getAscender() * 0.3f * size;
                     thickness = metrics.getUnderlineThickness() * 1.5f * size;
+
+                    x = data.startX;
+                    y = data.baseY + offsetY;
+
+                    width = data.endX - data.startX;
+                }
+                case OVERLINE -> {
+                    float offsetY = metrics.getAscender() * size;
+                    thickness = metrics.getUnderlineThickness() * size;
 
                     x = data.startX;
                     y = data.baseY + offsetY;
@@ -473,7 +492,8 @@ public class TextRenderer {
             UNDERLINE,
             STRIKETHROUGH,
             DOUBLE_UNDERLINE,
-            DOUBLE_STRIKETHROUGH
+            DOUBLE_STRIKETHROUGH,
+            OVERLINE
         }
     }
 }

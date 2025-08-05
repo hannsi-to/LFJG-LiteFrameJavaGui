@@ -16,6 +16,7 @@ public class CharState {
     public boolean box;
     public boolean shadow;
     public boolean outLine;
+    public boolean overLine;
     public boolean spaseX;
     public boolean spaseY;
     public boolean spaseCheck;
@@ -40,6 +41,7 @@ public class CharState {
         this.box = false;
         this.shadow = false;
         this.outLine = false;
+        this.overLine = false;
         this.spaseX = false;
         this.spaseY = false;
         this.spaseCheck = false;
@@ -66,6 +68,7 @@ public class CharState {
                 color = Color.of(0f, 0f, 0f, 0.5f);
             }
             case OUTLINE -> outLine = true;
+            case OVERLINE -> overLine = true;
             case RESET -> reset();
             case NEWLINE -> {
             }
