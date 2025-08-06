@@ -12,6 +12,7 @@ uniform bool box;
 uniform vec4 uvSize;
 uniform bool outline;
 uniform float outlineWidth;
+uniform float blurSize;
 
 float median(float r, float g, float b) {
     return max(min(r, g), min(max(r, g), b));

@@ -305,6 +305,8 @@ public class TextRenderer {
                     msdfFontShaderProgram.setUniform("outline", UploadUniformType.ON_CHANGE, false);
                 }
 
+                msdfFontShaderProgram.setUniform("blurSize", UploadUniformType.ON_CHANGE, 1f);
+
                 msdfFontShaderProgram.setUniform("fontColor", UploadUniformType.ON_CHANGE, charState.color);
                 msdfFontShaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix.translate(cursorX + (charState.shadow ? size * 0.02f : 0), cursorY - (charState.shadow ? size * 0.02f : 0), 0).scale(size, size, 1));
                 vaoRendering.draw(textMesh.mesh, GL_TRIANGLES);
