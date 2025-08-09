@@ -23,8 +23,6 @@ import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL30.*;
 
 public class FrameBuffer {
-    private static float lastClearR = -1f, lastClearG = -1f, lastClearB = -1f, lastClearA = -1f;
-
     private final int frameBufferId;
     private final int textureId;
     private final int renderBufferId;
@@ -104,38 +102,6 @@ public class FrameBuffer {
         this.glObject = glObject;
     }
 
-    public static float getLastClearR() {
-        return lastClearR;
-    }
-
-    public static void setLastClearR(float lastClearR) {
-        FrameBuffer.lastClearR = lastClearR;
-    }
-
-    public static float getLastClearG() {
-        return lastClearG;
-    }
-
-    public static void setLastClearG(float lastClearG) {
-        FrameBuffer.lastClearG = lastClearG;
-    }
-
-    public static float getLastClearB() {
-        return lastClearB;
-    }
-
-    public static void setLastClearB(float lastClearB) {
-        FrameBuffer.lastClearB = lastClearB;
-    }
-
-    public static float getLastClearA() {
-        return lastClearA;
-    }
-
-    public static void setLastClearA(float lastClearA) {
-        FrameBuffer.lastClearA = lastClearA;
-    }
-
     /**
      * Cleans up the frame buffer by deleting the frame buffer and texture.
      */
@@ -180,15 +146,15 @@ public class FrameBuffer {
             throw new IllegalArgumentException("Framebuffer size must be > 0: width=" + width + ", height=" + height);
         }
 
-        glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
-        glBindTexture(GL_TEXTURE_2D, textureId);
+        GLStateCache.bindFrameBuffer(frameBufferId);
+        GLStateCache.bindTexture(GL_TEXTURE_2D, textureId);
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (int) width, (int) height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureId, 0);
 
-        glBindRenderbuffer(GL_RENDERBUFFER, renderBufferId);
+        bindRenderBuffer();
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH32F_STENCIL8, (int) width, (int) height);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, renderBufferId);
 
@@ -197,9 +163,9 @@ public class FrameBuffer {
             throw new CompleteFrameBufferException("Frame Buffer not complete: 0x" + Integer.toHexString(status));
         }
 
-        glBindRenderbuffer(GL_RENDERBUFFER, 0);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        GLStateCache.bindRenderBuffer(0);
+        GLStateCache.bindTexture(GL_TEXTURE_2D, 0);
+        GLStateCache.bindFrameBuffer(0);
     }
 
     /**
@@ -232,14 +198,14 @@ public class FrameBuffer {
 
         if (uesStencil) {
             glClear(GL_STENCIL_BUFFER_BIT);
-            glStencilFunc(GL_ALWAYS, 1, 0xff);
-            glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-            glColorMask(false, false, false, false);
+            GLStateCache.stencilFunc(GL_ALWAYS, 1, 0xff);
+            GLStateCache.stencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+            GLStateCache.colorMask(false, false, false, false);
             vaoRendering.draw(glObject.getMesh());
-            glColorMask(true, true, true, true);
+            GLStateCache.colorMask(true, true, true, true);
 
-            glStencilFunc(GL_EQUAL, 1, 0xff);
-            glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+            GLStateCache.stencilFunc(GL_EQUAL, 1, 0xff);
+            GLStateCache.stencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
         }
 
         bindTexture(textureUnit);
@@ -255,21 +221,21 @@ public class FrameBuffer {
      * Binds the render buffer.
      */
     public void bindRenderBuffer() {
-        glBindRenderbuffer(GL_RENDERBUFFER, renderBufferId);
+        GLStateCache.bindRenderBuffer(renderBufferId);
     }
 
     /**
      * Binds the frame buffer for drawing.
      */
     public void bindDrawFrameBuffer() {
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBufferId);
+        GLStateCache.bindDrawFrameBuffer(frameBufferId);
     }
 
     /**
      * Binds the frame buffer for reading.
      */
     public void bindReadFrameBuffer() {
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBufferId);
+        GLStateCache.bindReadFrameBuffer(frameBufferId);
     }
 
     /**
@@ -278,19 +244,19 @@ public class FrameBuffer {
     public void bindFrameBuffer() {
         bindFrameBufferNoClear();
 
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        GLStateCache.clearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     }
 
     public void bindFrameBufferNoClear() {
-        glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
+        GLStateCache.bindFrameBuffer(frameBufferId);
     }
 
     /**
      * Unbinds the frame buffer.
      */
     public void unbindFrameBuffer() {
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        GLStateCache.bindFrameBuffer(0);
     }
 
     public int getFrameBufferId() {
