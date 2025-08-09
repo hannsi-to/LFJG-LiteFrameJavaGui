@@ -1,15 +1,17 @@
-package me.hannsi.test.sdf.msdf;
+package me.hannsi.lfjg.render.system.text.msdf.type;
 
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 
-public enum AtlasYOriginType implements IEnumTypeBase {
-    BOTTOM("bottom", 0),
-    TOP("top", 1);
+public enum GlyphPXAlign implements IEnumTypeBase {
+    OFF("off", 0),
+    ON("on", 1),
+    HORIZONTAL("horizontal", 2),
+    VERTICAL("vertical", 3);
 
     final String name;
     final int id;
 
-    AtlasYOriginType(String name, int id) {
+    GlyphPXAlign(String name, int id) {
         this.name = name;
         this.id = id;
     }

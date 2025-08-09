@@ -1,4 +1,4 @@
-package me.hannsi.test.sdf.msdf;
+package me.hannsi.lfjg.render.system.text.msdf;
 
 import java.util.HashMap;
 import java.util.List;

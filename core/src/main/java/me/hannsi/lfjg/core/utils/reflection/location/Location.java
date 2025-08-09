@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.core.utils.reflection.location;
 
-import me.hannsi.lfjg.core.manager.WorkspaceManager;
 import me.hannsi.lfjg.core.utils.type.types.LocationType;
 import org.lwjgl.BufferUtils;
 
@@ -13,7 +12,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public record Location(String path, LocationType locationType) {
@@ -23,9 +21,8 @@ public record Location(String path, LocationType locationType) {
 
     public static Location fromResource(String resourcePath) {
         String normalizedPath = resourcePath.startsWith("/") || resourcePath.startsWith("\\") ? resourcePath.substring(1) : resourcePath;
-        Path fullPath = Paths.get(WorkspaceManager.currentWorkspace, normalizedPath);
 
-        return new Location(fullPath.toString(), LocationType.RESOURCE);
+        return new Location(normalizedPath, LocationType.RESOURCE);
     }
 
     public static Location fromURL(String url) {
@@ -34,14 +31,20 @@ public record Location(String path, LocationType locationType) {
 
     public InputStream openStream() throws IOException {
         return switch (locationType) {
-            case FILE, RESOURCE -> new FileInputStream(path);
+            case FILE -> new FileInputStream(path);
+            case RESOURCE -> Location.class.getClassLoader().getResourceAsStream(path);
             case URL -> new URL(path).openStream();
         };
     }
 
     public boolean exists() throws IOException {
         return switch (locationType) {
-            case FILE, RESOURCE -> Files.exists(Paths.get(path));
+            case FILE -> Files.exists(Paths.get(path));
+            case RESOURCE -> {
+                try (InputStream is = openStream()) {
+                    yield is != null;
+                }
+            }
             case URL -> {
                 try {
                     HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(path).openConnection();
@@ -79,14 +82,35 @@ public record Location(String path, LocationType locationType) {
     }
 
     public File getFile() {
-        if (locationType == LocationType.URL) {
-            throw new UnsupportedOperationException("Only FILE or RESOURCE supports getFile()");
+        if (locationType != LocationType.FILE) {
+            throw new UnsupportedOperationException("getFile() supports only FILE location type.");
         }
         return new File(path).getAbsoluteFile();
     }
 
     public Location getParent() {
-        File parent = new File(path).getParentFile();
-        return (parent != null) ? new Location(parent.getPath(), locationType) : null;
+        return switch (locationType) {
+            case FILE -> {
+                File parent = new File(path).getParentFile();
+                yield (parent != null) ? new Location(parent.getPath(), locationType) : null;
+            }
+            case RESOURCE -> {
+                String normalizedPath = path.startsWith("/") ? path.substring(1) : path;
+                int lastSlash = normalizedPath.lastIndexOf('/');
+                yield (lastSlash > 0)
+                        ? new Location(normalizedPath.substring(0, lastSlash), locationType)
+                        : null;
+            }
+            case URL -> {
+                try {
+                    URL url = new URL(path);
+                    String file = url.getFile();
+                    int lastSlash = file.lastIndexOf('/');
+                    yield (lastSlash > 0) ? new Location(new URL(url.getProtocol(), url.getHost(), url.getPort(), file.substring(0, lastSlash)).toString(), locationType) : null;
+                } catch (Exception e) {
+                    yield null;
+                }
+            }
+        };
     }
 }

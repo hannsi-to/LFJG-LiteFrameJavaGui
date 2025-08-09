@@ -1,4 +1,4 @@
-package me.hannsi.test.sdf.msdf;
+package me.hannsi.lfjg.core.utils.toolkit;
 
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.DebugLog;

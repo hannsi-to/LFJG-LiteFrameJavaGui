@@ -1,4 +1,4 @@
-package me.hannsi.test.sdf.msdf;
+package me.hannsi.lfjg.render.system.text.msdf;
 
 import com.google.gson.Gson;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;

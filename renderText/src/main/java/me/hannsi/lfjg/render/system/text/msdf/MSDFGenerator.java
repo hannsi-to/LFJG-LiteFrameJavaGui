@@ -1,10 +1,13 @@
-package me.hannsi.test.sdf.msdf;
+package me.hannsi.lfjg.render.system.text.msdf;
 
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
+import me.hannsi.lfjg.core.utils.toolkit.UnicodeBlock;
 import me.hannsi.lfjg.core.utils.type.types.STBImageFormat;
+import me.hannsi.lfjg.render.debug.exceptions.UnsupportedImageFileException;
+import me.hannsi.lfjg.render.system.text.msdf.type.*;
 
 import java.awt.*;
 import java.io.*;

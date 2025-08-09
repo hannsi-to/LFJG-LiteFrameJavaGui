@@ -1,4 +1,4 @@
-package me.hannsi.test.sdf.msdf;
+package me.hannsi.lfjg.render.system.text.msdf;
 
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import org.lwjgl.stb.STBImage;
@@ -12,7 +12,7 @@ import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 
 public class MSDFTextureLoader {
-    protected int textureId;
+    public int textureId;
 
     private Location textureLocation;
 

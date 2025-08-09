@@ -6,4 +6,5 @@ include 'jcef'
 include 'physic'
 include 'render'
 include 'renderVideo'
+include 'renderText'
 

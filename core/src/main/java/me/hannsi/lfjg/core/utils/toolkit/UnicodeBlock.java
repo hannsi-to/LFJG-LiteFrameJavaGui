@@ -1,4 +1,4 @@
-package me.hannsi.test.sdf.msdf;
+package me.hannsi.lfjg.core.utils.toolkit;
 
 public record UnicodeBlock(String name, int startCodePoint, int endCodePoint) {
     public boolean contains(int codePoint) {

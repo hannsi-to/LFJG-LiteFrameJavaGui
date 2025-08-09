@@ -1,12 +1,14 @@
-package me.hannsi.test.sdf.msdf;
+package me.hannsi.lfjg.render.renderers.text;
 
 import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
+import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.toolkit.StringUtil;
+import me.hannsi.lfjg.render.debug.exceptions.UnknownAlignType;
 import me.hannsi.lfjg.render.renderers.font.AlignType;
 import me.hannsi.lfjg.render.renderers.font.CharState;
 import me.hannsi.lfjg.render.renderers.font.TextFormatType;
@@ -16,6 +18,9 @@ import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
+import me.hannsi.lfjg.render.system.text.TextMeshBuilder;
+import me.hannsi.lfjg.render.system.text.msdf.MSDFFont;
+import me.hannsi.lfjg.render.system.text.msdf.MSDFTextureLoader;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -152,7 +157,7 @@ public class TextRenderer {
                 continue;
             }
 
-            maxGlyphHeight = max(maxGlyphHeight, textMeshBuilder.getMsdfFont().getMetrics().getLineHeight() * size);
+            maxGlyphHeight = MathHelper.max(maxGlyphHeight, textMeshBuilder.getMsdfFont().getMetrics().getLineHeight() * size);
         }
 
         return lineCount * maxGlyphHeight;

@@ -1,19 +1,17 @@
-package me.hannsi.test.sdf.msdf;
+package me.hannsi.lfjg.render.system.text.msdf.type;
 
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 
-public enum AtlasSizeType implements IEnumTypeBase {
-    NONE("none", -1),
-    POTS("pots", 0),
-    POTR("potr", 1),
-    SQUARE("square", 2),
-    SQUARE2("square2", 3),
-    SQUARE4("square4", 4);
+public enum AtlasUnifomOrignType implements IEnumTypeBase {
+    OFF("off", 0),
+    ON("on", 1),
+    HORIZONTAL("horizontal", 2),
+    VERTICAL("vertical", 3);
 
     final int id;
     final String name;
 
-    AtlasSizeType(String name, int id) {
+    AtlasUnifomOrignType(String name, int id) {
         this.id = id;
         this.name = name;
     }

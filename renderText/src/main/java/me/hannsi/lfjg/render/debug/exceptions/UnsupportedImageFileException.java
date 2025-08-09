@@ -1,4 +1,4 @@
-package me.hannsi.test.sdf.msdf;
+package me.hannsi.lfjg.render.debug.exceptions;
 
 public class UnsupportedImageFileException extends RuntimeException {
     public UnsupportedImageFileException(String message) {

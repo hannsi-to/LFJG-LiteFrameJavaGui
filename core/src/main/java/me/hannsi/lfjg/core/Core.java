@@ -25,11 +25,17 @@ public class Core {
     public static final String DEFAULT_LFJG_JCEF_CORE_CLASS_NAME = ".JCefCore";
     public static final String DEFAULT_LFJG_PHYSIC_CORE_CLASS_NAME = ".PhysicCore";
     public static final String DEFAULT_LFJG_RENDER_CORE_CLASS_NAME = ".RenderCore";
+    public static final String DEFAULT_LFJG_RENDER_TEXT_CORE_CLASS_NAME = ".RenderTextCore";
+    public static final String DEFAULT_LFJG_RENDER_VIDEO_CORE_CLASS_NAME = ".RenderVideoCore";
+
     public static final boolean enableLFJGAudioSystem;
     public static final boolean enableLFJGFrameSystem;
     public static final boolean enableLFJGJCefSystem;
     public static final boolean enableLFJGPhysicSystem;
     public static final boolean enableLFJGRenderSystem;
+    public static final boolean enableLFJGRenderTextSystem;
+    public static final boolean enableLFJGRenderVideoSystem;
+
     public static boolean CORE_SYSTEM_DEBUG = true;
 
     public static Projection projection2D;
@@ -46,6 +52,8 @@ public class Core {
         enableLFJGJCefSystem = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_JCEF_SYSTEM_PATH + DEFAULT_LFJG_JCEF_CORE_CLASS_NAME);
         enableLFJGPhysicSystem = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_PHYSIC_SYSTEM_PATH + DEFAULT_LFJG_PHYSIC_CORE_CLASS_NAME);
         enableLFJGRenderSystem = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_CORE_CLASS_NAME);
+        enableLFJGRenderTextSystem = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_TEXT_CORE_CLASS_NAME);
+        enableLFJGRenderVideoSystem = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_VIDEO_CORE_CLASS_NAME);
     }
 
     public static Object invokeStaticMethod(String className, String methodName, Object... args) {

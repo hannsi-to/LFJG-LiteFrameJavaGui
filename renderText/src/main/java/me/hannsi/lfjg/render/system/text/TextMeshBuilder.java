@@ -1,7 +1,8 @@
-package me.hannsi.test.sdf.msdf;
+package me.hannsi.lfjg.render.system.text;
 
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
+import me.hannsi.lfjg.render.system.text.msdf.MSDFFont;
 
 import java.util.HashMap;
 import java.util.Map;
