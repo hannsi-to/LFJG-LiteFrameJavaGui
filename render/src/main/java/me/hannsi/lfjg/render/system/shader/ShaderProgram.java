@@ -24,9 +24,9 @@ import static org.lwjgl.opengl.GL20.*;
  * Represents a shader program in the OpenGL rendering system.
  */
 public class ShaderProgram {
-    private final Map<String, Integer> uniformCache = new HashMap<>();
-    private final Map<String, UniformValue> uniformValues = new HashMap<>();
     private final int programId;
+    private final Map<String, UniformValue> uniformValues;
+    private final Map<String, Integer> uniformCache;
 
     private int vertexShaderId;
     private int fragmentShaderId;
@@ -35,6 +35,9 @@ public class ShaderProgram {
      * Constructs a new ShaderProgram.
      */
     public ShaderProgram() {
+        uniformCache = new HashMap<>();
+        uniformValues = new HashMap<>();
+
         programId = glCreateProgram();
         if (programId == 0) {
             throw new CreatingShaderProgramException("Could not create Shader");

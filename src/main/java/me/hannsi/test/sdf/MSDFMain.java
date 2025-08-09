@@ -5,13 +5,14 @@ import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.renderers.font.TextFormatType;
+import me.hannsi.lfjg.render.renderers.polygon.GLLine;
 import me.hannsi.test.sdf.msdf.*;
 import org.joml.Vector2f;
 
 import java.io.IOException;
 
 public class MSDFMain implements LFJGFrame {
+    GLLine glLine;
     TextRenderer textRenderer;
     private Frame frame;
 
@@ -26,6 +27,9 @@ public class MSDFMain implements LFJGFrame {
     @Override
     public void init() {
         frame.updateLFJGLContext();
+
+        glLine = new GLLine("GLLine1");
+        glLine.line(0, 100, 1920, 100, 0.1f, Color.of(100, 100, 100, 255));
 
         try {
             Location fontFilePath = Location.fromFile("C:\\Users\\hanns\\idea-project\\LFJG-LiteFrameJavaGui\\core\\src\\main\\resources\\font\\GenZenGothic.ttf");
@@ -68,7 +72,8 @@ public class MSDFMain implements LFJGFrame {
                     .textMeshBuilder(textMeshBuilder)
                     .msdfTextureLoader(msdfTextureLoader)
                     .defaultFontColor(Color.WHITE)
-                    .pos(new Vector2f(100, 100))
+                    .textFormat(true)
+                    .pos(new Vector2f(1920 / 2f, 100))
                     .size(64);
         } catch (IOException e) {
             System.err.println("\nFATAL: Failed to initialize SDFGenerator.");
@@ -77,7 +82,10 @@ public class MSDFMain implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-        textRenderer.draw(TextFormatType.SPASE_X + "{40}しるT" + TextFormatType.OVERLINE + "しるT" + TextFormatType.SPASE_Y + "{-40}" + TextFormatType.NEWLINE + "ばは" + TextFormatType.DARK_BLUE + TextFormatType.STRIKETHROUGH + "あ" + TextFormatType.GOLD + "ほ");
+        textRenderer.draw("abcdefghijklmnopqrstuvwxyz");
+        glLine.draw();
+
+
 //        textRenderer.draw("しるT" + "しるT" + TextFormatType.RESET + "ばは" + TextFormatType.DARK_BLUE + TextFormatType.STRIKETHROUGH + "あ" + TextFormatType.GOLD + "ほ");
 //        DebugLog.debug(getClass(), "FPS:" + frame.getFps());
     }

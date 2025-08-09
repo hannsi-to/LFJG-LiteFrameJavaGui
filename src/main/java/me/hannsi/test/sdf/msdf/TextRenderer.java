@@ -7,6 +7,7 @@ import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.toolkit.StringUtil;
+import me.hannsi.lfjg.render.renderers.font.AlignType;
 import me.hannsi.lfjg.render.renderers.font.CharState;
 import me.hannsi.lfjg.render.renderers.font.TextFormatType;
 import me.hannsi.lfjg.render.system.mesh.BufferObjectType;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static me.hannsi.lfjg.core.utils.math.MathHelper.max;
+import static me.hannsi.lfjg.render.renderers.font.Align.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 
@@ -41,7 +43,8 @@ public class TextRenderer {
     private TextMeshBuilder textMeshBuilder;
     private Vector2f pos = new Vector2f(100, 100);
     private int size = 32;
-    private boolean chatFormat;
+    private boolean textFormat;
+    private int align = AlignType.CENTER_BOTTOM.getId();
 
     TextRenderer() {
         this.lineDatum = new ArrayList<>();
@@ -94,9 +97,19 @@ public class TextRenderer {
         return this;
     }
 
-    public TextRenderer charFormat(boolean chatFormat) {
-        this.chatFormat = chatFormat;
+    public TextRenderer textFormat(boolean textFormat) {
+        this.textFormat = textFormat;
+        return this;
+    }
 
+
+    public TextRenderer align(int align) {
+        this.align = align;
+        return this;
+    }
+
+    public TextRenderer align(AlignType alignType) {
+        this.align = alignType.getId();
         return this;
     }
 
@@ -139,16 +152,49 @@ public class TextRenderer {
                 continue;
             }
 
-            MSDFFont.Glyph glyph = textMeshBuilder.getGlyphMap().get(codePoint);
-            if (glyph != null) {
-                maxGlyphHeight = max(maxGlyphHeight, textMeshBuilder.getMsdfFont().getMetrics().getLineHeight() * size);
-            }
+            maxGlyphHeight = max(maxGlyphHeight, textMeshBuilder.getMsdfFont().getMetrics().getLineHeight() * size);
         }
 
         return lineCount * maxGlyphHeight;
     }
 
+    public float[] setAlignPos(String text) {
+        float[] position = new float[2];
+
+        if ((align & ALIGN_LEFT) != 0) {
+            position[0] = pos.x();
+        } else if ((align & ALIGN_CENTER) != 0) {
+            position[0] = pos.x() - getTextWidth(text) / 2f;
+        } else if ((align & ALIGN_RIGHT) != 0) {
+            position[0] = pos.x() - getTextWidth(text);
+        } else {
+            throw new UnknownAlignType("This alignment constant does not exist. const: " + align);
+        }
+
+        if ((align & ALIGN_TOP) != 0) {
+            position[1] = pos.y() - getTextHeight(text);
+        } else if ((align & ALIGN_MIDDLE) != 0) {
+            position[1] = pos.y() - getTextHeight(text) / 2f;
+        } else if ((align & ALIGN_BASELINE) != 0) {
+            position[1] = pos.y();
+        } else if ((align & ALIGN_BOTTOM) != 0) {
+            MSDFFont.Metrics metrics = textMeshBuilder.getMsdfFont().getMetrics();
+            float offset = metrics.getDescender();
+            position[1] = pos.y() - (offset * size);
+        } else {
+            throw new UnknownAlignType("This alignment constant does not exist. const: " + align);
+        }
+
+        return position;
+    }
+
     public TextRenderer draw(String text) {
+        GLStateCache.enable(GL_BLEND);
+        GLStateCache.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        GLStateCache.enable(GL_TEXTURE_2D);
+        GLStateCache.activeTexture(GL_TEXTURE0);
+        GLStateCache.bindTexture(GL_TEXTURE_2D, msdfTextureLoader.textureId);
+
         msdfFontShaderProgram.bind();
 
         msdfFontShaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());
@@ -156,18 +202,14 @@ public class TextRenderer {
         msdfFontShaderProgram.setUniform("fontAtlas", UploadUniformType.ONCE, 0);
         msdfFontShaderProgram.setUniform("distanceRange", UploadUniformType.ONCE, (float) textMeshBuilder.getMsdfFont().getAtlas().getDistanceRange());
 
-        GLStateCache.enable(GL_BLEND);
-        GLStateCache.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        GLStateCache.enable(GL_TEXTURE_2D);
-        GLStateCache.activeTexture(GL_TEXTURE0);
-        GLStateCache.bindTexture(GL_TEXTURE_2D, msdfTextureLoader.textureId);
-
         boolean code = false;
         TextFormatType textFormatType;
         CharState charState = new CharState(defaultFontColor);
 
-        float cursorX = pos.x();
-        float cursorY = pos.y();
+        float[] alignPos = setAlignPos(text);
+        float cursorX = alignPos[0];
+        float cursorY = alignPos[1];
+
         float spaseX = 0f;
         float spaseY = 0f;
         StringBuilder value = null;
@@ -177,8 +219,8 @@ public class TextRenderer {
         LineData doubleStrikethroughData = null;
         LineData overLineData = null;
         for (int i = 0; i < text.length(); i++) {
-            char ch = text.toCharArray()[i];
-            if (ch == TextFormatType.PREFIX_CODE) {
+            char ch = text.charAt(i);
+            if (ch == TextFormatType.PREFIX_CODE && textFormat) {
                 code = true;
                 continue;
             }
@@ -203,6 +245,8 @@ public class TextRenderer {
 
             if (charState.obfuscated) {
                 ch = StringUtil.getRandomCharacter(StringUtil.getStringFromChars(textMeshBuilder.getChars()));
+                cursorX = alignPos[0];
+                cursorY = alignPos[1];
             }
 
             if (charState.spaseX || charState.spaseY) {
@@ -235,9 +279,21 @@ public class TextRenderer {
             }
 
             int charCode = ch;
+
+            TextMeshBuilder.TextMesh textMesh = textMeshBuilder.getTextMeshMap().get(charCode);
+            if (textMesh == null && charCode != 32) {
+                DebugLog.error(getClass(), "Code point " + charCode + "(" + ch + ") is not generated by " + TextMeshBuilder.class.getSimpleName());
+                continue;
+            }
+
             MSDFFont.Glyph glyph = textMeshBuilder.getGlyphMap().get(charCode);
             if (glyph == null) {
                 continue;
+            }
+            MSDFFont.Metrics metrics = textMeshBuilder.getMsdfFont().getMetrics();
+            float bearingY = 0f;
+            if (glyph.getPlaneBounds().getBottom() < metrics.getDescender()) {
+                bearingY = -glyph.getPlaneBounds().getBottom() * size;
             }
 
             float advance = glyph.getAdvance();
@@ -246,12 +302,7 @@ public class TextRenderer {
                 continue;
             }
 
-            TextMeshBuilder.TextMesh textMesh = textMeshBuilder.getTextMeshMap().get(charCode);
-            if (textMesh == null) {
-                DebugLog.error(getClass(), "Code point " + charCode + " is not generated by " + TextMeshBuilder.class.getSimpleName());
-                continue;
-            }
-
+            assert textMesh != null;
             if (!charState.skip) {
                 if (charState.underLine) {
                     underLineData = new LineData(LineData.LineType.UNDERLINE, cursorX, cursorX, cursorY, charState.color);
@@ -300,15 +351,15 @@ public class TextRenderer {
 
                 if (charState.outLine) {
                     msdfFontShaderProgram.setUniform("outline", UploadUniformType.ON_CHANGE, true);
-                    msdfFontShaderProgram.setUniform("outlineWidth", UploadUniformType.ON_CHANGE, 0f);
+                    msdfFontShaderProgram.setUniform("outlineWidth", UploadUniformType.ONCE, 0f);
                 } else {
                     msdfFontShaderProgram.setUniform("outline", UploadUniformType.ON_CHANGE, false);
                 }
 
-                msdfFontShaderProgram.setUniform("blurSize", UploadUniformType.ON_CHANGE, 1f);
-
+                float glyphYOffset = -glyph.getPlaneBounds().getBottom() * size;
+                modelMatrix.translate(cursorX + (charState.shadow ? size * 0.02f : 0), cursorY - bearingY + (charState.shadow ? size * 0.02f : 0) + glyphYOffset, 0).scale(size, size, 1);
                 msdfFontShaderProgram.setUniform("fontColor", UploadUniformType.ON_CHANGE, charState.color);
-                msdfFontShaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix.translate(cursorX + (charState.shadow ? size * 0.02f : 0), cursorY - (charState.shadow ? size * 0.02f : 0), 0).scale(size, size, 1));
+                msdfFontShaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix);
                 vaoRendering.draw(textMesh.mesh, GL_TRIANGLES);
             }
 
@@ -348,17 +399,13 @@ public class TextRenderer {
             modelMatrix.identity();
         }
 
-        if (!lineDatum.isEmpty()) {
-            GLStateCache.disable(GL_TEXTURE_2D);
-        }
-        for (LineData data : lineDatum) {
+        for (int i = 0, lineDatumSize = lineDatum.size(); i < lineDatumSize; i++) {
+            LineData data = lineDatum.get(i);
             lineShaderProgram.bind();
-
-            float thickness;
 
             float x;
             float y;
-
+            float thickness;
             float width;
 
             MSDFFont.Metrics metrics = textMeshBuilder.getMsdfFont().getMetrics();
@@ -397,6 +444,7 @@ public class TextRenderer {
             lineShaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, viewMatrix);
             lineShaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix.translate(x, y, 0).scale(width, thickness, 1));
             lineShaderProgram.setUniform("color", UploadUniformType.PER_FRAME, data.color);
+            lineShaderProgram.setUniform("replaceColor", UploadUniformType.ONCE, true);
 
             vaoRendering.draw(lineMesh);
 
@@ -463,12 +511,12 @@ public class TextRenderer {
         this.defaultFontColor = defaultFontColor;
     }
 
-    public boolean isChatFormat() {
-        return chatFormat;
+    public boolean isTextFormat() {
+        return textFormat;
     }
 
-    public void setChatFormat(boolean chatFormat) {
-        this.chatFormat = chatFormat;
+    public void setTextFormat(boolean textFormat) {
+        this.textFormat = textFormat;
     }
 
     public static class LineData {

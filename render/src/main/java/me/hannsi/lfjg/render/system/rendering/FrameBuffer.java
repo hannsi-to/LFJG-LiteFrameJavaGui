@@ -228,7 +228,7 @@ public class FrameBuffer {
             GLStateCache.enable(GL_STENCIL_TEST);
         }
 
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        GLStateCache.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         if (uesStencil) {
             glClear(GL_STENCIL_BUFFER_BIT);
@@ -244,9 +244,11 @@ public class FrameBuffer {
 
         bindTexture(textureUnit);
         vaoRendering.draw(mesh);
-        unbindTexture(textureUnit);
+    }
 
-        shaderProgramFBO.unbind();
+    public void bindTexture(int textureUnit) {
+        GLStateCache.activeTexture(GL_TEXTURE0 + textureUnit);
+        GLStateCache.bindTexture(GL_TEXTURE_2D, textureId);
     }
 
     /**
@@ -257,13 +259,6 @@ public class FrameBuffer {
     }
 
     /**
-     * Unbinds the render buffer.
-     */
-    public void unbindRenderBuffer() {
-        glBindRenderbuffer(GL_RENDERBUFFER, 0);
-    }
-
-    /**
      * Binds the frame buffer for drawing.
      */
     public void bindDrawFrameBuffer() {
@@ -271,24 +266,10 @@ public class FrameBuffer {
     }
 
     /**
-     * Unbinds the frame buffer from drawing.
-     */
-    public void unbindDrawFrameBuffer() {
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-    }
-
-    /**
      * Binds the frame buffer for reading.
      */
     public void bindReadFrameBuffer() {
         glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBufferId);
-    }
-
-    /**
-     * Unbinds the frame buffer from reading.
-     */
-    public void unBindReadFrameBuffer() {
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
     }
 
     /**
@@ -310,25 +291,6 @@ public class FrameBuffer {
      */
     public void unbindFrameBuffer() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    }
-
-    /**
-     * Binds the texture to the specified texture unit.
-     *
-     * @param textureUnit the texture unit to bind to
-     */
-    public void bindTexture(int textureUnit) {
-        glActiveTexture(GL_TEXTURE0 + textureUnit);
-        glBindTexture(GL_TEXTURE_2D, textureId);
-    }
-
-    /**
-     * Unbinds the texture from the specified texture unit.
-     *
-     * @param textureUnit the texture unit to unbind from
-     */
-    public void unbindTexture(int textureUnit) {
-//        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     public int getFrameBufferId() {

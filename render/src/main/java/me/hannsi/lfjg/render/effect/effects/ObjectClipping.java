@@ -60,8 +60,6 @@ public class ObjectClipping extends EffectBase {
 
         if (clippingObject.getEffectCache() != null) {
             clippingObject.getEffectCache().getEndFrameBuffer().bindTexture(1);
-        } else {
-            clippingObject.getFrameBuffer().unbindTexture(1);
         }
 
         super.frameBuffer(baseGLObject);

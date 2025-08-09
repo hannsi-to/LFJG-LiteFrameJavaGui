@@ -13,13 +13,19 @@ uniform mat4 modelMatrix;
 uniform sampler2D textureSampler;
 uniform vec4 color;
 uniform int blendMode;
+uniform bool replaceColor;
 
 #include "shader/frameBuffer/util/Blend.glsl"
 
 void main()
 {
     vec4 texColor = texture(textureSampler, outTexture);
-    vec4 subColor = outColor;
-    vec4 newColor = subColor = color;
+    vec4 newColor;
+    if (replaceColor){
+        newColor = color;
+    } else {
+        newColor = outColor;
+    }
+
     fragColor = blend(texColor, newColor, blendMode);
 }
