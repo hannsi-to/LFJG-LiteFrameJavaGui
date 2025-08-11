@@ -6,13 +6,11 @@ import me.hannsi.lfjg.core.utils.type.types.ImageLoaderType;
 import me.hannsi.lfjg.core.utils.type.types.LocationType;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.system.MemoryUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -29,42 +27,6 @@ public class TextureLoader {
         loadTexture();
     }
 
-    public static ByteBuffer loadImageInSTBImage(Location location, IntBuffer widthBuffer, IntBuffer heightBuffer, IntBuffer channelsBuffer) {
-        ByteBuffer image;
-        ByteBuffer buffer = null;
-
-        try (InputStream inputStream = location.openStream()) {
-            if (inputStream == null) {
-                throw new RuntimeException("Resource not found: " + location.path());
-            }
-
-            byte[] data = inputStream.readAllBytes();
-            buffer = MemoryUtil.memAlloc(data.length);
-            buffer.put(data);
-            buffer.flip();
-
-            STBImage.stbi_set_flip_vertically_on_load(true);
-            image = STBImage.stbi_load_from_memory(buffer, widthBuffer, heightBuffer, channelsBuffer, STBImage.STBI_rgb_alpha);
-
-            if (image == null) {
-                throw new RuntimeException("Failed to load image: " + STBImage.stbi_failure_reason());
-            }
-
-            if (widthBuffer.get(0) == 0 || heightBuffer.get(0) == 0) {
-                STBImage.stbi_image_free(image);
-                throw new RuntimeException("Invalid texture dimensions.");
-            }
-
-            return image;
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to read resource: " + location.path(), e);
-        } finally {
-            if (buffer != null) {
-                MemoryUtil.memFree(buffer);
-            }
-        }
-    }
-
     public void cleanup() {
         Core.GL11.glDeleteTextures(textureId);
     }
@@ -72,7 +34,7 @@ public class TextureLoader {
     private void loadTexture() {
         if (texturePath.locationType() == LocationType.FILE || texturePath.locationType() == LocationType.RESOURCE) {
             switch (imageLoaderType) {
-                case STB_IMAGE -> {
+                case STB_IMAGE:
                     try (MemoryStack stack = MemoryStack.stackPush()) {
                         IntBuffer width = stack.mallocInt(1);
                         IntBuffer height = stack.mallocInt(1);
@@ -87,9 +49,8 @@ public class TextureLoader {
 
                         STBImage.stbi_image_free(image);
                     }
-                }
-                case JAVA_CV -> {
-//                    Mat bgrMat = opencv_imgcodecs.imdecode(new Mat(texturePath.getBytes()), opencv_imgcodecs.IMREAD_COLOR);
+                    break;
+                case JAVA_CV://                    Mat bgrMat = opencv_imgcodecs.imdecode(new Mat(texturePath.getBytes()), opencv_imgcodecs.IMREAD_COLOR);
 //
 //                    if (bgrMat.empty()) {
 //                        DebugLog.error(getClass(), "Image file [" + texturePath + "] not loaded.");
@@ -100,8 +61,9 @@ public class TextureLoader {
 //                    cvtColor(bgrMat, mat, opencv_imgproc.COLOR_BGR2RGBA);
 //
 //                    generateTexture(mat.cols(), mat.rows(), IOUtil.matToByteBufferRGBA(mat));
-                }
-                default -> throw new IllegalStateException("Unexpected value: " + imageLoaderType);
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + imageLoaderType);
             }
         } else {
             try {

@@ -205,7 +205,7 @@ public class IOUtil extends Util {
         return data;
     }
 
-    public static String readInputStreamToString(InputStream inputStream) {
+    public static String readInputStreamToString(InputStream inputStream) throws UnsupportedEncodingException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         byte[] buffer = new byte[512];
 
@@ -221,7 +221,7 @@ public class IOUtil extends Util {
             out.write(buffer, 0, read);
         }
 
-        return out.toString(StandardCharsets.UTF_8);
+        return out.toString(String.valueOf(StandardCharsets.UTF_8));
     }
 
     public static ByteBuffer svgToByteBuffer(Location fileLocation) {

@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.core.debug;
 
 import me.hannsi.lfjg.core.utils.math.MathHelper;
+import me.hannsi.lfjg.core.utils.toolkit.StringUtil;
 
 public class LogGenerator {
     public static int barCount = 30;
@@ -16,19 +17,20 @@ public class LogGenerator {
         id = "ID: " + id;
 
         switch (logGenerateType) {
-            case CREATE_CACHE -> {
+            case CREATE_CACHE:
                 type += "Cache Creation";
                 message += "Create " + clazz.getSimpleName() + (!subMessage.isEmpty() ? " | " : "") + subMessage;
-            }
-            case CLEANUP -> {
+                break;
+            case CLEANUP:
                 type += "Cleanup";
                 message += clazz.getSimpleName() + " cleanup is complete" + (!subMessage.isEmpty() ? " | " : "") + subMessage;
-            }
-            case LOAD -> {
+                break;
+            case LOAD:
                 type += "Load";
                 message += "Load " + clazz.getSimpleName() + (!subMessage.isEmpty() ? " | " : "") + subMessage;
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + logGenerateType);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + logGenerateType);
         }
 
         this.title = title;
@@ -51,10 +53,9 @@ public class LogGenerator {
     public String createLog() {
         StringBuilder log = new StringBuilder("\n");
         StringBuilder firstLine = new StringBuilder();
-
-        firstLine.append("-".repeat(MathHelper.max(0, barCount)));
+        firstLine.append(StringUtil.repeat("-", MathHelper.max(0, barCount)));
         firstLine.append(" ").append(title).append(" ");
-        firstLine.append("-".repeat(MathHelper.max(0, barCount)));
+        firstLine.append(StringUtil.repeat("-", MathHelper.max(0, barCount)));
 
         log.append(firstLine);
 
@@ -63,7 +64,7 @@ public class LogGenerator {
         }
 
         log.append("\n");
-        log.append("-".repeat(MathHelper.max(0, firstLine.length())));
+        log.append(StringUtil.repeat("-", MathHelper.max(0, firstLine.length())));
         log.append("\n");
 
         return log.toString();
@@ -71,11 +72,20 @@ public class LogGenerator {
 
     public void logging(DebugLevel debugLevel) {
         switch (debugLevel) {
-            case DEBUG -> DebugLog.debug(LogGenerator.class, createLog());
-            case INFO -> DebugLog.info(LogGenerator.class, createLog());
-            case WARNING -> DebugLog.warning(LogGenerator.class, createLog());
-            case ERROR -> DebugLog.error(LogGenerator.class, createLog());
-            default -> throw new IllegalStateException("Unexpected value: " + debugLevel);
+            case DEBUG:
+                DebugLog.debug(LogGenerator.class, createLog());
+                break;
+            case INFO:
+                DebugLog.info(LogGenerator.class, createLog());
+                break;
+            case WARNING:
+                DebugLog.warning(LogGenerator.class, createLog());
+                break;
+            case ERROR:
+                DebugLog.error(LogGenerator.class, createLog());
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + debugLevel);
         }
     }
 

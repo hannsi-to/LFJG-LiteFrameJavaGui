@@ -117,20 +117,6 @@ public class RuntimeUtil extends Util {
         return threadBean.getThreadCount();
     }
 
-    public static long getTotalSystemMemory() {
-        OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
-        return osBean.getTotalMemorySize();
-    }
-
-    public static long getFreeSystemMemory() {
-        OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
-        return osBean.getFreeMemorySize();
-    }
-
-    public static long getSystemMemoryUsed() {
-        return getTotalSystemMemory() - getFreeSystemMemory();
-    }
-
     public static double getProcessCpuLoad() {
         OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         return osBean.getProcessCpuLoad() * 100;

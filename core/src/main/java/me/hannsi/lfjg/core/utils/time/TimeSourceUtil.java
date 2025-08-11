@@ -43,46 +43,40 @@ public class TimeSourceUtil extends Util {
 
     public static long getTimeMills(TimeSourceType timeSourceType) {
         switch (timeSourceType) {
-            case GLFW_TIME -> {
+            case GLFW_TIME:
                 return getGLFWTimeMills();
-            }
-            case SYSTEM_TIME -> {
+            case SYSTEM_TIME:
                 return getSystemTimeMills();
-            }
-            case NANO_TIME -> {
+            case NANO_TIME:
                 return getNanoTimeMills();
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + timeSourceType);
+            default:
+                throw new IllegalStateException("Unexpected value: " + timeSourceType);
         }
     }
 
     public static double getTime(TimeSourceType timeSourceType) {
         switch (timeSourceType) {
-            case GLFW_TIME -> {
+            case GLFW_TIME:
                 return getGLFWTime();
-            }
-            case SYSTEM_TIME -> {
+            case SYSTEM_TIME:
                 return getSystemTime();
-            }
-            case NANO_TIME -> {
+            case NANO_TIME:
                 return getNanoTime();
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + timeSourceType);
+            default:
+                throw new IllegalStateException("Unexpected value: " + timeSourceType);
         }
     }
 
     public static long getNanoTime(TimeSourceType timeSourceType) {
         switch (timeSourceType) {
-            case GLFW_TIME -> {
+            case GLFW_TIME:
                 return getGLFWTimeNano();
-            }
-            case SYSTEM_TIME -> {
+            case SYSTEM_TIME:
                 return getSystemTimeNano();
-            }
-            case NANO_TIME -> {
+            case NANO_TIME:
                 return getNanoTimeNano();
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + timeSourceType);
+            default:
+                throw new IllegalStateException("Unexpected value: " + timeSourceType);
         }
     }
 }

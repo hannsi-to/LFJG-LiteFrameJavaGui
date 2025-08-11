@@ -37,7 +37,7 @@ public class UnicodeBlocks {
         }
 
         if (!success) {
-            try (BufferedReader reader = new BufferedReader(new FileReader("Blocks.txt", StandardCharsets.UTF_8))) {
+            try (BufferedReader reader = new BufferedReader(new FileReader("Blocks.txt"))) {
                 loadBlocks(reader);
             } catch (IOException e) {
                 throw new RuntimeException("Failed to load Unicode Blocks locally.", e);

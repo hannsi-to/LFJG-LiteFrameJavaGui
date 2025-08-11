@@ -374,7 +374,9 @@ public class Mesh {
 
     private List<DrawCommand> generateDefaultDrawCommands() {
         int count = useElementBufferObject ? numVertices : this.count;
-        return List.of(new DrawCommand(count, 1, 0, 0, 0));
+        List<DrawCommand> list = new ArrayList<>();
+        list.add(new DrawCommand(count, 1, 0, 0, 0));
+        return Collections.unmodifiableList(list);
     }
 
     private void uploadIndirectBuffer() {

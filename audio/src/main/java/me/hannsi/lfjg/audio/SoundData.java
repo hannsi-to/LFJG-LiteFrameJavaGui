@@ -34,14 +34,13 @@ public class SoundData {
 
     public SoundData createSoundPCM(SoundLoaderType soundLoaderType, Location fileLocation) {
         switch (soundLoaderType) {
-            case STB_VORBIS -> {
+            case STB_VORBIS:
                 try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
                     pcm = readVorbis(fileLocation.path(), info);
                     updatePCMData(info.sample_rate(), info.channels());
                 }
-            }
-            case JAVA_CV -> {
-//                try (FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(fileLocation.path())) {
+                break;
+            case JAVA_CV://                try (FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(fileLocation.path())) {
 //                    pcm = readAudio(grabber, fileLocation.path());
 //
 //                    int sampleRate = grabber.getSampleRate();
@@ -51,9 +50,9 @@ public class SoundData {
 //                } catch (Exception e) {
 //                    throw new RuntimeException("Failed to load audio file: " + fileLocation.path(), e);
 //                }
-
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + soundLoaderType);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + soundLoaderType);
         }
 
         return this;

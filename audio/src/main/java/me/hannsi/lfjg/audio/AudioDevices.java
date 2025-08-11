@@ -24,7 +24,8 @@ public class AudioDevices {
             Line.Info[] sourceLineInfo = mixer.getSourceLineInfo();
             boolean supportsOutput = false;
             for (Line.Info info : sourceLineInfo) {
-                if (info instanceof DataLine.Info dataLineInfo) {
+                if (info instanceof DataLine.Info) {
+                    DataLine.Info dataLineInfo = (DataLine.Info) info;
                     if (SourceDataLine.class.isAssignableFrom(dataLineInfo.getLineClass())) {
                         supportsOutput = true;
                         break;

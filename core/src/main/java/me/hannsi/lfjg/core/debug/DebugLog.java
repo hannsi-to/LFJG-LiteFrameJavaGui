@@ -100,22 +100,22 @@ public class DebugLog {
     private String getDescription() {
         String description = "[" + clazz.getSimpleName() + "] ";
 
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
         switch (debugType) {
-            case EXCEPTION -> {
-                StringWriter sw = new StringWriter();
-                PrintWriter pw = new PrintWriter(sw);
+            case EXCEPTION:
                 exception.printStackTrace(pw);
                 description += "\n" + sw;
-            }
-            case ERROR -> {
-                StringWriter sw = new StringWriter();
-                PrintWriter pw = new PrintWriter(sw);
+                break;
+            case ERROR:
                 error.printStackTrace(pw);
                 description += "\n" + sw;
-            }
-            case TEXT -> description += debugText;
-
-            default -> throw new IllegalStateException("Unexpected value: " + debugType);
+                break;
+            case TEXT:
+                description += debugText;
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + debugType);
         }
         return description;
     }

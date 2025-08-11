@@ -1,10 +1,13 @@
 package me.hannsi.test.sdf;
 
+import me.hannsi.lfjg.core.manager.WorkspaceManager;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.toolkit.UnicodeBlocks;
 import me.hannsi.lfjg.frame.Frame;
+import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
+import me.hannsi.lfjg.frame.setting.settings.SeverityType;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.renderers.polygon.GLLine;
 import me.hannsi.lfjg.render.renderers.text.TextRenderer;
@@ -44,7 +47,7 @@ public class MSDFMain implements LFJGFrame {
             Location fontFilePath = Location.fromFile("C:\\Users\\hanns\\idea-project\\LFJG-LiteFrameJavaGui\\core\\src\\main\\resources\\font\\GenZenGothic.ttf");
 
             String characters = "Hello world!!あ";
-            String outputFileName = "my-sdf-font-final";
+            String outputFileName = WorkspaceManager.currentWorkspace;
             int textureResolution = 512;
 
             MSDFGenerator generator = MSDFGenerator.createMSDFGenerator()
@@ -107,5 +110,6 @@ public class MSDFMain implements LFJGFrame {
     @Override
     public void setFrameSetting() {
         frame.setFrameSettingValue(RefreshRateSetting.class, -1);
+        frame.setFrameSettingValue(CheckSeveritiesSetting.class, new SeverityType[]{SeverityType.HIGH});
     }
 }

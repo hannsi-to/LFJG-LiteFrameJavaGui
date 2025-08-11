@@ -1,8 +1,11 @@
 package me.hannsi.lfjg.render;
 
-public class RenderCore {
+import me.hannsi.lfjg.core.Service;
+import me.hannsi.lfjg.core.ServiceData;
 
-    public static void main(String... args) {
-
+public class RenderCore implements Service {
+    @Override
+    public ServiceData execute() {
+        return new ServiceData(true, "Render", "v1.0.0");
     }
 }

@@ -4,7 +4,6 @@
 
 package org.cef.browser;
 
-import java.io.Serial;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -127,7 +126,6 @@ public class CefDevToolsClient implements AutoCloseable {
     }
 
     public static final class DevToolsException extends Exception {
-        @Serial
         private static final long serialVersionUID = 3952948449841375372L;
 
         private final String json_;

@@ -17,16 +17,21 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ClassUtil extends Util {
     private static final Map<String, MethodHandle> METHOD_HANDLE_CACHE = new ConcurrentHashMap<>();
 
-    private static final Map<Class<?>, Class<?>> PRIMITIVE_MAP = Map.ofEntries(
-            Map.entry(Boolean.class, boolean.class),
-            Map.entry(Byte.class, byte.class),
-            Map.entry(Character.class, char.class),
-            Map.entry(Double.class, double.class),
-            Map.entry(Float.class, float.class),
-            Map.entry(Integer.class, int.class),
-            Map.entry(Long.class, long.class),
-            Map.entry(Short.class, short.class)
-    );
+    private static final Map<Class<?>, Class<?>> PRIMITIVE_MAP;
+
+    static {
+        Map<Class<?>, Class<?>> map = new HashMap<>();
+        map.put(Boolean.class, boolean.class);
+        map.put(Byte.class, byte.class);
+        map.put(Character.class, char.class);
+        map.put(Double.class, double.class);
+        map.put(Float.class, float.class);
+        map.put(Integer.class, int.class);
+        map.put(Long.class, long.class);
+        map.put(Short.class, short.class);
+
+        PRIMITIVE_MAP = Collections.unmodifiableMap(map);
+    }
 
     private static Class<?> wrapPrimitive(Class<?> clazz) {
         return PRIMITIVE_MAP.getOrDefault(clazz, clazz);
@@ -82,6 +87,22 @@ public class ClassUtil extends Util {
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                  NoSuchMethodException e) {
             throw new RuntimeException("Could not instantiate class: " + clazz.getName(), e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T createInstanceWithoutArgs(String className) {
+        Class<T> clazz = null;
+        try {
+            clazz = (Class<T>) Class.forName(className);
+            Constructor<T> constructor = clazz.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            return constructor.newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
+            throw new RuntimeException("Could not instantiate class: " + clazz.getName(), e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 

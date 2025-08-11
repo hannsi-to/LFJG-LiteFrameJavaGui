@@ -371,15 +371,25 @@ public class CefBrowserOsr extends CefBrowser_N implements CefRenderHandler {
     public boolean startDragging(CefBrowser browser, CefDragData dragData, int mask, int x, int y) {
         int action = getDndAction(mask);
         MouseEvent triggerEvent = new MouseEvent(canvas_, MouseEvent.MOUSE_DRAGGED, 0, 0, x, y, 0, false);
-        DragGestureEvent ev = new DragGestureEvent(new SyntheticDragGestureRecognizer(canvas_, action, triggerEvent), action, new Point(x, y), new ArrayList<>(List.of(triggerEvent)));
 
-        DragSource.getDefaultDragSource().startDrag(ev, /*dragCursor=*/null, new StringSelection(dragData.getFragmentText()), new DragSourceAdapter() {
-            @Override
-            public void dragDropEnd(DragSourceDropEvent dsde) {
-                dragSourceEndedAt(dsde.getLocation(), action);
-                dragSourceSystemDragEnded();
-            }
-        });
+        List<MouseEvent> triggerEventList = new ArrayList<>();
+        triggerEventList.add(triggerEvent);
+
+        DragGestureEvent ev = new DragGestureEvent(
+                new SyntheticDragGestureRecognizer(canvas_, action, triggerEvent),
+                action,
+                new Point(x, y),
+                triggerEventList
+        );
+
+        DragSource.getDefaultDragSource().startDrag(ev, /*dragCursor=*/null,
+                new StringSelection(dragData.getFragmentText()), new DragSourceAdapter() {
+                    @Override
+                    public void dragDropEnd(DragSourceDropEvent dsde) {
+                        dragSourceEndedAt(dsde.getLocation(), action);
+                        dragSourceSystemDragEnded();
+                    }
+                });
         return true;
     }
 
@@ -441,10 +451,11 @@ public class CefBrowserOsr extends CefBrowser_N implements CefRenderHandler {
             // is returned, on which the caller can wait for a result (but not with the Event
             // Thread, as we need that for pixel grabbing, which is why there's a safeguard in place
             // to catch that situation if it accidentally happens).
-            CompletableFuture<BufferedImage> future = new CompletableFuture<>() {
+            CompletableFuture<BufferedImage> future = new CompletableFuture<BufferedImage>() {
                 private void safeguardGet() {
                     if (SwingUtilities.isEventDispatchThread()) {
-                        throw new RuntimeException("Waiting on this Future using the AWT Event Thread is illegal, " + "because it can potentially deadlock the thread.");
+                        throw new RuntimeException("Waiting on this Future using the AWT Event Thread is illegal, " +
+                                "because it can potentially deadlock the thread.");
                     }
                 }
 
@@ -455,7 +466,8 @@ public class CefBrowserOsr extends CefBrowser_N implements CefRenderHandler {
                 }
 
                 @Override
-                public BufferedImage get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+                public BufferedImage get(long timeout, TimeUnit unit)
+                        throws InterruptedException, ExecutionException, TimeoutException {
                     safeguardGet();
                     return super.get(timeout, unit);
                 }

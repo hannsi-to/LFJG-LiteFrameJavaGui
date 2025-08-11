@@ -13,6 +13,17 @@ import java.util.regex.Pattern;
 public class StringUtil extends Util {
     public static final String DEFAULT_CHARS_BASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
+    public static String repeat(String str, int count) {
+        if (str == null || count <= 0) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder(str.length() * count);
+        for (int i = 0; i < count; i++) {
+            sb.append(str);
+        }
+        return sb.toString();
+    }
+
     public static String getFirstNCharacters(String str, int n) {
         if (str == null || n <= 0 || n > str.length()) {
             return "";
@@ -259,10 +270,6 @@ public class StringUtil extends Util {
         }
 
         return reverseStringRecursive(str.substring(1)) + str.charAt(0);
-    }
-
-    public static String repeatString(String str, int times) {
-        return str.repeat(Math.max(0, times));
     }
 
     public static String replaceAll(String str, char oldChar, char newChar) {

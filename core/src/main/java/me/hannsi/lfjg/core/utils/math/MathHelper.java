@@ -61,11 +61,11 @@ public class MathHelper {
     /**
      * Value of TAU as double.
      */
-    public static final double TAU_d = java.lang.Math.TAU;
+    public static final double TAU_d = 2 * Math.PI;
     /**
      * Value of TAU as float.
      */
-    public static final float TAU = (float) java.lang.Math.TAU;
+    public static final float TAU = (float) TAU_d;
 
     public static final Random RANDOM = new Random();
 
@@ -1438,7 +1438,14 @@ public class MathHelper {
      * @throws ArithmeticException If overflow occurs.
      */
     public static int divideExact(int x, int y) {
-        return java.lang.Math.divideExact(x, y);
+        if (y == 0) {
+            throw new ArithmeticException("/ by zero");
+        }
+        int div = x / y;
+        if (x % y != 0) {
+            throw new ArithmeticException("non-exact result");
+        }
+        return div;
     }
 
     /**
@@ -1450,7 +1457,14 @@ public class MathHelper {
      * @throws ArithmeticException If overflow occurs.
      */
     public static long divideExact(long x, long y) {
-        return java.lang.Math.divideExact(x, y);
+        if (y == 0) {
+            throw new ArithmeticException("/ by zero");
+        }
+        long div = x / y;
+        if (x % y != 0) {
+            throw new ArithmeticException("non-exact result");
+        }
+        return div;
     }
 
     /**
@@ -1462,7 +1476,14 @@ public class MathHelper {
      * @throws ArithmeticException If overflow occurs.
      */
     public static int floorDivExact(int x, int y) {
-        return java.lang.Math.floorDivExact(x, y);
+        if (y == 0) {
+            throw new ArithmeticException("/ by zero");
+        }
+        int div = floorDiv(x, y);
+        if (x % y != 0) {
+            throw new ArithmeticException("non-exact result");
+        }
+        return div;
     }
 
     /**
@@ -1474,7 +1495,14 @@ public class MathHelper {
      * @throws ArithmeticException If overflow occurs.
      */
     public static long floorDivExact(long x, long y) {
-        return java.lang.Math.floorDivExact(x, y);
+        if (y == 0) {
+            throw new ArithmeticException("/ by zero");
+        }
+        long div = floorDiv(x, y);
+        if (x % y != 0) {
+            throw new ArithmeticException("non-exact result");
+        }
+        return div;
     }
 
     /**
@@ -1528,7 +1556,15 @@ public class MathHelper {
      * @throws ArithmeticException If y is zero.
      */
     public static int ceilDivExact(int x, int y) {
-        return java.lang.Math.ceilDivExact(x, y);
+        if (y == 0) {
+            throw new ArithmeticException("/ by zero");
+        }
+        int div = x / y;
+        int rem = x % y;
+        if (rem != 0) {
+            throw new ArithmeticException("non-exact result");
+        }
+        return div;
     }
 
     /**
@@ -1540,7 +1576,15 @@ public class MathHelper {
      * @throws ArithmeticException If y is zero.
      */
     public static long ceilDivExact(long x, long y) {
-        return java.lang.Math.ceilDivExact(x, y);
+        if (y == 0) {
+            throw new ArithmeticException("/ by zero");
+        }
+        long div = x / y;
+        long rem = x % y;
+        if (rem != 0) {
+            throw new ArithmeticException("non-exact result");
+        }
+        return div;
     }
 
     /**
@@ -1681,7 +1725,17 @@ public class MathHelper {
      * @return The high part of the product of x and y.
      */
     public static long multiplyHigh(long x, long y) {
-        return java.lang.Math.multiplyHigh(x, y);
+        long x0 = x & 0xFFFFFFFFL;
+        long x1 = x >>> 32;
+        long y0 = y & 0xFFFFFFFFL;
+        long y1 = y >>> 32;
+
+        long z2 = x1 * y1;
+        long t = x0 * y1 + (z2 << 32);
+        long z1 = t >>> 32;
+
+        t = x1 * y0 + z1;
+        return z2 + (t >>> 32);
     }
 
     /**
@@ -1692,7 +1746,18 @@ public class MathHelper {
      * @return The high part of the product of x and y.
      */
     public static long unsignedMultiplyHigh(long x, long y) {
-        return java.lang.Math.unsignedMultiplyHigh(x, y);
+        long x0 = x & 0xFFFFFFFFL;
+        long x1 = x >>> 32;
+        long y0 = y & 0xFFFFFFFFL;
+        long y1 = y >>> 32;
+
+        long z2 = x1 * y1;
+        long t = x0 * y1 + (z2 << 32);
+        long z1 = t >>> 32;
+
+        t = x1 * y0 + z1;
+
+        return z2 + (t >>> 32);
     }
 
     /**
@@ -1752,7 +1817,14 @@ public class MathHelper {
      * @throws ArithmeticException If y is zero.
      */
     public static int ceilDiv(int x, int y) {
-        return java.lang.Math.ceilDiv(x, y);
+        if (y == 0) {
+            throw new ArithmeticException("/ by zero");
+        }
+        int r = x / y;
+        if ((x ^ y) > 0 && x % y != 0) {
+            r++;
+        }
+        return r;
     }
 
     /**
@@ -1764,7 +1836,14 @@ public class MathHelper {
      * @throws ArithmeticException If y is zero.
      */
     public static long ceilDiv(long x, long y) {
-        return java.lang.Math.ceilDiv(x, y);
+        if (y == 0) {
+            throw new ArithmeticException("/ by zero");
+        }
+        long r = x / y;
+        if ((x ^ y) > 0 && x % y != 0) {
+            r++;
+        }
+        return r;
     }
 
     /**
@@ -1776,7 +1855,19 @@ public class MathHelper {
      * @throws ArithmeticException If y is zero.
      */
     public static int ceilMod(int x, int y) {
-        return java.lang.Math.ceilMod(x, y);
+        if (y == 0) {
+            throw new ArithmeticException("/ by zero");
+        }
+        int r = x % y;
+        if (r == 0) {
+            return 0;
+        }
+
+        boolean sameSign = (x ^ y) > 0;
+        if (!sameSign) {
+            r += y;
+        }
+        return r;
     }
 
     /**
@@ -1788,7 +1879,19 @@ public class MathHelper {
      * @throws ArithmeticException If y is zero.
      */
     public static long ceilMod(long x, long y) {
-        return java.lang.Math.ceilMod(x, y);
+        if (y == 0L) {
+            throw new ArithmeticException("/ by zero");
+        }
+        long r = x % y;
+        if (r == 0L) {
+            return 0L;
+        }
+
+        boolean sameSign = ((x ^ y) >= 0);
+        if (!sameSign) {
+            r += y;
+        }
+        return r;
     }
 
     /**
@@ -1839,7 +1942,10 @@ public class MathHelper {
      * @throws ArithmeticException If the result overflows.
      */
     public static int absExact(int a) {
-        return java.lang.Math.absExact(a);
+        if (a == Integer.MIN_VALUE) {
+            throw new ArithmeticException("integer overflow");
+        }
+        return Math.abs(a);
     }
 
     /**
@@ -1850,7 +1956,10 @@ public class MathHelper {
      * @throws ArithmeticException if the absolute value of the given value overflows
      */
     public static long absExact(long a) {
-        return java.lang.Math.absExact(a);
+        if (a == Long.MIN_VALUE) {
+            throw new ArithmeticException("long overflow");
+        }
+        return Math.abs(a);
     }
 
     /**

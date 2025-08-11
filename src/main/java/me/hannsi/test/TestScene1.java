@@ -12,7 +12,6 @@ import me.hannsi.lfjg.render.animation.animations.Bounce;
 import me.hannsi.lfjg.render.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.effect.effects.*;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
-import me.hannsi.lfjg.render.renderers.font.GLText;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.renderers.polygon.GLTriangle;
 import me.hannsi.lfjg.render.renderers.shader.GLShader;
@@ -32,7 +31,6 @@ public class TestScene1 implements IScene {
 
     GLRect glGround;
     GLRect gl1;
-    GLText glText;
     GLRect gl2;
     GLTriangle glTriangle;
     GLShader glShader;
@@ -191,7 +189,6 @@ public class TestScene1 implements IScene {
 
         gl1EffectCache.create(gl1);
 //        gl1SplitObjectEffectCache.create(gl1);
-        glFontEffectCache.create(glText);
         glTriangleEffectCache.create(glTriangle);
         glShaderEffectCache.create(glShader);
         glShaderSplitObjectEffectCache.create(glShader);
@@ -199,7 +196,6 @@ public class TestScene1 implements IScene {
 
         glShader.setEffectCache(glShaderEffectCache);
         gl1.setEffectCache(gl1EffectCache);
-        glText.setEffectCache(glFontEffectCache);
         glTriangle.setEffectCache(glTriangleEffectCache);
         glSVG.setEffectCache(glSVGEffectCache);
     }

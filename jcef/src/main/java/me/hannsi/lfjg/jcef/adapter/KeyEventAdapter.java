@@ -72,63 +72,140 @@ public class KeyEventAdapter {
     }
 
     private int unicodeToAWTKeyCode(int unicode) {
-        return switch (unicode) {
-            case '\n' -> KeyEvent.VK_ENTER;
-            case '\b' -> KeyEvent.VK_BACK_SPACE;
-            case '\t' -> KeyEvent.VK_TAB;
-            case 0x1B -> KeyEvent.VK_ESCAPE;
-            case ' ' -> KeyEvent.VK_SPACE;
+        switch (unicode) {
+            case '\n':
+                return KeyEvent.VK_ENTER;
+            case '\b':
+                return KeyEvent.VK_BACK_SPACE;
+            case '\t':
+                return KeyEvent.VK_TAB;
+            case 0x1B:
+                return KeyEvent.VK_ESCAPE;
+            case ' ':
+                return KeyEvent.VK_SPACE;
 
-            case 'a', 'A' -> KeyEvent.VK_A;
-            case 'b', 'B' -> KeyEvent.VK_B;
-            case 'c', 'C' -> KeyEvent.VK_C;
-            case 'd', 'D' -> KeyEvent.VK_D;
-            case 'e', 'E' -> KeyEvent.VK_E;
-            case 'f', 'F' -> KeyEvent.VK_F;
-            case 'g', 'G' -> KeyEvent.VK_G;
-            case 'h', 'H' -> KeyEvent.VK_H;
-            case 'i', 'I' -> KeyEvent.VK_I;
-            case 'j', 'J' -> KeyEvent.VK_J;
-            case 'k', 'K' -> KeyEvent.VK_K;
-            case 'l', 'L' -> KeyEvent.VK_L;
-            case 'm', 'M' -> KeyEvent.VK_M;
-            case 'n', 'N' -> KeyEvent.VK_N;
-            case 'o', 'O' -> KeyEvent.VK_O;
-            case 'p', 'P' -> KeyEvent.VK_P;
-            case 'q', 'Q' -> KeyEvent.VK_Q;
-            case 'r', 'R' -> KeyEvent.VK_R;
-            case 's', 'S' -> KeyEvent.VK_S;
-            case 't', 'T' -> KeyEvent.VK_T;
-            case 'u', 'U' -> KeyEvent.VK_U;
-            case 'v', 'V' -> KeyEvent.VK_V;
-            case 'w', 'W' -> KeyEvent.VK_W;
-            case 'x', 'X' -> KeyEvent.VK_X;
-            case 'y', 'Y' -> KeyEvent.VK_Y;
-            case 'z', 'Z' -> KeyEvent.VK_Z;
+            case 'a':
+            case 'A':
+                return KeyEvent.VK_A;
+            case 'b':
+            case 'B':
+                return KeyEvent.VK_B;
+            case 'c':
+            case 'C':
+                return KeyEvent.VK_C;
+            case 'd':
+            case 'D':
+                return KeyEvent.VK_D;
+            case 'e':
+            case 'E':
+                return KeyEvent.VK_E;
+            case 'f':
+            case 'F':
+                return KeyEvent.VK_F;
+            case 'g':
+            case 'G':
+                return KeyEvent.VK_G;
+            case 'h':
+            case 'H':
+                return KeyEvent.VK_H;
+            case 'i':
+            case 'I':
+                return KeyEvent.VK_I;
+            case 'j':
+            case 'J':
+                return KeyEvent.VK_J;
+            case 'k':
+            case 'K':
+                return KeyEvent.VK_K;
+            case 'l':
+            case 'L':
+                return KeyEvent.VK_L;
+            case 'm':
+            case 'M':
+                return KeyEvent.VK_M;
+            case 'n':
+            case 'N':
+                return KeyEvent.VK_N;
+            case 'o':
+            case 'O':
+                return KeyEvent.VK_O;
+            case 'p':
+            case 'P':
+                return KeyEvent.VK_P;
+            case 'q':
+            case 'Q':
+                return KeyEvent.VK_Q;
+            case 'r':
+            case 'R':
+                return KeyEvent.VK_R;
+            case 's':
+            case 'S':
+                return KeyEvent.VK_S;
+            case 't':
+            case 'T':
+                return KeyEvent.VK_T;
+            case 'u':
+            case 'U':
+                return KeyEvent.VK_U;
+            case 'v':
+            case 'V':
+                return KeyEvent.VK_V;
+            case 'w':
+            case 'W':
+                return KeyEvent.VK_W;
+            case 'x':
+            case 'X':
+                return KeyEvent.VK_X;
+            case 'y':
+            case 'Y':
+                return KeyEvent.VK_Y;
+            case 'z':
+            case 'Z':
+                return KeyEvent.VK_Z;
 
-            case '0' -> KeyEvent.VK_0;
-            case '1' -> KeyEvent.VK_1;
-            case '2' -> KeyEvent.VK_2;
-            case '3' -> KeyEvent.VK_3;
-            case '4' -> KeyEvent.VK_4;
-            case '5' -> KeyEvent.VK_5;
-            case '6' -> KeyEvent.VK_6;
-            case '7' -> KeyEvent.VK_7;
-            case '8' -> KeyEvent.VK_8;
-            case '9' -> KeyEvent.VK_9;
+            case '0':
+                return KeyEvent.VK_0;
+            case '1':
+                return KeyEvent.VK_1;
+            case '2':
+                return KeyEvent.VK_2;
+            case '3':
+                return KeyEvent.VK_3;
+            case '4':
+                return KeyEvent.VK_4;
+            case '5':
+                return KeyEvent.VK_5;
+            case '6':
+                return KeyEvent.VK_6;
+            case '7':
+                return KeyEvent.VK_7;
+            case '8':
+                return KeyEvent.VK_8;
+            case '9':
+                return KeyEvent.VK_9;
 
-            case '-' -> KeyEvent.VK_MINUS;
-            case '=' -> KeyEvent.VK_EQUALS;
-            case '\\' -> KeyEvent.VK_BACK_SLASH;
-            case ';' -> KeyEvent.VK_SEMICOLON;
-            case '\'' -> KeyEvent.VK_QUOTE;
-            case ',' -> KeyEvent.VK_COMMA;
-            case '.' -> KeyEvent.VK_PERIOD;
-            case '/' -> KeyEvent.VK_SLASH;
-            case '`' -> KeyEvent.VK_BACK_QUOTE;
+            case '-':
+                return KeyEvent.VK_MINUS;
+            case '=':
+                return KeyEvent.VK_EQUALS;
+            case '\\':
+                return KeyEvent.VK_BACK_SLASH;
+            case ';':
+                return KeyEvent.VK_SEMICOLON;
+            case '\'':
+                return KeyEvent.VK_QUOTE;
+            case ',':
+                return KeyEvent.VK_COMMA;
+            case '.':
+                return KeyEvent.VK_PERIOD;
+            case '/':
+                return KeyEvent.VK_SLASH;
+            case '`':
+                return KeyEvent.VK_BACK_QUOTE;
 
-            default -> KeyEvent.VK_UNDEFINED;
-        };
+            default:
+                return KeyEvent.VK_UNDEFINED;
+        }
     }
 
     public int glfwToAWTKeyCode(int glfwKey) {

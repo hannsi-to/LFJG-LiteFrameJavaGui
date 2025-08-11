@@ -45,7 +45,23 @@ public class TimeCalculator {
         return new ResultWithTime<>(result, time);
     }
 
-    public record ResultWithTime<T>(T result, long timeTakenNano) {
+    public static class ResultWithTime<T> {
+        private final T result;
+        private final long timeTakenNano;
+
+        public ResultWithTime(T result, long timeTakenNano) {
+            this.result = result;
+            this.timeTakenNano = timeTakenNano;
+        }
+
+        public T getResult() {
+            return result;
+        }
+
+        public long getTimeTakenNano() {
+            return timeTakenNano;
+        }
+
         public String getFormattedTime() {
             return formatNanoTime(timeTakenNano);
         }

@@ -36,6 +36,14 @@ public class Core {
     public static final boolean enableLFJGRenderTextSystem;
     public static final boolean enableLFJGRenderVideoSystem;
 
+    public static ServiceData lfjgAudioServiceData = null;
+    public static ServiceData lfjgFrameServiceData = null;
+    public static ServiceData lfjgJCefServiceData = null;
+    public static ServiceData lfjgPhysicServiceData = null;
+    public static ServiceData lfjgRenderServiceData = null;
+    public static ServiceData lfjgRenderTextServiceData = null;
+    public static ServiceData lfjgRenderVideoServiceData = null;
+
     public static boolean CORE_SYSTEM_DEBUG = true;
 
     public static Projection projection2D;
@@ -54,6 +62,42 @@ public class Core {
         enableLFJGRenderSystem = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_CORE_CLASS_NAME);
         enableLFJGRenderTextSystem = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_TEXT_CORE_CLASS_NAME);
         enableLFJGRenderVideoSystem = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_VIDEO_CORE_CLASS_NAME);
+
+        if (enableLFJGAudioSystem) {
+            Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_AUDIO_SYSTEM_PATH + DEFAULT_LFJG_AUDIO_CORE_CLASS_NAME);
+            lfjgAudioServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
+            DebugLog.info(instance.getClass(), lfjgAudioServiceData.toString());
+        }
+        if (enableLFJGFrameSystem) {
+            Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME_CORE_CLASS_NAME);
+            lfjgFrameServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
+            DebugLog.info(instance.getClass(), lfjgFrameServiceData.toString());
+        }
+        if (enableLFJGJCefSystem) {
+            Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_JCEF_SYSTEM_PATH + DEFAULT_LFJG_JCEF_CORE_CLASS_NAME);
+            lfjgJCefServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
+            DebugLog.info(instance.getClass(), lfjgJCefServiceData.toString());
+        }
+        if (enableLFJGPhysicSystem) {
+            Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_PHYSIC_SYSTEM_PATH + DEFAULT_LFJG_PHYSIC_CORE_CLASS_NAME);
+            lfjgPhysicServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
+            DebugLog.info(instance.getClass(), lfjgPhysicServiceData.toString());
+        }
+        if (enableLFJGRenderSystem) {
+            Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_CORE_CLASS_NAME);
+            lfjgRenderServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
+            DebugLog.info(instance.getClass(), lfjgRenderServiceData.toString());
+        }
+        if (enableLFJGRenderTextSystem) {
+            Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_TEXT_CORE_CLASS_NAME);
+            lfjgRenderTextServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
+            DebugLog.info(instance.getClass(), lfjgRenderTextServiceData.toString());
+        }
+        if (enableLFJGRenderVideoSystem) {
+            Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_VIDEO_CORE_CLASS_NAME);
+            lfjgRenderVideoServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
+            DebugLog.info(instance.getClass(), lfjgRenderVideoServiceData.toString());
+        }
     }
 
     public static Object invokeStaticMethod(String className, String methodName, Object... args) {

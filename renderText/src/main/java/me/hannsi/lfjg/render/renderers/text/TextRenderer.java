@@ -9,15 +9,15 @@ import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.toolkit.StringUtil;
 import me.hannsi.lfjg.render.debug.exceptions.UnknownAlignType;
-import me.hannsi.lfjg.render.renderers.font.AlignType;
-import me.hannsi.lfjg.render.renderers.font.CharState;
-import me.hannsi.lfjg.render.renderers.font.TextFormatType;
 import me.hannsi.lfjg.render.system.mesh.BufferObjectType;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
+import me.hannsi.lfjg.render.system.text.AlignType;
+import me.hannsi.lfjg.render.system.text.CharState;
+import me.hannsi.lfjg.render.system.text.TextFormatType;
 import me.hannsi.lfjg.render.system.text.TextMeshBuilder;
 import me.hannsi.lfjg.render.system.text.msdf.MSDFFont;
 import me.hannsi.lfjg.render.system.text.msdf.MSDFTextureLoader;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static me.hannsi.lfjg.core.utils.math.MathHelper.max;
-import static me.hannsi.lfjg.render.renderers.font.Align.*;
+import static me.hannsi.lfjg.render.system.text.Align.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 
@@ -414,35 +414,39 @@ public class TextRenderer {
             float width;
 
             MSDFFont.Metrics metrics = textMeshBuilder.getMsdfFont().getMetrics();
+            float offsetY;
             switch (data.lineType) {
-                case UNDERLINE, DOUBLE_UNDERLINE -> {
-                    float offsetY = metrics.getUnderlineY() * size;
+                case UNDERLINE:
+                case DOUBLE_UNDERLINE:
+                    offsetY = metrics.getUnderlineY() * size;
                     thickness = metrics.getUnderlineThickness() * size;
 
                     x = data.startX;
                     y = data.baseY + offsetY;
 
                     width = data.endX - data.startX;
-                }
-                case STRIKETHROUGH, DOUBLE_STRIKETHROUGH -> {
-                    float offsetY = metrics.getAscender() * 0.3f * size;
+                    break;
+                case STRIKETHROUGH:
+                case DOUBLE_STRIKETHROUGH:
+                    offsetY = metrics.getAscender() * 0.3f * size;
                     thickness = metrics.getUnderlineThickness() * 1.5f * size;
 
                     x = data.startX;
                     y = data.baseY + offsetY;
 
                     width = data.endX - data.startX;
-                }
-                case OVERLINE -> {
-                    float offsetY = metrics.getAscender() * size;
+                    break;
+                case OVERLINE:
+                    offsetY = metrics.getAscender() * size;
                     thickness = metrics.getUnderlineThickness() * size;
 
                     x = data.startX;
                     y = data.baseY + offsetY;
 
                     width = data.endX - data.startX;
-                }
-                default -> throw new IllegalStateException("Unexpected value: " + data.lineType);
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + data.lineType);
             }
 
             lineShaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());

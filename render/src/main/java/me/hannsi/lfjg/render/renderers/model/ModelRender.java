@@ -77,9 +77,10 @@ public class ModelRender {
                 shaderProgram.setUniform("materialType", UploadUniformType.PER_FRAME, material.getMaterialType().getId());
 
                 switch (material.getMaterialType()) {
-                    case NO_MATERIAL, COLOR -> {
-                    }
-                    case TEXTURE -> {
+                    case NO_MATERIAL:
+                    case COLOR:
+                        break;
+                    case TEXTURE:
                         if (textureCache == null) {
                             throw new ModelException("To use a texture material, TextureCache must be set.");
                         }
@@ -92,8 +93,9 @@ public class ModelRender {
                             throw new ModelException("Not found texture: " + material.getTextureLocation().path());
                         }
                         textureLoader.bind();
-                    }
-                    default -> throw new IllegalStateException("Unexpected value: " + material.getMaterialType());
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + material.getMaterialType());
                 }
 
                 for (Mesh mesh : material.getMeshes()) {

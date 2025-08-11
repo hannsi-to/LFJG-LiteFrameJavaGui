@@ -156,38 +156,64 @@ public class ShaderProgram {
         } else if (first instanceof Float) {
             float[] floatValues = toFloatArray(values);
             switch (floatValues.length) {
-                case 1 -> glUniform1f(location, floatValues[0]);
-                case 2 -> glUniform2f(location, floatValues[0], floatValues[1]);
-                case 3 -> glUniform3f(location, floatValues[0], floatValues[1], floatValues[2]);
-                case 4 -> glUniform4f(location, floatValues[0], floatValues[1], floatValues[2], floatValues[3]);
-                default -> throw new IllegalArgumentException("Unsupported float uniform size: " + floatValues.length);
+                case 1:
+                    glUniform1f(location, floatValues[0]);
+                    break;
+                case 2:
+                    glUniform2f(location, floatValues[0], floatValues[1]);
+                    break;
+                case 3:
+                    glUniform3f(location, floatValues[0], floatValues[1], floatValues[2]);
+                    break;
+                case 4:
+                    glUniform4f(location, floatValues[0], floatValues[1], floatValues[2], floatValues[3]);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported float uniform size: " + floatValues.length);
             }
         } else if (first instanceof Integer) {
             int[] intValues = Arrays.stream(values).mapToInt(v -> (Integer) v).toArray();
             switch (intValues.length) {
-                case 1 -> glUniform1i(location, intValues[0]);
-                case 2 -> glUniform2i(location, intValues[0], intValues[1]);
-                case 3 -> glUniform3i(location, intValues[0], intValues[1], intValues[2]);
-                case 4 -> glUniform4i(location, intValues[0], intValues[1], intValues[2], intValues[3]);
-                default -> throw new IllegalArgumentException("Unsupported int uniform size: " + intValues.length);
+                case 1:
+                    glUniform1i(location, intValues[0]);
+                    break;
+                case 2:
+                    glUniform2i(location, intValues[0], intValues[1]);
+                    break;
+                case 3:
+                    glUniform3i(location, intValues[0], intValues[1], intValues[2]);
+                    break;
+                case 4:
+                    glUniform4i(location, intValues[0], intValues[1], intValues[2], intValues[3]);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported int uniform size: " + intValues.length);
             }
-        } else if (first instanceof Matrix4f mat) {
+        } else if (first instanceof Matrix4f) {
+            Matrix4f mat = (Matrix4f) first;
             try (MemoryStack stack = MemoryStack.stackPush()) {
                 glUniformMatrix4fv(location, false, mat.get(stack.mallocFloat(16)));
             }
-        } else if (first instanceof Vector2f vec) {
+        } else if (first instanceof Vector2f) {
+            Vector2f vec = (Vector2f) first;
             glUniform2f(location, vec.x, vec.y);
-        } else if (first instanceof Vector3f vec) {
+        } else if (first instanceof Vector3f) {
+            Vector3f vec = (Vector3f) first;
             glUniform3f(location, vec.x, vec.y, vec.z);
-        } else if (first instanceof Vector4f vec) {
+        } else if (first instanceof Vector4f) {
+            Vector4f vec = (Vector4f) first;
             glUniform4f(location, vec.x, vec.y, vec.z, vec.w);
-        } else if (first instanceof Vector2i vec) {
+        } else if (first instanceof Vector2i) {
+            Vector2i vec = (Vector2i) first;
             glUniform2i(location, vec.x, vec.y);
-        } else if (first instanceof Vector3i vec) {
+        } else if (first instanceof Vector3i) {
+            Vector3i vec = (Vector3i) first;
             glUniform3i(location, vec.x, vec.y, vec.z);
-        } else if (first instanceof Vector4i vec) {
+        } else if (first instanceof Vector4i) {
+            Vector4i vec = (Vector4i) first;
             glUniform4i(location, vec.x, vec.y, vec.z, vec.w);
-        } else if (first instanceof Color color) {
+        } else if (first instanceof Color) {
+            Color color = (Color) first;
             glUniform4f(location, color.getRedF(), color.getGreenF(), color.getBlueF(), color.getAlphaF());
         } else {
             throw new IllegalArgumentException("Unsupported uniform value type: " + first.getClass());

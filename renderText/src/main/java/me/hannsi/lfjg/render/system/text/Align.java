@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.renderers.font;
+package me.hannsi.lfjg.render.system.text;
 
 public class Align {
     public static final int ALIGN_LEFT = 1;

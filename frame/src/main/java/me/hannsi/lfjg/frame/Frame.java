@@ -133,16 +133,18 @@ public class Frame implements IFrame {
 
     private void initRendering() {
         switch (renderingType) {
-            case OPEN_GL -> {
+            case OPEN_GL:
                 Core.GL.createCapabilities();
                 nanoVGContext = Core.NanoVGGL3.nvgCreate(Core.NanoVGGL3.NVG_ANTIALIAS);
                 if (nanoVGContext == MemoryUtil.NULL) {
                     throw new RuntimeException("Failed to create NanoVG context");
                 }
-            }
-            case LIB_GDX, VULKAN -> {
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + renderingType);
+                break;
+            case LIB_GDX:
+            case VULKAN:
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + renderingType);
         }
     }
 
@@ -248,10 +250,14 @@ public class Frame implements IFrame {
 
     private void draw() {
         switch (renderingType) {
-            case OPEN_GL -> eventManager.call(new DrawFrameWithOpenGLEvent());
-            case LIB_GDX, VULKAN -> {
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + renderingType);
+            case OPEN_GL:
+                eventManager.call(new DrawFrameWithOpenGLEvent());
+                break;
+            case LIB_GDX:
+            case VULKAN:
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + renderingType);
         }
     }
 
@@ -266,8 +272,12 @@ public class Frame implements IFrame {
 
     private void setAntiAliasing() {
         switch (((AntiAliasingType) getFrameSettingValue(AntiAliasingSetting.class))) {
-            case MSAA -> Core.GL11.glEnable(Core.GL13.GL_MULTISAMPLE);
-            case OFF -> Core.GL11.glDisable(Core.GL13.GL_MULTISAMPLE);
+            case MSAA:
+                Core.GL11.glEnable(Core.GL13.GL_MULTISAMPLE);
+                break;
+            case OFF:
+                Core.GL11.glDisable(Core.GL13.GL_MULTISAMPLE);
+                break;
         }
     }
 
@@ -275,13 +285,15 @@ public class Frame implements IFrame {
         Callbacks.glfwFreeCallbacks(windowID);
 
         switch (renderingType) {
-            case OPEN_GL -> Core.NanoVGGL3.nvgDelete(nanoVGContext);
-            case VULKAN -> {
-
-            }
-            case LIB_GDX -> {
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + renderingType);
+            case OPEN_GL:
+                Core.NanoVGGL3.nvgDelete(nanoVGContext);
+                break;
+            case VULKAN:
+                break;
+            case LIB_GDX:
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + renderingType);
         }
 
         glfwDestroyWindow(windowID);

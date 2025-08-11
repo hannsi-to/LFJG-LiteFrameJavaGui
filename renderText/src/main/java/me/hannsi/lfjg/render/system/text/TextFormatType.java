@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.renderers.font;
+package me.hannsi.lfjg.render.system.text;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.toolkit.StringUtil;
@@ -54,26 +54,44 @@ public enum TextFormatType implements IEnumTypeBase {
     }
 
     public static Color getColor(TextFormatType textFormatType, Color defaultColor) {
-        return switch (textFormatType) {
-            case BLACK -> new Color(0, 0, 0);
-            case DARK_BLUE -> new Color(0, 0, 170);
-            case DARK_GREEN -> new Color(0, 170, 0);
-            case DARK_AQUA -> new Color(0, 170, 170);
-            case DARK_RED -> new Color(170, 0, 0);
-            case DARK_PURPLE -> new Color(170, 0, 170);
-            case GOLD -> new Color(255, 170, 0);
-            case GRAY -> new Color(170, 170, 170);
-            case DARK_GRAY -> new Color(85, 85, 85);
-            case BLUE -> new Color(85, 85, 255);
-            case GREEN -> new Color(85, 255, 85);
-            case AQUA -> new Color(85, 255, 255);
-            case RED -> new Color(255, 85, 85);
-            case LIGHT_PURPLE -> new Color(255, 85, 255);
-            case YELLOW -> new Color(255, 255, 85);
-            case WHITE -> new Color(255, 255, 255);
-            case DEFAULT_COLOR -> defaultColor;
-            default -> null;
-        };
+        switch (textFormatType) {
+            case BLACK:
+                return new Color(0, 0, 0);
+            case DARK_BLUE:
+                return new Color(0, 0, 170);
+            case DARK_GREEN:
+                return new Color(0, 170, 0);
+            case DARK_AQUA:
+                return new Color(0, 170, 170);
+            case DARK_RED:
+                return new Color(170, 0, 0);
+            case DARK_PURPLE:
+                return new Color(170, 0, 170);
+            case GOLD:
+                return new Color(255, 170, 0);
+            case GRAY:
+                return new Color(170, 170, 170);
+            case DARK_GRAY:
+                return new Color(85, 85, 85);
+            case BLUE:
+                return new Color(85, 85, 255);
+            case GREEN:
+                return new Color(85, 255, 85);
+            case AQUA:
+                return new Color(85, 255, 255);
+            case RED:
+                return new Color(255, 85, 85);
+            case LIGHT_PURPLE:
+                return new Color(255, 85, 255);
+            case YELLOW:
+                return new Color(255, 255, 85);
+            case WHITE:
+                return new Color(255, 255, 255);
+            case DEFAULT_COLOR:
+                return defaultColor;
+            default:
+                return null;
+        }
     }
 
     public static TextFormatType getTextFormatType(char code) {

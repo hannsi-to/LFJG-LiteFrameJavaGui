@@ -49,7 +49,7 @@ public class ImageCapture {
         if (flip) {
             for (int i = 0; i < height; i++) {
                 buffer.position((height - i - 1) * width * colorFormatType.getChannels());
-                flippedBuffer.put(buffer.slice().limit(width * colorFormatType.getChannels()));
+                flippedBuffer.put((ByteBuffer) buffer.slice().limit(width * colorFormatType.getChannels()));
             }
         } else {
             flippedBuffer.put(buffer);
@@ -64,8 +64,12 @@ public class ImageCapture {
 
         LogGenerator logGenerator = null;
         switch (imageLoaderType) {
-            case STB_IMAGE -> logGenerator = writeSTBImage(path, convertedBuffer);
-            case JAVA_CV -> logGenerator = writeJavaCV(path, convertedBuffer);
+            case STB_IMAGE:
+                logGenerator = writeSTBImage(path, convertedBuffer);
+                break;
+            case JAVA_CV:
+                logGenerator = writeJavaCV(path, convertedBuffer);
+                break;
         }
 
         logGenerator.logging(DebugLevel.INFO);
@@ -98,23 +102,56 @@ public class ImageCapture {
     private LogGenerator writeSTBImage(String path, ByteBuffer imageBuffer) {
         imageBuffer.rewind();
 
-        boolean success = switch (stbImageFormat) {
-            case PNG ->
-                    STBImageWrite.stbi_write_png(path, width, height, colorFormatType.getChannels(), imageBuffer, width * colorFormatType.getChannels());
+        boolean success;
+        switch (stbImageFormat) {
+            case PNG:
+                success = STBImageWrite.stbi_write_png(
+                        path,
+                        width,
+                        height,
+                        colorFormatType.getChannels(),
+                        imageBuffer,
+                        width * colorFormatType.getChannels()
+                );
+                break;
 
-            case JPG -> {
+            case JPG:
                 if (colorFormatType.getChannels() != 3) {
                     throw new IllegalArgumentException("JPEG format only supports 3 (RGB) channels.");
                 }
-                yield STBImageWrite.stbi_write_jpg(path, width, height, 3, imageBuffer, jpgQuality);
-            }
+                success = STBImageWrite.stbi_write_jpg(
+                        path,
+                        width,
+                        height,
+                        3,
+                        imageBuffer,
+                        jpgQuality
+                );
+                break;
 
-            case BMP -> STBImageWrite.stbi_write_bmp(path, width, height,
-                    colorFormatType.getChannels(), imageBuffer);
+            case BMP:
+                success = STBImageWrite.stbi_write_bmp(
+                        path,
+                        width,
+                        height,
+                        colorFormatType.getChannels(),
+                        imageBuffer
+                );
+                break;
 
-            case TGA -> STBImageWrite.stbi_write_tga(path, width, height,
-                    colorFormatType.getChannels(), imageBuffer);
-        };
+            case TGA:
+                success = STBImageWrite.stbi_write_tga(
+                        path,
+                        width,
+                        height,
+                        colorFormatType.getChannels(),
+                        imageBuffer
+                );
+                break;
+
+            default:
+                throw new IllegalArgumentException();
+        }
 
         if (!success) {
             throw new RuntimeException("Failed to save screenshot to image: " + path);

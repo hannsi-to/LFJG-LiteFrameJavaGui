@@ -77,15 +77,22 @@ public class OpenGLDebug {
      * @return the corresponding source string
      */
     public static String getSourceString(int source) {
-        return switch (source) {
-            case GL_DEBUG_SOURCE_API -> "API";
-            case GL_DEBUG_SOURCE_WINDOW_SYSTEM -> "Window System";
-            case GL_DEBUG_SOURCE_SHADER_COMPILER -> "Shader Compiler";
-            case GL_DEBUG_SOURCE_THIRD_PARTY -> "Third Party";
-            case GL_DEBUG_SOURCE_APPLICATION -> "Application";
-            case GL_DEBUG_SOURCE_OTHER -> "Other";
-            default -> "Unknown";
-        };
+        switch (source) {
+            case GL_DEBUG_SOURCE_API:
+                return "API";
+            case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
+                return "Window System";
+            case GL_DEBUG_SOURCE_SHADER_COMPILER:
+                return "Shader Compiler";
+            case GL_DEBUG_SOURCE_THIRD_PARTY:
+                return "Third Party";
+            case GL_DEBUG_SOURCE_APPLICATION:
+                return "Application";
+            case GL_DEBUG_SOURCE_OTHER:
+                return "Other";
+            default:
+                return "Unknown";
+        }
     }
 
     /**
@@ -95,15 +102,22 @@ public class OpenGLDebug {
      * @return the corresponding type string
      */
     public static String getTypeString(int type) {
-        return switch (type) {
-            case GL_DEBUG_TYPE_ERROR -> "Error";
-            case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR -> "Deprecated Behavior";
-            case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR -> "Undefined Behavior";
-            case GL_DEBUG_TYPE_PORTABILITY -> "Portability";
-            case GL_DEBUG_TYPE_PERFORMANCE -> "Performance";
-            case GL_DEBUG_TYPE_OTHER -> "Other";
-            default -> "Unknown";
-        };
+        switch (type) {
+            case GL_DEBUG_TYPE_ERROR:
+                return "Error";
+            case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+                return "Deprecated Behavior";
+            case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+                return "Undefined Behavior";
+            case GL_DEBUG_TYPE_PORTABILITY:
+                return "Portability";
+            case GL_DEBUG_TYPE_PERFORMANCE:
+                return "Performance";
+            case GL_DEBUG_TYPE_OTHER:
+                return "Other";
+            default:
+                return "Unknown";
+        }
     }
 
     /**
@@ -113,12 +127,17 @@ public class OpenGLDebug {
      * @return the corresponding severity string
      */
     public static String getSeverityString(int severity) {
-        return switch (severity) {
-            case GL_DEBUG_SEVERITY_NOTIFICATION -> "Notification";
-            case GL_DEBUG_SEVERITY_LOW -> "Low";
-            case GL_DEBUG_SEVERITY_MEDIUM -> "Medium";
-            case GL_DEBUG_SEVERITY_HIGH -> "High";
-            default -> "Unknown";
-        };
+        switch (severity) {
+            case GL_DEBUG_SEVERITY_NOTIFICATION:
+                return "Notification";
+            case GL_DEBUG_SEVERITY_LOW:
+                return "Low";
+            case GL_DEBUG_SEVERITY_MEDIUM:
+                return "Medium";
+            case GL_DEBUG_SEVERITY_HIGH:
+                return "High";
+            default:
+                return "Unknown";
+        }
     }
 }

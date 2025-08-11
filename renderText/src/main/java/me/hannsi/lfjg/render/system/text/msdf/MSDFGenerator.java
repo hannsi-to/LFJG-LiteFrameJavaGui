@@ -4,12 +4,12 @@ import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
+import me.hannsi.lfjg.core.utils.toolkit.StringUtil;
 import me.hannsi.lfjg.core.utils.toolkit.UnicodeBlock;
 import me.hannsi.lfjg.core.utils.type.types.STBImageFormat;
 import me.hannsi.lfjg.render.debug.exceptions.UnsupportedImageFileException;
 import me.hannsi.lfjg.render.system.text.msdf.type.*;
 
-import java.awt.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -27,7 +27,6 @@ public class MSDFGenerator {
 
     private char[] chars;
     private Location ttfPath;
-    private Font font;
     private String outputName;
 
     MSDFGenerator() throws IOException {
@@ -63,10 +62,16 @@ public class MSDFGenerator {
 
     public MSDFGenerator ttfPath(Location ttfPath) {
         this.ttfPath = ttfPath;
-        try {
-            this.font = Font.createFont(Font.TRUETYPE_FONT, ttfPath.getFile()).deriveFont(Font.PLAIN, 1f);
-        } catch (FontFormatException | IOException e) {
-            throw new RuntimeException(e);
+
+        switch (ttfPath.locationType()) {
+            case RESOURCE:
+                break;
+            case FILE:
+                break;
+            case URL:
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + ttfPath.locationType());
         }
 
         command.add("-font");
@@ -91,9 +96,6 @@ public class MSDFGenerator {
         for (UnicodeBlock unicodeBlock : unicodeBlocks) {
             for (int codePoint = unicodeBlock.startCodePoint(); codePoint <= unicodeBlock.endCodePoint(); codePoint++) {
                 if (!Character.isValidCodePoint(codePoint) || !Character.isDefined(codePoint)) {
-                    continue;
-                }
-                if (!charCheck(codePoint)) {
                     continue;
                 }
                 charsetBuilder.append(Character.toChars(codePoint));
@@ -164,14 +166,16 @@ public class MSDFGenerator {
 
     public MSDFGenerator format(STBImageFormat stbImageFormat) {
         switch (stbImageFormat) {
-            case PNG, BMP -> {
+            case PNG:
+            case BMP:
                 command.add("-format");
                 command.add(stbImageFormat.getName());
-            }
-            case JPG, TGA -> {
+                break;
+            case JPG:
+            case TGA:
                 throw new UnsupportedImageFileException("Unsupported image file: " + stbImageFormat.getName());
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + stbImageFormat);
+            default:
+                throw new IllegalStateException("Unexpected value: " + stbImageFormat);
         }
 
         return this;
@@ -287,15 +291,6 @@ public class MSDFGenerator {
     }
 
     public MSDFGenerator charset(String charset) {
-        StringBuilder newCharset = new StringBuilder();
-        for (char c : charset.toCharArray()) {
-            if (!charCheck(c)) {
-                continue;
-            }
-
-            newCharset.append(c);
-        }
-        charset = newCharset.toString();
         chars = charset.toCharArray();
 
         try {
@@ -349,22 +344,6 @@ public class MSDFGenerator {
         throw new UnsupportedOperationException("Unsupported Operating System: " + os);
     }
 
-    private boolean charCheck(int codePoint) {
-        if (Character.isISOControl(codePoint)) {
-            return false;
-        }
-
-        return font.canDisplay(codePoint);
-    }
-
-    private boolean charCheck(char c) {
-        if (Character.isISOControl(c)) {
-            return false;
-        }
-
-        return font.canDisplay(c);
-    }
-
     public boolean generate() {
         DebugLog.info(getClass(), "Starting SDF font generation (for v1.3.0)...");
         DebugLog.debug(getClass(), "Font: " + ttfPath.path());
@@ -382,15 +361,16 @@ public class MSDFGenerator {
 
             Process process = pb.start();
 
-            DebugLog.debug(getClass(), "-".repeat(MathHelper.max(0, LogGenerator.barCount)) + " " + "msdf-atlas-gen log start" + " " + "-".repeat(MathHelper.max(0, LogGenerator.barCount)));
+            DebugLog.debug(getClass(), StringUtil.repeat("-", MathHelper.max(0, LogGenerator.barCount)) + " " + "msdf-atlas-gen log start" + " " + StringUtil.repeat("-", MathHelper.max(0, LogGenerator.barCount)));
+
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     DebugLog.debug(getClass(), "\t\t" + line);
                 }
             }
-            DebugLog.debug(getClass(), "-".repeat(MathHelper.max(0, LogGenerator.barCount)) + " " + "msdf-atlas-gen log end" + " " + "-".repeat(MathHelper.max(0, LogGenerator.barCount)));
 
+            DebugLog.debug(getClass(), StringUtil.repeat("-", MathHelper.max(0, LogGenerator.barCount)) + " " + "msdf-atlas-gen log end" + " " + StringUtil.repeat("-", MathHelper.max(0, LogGenerator.barCount)));
             int exitCode = process.waitFor();
 
             File pngFile = new File(outputName + ".png");
@@ -444,10 +424,6 @@ public class MSDFGenerator {
 
     public String getOutputName() {
         return outputName;
-    }
-
-    public Font getFont() {
-        return font;
     }
 
     public char[] getChars() {

@@ -1,8 +1,8 @@
-package me.hannsi.lfjg.render.renderers.font;
+package me.hannsi.lfjg.render.system.text;
 
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 
-import static me.hannsi.lfjg.render.renderers.font.Align.*;
+import static me.hannsi.lfjg.render.system.text.Align.*;
 
 public enum AlignType implements IEnumTypeBase {
     LEFT_TOP("LeftTop", ALIGN_LEFT | ALIGN_TOP),

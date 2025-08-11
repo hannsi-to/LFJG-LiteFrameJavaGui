@@ -5,9 +5,7 @@ import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.render.renderers.GLObject;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -68,7 +66,9 @@ public class GLObjectCache {
             return;
         }
 
-        Set<String> ignoreSet = Set.of(ignoreGLObjectNames);
+        Set<String> ignoreSet = new HashSet<>();
+        Collections.addAll(ignoreSet, ignoreGLObjectNames);
+
         draw(glObject -> !ignoreSet.contains(glObject.getName()));
     }
 

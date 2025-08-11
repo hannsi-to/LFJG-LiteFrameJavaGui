@@ -31,9 +31,10 @@ public class VertexKey {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof VertexKey other)) {
+        if (!(o instanceof VertexKey)) {
             return false;
         }
+        VertexKey other = (VertexKey) o;
         if (this.length != other.length) {
             return false;
         }

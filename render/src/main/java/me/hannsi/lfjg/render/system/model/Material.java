@@ -64,22 +64,23 @@ public class Material {
         boolean color = mesh.getVboIds().get(BufferObjectType.COLORS_BUFFER) != null;
         boolean texture = mesh.getVboIds().get(BufferObjectType.TEXTURE_BUFFER) != null;
         switch (materialType) {
-            case NO_MATERIAL -> {
+            case NO_MATERIAL:
                 if (color || texture) {
                     message = "An extra VertexBufferObject is generated for the set MaterialType. CurrentMaterialType: " + materialType.getName() + " | Created Color: " + color + " | Created Texture: " + texture;
                 }
-            }
-            case COLOR -> {
+                break;
+            case COLOR:
                 if (texture) {
                     message = "An extra VertexBufferObject is generated for the set MaterialType. CurrentMaterialType: " + materialType.getName() + " | Created Color: " + color + " | Created Texture: " + true;
                 }
-            }
-            case TEXTURE -> {
+                break;
+            case TEXTURE:
                 if (color) {
                     message = "An extra VertexBufferObject is generated for the set MaterialType. CurrentMaterialType: " + materialType.getName() + " | Created Color: " + true + " | Created Texture: " + texture;
                 }
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + materialType);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + materialType);
         }
 
         return message;
@@ -97,10 +98,17 @@ public class Material {
 
         BufferObjectType bufferObjectType;
         switch (materialType) {
-            case NO_MATERIAL -> bufferObjectType = BufferObjectType.POSITIONS_BUFFER;
-            case COLOR -> bufferObjectType = BufferObjectType.COLORS_BUFFER;
-            case TEXTURE -> bufferObjectType = BufferObjectType.TEXTURE_BUFFER;
-            default -> throw new IllegalStateException("Unexpected value: " + materialType);
+            case NO_MATERIAL:
+                bufferObjectType = BufferObjectType.POSITIONS_BUFFER;
+                break;
+            case COLOR:
+                bufferObjectType = BufferObjectType.COLORS_BUFFER;
+                break;
+            case TEXTURE:
+                bufferObjectType = BufferObjectType.TEXTURE_BUFFER;
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + materialType);
         }
 
         if (mesh.getVboIds().get(bufferObjectType) == null) {

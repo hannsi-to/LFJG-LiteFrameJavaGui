@@ -196,7 +196,7 @@ public class EffectCache {
         new LogGenerator(
                 LogGenerateType.CLEANUP,
                 getClass(),
-                ids.isEmpty() ? "" : ids.substring(0, ids.toString().length() - 2),
+                ids.length() == 0 ? "" : ids.substring(0, ids.length() - 2),
                 ""
         ).logging(DebugLevel.DEBUG);
     }
@@ -217,6 +217,43 @@ public class EffectCache {
         this.endFrameBuffer = endFrameBuffer;
     }
 
-    public record Identifier(String name, long id) {
+    public final class Identifier {
+        private final String name;
+        private final long id;
+
+        public Identifier(String name, long id) {
+            this.name = name;
+            this.id = id;
+        }
+
+        public String name() {
+            return name;
+        }
+
+        public long id() {
+            return id;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) return true;
+            if (obj == null || obj.getClass() != this.getClass()) return false;
+            Identifier that = (Identifier) obj;
+            return Objects.equals(this.name, that.name) &&
+                    this.id == that.id;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name, id);
+        }
+
+        @Override
+        public String toString() {
+            return "Identifier[" +
+                    "name=" + name + ", " +
+                    "id=" + id + ']';
+        }
+
     }
 }

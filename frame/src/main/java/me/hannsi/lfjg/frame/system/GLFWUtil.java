@@ -102,13 +102,18 @@ public class GLFWUtil extends Util {
         long monitor;
 
         switch (monitorType) {
-            case WINDOW -> monitor = MemoryUtil.NULL;
-            case FULL_SCREEN -> monitor = GLFW.glfwGetPrimaryMonitor();
-            case BORDERLESS -> {
+            case WINDOW:
+                monitor = MemoryUtil.NULL;
+                break;
+            case FULL_SCREEN:
+                monitor = GLFW.glfwGetPrimaryMonitor();
+                break;
+            case BORDERLESS:
                 GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
                 monitor = MemoryUtil.NULL;
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + monitorType);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + monitorType);
         }
 
         return monitor;

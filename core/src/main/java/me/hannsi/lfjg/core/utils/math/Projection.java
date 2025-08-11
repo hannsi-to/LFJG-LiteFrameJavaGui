@@ -36,13 +36,14 @@ public class Projection {
         float aspectWindow = (float) windowWidth / windowHeight;
 
         switch (projectionType) {
-            case ORTHOGRAPHIC_PROJECTION -> {
+            case ORTHOGRAPHIC_PROJECTION:
                 projMatrix = new Matrix4f().ortho(0, windowWidth, 0, windowHeight, -1f, 1f);
-            }
-            case PERSPECTIVE_PROJECTION -> {
+                break;
+            case PERSPECTIVE_PROJECTION:
                 projMatrix = new Matrix4f().setPerspective(fov, aspectWindow, zNear, zFar);
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + projectionType);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + projectionType);
         }
     }
 
