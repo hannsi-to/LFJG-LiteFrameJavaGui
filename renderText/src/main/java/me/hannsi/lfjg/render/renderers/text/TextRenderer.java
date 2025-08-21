@@ -185,7 +185,7 @@ public class TextRenderer {
         } else if ((align & ALIGN_BOTTOM) != 0) {
             MSDFFont.Metrics metrics = textMeshBuilder.getMsdfFont().getMetrics();
             float offset = metrics.getDescender();
-            position[1] = pos.y() - (offset * size);
+            position[1] = pos.y() - (offset * size * 2);
         } else {
             throw new UnknownAlignType("This alignment constant does not exist. const: " + align);
         }

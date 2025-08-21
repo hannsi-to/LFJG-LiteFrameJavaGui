@@ -51,7 +51,7 @@ public class MSDFMain implements LFJGFrame {
             int textureResolution = 512;
 
             MSDFGenerator generator = MSDFGenerator.createMSDFGenerator()
-                    .type(AtlasType.MSDF)
+                    .type(AtlasType.MTSDF)
                     .ttfPath(fontFilePath)
                     .unicodeBlock(UnicodeBlocks.getBlocks(characters))
                     .outputName(outputFileName)
