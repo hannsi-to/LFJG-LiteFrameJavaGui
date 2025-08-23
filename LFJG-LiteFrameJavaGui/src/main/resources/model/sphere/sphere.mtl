@@ -1,0 +1,13 @@
+#https://github.com/melfm/openGL-shading-texture/tree/master
+
+# Blender MTL File: 'sphere.blend'
+# Material Count: 1
+
+newmtl Material.001
+Ns 92.156863
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.297297 0.297297 0.297297
+Ni 1.000000
+d 1.000000
+illum 2

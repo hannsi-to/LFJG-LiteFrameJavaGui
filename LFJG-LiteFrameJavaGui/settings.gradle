@@ -1,0 +1,10 @@
+rootProject.name = 'LiteFrameJavaGui'
+include 'core'
+include 'audio'
+include 'frame'
+include 'jcef'
+include 'physic'
+include 'render'
+include 'renderVideo'
+include 'renderText'
+
