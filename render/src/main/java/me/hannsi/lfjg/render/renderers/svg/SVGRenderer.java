@@ -25,7 +25,7 @@ public class SVGRenderer {
         vaoRendering = new VAORendering();
 
         shaderProgramFBO = new ShaderProgram();
-        vertexShaderFBO = Location.fromResource("shader/frameBuffer/VertexShader.vsh");
+        vertexShaderFBO = Location.fromResource("shader/VertexShader.vsh");
         fragmentShaderFBO = Location.fromResource("shader/frameBuffer/FragmentShader.fsh");
     }
 

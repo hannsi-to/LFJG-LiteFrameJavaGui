@@ -55,12 +55,12 @@ public class TextRenderer {
         this.lineDatum = new ArrayList<>();
 
         this.msdfFontShaderProgram = new ShaderProgram();
-        this.msdfFontShaderProgram.createVertexShader(Location.fromResource("shader/msdf/VertexShader.vsh"));
+        this.msdfFontShaderProgram.createVertexShader(Location.fromResource("shader/VertexShader.vsh"));
         this.msdfFontShaderProgram.createFragmentShader(Location.fromResource("shader/msdf/FragmentShader.fsh"));
         this.msdfFontShaderProgram.link();
 
         this.lineShaderProgram = new ShaderProgram();
-        this.lineShaderProgram.createVertexShader(Location.fromResource("shader/scene/object/VertexShader.vsh"));
+        this.lineShaderProgram.createVertexShader(Location.fromResource("shader/VertexShader.vsh"));
         this.lineShaderProgram.createFragmentShader(Location.fromResource("shader/scene/object/FragmentShader.fsh"));
         this.lineShaderProgram.link();
 

@@ -131,11 +131,11 @@ public class GLPolygon extends GLObject {
      * Renders the polygon.
      */
     public void rendering() {
-        rendering(Location.fromResource("shader/scene/object/VertexShader.vsh"), Location.fromResource("shader/scene/object/FragmentShader.fsh"));
+        rendering(Location.fromResource("shader/VertexShader.vsh"), Location.fromResource("shader/scene/object/FragmentShader.fsh"));
     }
 
     public void rendering(boolean isFragmentShaderPath, Location location) {
-        rendering(isFragmentShaderPath ? Location.fromResource("shader/scene/object/VertexShader.vsh") : location, isFragmentShaderPath ? location : Location.fromResource("shader/scene/object/FragmentShader.fsh"));
+        rendering(isFragmentShaderPath ? Location.fromResource("shader/VertexShader.vsh") : location, isFragmentShaderPath ? location : Location.fromResource("shader/scene/object/FragmentShader.fsh"));
     }
 
     public void updateData() {

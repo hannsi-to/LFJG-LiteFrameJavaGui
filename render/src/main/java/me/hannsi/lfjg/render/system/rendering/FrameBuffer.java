@@ -84,7 +84,7 @@ public class FrameBuffer {
         }
 
         shaderProgramFBO = new ShaderProgram();
-        vertexShaderFBO = Location.fromResource("shader/frameBuffer/VertexShader.vsh");
+        vertexShaderFBO = Location.fromResource("shader/VertexShader.vsh");
         fragmentShaderFBO = Location.fromResource("shader/frameBuffer/FragmentShader.fsh");
 
         vaoRendering = new VAORendering();
