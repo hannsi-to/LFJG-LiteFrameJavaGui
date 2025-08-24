@@ -13,6 +13,7 @@ import me.hannsi.lfjg.render.system.mesh.BufferObjectType;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
+import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import me.hannsi.lfjg.render.system.text.AlignType;
@@ -55,13 +56,13 @@ public class TextRenderer {
         this.lineDatum = new ArrayList<>();
 
         this.msdfFontShaderProgram = new ShaderProgram();
-        this.msdfFontShaderProgram.createVertexShader(Location.fromResource("shader/msdf/VertexShader.vsh"));
+        this.msdfFontShaderProgram.createVertexShader(Location.fromResource("shader/VertexShader.vsh"));
         this.msdfFontShaderProgram.createFragmentShader(Location.fromResource("shader/msdf/FragmentShader.fsh"));
         this.msdfFontShaderProgram.link();
 
         this.lineShaderProgram = new ShaderProgram();
-        this.lineShaderProgram.createVertexShader(Location.fromResource("shader/scene/object/VertexShader.vsh"));
-        this.lineShaderProgram.createFragmentShader(Location.fromResource("shader/scene/object/FragmentShader.fsh"));
+        this.lineShaderProgram.createVertexShader(Location.fromResource("shader/VertexShader.vsh"));
+        this.lineShaderProgram.createFragmentShader(Location.fromResource("shader/FragmentShader.fsh"));
         this.lineShaderProgram.link();
 
         float[] positions = new float[]{0, 0, 0, 1, 1, 1, 1, 0};
@@ -449,11 +450,12 @@ public class TextRenderer {
                     throw new IllegalStateException("Unexpected value: " + data.lineType);
             }
 
+            lineShaderProgram.setUniform("fragmentShaderType",UploadUniformType.ONCE, FragmentShaderType.OBJECT.getId());
             lineShaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());
             lineShaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, viewMatrix);
             lineShaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix.translate(x, y, 0).scale(width, thickness, 1));
-            lineShaderProgram.setUniform("color", UploadUniformType.PER_FRAME, data.color);
-            lineShaderProgram.setUniform("replaceColor", UploadUniformType.ONCE, true);
+            lineShaderProgram.setUniform("objectColor", UploadUniformType.PER_FRAME, data.color);
+            lineShaderProgram.setUniform("objectReplaceColor", UploadUniformType.ONCE, true);
 
             vaoRendering.draw(lineMesh);
 

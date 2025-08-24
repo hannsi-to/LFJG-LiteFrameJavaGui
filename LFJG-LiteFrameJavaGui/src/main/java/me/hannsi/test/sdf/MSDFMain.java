@@ -11,6 +11,7 @@ import me.hannsi.lfjg.frame.setting.settings.SeverityType;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.renderers.polygon.GLLine;
 import me.hannsi.lfjg.render.renderers.text.TextRenderer;
+import me.hannsi.lfjg.render.system.text.TextFormatType;
 import me.hannsi.lfjg.render.system.text.TextMeshBuilder;
 import me.hannsi.lfjg.render.system.text.msdf.MSDFFont;
 import me.hannsi.lfjg.render.system.text.msdf.MSDFGenerator;
@@ -94,7 +95,7 @@ public class MSDFMain implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-        textRenderer.draw("abcdefghijklmnopqrstuvwxyz");
+        textRenderer.draw(TextFormatType.UNDERLINE + "abcdefghijklmnopqrstuvwxyz");
         glLine.draw();
 
 

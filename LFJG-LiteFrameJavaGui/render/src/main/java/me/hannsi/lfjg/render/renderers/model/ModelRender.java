@@ -32,7 +32,7 @@ public class ModelRender {
 
     ModelRender() {
         shaderProgram = new ShaderProgram();
-        shaderProgram.createVertexShader(Location.fromResource("shader/scene/model/VertexShader.vsh"));
+        shaderProgram.createVertexShader(Location.fromResource("shader/VertexShader.vsh"));
         shaderProgram.createFragmentShader(Location.fromResource("shader/scene/model/FragmentShader.fsh"));
         shaderProgram.link();
 
