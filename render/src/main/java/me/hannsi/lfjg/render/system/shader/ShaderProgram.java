@@ -57,6 +57,19 @@ public class ShaderProgram {
         return result;
     }
 
+    private static int[] toIntArray(Object[] values){
+        int[] result = new int[values.length];
+        for (int i = 0; i < values.length; i++) {
+            Object v = values[i];
+            if (v instanceof Number) {
+                result[i] = ((Number) v).intValue();
+            } else {
+                throw new IllegalArgumentException("Value is not a number: " + v);
+            }
+        }
+        return result;
+    }
+
     /**
      * Cleans up the shader program by deleting it.
      */
@@ -172,7 +185,7 @@ public class ShaderProgram {
                     throw new IllegalArgumentException("Unsupported float uniform size: " + floatValues.length);
             }
         } else if (first instanceof Integer) {
-            int[] intValues = Arrays.stream(values).mapToInt(v -> (Integer) v).toArray();
+            int[] intValues = toIntArray(values);
             switch (intValues.length) {
                 case 1:
                     glUniform1i(location, intValues[0]);

@@ -1,18 +1,9 @@
-#version 330
+uniform int modelMaterialType;
 
-in vec4 outColor;
-in vec2 outTextureCoord;
-
-out vec4 fragColor;
-
-uniform int materialType;
-uniform sampler2D textureSampler;
-
-void main()
-{
-    if (materialType == 1){
+void modelMain(){
+    if (modelMaterialType == 1){
         fragColor = outColor;
-    } else if (materialType == 2){
-        fragColor = texture(textureSampler, outTextureCoord);
+    } else if (modelMaterialType == 2){
+        fragColor = texture(textureSampler, outTexture);
     }
 }

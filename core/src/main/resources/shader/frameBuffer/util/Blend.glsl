@@ -1,5 +1,3 @@
-#include "shader/frameBuffer/util/Luminance.glsl"
-
 vec4 blendNormal(vec4 base, vec4 blend) {
     if (blend.a == 0){
         return base;
