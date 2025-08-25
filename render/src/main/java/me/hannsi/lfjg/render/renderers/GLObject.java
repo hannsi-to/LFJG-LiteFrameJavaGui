@@ -4,7 +4,6 @@ import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
-import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.Id;
 import me.hannsi.lfjg.render.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
@@ -20,6 +19,7 @@ import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
 
+import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
@@ -32,7 +32,6 @@ public class GLObject implements Cloneable {
     private VAORendering vaoRendering;
     private Mesh mesh;
     private FrameBuffer frameBuffer;
-    private ShaderProgram shaderProgram;
 
     private Matrix4f viewMatrix;
 
@@ -56,7 +55,6 @@ public class GLObject implements Cloneable {
         this.vaoRendering = null;
         this.mesh = null;
         this.frameBuffer = null;
-        this.shaderProgram = null;
 
         this.viewMatrix = null;
         this.transform = new Transform(this);
@@ -84,9 +82,6 @@ public class GLObject implements Cloneable {
         if (frameBuffer != null) {
             frameBuffer.cleanup();
         }
-        if (shaderProgram != null) {
-            shaderProgram.cleanup();
-        }
         if (vaoRendering != null) {
             vaoRendering.cleanup();
         }
@@ -102,17 +97,12 @@ public class GLObject implements Cloneable {
     /**
      * Initializes the GLObject by creating necessary OpenGL resources.
      */
-    public void create(Location vertexShader, Location fragmentShader) {
+    public void create() {
         vaoRendering = new VAORendering();
 
         frameBuffer = new FrameBuffer();
         frameBuffer.createFrameBuffer();
-        frameBuffer.createShaderProgram();
-
-        shaderProgram = new ShaderProgram();
-        shaderProgram.createVertexShader(vertexShader);
-        shaderProgram.createFragmentShader(fragmentShader);
-        shaderProgram.link();
+        frameBuffer.createMatrix();
 
         viewMatrix = new Matrix4f();
 
@@ -184,7 +174,7 @@ public class GLObject implements Cloneable {
     }
 
     private void bindResources() {
-        frameBuffer.bindFrameBuffer();
+        frameBuffer.bindFrameBufferNoClear();
         shaderProgram.bind();
     }
 
@@ -301,18 +291,6 @@ public class GLObject implements Cloneable {
 
     public ShaderProgram getShaderProgram() {
         return shaderProgram;
-    }
-
-    /**
-     * Sets the ShaderProgram of the GLObject.
-     *
-     * @param shaderProgram the ShaderProgram to set
-     * @return the GLObject instance
-     */
-    public GLObject setShaderProgram(ShaderProgram shaderProgram) {
-        this.shaderProgram = shaderProgram;
-
-        return this;
     }
 
     public Matrix4f getViewMatrix() {

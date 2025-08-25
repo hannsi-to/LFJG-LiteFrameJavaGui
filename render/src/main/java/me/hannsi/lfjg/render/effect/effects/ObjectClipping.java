@@ -18,7 +18,7 @@ public class ObjectClipping extends EffectBase {
 
         this.clippingFrameBuffer = new FrameBuffer();
         this.clippingFrameBuffer.createFrameBuffer();
-        this.clippingFrameBuffer.createShaderProgram();
+        this.clippingFrameBuffer.createMatrix();
 
         this.glObjectCache = glObjectCache;
         this.clippingObjectName = clippingObjectName;

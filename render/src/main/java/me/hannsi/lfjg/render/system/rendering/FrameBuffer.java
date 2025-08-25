@@ -20,6 +20,7 @@ import org.joml.Matrix4f;
 import java.nio.ByteBuffer;
 
 import static me.hannsi.lfjg.core.Core.frameBufferSize;
+import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL30.*;
 
@@ -33,9 +34,6 @@ public class FrameBuffer {
     private float width;
     private float height;
     private Mesh mesh;
-    private ShaderProgram shaderProgramFBO;
-    private Location vertexShaderFBO;
-    private Location fragmentShaderFBO;
     private Matrix4f modelMatrix;
     private Matrix4f viewMatrix;
 
@@ -84,10 +82,6 @@ public class FrameBuffer {
             throw new CreatingRenderBufferException("Failed to create render buffer");
         }
 
-        shaderProgramFBO = new ShaderProgram();
-        vertexShaderFBO = Location.fromResource("shader/VertexShader.vsh");
-        fragmentShaderFBO = Location.fromResource("shader/FragmentShader.fsh");
-
         vaoRendering = new VAORendering();
 
         float[] positions = new float[]{x, y, x + width, y, x + width, y + height, x, y + height};
@@ -113,7 +107,6 @@ public class FrameBuffer {
 
         vaoRendering.cleanup();
         mesh.cleanup();
-        shaderProgramFBO.cleanup();
         vaoRendering.cleanup();
 
         modelMatrix = null;
@@ -130,11 +123,7 @@ public class FrameBuffer {
     /**
      * Creates the shader program for the frame buffer.
      */
-    public void createShaderProgram() {
-        shaderProgramFBO.createVertexShader(vertexShaderFBO);
-        shaderProgramFBO.createFragmentShader(fragmentShaderFBO);
-        shaderProgramFBO.link();
-
+    public void createMatrix() {
         modelMatrix = new Matrix4f();
         viewMatrix = new Matrix4f();
     }
@@ -182,13 +171,13 @@ public class FrameBuffer {
      * @param textureUnit the texture unit to use
      */
     public void drawFrameBuffer(int textureUnit) {
-        shaderProgramFBO.bind();
+        shaderProgram.bind();
 
-        shaderProgramFBO.setUniform("fragmentShaderType",UploadUniformType.PER_FRAME, FragmentShaderType.FRAME_BUFFER.getId());
-        shaderProgramFBO.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());
-        shaderProgramFBO.setUniform("modelMatrix", UploadUniformType.ON_CHANGE, modelMatrix);
-        shaderProgramFBO.setUniform("viewMatrix", UploadUniformType.ON_CHANGE, viewMatrix);
-        shaderProgramFBO.setUniform("textureSampler", UploadUniformType.ONCE, textureUnit);
+        shaderProgram.setUniform("fragmentShaderType",UploadUniformType.PER_FRAME, FragmentShaderType.FRAME_BUFFER.getId());
+        shaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());
+        shaderProgram.setUniform("modelMatrix", UploadUniformType.ON_CHANGE, modelMatrix);
+        shaderProgram.setUniform("viewMatrix", UploadUniformType.ON_CHANGE, viewMatrix);
+        shaderProgram.setUniform("textureSampler", UploadUniformType.ONCE, textureUnit);
 
         GLStateCache.enable(GL_BLEND);
         GLStateCache.disable(GL_DEPTH_TEST);
@@ -318,27 +307,7 @@ public class FrameBuffer {
     }
 
     public ShaderProgram getShaderProgramFBO() {
-        return shaderProgramFBO;
-    }
-
-    public void setShaderProgramFBO(ShaderProgram shaderProgramFBO) {
-        this.shaderProgramFBO = shaderProgramFBO;
-    }
-
-    public Location getVertexShaderFBO() {
-        return vertexShaderFBO;
-    }
-
-    public void setVertexShaderFBO(Location vertexShaderFBO) {
-        this.vertexShaderFBO = vertexShaderFBO;
-    }
-
-    public Location getFragmentShaderFBO() {
-        return fragmentShaderFBO;
-    }
-
-    public void setFragmentShaderFBO(Location fragmentShaderFBO) {
-        this.fragmentShaderFBO = fragmentShaderFBO;
+        return null;
     }
 
     public Matrix4f getModelMatrix() {

@@ -25,7 +25,7 @@ public class GLObjectCache {
         glObjects = new HashMap<>();
         frameBuffer = new FrameBuffer();
 
-        frameBuffer.createShaderProgram();
+        frameBuffer.createMatrix();
         frameBuffer.createFrameBuffer();
     }
 

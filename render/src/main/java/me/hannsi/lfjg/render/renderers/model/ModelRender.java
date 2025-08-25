@@ -20,11 +20,11 @@ import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import java.util.Collection;
 import java.util.List;
 
+import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL13.*;
 
 public class ModelRender {
-    private final ShaderProgram shaderProgram;
     private final VAORendering vaoRendering;
 
     private ModelCache modelCache;
@@ -32,11 +32,6 @@ public class ModelRender {
     private Camera camera;
 
     ModelRender() {
-        shaderProgram = new ShaderProgram();
-        shaderProgram.createVertexShader(Location.fromResource("shader/VertexShader.vsh"));
-        shaderProgram.createFragmentShader(Location.fromResource("shader/scene/model/FragmentShader.fsh"));
-        shaderProgram.link();
-
         vaoRendering = new VAORendering();
 
         camera = new Camera();
@@ -114,10 +109,6 @@ public class ModelRender {
 
     public Model getModel(String id) {
         return getModelCache().getModels().get(id);
-    }
-
-    public ShaderProgram getShaderProgram() {
-        return shaderProgram;
     }
 
     public VAORendering getVaoRendering() {

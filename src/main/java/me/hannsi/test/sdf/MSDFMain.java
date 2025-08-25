@@ -1,5 +1,6 @@
 package me.hannsi.test.sdf;
 
+import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.manager.WorkspaceManager;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
@@ -9,6 +10,7 @@ import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.setting.settings.SeverityType;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
+import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.renderers.polygon.GLLine;
 import me.hannsi.lfjg.render.renderers.text.TextRenderer;
 import me.hannsi.lfjg.render.system.text.TextFormatType;
@@ -95,12 +97,12 @@ public class MSDFMain implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-        textRenderer.draw(TextFormatType.UNDERLINE + "abcdefghijklmnopqrstuvwxyz");
+//        textRenderer.draw(TextFormatType.UNDERLINE + "abcdefghijklmnopqrstuvwxyz");
         glLine.draw();
 
 
 //        textRenderer.draw("しるT" + "しるT" + TextFormatType.RESET + "ばは" + TextFormatType.DARK_BLUE + TextFormatType.STRIKETHROUGH + "あ" + TextFormatType.GOLD + "ほ");
-//        DebugLog.debug(getClass(), "FPS:" + frame.getFps());
+        DebugLog.debug(getClass(), "FPS:" + frame.getFps());
     }
 
     @Override

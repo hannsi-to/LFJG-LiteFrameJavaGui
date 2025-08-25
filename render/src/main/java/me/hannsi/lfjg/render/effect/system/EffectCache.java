@@ -18,7 +18,7 @@ public class EffectCache {
 
         this.endFrameBuffer = new FrameBuffer();
         this.endFrameBuffer.createFrameBuffer();
-        this.endFrameBuffer.createShaderProgram();
+        this.endFrameBuffer.createMatrix();
     }
 
     public static EffectCache initEffectCache() {

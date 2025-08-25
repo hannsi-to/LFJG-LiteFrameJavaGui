@@ -43,30 +43,30 @@ public class EffectBase {
         frameBuffer = new FrameBuffer(glObject.getTransform().getX(), glObject.getTransform().getY(), glObject.getTransform().getWidth(), glObject.getTransform().getHeight());
 
         if (vertexPath != null) {
-            frameBuffer.setVertexShaderFBO(vertexPath);
+//            frameBuffer.setVertexShaderFBO(vertexPath);
         }
 
         if (fragmentPath != null) {
-            frameBuffer.setFragmentShaderFBO(fragmentPath);
+//            frameBuffer.setFragmentShaderFBO(fragmentPath);
         }
 
         frameBuffer.createFrameBuffer();
-        frameBuffer.createShaderProgram();
+        frameBuffer.createMatrix();
     }
 
     public void create(FrameBuffer frameBuffer) {
         this.frameBuffer = frameBuffer;
 
         if (vertexPath != null) {
-            frameBuffer.setVertexShaderFBO(vertexPath);
+//            frameBuffer.setVertexShaderFBO(vertexPath);
         }
 
         if (fragmentPath != null) {
-            frameBuffer.setFragmentShaderFBO(fragmentPath);
+//            frameBuffer.setFragmentShaderFBO(fragmentPath);
         }
 
         frameBuffer.createFrameBuffer();
-        frameBuffer.createShaderProgram();
+        frameBuffer.createMatrix();
     }
 
     public void cleanup() {

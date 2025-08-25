@@ -85,7 +85,7 @@ public class SplitFrameBuffer {
 
                 FrameBuffer frameBuffer = new FrameBuffer(srcX, srcY, srcWidth, srcHeight);
                 frameBuffer.createFrameBuffer();
-                frameBuffer.createShaderProgram();
+                frameBuffer.createMatrix();
 
                 smallFrameBuffers[y][x] = frameBuffer;
             }

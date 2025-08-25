@@ -177,7 +177,7 @@ public class GLPolygon extends GLObject {
             setMesh(mesh);
 
             setGLObjectParameter();
-            create(vertexShaderPath, fragmentShaderPath);
+            create();
             latestVertex = vertex;
             latestColor = color;
             latestTexture = texture;
