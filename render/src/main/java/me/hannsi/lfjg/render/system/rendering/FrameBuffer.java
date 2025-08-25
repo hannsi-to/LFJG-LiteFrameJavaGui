@@ -12,6 +12,7 @@ import me.hannsi.lfjg.render.debug.exceptions.render.scene.CreatingRenderBufferE
 import me.hannsi.lfjg.render.debug.exceptions.texture.CreatingTextureException;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
+import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
@@ -85,7 +86,7 @@ public class FrameBuffer {
 
         shaderProgramFBO = new ShaderProgram();
         vertexShaderFBO = Location.fromResource("shader/VertexShader.vsh");
-        fragmentShaderFBO = Location.fromResource("shader/frameBuffer/FragmentShader.fsh");
+        fragmentShaderFBO = Location.fromResource("shader/FragmentShader.fsh");
 
         vaoRendering = new VAORendering();
 
@@ -183,6 +184,7 @@ public class FrameBuffer {
     public void drawFrameBuffer(int textureUnit) {
         shaderProgramFBO.bind();
 
+        shaderProgramFBO.setUniform("fragmentShaderType",UploadUniformType.PER_FRAME, FragmentShaderType.FRAME_BUFFER.getId());
         shaderProgramFBO.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());
         shaderProgramFBO.setUniform("modelMatrix", UploadUniformType.ON_CHANGE, modelMatrix);
         shaderProgramFBO.setUniform("viewMatrix", UploadUniformType.ON_CHANGE, viewMatrix);

@@ -4,7 +4,9 @@ import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 
 public enum FragmentShaderType implements IEnumTypeBase {
     OBJECT(0,"Object"),
-    MODEL(1,"Model");
+    MODEL(1,"Model"),
+    FRAME_BUFFER(2,"FrameBuffer"),
+    MSDF(3,"MSDF");
 
     final int id;
     final String name;

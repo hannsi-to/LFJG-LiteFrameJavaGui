@@ -14,11 +14,12 @@ uniform int fragmentShaderType;
 
 #include "shader/scene/object/FragmentShader.fsh"
 #include "shader/scene/model/FragmentShader.fsh"
+#include "shader/frameBuffer/FragmentShader.fsh"
 
 void main() {
-    if(fragmentShaderType == 0){
-        objectMain();
-    }else if(fragmentShaderType == 1){
-        modelMain();
+    switch(fragmentShaderType){
+        case 0: objectMain(); break;
+        case 1: modelMain(); break;
+        case 2: frameBufferMain(); break;
     }
 }
