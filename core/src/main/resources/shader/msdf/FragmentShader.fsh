@@ -1,31 +1,24 @@
-uniform vec4 fontColor;
-uniform float distanceRange;
-uniform float boldness;
-uniform bool box;
-uniform vec4 uvSize;
-uniform bool outline;
-uniform float outlineWidth;
+uniform vec4 msdfFontColor;
+uniform float msdfDistanceRange;
+uniform float msdfBoldness;
+uniform bool msdfBox;
+uniform vec4 msdfUVSize;
+uniform bool msdfOutline;
+uniform float msdfOutlineWidth;
 
-float median(float r, float g, float b) {
+float msdfMedian(float r, float g, float b) {
     return max(min(r, g), min(max(r, g), b));
-}
-
-float distanceToLine(vec2 p, vec2 a, vec2 b) {
-    vec2 pa = p - a;
-    vec2 ba = b - a;
-    float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
-    return length(pa - ba * h);
 }
 
 void msdfMain() {
     vec3 msdf = texture(textureSampler, outTexture).rgb;
-    float sd = median(msdf.r, msdf.g, msdf.b);
-    sd += boldness;
+    float sd = msdfMedian(msdf.r, msdf.g, msdf.b);
+    sd += msdfBoldness;
 
     float screenPxDistance = fwidth(sd);
 
     float innerEdge = 0.5;
-    float outerEdge = 0.5 + outlineWidth * 0.5;
+    float outerEdge = 0.5 + msdfOutlineWidth * 0.5;
 
     float fillAlpha = smoothstep(innerEdge - screenPxDistance, innerEdge + screenPxDistance, sd);
     float outlineAlpha = smoothstep(outerEdge - screenPxDistance, outerEdge + screenPxDistance, sd);
@@ -34,18 +27,18 @@ void msdfMain() {
     vec4 resultColor;
     vec4 uOutlineColor = vec4(1, 0, 0, 1);
 
-    if (outline) {
+    if (msdfOutline) {
         resultColor = vec4(uOutlineColor.rgb, outlineOnlyAlpha * uOutlineColor.a);
     } else {
-        resultColor = vec4(fontColor.rgb, fillAlpha * fontColor.a);
+        resultColor = vec4(msdfFontColor.rgb, fillAlpha * msdfFontColor.a);
     }
 
     bool isBorder =
-    outTexture.x < uvSize.x || outTexture.x > uvSize.z ||
-    outTexture.y < uvSize.y || outTexture.y > uvSize.w;
+    outTexture.x < msdfUVSize.x || outTexture.x > msdfUVSize.z ||
+    outTexture.y < msdfUVSize.y || outTexture.y > msdfUVSize.w;
 
-    if (isBorder && box) {
-        fragColor = fontColor;
+    if (isBorder && msdfBox) {
+        fragColor = msdfFontColor;
     } else {
         fragColor = resultColor;
     }
