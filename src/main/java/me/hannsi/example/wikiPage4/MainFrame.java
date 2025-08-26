@@ -1,11 +1,7 @@
 package me.hannsi.example.wikiPage4;
 
-import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.LFJGRenderContext;
-import me.hannsi.lfjg.render.system.font.Font;
-import me.hannsi.lfjg.render.system.font.FontCache;
 
 public class MainFrame implements LFJGFrame {
     private Frame frame;

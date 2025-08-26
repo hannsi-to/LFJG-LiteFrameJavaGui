@@ -16,7 +16,6 @@ import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.renderers.polygon.GLTriangle;
 import me.hannsi.lfjg.render.renderers.shader.GLShader;
 import me.hannsi.lfjg.render.renderers.svg.GLSVG;
-import me.hannsi.lfjg.render.system.font.FontCache;
 import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
@@ -47,7 +46,6 @@ public class TestScene1 implements IScene {
     EffectCache glSVGEffectCache;
 
     AnimationCache gl1AnimationCache;
-    FontCache fontCache;
 
     SoundCache soundCache;
 
