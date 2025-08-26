@@ -6,7 +6,6 @@ import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
-import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.toolkit.StringUtil;
 import me.hannsi.lfjg.render.debug.exceptions.UnknownAlignType;
 import me.hannsi.lfjg.render.system.mesh.BufferObjectType;
@@ -30,15 +29,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static me.hannsi.lfjg.core.utils.math.MathHelper.max;
+import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 import static me.hannsi.lfjg.render.system.text.Align.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 
 public class TextRenderer {
     protected List<LineData> lineDatum;
-    protected ShaderProgram msdfFontShaderProgram;
     protected Mesh lineMesh;
     protected VAORendering vaoRendering;
+    protected CharState charState;
+    protected MSDFFont.Metrics metrics;
 
     private Matrix4f viewMatrix = new Matrix4f();
     private Color defaultFontColor = Color.WHITE;
@@ -54,17 +55,14 @@ public class TextRenderer {
     TextRenderer() {
         this.lineDatum = new ArrayList<>();
 
-        this.msdfFontShaderProgram = new ShaderProgram();
-        this.msdfFontShaderProgram.createVertexShader(Location.fromResource("shader/VertexShader.vsh"));
-        this.msdfFontShaderProgram.createFragmentShader(Location.fromResource("shader/FragmentShader.fsh"));
-        this.msdfFontShaderProgram.link();
-
         float[] positions = new float[]{0, 0, 0, 1, 1, 1, 1, 0};
         float[] colors = defaultFontColor.getFloatArray(4);
         this.lineMesh = Mesh.createMesh()
                 .createBufferObject2D(positions, colors, null);
 
         this.vaoRendering = new VAORendering();
+
+        this.charState = new CharState(defaultFontColor);
     }
 
     public static TextRenderer createTextRender() {
@@ -178,7 +176,6 @@ public class TextRenderer {
         } else if ((align & ALIGN_BASELINE) != 0) {
             position[1] = pos.y();
         } else if ((align & ALIGN_BOTTOM) != 0) {
-            MSDFFont.Metrics metrics = textMeshBuilder.getMsdfFont().getMetrics();
             float offset = metrics.getDescender();
             position[1] = pos.y() - (offset * size * 2);
         } else {
@@ -195,17 +192,13 @@ public class TextRenderer {
         GLStateCache.activeTexture(GL_TEXTURE0);
         GLStateCache.bindTexture(GL_TEXTURE_2D, msdfTextureLoader.textureId);
 
-        msdfFontShaderProgram.bind();
-
-        msdfFontShaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.MSDF.getId());
-        msdfFontShaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());
-        msdfFontShaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, viewMatrix);
-        msdfFontShaderProgram.setUniform("textureSampler", UploadUniformType.ONCE, 0);
-        msdfFontShaderProgram.setUniform("msdfDistanceRange", UploadUniformType.ONCE, (float) textMeshBuilder.getMsdfFont().getAtlas().getDistanceRange());
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.MSDF.getId());
+        shaderProgram.setUniform("textureSampler", UploadUniformType.PER_FRAME, 0);
 
         boolean code = false;
         TextFormatType textFormatType;
-        CharState charState = new CharState(defaultFontColor);
+
+        metrics = textMeshBuilder.getMsdfFont().getMetrics();
 
         float[] alignPos = setAlignPos(text);
         float cursorX = alignPos[0];
@@ -291,7 +284,6 @@ public class TextRenderer {
             if (glyph == null) {
                 continue;
             }
-            MSDFFont.Metrics metrics = textMeshBuilder.getMsdfFont().getMetrics();
             float bearingY = 0f;
             if (glyph.getPlaneBounds().getBottom() < metrics.getDescender()) {
                 bearingY = -glyph.getPlaneBounds().getBottom() * size;
@@ -326,41 +318,41 @@ public class TextRenderer {
                 }
 
                 if (charState.italic) {
-                    msdfFontShaderProgram.setUniform("italicSkew", UploadUniformType.ON_CHANGE, 0.4f);
+                    shaderProgram.setUniform("italicSkew", UploadUniformType.ON_CHANGE, 0.4f);
                 } else {
-                    msdfFontShaderProgram.setUniform("italicSkew", UploadUniformType.ON_CHANGE, 0f);
+                    shaderProgram.setUniform("italicSkew", UploadUniformType.ON_CHANGE, 0f);
                 }
 
                 if (charState.bold) {
-                    msdfFontShaderProgram.setUniform("msdfBoldness", UploadUniformType.ON_CHANGE, 0.24f);
+                    shaderProgram.setUniform("msdfBoldness", UploadUniformType.ON_CHANGE, 0.24f);
                 } else {
-                    msdfFontShaderProgram.setUniform("msdfBoldness", UploadUniformType.ON_CHANGE, 0f);
+                    shaderProgram.setUniform("msdfBoldness", UploadUniformType.ON_CHANGE, 0f);
                 }
 
                 if (charState.ghost) {
-                    msdfFontShaderProgram.setUniform("msdfBoldness", UploadUniformType.ON_CHANGE, -0.5f);
+                    shaderProgram.setUniform("msdfBoldness", UploadUniformType.ON_CHANGE, -0.5f);
                 } else {
-                    msdfFontShaderProgram.setUniform("msdfBoldness", UploadUniformType.ON_CHANGE, 0f);
+                    shaderProgram.setUniform("msdfBoldness", UploadUniformType.ON_CHANGE, 0f);
                 }
 
                 if (charState.box) {
-                    msdfFontShaderProgram.setUniform("msdfBox", UploadUniformType.PER_FRAME, true);
-                    msdfFontShaderProgram.setUniform("msdfUVSize", UploadUniformType.PER_FRAME, new Vector4f(textMesh.uvs[0], textMesh.uvs[1], textMesh.uvs[2], textMesh.uvs[5]));
+                    shaderProgram.setUniform("msdfBox", UploadUniformType.PER_FRAME, true);
+                    shaderProgram.setUniform("msdfUVSize", UploadUniformType.PER_FRAME, new Vector4f(textMesh.uvs[0], textMesh.uvs[1], textMesh.uvs[2], textMesh.uvs[5]));
                 } else {
-                    msdfFontShaderProgram.setUniform("msdfBox", UploadUniformType.ON_CHANGE, false);
+                    shaderProgram.setUniform("msdfBox", UploadUniformType.ON_CHANGE, false);
                 }
 
                 if (charState.outLine) {
-                    msdfFontShaderProgram.setUniform("msdfOutline", UploadUniformType.ON_CHANGE, true);
-                    msdfFontShaderProgram.setUniform("msdfOutlineWidth", UploadUniformType.ONCE, 0f);
+                    shaderProgram.setUniform("msdfOutline", UploadUniformType.ON_CHANGE, true);
+                    shaderProgram.setUniform("msdfOutlineWidth", UploadUniformType.ONCE, 0f);
                 } else {
-                    msdfFontShaderProgram.setUniform("msdfOutline", UploadUniformType.ON_CHANGE, false);
+                    shaderProgram.setUniform("msdfOutline", UploadUniformType.ON_CHANGE, false);
                 }
 
                 float glyphYOffset = -glyph.getPlaneBounds().getBottom() * size;
                 modelMatrix.translate(cursorX + (charState.shadow ? size * 0.02f : 0), cursorY - bearingY + (charState.shadow ? size * 0.02f : 0) + glyphYOffset, 0).scale(size, size, 1);
-                msdfFontShaderProgram.setUniform("msdfFontColor", UploadUniformType.ON_CHANGE, charState.color);
-                msdfFontShaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix);
+                shaderProgram.setUniform("msdfFontColor", UploadUniformType.ON_CHANGE, charState.color);
+                shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix);
                 vaoRendering.draw(textMesh.mesh, GL_TRIANGLES);
             }
 
@@ -374,7 +366,7 @@ public class TextRenderer {
             if (doubleUnderLineData != null) {
                 doubleUnderLineData.endX = cursorX;
                 lineDatum.add(doubleUnderLineData.newInstance());
-                doubleUnderLineData.baseY = doubleUnderLineData.baseY - textMeshBuilder.getMsdfFont().getMetrics().getUnderlineThickness() * size * 2;
+                doubleUnderLineData.baseY = doubleUnderLineData.baseY - metrics.getUnderlineThickness() * size * 2;
                 lineDatum.add(doubleUnderLineData.newInstance());
                 doubleUnderLineData = null;
             }
@@ -385,9 +377,9 @@ public class TextRenderer {
             }
             if (doubleStrikethroughData != null) {
                 doubleStrikethroughData.endX = cursorX;
-                doubleStrikethroughData.baseY += textMeshBuilder.getMsdfFont().getMetrics().getUnderlineThickness() * 1.5f * size;
+                doubleStrikethroughData.baseY += metrics.getUnderlineThickness() * 1.5f * size;
                 lineDatum.add(doubleStrikethroughData.newInstance());
-                doubleStrikethroughData.baseY -= textMeshBuilder.getMsdfFont().getMetrics().getUnderlineThickness() * 1.5f * size * 2;
+                doubleStrikethroughData.baseY -= metrics.getUnderlineThickness() * 1.5f * size * 2;
                 lineDatum.add(doubleStrikethroughData.newInstance());
                 doubleStrikethroughData = null;
             }
@@ -400,13 +392,13 @@ public class TextRenderer {
             modelMatrix.identity();
         }
 
+        int index = 0;
         for (LineData data : lineDatum) {
             float x;
             float y;
             float thickness;
             float width;
 
-            MSDFFont.Metrics metrics = textMeshBuilder.getMsdfFont().getMetrics();
             float offsetY;
             switch (data.lineType) {
                 case UNDERLINE:
@@ -442,16 +434,17 @@ public class TextRenderer {
                     throw new IllegalStateException("Unexpected value: " + data.lineType);
             }
 
-            msdfFontShaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.OBJECT.getId());
-            msdfFontShaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());
-            msdfFontShaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, viewMatrix);
-            msdfFontShaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix.translate(x, y, 0).scale(width, thickness, 1));
-            msdfFontShaderProgram.setUniform("objectColor", UploadUniformType.PER_FRAME, data.color);
-            msdfFontShaderProgram.setUniform("objectReplaceColor", UploadUniformType.ONCE, true);
+            shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.OBJECT.getId());
+            shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix.translate(x, y, 0).scale(width, thickness, 1));
+            shaderProgram.setUniform("objectColor", UploadUniformType.PER_FRAME, data.color);
+            shaderProgram.setUniform("objectReplaceColor", UploadUniformType.ONCE, true);
 
             vaoRendering.draw(lineMesh);
+            index++;
 
-            modelMatrix.identity();
+            if(lineDatum.size() != index){
+                modelMatrix.identity();
+            }
         }
         lineDatum.clear();
 

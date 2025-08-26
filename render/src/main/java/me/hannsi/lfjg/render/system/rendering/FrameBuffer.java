@@ -177,7 +177,7 @@ public class FrameBuffer {
         shaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());
         shaderProgram.setUniform("modelMatrix", UploadUniformType.ON_CHANGE, modelMatrix);
         shaderProgram.setUniform("viewMatrix", UploadUniformType.ON_CHANGE, viewMatrix);
-        shaderProgram.setUniform("textureSampler", UploadUniformType.ONCE, textureUnit);
+        shaderProgram.setUniform("textureSampler", UploadUniformType.PER_FRAME, textureUnit);
 
         GLStateCache.enable(GL_BLEND);
         GLStateCache.disable(GL_DEPTH_TEST);

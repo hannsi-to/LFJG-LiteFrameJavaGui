@@ -16,17 +16,12 @@ public class GLObjectCache {
      * Maps objectId to GLObject.
      */
     private final Map<Long, GLObject> glObjects;
-    private final FrameBuffer frameBuffer;
 
     /**
      * Constructs a new GLObjectCache.
      */
     public GLObjectCache() {
         glObjects = new HashMap<>();
-        frameBuffer = new FrameBuffer();
-
-        frameBuffer.createMatrix();
-        frameBuffer.createFrameBuffer();
     }
 
     public static GLObjectCache createGLObjectCache() {
@@ -73,15 +68,10 @@ public class GLObjectCache {
     }
 
     public void draw(Predicate<GLObject> filter) {
-        frameBuffer.bindFrameBuffer();
-
         for (GLObject glObject : glObjects.values()) {
             if (filter != null && !filter.test(glObject)) continue;
             glObject.draw();
         }
-
-        frameBuffer.unbindFrameBuffer();
-        frameBuffer.drawFrameBuffer();
     }
 
     /**
@@ -94,7 +84,6 @@ public class GLObjectCache {
             ids.append(glObject.getObjectId()).append(", ");
         }
 
-        frameBuffer.cleanup();
         glObjects.clear();
 
         if (ids.length() > 2) {
@@ -136,9 +125,5 @@ public class GLObjectCache {
 
     public Map<Long, GLObject> getGlObjects() {
         return glObjects;
-    }
-
-    public FrameBuffer getFrameBuffer() {
-        return frameBuffer;
     }
 }

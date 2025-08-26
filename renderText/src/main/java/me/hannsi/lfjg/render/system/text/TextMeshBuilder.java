@@ -18,6 +18,15 @@ public class TextMeshBuilder {
         textMeshMap = new HashMap<>();
     }
 
+    public void cleanup(){
+        textMeshMap.clear();
+        textMeshMap = null;
+        msdfFont.cleanup();
+        glyphMap.clear();
+        glyphMap = null;
+        chars = null;
+    }
+
     public static TextMeshBuilder createTextMeshBuilder() {
         return new TextMeshBuilder();
     }

@@ -10,6 +10,15 @@ public class MSDFFont {
     private List<Glyph> glyphs;
     private List<Object> kerning;
 
+    public void cleanup(){
+        atlas = null;
+        metrics = null;
+        glyphs.clear();
+        glyphs = null;
+        kerning.clear();
+        kerning = null;
+    }
+
     public Map<Integer, Glyph> getGlyphMap() {
         Map<Integer, Glyph> map = new HashMap<>();
         for (Glyph glyph : glyphs) {

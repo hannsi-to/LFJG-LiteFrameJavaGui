@@ -125,7 +125,7 @@ public class GLObject implements Cloneable {
             effectCache.push(this);
         }
 
-        vaoRendering.draw(this);
+        drawVAORendering();
 
         if (effectCache != null) {
             effectCache.pop(this);
@@ -138,6 +138,10 @@ public class GLObject implements Cloneable {
         if (autoDraw) {
             drawFrameBuffer();
         }
+    }
+
+    public void drawVAORendering(){
+        vaoRendering.draw(this);
     }
 
     private void uploadCache() {
@@ -169,7 +173,7 @@ public class GLObject implements Cloneable {
         shaderProgram.setUniform("modelMatrix", UploadUniformType.ON_CHANGE, transform.getModelMatrix());
         shaderProgram.setUniform("viewMatrix", UploadUniformType.ON_CHANGE, viewMatrix);
         if (mesh.getVboIds().get(BufferObjectType.TEXTURE_BUFFER) != null) {
-            shaderProgram.setUniform("textureSampler", UploadUniformType.ONCE, 0);
+            shaderProgram.setUniform("textureSampler", UploadUniformType.PER_FRAME, 0);
         }
     }
 

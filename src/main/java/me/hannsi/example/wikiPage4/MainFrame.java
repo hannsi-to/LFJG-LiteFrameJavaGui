@@ -18,9 +18,9 @@ public class MainFrame implements LFJGFrame {
     public void init() {
         frame.updateLFJGLContext();
 
-        LFJGRenderContext.fontCache = FontCache.initFontCache()
-                .createCache(new Font("Font1", Location.fromResource("font/default.ttf")))
-                .loadFonts();
+//        LFJGRenderContext.fontCache = FontCache.initFontCache()
+//                .createCache(new Font("Font1", Location.fromResource("font/default.ttf")))
+//                .loadFonts();
     }
 
     @Override

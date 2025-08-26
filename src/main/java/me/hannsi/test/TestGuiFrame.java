@@ -70,9 +70,9 @@ public class TestGuiFrame implements LFJGFrame {
         Core.keyboardInfo = new KeyboardInfo();
         camera = new Camera();
 
-        LFJGRenderContext.fontCache = FontCache.initFontCache()
-                .createCache(new Font("font", Location.fromResource("font/default.ttf")))
-                .loadFonts();
+//        LFJGRenderContext.fontCache = FontCache.initFontCache()
+//                .createCache(new Font("font", Location.fromResource("font/default.ttf")))
+//                .loadFonts();
 
         sceneSystem = SceneSystem.initSceneSystem()
                 .addScene(new TestScene1().getScene())
@@ -200,7 +200,7 @@ public class TestGuiFrame implements LFJGFrame {
 
     @Override
     public void stopFrame() {
-        LFJGRenderContext.fontCache.cleanup();
+//        LFJGRenderContext.fontCache.cleanup();
 
         sceneSystem.stopFrameScenes();
         sceneSystem.cleanup();

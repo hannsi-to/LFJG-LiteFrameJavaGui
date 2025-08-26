@@ -20,6 +20,11 @@ public class MSDFTextureLoader {
         this.textureId = glGenTextures();
     }
 
+    public void cleanup(){
+        glDeleteTextures(textureId);
+        textureId = -1;
+    }
+
     public static MSDFTextureLoader createMSDFTextureLoader() {
         return new MSDFTextureLoader();
     }

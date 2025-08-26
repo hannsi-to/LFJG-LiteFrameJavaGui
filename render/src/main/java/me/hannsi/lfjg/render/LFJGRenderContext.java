@@ -7,7 +7,6 @@ import me.hannsi.lfjg.render.system.svg.SVGCache;
 
 public class LFJGRenderContext {
     public static ShaderProgram shaderProgram;
-    public static FontCache fontCache;
     public static SVGCache svgCache;
 
     static {

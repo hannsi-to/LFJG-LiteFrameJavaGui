@@ -10,10 +10,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TextureCache {
-    private final Map<String, TextureLoader> textureMap;
+    private final Map<String, TextureLoader> textureCaches;
 
     TextureCache() {
-        this.textureMap = new HashMap<>();
+        this.textureCaches = new HashMap<>();
     }
 
     public static TextureCache createTextureCache() {
@@ -23,7 +23,7 @@ public class TextureCache {
     public void cleanup() {
         StringBuilder ids = new StringBuilder();
         int index = 0;
-        for (TextureLoader textureLoader : textureMap.values()) {
+        for (TextureLoader textureLoader : textureCaches.values()) {
             if (index == 0) {
                 ids.append(textureLoader.getTextureId());
             } else {
@@ -32,7 +32,7 @@ public class TextureCache {
             textureLoader.cleanup();
             index++;
         }
-        textureMap.clear();
+        textureCaches.clear();
 
         new LogGenerator(
                 LogGenerateType.CLEANUP,
@@ -44,7 +44,7 @@ public class TextureCache {
 
     public TextureCache createCache(String name, Location path) {
         TextureLoader textureLoader = new TextureLoader(path, ImageLoaderType.STB_IMAGE);
-        textureMap.put(name, textureLoader);
+        textureCaches.put(name, textureLoader);
 
         new LogGenerator(
                 LogGenerateType.CREATE_CACHE,
@@ -57,7 +57,7 @@ public class TextureCache {
     }
 
     public TextureLoader getTexture(String name) {
-        TextureLoader textureLoader = textureMap.get(name);
+        TextureLoader textureLoader = textureCaches.get(name);
         if (textureLoader == null) {
             throw new RuntimeException("Texture path not found: " + name);
         }
@@ -65,7 +65,7 @@ public class TextureCache {
         return textureLoader;
     }
 
-    public Map<String, TextureLoader> getTextureMap() {
-        return textureMap;
+    public Map<String, TextureLoader> getTextureCaches() {
+        return textureCaches;
     }
 }

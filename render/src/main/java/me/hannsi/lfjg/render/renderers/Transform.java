@@ -45,6 +45,22 @@ public class Transform {
         return this;
     }
 
+    public Transform reset(){
+        this.centerX = 0;
+        this.centerY = 0;
+        this.centerZ = 0;
+        this.angleX = 0;
+        this.angleY = 0;
+        this.angleZ = 0;
+        this.scaleX = 1;
+        this.scaleY = 1;
+        this.scaleZ = 1;
+
+        modelMatrix.identity();
+
+        return this;
+    }
+
     public Transform translate(float x, float y, float z) {
         this.centerX += x;
         this.centerY += y;
@@ -64,9 +80,9 @@ public class Transform {
     }
 
     public Transform scale(float scaleX, float scaleY, float scaleZ) {
-        this.scaleX = scaleX;
-        this.scaleY = scaleY;
-        this.scaleZ = scaleZ;
+        this.scaleX += scaleX;
+        this.scaleY += scaleY;
+        this.scaleZ += scaleZ;
         modelMatrix.scale(scaleX, scaleY, scaleZ);
 
         return this;

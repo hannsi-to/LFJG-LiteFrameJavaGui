@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render;
 
-public class LFJGRenderTextContext {
+import me.hannsi.lfjg.render.system.text.font.FontCache;
 
+public class LFJGRenderTextContext {
+    public static FontCache fontCache = FontCache.createFontCache();
 }

@@ -56,6 +56,13 @@ public class MSDFGenerator {
         DebugLog.info(getClass(), "Extracted msdf-atlas-gen to temporary directory: " + this.executable.getAbsolutePath());
     }
 
+    public void cleanup(){
+        command.clear();
+        charsetFile = null;
+        textureOutputLocation = null;
+        jsonOutputLocation = null;
+    }
+
     public static MSDFGenerator createMSDFGenerator() throws IOException {
         return new MSDFGenerator();
     }
@@ -82,11 +89,24 @@ public class MSDFGenerator {
     public MSDFGenerator outputName(String outputName) {
         this.outputName = outputName;
 
+        String pngFile = outputName + ".png";
+        String jsonFile = outputName + ".json";
+
+        File outDir = new File(outputName).getParentFile();
+        if (outDir != null && !outDir.exists()) {
+            if (outDir.mkdirs()) {
+                DebugLog.info(getClass(), "Created output directory: " + outDir.getAbsolutePath());
+            } else {
+                DebugLog.warning(getClass(), "Failed to create output directory: " + outDir.getAbsolutePath());
+            }
+        }
+
         command.add("-imageout");
-        command.add(outputName + ".png");
+        command.add(pngFile);
 
         command.add("-json");
-        command.add(outputName + ".json");
+        command.add(jsonFile);
+
         return this;
     }
 
