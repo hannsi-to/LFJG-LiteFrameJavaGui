@@ -97,7 +97,7 @@ public class MSDFMain implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-//        textRenderer.draw(TextFormatType.UNDERLINE + "abcdefghijklmnopqrstuvwxyz");
+        textRenderer.draw(TextFormatType.UNDERLINE + "abcdefghijklmnopqrstuvwxyz");
         glLine.draw();
 
 

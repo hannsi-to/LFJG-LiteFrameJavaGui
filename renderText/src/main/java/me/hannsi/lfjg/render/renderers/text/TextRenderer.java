@@ -57,7 +57,7 @@ public class TextRenderer {
 
         this.msdfFontShaderProgram = new ShaderProgram();
         this.msdfFontShaderProgram.createVertexShader(Location.fromResource("shader/VertexShader.vsh"));
-        this.msdfFontShaderProgram.createFragmentShader(Location.fromResource("shader/msdf/FragmentShader.fsh"));
+        this.msdfFontShaderProgram.createFragmentShader(Location.fromResource("shader/FragmentShader.fsh"));
         this.msdfFontShaderProgram.link();
 
         this.lineShaderProgram = new ShaderProgram();
@@ -203,9 +203,10 @@ public class TextRenderer {
 
         msdfFontShaderProgram.bind();
 
+        msdfFontShaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.MSDF.getId());
         msdfFontShaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());
         msdfFontShaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, viewMatrix);
-        msdfFontShaderProgram.setUniform("fontAtlas", UploadUniformType.ONCE, 0);
+        msdfFontShaderProgram.setUniform("textureSampler", UploadUniformType.ONCE, 0);
         msdfFontShaderProgram.setUniform("distanceRange", UploadUniformType.ONCE, (float) textMeshBuilder.getMsdfFont().getAtlas().getDistanceRange());
 
         boolean code = false;

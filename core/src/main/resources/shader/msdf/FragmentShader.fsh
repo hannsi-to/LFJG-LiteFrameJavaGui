@@ -1,10 +1,3 @@
-#version 330 core
-
-in vec4 outPosition;
-in vec2 outTexture;
-out vec4 fragColor;
-
-uniform sampler2D fontAtlas;
 uniform vec4 fontColor;
 uniform float distanceRange;
 uniform float boldness;
@@ -24,8 +17,8 @@ float distanceToLine(vec2 p, vec2 a, vec2 b) {
     return length(pa - ba * h);
 }
 
-void main() {
-    vec3 msdf = texture(fontAtlas, outTexture).rgb;
+void msdfMain() {
+    vec3 msdf = texture(textureSampler, outTexture).rgb;
     float sd = median(msdf.r, msdf.g, msdf.b);
     sd += boldness;
 
