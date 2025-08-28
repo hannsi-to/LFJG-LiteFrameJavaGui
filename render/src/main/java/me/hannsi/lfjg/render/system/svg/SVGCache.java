@@ -13,7 +13,7 @@ public class SVGCache {
         svgCache = new HashMap<>();
     }
 
-    public static SVGCache initSVGCache() {
+    public static SVGCache createSVGCache() {
         return new SVGCache();
     }
 

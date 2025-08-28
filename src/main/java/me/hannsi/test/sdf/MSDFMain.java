@@ -11,20 +11,23 @@ import me.hannsi.lfjg.frame.setting.settings.SeverityType;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.effect.effects.Rotate;
 import me.hannsi.lfjg.render.effect.effects.Scale;
+import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.effects.Translate;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLLine;
+import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.renderers.text.GLText;
 import me.hannsi.lfjg.render.renderers.text.TextRenderer;
 import me.hannsi.lfjg.render.system.text.AlignType;
 import me.hannsi.lfjg.render.system.text.TextFormatType;
 import me.hannsi.lfjg.render.system.text.font.Font;
 
+import static me.hannsi.lfjg.render.LFJGRenderContext.textureCache;
 import static me.hannsi.lfjg.render.LFJGRenderTextContext.fontCache;
 
 public class MSDFMain implements LFJGFrame {
-    GLLine glLine;
     GLText glText;
+    GLRect glRect;
 
     EffectCache effectCache;
 
@@ -51,19 +54,21 @@ public class MSDFMain implements LFJGFrame {
                         .createCache()
         );
 
-//        glLine = new GLLine("GLLine1");
-//        glLine.line(0, 100, 1920, 100, 0.1f, Color.of(100, 100, 100, 255));
-
         glText = new GLText("GLText1");
         glText.text("Font1",TextFormatType.UNDERLINE + "abcdefghijkl" + TextFormatType.STRIKETHROUGH + "mnopqrstuvwxyz",0, 100,64,Color.WHITE,true, AlignType.LEFT_BASELINE);
+
+        glRect = new GLRect("GLRect1");
+        glRect.uv(0, 1, 1, 0);
+        glRect.rectWH(0, 0, 1920, 1080, Color.of(0, 0, 0, 0));
+
+        textureCache.createCache("Test1",Location.fromResource("texture/test/test1.jpg"));
 
         effectCache = EffectCache.createEffectCache()
 //                .createCache(Translate.createTranslate("Translate1").x(100))
 //                .createCache(Scale.createScale("Scale").x(2).cx(0).cy(0).autoCenter(false))
 //                .createCache(Rotate.createRotate().autoCenter(false).cx(0).cy(0).zDegree(45))
-                .attachGLObject(glText);
-
-        System.out.println(glText.getTransform().getCenterX() + " : " + glText.getTransform().getCenterY());
+                .createCache(Texture.createTexture("Texture1").textureName("Test1"))
+                .attachGLObject(glRect);
     }
 
     @Override
@@ -72,6 +77,7 @@ public class MSDFMain implements LFJGFrame {
 
 //        ((Translate) effectCache.getEffectBase("Translate1")).x(500);
 
+        glRect.draw();
         glText.draw();
 //        glLine.draw();
 

@@ -1,3 +1,5 @@
+uniform sampler2D frameBufferSampler;
+
 void frameBufferMain() {
-    fragColor = texture(textureSampler, outTexture);
+    fragColor = texture(frameBufferSampler, outTexture);
 }

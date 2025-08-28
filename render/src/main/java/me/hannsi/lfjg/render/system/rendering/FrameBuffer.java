@@ -158,26 +158,14 @@ public class FrameBuffer {
         GLStateCache.bindFrameBuffer(0);
     }
 
-    /**
-     * Draws the frame buffer using the default texture unit.
-     */
     public void drawFrameBuffer() {
-        drawFrameBuffer(0);
-    }
-
-    /**
-     * Draws the frame buffer using the specified texture unit.
-     *
-     * @param textureUnit the texture unit to use
-     */
-    public void drawFrameBuffer(int textureUnit) {
         shaderProgram.bind();
 
         shaderProgram.setUniform("fragmentShaderType",UploadUniformType.PER_FRAME, FragmentShaderType.FRAME_BUFFER.getId());
         shaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());
         shaderProgram.setUniform("modelMatrix", UploadUniformType.ON_CHANGE, modelMatrix);
         shaderProgram.setUniform("viewMatrix", UploadUniformType.ON_CHANGE, viewMatrix);
-        shaderProgram.setUniform("textureSampler", UploadUniformType.PER_FRAME, textureUnit);
+        shaderProgram.setUniform("frameBufferSampler", UploadUniformType.ONCE, 3);
 
         GLStateCache.enable(GL_BLEND);
         GLStateCache.disable(GL_DEPTH_TEST);
@@ -199,12 +187,12 @@ public class FrameBuffer {
             GLStateCache.stencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
         }
 
-        bindTexture(textureUnit);
+        bindTexture();
         vaoRendering.draw(mesh);
     }
 
-    public void bindTexture(int textureUnit) {
-        GLStateCache.activeTexture(GL_TEXTURE0 + textureUnit);
+    public void bindTexture() {
+        GLStateCache.activeTexture(GL_TEXTURE3);
         GLStateCache.bindTexture(GL_TEXTURE_2D, textureId);
     }
 

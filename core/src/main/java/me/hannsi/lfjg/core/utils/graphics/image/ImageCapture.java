@@ -55,20 +55,13 @@ public class ImageCapture {
             flippedBuffer.put(buffer);
         }
 
-        ByteBuffer convertedBuffer;
-        if (colorFormatType == ColorFormatType.BGRA) {
-            convertedBuffer = IOUtil.convertBGRAtoRGBA(flippedBuffer, width, height);
-        } else {
-            convertedBuffer = flippedBuffer;
-        }
-
         LogGenerator logGenerator = null;
         switch (imageLoaderType) {
             case STB_IMAGE:
-                logGenerator = writeSTBImage(path, convertedBuffer);
+                logGenerator = writeSTBImage(path, flippedBuffer);
                 break;
             case JAVA_CV:
-                logGenerator = writeJavaCV(path, convertedBuffer);
+                logGenerator = writeJavaCV(path, flippedBuffer);
                 break;
         }
 

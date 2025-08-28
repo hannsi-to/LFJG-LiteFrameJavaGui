@@ -34,6 +34,7 @@ import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 import static me.hannsi.lfjg.render.system.text.Align.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 
 public class TextRenderer {
     protected List<LineData> lineDatum;
@@ -189,11 +190,11 @@ public class TextRenderer {
         GLStateCache.enable(GL_BLEND);
         GLStateCache.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         GLStateCache.enable(GL_TEXTURE_2D);
-        GLStateCache.activeTexture(GL_TEXTURE0);
+        GLStateCache.activeTexture(GL_TEXTURE1);
         GLStateCache.bindTexture(GL_TEXTURE_2D, msdfTextureLoader.textureId);
 
         shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.MSDF.getId());
-        shaderProgram.setUniform("textureSampler", UploadUniformType.PER_FRAME, 0);
+        shaderProgram.setUniform("fontAtlas", UploadUniformType.ONCE, 1);
 
         boolean code = false;
         TextFormatType textFormatType;

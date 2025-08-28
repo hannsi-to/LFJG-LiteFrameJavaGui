@@ -191,8 +191,6 @@ public class Core {
         public static final int GL_RGBA16F;
         public static final int GL_RGB32F;
         public static final int GL_RGBA32F;
-        public static final int GL_BGR;
-        public static final int GL_BGRA;
         public static final int GL_DEPTH_STENCIL;
 
         static {
@@ -201,8 +199,6 @@ public class Core {
             GL_RGBA16F = getStaticIntField(PACKAGE, "GL_RGBA16F");
             GL_RGB32F = getStaticIntField(PACKAGE, "GL_RGB32F");
             GL_RGBA32F = getStaticIntField(PACKAGE, "GL_RGBA32F");
-            GL_BGR = getStaticIntField(PACKAGE, "GL_BGR");
-            GL_BGRA = getStaticIntField(PACKAGE, "GL_BGRA");
             GL_DEPTH_STENCIL = getStaticIntField(PACKAGE, "GL_DEPTH_STENCIL");
         }
 

@@ -1,3 +1,4 @@
+uniform sampler2D fontAtlas;
 uniform vec4 msdfFontColor;
 uniform float msdfDistanceRange;
 uniform float msdfBoldness;
@@ -11,7 +12,7 @@ float msdfMedian(float r, float g, float b) {
 }
 
 void msdfMain() {
-    vec3 msdf = texture(textureSampler, outTexture).rgb;
+    vec3 msdf = texture(fontAtlas, outTexture).rgb;
     float sd = msdfMedian(msdf.r, msdf.g, msdf.b);
     sd += msdfBoldness;
 

@@ -174,7 +174,7 @@ public class GLObject implements Cloneable {
         shaderProgram.setUniform("modelMatrix", UploadUniformType.ON_CHANGE, transform.getModelMatrix());
         shaderProgram.setUniform("viewMatrix", UploadUniformType.ON_CHANGE, viewMatrix);
         if (mesh.getVboIds().get(BufferObjectType.TEXTURE_BUFFER) != null) {
-            shaderProgram.setUniform("textureSampler", UploadUniformType.PER_FRAME, 0);
+            shaderProgram.setUniform("textureSampler", UploadUniformType.ONCE, 0);
         }
     }
 
