@@ -65,4 +65,6 @@ public class Translate extends EffectBase {
 
         super.pop(baseGLObject);
     }
+
+
 }

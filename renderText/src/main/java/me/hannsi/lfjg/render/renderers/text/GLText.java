@@ -3,6 +3,7 @@ package me.hannsi.lfjg.render.renderers.text;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
+import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.text.Align;
 import me.hannsi.lfjg.render.system.text.AlignType;
 import me.hannsi.lfjg.render.system.text.font.Font;
@@ -10,7 +11,7 @@ import org.joml.Vector2f;
 
 import static me.hannsi.lfjg.render.LFJGRenderTextContext.fontCache;
 
-public class GLText extends GLRect {
+public class GLText extends GLPolygon {
     private TextRenderer textRenderer;
     private String text;
     private int fontSize;
@@ -38,8 +39,16 @@ public class GLText extends GLRect {
                 .size(fontSize)
                 .align(alignType);
 
-        rectWH(x,y, getTextWidth(text),getTextHeight(text),Color.of(0,0,0,0));
+        float width = getTextWidth(text);
+        float height = getTextHeight(text);
+        Color color = Color.of(0,0,0,0);
 
+        put().vertex(new Vector2f(x, y)).color(color).end();
+        put().vertex(new Vector2f(x + width, y)).color(color).end();
+        put().vertex(new Vector2f(x + width, y + height)).color(color).end();
+        put().vertex(new Vector2f(x, y + height)).color(color).end();
+
+        setDrawType(DrawType.QUADS);
         rendering();
 
         textRenderer.setBaseMatrix(getTransform().getModelMatrix());

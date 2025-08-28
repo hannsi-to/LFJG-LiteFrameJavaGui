@@ -4,6 +4,7 @@ import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.debug.exceptions.render.meshBuilder.MeshBuilderException;
+import me.hannsi.lfjg.render.effect.effects.Scale;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.mesh.BufferObjectType;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
@@ -127,15 +128,8 @@ public class GLPolygon extends GLObject {
     public void end() {
     }
 
-    /**
-     * Renders the polygon.
-     */
-    public void rendering() {
-        rendering(Location.fromResource("shader/VertexShader.vsh"), Location.fromResource("shader/FragmentShader.fsh"));
-    }
-
     public void rendering(boolean isFragmentShaderPath, Location location) {
-        rendering(isFragmentShaderPath ? Location.fromResource("shader/VertexShader.vsh") : location, isFragmentShaderPath ? location : Location.fromResource("shader/FragmentShader.fsh"));
+        rendering();
     }
 
     public void updateData() {
@@ -163,7 +157,7 @@ public class GLPolygon extends GLObject {
         texture = new float[0];
     }
 
-    public void rendering(Location vertexShaderPath, Location fragmentShaderPath) {
+    public void rendering() {
         if (isUpdate) {
             updateData();
         } else {

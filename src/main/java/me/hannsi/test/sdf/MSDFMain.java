@@ -9,6 +9,7 @@ import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.setting.settings.SeverityType;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
+import me.hannsi.lfjg.render.effect.effects.Scale;
 import me.hannsi.lfjg.render.effect.effects.Translate;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLLine;
@@ -49,29 +50,32 @@ public class MSDFMain implements LFJGFrame {
                         .createCache()
         );
 
-        glLine = new GLLine("GLLine1");
-        glLine.line(0, 100, 1920, 100, 0.1f, Color.of(100, 100, 100, 255));
+//        glLine = new GLLine("GLLine1");
+//        glLine.line(0, 100, 1920, 100, 0.1f, Color.of(100, 100, 100, 255));
 
         glText = new GLText("GLText1");
         glText.text("Font1",TextFormatType.UNDERLINE + "abcdefghijkl" + TextFormatType.STRIKETHROUGH + "mnopqrstuvwxyz",0, 100,64,Color.WHITE,true, AlignType.LEFT_BASELINE);
 
         effectCache = EffectCache.createEffectCache()
-                .createCache(Translate.createTranslate("Translate1").x(100))
+//                .createCache(Translate.createTranslate("Translate1").x(100))
+//                .createCache(Scale.createScale("Scale").x(2).cx(0).cy(0).autoCenter(false))
                 .attachGLObject(glText);
+
+        System.out.println(glText.getTransform().getCenterX() + " : " + glText.getTransform().getCenterY());
     }
 
     @Override
     public void drawFrame() {
 //        textRenderer.draw(TextFormatType.UNDERLINE + "abcdefghijklmnopqrstuvwxyz");
 
-        ((Translate) effectCache.getEffectBase("Translate1")).x(500);
+//        ((Translate) effectCache.getEffectBase("Translate1")).x(500);
 
         glText.draw();
-        glLine.draw();
+//        glLine.draw();
 
 
 //        textRenderer.draw("しるT" + "しるT" + TextFormatType.RESET + "ばは" + TextFormatType.DARK_BLUE + TextFormatType.STRIKETHROUGH + "あ" + TextFormatType.GOLD + "ほ");
-        DebugLog.debug(getClass(), "FPS:" + frame.getFps());
+//        DebugLog.debug(getClass(), "FPS:" + frame.getFps());
     }
 
     @Override

@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.render.renderers;
 
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 public class Transform {
@@ -46,8 +47,8 @@ public class Transform {
     }
 
     public Transform reset(){
-        this.centerX = 0;
-        this.centerY = 0;
+        this.centerX = x + (width / 2f);
+        this.centerY = y + (height / 2f);
         this.centerZ = 0;
         this.angleX = 0;
         this.angleY = 0;
