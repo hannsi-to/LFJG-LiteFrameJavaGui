@@ -36,15 +36,7 @@ public class EffectBase {
 
     }
 
-    public void frameBufferPush(GLObject baseGLObject) {
-
-    }
-
-    public void frameBufferPop(GLObject baseGLObject) {
-
-    }
-
-    public void frameBuffer(GLObject baseGLObject) {
+    public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
 
     }
 

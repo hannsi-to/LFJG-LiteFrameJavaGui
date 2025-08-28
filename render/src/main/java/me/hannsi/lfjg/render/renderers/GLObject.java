@@ -98,12 +98,6 @@ public class GLObject implements Cloneable {
     public void create() {
         vaoRendering = new VAORendering();
 
-        if(effectCache != null){
-            frameBuffer = new FrameBuffer();
-            frameBuffer.createFrameBuffer();
-            frameBuffer.createMatrix();
-        }
-
         viewMatrix = new Matrix4f();
 
         blendType = BlendType.NORMAL;
@@ -122,12 +116,22 @@ public class GLObject implements Cloneable {
         uploadUniforms();
 
         if(effectCache != null){
+            if(frameBuffer == null){
+                frameBuffer = new FrameBuffer();
+                frameBuffer.createFrameBuffer();
+                frameBuffer.createMatrix(transform.getModelMatrix(), viewMatrix);
+            }
+
             effectCache.push(this);
-//            frameBuffer.bindFrameBufferNoClear();
+            if(effectCache.isNeedFrameBuffer()){
+                frameBuffer.bindFrameBufferNoClear();
+            }
         }
         drawVAORendering();
         if(effectCache != null){
-//            frameBuffer.unbindFrameBuffer();
+            if(effectCache.isNeedFrameBuffer()){
+                frameBuffer.unbindFrameBuffer();
+            }
             effectCache.pop(this);
         }
 
@@ -143,8 +147,9 @@ public class GLObject implements Cloneable {
     }
 
     public void drawFrameBuffer() {
-        if(effectCache != null){
-//            frameBuffer.drawFrameBuffer();
+        if(effectCache != null && effectCache.isNeedFrameBuffer()){
+            effectCache.setLatestFrameBuffer(frameBuffer);
+            effectCache.drawFrameBuffer(this);
         }
     }
 

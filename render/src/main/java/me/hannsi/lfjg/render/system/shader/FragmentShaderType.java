@@ -6,7 +6,9 @@ public enum FragmentShaderType implements IEnumTypeBase {
     OBJECT(0,"Object"),
     MODEL(1,"Model"),
     FRAME_BUFFER(2,"FrameBuffer"),
-    MSDF(3,"MSDF");
+    MSDF(3,"MSDF"),
+    BLOOM(4,"Bloom"),
+    BOX_BLUR(5,"BoxBlur");
 
     final int id;
     final String name;

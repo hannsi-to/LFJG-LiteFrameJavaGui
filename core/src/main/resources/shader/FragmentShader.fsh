@@ -16,6 +16,8 @@ uniform int fragmentShaderType;
 #include "shader/scene/model/FragmentShader.fsh"
 #include "shader/frameBuffer/FragmentShader.fsh"
 #include "shader/msdf/FragmentShader.fsh"
+#include "shader/frameBuffer/filter/Bloom.fsh"
+#include "shader/frameBuffer/filter/BoxBlur.fsh"
 
 void main() {
     switch(fragmentShaderType){
@@ -23,5 +25,7 @@ void main() {
         case 1: modelMain(); break;
         case 2: frameBufferMain(); break;
         case 3: msdfMain(); break;
+        case 4: bloomMain(); break;
+        case 5: boxBlurMain(); break;
     }
 }

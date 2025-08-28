@@ -56,7 +56,7 @@ public class GLSVG extends GLRect {
 
         frameBuffer = new FrameBuffer(0, 0, svgWidth * scaleX, svgHeight * scaleY);
         frameBuffer.createFrameBuffer();
-        frameBuffer.createMatrix();
+        frameBuffer.createMatrix(getTransform().getModelMatrix(),getViewMatrix());
 
         svgRenderer = new SVGRenderer();
         svgRenderer.addVertex(0, 0, svgWidth * scaleX, svgHeight * scaleY);

@@ -1,6 +1,5 @@
 package me.hannsi.test.sdf;
 
-import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.toolkit.UnicodeBlocks;
@@ -9,15 +8,12 @@ import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.setting.settings.SeverityType;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.effect.effects.Rotate;
-import me.hannsi.lfjg.render.effect.effects.Scale;
+import me.hannsi.lfjg.render.effect.effects.Bloom;
+import me.hannsi.lfjg.render.effect.effects.BoxBlur;
 import me.hannsi.lfjg.render.effect.effects.Texture;
-import me.hannsi.lfjg.render.effect.effects.Translate;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
-import me.hannsi.lfjg.render.renderers.polygon.GLLine;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.renderers.text.GLText;
-import me.hannsi.lfjg.render.renderers.text.TextRenderer;
 import me.hannsi.lfjg.render.system.text.AlignType;
 import me.hannsi.lfjg.render.system.text.TextFormatType;
 import me.hannsi.lfjg.render.system.text.font.Font;
@@ -55,19 +51,21 @@ public class MSDFMain implements LFJGFrame {
         );
 
         glText = new GLText("GLText1");
-        glText.text("Font1",TextFormatType.UNDERLINE + "abcdefghijkl" + TextFormatType.STRIKETHROUGH + "mnopqrstuvwxyz",0, 100,64,Color.WHITE,true, AlignType.LEFT_BASELINE);
+        glText.text("Font1", TextFormatType.UNDERLINE + "abcdefghijkl" + TextFormatType.STRIKETHROUGH + "mnopqrstuvwxyz", 0, 100, 64, Color.WHITE, true, AlignType.LEFT_BASELINE);
 
         glRect = new GLRect("GLRect1");
         glRect.uv(0, 1, 1, 0);
         glRect.rectWH(0, 0, 1920, 1080, Color.of(0, 0, 0, 0));
 
-        textureCache.createCache("Test1",Location.fromResource("texture/test/test1.jpg"));
+        textureCache.createCache("Test1", Location.fromResource("texture/test/test1.jpg"));
 
         effectCache = EffectCache.createEffectCache()
 //                .createCache(Translate.createTranslate("Translate1").x(100))
 //                .createCache(Scale.createScale("Scale").x(2).cx(0).cy(0).autoCenter(false))
 //                .createCache(Rotate.createRotate().autoCenter(false).cx(0).cy(0).zDegree(45))
                 .createCache(Texture.createTexture("Texture1").textureName("Test1"))
+//                .createCache(Bloom.createBloom("Bloom"))
+//                .createCache(BoxBlur.createBoxBlur("BoxBlur1")  )
                 .attachGLObject(glRect);
     }
 
@@ -78,7 +76,7 @@ public class MSDFMain implements LFJGFrame {
 //        ((Translate) effectCache.getEffectBase("Translate1")).x(500);
 
         glRect.draw();
-        glText.draw();
+//        glText.draw();
 //        glLine.draw();
 
 

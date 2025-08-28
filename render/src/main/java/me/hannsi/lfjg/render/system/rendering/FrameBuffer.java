@@ -37,31 +37,21 @@ public class FrameBuffer {
     private Matrix4f modelMatrix;
     private Matrix4f viewMatrix;
 
-    private boolean uesStencil;
     private GLObject glObject;
 
-    /**
-     * Constructs a new FrameBuffer with the specified resolution.
-     */
     public FrameBuffer() {
-        this(false, null);
+        this(null);
     }
 
     public FrameBuffer(float x, float y, float width, float height) {
-        this(false, null, x, y, width, height);
+        this(null, x, y, width, height);
     }
 
-    public FrameBuffer(boolean uesStencil, GLObject glObject) {
-        this(uesStencil, glObject, 0, 0, frameBufferSize.x(), frameBufferSize.y());
+    public FrameBuffer(GLObject glObject) {
+        this(glObject, 0, 0, frameBufferSize.x(), frameBufferSize.y());
     }
 
-    /**
-     * Constructs a new FrameBuffer with the specified resolution, stencil usage, and GL object.
-     *
-     * @param uesStencil whether to use stencil buffer
-     * @param glObject   the GL object associated with the frame buffer
-     */
-    public FrameBuffer(boolean uesStencil, GLObject glObject, float x, float y, float width, float height) {
+    public FrameBuffer(GLObject glObject, float x, float y, float width, float height) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -93,7 +83,6 @@ public class FrameBuffer {
                 .createBufferObject2D(positions, null, uvs)
                 .builderClose();
 
-        this.uesStencil = uesStencil;
         this.glObject = glObject;
     }
 
@@ -109,9 +98,6 @@ public class FrameBuffer {
         mesh.cleanup();
         vaoRendering.cleanup();
 
-        modelMatrix = null;
-        viewMatrix = null;
-
         new LogGenerator(
                 LogGenerateType.CLEANUP,
                 getClass(),
@@ -123,9 +109,9 @@ public class FrameBuffer {
     /**
      * Creates the shader program for the frame buffer.
      */
-    public void createMatrix() {
-        modelMatrix = new Matrix4f();
-        viewMatrix = new Matrix4f();
+    public void createMatrix(Matrix4f modelMatrix,Matrix4f viewMatrix) {
+        this.modelMatrix = modelMatrix;
+        this.viewMatrix = viewMatrix;
     }
 
     /**
@@ -158,41 +144,33 @@ public class FrameBuffer {
         GLStateCache.bindFrameBuffer(0);
     }
 
-    public void drawFrameBuffer() {
+    public void drawFrameBuffer(){
+        drawFrameBuffer(true);
+    }
+
+    public void drawFrameBuffer(boolean drawVAORendering) {
         shaderProgram.bind();
 
         shaderProgram.setUniform("fragmentShaderType",UploadUniformType.PER_FRAME, FragmentShaderType.FRAME_BUFFER.getId());
-        shaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());
         shaderProgram.setUniform("modelMatrix", UploadUniformType.ON_CHANGE, modelMatrix);
-        shaderProgram.setUniform("viewMatrix", UploadUniformType.ON_CHANGE, viewMatrix);
         shaderProgram.setUniform("frameBufferSampler", UploadUniformType.ONCE, 3);
 
         GLStateCache.enable(GL_BLEND);
         GLStateCache.disable(GL_DEPTH_TEST);
-        if (uesStencil) {
-            GLStateCache.enable(GL_STENCIL_TEST);
-        }
-
         GLStateCache.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        if (uesStencil) {
-            glClear(GL_STENCIL_BUFFER_BIT);
-            GLStateCache.stencilFunc(GL_ALWAYS, 1, 0xff);
-            GLStateCache.stencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-            GLStateCache.colorMask(false, false, false, false);
-            vaoRendering.draw(glObject.getMesh());
-            GLStateCache.colorMask(true, true, true, true);
-
-            GLStateCache.stencilFunc(GL_EQUAL, 1, 0xff);
-            GLStateCache.stencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-        }
-
         bindTexture();
+        if(drawVAORendering){
+            drawVAORendering();
+        }
+    }
+
+    public void drawVAORendering(){
         vaoRendering.draw(mesh);
     }
 
     public void bindTexture() {
-        GLStateCache.activeTexture(GL_TEXTURE3);
+        glActiveTexture(GL_TEXTURE3);
         GLStateCache.bindTexture(GL_TEXTURE_2D, textureId);
     }
 
@@ -312,14 +290,6 @@ public class FrameBuffer {
 
     public void setViewMatrix(Matrix4f viewMatrix) {
         this.viewMatrix = viewMatrix;
-    }
-
-    public boolean isUesStencil() {
-        return uesStencil;
-    }
-
-    public void setUesStencil(boolean uesStencil) {
-        this.uesStencil = uesStencil;
     }
 
     public GLObject getGlObject() {

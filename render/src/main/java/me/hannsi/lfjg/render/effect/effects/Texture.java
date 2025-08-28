@@ -45,7 +45,7 @@ public class Texture extends EffectBase {
     @Override
     public void push(GLObject baseGLObject) {
         GLStateCache.enable(GL_TEXTURE_2D);
-        GLStateCache.activeTexture(GL_TEXTURE0);
+        glActiveTexture(GL_TEXTURE0);
         if(textureLoader != null){
             textureLoader.bind();
         }else{

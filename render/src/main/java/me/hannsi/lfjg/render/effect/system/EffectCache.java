@@ -6,13 +6,16 @@ import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.render.Id;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
+import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
 import java.util.*;
 
 public class EffectCache {
     private LinkedHashMap<String,EffectBase> effectBases;
-    private GLObject glObject;
     private FrameBuffer currentFrameBuffer;
+    private FrameBuffer latestFrameBuffer;
+    private boolean needFrameBuffer;
 
     EffectCache() {
         this.effectBases = new LinkedHashMap<>();
@@ -23,11 +26,21 @@ public class EffectCache {
     }
 
     public EffectCache attachGLObject(GLObject glObject){
-        this.glObject = glObject;
-        this.glObject.setEffectCache(this);
+        glObject.setEffectCache(this);
 
-        for (Map.Entry<String,EffectBase> effectBasesEntry : effectBases.entrySet()) {
-            effectBasesEntry.getValue().create();
+        currentFrameBuffer = new FrameBuffer(glObject);
+        currentFrameBuffer.createFrameBuffer();
+        currentFrameBuffer.createMatrix(glObject.getTransform().getModelMatrix(),glObject.getViewMatrix());
+
+        latestFrameBuffer = new FrameBuffer(glObject);
+        latestFrameBuffer.createFrameBuffer();
+        latestFrameBuffer.createMatrix(glObject.getTransform().getModelMatrix(),glObject.getViewMatrix());
+
+        for (Map.Entry<String, EffectBase> effectBaseEntry : effectBases.entrySet()) {
+            if(effectBaseEntry.getValue().isNoUseFrameBuffer()){
+                continue;
+            }
+            needFrameBuffer = true;
         }
 
         return this;
@@ -84,6 +97,29 @@ public class EffectCache {
         }
     }
 
+    public void drawFrameBuffer(GLObject glObject){
+        for (Map.Entry<String, EffectBase> effectBaseEntry : effectBases.entrySet()) {
+            EffectBase effectBase = effectBaseEntry.getValue();
+            if(effectBase.isNoUseFrameBuffer()){
+                continue;
+            }
+
+            currentFrameBuffer.bindFrameBufferNoClear();
+
+            latestFrameBuffer.drawFrameBuffer(false);
+
+            effectBase.drawFrameBuffer(latestFrameBuffer);
+
+            latestFrameBuffer.drawVAORendering();
+
+            currentFrameBuffer.unbindFrameBuffer();
+
+            latestFrameBuffer = currentFrameBuffer;
+        }
+
+        latestFrameBuffer.drawFrameBuffer();
+    }
+
     public void cleanup() {
         StringBuilder ids = new StringBuilder();
         for (Map.Entry<String,EffectBase> entry : effectBases.entrySet()) {
@@ -104,5 +140,25 @@ public class EffectCache {
 
     public EffectBase getEffectBase(String name) {
         return effectBases.get(name);
+    }
+
+    public boolean isNeedFrameBuffer() {
+        return needFrameBuffer;
+    }
+
+    public FrameBuffer getCurrentFrameBuffer() {
+        return currentFrameBuffer;
+    }
+
+    public void setCurrentFrameBuffer(FrameBuffer currentFrameBuffer) {
+        this.currentFrameBuffer = currentFrameBuffer;
+    }
+
+    public FrameBuffer getLatestFrameBuffer() {
+        return latestFrameBuffer;
+    }
+
+    public void setLatestFrameBuffer(FrameBuffer latestFrameBuffer) {
+        this.latestFrameBuffer = latestFrameBuffer;
     }
 }
