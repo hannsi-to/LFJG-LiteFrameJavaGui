@@ -129,9 +129,6 @@ public class GLObject implements Cloneable {
         }
         drawVAORendering();
         if(effectCache != null){
-            if(effectCache.isNeedFrameBuffer()){
-                frameBuffer.unbindFrameBuffer();
-            }
             effectCache.pop(this);
         }
 
@@ -148,7 +145,7 @@ public class GLObject implements Cloneable {
 
     public void drawFrameBuffer() {
         if(effectCache != null && effectCache.isNeedFrameBuffer()){
-            effectCache.setLatestFrameBuffer(frameBuffer);
+            effectCache.setFrontFrameBuffer(frameBuffer);
             effectCache.drawFrameBuffer(this);
         }
     }

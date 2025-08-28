@@ -3,18 +3,16 @@ package me.hannsi.lfjg.render.effect.system;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
-import me.hannsi.lfjg.render.Id;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
-import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
-import me.hannsi.lfjg.render.system.shader.UploadUniformType;
+import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 
 import java.util.*;
 
 public class EffectCache {
     private LinkedHashMap<String,EffectBase> effectBases;
-    private FrameBuffer currentFrameBuffer;
-    private FrameBuffer latestFrameBuffer;
+    private FrameBuffer frontFrameBuffer;
+    private FrameBuffer backendFrameBuffer;
     private boolean needFrameBuffer;
 
     EffectCache() {
@@ -28,13 +26,13 @@ public class EffectCache {
     public EffectCache attachGLObject(GLObject glObject){
         glObject.setEffectCache(this);
 
-        currentFrameBuffer = new FrameBuffer(glObject);
-        currentFrameBuffer.createFrameBuffer();
-        currentFrameBuffer.createMatrix(glObject.getTransform().getModelMatrix(),glObject.getViewMatrix());
+        frontFrameBuffer = new FrameBuffer(glObject);
+        frontFrameBuffer.createFrameBuffer();
+        frontFrameBuffer.createMatrix(glObject.getTransform().getModelMatrix(),glObject.getViewMatrix());
 
-        latestFrameBuffer = new FrameBuffer(glObject);
-        latestFrameBuffer.createFrameBuffer();
-        latestFrameBuffer.createMatrix(glObject.getTransform().getModelMatrix(),glObject.getViewMatrix());
+        backendFrameBuffer = new FrameBuffer(glObject);
+        backendFrameBuffer.createFrameBuffer();
+        backendFrameBuffer.createMatrix(glObject.getTransform().getModelMatrix(),glObject.getViewMatrix());
 
         for (Map.Entry<String, EffectBase> effectBaseEntry : effectBases.entrySet()) {
             if(effectBaseEntry.getValue().isNoUseFrameBuffer()){
@@ -104,20 +102,20 @@ public class EffectCache {
                 continue;
             }
 
-            currentFrameBuffer.bindFrameBufferNoClear();
+            backendFrameBuffer.bindFrameBufferNoClear();
 
-            latestFrameBuffer.drawFrameBuffer(false);
+            frontFrameBuffer.drawFrameBuffer(false);
+            effectBase.drawFrameBuffer(frontFrameBuffer);
+            frontFrameBuffer.drawVAORendering();
 
-            effectBase.drawFrameBuffer(latestFrameBuffer);
+            GLStateCache.bindFrameBuffer(0);
 
-            latestFrameBuffer.drawVAORendering();
-
-            currentFrameBuffer.unbindFrameBuffer();
-
-            latestFrameBuffer = currentFrameBuffer;
+            FrameBuffer temp = frontFrameBuffer;
+            frontFrameBuffer = backendFrameBuffer;
+            backendFrameBuffer = temp;
         }
 
-        latestFrameBuffer.drawFrameBuffer();
+        frontFrameBuffer.drawFrameBuffer();
     }
 
     public void cleanup() {
@@ -146,19 +144,27 @@ public class EffectCache {
         return needFrameBuffer;
     }
 
-    public FrameBuffer getCurrentFrameBuffer() {
-        return currentFrameBuffer;
+    public FrameBuffer getFrontFrameBuffer() {
+        return frontFrameBuffer;
     }
 
-    public void setCurrentFrameBuffer(FrameBuffer currentFrameBuffer) {
-        this.currentFrameBuffer = currentFrameBuffer;
+    public void setFrontFrameBuffer(FrameBuffer frontFrameBuffer) {
+        this.frontFrameBuffer = frontFrameBuffer;
     }
 
-    public FrameBuffer getLatestFrameBuffer() {
-        return latestFrameBuffer;
+    public FrameBuffer getBackendFrameBuffer() {
+        return backendFrameBuffer;
     }
 
-    public void setLatestFrameBuffer(FrameBuffer latestFrameBuffer) {
-        this.latestFrameBuffer = latestFrameBuffer;
+    public void setBackendFrameBuffer(FrameBuffer backendFrameBuffer) {
+        this.backendFrameBuffer = backendFrameBuffer;
+    }
+
+    public LinkedHashMap<String, EffectBase> getEffectBases() {
+        return effectBases;
+    }
+
+    public void setEffectBases(LinkedHashMap<String, EffectBase> effectBases) {
+        this.effectBases = effectBases;
     }
 }
