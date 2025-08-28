@@ -8,7 +8,8 @@ public enum FragmentShaderType implements IEnumTypeBase {
     FRAME_BUFFER(2,"FrameBuffer"),
     MSDF(3,"MSDF"),
     BLOOM(4,"Bloom"),
-    BOX_BLUR(5,"BoxBlur");
+    BOX_BLUR(5,"BoxBlur"),
+    CHROMA_KEY(6,"ChromaKey");
 
     final int id;
     final String name;
