@@ -9,6 +9,7 @@ import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.setting.settings.SeverityType;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
+import me.hannsi.lfjg.render.effect.effects.Rotate;
 import me.hannsi.lfjg.render.effect.effects.Scale;
 import me.hannsi.lfjg.render.effect.effects.Translate;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
@@ -59,6 +60,7 @@ public class MSDFMain implements LFJGFrame {
         effectCache = EffectCache.createEffectCache()
 //                .createCache(Translate.createTranslate("Translate1").x(100))
 //                .createCache(Scale.createScale("Scale").x(2).cx(0).cy(0).autoCenter(false))
+//                .createCache(Rotate.createRotate().autoCenter(false).cx(0).cy(0).zDegree(45))
                 .attachGLObject(glText);
 
         System.out.println(glText.getTransform().getCenterX() + " : " + glText.getTransform().getCenterY());
