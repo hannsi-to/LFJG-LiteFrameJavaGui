@@ -32,8 +32,8 @@ public class BoxBlur extends EffectBase {
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
         shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.BOX_BLUR.getId());
-        shaderProgram.setUniform("kernelX", UploadUniformType.ON_CHANGE, kernelX);
-        shaderProgram.setUniform("kernelY", UploadUniformType.ON_CHANGE, kernelY);
+        shaderProgram.setUniform("boxBlurKernelX", UploadUniformType.ON_CHANGE, kernelX);
+        shaderProgram.setUniform("boxBlurKernelY", UploadUniformType.ON_CHANGE, kernelY);
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

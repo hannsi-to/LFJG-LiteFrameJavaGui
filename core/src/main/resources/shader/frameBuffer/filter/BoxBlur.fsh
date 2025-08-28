@@ -1,5 +1,5 @@
-uniform int kernelX;
-uniform int kernelY;
+uniform int boxBlurKernelX;
+uniform int boxBlurKernelY;
 
 void boxBlurMain() {
     vec2 texSize = textureSize(frameBufferSampler, 0);
@@ -8,8 +8,8 @@ void boxBlurMain() {
     vec4 color = texture(frameBufferSampler, outTexture);
     int count = 1;
 
-    for (int i = -kernelX; i <= kernelX; i++) {
-        for (int j = -kernelY; j <= kernelY; j++) {
+    for (int i = -boxBlurKernelX; i <= boxBlurKernelX; i++) {
+        for (int j = -boxBlurKernelY; j <= boxBlurKernelY; j++) {
             if (i == 0 && j == 0) {
                 continue;
             }
