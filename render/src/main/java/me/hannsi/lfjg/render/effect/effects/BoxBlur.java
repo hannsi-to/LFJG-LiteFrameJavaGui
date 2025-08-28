@@ -37,4 +37,20 @@ public class BoxBlur extends EffectBase {
 
         super.drawFrameBuffer(latestFrameBuffer);
     }
+
+    public int getKernelX() {
+        return kernelX;
+    }
+
+    public void setKernelX(int kernelX) {
+        this.kernelX = kernelX;
+    }
+
+    public int getKernelY() {
+        return kernelY;
+    }
+
+    public void setKernelY(int kernelY) {
+        this.kernelY = kernelY;
+    }
 }

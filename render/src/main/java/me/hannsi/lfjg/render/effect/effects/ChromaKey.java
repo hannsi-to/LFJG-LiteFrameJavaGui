@@ -85,4 +85,44 @@ public class ChromaKey extends EffectBase {
 
         super.drawFrameBuffer(latestFrameBuffer);
     }
+
+    public Color getChromaKeyColor() {
+        return chromaKeyColor;
+    }
+
+    public void setChromaKeyColor(Color chromaKeyColor) {
+        this.chromaKeyColor = chromaKeyColor;
+    }
+
+    public float getHueRange() {
+        return hueRange;
+    }
+
+    public void setHueRange(float hueRange) {
+        this.hueRange = hueRange;
+    }
+
+    public float getSaturationRange() {
+        return saturationRange;
+    }
+
+    public void setSaturationRange(float saturationRange) {
+        this.saturationRange = saturationRange;
+    }
+
+    public float getBoundarySmoothness() {
+        return boundarySmoothness;
+    }
+
+    public void setBoundarySmoothness(float boundarySmoothness) {
+        this.boundarySmoothness = boundarySmoothness;
+    }
+
+    public Color getColorAdjustment() {
+        return colorAdjustment;
+    }
+
+    public void setColorAdjustment(Color colorAdjustment) {
+        this.colorAdjustment = colorAdjustment;
+    }
 }

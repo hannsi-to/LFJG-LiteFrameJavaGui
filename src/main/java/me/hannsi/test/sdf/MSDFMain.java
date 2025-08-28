@@ -1,5 +1,6 @@
 package me.hannsi.test.sdf;
 
+import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.toolkit.UnicodeBlocks;
@@ -8,10 +9,7 @@ import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.setting.settings.SeverityType;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.effect.effects.Bloom;
-import me.hannsi.lfjg.render.effect.effects.BoxBlur;
-import me.hannsi.lfjg.render.effect.effects.ChromaKey;
-import me.hannsi.lfjg.render.effect.effects.Texture;
+import me.hannsi.lfjg.render.effect.effects.*;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.renderers.text.GLText;
@@ -65,9 +63,10 @@ public class MSDFMain implements LFJGFrame {
 //                .createCache(Scale.createScale("Scale").x(2).cx(0).cy(0).autoCenter(false))
 //                .createCache(Rotate.createRotate().autoCenter(false).cx(0).cy(0).zDegree(45))
                 .createCache(Texture.createTexture("Texture1").textureName("Test1"))
-//                .createCache(Bloom.createBloom("Bloom"))
-//                .createCache(BoxBlur.createBoxBlur("BoxBlur1"))
-//                .createCache(ChromaKey.createChromaKey("ChromaKey").chromaKeyColor(Color.of(17, 40, 133,255)))
+                .createCache(Bloom.createBloom("Bloom"))
+                .createCache(BoxBlur.createBoxBlur("BoxBlur1"))
+                .createCache(ChromaKey.createChromaKey("ChromaKey1").chromaKeyColor(Color.of(17, 40, 133,255)))
+                .createCache(ChromaticAberration.createChromaticAberration("ChromaticAberration1"))
                 .attachGLObject(glRect);
     }
 
@@ -83,7 +82,7 @@ public class MSDFMain implements LFJGFrame {
 
 
 //        textRenderer.draw("しるT" + "しるT" + TextFormatType.RESET + "ばは" + TextFormatType.DARK_BLUE + TextFormatType.STRIKETHROUGH + "あ" + TextFormatType.GOLD + "ほ");
-//        DebugLog.debug(getClass(), "FPS:" + frame.getFps());
+        DebugLog.debug(getClass(), "FPS:" + frame.getFps());
     }
 
     @Override

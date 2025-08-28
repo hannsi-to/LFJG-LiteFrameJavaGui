@@ -19,6 +19,7 @@ uniform int fragmentShaderType;
 #include "shader/frameBuffer/filter/Bloom.fsh"
 #include "shader/frameBuffer/filter/BoxBlur.fsh"
 #include "shader/frameBuffer/filter/ChromaKey.fsh"
+#include "shader/frameBuffer/filter/ChromaticAberration.fsh"
 
 void main() {
     switch(fragmentShaderType){
@@ -29,5 +30,6 @@ void main() {
         case 4: bloomMain(); break;
         case 5: boxBlurMain(); break;
         case 6: chromaKeyMain(); break;
+        case 7: chromaticAberrationMain(); break;
     }
 }
