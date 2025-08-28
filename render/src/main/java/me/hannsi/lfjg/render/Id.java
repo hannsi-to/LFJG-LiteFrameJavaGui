@@ -13,7 +13,6 @@ public class Id {
     /**
      * The initial ID for effect caches.
      */
-    public static final long initialEffectCacheId = Long.MIN_VALUE;
     public static final long initialAnimationCacheId = Long.MIN_VALUE;
     public static final long initialItemId = Long.MIN_VALUE;
 
@@ -22,7 +21,6 @@ public class Id {
      * The latest ID assigned to an OpenGL object.
      */
     public static long latestGLObjectId = initialGLObjectId;
-    public static long latestEffectCacheId = initialEffectCacheId;
     public static long latestAnimationCacheId = initialAnimationCacheId;
     public static long latestItemId = initialItemId;
 }

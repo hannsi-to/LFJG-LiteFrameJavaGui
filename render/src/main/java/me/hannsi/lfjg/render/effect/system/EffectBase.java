@@ -8,83 +8,24 @@ import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 
 public class EffectBase {
-    private final Location vertexPath;
-    private final Location fragmentPath;
     private final String name;
+    private final boolean noUseFrameBuffer;
 
-    private FrameBuffer frameBuffer;
-    private int id;
-    private Class<GLObject>[] ignoreGLObject;
-
-    @SafeVarargs
-    public EffectBase(Location vertexPath, Location fragmentPath, int id, String name, Class<GLObject>... ignoreGLObject) {
-        this.id = id;
+    public EffectBase(String name,boolean noUseFrameBuffer) {
         this.name = name;
-        this.ignoreGLObject = ignoreGLObject;
-        this.vertexPath = vertexPath;
-        this.fragmentPath = fragmentPath;
+        this.noUseFrameBuffer = noUseFrameBuffer;
     }
 
-    public EffectBase(Location path, boolean isFragmentPath, int id, String name) {
-        this(isFragmentPath ? null : path, isFragmentPath ? path : null, id, name);
-    }
-
-    @SafeVarargs
-    public EffectBase(Location path, boolean isFragmentPath, int id, String name, Class<GLObject>... ignoreGLObject) {
-        this(isFragmentPath ? null : path, isFragmentPath ? path : null, id, name, ignoreGLObject);
-    }
-
-    @SafeVarargs
-    public EffectBase(int id, String name, Class<GLObject>... ignoreGLObject) {
-        this(null, null, id, name, ignoreGLObject);
-    }
-
-    public void create(GLObject glObject) {
-        frameBuffer = new FrameBuffer(glObject.getTransform().getX(), glObject.getTransform().getY(), glObject.getTransform().getWidth(), glObject.getTransform().getHeight());
-
-        if (vertexPath != null) {
-//            frameBuffer.setVertexShaderFBO(vertexPath);
-        }
-
-        if (fragmentPath != null) {
-//            frameBuffer.setFragmentShaderFBO(fragmentPath);
-        }
-
-        frameBuffer.createFrameBuffer();
-        frameBuffer.createMatrix();
-    }
-
-    public void create(FrameBuffer frameBuffer) {
-        this.frameBuffer = frameBuffer;
-
-        if (vertexPath != null) {
-//            frameBuffer.setVertexShaderFBO(vertexPath);
-        }
-
-        if (fragmentPath != null) {
-//            frameBuffer.setFragmentShaderFBO(fragmentPath);
-        }
-
-        frameBuffer.createFrameBuffer();
-        frameBuffer.createMatrix();
+    public void create() {
     }
 
     public void cleanup() {
-        if (frameBuffer != null) {
-            frameBuffer.cleanup();
-        }
-        ignoreGLObject = null;
-
         new LogGenerator(
                 LogGenerateType.CLEANUP,
                 getClass(),
-                id,
+                name,
                 ""
         ).logging(DebugLevel.DEBUG);
-    }
-
-    public void draw(GLObject baseGLObject) {
-
     }
 
     public void pop(GLObject baseGLObject) {
@@ -107,43 +48,11 @@ public class EffectBase {
 
     }
 
-    public void setUniform(GLObject baseGLObject) {
-
-    }
-
-    public Location getVertexPath() {
-        return vertexPath;
-    }
-
-    public Location getFragmentPath() {
-        return fragmentPath;
-    }
-
     public String getName() {
         return name;
     }
 
-    public FrameBuffer getFrameBuffer() {
-        return frameBuffer;
-    }
-
-    public void setFrameBuffer(FrameBuffer frameBuffer) {
-        this.frameBuffer = frameBuffer;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Class<GLObject>[] getIgnoreGLObject() {
-        return ignoreGLObject;
-    }
-
-    public void setIgnoreGLObject(Class<GLObject>[] ignoreGLObject) {
-        this.ignoreGLObject = ignoreGLObject;
+    public boolean isNoUseFrameBuffer() {
+        return noUseFrameBuffer;
     }
 }

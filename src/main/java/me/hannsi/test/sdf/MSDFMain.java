@@ -9,6 +9,8 @@ import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.setting.settings.SeverityType;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
+import me.hannsi.lfjg.render.effect.effects.Translate;
+import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLLine;
 import me.hannsi.lfjg.render.renderers.text.GLText;
 import me.hannsi.lfjg.render.renderers.text.TextRenderer;
@@ -21,7 +23,9 @@ import static me.hannsi.lfjg.render.LFJGRenderTextContext.fontCache;
 public class MSDFMain implements LFJGFrame {
     GLLine glLine;
     GLText glText;
-    TextRenderer textRenderer;
+
+    EffectCache effectCache;
+
     private Frame frame;
 
     public static void main(String... args) {
@@ -49,60 +53,19 @@ public class MSDFMain implements LFJGFrame {
         glLine.line(0, 100, 1920, 100, 0.1f, Color.of(100, 100, 100, 255));
 
         glText = new GLText("GLText1");
-        glText.text("Font1",TextFormatType.UNDERLINE + "abcdefghijklmnopqrstuvwxyz",1920 / 2f, 100,64,Color.WHITE,true, AlignType.CENTER_BOTTOM);
+        glText.text("Font1",TextFormatType.UNDERLINE + "abcdefghijkl" + TextFormatType.STRIKETHROUGH + "mnopqrstuvwxyz",0, 100,64,Color.WHITE,true, AlignType.LEFT_BASELINE);
 
-//        try {
-//            Location fontFilePath = Location.fromFile("C:\\Users\\hanns\\idea-project\\LFJG-LiteFrameJavaGui\\core\\src\\main\\resources\\font\\GenZenGothic.ttf");
-//
-//            String characters = "Hello world!!あ";
-//            String outputFileName = WorkspaceManager.currentWorkspace;
-//            int textureResolution = 512;
-//
-//            MSDFGenerator generator = MSDFGenerator.createMSDFGenerator()
-//                    .type(AtlasType.MTSDF)
-//                    .ttfPath(fontFilePath)
-//                    .unicodeBlock(UnicodeBlocks.getBlocks(characters))
-//                    .outputName(outputFileName)
-//                    .atlasSize(AtlasSizeType.SQUARE4, true)
-//                    .yOrigin(AtlasYOriginType.BOTTOM);
-//
-//            boolean success = generator.generate();
-//
-//            if (success) {
-//                System.out.println("Process finished successfully.");
-//            } else {
-//                System.err.println("Process finished with errors.");
-//            }
-//
-//            Location jsonLocation = generator.getJsonOutputLocation();
-//            MSDFFont msdfFont = MSDFJsonLoader.createMSDFJsonLoader()
-//                    .jsonLocation(jsonLocation)
-//                    .parseFile();
-//
-//            Location textureLocation = generator.getTextureOutputLocation();
-//            MSDFTextureLoader msdfTextureLoader = MSDFTextureLoader.createMSDFTextureLoader()
-//                    .textureLocation(textureLocation)
-//                    .loadTexture();
-//            TextMeshBuilder textMeshBuilder = TextMeshBuilder.createTextMeshBuilder()
-//                    .msdfFont(msdfFont)
-//                    .chars(generator.getChars())
-//                    .generateMeshData();
-//
-//            textRenderer = TextRenderer.createTextRender()
-//                    .textMeshBuilder(textMeshBuilder)
-//                    .msdfTextureLoader(msdfTextureLoader)
-//                    .defaultFontColor(Color.WHITE)
-//                    .textFormat(true)
-//                    .pos(new Vector2f(1920 / 2f, 100))
-//                    .size(64);
-//        } catch (IOException e) {
-//            System.err.println("\nFATAL: Failed to initialize SDFGenerator.");
-//        }
+        effectCache = EffectCache.createEffectCache()
+                .createCache(Translate.createTranslate("Translate1").x(100))
+                .attachGLObject(glText);
     }
 
     @Override
     public void drawFrame() {
 //        textRenderer.draw(TextFormatType.UNDERLINE + "abcdefghijklmnopqrstuvwxyz");
+
+        ((Translate) effectCache.getEffectBase("Translate1")).x(500);
+
         glText.draw();
         glLine.draw();
 

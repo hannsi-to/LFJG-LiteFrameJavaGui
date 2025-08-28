@@ -12,12 +12,12 @@ public class Translate extends EffectBase {
     private float y = 0f;
     private float z = 0f;
 
-    Translate() {
-        super(2, "Translate", (Class<GLObject>) null);
+    Translate(String name) {
+        super(name,true);
     }
 
-    public static Translate createTranslate() {
-        return new Translate();
+    public static Translate createTranslate(String name){
+        return new Translate(name);
     }
 
     public Translate x(float x) {
@@ -51,64 +51,18 @@ public class Translate extends EffectBase {
     }
 
     @Override
+    public void push(GLObject baseGLObject) {
+        baseGLObject.getTransform().translate(-latestX, -latestY, -latestZ).translate(x, y, z);
+
+        super.push(baseGLObject);
+    }
+
+    @Override
     public void pop(GLObject baseGLObject) {
         latestX = x;
         latestY = y;
         latestZ = z;
 
         super.pop(baseGLObject);
-    }
-
-    @Override
-    public void push(GLObject baseGLObject) {
-        baseGLObject.getTransform().translate(-latestX, -latestY, -latestZ).translate(x, y, z);
-        super.push(baseGLObject);
-    }
-
-    @Override
-    public void frameBufferPush(GLObject baseGLObject) {
-        getFrameBuffer().bindFrameBuffer();
-        super.frameBufferPush(baseGLObject);
-    }
-
-    @Override
-    public void frameBufferPop(GLObject baseGLObject) {
-        getFrameBuffer().unbindFrameBuffer();
-        super.frameBufferPop(baseGLObject);
-    }
-
-    @Override
-    public void frameBuffer(GLObject baseGLObject) {
-        getFrameBuffer().drawFrameBuffer();
-        super.frameBuffer(baseGLObject);
-    }
-
-    @Override
-    public void setUniform(GLObject baseGLObject) {
-        super.setUniform(baseGLObject);
-    }
-
-    public float getX() {
-        return x;
-    }
-
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    public float getZ() {
-        return z;
-    }
-
-    public void setZ(float z) {
-        this.z = z;
     }
 }
