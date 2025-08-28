@@ -25,6 +25,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
+import javax.sound.sampled.Line;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,12 +39,13 @@ public class TextRenderer {
     protected List<LineData> lineDatum;
     protected Mesh lineMesh;
     protected VAORendering vaoRendering;
-    protected CharState charState;
-    protected MSDFFont.Metrics metrics;
 
     private Matrix4f viewMatrix = new Matrix4f();
     private Color defaultFontColor = Color.WHITE;
+    private Matrix4f baseMatrix = new Matrix4f();
     private Matrix4f modelMatrix = new Matrix4f();
+    private Matrix4f lineMatrix = new Matrix4f();
+    private MSDFFont.Metrics metrics;
 
     private MSDFTextureLoader msdfTextureLoader;
     private TextMeshBuilder textMeshBuilder;
@@ -61,8 +63,6 @@ public class TextRenderer {
                 .createBufferObject2D(positions, colors, null);
 
         this.vaoRendering = new VAORendering();
-
-        this.charState = new CharState(defaultFontColor);
     }
 
     public static TextRenderer createTextRender() {
@@ -198,8 +198,8 @@ public class TextRenderer {
         boolean code = false;
         TextFormatType textFormatType;
 
+        CharState charState = new CharState(defaultFontColor);
         metrics = textMeshBuilder.getMsdfFont().getMetrics();
-
         float[] alignPos = setAlignPos(text);
         float cursorX = alignPos[0];
         float cursorY = alignPos[1];
@@ -207,11 +207,6 @@ public class TextRenderer {
         float spaseX = 0f;
         float spaseY = 0f;
         StringBuilder value = null;
-        LineData underLineData = null;
-        LineData doubleUnderLineData = null;
-        LineData strikethroughLineData = null;
-        LineData doubleStrikethroughData = null;
-        LineData overLineData = null;
         for (int i = 0; i < text.length(); i++) {
             char ch = text.charAt(i);
             if (ch == TextFormatType.PREFIX_CODE && textFormat) {
@@ -297,26 +292,6 @@ public class TextRenderer {
 
             assert textMesh != null;
             if (!charState.skip) {
-                if (charState.underLine) {
-                    underLineData = new LineData(LineData.LineType.UNDERLINE, cursorX, cursorX, cursorY, charState.color);
-                }
-
-                if (charState.doubleUnderLine) {
-                    doubleUnderLineData = new LineData(LineData.LineType.DOUBLE_UNDERLINE, cursorX, cursorX, cursorY, charState.color);
-                }
-
-                if (charState.strikethrough) {
-                    strikethroughLineData = new LineData(LineData.LineType.STRIKETHROUGH, cursorX, cursorX, cursorY, charState.color);
-                }
-
-                if (charState.doubleStrikethrough) {
-                    doubleStrikethroughData = new LineData(LineData.LineType.DOUBLE_STRIKETHROUGH, cursorX, cursorX, cursorY, charState.color);
-                }
-
-                if (charState.overLine) {
-                    overLineData = new LineData(LineData.LineType.OVERLINE, cursorX, cursorX, cursorY, charState.color);
-                }
-
                 if (charState.italic) {
                     shaderProgram.setUniform("italicSkew", UploadUniformType.ON_CHANGE, 0.4f);
                 } else {
@@ -356,43 +331,37 @@ public class TextRenderer {
                 vaoRendering.draw(textMesh.mesh, GL_TRIANGLES);
             }
 
+            float prevCursorX = cursorX;
             cursorX += advance * size + spaseX;
 
-            if (underLineData != null) {
-                underLineData.endX = cursorX;
-                lineDatum.add(underLineData.newInstance());
-                underLineData = null;
-            }
-            if (doubleUnderLineData != null) {
-                doubleUnderLineData.endX = cursorX;
-                lineDatum.add(doubleUnderLineData.newInstance());
-                doubleUnderLineData.baseY = doubleUnderLineData.baseY - metrics.getUnderlineThickness() * size * 2;
-                lineDatum.add(doubleUnderLineData.newInstance());
-                doubleUnderLineData = null;
-            }
-            if (strikethroughLineData != null) {
-                strikethroughLineData.endX = cursorX;
-                lineDatum.add(strikethroughLineData.newInstance());
-                strikethroughLineData = null;
-            }
-            if (doubleStrikethroughData != null) {
-                doubleStrikethroughData.endX = cursorX;
-                doubleStrikethroughData.baseY += metrics.getUnderlineThickness() * 1.5f * size;
-                lineDatum.add(doubleStrikethroughData.newInstance());
-                doubleStrikethroughData.baseY -= metrics.getUnderlineThickness() * 1.5f * size * 2;
-                lineDatum.add(doubleStrikethroughData.newInstance());
-                doubleStrikethroughData = null;
-            }
-            if (overLineData != null) {
-                overLineData.endX = cursorX;
-                lineDatum.add(overLineData);
-                overLineData = null;
+            if (!charState.skip) {
+                if (charState.underLine) {
+                    lineDatum.add(new LineData(LineData.LineType.UNDERLINE,prevCursorX,cursorX,cursorY,charState.color));
+                }
+                if (charState.doubleUnderLine) {
+                    LineData lineData = new LineData(LineData.LineType.DOUBLE_UNDERLINE,prevCursorX,cursorX,cursorY,charState.color);
+                    lineDatum.add(lineData.newInstance());
+                    lineData.baseY = lineData.baseY - metrics.getUnderlineThickness() * size * 2;
+                    lineDatum.add(lineData);
+                }
+                if (charState.strikethrough) {
+                    lineDatum.add(new LineData(LineData.LineType.STRIKETHROUGH,prevCursorX,cursorX,cursorY,charState.color));
+                }
+                if (charState.doubleStrikethrough) {
+                    LineData lineData = new LineData(LineData.LineType.DOUBLE_STRIKETHROUGH,prevCursorX,cursorX,cursorY,charState.color);
+                    lineData.baseY += metrics.getUnderlineThickness() * 1.5f * size;
+                    lineDatum.add(lineData.newInstance());
+                    lineData.baseY -= metrics.getUnderlineThickness() * 1.5f * size * 2;
+                    lineDatum.add(lineData);
+                }
+                if (charState.overLine) {
+                    lineDatum.add(new LineData(LineData.LineType.OVERLINE,prevCursorX,cursorX,cursorY,charState.color));
+                }
             }
 
-            modelMatrix.identity();
+            modelMatrix = new Matrix4f(baseMatrix);
         }
 
-        int index = 0;
         for (LineData data : lineDatum) {
             float x;
             float y;
@@ -435,16 +404,13 @@ public class TextRenderer {
             }
 
             shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.OBJECT.getId());
-            shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix.translate(x, y, 0).scale(width, thickness, 1));
+            shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, lineMatrix.translate(x, y, 0).scale(width, thickness, 1));
             shaderProgram.setUniform("objectColor", UploadUniformType.PER_FRAME, data.color);
             shaderProgram.setUniform("objectReplaceColor", UploadUniformType.ONCE, true);
 
             vaoRendering.draw(lineMesh);
-            index++;
 
-            if(lineDatum.size() != index){
-                modelMatrix.identity();
-            }
+            lineMatrix = new Matrix4f(baseMatrix);
         }
         lineDatum.clear();
 
@@ -459,12 +425,44 @@ public class TextRenderer {
         this.viewMatrix = viewMatrix;
     }
 
+    public Matrix4f getBaseMatrix() {
+        return baseMatrix;
+    }
+
+    public void setBaseMatrix(Matrix4f baseMatrix) {
+        this.baseMatrix = baseMatrix;
+    }
+
+    public MSDFFont.Metrics getMetrics() {
+        return metrics;
+    }
+
+    public void setMetrics(MSDFFont.Metrics metrics) {
+        this.metrics = metrics;
+    }
+
     public Matrix4f getModelMatrix() {
         return modelMatrix;
     }
 
     public void setModelMatrix(Matrix4f modelMatrix) {
         this.modelMatrix = modelMatrix;
+    }
+
+    public Matrix4f getLineMatrix() {
+        return lineMatrix;
+    }
+
+    public void setLineMatrix(Matrix4f lineMatrix) {
+        this.lineMatrix = lineMatrix;
+    }
+
+    public int getAlign() {
+        return align;
+    }
+
+    public void setAlign(int align) {
+        this.align = align;
     }
 
     public MSDFTextureLoader getMsdfTextureLoader() {

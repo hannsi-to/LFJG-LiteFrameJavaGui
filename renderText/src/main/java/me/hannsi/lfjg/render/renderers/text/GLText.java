@@ -41,6 +41,8 @@ public class GLText extends GLRect {
         rectWH(x,y, getTextWidth(text),getTextHeight(text),Color.of(0,0,0,0));
 
         rendering();
+
+        textRenderer.setBaseMatrix(getTransform().getModelMatrix());
     }
 
     public float getTextWidth(String text) {

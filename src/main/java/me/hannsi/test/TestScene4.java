@@ -4,9 +4,6 @@ import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.render.effect.effects.DrawObject;
-import me.hannsi.lfjg.render.effect.effects.Texture;
-import me.hannsi.lfjg.render.effect.effects.Translate;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.renderers.polygon.GLTriangle;
@@ -41,9 +38,6 @@ public class TestScene4 implements IScene {
         clippingCache = GLObjectCache.createGLObjectCache()
                 .createCache(triangleClipping);
 
-        EffectCache.initEffectCache()
-                .createCache("Texture", Texture.createTexture(textureCache, "Texture1"))
-                .createCache("DrawObject", DrawObject.createDrawObject())
 //                .createCache("Bloom", Bloom.createBloom())
 //                .createCache("BoxBlur", BoxBlur.createBoxBlur())
 //                .createCache("ChromaKey", ChromaKey.createChromaKey().chromaKeyColor(Color.YELLOW))
@@ -72,8 +66,6 @@ public class TestScene4 implements IScene {
 //                .createCache("Rotate", Rotate.createRotate())
 //                .createCache("Scale", Scale.createScale())
 //                .createCache("SplitObject", SplitObject.createSplitObject())
-                .createCache("Translate", Translate.createTranslate().x(100))
-                .create(glRect);
     }
 
     @Override

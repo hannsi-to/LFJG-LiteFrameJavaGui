@@ -2,13 +2,10 @@ package me.hannsi.test.test1;
 
 import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
-import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.math.Projection;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.effect.effects.DrawObject;
-import me.hannsi.lfjg.render.effect.effects.Rotate;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
@@ -37,9 +34,7 @@ public class TestGuiFrame2 implements LFJGFrame {
         glRect1 = new GLRect("Rect1");
         glRect1.rect(500, 500, 1000, 1000, Color.RED);
 
-        glRect1EffectCache = EffectCache.initEffectCache();
-        glRect1EffectCache.createCache("DrawObject1", DrawObject.createDrawObject());
-        glRect1EffectCache.createCache("Rotate1", Rotate.createRotate().zDegree(45).cx(500).cy(500));
+        glRect1EffectCache = EffectCache.createEffectCache();
 
         glRect1.setEffectCache(glRect1EffectCache);
 
@@ -49,9 +44,6 @@ public class TestGuiFrame2 implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-        Rotate rotate1 = (Rotate) glRect1EffectCache.getEffectBase("Rotate1");
-        rotate1.setZ(rotate1.getZ() + MathHelper.toRadians(10));
-
         glObjectCache.draw();
     }
 

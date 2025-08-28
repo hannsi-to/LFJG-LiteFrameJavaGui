@@ -75,12 +75,10 @@ public class GLObject implements Cloneable {
         }
         if (effectCache != null) {
             effectCache.cleanup();
+            frameBuffer.cleanup();
         }
         if (mesh != null) {
             mesh.cleanup();
-        }
-        if (frameBuffer != null) {
-            frameBuffer.cleanup();
         }
         if (vaoRendering != null) {
             vaoRendering.cleanup();
@@ -100,9 +98,11 @@ public class GLObject implements Cloneable {
     public void create() {
         vaoRendering = new VAORendering();
 
-        frameBuffer = new FrameBuffer();
-        frameBuffer.createFrameBuffer();
-        frameBuffer.createMatrix();
+        if(effectCache != null){
+            frameBuffer = new FrameBuffer();
+            frameBuffer.createFrameBuffer();
+            frameBuffer.createMatrix();
+        }
 
         viewMatrix = new Matrix4f();
 
@@ -121,19 +121,17 @@ public class GLObject implements Cloneable {
         setupRenderState();
         uploadUniforms();
 
-        if (effectCache != null) {
+        if(effectCache != null){
             effectCache.push(this);
+//            frameBuffer.bindFrameBufferNoClear();
         }
-
         drawVAORendering();
-
-        if (effectCache != null) {
+        if(effectCache != null){
+//            frameBuffer.unbindFrameBuffer();
             effectCache.pop(this);
         }
 
         uploadCache();
-
-        frameBuffer.unbindFrameBuffer();
 
         if (autoDraw) {
             drawFrameBuffer();
@@ -144,10 +142,13 @@ public class GLObject implements Cloneable {
         vaoRendering.draw(this);
     }
 
-    private void uploadCache() {
-        if (effectCache != null) {
-            effectCache.frameBuffer(this);
+    public void drawFrameBuffer() {
+        if(effectCache != null){
+//            frameBuffer.drawFrameBuffer();
         }
+    }
+
+    private void uploadCache() {
         if (animationCache != null) {
             animationCache.loop(this);
         }
@@ -178,16 +179,7 @@ public class GLObject implements Cloneable {
     }
 
     private void bindResources() {
-        frameBuffer.bindFrameBufferNoClear();
         shaderProgram.bind();
-    }
-
-    public void drawFrameBuffer() {
-        if (effectCache != null) {
-            effectCache.getEndFrameBuffer().drawFrameBuffer();
-        } else {
-            frameBuffer.drawFrameBuffer();
-        }
     }
 
     public GLObject copy(String objectName) {
@@ -223,16 +215,6 @@ public class GLObject implements Cloneable {
     @Override
     protected Object clone() throws CloneNotSupportedException {
         return super.clone();
-    }
-
-    /**
-     * Gets the effect base at the specified index.
-     *
-     * @param index the index of the effect base
-     * @return the effect base at the specified index
-     */
-    public EffectBase getEffectBase(int index) {
-        return effectCache.getEffectBase(index);
     }
 
     public String getName() {

@@ -1,11 +1,11 @@
 package me.hannsi.test;
 
+import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.event.EventHandler;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.event.events.user.KeyEvent;
 import me.hannsi.lfjg.frame.event.events.user.MouseButtonEvent;
-import me.hannsi.lfjg.render.effect.effects.DrawObject;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.video.GLVideo;
 import me.hannsi.lfjg.render.system.scene.IScene;
@@ -30,16 +30,12 @@ public class TestVideo1 implements IScene {
     public void init() {
         glVideo = new GLVideo("TestVideo1");
         glVideo.video(Location.fromResource("video/[FMV] world.execute(me); - MILI [cn4M-fH08XY].webm"), 0, 0, frame.getWindowWidth(), frame.getWindowHeight());
-
-        effectCache = EffectCache.initEffectCache();
-        effectCache.createCache("DrawObject1", DrawObject.createDrawObject());
-        effectCache.create(glVideo);
-        glVideo.setEffectCache(effectCache);
     }
 
     @Override
     public void drawFrame() {
         glVideo.draw();
+        DebugLog.debug(getClass(), "FPS:" + frame.getFps());
     }
 
     @Override

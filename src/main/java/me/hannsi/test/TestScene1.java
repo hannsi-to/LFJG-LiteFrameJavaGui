@@ -10,7 +10,6 @@ import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.animation.animations.Bounce;
 import me.hannsi.lfjg.render.animation.system.AnimationCache;
-import me.hannsi.lfjg.render.effect.effects.*;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.renderers.polygon.GLTriangle;
@@ -138,19 +137,15 @@ public class TestScene1 implements IScene {
         Location image = Location.fromResource("texture/test/test_image_1920x1080.jpg");
         textureCache.createCache("Name1", image);
 
-        gl1EffectCache = EffectCache.initEffectCache();
-        gl1SplitObjectEffectCache = EffectCache.initEffectCache();
-        glFontEffectCache = EffectCache.initEffectCache();
-        glTriangleEffectCache = EffectCache.initEffectCache();
-        glShaderEffectCache = EffectCache.initEffectCache();
-        glShaderSplitObjectEffectCache = EffectCache.initEffectCache();
-        glSVGEffectCache = EffectCache.initEffectCache();
+        gl1EffectCache = EffectCache.createEffectCache();
+        gl1SplitObjectEffectCache = EffectCache.createEffectCache();
+        glFontEffectCache = EffectCache.createEffectCache();
+        glTriangleEffectCache = EffectCache.createEffectCache();
+        glShaderEffectCache = EffectCache.createEffectCache();
+        glShaderSplitObjectEffectCache = EffectCache.createEffectCache();
+        glSVGEffectCache = EffectCache.createEffectCache();
 
-        gl1SplitObjectEffectCache.createCache("Rotate1", Rotate.createRotate().zDegree(0).autoCenter(true));
-
-        gl1EffectCache.createCache("Texture1", Texture.createTexture(textureCache, "Name1"));
-        gl1EffectCache.createCache("DrawObject1", DrawObject.createDrawObject());
-//        gl1EffectCache.createCache("SplitObject1", new SplitObject(4, 5, 5, 5, gl1SplitObjectEffectCache));
+        //        gl1EffectCache.createCache("SplitObject1", new SplitObject(4, 5, 5, 5, gl1SplitObjectEffectCache));
 //        gl1EffectCache.createCache("Gradation1",new Gradation(resolution.x / 2, resolution.y / 2, (float) Math.toRadians(90), 0.2f, Gradation.ShapeMode.Rectangle, BlendType.Screen, new Color(50, 100, 200, 100), new Color(255, 255, 255, 255), 1f));
 //        gl1EffectCache.createCache(new Monochrome(resolution, 1f, new Color(255, 0, 255), true), gl1);
 //        gl1EffectCache.createCache(new ChromaticAberration(resolution, 0.002f, 90, 5f, ChromaticAberration.AberrationType.RedBlueB), gl1);
@@ -171,26 +166,7 @@ public class TestScene1 implements IScene {
 //        gl1EffectCache.createCache(new ColorCorrection(resolution, 0.5f, 0, 0, 0), gl1);
 //        gl1EffectCache.createCache(new Clipping2DRect(resolution, 0, 0, 500, 500), gl1);
 
-        glFontEffectCache.createCache("DrawObject1", DrawObject.createDrawObject());
-        glFontEffectCache.createCache("Translate1", Translate.createTranslate().x(200));
-
-        glTriangleEffectCache.createCache("DrawObject1", DrawObject.createDrawObject());
-
-        glShaderSplitObjectEffectCache.createCache("Rotate1", Rotate.createRotate().zDegree(0).autoCenter(true));
-
-        glShaderEffectCache.createCache("DrawObject1", DrawObject.createDrawObject());
-//        glShaderEffectCache.createCache("ObjectClipping1", new ObjectClipping(glObjectCache, "test3", true));
-//        glShaderEffectCache.createCache("SplitObject1", new SplitObject(20, 20, 5, 5, glShaderSplitObjectEffectCache));
-
-        glSVGEffectCache.createCache("DrawObject1", DrawObject.createDrawObject());
-        glSVGEffectCache.createCache("ColorChanger1", ColorChanger.createColorChanger().targetColor(Color.of(227, 227, 227)).newColor(Color.RED));
-
-        gl1EffectCache.create(gl1);
 //        gl1SplitObjectEffectCache.create(gl1);
-        glTriangleEffectCache.create(glTriangle);
-        glShaderEffectCache.create(glShader);
-        glShaderSplitObjectEffectCache.create(glShader);
-        glSVGEffectCache.create(glSVG);
 
         glShader.setEffectCache(glShaderEffectCache);
         gl1.setEffectCache(gl1EffectCache);
