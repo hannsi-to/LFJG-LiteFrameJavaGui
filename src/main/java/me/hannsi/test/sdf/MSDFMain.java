@@ -67,7 +67,8 @@ public class MSDFMain implements LFJGFrame {
 //                .createCache(BoxBlur.createBoxBlur("BoxBlusr1"))
 //                .createCache(ChromaKey.createChromaKey("ChromaKey1").chromaKeyColor(Color.of(17, 40, 133,255)))
 //                .createCache(ChromaticAberration.createChromaticAberration("ChromaticAberration1"))
-                .createCache(ClippingRect.createClippingRect("ClippingRect").x1(0).y1(0).x2(500).y2(500))
+//                .createCache(ClippingRect.createClippingRect("ClippingRect1").x1(0).y1(0).x2(500).y2(500))
+                .createCache(ColorChanger.createColorChanger("ColorChanger1").targetColor(Color.of(17, 40, 133,255)).newColor(Color.of(255,0,0,255)))
                 .attachGLObject(glRect);
     }
 

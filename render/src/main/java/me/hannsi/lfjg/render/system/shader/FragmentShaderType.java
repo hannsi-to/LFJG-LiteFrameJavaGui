@@ -11,7 +11,8 @@ public enum FragmentShaderType implements IEnumTypeBase {
     BOX_BLUR(5,"BoxBlur"),
     CHROMA_KEY(6,"ChromaKey"),
     CHROMATIC_ABERRATION(7,"ChromaticAberration"),
-    CLIPPING_RECT(8,"ClippingRect");
+    CLIPPING_RECT(8,"ClippingRect"),
+    COLOR_CHANGER(9,"ColorChanger");
 
     final int id;
     final String name;

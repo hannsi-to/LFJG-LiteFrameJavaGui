@@ -22,6 +22,7 @@ uniform ivec2 resolution;
 #include "shader/frameBuffer/filter/ChromaKey.fsh"
 #include "shader/frameBuffer/filter/ChromaticAberration.fsh"
 #include "shader/frameBuffer/filter/ClippingRect.fsh"
+#include "shader/frameBuffer/filter/ColorChanger.fsh"
 
 void main() {
     switch(fragmentShaderType){
@@ -34,5 +35,6 @@ void main() {
         case 6: chromaKeyMain(); break;
         case 7: chromaticAberrationMain(); break;
         case 8: clippingRectMain(); break;
+        case 9: colorChangerMain(); break;
     }
 }

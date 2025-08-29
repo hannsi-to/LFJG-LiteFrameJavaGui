@@ -1,25 +1,17 @@
-#version 330
+uniform bool colorChangerAplha;
+uniform vec4 colorChangerTargetColor;
+uniform vec4 colorChangerNewColor;
 
-in vec4 outPosition;
-in vec2 outTexture;
+void colorChangerMain() {
+    vec4 baseColor = texture(frameBufferSampler, outTexture);
 
-out vec4 fragColor;
-
-uniform sampler2D textureSampler;
-uniform bool aplha;
-uniform vec4 targetColor;
-uniform vec4 newColor;
-
-void main() {
-    vec4 baseColor = texture(textureSampler, outTexture);
-
-    if (aplha){
-        if (baseColor.rgba == targetColor.rgba){
-            baseColor.rgba = newColor.rgba;
+    if (colorChangerAplha){
+        if (baseColor.rgba == colorChangerTargetColor.rgba){
+            baseColor.rgba = colorChangerNewColor.rgba;
         }
     } else {
-        if (baseColor.rgb == targetColor.rgb){
-            baseColor.rgb = newColor.rgb;
+        if (baseColor.rgb == colorChangerTargetColor.rgb){
+            baseColor.rgb = colorChangerNewColor.rgb;
         }
     }
 
