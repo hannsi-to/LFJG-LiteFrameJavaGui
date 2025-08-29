@@ -124,11 +124,14 @@ public class GLObject implements Cloneable {
 
             effectCache.push(this);
             if(effectCache.isNeedFrameBuffer()){
-                frameBuffer.bindFrameBufferNoClear();
+                frameBuffer.bindFrameBuffer();
             }
         }
         drawVAORendering();
         if(effectCache != null){
+//            if(effectCache.isNeedFrameBuffer()){
+//                GLStateCache.bindFrameBuffer(0);
+//            }
             effectCache.pop(this);
         }
 
@@ -145,7 +148,7 @@ public class GLObject implements Cloneable {
 
     public void drawFrameBuffer() {
         if(effectCache != null && effectCache.isNeedFrameBuffer()){
-            effectCache.setFrontFrameBuffer(frameBuffer);
+            effectCache.setBaseFrameBuffer(frameBuffer);
             effectCache.drawFrameBuffer(this);
         }
     }
@@ -175,6 +178,7 @@ public class GLObject implements Cloneable {
         shaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());
         shaderProgram.setUniform("modelMatrix", UploadUniformType.ON_CHANGE, transform.getModelMatrix());
         shaderProgram.setUniform("viewMatrix", UploadUniformType.ON_CHANGE, viewMatrix);
+        shaderProgram.setUniform("resolution",UploadUniformType.ON_CHANGE,Core.frameBufferSize);
         if (mesh.getVboIds().get(BufferObjectType.TEXTURE_BUFFER) != null) {
             shaderProgram.setUniform("textureSampler", UploadUniformType.ONCE, 0);
         }

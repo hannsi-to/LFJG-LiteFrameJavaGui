@@ -10,16 +10,28 @@ import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 public class EffectBase {
     private final String name;
     private final boolean noUseFrameBuffer;
+    private FrameBuffer frameBuffer;
 
     public EffectBase(String name,boolean noUseFrameBuffer) {
         this.name = name;
         this.noUseFrameBuffer = noUseFrameBuffer;
+
+
     }
 
-    public void create() {
+    public void create(GLObject glObject){
+        if(!noUseFrameBuffer){
+            frameBuffer = new FrameBuffer();
+            frameBuffer.createFrameBuffer();
+            frameBuffer.createMatrix(glObject.getTransform().getModelMatrix(),glObject.getViewMatrix());
+        }
     }
 
     public void cleanup() {
+        if(frameBuffer != null){
+            frameBuffer.cleanup();
+        }
+
         new LogGenerator(
                 LogGenerateType.CLEANUP,
                 getClass(),
@@ -46,5 +58,9 @@ public class EffectBase {
 
     public boolean isNoUseFrameBuffer() {
         return noUseFrameBuffer;
+    }
+
+    public FrameBuffer getFrameBuffer() {
+        return frameBuffer;
     }
 }

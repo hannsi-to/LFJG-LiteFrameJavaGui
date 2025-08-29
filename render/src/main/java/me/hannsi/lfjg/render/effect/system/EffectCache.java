@@ -9,11 +9,13 @@ import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 
 import java.util.*;
 
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_STENCIL_BUFFER_BIT;
+
 public class EffectCache {
     private LinkedHashMap<String,EffectBase> effectBases;
-    private FrameBuffer frontFrameBuffer;
-    private FrameBuffer backendFrameBuffer;
     private boolean needFrameBuffer;
+    private FrameBuffer baseFrameBuffer;
 
     EffectCache() {
         this.effectBases = new LinkedHashMap<>();
@@ -26,15 +28,9 @@ public class EffectCache {
     public EffectCache attachGLObject(GLObject glObject){
         glObject.setEffectCache(this);
 
-        frontFrameBuffer = new FrameBuffer(glObject);
-        frontFrameBuffer.createFrameBuffer();
-        frontFrameBuffer.createMatrix(glObject.getTransform().getModelMatrix(),glObject.getViewMatrix());
-
-        backendFrameBuffer = new FrameBuffer(glObject);
-        backendFrameBuffer.createFrameBuffer();
-        backendFrameBuffer.createMatrix(glObject.getTransform().getModelMatrix(),glObject.getViewMatrix());
-
         for (Map.Entry<String, EffectBase> effectBaseEntry : effectBases.entrySet()) {
+            effectBaseEntry.getValue().create(glObject);
+
             if(effectBaseEntry.getValue().isNoUseFrameBuffer()){
                 continue;
             }
@@ -96,26 +92,38 @@ public class EffectCache {
     }
 
     public void drawFrameBuffer(GLObject glObject){
+        int index = 0;
+        EffectBase lastEffectBase = null;
         for (Map.Entry<String, EffectBase> effectBaseEntry : effectBases.entrySet()) {
             EffectBase effectBase = effectBaseEntry.getValue();
             if(effectBase.isNoUseFrameBuffer()){
                 continue;
             }
 
-            backendFrameBuffer.bindFrameBufferNoClear();
+            FrameBuffer nowFrameBuffer = effectBase.getFrameBuffer();
+            if(index == 0){
+                nowFrameBuffer.bindFrameBuffer();
+                baseFrameBuffer.drawFrameBuffer(false);
+                effectBase.drawFrameBuffer(baseFrameBuffer);
+                baseFrameBuffer.drawVAORendering();
+            }else{
+                FrameBuffer lastFrameBuffer = lastEffectBase.getFrameBuffer();
 
-            frontFrameBuffer.drawFrameBuffer(false);
-            effectBase.drawFrameBuffer(frontFrameBuffer);
-            frontFrameBuffer.drawVAORendering();
+                nowFrameBuffer.bindFrameBufferNoClear();
+                lastFrameBuffer.drawFrameBuffer(false);
+                effectBase.drawFrameBuffer(lastFrameBuffer);
+                lastFrameBuffer.drawVAORendering();
+            }
 
-            GLStateCache.bindFrameBuffer(0);
+            lastEffectBase = effectBase;
 
-            FrameBuffer temp = frontFrameBuffer;
-            frontFrameBuffer = backendFrameBuffer;
-            backendFrameBuffer = temp;
+            index++;
         }
 
-        frontFrameBuffer.drawFrameBuffer();
+        GLStateCache.bindFrameBuffer(0);
+        if(lastEffectBase != null){
+            lastEffectBase.getFrameBuffer().drawFrameBuffer();
+        }
     }
 
     public void cleanup() {
@@ -144,27 +152,19 @@ public class EffectCache {
         return needFrameBuffer;
     }
 
-    public FrameBuffer getFrontFrameBuffer() {
-        return frontFrameBuffer;
-    }
-
-    public void setFrontFrameBuffer(FrameBuffer frontFrameBuffer) {
-        this.frontFrameBuffer = frontFrameBuffer;
-    }
-
-    public FrameBuffer getBackendFrameBuffer() {
-        return backendFrameBuffer;
-    }
-
-    public void setBackendFrameBuffer(FrameBuffer backendFrameBuffer) {
-        this.backendFrameBuffer = backendFrameBuffer;
-    }
-
     public LinkedHashMap<String, EffectBase> getEffectBases() {
         return effectBases;
     }
 
     public void setEffectBases(LinkedHashMap<String, EffectBase> effectBases) {
         this.effectBases = effectBases;
+    }
+
+    public FrameBuffer getBaseFrameBuffer() {
+        return baseFrameBuffer;
+    }
+
+    public void setBaseFrameBuffer(FrameBuffer baseFrameBuffer) {
+        this.baseFrameBuffer = baseFrameBuffer;
     }
 }

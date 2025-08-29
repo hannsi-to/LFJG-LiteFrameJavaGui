@@ -8,6 +8,7 @@ out vec4 fragColor;
 
 uniform sampler2D textureSampler;
 uniform int fragmentShaderType;
+uniform ivec2 resolution;
 
 #include "shader/frameBuffer/util/Luminance.glsl"
 #include "shader/frameBuffer/util/Blend.glsl"
@@ -20,6 +21,7 @@ uniform int fragmentShaderType;
 #include "shader/frameBuffer/filter/BoxBlur.fsh"
 #include "shader/frameBuffer/filter/ChromaKey.fsh"
 #include "shader/frameBuffer/filter/ChromaticAberration.fsh"
+#include "shader/frameBuffer/filter/ClippingRect.fsh"
 
 void main() {
     switch(fragmentShaderType){
@@ -31,5 +33,6 @@ void main() {
         case 5: boxBlurMain(); break;
         case 6: chromaKeyMain(); break;
         case 7: chromaticAberrationMain(); break;
+        case 8: clippingRectMain(); break;
     }
 }
