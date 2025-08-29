@@ -12,6 +12,7 @@ uniform ivec2 resolution;
 
 #include "shader/frameBuffer/util/Luminance.glsl"
 #include "shader/frameBuffer/util/Blend.glsl"
+#include "shader/frameBuffer/util/MathUtil.glsl"
 
 #include "shader/scene/object/FragmentShader.fsh"
 #include "shader/scene/model/FragmentShader.fsh"
@@ -23,6 +24,7 @@ uniform ivec2 resolution;
 #include "shader/frameBuffer/filter/ChromaticAberration.fsh"
 #include "shader/frameBuffer/filter/ClippingRect.fsh"
 #include "shader/frameBuffer/filter/ColorChanger.fsh"
+#include "shader/frameBuffer/filter/ColorCorrection.fsh"
 
 void main() {
     switch(fragmentShaderType){
@@ -36,5 +38,6 @@ void main() {
         case 7: chromaticAberrationMain(); break;
         case 8: clippingRectMain(); break;
         case 9: colorChangerMain(); break;
+        case 10: colorCorrectionMain(); break;
     }
 }

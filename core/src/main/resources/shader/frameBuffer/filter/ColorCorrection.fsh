@@ -1,40 +1,29 @@
-#version 330
+uniform float colorCorrectionBrightness = 0.0;
+uniform float colorCorrectionContrast = 0.0;
+uniform float colorCorrectionSaturation = 0.0;
+uniform float colorCorrectionHue = 0.0;
 
-in vec4 outPosition;
-in vec2 outTexture;
-
-out vec4 fragColor;
-
-uniform sampler2D textureSampler;
-
-uniform float brightness = 0.0;
-uniform float contrast = 0.0;
-uniform float saturation = 0.0;
-uniform float hue = 0.0;
-
-#include "shader/frameBuffer/util/MathUtil.glsl"
-
-vec3 applyBrightness(vec3 color, float value) {
+vec3 colorCorrectionApplyBrightness(vec3 color, float value) {
     return color + value;
 }
 
-vec3 applyContrast(vec3 color, float value) {
+vec3 colorCorrectionApplyContrast(vec3 color, float value) {
     vec3 rgb = 0.5 + (1.0 + value) * (color.rgb - 0.5);
     return rgb;
 }
 
-vec3 desaturated(vec3 color) {
+vec3 colorCorrectionDesaturated(vec3 color) {
     vec3 luma = vec3(0.2126, 0.7152, 0.0722);
     vec3 rgb = vec3(dot(color, luma));
     return rgb;
 }
 
-vec3 applySaturation(vec3 color, float value) {
-    vec3 desaturated = desaturated(color);
+vec3 colorCorrectionApplySaturation(vec3 color, float value) {
+    vec3 desaturated = colorCorrectionDesaturated(color);
     return mix(desaturated, color, 1.0 + value);
 }
 
-vec3 applyHue(vec3 color, float value){
+vec3 colorCorrectionApplyHue(vec3 color, float value){
     vec3 hsb = rgb2hsb(color);
     hsb[0] = mod(hsb[0] + value, 1.0);
     if (hsb[0] < 0.0) {
@@ -44,16 +33,16 @@ vec3 applyHue(vec3 color, float value){
     return hsb2rgb(hsb);
 }
 
-vec3 applyColorCorrection(vec3 color) {
-    color = applyHue(color, hue);
-    color = applySaturation(color, saturation);
-    color = applyBrightness(color, brightness);
-    color = applyContrast(color, contrast);
+vec3 colorCorrectionApplyColorCorrection(vec3 color) {
+    color = colorCorrectionApplyHue(color, colorCorrectionHue);
+    color = colorCorrectionApplySaturation(color, colorCorrectionSaturation);
+    color = colorCorrectionApplyBrightness(color, colorCorrectionBrightness);
+    color = colorCorrectionApplyContrast(color, colorCorrectionContrast);
 
     return color;
 }
 
-void main(){
-    vec4 textureColor = texture(textureSampler, outTexture);
-    fragColor = vec4(applyColorCorrection(textureColor.rgb), textureColor.a);
+void colorCorrectionMain(){
+    vec4 textureColor = texture(frameBufferSampler, outTexture);
+    fragColor = vec4(colorCorrectionApplyColorCorrection(textureColor.rgb), textureColor.a);
 }

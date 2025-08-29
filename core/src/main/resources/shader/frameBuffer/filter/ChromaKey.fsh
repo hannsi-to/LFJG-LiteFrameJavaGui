@@ -4,8 +4,6 @@ uniform float chromaKeySaturationRange;
 uniform float chromaKeyBoundarySmoothness;
 uniform vec3 chromaKeyColorAdjustment;
 
-#include "shader/frameBuffer/util/MathUtil.glsl"
-
 float chromaKeySmoothEdge(float value, float edge0, float edge1) {
     return smoothstep(edge0 - chromaKeyBoundarySmoothness, edge1 + chromaKeyBoundarySmoothness, value);
 }
