@@ -29,6 +29,7 @@ uniform ivec2 resolution;
 #include "shader/frameBuffer/filter/DirectionalBlur.fsh"
 #include "shader/frameBuffer/filter/EdgeExtraction.fsh"
 #include "shader/frameBuffer/filter/FXAA.fsh"
+#include "shader/frameBuffer/filter/Flash.fsh"
 
 void main() {
     switch (fragmentShaderType){
@@ -47,5 +48,6 @@ void main() {
         case 12: directionalBlurMain(); break;
         case 13: edgeExtractionMain(); break;
         case 14: fxaaMain(); break;
+        case 15: flashMain(); break;
     }
 }

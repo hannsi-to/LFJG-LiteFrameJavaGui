@@ -30,4 +30,12 @@ public class FXAA extends EffectBase {
 
         super.drawFrameBuffer(latestFrameBuffer);
     }
+
+    public boolean isUseAlpha() {
+        return useAlpha;
+    }
+
+    public void setUseAlpha(boolean useAlpha) {
+        this.useAlpha = useAlpha;
+    }
 }
