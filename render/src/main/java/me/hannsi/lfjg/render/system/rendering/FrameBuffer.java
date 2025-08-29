@@ -140,7 +140,7 @@ public class FrameBuffer {
         shaderProgram.bind();
 
         shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.FRAME_BUFFER.getId());
-        shaderProgram.setUniform("modelMatrix", UploadUniformType.ON_CHANGE, modelMatrix);
+        shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix);
         shaderProgram.setUniform("frameBufferSampler", UploadUniformType.ONCE, 3);
 
         GLStateCache.enable(GL_BLEND);

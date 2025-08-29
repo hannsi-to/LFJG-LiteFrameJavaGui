@@ -37,7 +37,6 @@ public class GLObject implements Cloneable {
     private DrawType drawType;
     private float lineWidth;
     private float pointSize;
-    private boolean needFrameBuffer;
 
     private Transform transform;
 
@@ -104,10 +103,10 @@ public class GLObject implements Cloneable {
             } else {
                 bindFrameBuffer();
             }
-        } else if (needFrameBuffer) {
-            bindFrameBuffer();
         }
+
         drawVAORendering();
+
         if (effectCache != null) {
             if (!effectCache.isNeedFrameBuffer()) {
                 effectCache.pop(this);
@@ -164,9 +163,9 @@ public class GLObject implements Cloneable {
 
     private void uploadUniforms() {
         shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.OBJECT.getId());
-        shaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());
-        shaderProgram.setUniform("modelMatrix", UploadUniformType.ON_CHANGE, transform.getModelMatrix());
-        shaderProgram.setUniform("viewMatrix", UploadUniformType.ON_CHANGE, viewMatrix);
+        shaderProgram.setUniform("projectionMatrix", UploadUniformType.PER_FRAME, Core.projection2D.getProjMatrix());
+        shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, transform.getModelMatrix());
+        shaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, viewMatrix);
         shaderProgram.setUniform("resolution", UploadUniformType.ON_CHANGE, Core.frameBufferSize);
         if (mesh.getVboIds().get(BufferObjectType.TEXTURE_BUFFER) != null) {
             shaderProgram.setUniform("textureSampler", UploadUniformType.ONCE, 0);
@@ -332,13 +331,5 @@ public class GLObject implements Cloneable {
 
     public void setTransform(Transform transform) {
         this.transform = transform;
-    }
-
-    public boolean isNeedFrameBuffer() {
-        return needFrameBuffer;
-    }
-
-    public void setNeedFrameBuffer(boolean needFrameBuffer) {
-        this.needFrameBuffer = needFrameBuffer;
     }
 }

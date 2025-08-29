@@ -17,12 +17,12 @@ public class Rotate extends EffectBase {
     private float cy = 500f;
     private float cz = 0f;
 
-    Rotate() {
-        super("Rotate",true);
+    Rotate(String name) {
+        super(name, true);
     }
 
-    public static Rotate createRotate() {
-        return new Rotate();
+    public static Rotate createRotate(String name) {
+        return new Rotate(name);
     }
 
     public Rotate xRadian(float xRadian) {
