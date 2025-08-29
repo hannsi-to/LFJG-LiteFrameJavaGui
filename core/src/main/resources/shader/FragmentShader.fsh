@@ -31,6 +31,7 @@ uniform ivec2 resolution;
 #include "shader/frameBuffer/filter/FXAA.fsh"
 #include "shader/frameBuffer/filter/Flash.fsh"
 #include "shader/frameBuffer/filter/GaussianBlur.fsh"
+#include "shader/frameBuffer/filter/Glow.fsh"
 
 void main() {
     switch (fragmentShaderType){
@@ -52,5 +53,6 @@ void main() {
         case 15: flashMain(); break;
         case 16: gaussianBlurMain(); break;
         case 17: gaussianBlurMain(); break;
+        case 18: glowMain(); break;
     }
 }

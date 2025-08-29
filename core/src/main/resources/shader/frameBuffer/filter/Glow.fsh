@@ -1,20 +1,11 @@
-#version 330
-
-in vec2 outTexture;
-
-out vec4 fragColor;
-
-uniform sampler2D textureSampler;
-uniform float intensity;
-uniform float threshold;
+uniform float glowIntensity;
+uniform float glowThreshold;
 uniform vec3 glowColor;
-uniform bool useOriginalColor;
+uniform bool glowUseOriginalColor;
 uniform bool glowOnly;
-uniform float spread;
+uniform float glowSpread;
 
-uniform ivec2 texelSize;
-
-#include "shader/frameBuffer/util/Luminance.glsl"
+#define texelSize (1.0 / gl_FragCoord.xy)
 
 vec4 applyGlowBlur(vec2 uv, float spread, float threshold){
     vec4 sum = vec4(0.0);
@@ -23,7 +14,7 @@ vec4 applyGlowBlur(vec2 uv, float spread, float threshold){
     for (int x = -5; x <= 5; x++) {
         for (int y = -5; y <= 5; y++) {
             vec2 offset = vec2(x, y) * texelSize * spread;
-            vec4 sample1 = texture(textureSampler, uv + offset);
+            vec4 sample1 = texture(frameBufferSampler, uv + offset);
             float lum = luminance(sample1.rgb);
 
             if (lum > threshold) {
@@ -36,24 +27,24 @@ vec4 applyGlowBlur(vec2 uv, float spread, float threshold){
     return count > 0.0 ? sum / count : vec4(0.0);
 }
 
-void main() {
-    vec4 baseColor = texture(textureSampler, outTexture);
+void glowMain() {
+    vec4 baseColor = texture(frameBufferSampler, outTexture);
     float baseLuminance = luminance(baseColor.rgb);
 
     vec4 glow = vec4(0.0);
-    if (baseLuminance > threshold) {
-        glow = applyGlowBlur(outTexture, spread, threshold);
+    if (baseLuminance > glowThreshold) {
+        glow = applyGlowBlur(outTexture, glowSpread, glowThreshold);
 
-        if (!useOriginalColor) {
+        if (!glowUseOriginalColor) {
             glow.rgb = glowColor * baseLuminance;
             glow.a = 1.0;
         }
     }
 
     if (glowOnly) {
-        fragColor = glow * intensity;
+        fragColor = glow * glowIntensity;
     } else {
-        fragColor = baseColor + glow * intensity;
+        fragColor = baseColor + glow * glowIntensity;
     }
 
     fragColor.rgb = clamp(fragColor.rgb, 0.0, 1.0);
