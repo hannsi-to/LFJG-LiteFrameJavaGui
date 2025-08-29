@@ -83,9 +83,6 @@ public class FrameBuffer {
         this.glObject = glObject;
     }
 
-    /**
-     * Cleans up the frame buffer by deleting the frame buffer and texture.
-     */
     public void cleanup() {
         glDeleteFramebuffers(frameBufferId);
         glDeleteTextures(textureId);
@@ -103,17 +100,11 @@ public class FrameBuffer {
         ).logging(DebugLevel.DEBUG);
     }
 
-    /**
-     * Creates the shader program for the frame buffer.
-     */
     public void createMatrix(Matrix4f modelMatrix, Matrix4f viewMatrix) {
         this.modelMatrix = modelMatrix;
         this.viewMatrix = viewMatrix;
     }
 
-    /**
-     * Creates the frame buffer and its associated texture and render buffer.
-     */
     public void createFrameBuffer() {
         if (width <= 0 || height <= 0) {
             throw new IllegalArgumentException("Framebuffer size must be > 0: width=" + width + ", height=" + height);
@@ -176,30 +167,18 @@ public class FrameBuffer {
         GLStateCache.bindTexture(GL_TEXTURE_2D, textureId);
     }
 
-    /**
-     * Binds the render buffer.
-     */
     public void bindRenderBuffer() {
         GLStateCache.bindRenderBuffer(renderBufferId);
     }
 
-    /**
-     * Binds the frame buffer for drawing.
-     */
     public void bindDrawFrameBuffer() {
         GLStateCache.bindDrawFrameBuffer(frameBufferId);
     }
 
-    /**
-     * Binds the frame buffer for reading.
-     */
     public void bindReadFrameBuffer() {
         GLStateCache.bindReadFrameBuffer(frameBufferId);
     }
 
-    /**
-     * Binds the frame buffer.
-     */
     public void bindFrameBuffer() {
         bindFrameBufferNoClear();
 
@@ -211,9 +190,6 @@ public class FrameBuffer {
         GLStateCache.bindFrameBuffer(frameBufferId);
     }
 
-    /**
-     * Unbinds the frame buffer.
-     */
     public void unbindFrameBuffer() {
         GLStateCache.bindFrameBuffer(0);
     }

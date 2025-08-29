@@ -10,9 +10,6 @@ import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL30.glBlitFramebuffer;
 
-/**
- * Represents a split frame buffer in the OpenGL rendering system.
- */
 public class SplitFrameBuffer {
     private final int cols;
     private final int rows;
@@ -25,13 +22,6 @@ public class SplitFrameBuffer {
     private int indexX;
     private int indexY;
 
-    /**
-     * Constructs a new SplitFrameBuffer with the specified main frame buffer, columns, and rows.
-     *
-     * @param mainFrameBuffer the main frame buffer
-     * @param cols            the number of columns
-     * @param rows            the number of rows
-     */
     public SplitFrameBuffer(FrameBuffer mainFrameBuffer, int cols, int rows, int offsetX, int offsetY) {
         this.mainFrameBuffer = mainFrameBuffer;
         this.cols = cols;
@@ -48,9 +38,6 @@ public class SplitFrameBuffer {
         this(mainFrameBuffer, cols, rows, 0, 0);
     }
 
-    /**
-     * Cleans up all small frame buffers.
-     */
     public void cleanup() {
         mainFrameBuffer.cleanup();
 
@@ -73,9 +60,6 @@ public class SplitFrameBuffer {
         ).logging(DebugLevel.DEBUG);
     }
 
-    /**
-     * Creates the small frame buffers based on the specified columns and rows.
-     */
     public void createSmallFrameBuffers() {
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
@@ -93,9 +77,6 @@ public class SplitFrameBuffer {
         }
     }
 
-    /**
-     * Blits the main frame buffer to the small frame buffers.
-     */
     public void blitToSmallFrameBuffers() {
         mainFrameBuffer.bindReadFrameBuffer();
 

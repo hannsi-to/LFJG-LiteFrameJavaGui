@@ -4,7 +4,6 @@ import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.debug.exceptions.render.meshBuilder.MeshBuilderException;
-import me.hannsi.lfjg.render.effect.effects.Scale;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.mesh.BufferObjectType;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
@@ -27,30 +26,14 @@ public class GLPolygon extends GLObject {
 
     private boolean isUpdate;
 
-    /**
-     * Constructs a new GLPolygon with the specified name.
-     *
-     * @param name the name of the polygon renderer
-     */
     public GLPolygon(String name) {
         super(name);
     }
 
-    /**
-     * Prepares the polygon for rendering.
-     *
-     * @return the current instance of GLPolygon
-     */
     public GLPolygon put() {
         return this;
     }
 
-    /**
-     * Adds a vertex to the polygon.
-     *
-     * @param vector2f the vertex to add
-     * @return the current instance of GLPolygon
-     */
     public GLPolygon vertex(Vector2f vector2f) {
         if (vertex == null) {
             vertex = new float[0];
@@ -64,12 +47,6 @@ public class GLPolygon extends GLObject {
         return this;
     }
 
-    /**
-     * Adds a color to the polygon.
-     *
-     * @param c the color to add
-     * @return the current instance of GLPolygon
-     */
     public GLPolygon color(Color c) {
         if (color == null) {
             color = new float[0];
@@ -85,15 +62,6 @@ public class GLPolygon extends GLObject {
         return this;
     }
 
-    /**
-     * Adds texture coordinates to the polygon.
-     *
-     * @param u1 the u-coordinate of the first vertex
-     * @param v1 the v-coordinate of the first vertex
-     * @param u2 the u-coordinate of the second vertex
-     * @param v2 the v-coordinate of the second vertex
-     * @return the current instance of GLPolygon
-     */
     public GLPolygon uv(float u1, float v1, float u2, float v2) {
         put().uv(new Vector2f(u1, v1)).end();
         put().uv(new Vector2f(u2, v1)).end();
@@ -103,12 +71,6 @@ public class GLPolygon extends GLObject {
         return this;
     }
 
-    /**
-     * Adds a texture coordinate to the polygon.
-     *
-     * @param vector2f the texture coordinate to add
-     * @return the current instance of GLPolygon
-     */
     public GLPolygon uv(Vector2f vector2f) {
         if (texture == null) {
             texture = new float[0];
@@ -122,9 +84,6 @@ public class GLPolygon extends GLObject {
         return this;
     }
 
-    /**
-     * Ends the current polygon definition.
-     */
     public void end() {
     }
 

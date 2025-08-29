@@ -2,9 +2,7 @@ package me.hannsi.lfjg.render.renderers.text;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
-import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
-import me.hannsi.lfjg.render.system.text.Align;
 import me.hannsi.lfjg.render.system.text.AlignType;
 import me.hannsi.lfjg.render.system.text.font.Font;
 import org.joml.Vector2f;
@@ -22,7 +20,7 @@ public class GLText extends GLPolygon {
         super(name);
     }
 
-    public void text(String name,String text, float x, float y, int fontSize, Color fontColor, boolean textFormat, AlignType alignType){
+    public void text(String name, String text, float x, float y, int fontSize, Color fontColor, boolean textFormat, AlignType alignType) {
         Font font = fontCache.getFont(name);
 
         this.text = text;
@@ -35,13 +33,13 @@ public class GLText extends GLPolygon {
                 .msdfTextureLoader(font.getMsdfTextureLoader())
                 .defaultFontColor(fontColor)
                 .textFormat(textFormat)
-                .pos(new Vector2f(x,y))
+                .pos(new Vector2f(x, y))
                 .size(fontSize)
                 .align(alignType);
 
         float width = getTextWidth(text);
         float height = getTextHeight(text);
-        Color color = Color.of(0,0,0,0);
+        Color color = Color.of(0, 0, 0, 0);
 
         put().vertex(new Vector2f(x, y)).color(color).end();
         put().vertex(new Vector2f(x + width, y)).color(color).end();
@@ -65,5 +63,25 @@ public class GLText extends GLPolygon {
     @Override
     public void drawVAORendering() {
         textRenderer.draw(text);
+    }
+
+    public TextRenderer getTextRenderer() {
+        return textRenderer;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public int getFontSize() {
+        return fontSize;
+    }
+
+    public boolean isTextFormat() {
+        return textFormat;
+    }
+
+    public AlignType getAlignType() {
+        return alignType;
     }
 }

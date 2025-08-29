@@ -14,7 +14,6 @@ import me.hannsi.lfjg.render.system.text.msdf.type.AtlasType;
 import me.hannsi.lfjg.render.system.text.msdf.type.AtlasYOriginType;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 public class Font {
@@ -48,12 +47,12 @@ public class Font {
         textMeshBuilder.cleanup();
     }
 
-    public Font createCache(){
+    public Font createCache() {
         try {
             boolean success = msdfGenerator.generate();
 
             if (!success) {
-                DebugLog.error(getClass(),"Process finished with errors.");
+                DebugLog.error(getClass(), "Process finished with errors.");
             }
 
             textureLocation = msdfGenerator.getTextureOutputLocation();
@@ -69,8 +68,8 @@ public class Font {
                     .msdfFont(msdfFont)
                     .chars(msdfGenerator.getChars())
                     .generateMeshData();
-        }catch (IOException e){
-            DebugLog.error(getClass(),e);
+        } catch (IOException e) {
+            DebugLog.error(getClass(), e);
         }
 
         return this;
@@ -89,7 +88,7 @@ public class Font {
         return this;
     }
 
-    public Font unicodeBlocks(List<UnicodeBlock> unicodeBlocks){
+    public Font unicodeBlocks(List<UnicodeBlock> unicodeBlocks) {
         msdfGenerator.unicodeBlock(unicodeBlocks);
 
         return this;

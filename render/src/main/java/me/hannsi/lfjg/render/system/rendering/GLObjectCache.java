@@ -8,18 +8,9 @@ import me.hannsi.lfjg.render.renderers.GLObject;
 import java.util.*;
 import java.util.function.Predicate;
 
-/**
- * Caches OpenGL objects for rendering.
- */
 public class GLObjectCache {
-    /**
-     * Maps objectId to GLObject.
-     */
     private final Map<Long, GLObject> glObjects;
 
-    /**
-     * Constructs a new GLObjectCache.
-     */
     public GLObjectCache() {
         glObjects = new HashMap<>();
     }
@@ -28,12 +19,6 @@ public class GLObjectCache {
         return new GLObjectCache();
     }
 
-    /**
-     * Adds a GLObject to the cache.
-     *
-     * @param glObject the GLObject to cache
-     * @return this
-     */
     public GLObjectCache createCache(GLObject glObject) {
         glObjects.put(glObject.getObjectId(), glObject);
 
@@ -47,9 +32,6 @@ public class GLObjectCache {
         return this;
     }
 
-    /**
-     * Draws all cached GLObjects with the specified resolution and projection.
-     */
     public void draw() {
         draw(glObject -> true);
     }
@@ -74,9 +56,6 @@ public class GLObjectCache {
         }
     }
 
-    /**
-     * Cleans up all cached GLObjects.
-     */
     public void cleanup() {
         StringBuilder ids = new StringBuilder();
         for (GLObject glObject : glObjects.values()) {
@@ -98,22 +77,10 @@ public class GLObjectCache {
         ).logging(DebugLevel.DEBUG);
     }
 
-    /**
-     * Gets the GLObject with the specified object ID.
-     *
-     * @param objectId the ID of the GLObject to retrieve
-     * @return the GLObject with the specified ID, or null if not found
-     */
     public GLObject getGLObject(long objectId) {
         return glObjects.get(objectId);
     }
 
-    /**
-     * Gets the GLObject with the specified name.
-     *
-     * @param name the name of the GLObject
-     * @return the matching GLObject, or null if not found
-     */
     public GLObject getGLObject(String name) {
         for (GLObject glObject : glObjects.values()) {
             if (glObject.getName().equals(name)) {

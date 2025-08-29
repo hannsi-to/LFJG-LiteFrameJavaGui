@@ -12,9 +12,6 @@ import static org.lwjgl.opengl.GL40.glDrawElementsIndirect;
 import static org.lwjgl.opengl.GL43.glMultiDrawArraysIndirect;
 import static org.lwjgl.opengl.GL43.glMultiDrawElementsIndirect;
 
-/**
- * Handles rendering of VAOs (Vertex Array Objects) in the OpenGL rendering system.
- */
 public class VAORendering {
     public void draw(GLObject glObject) {
         draw(glObject.getMesh(), glObject.getDrawType().getId());

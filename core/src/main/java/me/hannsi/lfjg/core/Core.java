@@ -152,37 +152,6 @@ public class Core {
         return (int) value;
     }
 
-    public static class NanoVGGL3 {
-        public static final String PACKAGE = "org.lwjgl.nanovg.NanoVGGL3";
-
-        public static final int NVG_ANTIALIAS;
-
-        static {
-            NVG_ANTIALIAS = getStaticIntField(PACKAGE, "NVG_ANTIALIAS");
-        }
-
-        public static long nvgCreate(int flags) {
-            if (!enableLFJGRenderSystem) {
-                return -1L;
-            }
-
-            Object result = invokeStaticMethod(PACKAGE, "nvgCreate", flags);
-            if (result == null) {
-                return -1L;
-            }
-
-            return (long) result;
-        }
-
-        public static void nvgDelete(long ctx) {
-            if (!enableLFJGRenderSystem) {
-                return;
-            }
-
-            Object ignore = invokeStaticMethod(PACKAGE, "nvgDelete", ctx);
-        }
-    }
-
     public static class GL30 {
         public static final String PACKAGE = "org.lwjgl.opengl.GL30";
 

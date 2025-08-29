@@ -21,10 +21,6 @@ dependencies {
     // Assimp
     api "org.lwjgl:lwjgl-assimp"
     runtimeOnly "org.lwjgl:lwjgl-assimp::$lwjglNatives"
-
-    // NanoVG
-    api "org.lwjgl:lwjgl-nanovg"
-    runtimeOnly "org.lwjgl:lwjgl-nanovg::$lwjglNatives"
 }
 
 test {

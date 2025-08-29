@@ -10,19 +10,10 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Represents a GLSL (OpenGL Shading Language) code processor.
- * This class handles the inclusion of other shader files within a shader code.
- */
 public class GLSLCode {
     private final Location fileLocation;
     private boolean checkInclude;
 
-    /**
-     * Constructs a new GLSLCode instance with the specified resource location.
-     *
-     * @param fileLocation the location of the shader resource
-     */
     public GLSLCode(Location fileLocation) {
         this.fileLocation = fileLocation;
         checkInclude = true;
@@ -37,13 +28,6 @@ public class GLSLCode {
         ).logging(DebugLevel.DEBUG);
     }
 
-    /**
-     * Processes the includes within the shader code.
-     * Recursively replaces #include directives with the content of the included files.
-     *
-     * @param shaderCode the shader code to process
-     * @return the processed shader code with includes replaced
-     */
     private String processIncludes(String shaderCode) {
         Pattern pattern = Pattern.compile("#include\\s+\"([^\"]+)\"");
         Matcher matcher = pattern.matcher(shaderCode);
@@ -69,11 +53,6 @@ public class GLSLCode {
         return shaderCode;
     }
 
-    /**
-     * Creates the final shader code by reading the shader file and processing includes.
-     *
-     * @return the final shader code
-     */
     public String createCode() {
         String shaderCode;
         try {

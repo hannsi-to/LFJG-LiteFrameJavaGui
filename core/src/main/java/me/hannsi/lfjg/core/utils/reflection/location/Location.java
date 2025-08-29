@@ -3,7 +3,10 @@ package me.hannsi.lfjg.core.utils.reflection.location;
 import me.hannsi.lfjg.core.utils.type.types.LocationType;
 import org.lwjgl.BufferUtils;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -38,7 +41,7 @@ public final class Location {
     public InputStream openStream() throws IOException {
         switch (locationType) {
             case FILE:
-                return new FileInputStream(path);
+                return Files.newInputStream(Paths.get(path));
             case RESOURCE:
                 return Location.class.getClassLoader().getResourceAsStream(path);
             case URL:

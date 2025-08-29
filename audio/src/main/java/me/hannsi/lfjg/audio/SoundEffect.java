@@ -23,13 +23,13 @@ public class SoundEffect {
         return new SoundEffect();
     }
 
-    public SoundEffect initEffect() {
+    public SoundEffect createEffect() {
         this.effectId = alGenEffects();
         this.effectSlot = alGenAuxiliaryEffectSlots();
         return this;
     }
 
-    public SoundEffect initFilter() {
+    public SoundEffect createFilter() {
         this.filterId = alGenFilters();
         alFilteri(filterId, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
         return this;

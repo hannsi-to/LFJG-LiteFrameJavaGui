@@ -21,9 +21,6 @@ import org.joml.Matrix4f;
 import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 import static org.lwjgl.opengl.GL11.*;
 
-/**
- * Represents an OpenGL object with various properties and methods for rendering.
- */
 public class GLObject implements Cloneable {
     private String name;
     private long objectId;
@@ -44,11 +41,6 @@ public class GLObject implements Cloneable {
 
     private Transform transform;
 
-    /**
-     * Constructs a new GLObject with the specified name.
-     *
-     * @param name the name of the GLObject
-     */
     public GLObject(String name) {
         this.name = name;
 
@@ -66,9 +58,6 @@ public class GLObject implements Cloneable {
         this.objectId = ++Id.latestGLObjectId;
     }
 
-    /**
-     * Cleans up the resources used by the GLObject.
-     */
     public void cleanup() {
         if (animationCache != null) {
             animationCache.cleanup();
@@ -92,9 +81,6 @@ public class GLObject implements Cloneable {
         ).logging(DebugLevel.DEBUG);
     }
 
-    /**
-     * Initializes the GLObject by creating necessary OpenGL resources.
-     */
     public void create() {
         vaoRendering = new VAORendering();
 
@@ -103,9 +89,6 @@ public class GLObject implements Cloneable {
         blendType = BlendType.NORMAL;
     }
 
-    /**
-     * Draws the GLObject using the specified resolution and projection.
-     */
     public void draw() {
         draw(true);
     }
@@ -251,12 +234,6 @@ public class GLObject implements Cloneable {
         return vaoRendering;
     }
 
-    /**
-     * Sets the VAORendering of the GLObject.
-     *
-     * @param vaoRendering the VAORendering to set
-     * @return the GLObject instance
-     */
     public GLObject setVaoRendering(VAORendering vaoRendering) {
         this.vaoRendering = vaoRendering;
 
@@ -267,12 +244,6 @@ public class GLObject implements Cloneable {
         return mesh;
     }
 
-    /**
-     * Sets the Mesh of the GLObject.
-     *
-     * @param mesh the Mesh to set
-     * @return the GLObject instance
-     */
     public GLObject setMesh(Mesh mesh) {
         this.mesh = mesh;
 
@@ -319,12 +290,6 @@ public class GLObject implements Cloneable {
         return blendType;
     }
 
-    /**
-     * Sets the blend type of the GLObject.
-     *
-     * @param blendType the blend type to set
-     * @return the GLObject instance
-     */
     public GLObject setBlendType(BlendType blendType) {
         this.blendType = blendType;
 
@@ -335,12 +300,6 @@ public class GLObject implements Cloneable {
         return drawType;
     }
 
-    /**
-     * Sets the draw type of the GLObject.
-     *
-     * @param drawType the draw type to set
-     * @return the GLObject instance
-     */
     public GLObject setDrawType(DrawType drawType) {
         this.drawType = drawType;
 
@@ -351,12 +310,6 @@ public class GLObject implements Cloneable {
         return lineWidth;
     }
 
-    /**
-     * Sets the line width of the GLObject.
-     *
-     * @param lineWidth the line width to set
-     * @return the GLObject instance
-     */
     public GLObject setLineWidth(float lineWidth) {
         this.lineWidth = lineWidth;
 
@@ -367,12 +320,6 @@ public class GLObject implements Cloneable {
         return pointSize;
     }
 
-    /**
-     * Sets the point size of the GLObject.
-     *
-     * @param pointSize the point size to set
-     * @return the GLObject instance
-     */
     public GLObject setPointSize(float pointSize) {
         this.pointSize = pointSize;
 

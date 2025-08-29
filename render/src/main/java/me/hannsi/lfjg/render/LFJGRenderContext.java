@@ -3,12 +3,10 @@ package me.hannsi.lfjg.render;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
-import me.hannsi.lfjg.render.system.svg.SVGCache;
 
 public class LFJGRenderContext {
     public static ShaderProgram shaderProgram;
     public static TextureCache textureCache;
-    public static SVGCache svgCache;
 
     static {
         shaderProgram = new ShaderProgram();
@@ -17,6 +15,5 @@ public class LFJGRenderContext {
         shaderProgram.link();
 
         textureCache = TextureCache.createTextureCache();
-        svgCache = SVGCache.createSVGCache();
     }
 }

@@ -183,7 +183,7 @@ public class TestScene1 implements IScene {
     }
 
     public void soundCacheInit() {
-        soundCache = SoundCache.initSoundCache()
+        soundCache = SoundCache.createSoundCache()
                 .setAttenuationModel(AL11.AL_EXPONENT_DISTANCE)
                 .setListener(new SoundListener(new Vector3f(0, 0, 0)))
                 .createCache(

@@ -2986,6 +2986,13 @@ public class MathHelper {
         return new float[]{real, imaginary};
     }
 
+    /**
+     * Calculates the centroid (center of mass) of a polygon defined by 2D vertices.
+     *
+     * @param positions array of {@link Vector2d} representing the polygon's vertices
+     * @return centroid as a {@link Vector2d}
+     * @throws IllegalArgumentException if fewer than 3 vertices are given or if the polygon is invalid
+     */
     public static Vector2d calculateCentroid(Vector2d[] positions) {
         int n = positions.length;
         if (n < 3) {
@@ -3010,7 +3017,7 @@ public class MathHelper {
         }
 
         signedArea *= 0.5;
-        if (abs(signedArea) < 1e-10) {
+        if (Math.abs(signedArea) < 1e-10) {
             throw new IllegalArgumentException("Not a valid polygon.");
         }
 
@@ -3020,6 +3027,13 @@ public class MathHelper {
         return new Vector2d(centroidX, centroidY);
     }
 
+    /**
+     * Calculates the centroid of a polygon defined by flat double array positions.
+     * The array must be structured as [x0, y0, x1, y1, ..., xn, yn].
+     *
+     * @param positions array of doubles containing vertex coordinates
+     * @return centroid as a {@link Vector2d}
+     */
     public static Vector2d calculateCentroid(double[] positions) {
         Vector2d[] positions2D = new Vector2d[positions.length / 2];
         int index = 0;
@@ -3031,6 +3045,13 @@ public class MathHelper {
         return calculateCentroid(positions2D);
     }
 
+    /**
+     * Calculates the centroid (center of mass) of a polygon defined by 2D float vertices.
+     *
+     * @param positions array of {@link Vector2f} representing the polygon's vertices
+     * @return centroid as a {@link Vector2f}
+     * @throws IllegalArgumentException if fewer than 3 vertices are given or if the polygon is invalid
+     */
     public static Vector2f calculateCentroid(Vector2f[] positions) {
         int n = positions.length;
         if (n < 3) {
@@ -3055,7 +3076,7 @@ public class MathHelper {
         }
 
         signedArea *= 0.5f;
-        if (abs(signedArea) < 1e-10f) {
+        if (Math.abs(signedArea) < 1e-10f) {
             throw new IllegalArgumentException("Not a valid polygon.");
         }
 
@@ -3065,6 +3086,13 @@ public class MathHelper {
         return new Vector2f(centroidX, centroidY);
     }
 
+    /**
+     * Calculates the centroid of a polygon defined by flat float array positions.
+     * The array must be structured as [x0, y0, x1, y1, ..., xn, yn].
+     *
+     * @param positions array of floats containing vertex coordinates
+     * @return centroid as a {@link Vector2f}
+     */
     public static Vector2f calculateCentroid(float[] positions) {
         Vector2f[] positions2D = new Vector2f[positions.length / 2];
         int index = 0;
@@ -3076,34 +3104,82 @@ public class MathHelper {
         return calculateCentroid(positions2D);
     }
 
+    /**
+     * Computes the midpoint between two {@link Vector2d} points.
+     *
+     * @param a first point
+     * @param b second point
+     * @return midpoint as {@link Vector2d}
+     */
     public static Vector2d midpoint(Vector2d a, Vector2d b) {
         double midX = (a.x() + b.x()) / 2.0;
         double midY = (a.y() + b.y()) / 2.0;
         return new Vector2d(midX, midY);
     }
 
+    /**
+     * Computes the midpoint between two {@link Vector2f} points.
+     *
+     * @param a first point
+     * @param b second point
+     * @return midpoint as {@link Vector2f}
+     */
     public static Vector2f midpoint(Vector2f a, Vector2f b) {
         float midX = (a.x() + b.x()) / 2.0f;
         float midY = (a.y() + b.y()) / 2.0f;
         return new Vector2f(midX, midY);
     }
 
+    /**
+     * Returns a random integer between min and max (inclusive).
+     *
+     * @param min minimum value
+     * @param max maximum value
+     * @return random integer in range [min, max]
+     */
     public static int getRandomInt(int min, int max) {
         return RANDOM.nextInt((max - min) + 1) + min;
     }
 
+    /**
+     * Returns a random double between min and max.
+     *
+     * @param min minimum value
+     * @param max maximum value
+     * @return random double in range [min, max]
+     */
     public static double getRandomDouble(double min, double max) {
         return min + (max - min) * RANDOM.nextDouble();
     }
 
+    /**
+     * Returns a random float between min and max.
+     *
+     * @param min minimum value
+     * @param max maximum value
+     * @return random float in range [min, max]
+     */
     public static float getRandomFloat(float min, float max) {
         return min + (max - min) * RANDOM.nextFloat();
     }
 
+    /**
+     * Returns a random boolean value.
+     *
+     * @return {@code true} or {@code false} randomly
+     */
     public static boolean getRandomBoolean() {
         return RANDOM.nextBoolean();
     }
 
+    /**
+     * Returns a random element from an array.
+     *
+     * @param array array of elements
+     * @param <T>   type of element
+     * @return randomly chosen element
+     * @throws IllegalArgumentException if array is null or empty
+     */
     public static <T> T getRandomElement(T[] array) {
         if (array == null || array.length == 0) {
             throw new IllegalArgumentException("The array passed is invalid.");
@@ -3113,6 +3189,12 @@ public class MathHelper {
         return array[index];
     }
 
+    /**
+     * Simulates tossing a coin multiple times.
+     *
+     * @param times number of tosses
+     * @return number of times heads (true) occurred
+     */
     public static int tossCoin(int times) {
         int count = 0;
         for (int i = 0; i < times; i++) {
@@ -3124,14 +3206,35 @@ public class MathHelper {
         return count;
     }
 
+    /**
+     * Shuffles the elements of a list using the shared random generator.
+     *
+     * @param list list to shuffle
+     * @param <T>  type of list elements
+     */
     public static <T> void shuffleList(List<T> list) {
         Collections.shuffle(list, RANDOM);
     }
 
+    /**
+     * Returns a random sign, either {@code 1} or {@code -1}.
+     *
+     * @return 1 or -1
+     */
     public static int randomSign() {
         return getRandomBoolean() ? 1 : -1;
     }
 
+    /**
+     * Selects a random element from an array based on weighted probabilities.
+     *
+     * @param elements array of elements to choose from
+     * @param weights  array of weights corresponding to each element
+     * @param <T>      type of element
+     * @return selected element
+     * @throws IllegalArgumentException if array lengths mismatch, elements are empty, or weight is negative
+     * @throws IllegalStateException    if weight selection fails unexpectedly
+     */
     public static <T> T getWeightedRandomElement(T[] elements, int[] weights) {
         if (elements.length != weights.length || elements.length == 0) {
             throw new IllegalArgumentException("Element and weight list sizes are not equal or list contents are empty.");

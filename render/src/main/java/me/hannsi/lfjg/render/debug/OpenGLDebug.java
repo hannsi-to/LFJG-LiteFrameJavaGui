@@ -14,9 +14,6 @@ import static org.lwjgl.opengl.GL.getCapabilities;
 import static org.lwjgl.opengl.GL43.*;
 import static org.lwjgl.system.MemoryUtil.memUTF8;
 
-/**
- * Provides debugging utilities for OpenGL.
- */
 public class OpenGLDebug {
     public static final Map<Integer, Integer> SEVERITY_MAP = new HashMap<>();
 
@@ -70,12 +67,6 @@ public class OpenGLDebug {
         }
     }
 
-    /**
-     * Converts an OpenGL debug source code to a human-readable string.
-     *
-     * @param source the OpenGL debug source code
-     * @return the corresponding source string
-     */
     public static String getSourceString(int source) {
         switch (source) {
             case GL_DEBUG_SOURCE_API:
@@ -95,12 +86,6 @@ public class OpenGLDebug {
         }
     }
 
-    /**
-     * Converts an OpenGL debug type code to a human-readable string.
-     *
-     * @param type the OpenGL debug type code
-     * @return the corresponding type string
-     */
     public static String getTypeString(int type) {
         switch (type) {
             case GL_DEBUG_TYPE_ERROR:
@@ -120,12 +105,6 @@ public class OpenGLDebug {
         }
     }
 
-    /**
-     * Converts an OpenGL debug severity code to a human-readable string.
-     *
-     * @param severity the OpenGL debug severity code
-     * @return the corresponding severity string
-     */
     public static String getSeverityString(int severity) {
         switch (severity) {
             case GL_DEBUG_SEVERITY_NOTIFICATION:

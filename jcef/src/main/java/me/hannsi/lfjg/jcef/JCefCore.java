@@ -6,6 +6,6 @@ import me.hannsi.lfjg.core.ServiceData;
 public class JCefCore implements Service {
     @Override
     public ServiceData execute() {
-        return new ServiceData(true, "JCef", "v1.0.0");
+        return new ServiceData(false, "JCef", "v1.0.0");
     }
 }

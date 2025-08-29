@@ -20,9 +20,6 @@ import java.util.Map;
 
 import static org.lwjgl.opengl.GL20.*;
 
-/**
- * Represents a shader program in the OpenGL rendering system.
- */
 public class ShaderProgram {
     private final int programId;
     private final Map<String, UniformValue> uniformValues;
@@ -31,9 +28,6 @@ public class ShaderProgram {
     private int vertexShaderId;
     private int fragmentShaderId;
 
-    /**
-     * Constructs a new ShaderProgram.
-     */
     public ShaderProgram() {
         uniformCache = new HashMap<>();
         uniformValues = new HashMap<>();
@@ -70,11 +64,7 @@ public class ShaderProgram {
         return result;
     }
 
-    /**
-     * Cleans up the shader program by deleting it.
-     */
     public void cleanup() {
-        unbind();
         if (vertexShaderId != 0) {
             glDeleteShader(vertexShaderId);
         }
@@ -101,13 +91,6 @@ public class ShaderProgram {
         fragmentShaderId = createShader(new GLSLCode(fileLocation).createCode(), GL_FRAGMENT_SHADER);
     }
 
-    /**
-     * Creates a shader of the specified type from the given shader code.
-     *
-     * @param shaderCode the shader code
-     * @param shaderType the type of shader (e.g., GL_VERTEX_SHADER)
-     * @return the shader ID
-     */
     protected int createShader(String shaderCode, int shaderType) {
         int shaderId = glCreateShader(shaderType);
         if (shaderId == 0) {
@@ -124,9 +107,6 @@ public class ShaderProgram {
         return shaderId;
     }
 
-    /**
-     * Links the shader program.
-     */
     public void link() {
         glLinkProgram(programId);
         if (glGetProgrami(programId, GL_LINK_STATUS) == 0) {
@@ -259,17 +239,8 @@ public class ShaderProgram {
         }
     }
 
-    /**
-     * Binds the shader program for use.
-     */
     public void bind() {
         GLStateCache.useProgram(programId);
-    }
-
-    /**
-     * Unbinds the shader program.
-     */
-    public void unbind() {
     }
 
     public int getProgramId() {

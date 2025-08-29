@@ -15,8 +15,6 @@ public class EffectBase {
     public EffectBase(String name, boolean noUseFrameBuffer) {
         this.name = name;
         this.noUseFrameBuffer = noUseFrameBuffer;
-
-
     }
 
     public void create(GLObject glObject) {

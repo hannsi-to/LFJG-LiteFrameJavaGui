@@ -8,16 +8,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 
 import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
 
-/**
- * The GLFWDebug class is responsible for managing GLFW error callbacks and enabling debug output.
- */
 public class GLFWDebug {
-
-    /**
-     * Enables GLFW debug output if the GLFWDebugSetting is enabled in the frame settings.
-     *
-     * @param frame The Frame object associated with this debug output.
-     */
     public static void getGLFWDebug(Frame frame) {
         if (frame.getFrameSettingValue(GLFWDebugSetting.class)) {
             GLFWErrorCallback errorCallback = new GLFWErrorCallback() {

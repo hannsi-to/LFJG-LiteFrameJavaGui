@@ -4,24 +4,23 @@ import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
-import me.hannsi.lfjg.core.utils.graphics.image.TextureLoader;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class FontCache {
-    private final Map<String,Font> fontCaches;
+    private final Map<String, Font> fontCaches;
 
-    FontCache(){
+    FontCache() {
         this.fontCaches = new HashMap<>();
     }
 
-    public static FontCache createFontCache(){
+    public static FontCache createFontCache() {
         return new FontCache();
     }
 
-    public FontCache createCache(String name,Font font){
-        fontCaches.put(name,font);
+    public FontCache createCache(String name, Font font) {
+        fontCaches.put(name, font);
 
         new LogGenerator(
                 LogGenerateType.CREATE_CACHE,
@@ -33,15 +32,15 @@ public class FontCache {
         return this;
     }
 
-    public Font getFont(String name){
+    public Font getFont(String name) {
         Font font = fontCaches.get(name);
-        if(font == null){
+        if (font == null) {
             DebugLog.warning(getClass(), "Font not found in cache: " + name);
         }
         return font;
     }
 
-    public FontCache cleanup(){
+    public FontCache cleanup() {
         StringBuilder ids = new StringBuilder();
         int index = 0;
         for (Map.Entry<String, Font> font : fontCaches.entrySet()) {

@@ -40,11 +40,11 @@ public class SoundCache {
         createCapabilities(deviceCaps);
     }
 
-    public static SoundCache initSoundCache() {
-        return initSoundCache(AudioDevices.DEFAULT);
+    public static SoundCache createSoundCache() {
+        return createSoundCache(AudioDevices.DEFAULT);
     }
 
-    public static SoundCache initSoundCache(String desiredDevice) {
+    public static SoundCache createSoundCache(String desiredDevice) {
         return new SoundCache(desiredDevice);
     }
 

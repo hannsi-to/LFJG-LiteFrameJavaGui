@@ -3,9 +3,6 @@ package me.hannsi.lfjg.render.system.rendering;
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 import org.lwjgl.opengl.GL11;
 
-/**
- * Enumeration representing different types of drawing modes in OpenGL.
- */
 public enum DrawType implements IEnumTypeBase {
     POINTS(GL11.GL_POINTS, "Points", 1),
     LINES(GL11.GL_LINES, "Lines", -1),
@@ -22,34 +19,17 @@ public enum DrawType implements IEnumTypeBase {
     final String name;
     final int vertices;
 
-    /**
-     * Constructs a new DrawType enumeration value.
-     *
-     * @param id       the unique identifier of the drawing mode
-     * @param name     the name of the drawing mode
-     * @param vertices the number of vertices required for the drawing mode
-     */
     DrawType(int id, String name, int vertices) {
         this.id = id;
         this.name = name;
         this.vertices = vertices;
     }
 
-    /**
-     * Gets the unique identifier of the drawing mode.
-     *
-     * @return the unique identifier of the drawing mode
-     */
     @Override
     public int getId() {
         return id;
     }
 
-    /**
-     * Gets the name of the drawing mode.
-     *
-     * @return the name of the drawing mode
-     */
     @Override
     public String getName() {
         return name;

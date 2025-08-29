@@ -3,7 +3,6 @@ package me.hannsi.lfjg.render.renderers.model;
 import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureLoader;
-import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.toolkit.Camera;
 import me.hannsi.lfjg.render.debug.exceptions.model.ModelException;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
@@ -14,7 +13,6 @@ import me.hannsi.lfjg.render.system.model.ModelCache;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
-import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
 import java.util.Collection;
@@ -61,7 +59,7 @@ public class ModelRender {
 
         shaderProgram.bind();
 
-        shaderProgram.setUniform("fragmentShaderType",UploadUniformType.PER_FRAME, FragmentShaderType.MODEL.getId());
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.MODEL.getId());
         shaderProgram.setUniform("textureSampler", UploadUniformType.ONCE, 0);
         shaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection3D.getProjMatrix());
         shaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, camera.getViewMatrix());
@@ -103,8 +101,6 @@ public class ModelRender {
                 }
             }
         }
-
-        shaderProgram.unbind();
     }
 
     public Model getModel(String id) {

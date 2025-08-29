@@ -23,7 +23,7 @@ public class TestSound1 implements IScene {
     @Override
     public void init() {
         AudioDevices audioDevices = new AudioDevices();
-        soundCache = SoundCache.initSoundCache()
+        soundCache = SoundCache.createSoundCache()
                 .setAttenuationModel(AL_EXPONENT_DISTANCE)
                 .setListener(new SoundListener(new Vector3f(0, 0, 0)))
                 .createCache(
@@ -36,8 +36,8 @@ public class TestSound1 implements IScene {
                                 .attachBuffer()
                                 .attachEffect(
                                         SoundEffect.builderCreate()
-                                                .initEffect()
-                                                .initFilter()
+                                                .createEffect()
+                                                .createFilter()
                                                 .addSoundEffect(SoundEffectType.REVERB)
                                                 .addSoundFilter(SoundFilterType.LOWPASS_GAIN, 0.5f)
                                 )

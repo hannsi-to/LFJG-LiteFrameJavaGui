@@ -3,7 +3,10 @@ package me.hannsi.lfjg.core.utils.type.types;
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 
 public enum STBImageFormat implements IEnumTypeBase {
-    PNG(0, "png"), JPG(1, "jpg"), BMP(2, "bmp"), TGA(3, "tga");
+    PNG(0, "png"),
+    JPG(1, "jpg"),
+    BMP(2, "bmp"),
+    TGA(3, "tga");
 
     final int id;
     final String name;
