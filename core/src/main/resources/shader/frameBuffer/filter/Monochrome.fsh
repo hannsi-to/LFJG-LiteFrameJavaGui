@@ -1,24 +1,16 @@
-#version 330
+uniform float monochromeIntensity;
+uniform vec3 monochromeColor;
+uniform bool monochromePreserveBrightness;
 
-in vec4 outPosition;
-in vec2 outTexture;
-
-out vec4 fragColor;
-
-uniform sampler2D textureSampler;
-uniform float intensity;
-uniform vec3 color;
-uniform bool preserveBrightness;
-
-void main() {
-    vec4 texColor = texture(textureSampler, outTexture);
+void monochromeMain() {
+    vec4 texColor = texture(frameBufferSampler, outTexture);
 
     vec3 monoColor;
-    if (preserveBrightness) {
+    if (monochromePreserveBrightness) {
         float brightness = dot(texColor.rgb, vec3(0.299, 0.587, 0.114));
-        monoColor = mix(texColor.rgb, color * brightness, intensity);
+        monoColor = mix(texColor.rgb, monochromeColor * brightness, monochromeIntensity);
     } else {
-        monoColor = mix(texColor.rgb, color, intensity);
+        monoColor = mix(texColor.rgb, monochromeColor, monochromeIntensity);
     }
 
     fragColor = vec4(monoColor, texColor.a);

@@ -36,6 +36,7 @@ uniform ivec2 resolution;
 #include "shader/frameBuffer/filter/Inversion.fsh"
 #include "shader/frameBuffer/filter/LensBlur.fsh"
 #include "shader/frameBuffer/filter/LuminanceKey.fsh"
+#include "shader/frameBuffer/filter/Monochrome.fsh"
 
 void main() {
     switch (fragmentShaderType){
@@ -62,5 +63,6 @@ void main() {
         case 20: inversionMain(); break;
         case 21: lensBlurMain(); break;
         case 22: luminanceKeyMain(); break;
+        case 23: monochromeMain(); break;
     }
 }
