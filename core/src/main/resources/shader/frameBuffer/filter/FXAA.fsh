@@ -1,20 +1,13 @@
-#version 330
+uniform bool fxaaUseAlpha;
 
-in vec4 outPosition;
-in vec2 outTexture;
+#define texelStep vec2(1 / gl_FragCoord.x, 1 / gl_FragCoord.y)
 
-out vec4 fragColor;
-
-uniform sampler2D textureSampler;
-uniform vec2 texelStep;
-uniform bool useAlpha;
-
-void main() {
-    vec4 rgbaNW = texture(textureSampler, outTexture + vec2(-texelStep.x, -texelStep.y));
-    vec4 rgbaNE = texture(textureSampler, outTexture + vec2(texelStep.x, -texelStep.y));
-    vec4 rgbaSW = texture(textureSampler, outTexture + vec2(-texelStep.x, texelStep.y));
-    vec4 rgbaSE = texture(textureSampler, outTexture + vec2(texelStep.x, texelStep.y));
-    vec4 rgbaM  = texture(textureSampler, outTexture);
+void fxaaMain() {
+    vec4 rgbaNW = texture(frameBufferSampler, outTexture + vec2(-texelStep.x, -texelStep.y));
+    vec4 rgbaNE = texture(frameBufferSampler, outTexture + vec2(texelStep.x, -texelStep.y));
+    vec4 rgbaSW = texture(frameBufferSampler, outTexture + vec2(-texelStep.x, texelStep.y));
+    vec4 rgbaSE = texture(frameBufferSampler, outTexture + vec2(texelStep.x, texelStep.y));
+    vec4 rgbaM  = texture(frameBufferSampler, outTexture);
 
     vec3 luma = vec3(0.299, 0.587, 0.114);
     float lumaNW = dot(rgbaNW.rgb, luma);
@@ -32,8 +25,8 @@ void main() {
     float rcpDirMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);
     dir = min(vec2(8.0, 8.0), max(vec2(-8.0, -8.0), dir * rcpDirMin)) * texelStep;
 
-    vec3 rgbA = 0.5 * (texture(textureSampler, outTexture + dir * vec2(1.0/3.0 - 0.5)).rgb + texture(textureSampler, outTexture + dir * vec2(2.0/3.0 - 0.5)).rgb);
-    vec3 rgbB = rgbA * 0.5 + 0.25 * (texture(textureSampler, outTexture + dir * vec2(0.0 - 0.5)).rgb + texture(textureSampler, outTexture + dir * vec2(1.0 - 0.5)).rgb);
+    vec3 rgbA = 0.5 * (texture(frameBufferSampler, outTexture + dir * vec2(1.0/3.0 - 0.5)).rgb + texture(frameBufferSampler, outTexture + dir * vec2(2.0/3.0 - 0.5)).rgb);
+    vec3 rgbB = rgbA * 0.5 + 0.25 * (texture(frameBufferSampler, outTexture + dir * vec2(0.0 - 0.5)).rgb + texture(frameBufferSampler, outTexture + dir * vec2(1.0 - 0.5)).rgb);
 
     float lumaB = dot(rgbB, luma);
 
@@ -44,6 +37,6 @@ void main() {
         finalColor = rgbB;
     }
 
-    float alpha = useAlpha ? rgbaM.a : 1.0;
+    float alpha = fxaaUseAlpha ? rgbaM.a : 1.0;
     fragColor = vec4(finalColor, alpha);
 }

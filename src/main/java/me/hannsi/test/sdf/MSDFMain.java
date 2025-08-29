@@ -9,7 +9,7 @@ import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.setting.settings.SeverityType;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.effect.effects.EdgeExtraction;
+import me.hannsi.lfjg.render.effect.effects.FXAA;
 import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
@@ -73,7 +73,8 @@ public class MSDFMain implements LFJGFrame {
 //                .createCache(ColorCorrection.createColorCorrection("ColorCorrection1"))
 //                .createCache(DiagonalClipping.createDiagonalClipping("DiagonalClipping"))
 //                .createCache(DirectionalBlur.createDirectionBlur("DirectionalBlur1"))
-                .createCache(EdgeExtraction.createEdgeExtraction("EdgeExtraction1"))
+//                .createCache(EdgeExtraction.createEdgeExtraction("EdgeExtraction1"))
+                .createCache(FXAA.createFXAA("FXAA1"))
                 .attachGLObject(glRect)
                 .attachGLObject(glText);
     }
