@@ -35,6 +35,7 @@ uniform ivec2 resolution;
 #include "shader/frameBuffer/filter/Gradation.fsh"
 #include "shader/frameBuffer/filter/Inversion.fsh"
 #include "shader/frameBuffer/filter/LensBlur.fsh"
+#include "shader/frameBuffer/filter/LuminanceKey.fsh"
 
 void main() {
     switch (fragmentShaderType){
@@ -60,5 +61,6 @@ void main() {
         case 19: gradationMain(); break;
         case 20: inversionMain(); break;
         case 21: lensBlurMain(); break;
+        case 22: luminanceKeyMain(); break;
     }
 }
