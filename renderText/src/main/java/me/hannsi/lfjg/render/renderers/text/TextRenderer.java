@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.renderers.text;
 
-import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerator;
@@ -13,7 +12,6 @@ import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
-import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import me.hannsi.lfjg.render.system.text.AlignType;
 import me.hannsi.lfjg.render.system.text.CharState;
@@ -25,7 +23,6 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
-import javax.sound.sampled.Line;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +30,6 @@ import static me.hannsi.lfjg.core.utils.math.MathHelper.max;
 import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 import static me.hannsi.lfjg.render.system.text.Align.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 
 public class TextRenderer {
@@ -276,22 +272,28 @@ public class TextRenderer {
                 continue;
             }
 
+            if (charCode == 32) {
+                MSDFFont.Glyph glyph = textMeshBuilder.getGlyphMap().get(charCode);
+                float advance = glyph.getAdvance();
+                cursorX += advance * size;
+            }
+
             MSDFFont.Glyph glyph = textMeshBuilder.getGlyphMap().get(charCode);
             if (glyph == null) {
+
                 continue;
             }
+
+            float advance = glyph.getAdvance();
+            if (glyph.getPlaneBounds() == null || glyph.getAtlasBounds() == null) {
+                continue;
+            }
+
             float bearingY = 0f;
             if (glyph.getPlaneBounds().getBottom() < metrics.getDescender()) {
                 bearingY = -glyph.getPlaneBounds().getBottom() * size;
             }
 
-            float advance = glyph.getAdvance();
-            if (glyph.getPlaneBounds() == null || glyph.getAtlasBounds() == null) {
-                cursorX += advance * size;
-                continue;
-            }
-
-            assert textMesh != null;
             if (!charState.skip) {
                 if (charState.italic) {
                     shaderProgram.setUniform("italicSkew", UploadUniformType.ON_CHANGE, 0.4f);
@@ -337,26 +339,26 @@ public class TextRenderer {
 
             if (!charState.skip) {
                 if (charState.underLine) {
-                    lineDatum.add(new LineData(LineData.LineType.UNDERLINE,prevCursorX,cursorX,cursorY,charState.color));
+                    lineDatum.add(new LineData(LineData.LineType.UNDERLINE, prevCursorX, cursorX, cursorY, charState.color));
                 }
                 if (charState.doubleUnderLine) {
-                    LineData lineData = new LineData(LineData.LineType.DOUBLE_UNDERLINE,prevCursorX,cursorX,cursorY,charState.color);
+                    LineData lineData = new LineData(LineData.LineType.DOUBLE_UNDERLINE, prevCursorX, cursorX, cursorY, charState.color);
                     lineDatum.add(lineData.newInstance());
                     lineData.baseY = lineData.baseY - metrics.getUnderlineThickness() * size * 2;
                     lineDatum.add(lineData);
                 }
                 if (charState.strikethrough) {
-                    lineDatum.add(new LineData(LineData.LineType.STRIKETHROUGH,prevCursorX,cursorX,cursorY,charState.color));
+                    lineDatum.add(new LineData(LineData.LineType.STRIKETHROUGH, prevCursorX, cursorX, cursorY, charState.color));
                 }
                 if (charState.doubleStrikethrough) {
-                    LineData lineData = new LineData(LineData.LineType.DOUBLE_STRIKETHROUGH,prevCursorX,cursorX,cursorY,charState.color);
+                    LineData lineData = new LineData(LineData.LineType.DOUBLE_STRIKETHROUGH, prevCursorX, cursorX, cursorY, charState.color);
                     lineData.baseY += metrics.getUnderlineThickness() * 1.5f * size;
                     lineDatum.add(lineData.newInstance());
                     lineData.baseY -= metrics.getUnderlineThickness() * 1.5f * size * 2;
                     lineDatum.add(lineData);
                 }
                 if (charState.overLine) {
-                    lineDatum.add(new LineData(LineData.LineType.OVERLINE,prevCursorX,cursorX,cursorY,charState.color));
+                    lineDatum.add(new LineData(LineData.LineType.OVERLINE, prevCursorX, cursorX, cursorY, charState.color));
                 }
             }
 
