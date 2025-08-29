@@ -91,4 +91,36 @@ public class ColorCorrection extends EffectBase {
 
         super.drawFrameBuffer(latestFrameBuffer);
     }
+
+    public float getBrightness() {
+        return brightness;
+    }
+
+    public void setBrightness(float brightness) {
+        this.brightness = brightness;
+    }
+
+    public float getContrast() {
+        return contrast;
+    }
+
+    public void setContrast(float contrast) {
+        this.contrast = contrast;
+    }
+
+    public float getSaturation() {
+        return saturation;
+    }
+
+    public void setSaturation(float saturation) {
+        this.saturation = saturation;
+    }
+
+    public float getHue() {
+        return hue;
+    }
+
+    public void setHue(float hue) {
+        this.hue = hue;
+    }
 }

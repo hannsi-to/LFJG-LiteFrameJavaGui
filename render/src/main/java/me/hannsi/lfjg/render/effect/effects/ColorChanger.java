@@ -45,4 +45,28 @@ public class ColorChanger extends EffectBase {
 
         super.drawFrameBuffer(latestFrameBuffer);
     }
+
+    public boolean isAlpha() {
+        return alpha;
+    }
+
+    public void setAlpha(boolean alpha) {
+        this.alpha = alpha;
+    }
+
+    public Color getTargetColor() {
+        return targetColor;
+    }
+
+    public void setTargetColor(Color targetColor) {
+        this.targetColor = targetColor;
+    }
+
+    public Color getNewColor() {
+        return newColor;
+    }
+
+    public void setNewColor(Color newColor) {
+        this.newColor = newColor;
+    }
 }

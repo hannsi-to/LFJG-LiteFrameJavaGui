@@ -25,6 +25,7 @@ uniform ivec2 resolution;
 #include "shader/frameBuffer/filter/ClippingRect.fsh"
 #include "shader/frameBuffer/filter/ColorChanger.fsh"
 #include "shader/frameBuffer/filter/ColorCorrection.fsh"
+#include "shader/frameBuffer/filter/DiagonalClipping.fsh"
 
 void main() {
     switch(fragmentShaderType){
@@ -39,5 +40,6 @@ void main() {
         case 8: clippingRectMain(); break;
         case 9: colorChangerMain(); break;
         case 10: colorCorrectionMain(); break;
+        case 11: diagonalClippingMain(); break;
     }
 }

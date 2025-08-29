@@ -1,28 +1,19 @@
-#version 330
+uniform vec2 diagonalClippingClipCenter;
+uniform float diagonalClippingClipAngle;
+uniform float diagonalClippingBlurWidth;
+uniform bool diagonalClippingInvertClip;
 
-in vec4 outPosition;
-in vec2 outTexture;
+void diagonalClippingMain() {
+    vec4 texColor = texture(frameBufferSampler, outTexture);
 
-out vec4 fragColor;
+    vec2 screenPos = gl_FragCoord.xy;
 
-uniform sampler2D textureSampler;
+    vec2 toFrag = screenPos - diagonalClippingClipCenter;
+    float distanceToLine = toFrag.x * cos(diagonalClippingClipAngle) + toFrag.y * sin(diagonalClippingClipAngle);
 
-uniform vec2 clipCenter;
-uniform float clipAngle;
-uniform float blurWidth;
-uniform bool invertClip;
+    float edge = smoothstep(-diagonalClippingBlurWidth, 0.0, distanceToLine);
 
-void main() {
-    vec4 texColor = texture(textureSampler, outTexture);
-
-    vec2 fragCoord = outPosition.xy;
-
-    vec2 toFrag = fragCoord - clipCenter;
-    float distanceToLine = toFrag.x * cos(clipAngle) + toFrag.y * sin(clipAngle);
-
-    float edge = smoothstep(-blurWidth, 0.0, distanceToLine);
-
-    if (invertClip) {
+    if (diagonalClippingInvertClip) {
         edge = 1.0 - edge;
     }
 
