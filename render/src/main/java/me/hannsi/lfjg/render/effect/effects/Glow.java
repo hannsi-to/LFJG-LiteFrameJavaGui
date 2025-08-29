@@ -82,4 +82,52 @@ public class Glow extends EffectBase {
 
         super.drawFrameBuffer(latestFrameBuffer);
     }
+
+    public float getIntensity() {
+        return intensity;
+    }
+
+    public void setIntensity(float intensity) {
+        this.intensity = intensity;
+    }
+
+    public float getThreshold() {
+        return threshold;
+    }
+
+    public void setThreshold(float threshold) {
+        this.threshold = threshold;
+    }
+
+    public float getSpread() {
+        return spread;
+    }
+
+    public void setSpread(float spread) {
+        this.spread = spread;
+    }
+
+    public boolean isUseOriginalColor() {
+        return useOriginalColor;
+    }
+
+    public void setUseOriginalColor(boolean useOriginalColor) {
+        this.useOriginalColor = useOriginalColor;
+    }
+
+    public Color getGlowColor() {
+        return glowColor;
+    }
+
+    public void setGlowColor(Color glowColor) {
+        this.glowColor = glowColor;
+    }
+
+    public boolean isGlowOnly() {
+        return glowOnly;
+    }
+
+    public void setGlowOnly(boolean glowOnly) {
+        this.glowOnly = glowOnly;
+    }
 }

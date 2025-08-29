@@ -7,7 +7,7 @@ import me.hannsi.lfjg.core.utils.toolkit.UnicodeBlocks;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.effect.effects.Glow;
+import me.hannsi.lfjg.render.effect.effects.Gradation;
 import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
@@ -76,7 +76,8 @@ public class MSDFMain implements LFJGFrame {
 //                .createCache(Flash.createFlash("Flash1"))
 //                .createCache(GaussianBlurHorizontal.createGaussianBlurHorizontal("GaussianBlurHorizontal1"))
 //                .createCache(GaussianBlurVertical.createGaussianBlurVertical("GaussianBlurVertical1"))
-                .createCache(Glow.createGlow("Glow1"))
+//                .createCache(Glow.createGlow("Glow1"))
+                .createCache(Gradation.createGradation("Gradation1"))
                 .attachGLObject(glRect)
                 .attachGLObject(glText);
     }

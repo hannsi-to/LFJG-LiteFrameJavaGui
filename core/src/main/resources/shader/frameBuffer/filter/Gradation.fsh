@@ -1,26 +1,13 @@
-#version 330
-
-in vec4 outPosition;
-in vec2 outTexture;
-
-out vec4 fragColor;
-
-uniform sampler2D textureSampler;
-
-uniform vec2 center;
-uniform float angle;
-uniform float width;
+uniform vec2 gradationCenter;
+uniform float gradationAngle;
+uniform float gradationWidth;
 uniform int gradientShape;
-uniform int blendMode;
-uniform vec4 startColor;
-uniform vec4 endColor;
-uniform float intensity;
+uniform int gradationBlendMode;
+uniform vec4 gradationStartColor;
+uniform vec4 gradationEndColor;
+uniform float gradationIntensity;
 
-uniform float aspectRatio;
-
-#include "shader/frameBuffer/util/Blend.glsl"
-
-vec2 rotate(vec2 pos, float angle) {
+vec2 gradationRotate(vec2 pos, float angle) {
     float s = sin(angle);
     float c = cos(angle);
     return vec2(
@@ -29,31 +16,31 @@ vec2 rotate(vec2 pos, float angle) {
     );
 }
 
-void main() {
+void gradationMain() {
     vec2 uv = outTexture;
-    vec2 rel = uv - center;
-    rel.x *= aspectRatio;
+    vec2 rel = uv - gradationCenter / gl_FragCoord.xy;
+    rel.x *= gl_FragCoord.x / gl_FragCoord.y;
 
-    vec2 rotated = rotate(rel, angle);
+    vec2 rotated = gradationRotate(rel, gradationAngle);
 
     vec4 gradientColor = vec4(0.0);
     float dist = 0.0;
 
     if (gradientShape == 0) {
-        float pos = dot(rel, vec2(cos(angle), sin(angle))) / width;
+        float pos = dot(rel, vec2(cos(gradationAngle), sin(gradationAngle))) / gradationWidth;
         float t = smoothstep(-0.5, 0.5, pos);
-        gradientColor = mix(startColor, endColor, t);
+        gradientColor = mix(gradationStartColor, gradationEndColor, t);
     } else if (gradientShape == 1) {
         dist = length(rotated);
-        float t = smoothstep(0.0, width, dist);
-        gradientColor = mix(startColor, endColor, t);
+        float t = smoothstep(0.0, gradationWidth, dist);
+        gradientColor = mix(gradationStartColor, gradationEndColor, t);
     } else if (gradientShape == 2) {
-        vec2 d = abs(rotated) - vec2(width);
+        vec2 d = abs(rotated) - vec2(gradationWidth);
         dist = length(max(d, 0.0));
-        float t = smoothstep(0.0, width, dist);
-        gradientColor = mix(startColor, endColor, t);
+        float t = smoothstep(0.0, gradationWidth, dist);
+        gradientColor = mix(gradationStartColor, gradationEndColor, t);
     }
 
-    gradientColor *= intensity;
-    fragColor = blend(texture(textureSampler, uv), gradientColor, blendMode);
+    gradientColor *= gradationIntensity;
+    fragColor = blend(texture(frameBufferSampler, uv), gradientColor, gradationBlendMode);
 }
