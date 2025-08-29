@@ -3,71 +3,91 @@ package me.hannsi.lfjg.render.animation.system;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
-import me.hannsi.lfjg.render.Id;
 import me.hannsi.lfjg.render.renderers.GLObject;
 
 import java.util.LinkedHashMap;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Map;
 
 public class AnimationCache {
-    private LinkedHashMap<AnimationBase, Long> animationBases;
+    private LinkedHashMap<String, AnimationBase> animationBases;
+    private GLObject glObject;
 
     AnimationCache() {
         this.animationBases = new LinkedHashMap<>();
     }
 
-    public static AnimationCache initAnimationCache() {
+    public static AnimationCache createAnimationCache() {
         return new AnimationCache();
     }
 
+    public AnimationCache attachGLObject(GLObject glObject) {
+        glObject.setAnimationCache(this);
+        this.glObject = glObject;
+
+        return this;
+    }
+
     public AnimationCache createCache(AnimationBase animationBase) {
-        this.animationBases.put(animationBase, Id.latestAnimationCacheId++);
+        this.animationBases.put(animationBase.getName(), animationBase);
 
         new LogGenerator(
                 LogGenerateType.CREATE_CACHE,
                 getClass(),
-                animationBase.getId(),
+                animationBase.getName(),
                 ""
         ).logging(DebugLevel.DEBUG);
 
         return this;
     }
 
-    public void start(GLObject glObject) {
-        animationBases.forEach((animationBase, id) -> animationBase.start(glObject));
+    public AnimationCache start() {
+        for (Map.Entry<String, AnimationBase> animationBaseEntry : animationBases.entrySet()) {
+            animationBaseEntry.getValue().start(glObject);
+        }
+
+        return this;
     }
 
-    public void end(GLObject glObject) {
-        animationBases.forEach((animationBase, id) -> animationBase.stop(glObject));
+    public AnimationCache end() {
+        for (Map.Entry<String, AnimationBase> animationBaseEntry : animationBases.entrySet()) {
+            animationBaseEntry.getValue().stop(glObject);
+        }
+
+        return this;
     }
 
-    public void loop(GLObject glObject) {
-        animationBases.forEach((animationBase, id) -> animationBase.systemLoop(glObject));
+    public AnimationCache loop() {
+        for (Map.Entry<String, AnimationBase> animationBaseEntry : animationBases.entrySet()) {
+            animationBaseEntry.getValue().systemLoop(glObject);
+        }
+
+        return this;
     }
 
-    public void cleanup(GLObject glObject) {
-        AtomicReference<String> ids = new AtomicReference<>();
-        animationBases.forEach((animationBase, id) -> {
-            animationBase.stop(glObject);
-            animationBase.cleanup();
-            ids.set(ids.get() + ", ");
-        });
+    public void cleanup() {
+        StringBuilder ids = new StringBuilder();
+
+        for (Map.Entry<String, AnimationBase> animationBaseEntry : animationBases.entrySet()) {
+            animationBaseEntry.getValue().stop(glObject);
+            animationBaseEntry.getValue().cleanup();
+            ids.append(animationBaseEntry.getKey()).append(", ");
+        }
 
         animationBases.clear();
 
         new LogGenerator(
                 LogGenerateType.CLEANUP,
                 getClass(),
-                ids.get().substring(0, ids.get().length() - 2),
+                ids.substring(0, ids.length() - 2),
                 ""
         ).logging(DebugLevel.DEBUG);
     }
 
-    public LinkedHashMap<AnimationBase, Long> getAnimationBases() {
+    public LinkedHashMap<String, AnimationBase> getAnimationBases() {
         return animationBases;
     }
 
-    public void setAnimationBases(LinkedHashMap<AnimationBase, Long> animationBases) {
+    public void setAnimationBases(LinkedHashMap<String, AnimationBase> animationBases) {
         this.animationBases = animationBases;
     }
 }

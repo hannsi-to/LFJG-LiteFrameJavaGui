@@ -8,7 +8,6 @@ import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.graphics.image.ImageCapture;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
-import me.hannsi.lfjg.render.animation.animations.Bounce;
 import me.hannsi.lfjg.render.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
@@ -175,8 +174,8 @@ public class TestScene1 implements IScene {
     }
 
     public void animationCacheInit() {
-        gl1AnimationCache = AnimationCache.initAnimationCache()
-                .createCache(new Bounce(0, 500, 100f, 45));
+//        gl1AnimationCache = AnimationCache.createAnimationCache()
+//                .createCache(new Bounce(0, 500, 100f, 45));
 //        gl1AnimationCache.createCache(new Trembling(0, 1000, 90, resolution.x / 2, resolution.y / 2));
 
 //        gl1.setAnimationCache(gl1AnimationCache);

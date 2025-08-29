@@ -13,32 +13,50 @@ public class Trembling extends AnimationBase {
     protected float latestRadians;
     protected float degreesValue;
 
-    private long millis;
-    private float degrees;
-    private boolean random;
-    private float cx;
-    private float cy;
-    private float cz;
+    private long millis = 1000;
+    private float degrees = 90;
+    private boolean random = true;
+    private float cx = 500;
+    private float cy = 500;
+    private float cz = 0;
 
-    public Trembling(long pauseTime, long millis, float degrees, boolean random, float cx, float cy, float cz) {
-        super("Trembling", 0, pauseTime);
+    Trembling(String name) {
+        super(name);
+    }
 
+    public static Trembling createTrembling(String name) {
+        return new Trembling(name);
+    }
+
+    public Trembling millis(long millis) {
         this.millis = millis;
+        return this;
+    }
+
+    public Trembling degrees(float degrees) {
         this.degrees = degrees;
+        return this;
+    }
+
+    public Trembling random(boolean random) {
         this.random = random;
+        return this;
+    }
+
+    public Trembling cx(float cx) {
         this.cx = cx;
+        return this;
+    }
+
+    public Trembling cy(float cy) {
         this.cy = cy;
+        return this;
+    }
+
+    public Trembling cz(float cz) {
         this.cz = cz;
+        return this;
     }
-
-    public Trembling(long pauseTime, long millis, float degrees, float cx, float cy) {
-        this(pauseTime, millis, degrees, false, cx, cy, 0);
-    }
-
-    public Trembling(long pauseTime, long millis, float degrees, boolean random, float cx, float cy) {
-        this(pauseTime, millis, degrees, random, cx, cy, 0);
-    }
-
 
     @Override
     public void loop(long currentTime, GLObject glObject) {

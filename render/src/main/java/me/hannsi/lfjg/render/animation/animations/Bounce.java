@@ -12,16 +12,31 @@ public class Bounce extends AnimationBase {
     protected float lastX;
     protected float lastY;
 
-    private long millis;
-    private float height;
-    private float degrees;
+    private long millis = 500;
+    private float height = 100;
+    private float degrees = 45;
 
-    public Bounce(long pauseTime, long millis, float height, float degrees) {
-        super("Bounce", 1, pauseTime);
+    Bounce(String name) {
+        super(name);
+    }
 
+    public static Bounce createBounce(String name) {
+        return new Bounce(name);
+    }
+
+    public Bounce millis(long millis) {
         this.millis = millis;
+        return this;
+    }
+
+    public Bounce height(float height) {
         this.height = height;
+        return this;
+    }
+
+    public Bounce degrees(float degrees) {
         this.degrees = degrees;
+        return this;
     }
 
     @Override

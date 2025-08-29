@@ -71,7 +71,7 @@ public class GLObject implements Cloneable {
      */
     public void cleanup() {
         if (animationCache != null) {
-            animationCache.cleanup(this);
+            animationCache.cleanup();
         }
         if (effectCache != null) {
             effectCache.cleanup();
@@ -131,8 +131,6 @@ public class GLObject implements Cloneable {
             }
         }
 
-        uploadCache();
-
         if (autoDraw) {
             drawFrameBuffer();
         }
@@ -147,6 +145,8 @@ public class GLObject implements Cloneable {
             effectCache.setBaseFrameBuffer(frameBuffer);
             effectCache.drawFrameBuffer(this);
         }
+
+        updateAnimation();
     }
 
     private void bindFrameBuffer() {
@@ -159,9 +159,9 @@ public class GLObject implements Cloneable {
         frameBuffer.bindFrameBuffer();
     }
 
-    private void uploadCache() {
+    private void updateAnimation() {
         if (animationCache != null) {
-            animationCache.loop(this);
+            animationCache.loop();
         }
     }
 
