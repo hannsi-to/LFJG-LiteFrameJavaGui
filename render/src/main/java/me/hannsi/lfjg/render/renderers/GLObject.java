@@ -63,6 +63,8 @@ public class GLObject implements Cloneable {
         }
         if (effectCache != null) {
             effectCache.cleanup();
+        }
+        if (frameBuffer != null) {
             frameBuffer.cleanup();
         }
         if (mesh != null) {
