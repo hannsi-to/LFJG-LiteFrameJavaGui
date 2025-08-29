@@ -230,9 +230,7 @@ public class TextRenderer {
             }
 
             if (charState.obfuscated) {
-                ch = StringUtil.getRandomCharacter(StringUtil.getStringFromChars(textMeshBuilder.getChars()));
-                cursorX = alignPos[0];
-                cursorY = alignPos[1];
+                ch = StringUtil.getRandomCharacter("qwertyuiopasdfghjklzxcvbnm1234567890");
             }
 
             if (charState.spaseX || charState.spaseY) {
@@ -302,15 +300,15 @@ public class TextRenderer {
                 }
 
                 if (charState.bold) {
-                    shaderProgram.setUniform("msdfBoldness", UploadUniformType.ON_CHANGE, 0.24f);
+                    shaderProgram.setUniform("msdfBoldness", UploadUniformType.ON_CHANGE, -0.2f);
                 } else {
                     shaderProgram.setUniform("msdfBoldness", UploadUniformType.ON_CHANGE, 0f);
                 }
 
                 if (charState.ghost) {
-                    shaderProgram.setUniform("msdfBoldness", UploadUniformType.ON_CHANGE, -0.5f);
+                    shaderProgram.setUniform("msdfGhost", UploadUniformType.ON_CHANGE, -0.5f);
                 } else {
-                    shaderProgram.setUniform("msdfBoldness", UploadUniformType.ON_CHANGE, 0f);
+                    shaderProgram.setUniform("msdfGhost", UploadUniformType.ON_CHANGE, 0f);
                 }
 
                 if (charState.box) {
@@ -331,6 +329,7 @@ public class TextRenderer {
                 modelMatrix.translate(cursorX + (charState.shadow ? size * 0.02f : 0), cursorY - bearingY + (charState.shadow ? size * 0.02f : 0) + glyphYOffset, 0).scale(size, size, 1);
                 shaderProgram.setUniform("msdfFontColor", UploadUniformType.ON_CHANGE, charState.color);
                 shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix);
+                assert textMesh != null;
                 vaoRendering.draw(textMesh.mesh, GL_TRIANGLES);
             }
 
@@ -409,9 +408,11 @@ public class TextRenderer {
             shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.OBJECT.getId());
             shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, lineMatrix.translate(x, y, 0).scale(width, thickness, 1));
             shaderProgram.setUniform("objectColor", UploadUniformType.PER_FRAME, data.color);
-            shaderProgram.setUniform("objectReplaceColor", UploadUniformType.ONCE, true);
+            shaderProgram.setUniform("objectReplaceColor", UploadUniformType.PER_FRAME, true);
 
             vaoRendering.draw(lineMesh);
+
+            shaderProgram.setUniform("objectReplaceColor", UploadUniformType.PER_FRAME, false);
 
             lineMatrix = new Matrix4f(baseMatrix);
         }

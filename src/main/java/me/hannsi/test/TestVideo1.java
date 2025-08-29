@@ -1,6 +1,5 @@
 package me.hannsi.test;
 
-import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.event.EventHandler;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
@@ -35,7 +34,7 @@ public class TestVideo1 implements IScene {
     @Override
     public void drawFrame() {
         glVideo.draw();
-        DebugLog.debug(getClass(), "FPS:" + frame.getFps());
+//        DebugLog.debug(getClass(), "FPS:" + frame.getFps());
     }
 
     @Override

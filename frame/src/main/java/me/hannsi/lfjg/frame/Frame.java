@@ -30,7 +30,6 @@ import org.lwjgl.system.MemoryUtil;
 
 import java.util.concurrent.locks.LockSupport;
 
-import static me.hannsi.lfjg.core.Core.nanoVGContext;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Frame implements IFrame {
@@ -135,10 +134,6 @@ public class Frame implements IFrame {
         switch (renderingType) {
             case OPEN_GL:
                 Core.GL.createCapabilities();
-                nanoVGContext = Core.NanoVGGL3.nvgCreate(Core.NanoVGGL3.NVG_ANTIALIAS);
-                if (nanoVGContext == MemoryUtil.NULL) {
-                    throw new RuntimeException("Failed to create NanoVG context");
-                }
                 break;
             case LIB_GDX:
             case VULKAN:
@@ -286,7 +281,6 @@ public class Frame implements IFrame {
 
         switch (renderingType) {
             case OPEN_GL:
-                Core.NanoVGGL3.nvgDelete(nanoVGContext);
                 break;
             case VULKAN:
                 break;

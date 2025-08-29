@@ -50,7 +50,6 @@ public class Core {
     public static Projection projection3D;
     public static Vector2i frameBufferSize;
     public static float devicePixelRatio;
-    public static long nanoVGContext;
     public static MouseInfo mouseInfo;
     public static KeyboardInfo keyboardInfo;
 

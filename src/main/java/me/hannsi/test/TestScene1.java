@@ -12,8 +12,6 @@ import me.hannsi.lfjg.render.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.renderers.polygon.GLTriangle;
-import me.hannsi.lfjg.render.renderers.shader.GLShader;
-import me.hannsi.lfjg.render.renderers.svg.GLSVG;
 import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
@@ -21,7 +19,6 @@ import org.joml.Vector3f;
 import org.lwjgl.openal.AL11;
 
 import static me.hannsi.lfjg.core.Core.frameBufferSize;
-import static me.hannsi.lfjg.frame.LFJGContext.frame;
 
 public class TestScene1 implements IScene {
     public Scene scene;
@@ -30,8 +27,6 @@ public class TestScene1 implements IScene {
     GLRect gl1;
     GLRect gl2;
     GLTriangle glTriangle;
-    GLShader glShader;
-    GLSVG glSVG;
     GLObjectCache glObjectCache;
     TextureCache textureCache;
 
@@ -123,9 +118,6 @@ public class TestScene1 implements IScene {
         glTriangle = new GLTriangle("test3");
         glTriangle.triangle(0, 0, 500, 0, 250, 500, Color.of(255, 255, 255, alpha), Color.of(255, 255, 0, alpha), Color.of(255, 255, 255, alpha));
 
-        glShader = new GLShader("Shader1");
-        glShader.shader(Location.fromResource("shader/test/test.fsh"), 0, 0, frame.getFrameBufferWidth(), frame.getFrameBufferHeight());
-
 //        glSVG = new GLSVG("SVG1");
 //        glSVG.svg(new ResourcesLocation("svg/delete.svg"), 100, 100, 5, 5);
 //        glSVG.setBlendType(BlendType.NORMAL);
@@ -167,10 +159,8 @@ public class TestScene1 implements IScene {
 
 //        gl1SplitObjectEffectCache.create(gl1);
 
-        glShader.setEffectCache(glShaderEffectCache);
         gl1.setEffectCache(gl1EffectCache);
         glTriangle.setEffectCache(glTriangleEffectCache);
-        glSVG.setEffectCache(glSVGEffectCache);
     }
 
     public void animationCacheInit() {
