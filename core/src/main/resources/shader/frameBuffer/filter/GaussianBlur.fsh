@@ -1,32 +1,19 @@
-#version 330
+uniform vec2 gaussianBlurDirection;
+uniform float gaussianBlurRadius;
+uniform float gaussianBlurValues[256];
 
-in vec4 outPosition;
-in vec2 outTexture;
+#define texelSize (1.0 / gl_FragCoord.xy)
 
-out vec4 fragColor;
+void gaussianBlurMain() {
+    vec4 blr = vec4(0.0);
+    int radius = int(gaussianBlurRadius);
 
-uniform sampler2D textureSampler;
-
-uniform vec2 direction;
-uniform float radius;
-uniform float values[256];
-uniform vec2 texelSize;
-
-#define offset (texelSize * direction)
-
-void main() {
-    vec4 blr;
-
-    if (radius == 0.0) {
-        blr = texture(textureSampler, outTexture).rgba;
-    } else {
-        blr = texture(textureSampler, outTexture).rgba * values[0];
-        for (int i = 1; i <= int(radius); i++) {
-            float f = float(i);
-            blr += texture(textureSampler, outTexture + f * offset).rgba * values[i];
-            blr += texture(textureSampler, outTexture - f * offset).rgba * values[i];
-        }
+    blr += texture(frameBufferSampler, outTexture) * gaussianBlurValues[0];
+    for (int i = 1; i <= radius; i++) {
+        vec2 offset = float(i) * texelSize * gaussianBlurDirection;
+        blr += texture(frameBufferSampler, outTexture + offset) * gaussianBlurValues[i];
+        blr += texture(frameBufferSampler, outTexture - offset) * gaussianBlurValues[i];
     }
 
-    fragColor = vec4(blr);
+    fragColor = blr;
 }

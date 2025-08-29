@@ -14,7 +14,7 @@ import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.joml.*;
 import org.lwjgl.system.MemoryStack;
 
-import java.util.Arrays;
+import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,7 +57,7 @@ public class ShaderProgram {
         return result;
     }
 
-    private static int[] toIntArray(Object[] values){
+    private static int[] toIntArray(Object[] values) {
         int[] result = new int[values.length];
         for (int i = 0; i < values.length; i++) {
             Object v = values[i];
@@ -201,6 +201,32 @@ public class ShaderProgram {
                     break;
                 default:
                     throw new IllegalArgumentException("Unsupported int uniform size: " + intValues.length);
+            }
+        } else if (first instanceof FloatBuffer) {
+            FloatBuffer floatBuffer = (FloatBuffer) first;
+            int size = floatBuffer.remaining();
+            switch (size) {
+                case 1:
+                    glUniform1fv(location, floatBuffer);
+                    break;
+                case 2:
+                    glUniform2fv(location, floatBuffer);
+                    break;
+                case 3:
+                    glUniform3fv(location, floatBuffer);
+                    break;
+                case 4:
+                    glUniform4fv(location, floatBuffer);
+                    break;
+                case 16:
+                    glUniformMatrix4fv(location, false, floatBuffer);
+                    break;
+                default:
+                    if (size > 4 && size <= 256) {
+                        glUniform1fv(location, floatBuffer);
+                        break;
+                    }
+                    throw new IllegalArgumentException("Unsupported FloatBuffer size: " + floatBuffer.remaining());
             }
         } else if (first instanceof Matrix4f) {
             Matrix4f mat = (Matrix4f) first;

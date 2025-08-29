@@ -7,6 +7,7 @@ import me.hannsi.lfjg.core.utils.toolkit.UnicodeBlocks;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
+import me.hannsi.lfjg.render.effect.effects.GaussianBlurHorizontal;
 import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
@@ -73,8 +74,9 @@ public class MSDFMain implements LFJGFrame {
 //                .createCache(EdgeExtraction.createEdgeExtraction("EdgeExtraction1"))
 //                .createCache(FXAA.createFXAA("FXAA1"))
 //                .createCache(Flash.createFlash("Flash1"))
-                .attachGLObject(glRect);
-//                .attachGLObject(glText);
+                .createCache(GaussianBlurHorizontal.createGaussianBlurHorizontal("GaussianBlurHorizontal1"))
+                .attachGLObject(glRect)
+                .attachGLObject(glText);
     }
 
     @Override
@@ -84,7 +86,7 @@ public class MSDFMain implements LFJGFrame {
 //        ((Translate) effectCache.getEffectBase("Translate1")).x(500);
 
         glRect.draw();
-//        glText.draw();
+        glText.draw();
 //        glLine.draw();
 
 

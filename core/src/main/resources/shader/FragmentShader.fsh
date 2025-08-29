@@ -30,6 +30,7 @@ uniform ivec2 resolution;
 #include "shader/frameBuffer/filter/EdgeExtraction.fsh"
 #include "shader/frameBuffer/filter/FXAA.fsh"
 #include "shader/frameBuffer/filter/Flash.fsh"
+#include "shader/frameBuffer/filter/GaussianBlur.fsh"
 
 void main() {
     switch (fragmentShaderType){
@@ -49,5 +50,7 @@ void main() {
         case 13: edgeExtractionMain(); break;
         case 14: fxaaMain(); break;
         case 15: flashMain(); break;
+        case 16: gaussianBlurMain(); break;
+        case 17: gaussianBlurMain(); break;
     }
 }
