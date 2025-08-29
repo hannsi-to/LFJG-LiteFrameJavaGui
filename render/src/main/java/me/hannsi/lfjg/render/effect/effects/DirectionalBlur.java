@@ -48,9 +48,25 @@ public class DirectionalBlur extends EffectBase {
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
         shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.DIRECTION_BLUR.getId());
-        shaderProgram.setUniform("radius", UploadUniformType.ON_CHANGE, radius * 10);
-        shaderProgram.setUniform("angle", UploadUniformType.ON_CHANGE, angle);
+        shaderProgram.setUniform("directionalBlurRadius", UploadUniformType.ON_CHANGE, radius * 10);
+        shaderProgram.setUniform("directionalBlurAngle", UploadUniformType.ON_CHANGE, angle);
 
         super.drawFrameBuffer(latestFrameBuffer);
+    }
+
+    public float getRadius() {
+        return radius;
+    }
+
+    public void setRadius(float radius) {
+        this.radius = radius;
+    }
+
+    public float getAngle() {
+        return angle;
+    }
+
+    public void setAngle(float angle) {
+        this.angle = angle;
     }
 }

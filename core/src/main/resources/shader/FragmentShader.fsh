@@ -26,9 +26,11 @@ uniform ivec2 resolution;
 #include "shader/frameBuffer/filter/ColorChanger.fsh"
 #include "shader/frameBuffer/filter/ColorCorrection.fsh"
 #include "shader/frameBuffer/filter/DiagonalClipping.fsh"
+#include "shader/frameBuffer/filter/DirectionalBlur.fsh"
+#include "shader/frameBuffer/filter/EdgeExtraction.fsh"
 
 void main() {
-    switch(fragmentShaderType){
+    switch (fragmentShaderType){
         case 0: objectMain(); break;
         case 1: modelMain(); break;
         case 2: frameBufferMain(); break;
@@ -41,5 +43,7 @@ void main() {
         case 9: colorChangerMain(); break;
         case 10: colorCorrectionMain(); break;
         case 11: diagonalClippingMain(); break;
+        case 12: directionalBlurMain(); break;
+        case 13: edgeExtractionMain(); break;
     }
 }
