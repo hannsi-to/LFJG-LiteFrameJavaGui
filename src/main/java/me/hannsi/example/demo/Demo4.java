@@ -1,4 +1,4 @@
-package me.hannsi.test;
+package me.hannsi.example.demo;
 
 import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
@@ -10,19 +10,17 @@ import me.hannsi.lfjg.render.system.model.ModelLoader;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
 
-public class Test3D1 implements IScene {
-    Scene scene;
+public class Demo4 implements IScene {
     Frame frame;
-    TestGuiFrame testGuiFrame;
+    Scene scene;
 
     ModelRender modelRender;
     Entity entity;
     float rotation;
 
-    public Test3D1(Frame frame, TestGuiFrame testGuiFrame) {
-        this.scene = new Scene("Test3D1", this);
+    public Demo4(Frame frame) {
         this.frame = frame;
-        this.testGuiFrame = testGuiFrame;
+        this.scene = new Scene("Demo4", this);
     }
 
     @Override
@@ -137,10 +135,19 @@ public class Test3D1 implements IScene {
         modelRender = ModelRender.createModelRender()
                 .modelCache(
                         ModelCache.createModelCache()
+//                                .createModelCache(
+//                                        Model
+//                                                .createModel("cube-model", new Material)
+//                                                .addEntity(
+//                                                        entity = Entity.createEntity("cube-entity")
+//                                                                .setPosition(0, 0, -2)
+//                                                                .updateModelMatrix()
+//                                                )
+//                                )
                                 .createModelCache(
                                         ModelLoader.createModelLoader("cube-model")
                                                 .textureCache(textureCache)
-                                                .modelLocation(Location.fromResource("model/tripo/tripo_pbr_model_2412d272-991e-418d-adb2-6cfe4820dc81.obj"))
+                                                .modelLocation(Location.fromFile("C:\\Users\\hanns\\idea-project\\LFJG-LiteFrameJavaGui\\src\\main\\resources\\model\\tripo\\tripo_pbr_model_2412d272-991e-418d-adb2-6cfe4820dc81.obj"))
                                                 .loadModel()
                                                 .addEntity(
                                                         entity = Entity.createEntity("cube-entity")

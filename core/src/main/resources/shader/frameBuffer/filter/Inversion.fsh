@@ -13,7 +13,7 @@ void inversionMain() {
         texCoords.x = 1.0 - texCoords.x;
     }
 
-    vec4 color = texture(textureSampler, texCoords);
+    vec4 color = texture(frameBufferSampler, texCoords);
 
     if (inversionInvertBrightness) {
         color.rgb = vec3(1.0) - color.rgb;
