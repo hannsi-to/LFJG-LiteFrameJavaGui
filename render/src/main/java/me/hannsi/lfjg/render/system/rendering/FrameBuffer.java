@@ -1,10 +1,8 @@
 package me.hannsi.lfjg.render.system.rendering;
 
-import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
-import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.debug.exceptions.frameBuffer.CompleteFrameBufferException;
 import me.hannsi.lfjg.render.debug.exceptions.frameBuffer.CreatingFrameBufferException;
@@ -75,7 +73,6 @@ public class FrameBuffer {
         vaoRendering = new VAORendering();
 
         float[] positions = new float[]{x, y, x + width, y, x + width, y + height, x, y + height};
-
         float[] uvs = new float[]{0, 0, 1, 0, 1, 1, 0, 1};
 
         mesh = Mesh.createMesh()
@@ -109,7 +106,7 @@ public class FrameBuffer {
     /**
      * Creates the shader program for the frame buffer.
      */
-    public void createMatrix(Matrix4f modelMatrix,Matrix4f viewMatrix) {
+    public void createMatrix(Matrix4f modelMatrix, Matrix4f viewMatrix) {
         this.modelMatrix = modelMatrix;
         this.viewMatrix = viewMatrix;
     }
@@ -144,14 +141,14 @@ public class FrameBuffer {
         GLStateCache.bindFrameBuffer(0);
     }
 
-    public void drawFrameBuffer(){
+    public void drawFrameBuffer() {
         drawFrameBuffer(true);
     }
 
     public void drawFrameBuffer(boolean drawVAORendering) {
         shaderProgram.bind();
 
-        shaderProgram.setUniform("fragmentShaderType",UploadUniformType.PER_FRAME, FragmentShaderType.FRAME_BUFFER.getId());
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.FRAME_BUFFER.getId());
         shaderProgram.setUniform("modelMatrix", UploadUniformType.ON_CHANGE, modelMatrix);
         shaderProgram.setUniform("frameBufferSampler", UploadUniformType.ONCE, 3);
 
@@ -160,12 +157,12 @@ public class FrameBuffer {
         GLStateCache.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         bindTexture();
-        if(drawVAORendering){
+        if (drawVAORendering) {
             drawVAORendering();
         }
     }
 
-    public void drawVAORendering(){
+    public void drawVAORendering() {
         vaoRendering.draw(mesh);
     }
 
@@ -276,14 +273,6 @@ public class FrameBuffer {
         return null;
     }
 
-    public Matrix4f getModelMatrix() {
-        return modelMatrix;
-    }
-
-    public void setModelMatrix(Matrix4f modelMatrix) {
-        this.modelMatrix = modelMatrix;
-    }
-
     public Matrix4f getViewMatrix() {
         return viewMatrix;
     }
@@ -298,5 +287,13 @@ public class FrameBuffer {
 
     public void setGlObject(GLObject glObject) {
         this.glObject = glObject;
+    }
+
+    public Matrix4f getModelMatrix() {
+        return modelMatrix;
+    }
+
+    public void setModelMatrix(Matrix4f modelMatrix) {
+        this.modelMatrix = modelMatrix;
     }
 }

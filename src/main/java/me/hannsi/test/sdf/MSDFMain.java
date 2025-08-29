@@ -5,11 +5,8 @@ import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.toolkit.UnicodeBlocks;
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
-import me.hannsi.lfjg.frame.setting.settings.SeverityType;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.effect.effects.Flash;
 import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
@@ -75,9 +72,9 @@ public class MSDFMain implements LFJGFrame {
 //                .createCache(DirectionalBlur.createDirectionBlur("DirectionalBlur1"))
 //                .createCache(EdgeExtraction.createEdgeExtraction("EdgeExtraction1"))
 //                .createCache(FXAA.createFXAA("FXAA1"))
-                .createCache(Flash.createFlash("Flash1"))
-                .attachGLObject(glRect)
-                .attachGLObject(glText);
+//                .createCache(Flash.createFlash("Flash1"))
+                .attachGLObject(glRect);
+//                .attachGLObject(glText);
     }
 
     @Override
@@ -87,7 +84,7 @@ public class MSDFMain implements LFJGFrame {
 //        ((Translate) effectCache.getEffectBase("Translate1")).x(500);
 
         glRect.draw();
-        glText.draw();
+//        glText.draw();
 //        glLine.draw();
 
 
@@ -103,6 +100,6 @@ public class MSDFMain implements LFJGFrame {
     @Override
     public void setFrameSetting() {
         frame.setFrameSettingValue(RefreshRateSetting.class, -1);
-        frame.setFrameSettingValue(CheckSeveritiesSetting.class, new SeverityType[]{SeverityType.HIGH});
+//        frame.setFrameSettingValue(CheckSeveritiesSetting.class, new SeverityType[]{SeverityType.HIGH});
     }
 }

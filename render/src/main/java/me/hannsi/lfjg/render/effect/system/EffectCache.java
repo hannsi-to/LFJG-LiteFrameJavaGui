@@ -7,13 +7,11 @@ import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 
-import java.util.*;
-
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_STENCIL_BUFFER_BIT;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class EffectCache {
-    private LinkedHashMap<String,EffectBase> effectBases;
+    private LinkedHashMap<String, EffectBase> effectBases;
     private boolean needFrameBuffer;
     private FrameBuffer baseFrameBuffer;
 
@@ -25,13 +23,13 @@ public class EffectCache {
         return new EffectCache();
     }
 
-    public EffectCache attachGLObject(GLObject glObject){
+    public EffectCache attachGLObject(GLObject glObject) {
         glObject.setEffectCache(this);
 
         for (Map.Entry<String, EffectBase> effectBaseEntry : effectBases.entrySet()) {
             effectBaseEntry.getValue().create(glObject);
 
-            if(effectBaseEntry.getValue().isNoUseFrameBuffer()){
+            if (effectBaseEntry.getValue().isNoUseFrameBuffer()) {
                 continue;
             }
             needFrameBuffer = true;
@@ -41,7 +39,7 @@ public class EffectCache {
     }
 
     public EffectCache createCache(EffectBase effectBase) {
-        this.effectBases.put(effectBase.getName(),effectBase);
+        this.effectBases.put(effectBase.getName(), effectBase);
 
         new LogGenerator(
                 LogGenerateType.CREATE_CACHE,
@@ -54,12 +52,12 @@ public class EffectCache {
     }
 
     public EffectCache createCache(String name, EffectBase effectBase, int index) {
-        LinkedHashMap<String,EffectBase> newEffectCache = new LinkedHashMap<>();
+        LinkedHashMap<String, EffectBase> newEffectCache = new LinkedHashMap<>();
 
         int i = 0;
-        for (Map.Entry<String,EffectBase> effectBaseIdentifierEntry : effectBases.entrySet()) {
+        for (Map.Entry<String, EffectBase> effectBaseIdentifierEntry : effectBases.entrySet()) {
             if (i == index) {
-                newEffectCache.put(name,effectBase);
+                newEffectCache.put(name, effectBase);
             }
 
             newEffectCache.put(effectBaseIdentifierEntry.getKey(), effectBaseIdentifierEntry.getValue());
@@ -80,33 +78,33 @@ public class EffectCache {
     }
 
     public void push(GLObject glObject) {
-        for (Map.Entry<String,EffectBase> effectBasesEntry : effectBases.entrySet()) {
+        for (Map.Entry<String, EffectBase> effectBasesEntry : effectBases.entrySet()) {
             effectBasesEntry.getValue().push(glObject);
         }
     }
 
     public void pop(GLObject glObject) {
-        for (Map.Entry<String,EffectBase> effectBasesEntry : effectBases.entrySet()) {
+        for (Map.Entry<String, EffectBase> effectBasesEntry : effectBases.entrySet()) {
             effectBasesEntry.getValue().pop(glObject);
         }
     }
 
-    public void drawFrameBuffer(GLObject glObject){
+    public void drawFrameBuffer(GLObject glObject) {
         int index = 0;
         EffectBase lastEffectBase = null;
         for (Map.Entry<String, EffectBase> effectBaseEntry : effectBases.entrySet()) {
             EffectBase effectBase = effectBaseEntry.getValue();
-            if(effectBase.isNoUseFrameBuffer()){
+            if (effectBase.isNoUseFrameBuffer()) {
                 continue;
             }
 
             FrameBuffer nowFrameBuffer = effectBase.getFrameBuffer();
-            if(index == 0){
+            if (index == 0) {
                 nowFrameBuffer.bindFrameBuffer();
                 baseFrameBuffer.drawFrameBuffer(false);
                 effectBase.drawFrameBuffer(baseFrameBuffer);
                 baseFrameBuffer.drawVAORendering();
-            }else{
+            } else {
                 FrameBuffer lastFrameBuffer = lastEffectBase.getFrameBuffer();
 
                 nowFrameBuffer.bindFrameBufferNoClear();
@@ -116,19 +114,20 @@ public class EffectCache {
             }
 
             lastEffectBase = effectBase;
-
             index++;
         }
 
         GLStateCache.bindFrameBuffer(0);
-        if(lastEffectBase != null){
+        if (lastEffectBase != null) {
+            push(glObject);
             lastEffectBase.getFrameBuffer().drawFrameBuffer();
+            pop(glObject);
         }
     }
 
     public void cleanup() {
         StringBuilder ids = new StringBuilder();
-        for (Map.Entry<String,EffectBase> entry : effectBases.entrySet()) {
+        for (Map.Entry<String, EffectBase> entry : effectBases.entrySet()) {
             EffectBase effectBase = entry.getValue();
             String name = entry.getKey();
             effectBase.cleanup();

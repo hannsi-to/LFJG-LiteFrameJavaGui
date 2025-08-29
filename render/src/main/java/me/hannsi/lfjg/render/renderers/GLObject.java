@@ -6,7 +6,6 @@ import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.render.Id;
 import me.hannsi.lfjg.render.animation.system.AnimationCache;
-import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.system.mesh.BufferObjectType;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
@@ -115,24 +114,24 @@ public class GLObject implements Cloneable {
         setupRenderState();
         uploadUniforms();
 
-        if(effectCache != null){
-            if(frameBuffer == null){
-                frameBuffer = new FrameBuffer();
-                frameBuffer.createFrameBuffer();
-                frameBuffer.createMatrix(transform.getModelMatrix(), viewMatrix);
-            }
+        if (effectCache != null) {
+            if (!effectCache.isNeedFrameBuffer()) {
+                effectCache.push(this);
+            } else {
+                if (frameBuffer == null) {
+                    frameBuffer = new FrameBuffer();
+                    frameBuffer.createFrameBuffer();
+                    frameBuffer.createMatrix(new Matrix4f(), viewMatrix);
+                }
 
-            effectCache.push(this);
-            if(effectCache.isNeedFrameBuffer()){
                 frameBuffer.bindFrameBuffer();
             }
         }
         drawVAORendering();
-        if(effectCache != null){
-//            if(effectCache.isNeedFrameBuffer()){
-//                GLStateCache.bindFrameBuffer(0);
-//            }
-            effectCache.pop(this);
+        if (effectCache != null) {
+            if (!effectCache.isNeedFrameBuffer()) {
+                effectCache.pop(this);
+            }
         }
 
         uploadCache();
@@ -142,12 +141,12 @@ public class GLObject implements Cloneable {
         }
     }
 
-    public void drawVAORendering(){
+    public void drawVAORendering() {
         vaoRendering.draw(this);
     }
 
     public void drawFrameBuffer() {
-        if(effectCache != null && effectCache.isNeedFrameBuffer()){
+        if (effectCache != null && effectCache.isNeedFrameBuffer()) {
             effectCache.setBaseFrameBuffer(frameBuffer);
             effectCache.drawFrameBuffer(this);
         }
@@ -174,11 +173,11 @@ public class GLObject implements Cloneable {
     }
 
     private void uploadUniforms() {
-        shaderProgram.setUniform("fragmentShaderType",UploadUniformType.PER_FRAME, FragmentShaderType.OBJECT.getId());
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.OBJECT.getId());
         shaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());
         shaderProgram.setUniform("modelMatrix", UploadUniformType.ON_CHANGE, transform.getModelMatrix());
         shaderProgram.setUniform("viewMatrix", UploadUniformType.ON_CHANGE, viewMatrix);
-        shaderProgram.setUniform("resolution",UploadUniformType.ON_CHANGE,Core.frameBufferSize);
+        shaderProgram.setUniform("resolution", UploadUniformType.ON_CHANGE, Core.frameBufferSize);
         if (mesh.getVboIds().get(BufferObjectType.TEXTURE_BUFFER) != null) {
             shaderProgram.setUniform("textureSampler", UploadUniformType.ONCE, 0);
         }

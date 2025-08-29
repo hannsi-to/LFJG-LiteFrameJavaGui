@@ -3,6 +3,7 @@ package me.hannsi.lfjg.render.system.rendering;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
@@ -85,7 +86,7 @@ public class SplitFrameBuffer {
 
                 FrameBuffer frameBuffer = new FrameBuffer(srcX, srcY, srcWidth, srcHeight);
                 frameBuffer.createFrameBuffer();
-                frameBuffer.createMatrix(mainFrameBuffer.getModelMatrix(),mainFrameBuffer.getViewMatrix());
+                frameBuffer.createMatrix(new Matrix4f(), mainFrameBuffer.getViewMatrix());
 
                 smallFrameBuffers[y][x] = frameBuffer;
             }

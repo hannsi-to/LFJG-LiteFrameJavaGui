@@ -6,6 +6,7 @@ import me.hannsi.lfjg.core.utils.math.io.IOUtil;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
+import org.joml.Matrix4f;
 import org.lwjgl.nanovg.NSVGImage;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
@@ -56,7 +57,7 @@ public class GLSVG extends GLRect {
 
         frameBuffer = new FrameBuffer(0, 0, svgWidth * scaleX, svgHeight * scaleY);
         frameBuffer.createFrameBuffer();
-        frameBuffer.createMatrix(getTransform().getModelMatrix(),getViewMatrix());
+        frameBuffer.createMatrix(new Matrix4f(), getViewMatrix());
 
         svgRenderer = new SVGRenderer();
         svgRenderer.addVertex(0, 0, svgWidth * scaleX, svgHeight * scaleY);

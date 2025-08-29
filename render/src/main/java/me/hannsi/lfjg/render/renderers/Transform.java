@@ -1,7 +1,6 @@
 package me.hannsi.lfjg.render.renderers;
 
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 public class Transform {
@@ -34,6 +33,28 @@ public class Transform {
         this.modelMatrix = modelMatrix;
     }
 
+    public Transform(GLObject glObject, Matrix4f modelMatrix, float x, float y, float width, float height, float centerX, float centerY, float centerZ, float angleX, float angleY, float angleZ, float scaleX, float scaleY, float scaleZ) {
+        this.glObject = glObject;
+        this.modelMatrix = modelMatrix;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.centerX = centerX;
+        this.centerY = centerY;
+        this.centerZ = centerZ;
+        this.angleX = angleX;
+        this.angleY = angleY;
+        this.angleZ = angleZ;
+        this.scaleX = scaleX;
+        this.scaleY = scaleY;
+        this.scaleZ = scaleZ;
+    }
+
+    public Transform newInstance() {
+        return new Transform(glObject, modelMatrix, x, y, width, height, centerX, centerY, centerZ, angleX, angleY, angleZ, scaleX, scaleY, scaleZ);
+    }
+
     public Transform setBound(Vector4f vector4f) {
         return setBound(vector4f.x(), vector4f.y(), vector4f.z(), vector4f.w());
     }
@@ -46,7 +67,7 @@ public class Transform {
         return this;
     }
 
-    public Transform reset(){
+    public Transform reset() {
         this.centerX = x + (width / 2f);
         this.centerY = y + (height / 2f);
         this.centerZ = 0;
