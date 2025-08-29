@@ -40,6 +40,7 @@ public class GLObject implements Cloneable {
     private DrawType drawType;
     private float lineWidth;
     private float pointSize;
+    private boolean needFrameBuffer;
 
     private Transform transform;
 
@@ -118,14 +119,10 @@ public class GLObject implements Cloneable {
             if (!effectCache.isNeedFrameBuffer()) {
                 effectCache.push(this);
             } else {
-                if (frameBuffer == null) {
-                    frameBuffer = new FrameBuffer();
-                    frameBuffer.createFrameBuffer();
-                    frameBuffer.createMatrix(new Matrix4f(), viewMatrix);
-                }
-
-                frameBuffer.bindFrameBuffer();
+                bindFrameBuffer();
             }
+        } else if (needFrameBuffer) {
+            bindFrameBuffer();
         }
         drawVAORendering();
         if (effectCache != null) {
@@ -150,6 +147,16 @@ public class GLObject implements Cloneable {
             effectCache.setBaseFrameBuffer(frameBuffer);
             effectCache.drawFrameBuffer(this);
         }
+    }
+
+    private void bindFrameBuffer() {
+        if (frameBuffer == null) {
+            frameBuffer = new FrameBuffer();
+            frameBuffer.createFrameBuffer();
+            frameBuffer.createMatrix(new Matrix4f(), viewMatrix);
+        }
+
+        frameBuffer.bindFrameBuffer();
     }
 
     private void uploadCache() {
@@ -378,5 +385,13 @@ public class GLObject implements Cloneable {
 
     public void setTransform(Transform transform) {
         this.transform = transform;
+    }
+
+    public boolean isNeedFrameBuffer() {
+        return needFrameBuffer;
+    }
+
+    public void setNeedFrameBuffer(boolean needFrameBuffer) {
+        this.needFrameBuffer = needFrameBuffer;
     }
 }

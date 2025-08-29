@@ -13,7 +13,7 @@ float flashComputeAttenuation(vec2 texCoords, vec2 center, float intensity) {
 }
 
 void flashMain() {
-    vec2 screenSize = gl_FragCoord.xy;
+    vec2 screenSize = resolution.xy;
     vec4 baseColor = texture(frameBufferSampler, outTexture);
     vec2 lightUV = flashScreenPosition / screenSize;
     float attenuation = flashComputeAttenuation(outTexture, lightUV, flashIntensity);

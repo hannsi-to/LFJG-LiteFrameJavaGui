@@ -6,7 +6,7 @@ uniform bool diagonalClippingInvertClip;
 void diagonalClippingMain() {
     vec4 texColor = texture(frameBufferSampler, outTexture);
 
-    vec2 screenPos = gl_FragCoord.xy;
+    vec2 screenPos = resolution.xy;
 
     vec2 toFrag = screenPos - diagonalClippingClipCenter;
     float distanceToLine = toFrag.x * cos(diagonalClippingClipAngle) + toFrag.y * sin(diagonalClippingClipAngle);

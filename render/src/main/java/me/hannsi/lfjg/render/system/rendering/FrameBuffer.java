@@ -166,6 +166,11 @@ public class FrameBuffer {
         vaoRendering.draw(mesh);
     }
 
+    public void bindTexture(int unit) {
+        glActiveTexture(GL_TEXTURE0 + unit);
+        GLStateCache.bindTexture(GL_TEXTURE_2D, textureId);
+    }
+
     public void bindTexture() {
         glActiveTexture(GL_TEXTURE3);
         GLStateCache.bindTexture(GL_TEXTURE_2D, textureId);

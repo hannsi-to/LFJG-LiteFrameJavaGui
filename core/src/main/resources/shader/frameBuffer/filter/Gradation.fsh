@@ -18,8 +18,8 @@ vec2 gradationRotate(vec2 pos, float angle) {
 
 void gradationMain() {
     vec2 uv = outTexture;
-    vec2 rel = uv - gradationCenter / gl_FragCoord.xy;
-    rel.x *= gl_FragCoord.x / gl_FragCoord.y;
+    vec2 rel = uv - gradationCenter / resolution.xy;
+    rel.x *= resolution.x / resolution.y;
 
     vec2 rotated = gradationRotate(rel, gradationAngle);
 

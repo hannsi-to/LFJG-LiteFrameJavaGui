@@ -5,7 +5,7 @@ uniform bool glowUseOriginalColor;
 uniform bool glowOnly;
 uniform float glowSpread;
 
-#define texelSize (1.0 / gl_FragCoord.xy)
+#define texelSize (1.0 / resolution.xy)
 
 vec4 applyGlowBlur(vec2 uv, float spread, float threshold){
     vec4 sum = vec4(0.0);

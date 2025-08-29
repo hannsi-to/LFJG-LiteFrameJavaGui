@@ -2,7 +2,7 @@ uniform vec2 gaussianBlurDirection;
 uniform float gaussianBlurRadius;
 uniform float gaussianBlurValues[256];
 
-#define texelSize (1.0 / gl_FragCoord.xy)
+#define texelSize (1.0 / resolution.xy)
 
 void gaussianBlurMain() {
     vec4 blr = vec4(0.0);

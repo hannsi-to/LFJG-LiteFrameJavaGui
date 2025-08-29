@@ -102,14 +102,14 @@ public class EffectCache {
             if (index == 0) {
                 nowFrameBuffer.bindFrameBuffer();
                 baseFrameBuffer.drawFrameBuffer(false);
-                effectBase.drawFrameBuffer(baseFrameBuffer);
+                effectBase.drawFrameBuffer(nowFrameBuffer);
                 baseFrameBuffer.drawVAORendering();
             } else {
                 FrameBuffer lastFrameBuffer = lastEffectBase.getFrameBuffer();
 
                 nowFrameBuffer.bindFrameBufferNoClear();
                 lastFrameBuffer.drawFrameBuffer(false);
-                effectBase.drawFrameBuffer(lastFrameBuffer);
+                effectBase.drawFrameBuffer(nowFrameBuffer);
                 lastFrameBuffer.drawVAORendering();
             }
 

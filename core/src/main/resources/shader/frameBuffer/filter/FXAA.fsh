@@ -1,6 +1,6 @@
 uniform bool fxaaUseAlpha;
 
-#define texelStep vec2(1 / gl_FragCoord.x, 1 / gl_FragCoord.y)
+#define texelStep vec2(1 / resolution.x, 1 / resolution.y)
 
 void fxaaMain() {
     vec4 rgbaNW = texture(frameBufferSampler, outTexture + vec2(-texelStep.x, -texelStep.y));

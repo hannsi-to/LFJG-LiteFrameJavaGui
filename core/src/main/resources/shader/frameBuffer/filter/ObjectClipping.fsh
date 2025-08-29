@@ -1,19 +1,11 @@
-#version 330
+uniform sampler2D objectClippingTextureSampler;
+uniform bool objectClippingInvert;
 
-in vec4 outPosition;
-in vec2 outTexture;
+void objectClippingMain() {
+    vec4 color = texture(frameBufferSampler, outTexture);
+    vec4 mask = texture(objectClippingTextureSampler, outTexture);
 
-out vec4 fragColor;
-
-uniform sampler2D textureSampler;
-uniform sampler2D clippingTextureSampler;
-uniform bool invert;
-
-void main() {
-    vec4 color = texture(textureSampler, outTexture);
-    vec4 mask = texture(clippingTextureSampler, outTexture);
-
-    if (invert ? mask.a != 0.0 : mask.a == 0.0) {
+    if (objectClippingInvert ? mask.a != 0.0 : mask.a == 0.0) {
         discard;
     }
 
