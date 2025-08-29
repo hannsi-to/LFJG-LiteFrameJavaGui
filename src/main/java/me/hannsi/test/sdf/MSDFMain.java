@@ -9,7 +9,8 @@ import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.setting.settings.SeverityType;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.effect.effects.*;
+import me.hannsi.lfjg.render.effect.effects.DiagonalClipping;
+import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.renderers.text.GLText;
@@ -71,7 +72,8 @@ public class MSDFMain implements LFJGFrame {
 //                .createCache(ColorChanger.createColorChanger("ColorChanger1").targetColor(Color.of(17, 40, 133,255)).newColor(Color.of(255,0,0,255)))
 //                .createCache(ColorCorrection.createColorCorrection("ColorCorrection1"))
                 .createCache(DiagonalClipping.createDiagonalClipping("DiagonalClipping"))
-                .attachGLObject(glRect);
+                .attachGLObject(glRect)
+                .attachGLObject(glText);
     }
 
     @Override
@@ -81,7 +83,7 @@ public class MSDFMain implements LFJGFrame {
 //        ((Translate) effectCache.getEffectBase("Translate1")).x(500);
 
         glRect.draw();
-//        glText.draw();
+        glText.draw();
 //        glLine.draw();
 
 
