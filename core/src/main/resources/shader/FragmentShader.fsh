@@ -39,6 +39,7 @@ uniform ivec2 resolution;
 #include "shader/frameBuffer/filter/Monochrome.fsh"
 #include "shader/frameBuffer/filter/ObjectClipping.fsh"
 #include "shader/frameBuffer/filter/Pixelate.fsh"
+#include "shader/frameBuffer/filter/RadialBlur.fsh"
 
 void main() {
     switch (fragmentShaderType){
@@ -68,5 +69,6 @@ void main() {
         case 23: monochromeMain(); break;
         case 24: objectClippingMain(); break;
         case 25: pixelateMain(); break;
+        case 26: radialBlurMain(); break;
     }
 }

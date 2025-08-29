@@ -7,7 +7,7 @@ import me.hannsi.lfjg.core.utils.toolkit.UnicodeBlocks;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.effect.effects.Pixelate;
+import me.hannsi.lfjg.render.effect.effects.RadialBlur;
 import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
@@ -82,7 +82,8 @@ public class MSDFMain implements LFJGFrame {
 //                .createCache(LensBlur.createLensBlur("LensBlur1"))
 //                .createCache(LuminanceKey.createLuminanceKey("LuminanceKey1"))
 //                .createCache(Monochrome.createMonochrome("Monochrome"))
-                .createCache(Pixelate.createPixelate("Pixelate1"))
+//                .createCache(Pixelate.createPixelate("Pixelate1"))
+                .createCache(RadialBlur.createRadialBlur("RadialBlur1"))
                 .attachGLObject(glRect)
                 .attachGLObject(glText);
     }
