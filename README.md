@@ -13,7 +13,8 @@ LiteFrameJavaGui is a lightweight Java GUI framework.
 ![alt](https://github.com/hannsi-to/LFJG-LiteFrameJavaGui/blob/main/wiki/Demo3.png)<br>
 
 ## Wiki
-![alt](https://github.com/hannsi-to/LFJG-LiteFrameJavaGui/wiki)
+![https://github.com/hannsi-to/LFJG-LiteFrameJavaGui/wiki
+](https://github.com/hannsi-to/LFJG-LiteFrameJavaGui/wiki)
 
 ## License
 
