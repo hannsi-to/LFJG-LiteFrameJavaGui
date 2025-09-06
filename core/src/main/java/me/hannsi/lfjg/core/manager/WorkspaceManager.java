@@ -3,9 +3,7 @@ package me.hannsi.lfjg.core.manager;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.utils.toolkit.ANSIFormat;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UncheckedIOException;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,6 +32,16 @@ public class WorkspaceManager {
 
     public static String getCurrentWorkspace() {
         return currentWorkspace;
+    }
+
+    private static byte[] readAllBytes(InputStream in) throws IOException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        byte[] data = new byte[8192];
+        int n;
+        while ((n = in.read(data, 0, data.length)) != -1) {
+            buffer.write(data, 0, n);
+        }
+        return buffer.toByteArray();
     }
 
     public void createDirectories() {
@@ -70,15 +78,29 @@ public class WorkspaceManager {
                 try (ZipInputStream zip = new ZipInputStream(Files.newInputStream(jarPath))) {
                     ZipEntry entry;
                     StringBuilder debugBuilder = new StringBuilder();
+
                     while ((entry = zip.getNextEntry()) != null) {
                         String name = entry.getName();
+
                         if (isTargetResource(name) && !entry.isDirectory()) {
                             Path path = outputPath.resolve(name);
                             Files.createDirectories(path.getParent());
-                            Files.copy(zip, path, StandardCopyOption.REPLACE_EXISTING);
+
+                            byte[] jarBytes = readAllBytes(zip);
+
+                            if (Files.exists(path)) {
+                                byte[] existingBytes = Files.readAllBytes(path);
+                                if (Arrays.equals(jarBytes, existingBytes)) {
+                                    debugBuilder.append("\tSkipped (no change): ").append(name).append(" -> ").append(path).append("\n");
+                                    continue;
+                                }
+                            }
+
+                            Files.write(path, jarBytes);
                             debugBuilder.append("\tCopied: ").append(name).append(" -> ").append(path).append("\n");
                         }
                     }
+
                     DebugLog.debug(getClass(), debugBuilder.toString());
                     DebugLog.debug(getClass(), "Resources copied from JAR.");
                 }
