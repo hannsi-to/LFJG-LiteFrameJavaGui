@@ -18,7 +18,7 @@ public class MainFrame implements LFJGFrame {
         frame.updateLFJGLContext();
 
         glVideo = new GLVideo("TestVideo1");
-        glVideo.video(Location.fromFile("C:\\Users\\hanns\\idea-project\\LFJG-LiteFrameJavaGui\\src\\main\\java\\me\\hannsi\\example\\wikiPage10\\sample.mp4"), 0, 0, frame.getWindowWidth(), frame.getWindowHeight());
+        glVideo.video(Location.fromResource("video/sample.mp4"), 0, 0, frame.getWindowWidth(), frame.getWindowHeight());
     }
 
     @Override

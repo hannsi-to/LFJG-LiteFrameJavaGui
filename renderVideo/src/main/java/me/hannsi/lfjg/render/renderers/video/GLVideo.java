@@ -63,5 +63,9 @@ public class GLVideo extends GLRect {
 
         super.cleanup();
     }
+
+    public VideoFrameSystem getVideoFrameSystem() {
+        return videoFrameSystem;
+    }
 }
 
