@@ -48,6 +48,14 @@ public class EventManager {
         }
     }
 
+    public void unregister(Object handler) {
+        handlers.remove(handler);
+
+        for (List<HandlerMethod> handlerMethods : eventHandlers.values()) {
+            handlerMethods.removeIf(h -> h.target.equals(handler));
+        }
+    }
+
     public boolean hasRegistered(Object handler) {
         return handlers.contains(handler);
     }
