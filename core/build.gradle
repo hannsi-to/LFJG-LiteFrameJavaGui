@@ -17,21 +17,25 @@ dependencies {
     implementation "org.apache.logging.log4j:log4j-core:2.23.1"
     annotationProcessor "org.apache.logging.log4j:log4j-core:2.23.1"
 
-    // LWJGL BOM
-    api platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+    if (lwjglVersion == 2) {
 
-    //LWJGL
-    api "org.lwjgl:lwjgl"
-    runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
+    } else if (lwjglVersion == 3) {
+        // LWJGL BOM
+        api platform("org.lwjgl:lwjgl-bom:$lwjgl3Version")
 
-    //STB
-    api "org.lwjgl:lwjgl-stb"
-    runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
+        //LWJGL
+        api "org.lwjgl:lwjgl"
+        runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
 
-    // Math & AWT
-    api "org.joml:joml:$jomlVersion"
-    api "org.joml:joml-primitives:$jomlprimitivesVersion"
-    api "org.lwjglx:lwjgl3-awt:$lwjgl3awtVersion"
+        //STB
+        api "org.lwjgl:lwjgl-stb"
+        runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
+
+        // Math & AWT
+        api "org.joml:joml:$jomlVersion"
+        api "org.joml:joml-primitives:$jomlprimitivesVersion"
+        api "org.lwjglx:lwjgl3-awt:$lwjgl3awtVersion"
+    }
 
     // Reflection
     implementation "org.reflections:reflections:0.10.2"

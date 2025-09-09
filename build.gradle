@@ -8,7 +8,9 @@ group = "me.hannsi.lfjg"
 version = "1.0-SNAPSHOT"
 
 ext {
-    lwjglVersion = "3.3.4"
+    lwjglVersion = 3
+    lwjgl2Version = "2.9.3"
+    lwjgl3Version = "3.3.4"
     jomlVersion = "1.10.7"
     lwjgl3awtVersion = "0.1.8"
     steamworks4jVersion = "1.9.0"
@@ -25,7 +27,7 @@ repositories {
 dependencies {
     implementation project(":core")
     implementation project(":audio")
-    implementation project(":frame")
+    implementation project(":frame3")
     implementation project(":jcef")
     implementation project(":physic")
     implementation project(":render")

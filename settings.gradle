@@ -7,4 +7,6 @@ include 'physic'
 include 'render'
 include 'renderVideo'
 include 'renderText'
+include 'frame2'
+include 'frame3'
 

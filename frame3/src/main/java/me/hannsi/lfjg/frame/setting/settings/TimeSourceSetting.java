@@ -1,9 +1,9 @@
 package me.hannsi.lfjg.frame.setting.settings;
 
+import me.hannsi.lfjg.core.utils.type.types.TimeSourceType;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
-import me.hannsi.lfjg.core.utils.type.types.TimeSourceType;
 
 /**
  * Represents a setting for the time source of a frame.

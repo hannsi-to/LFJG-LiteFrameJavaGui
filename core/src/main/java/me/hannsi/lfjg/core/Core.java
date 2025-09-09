@@ -21,15 +21,19 @@ public class Core {
     public static final String DEFAULT_LFJG_RENDER_SYSTEM_PATH = ".render";
 
     public static final String DEFAULT_LFJG_AUDIO_CORE_CLASS_NAME = ".AudioCore";
-    public static final String DEFAULT_LFJG_FRAME_CORE_CLASS_NAME = ".FrameCore";
+    public static final String DEFAULT_LFJG_FRAME2_CORE_CLASS_NAME = ".Frame2Core";
+    public static final String DEFAULT_LFJG_FRAME3_CORE_CLASS_NAME = ".Frame3Core";
     public static final String DEFAULT_LFJG_JCEF_CORE_CLASS_NAME = ".JCefCore";
     public static final String DEFAULT_LFJG_PHYSIC_CORE_CLASS_NAME = ".PhysicCore";
     public static final String DEFAULT_LFJG_RENDER_CORE_CLASS_NAME = ".RenderCore";
     public static final String DEFAULT_LFJG_RENDER_TEXT_CORE_CLASS_NAME = ".RenderTextCore";
     public static final String DEFAULT_LFJG_RENDER_VIDEO_CORE_CLASS_NAME = ".RenderVideoCore";
 
+    public static final int LWJGL_VERSION;
+
     public static final boolean enableLFJGAudioSystem;
-    public static final boolean enableLFJGFrameSystem;
+    public static final boolean enableLFJGFrame2System;
+    public static final boolean enableLFJGFrame3System;
     public static final boolean enableLFJGJCefSystem;
     public static final boolean enableLFJGPhysicSystem;
     public static final boolean enableLFJGRenderSystem;
@@ -54,8 +58,20 @@ public class Core {
     public static KeyboardInfo keyboardInfo;
 
     static {
+        if (isLWJGL3()) {
+            LWJGL_VERSION = 3;
+            DebugLog.info(Core.class, "LWJGL3 is loaded");
+        } else if (isLWJGL2()) {
+            LWJGL_VERSION = 2;
+            DebugLog.info(Core.class, "LWJGL2 is loaded");
+        } else {
+            LWJGL_VERSION = -1;
+            DebugLog.error(Core.class, "LWJGL not found");
+        }
+
         enableLFJGAudioSystem = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_AUDIO_SYSTEM_PATH + DEFAULT_LFJG_AUDIO_CORE_CLASS_NAME);
-        enableLFJGFrameSystem = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME_CORE_CLASS_NAME);
+        enableLFJGFrame2System = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME2_CORE_CLASS_NAME);
+        enableLFJGFrame3System = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME3_CORE_CLASS_NAME);
         enableLFJGJCefSystem = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_JCEF_SYSTEM_PATH + DEFAULT_LFJG_JCEF_CORE_CLASS_NAME);
         enableLFJGPhysicSystem = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_PHYSIC_SYSTEM_PATH + DEFAULT_LFJG_PHYSIC_CORE_CLASS_NAME);
         enableLFJGRenderSystem = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_CORE_CLASS_NAME);
@@ -67,8 +83,13 @@ public class Core {
             lfjgAudioServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
             DebugLog.info(instance.getClass(), lfjgAudioServiceData.toString());
         }
-        if (enableLFJGFrameSystem) {
-            Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME_CORE_CLASS_NAME);
+        if (enableLFJGFrame2System) {
+            Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME2_CORE_CLASS_NAME);
+            lfjgFrameServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
+            DebugLog.info(instance.getClass(), lfjgFrameServiceData.toString());
+        }
+        if (enableLFJGFrame3System) {
+            Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME3_CORE_CLASS_NAME);
             lfjgFrameServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
             DebugLog.info(instance.getClass(), lfjgFrameServiceData.toString());
         }
@@ -99,7 +120,25 @@ public class Core {
         }
     }
 
-    public static Object invokeStaticMethod(String className, String methodName, Object... args) {
+    private static boolean isLWJGL3() {
+        try {
+            Class.forName("org.lwjgl.system.MemoryUtil");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
+    private static boolean isLWJGL2() {
+        try {
+            Class.forName("org.lwjgl.BufferUtils");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
+    private static Object invokeStaticMethod(String className, String methodName, Object... args) {
         Object result = null;
         try {
             result = ClassUtil.invokeStaticMethod(className, methodName, args);
@@ -693,7 +732,7 @@ public class Core {
         }
 
         public static double glfwGetTime() {
-            if (!enableLFJGFrameSystem) {
+            if (!enableLFJGFrame3System) {
                 return -1d;
             }
 

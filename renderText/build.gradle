@@ -12,11 +12,11 @@ repositories {
 }
 
 dependencies {
-    implementation project(":core")
-    implementation project(":render")
-
     // GSON
     implementation "com.google.code.gson:gson:2.13.1"
+
+    implementation project(":core")
+    implementation project(":render")
 }
 
 test {

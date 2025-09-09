@@ -14,13 +14,15 @@ repositories {
 dependencies {
     implementation project(":core")
 
-    // OpenGL
-    api "org.lwjgl:lwjgl-opengl"
-    runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
+    if (lwjglVersion == 3) {
+        // OpenGL
+        api "org.lwjgl:lwjgl-opengl"
+        runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
 
-    // Assimp
-    api "org.lwjgl:lwjgl-assimp"
-    runtimeOnly "org.lwjgl:lwjgl-assimp::$lwjglNatives"
+        // Assimp
+        api "org.lwjgl:lwjgl-assimp"
+        runtimeOnly "org.lwjgl:lwjgl-assimp::$lwjglNatives"
+    }
 }
 
 test {
