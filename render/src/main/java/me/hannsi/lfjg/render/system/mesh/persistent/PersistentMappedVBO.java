@@ -13,7 +13,7 @@ public class PersistentMappedVBO implements PersistentMappedBuffer {
     private final int sizeInBytes;
 
     private int currentIndex = 0;
-
+    
     public PersistentMappedVBO(int size, int flags) {
         this.sizeInBytes = size * Float.BYTES;
 
