@@ -1,23 +1,21 @@
 package me.hannsi.lfjg.render.effect.effects;
 
-import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
+import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
-
-public class ChromaticAberration  extends EffectBase {
+public class ChromaticAberration extends EffectBase {
     private float offsetAmount = 0.008f;
     private float angle = MathHelper.toRadians(90);
     private float strength = 0.7f;
     private AberrationType aberrationType = AberrationType.RED_BLUE_A;
 
     ChromaticAberration(String name) {
-        super(name,false);
+        super(name, false);
     }
 
     public static ChromaticAberration createChromaticAberration(String name) {
@@ -71,11 +69,11 @@ public class ChromaticAberration  extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.CHROMATIC_ABERRATION.getId());
-        shaderProgram.setUniform("chromaticAberrationOffsetAmount", UploadUniformType.ON_CHANGE, offsetAmount);
-        shaderProgram.setUniform("chromaticAberrationAngle", UploadUniformType.ON_CHANGE, angle);
-        shaderProgram.setUniform("chromaticAberrationStrength", UploadUniformType.ON_CHANGE, strength);
-        shaderProgram.setUniform("aberrationType", UploadUniformType.ON_CHANGE, aberrationType.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.CHROMATIC_ABERRATION.getId());
+        LFJGRenderContext.shaderProgram.setUniform("chromaticAberrationOffsetAmount", UploadUniformType.ON_CHANGE, offsetAmount);
+        LFJGRenderContext.shaderProgram.setUniform("chromaticAberrationAngle", UploadUniformType.ON_CHANGE, angle);
+        LFJGRenderContext.shaderProgram.setUniform("chromaticAberrationStrength", UploadUniformType.ON_CHANGE, strength);
+        LFJGRenderContext.shaderProgram.setUniform("aberrationType", UploadUniformType.ON_CHANGE, aberrationType.getId());
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

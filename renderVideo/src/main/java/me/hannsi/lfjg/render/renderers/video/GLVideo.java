@@ -7,11 +7,8 @@ import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import me.hannsi.lfjg.render.system.video.VideoFrameSystem;
-
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 
 public class GLVideo extends GLRect {
     private VideoFrameSystem videoFrameSystem;
@@ -50,9 +47,9 @@ public class GLVideo extends GLRect {
             this.getShaderProgram().setUniform("objectReplaceColor", UploadUniformType.ON_CHANGE, false);
             this.getShaderProgram().setUniform("objectBlendMode", UploadUniformType.ON_CHANGE, blendType.getId());
 
-            GLStateCache.enable(GL_TEXTURE_2D);
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, videoFrameSystem.getTextureId());
+            GLStateCache.enable(GL11.GL_TEXTURE_2D);
+            GL13.glActiveTexture(GL13.GL_TEXTURE0);
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, videoFrameSystem.getTextureId());
             super.drawVAORendering();
         }
     }

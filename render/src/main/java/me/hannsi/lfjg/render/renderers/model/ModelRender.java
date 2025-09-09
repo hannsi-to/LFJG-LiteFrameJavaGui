@@ -4,6 +4,7 @@ import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureLoader;
 import me.hannsi.lfjg.core.utils.toolkit.Camera;
+import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.debug.exceptions.model.ModelException;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.render.system.model.Entity;
@@ -14,13 +15,11 @@ import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 
 import java.util.Collection;
 import java.util.List;
-
-import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL13.*;
 
 public class ModelRender {
     private final VAORendering vaoRendering;
@@ -55,21 +54,21 @@ public class ModelRender {
     }
 
     public void render() {
-        GLStateCache.enable(GL_DEPTH_TEST);
+        GLStateCache.enable(GL11.GL_DEPTH_TEST);
 
-        shaderProgram.bind();
+        LFJGRenderContext.shaderProgram.bind();
 
-        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.MODEL.getId());
-        shaderProgram.setUniform("textureSampler", UploadUniformType.ONCE, 0);
-        shaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection3D.getProjMatrix());
-        shaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, camera.getViewMatrix());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.MODEL.getId());
+        LFJGRenderContext.shaderProgram.setUniform("textureSampler", UploadUniformType.ONCE, 0);
+        LFJGRenderContext.shaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection3D.getProjMatrix());
+        LFJGRenderContext.shaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, camera.getViewMatrix());
 
         Collection<Model> models = modelCache.getModels().values();
         for (Model model : models) {
             List<Entity> entities = model.getEntities();
 
             for (Material material : model.getMaterials()) {
-                shaderProgram.setUniform("modelMaterialType", UploadUniformType.PER_FRAME, material.getMaterialType().getId());
+                LFJGRenderContext.shaderProgram.setUniform("modelMaterialType", UploadUniformType.PER_FRAME, material.getMaterialType().getId());
 
                 switch (material.getMaterialType()) {
                     case NO_MATERIAL:
@@ -80,8 +79,8 @@ public class ModelRender {
                             throw new ModelException("To use a texture material, TextureCache must be set.");
                         }
 
-                        glActiveTexture(GL_TEXTURE0);
-                        GLStateCache.enable(GL_TEXTURE_2D);
+                        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+                        GLStateCache.enable(GL11.GL_TEXTURE_2D);
 
                         TextureLoader textureLoader = textureCache.getTexture(material.getTextureLocation().path());
                         if (textureLoader == null) {
@@ -95,8 +94,8 @@ public class ModelRender {
 
                 for (Mesh mesh : material.getMeshes()) {
                     for (Entity entity : entities) {
-                        shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, entity.getModelMatrix());
-                        vaoRendering.draw(mesh, GL_TRIANGLES);
+                        LFJGRenderContext.shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, entity.getModelMatrix());
+                        vaoRendering.draw(mesh, GL11.GL_TRIANGLES);
                     }
                 }
             }

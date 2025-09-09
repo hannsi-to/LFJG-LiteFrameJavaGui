@@ -5,8 +5,6 @@ import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.system.scene.SceneSystem;
 
-import static me.hannsi.lfjg.frame.LFJGContext.frame;
-
 public class MainFrame implements LFJGFrame {
     SceneSystem sceneSystem;
 
@@ -16,18 +14,18 @@ public class MainFrame implements LFJGFrame {
     }
 
     public void setFrame() {
-        frame = new Frame(this, "TestGuiFrame");
+        LFJGContext.frame = new Frame(this, "TestGuiFrame");
     }
 
     @Override
     public void init() {
-        frame.updateLFJGLContext();
+        LFJGContext.frame.updateLFJGLContext();
 
         sceneSystem = SceneSystem.initSceneSystem()
-                .addScene(new Demo1(frame).getScene())
-                .addScene(new Demo2(frame).getScene())
-                .addScene(new Demo3(frame).getScene())
-                .addScene(new Demo4(frame).getScene())
+                .addScene(new Demo1(LFJGContext.frame).getScene())
+                .addScene(new Demo2(LFJGContext.frame).getScene())
+                .addScene(new Demo3(LFJGContext.frame).getScene())
+                .addScene(new Demo4(LFJGContext.frame).getScene())
                 .setCurrentScene("Demo4")
                 .initScenes();
     }

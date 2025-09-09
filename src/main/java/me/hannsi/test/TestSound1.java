@@ -6,8 +6,7 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
 import org.joml.Vector3f;
-
-import static org.lwjgl.openal.AL11.AL_EXPONENT_DISTANCE;
+import org.lwjgl.openal.AL11;
 
 public class TestSound1 implements IScene {
     public Scene scene;
@@ -24,7 +23,7 @@ public class TestSound1 implements IScene {
     public void init() {
         AudioDevices audioDevices = new AudioDevices();
         soundCache = SoundCache.createSoundCache()
-                .setAttenuationModel(AL_EXPONENT_DISTANCE)
+                .setAttenuationModel(AL11.AL_EXPONENT_DISTANCE)
                 .setListener(new SoundListener(new Vector3f(0, 0, 0)))
                 .createCache(
                         "test",

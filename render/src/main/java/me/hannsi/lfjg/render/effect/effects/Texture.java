@@ -1,16 +1,14 @@
 package me.hannsi.lfjg.render.effect.effects;
 
 import me.hannsi.lfjg.core.utils.graphics.image.TextureLoader;
+import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
-
-import static me.hannsi.lfjg.render.LFJGRenderContext.textureCache;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 
 public class Texture extends EffectBase {
     private TextureLoader textureLoader;
@@ -26,7 +24,7 @@ public class Texture extends EffectBase {
     }
 
     public Texture textureName(String textureName) {
-        textureLoader = textureCache.getTexture(textureName);
+        textureLoader = LFJGRenderContext.textureCache.getTexture(textureName);
         return this;
     }
 
@@ -42,12 +40,12 @@ public class Texture extends EffectBase {
 
     @Override
     public void push(GLObject baseGLObject) {
-        GLStateCache.enable(GL_TEXTURE_2D);
-        glActiveTexture(GL_TEXTURE0);
+        GLStateCache.enable(GL11.GL_TEXTURE_2D);
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
         if (textureLoader != null) {
             textureLoader.bind();
         } else {
-            GLStateCache.bindTexture(GL_TEXTURE_2D, textureId);
+            GLStateCache.bindTexture(GL11.GL_TEXTURE_2D, textureId);
         }
 
         baseGLObject.getShaderProgram().setUniform("objectReplaceColor", UploadUniformType.ON_CHANGE, false);

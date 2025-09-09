@@ -9,13 +9,12 @@ import me.hannsi.lfjg.core.utils.type.types.LocationType;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.Java2DFrameConverter;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.ByteBuffer;
-
-import static org.lwjgl.opengl.GL11.*;
 
 public class VideoFrameSystem {
     private Location location;
@@ -56,7 +55,7 @@ public class VideoFrameSystem {
         }
 
         if (textureId != -1) {
-            glDeleteTextures(textureId);
+            GL11.glDeleteTextures(textureId);
             textureId = -1;
         }
 
@@ -184,18 +183,18 @@ public class VideoFrameSystem {
                 height = image.getHeight();
 
                 if (textureId == -1) {
-                    textureId = glGenTextures();
+                    textureId = GL11.glGenTextures();
 
-                    glBindTexture(GL_TEXTURE_2D, textureId);
-                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-                    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, byteImage);
-                    glBindTexture(GL_TEXTURE_2D, 0);
+                    GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
+                    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+                    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+                    GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, byteImage);
+                    GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
                 }
 
-                glBindTexture(GL_TEXTURE_2D, textureId);
-                glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, byteImage);
-                glBindTexture(GL_TEXTURE_2D, 0);
+                GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
+                GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, 0, 0, width, height, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, byteImage);
+                GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
             }
         }
     }

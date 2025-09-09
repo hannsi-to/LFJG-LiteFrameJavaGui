@@ -22,12 +22,10 @@ import org.cef.CefClient;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefBrowserOsr;
 import org.joml.Vector2f;
+import org.lwjgl.glfw.GLFW;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-
-import static me.hannsi.lfjg.frame.LFJGContext.frame;
-import static org.lwjgl.glfw.GLFW.*;
 
 public class TestGuiFrame implements LFJGFrame {
     private static final String URL = "https://google.com";
@@ -55,14 +53,14 @@ public class TestGuiFrame implements LFJGFrame {
     }
 
     public void setFrame() {
-        frame = new Frame(this, "TestGuiFrame");
+        LFJGContext.frame = new Frame(this, "TestGuiFrame");
     }
 
     @Override
     public void init() {
         IFrame.eventManager.register(this);
 
-        frame.updateLFJGLContext();
+        LFJGContext.frame.updateLFJGLContext();
         Core.mouseInfo = new MouseInfo();
         Core.keyboardInfo = new KeyboardInfo();
         camera = new Camera();
@@ -73,13 +71,13 @@ public class TestGuiFrame implements LFJGFrame {
 
         sceneSystem = SceneSystem.initSceneSystem()
                 .addScene(new TestScene1().getScene())
-                .addScene(new TestScene2(frame).getScene())
-                .addScene(new TestScene3(frame).getScene())
-                .addScene(new TestScene4(frame).getScene())
-                .addScene(new TestSound1(frame).getScene())
-                .addScene(new TestVideo1(frame).getScene())
-                .addScene(new TestPhysic1(frame).getScene())
-                .addScene(new Test3D1(frame, this).getScene())
+                .addScene(new TestScene2(LFJGContext.frame).getScene())
+                .addScene(new TestScene3(LFJGContext.frame).getScene())
+                .addScene(new TestScene4(LFJGContext.frame).getScene())
+                .addScene(new TestSound1(LFJGContext.frame).getScene())
+                .addScene(new TestVideo1(LFJGContext.frame).getScene())
+                .addScene(new TestPhysic1(LFJGContext.frame).getScene())
+                .addScene(new Test3D1(LFJGContext.frame, this).getScene())
                 .setCurrentScene("TestVideo1")
                 .initScenes();
 
@@ -165,19 +163,19 @@ public class TestGuiFrame implements LFJGFrame {
         sceneSystem.drawFrameScenes();
 
         float move = 0.01f;
-        if (isKeyPressed(GLFW_KEY_W)) {
+        if (isKeyPressed(GLFW.GLFW_KEY_W)) {
             camera.moveForward(move);
-        } else if (isKeyPressed(GLFW_KEY_S)) {
+        } else if (isKeyPressed(GLFW.GLFW_KEY_S)) {
             camera.moveBackwards(move);
         }
-        if (isKeyPressed(GLFW_KEY_A)) {
+        if (isKeyPressed(GLFW.GLFW_KEY_A)) {
             camera.moveLeft(move);
-        } else if (isKeyPressed(GLFW_KEY_D)) {
+        } else if (isKeyPressed(GLFW.GLFW_KEY_D)) {
             camera.moveRight(move);
         }
-        if (isKeyPressed(GLFW_KEY_SPACE)) {
+        if (isKeyPressed(GLFW.GLFW_KEY_SPACE)) {
             camera.moveUp(move);
-        } else if (isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
+        } else if (isKeyPressed(GLFW.GLFW_KEY_LEFT_SHIFT)) {
             camera.moveDown(move);
         }
 
@@ -192,7 +190,7 @@ public class TestGuiFrame implements LFJGFrame {
     }
 
     public boolean isKeyPressed(int keyCode) {
-        return glfwGetKey(frame.getWindowID(), keyCode) == GLFW_PRESS;
+        return GLFW.glfwGetKey(LFJGContext.frame.getWindowID(), keyCode) == GLFW.GLFW_PRESS;
     }
 
     @Override
@@ -212,14 +210,14 @@ public class TestGuiFrame implements LFJGFrame {
 
     @Override
     public void setFrameSetting() {
-        frame.setFrameSettingValue(RefreshRateSetting.class, -1);
-        frame.setFrameSettingValue(MonitorSetting.class, MonitorType.BORDERLESS);
-        frame.setFrameSettingValue(VSyncSetting.class, VSyncType.V_SYNC_OFF);
-        frame.setFrameSettingValue(FloatingSetting.class, false);
-        frame.setFrameSettingValue(IconSetting.class, Location.fromResource("icon/salad_x32.png"));
-        frame.setFrameSettingValue(AntiAliasingSetting.class, AntiAliasingType.OFF);
-        frame.setFrameSettingValue(WidthSetting.class, 1920);
-        frame.setFrameSettingValue(HeightSetting.class, 1080);
+        LFJGContext.frame.setFrameSettingValue(RefreshRateSetting.class, -1);
+        LFJGContext.frame.setFrameSettingValue(MonitorSetting.class, MonitorType.BORDERLESS);
+        LFJGContext.frame.setFrameSettingValue(VSyncSetting.class, VSyncType.V_SYNC_OFF);
+        LFJGContext.frame.setFrameSettingValue(FloatingSetting.class, false);
+        LFJGContext.frame.setFrameSettingValue(IconSetting.class, Location.fromResource("icon/salad_x32.png"));
+        LFJGContext.frame.setFrameSettingValue(AntiAliasingSetting.class, AntiAliasingType.OFF);
+        LFJGContext.frame.setFrameSettingValue(WidthSetting.class, 1920);
+        LFJGContext.frame.setFrameSettingValue(HeightSetting.class, 1080);
     }
 
     @EventHandler

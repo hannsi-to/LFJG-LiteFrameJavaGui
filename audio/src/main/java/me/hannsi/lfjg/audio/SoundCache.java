@@ -6,18 +6,12 @@ import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.toolkit.Camera;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.lwjgl.openal.ALC;
-import org.lwjgl.openal.ALCCapabilities;
+import org.lwjgl.openal.*;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
-
-import static me.hannsi.lfjg.audio.LFJGOpenALContext.openALDevice;
-import static org.lwjgl.openal.AL.createCapabilities;
-import static org.lwjgl.openal.AL10.alDistanceModel;
-import static org.lwjgl.openal.ALC10.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class SoundCache {
     private final long context;
@@ -27,17 +21,17 @@ public class SoundCache {
     SoundCache(String desiredDevice) {
         soundDataList = new HashMap<>();
 
-        openALDevice = alcOpenDevice(desiredDevice);
-        if (openALDevice == NULL) {
+        LFJGOpenALContext.openALDevice = ALC10.alcOpenDevice(desiredDevice);
+        if (LFJGOpenALContext.openALDevice == MemoryUtil.NULL) {
             throw new IllegalStateException("Failed to open the default OpenAL device.");
         }
-        ALCCapabilities deviceCaps = ALC.createCapabilities(openALDevice);
-        this.context = alcCreateContext(openALDevice, (IntBuffer) null);
-        if (context == NULL) {
+        ALCCapabilities deviceCaps = ALC.createCapabilities(LFJGOpenALContext.openALDevice);
+        this.context = ALC10.alcCreateContext(LFJGOpenALContext.openALDevice, (IntBuffer) null);
+        if (context == MemoryUtil.NULL) {
             throw new IllegalStateException("Failed to create OpenAL context.");
         }
-        alcMakeContextCurrent(context);
-        createCapabilities(deviceCaps);
+        ALC10.alcMakeContextCurrent(context);
+        AL.createCapabilities(deviceCaps);
     }
 
     public static SoundCache createSoundCache() {
@@ -66,11 +60,11 @@ public class SoundCache {
             soundData.cleanup();
         });
         soundDataList.clear();
-        if (context != NULL) {
-            alcDestroyContext(context);
+        if (context != MemoryUtil.NULL) {
+            ALC10.alcDestroyContext(context);
         }
-        if (openALDevice != NULL) {
-            alcCloseDevice(openALDevice);
+        if (LFJGOpenALContext.openALDevice != MemoryUtil.NULL) {
+            ALC10.alcCloseDevice(LFJGOpenALContext.openALDevice);
         }
 
         new LogGenerator(
@@ -89,7 +83,7 @@ public class SoundCache {
     }
 
     public SoundCache setAttenuationModel(int model) {
-        alDistanceModel(model);
+        AL10.alDistanceModel(model);
         return this;
     }
 
@@ -108,7 +102,7 @@ public class SoundCache {
     }
 
     public long getOpenALDevice() {
-        return openALDevice;
+        return LFJGOpenALContext.openALDevice;
     }
 
     public long getContext() {

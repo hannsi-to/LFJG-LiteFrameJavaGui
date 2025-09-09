@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static org.lwjgl.assimp.Assimp.*;
-
 public class ModelLoader {
     private final String modelId;
     private Location modelLocation;
@@ -28,7 +26,7 @@ public class ModelLoader {
 
         this.modelLocation = null;
         this.textureCache = null;
-        this.flags = aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_FixInfacingNormals | aiProcess_CalcTangentSpace | aiProcess_LimitBoneWeights | aiProcess_PreTransformVertices;
+        this.flags = Assimp.aiProcess_GenSmoothNormals | Assimp.aiProcess_JoinIdenticalVertices | Assimp.aiProcess_Triangulate | Assimp.aiProcess_FixInfacingNormals | Assimp.aiProcess_CalcTangentSpace | Assimp.aiProcess_LimitBoneWeights | Assimp.aiProcess_PreTransformVertices;
     }
 
     public static ModelLoader createModelLoader(String modelId) {
@@ -116,7 +114,7 @@ public class ModelLoader {
         }
 
         String modelDir = file.getParent();
-        AIScene aiScene = aiImportFile(modelLocation.path(), flags);
+        AIScene aiScene = Assimp.aiImportFile(modelLocation.path(), flags);
         if (aiScene == null) {
             throw new ModelLoaderException("Error loading model: " + modelLocation.path());
         }
@@ -156,14 +154,14 @@ public class ModelLoader {
         Material material = Material.createMaterial();
         try (MemoryStack memoryStack = MemoryStack.stackPush()) {
             AIColor4D color4D = AIColor4D.create();
-            int result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE, aiTextureType_NONE, 0, color4D);
-            if (result == aiReturn_SUCCESS) {
+            int result = Assimp.aiGetMaterialColor(aiMaterial, Assimp.AI_MATKEY_COLOR_DIFFUSE, Assimp.aiTextureType_NONE, 0, color4D);
+            if (result == Assimp.aiReturn_SUCCESS) {
                 material.setMaterialType(MaterialType.COLOR);
                 material.setDiffuseColor(new Vector4f(color4D.r(), color4D.g(), color4D.b(), color4D.a()));
             }
 
             AIString aiTexturePath = AIString.calloc(memoryStack);
-            aiGetMaterialTexture(aiMaterial, aiTextureType_DIFFUSE, 0, aiTexturePath, (IntBuffer) null, null, null, null, null, null);
+            Assimp.aiGetMaterialTexture(aiMaterial, Assimp.aiTextureType_DIFFUSE, 0, aiTexturePath, (IntBuffer) null, null, null, null, null, null);
             String texturePath = aiTexturePath.dataString();
             if (!texturePath.isEmpty()) {
                 material.setMaterialType(MaterialType.TEXTURE);

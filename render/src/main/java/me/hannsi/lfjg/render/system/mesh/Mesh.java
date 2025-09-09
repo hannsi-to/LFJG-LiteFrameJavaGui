@@ -8,10 +8,9 @@ import me.hannsi.lfjg.render.debug.exceptions.render.meshBuilder.MeshBuilderExce
 import me.hannsi.lfjg.render.system.mesh.persistent.PersistentMappedEBO;
 import me.hannsi.lfjg.render.system.mesh.persistent.PersistentMappedIBO;
 import me.hannsi.lfjg.render.system.mesh.persistent.PersistentMappedVBO;
+import org.lwjgl.opengl.GL30;
 
 import java.util.*;
-
-import static org.lwjgl.opengl.GL30.*;
 
 public class Mesh {
     private final int vaoId;
@@ -27,7 +26,7 @@ public class Mesh {
     private boolean useIndirect;
 
     Mesh() {
-        this.vaoId = glGenVertexArrays();
+        this.vaoId = GL30.glGenVertexArrays();
         this.vboIds = new HashMap<>();
 
         this.projectionType = MeshConstants.DEFAULT_PROJECTION_TYPE;
@@ -36,7 +35,7 @@ public class Mesh {
         this.useIndirect = MeshConstants.DEFAULT_USE_INDIRECT;
         this.drawCommands = new ArrayList<>();
 
-        glBindVertexArray(vaoId);
+        GL30.glBindVertexArray(vaoId);
     }
 
     public static Mesh createMesh() {
@@ -93,7 +92,7 @@ public class Mesh {
             ids.append("IndirectBufferObject: ").append(id).append(" | ");
         }
 
-        glDeleteVertexArrays(vaoId);
+        GL30.glDeleteVertexArrays(vaoId);
         ids.append("VertexArrayObject: ").append(vaoId);
 
         new LogGenerator(
@@ -296,7 +295,7 @@ public class Mesh {
     }
 
     public Mesh builderClose() {
-        glBindVertexArray(0);
+        GL30.glBindVertexArray(0);
         return this;
     }
 

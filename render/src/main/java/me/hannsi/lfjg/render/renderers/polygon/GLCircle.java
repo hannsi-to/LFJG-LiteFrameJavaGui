@@ -1,10 +1,9 @@
 package me.hannsi.lfjg.render.renderers.polygon;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
+import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import org.joml.Vector2f;
-
-import static me.hannsi.lfjg.core.utils.math.MathHelper.*;
 
 /**
  * Class representing a circle renderer in OpenGL.
@@ -77,15 +76,15 @@ public class GLCircle extends GLPolygon {
         }
 
         for (int i = 0; i <= segmentCount; i++) {
-            float theta = 2.0f * PI * i / segmentCount;
-            float x = xCenter + xRadius * cos(theta);
-            float y = yCenter + yRadius * sin(theta);
+            float theta = 2.0f * MathHelper.PI * i / segmentCount;
+            float x = xCenter + xRadius * MathHelper.cos(theta);
+            float y = yCenter + yRadius * MathHelper.sin(theta);
 
             Color color;
             if (colorCount > 1) {
                 float colorIndex = (float) i / segmentCount * (colorCount - 1);
                 int startColorIndex = (int) colorIndex;
-                int endColorIndex = min(startColorIndex + 1, colorCount - 1);
+                int endColorIndex = MathHelper.min(startColorIndex + 1, colorCount - 1);
                 float factor = colorIndex - startColorIndex;
 
                 Color startColor = colors[startColorIndex];
@@ -171,15 +170,15 @@ public class GLCircle extends GLPolygon {
         }
 
         for (int i = 0; i <= segmentCount; i++) {
-            float theta = 2.0f * PI * i / segmentCount;
-            float x = xCenter + xRadius * cos(theta);
-            float y = yCenter + yRadius * sin(theta);
+            float theta = 2.0f * MathHelper.PI * i / segmentCount;
+            float x = xCenter + xRadius * MathHelper.cos(theta);
+            float y = yCenter + yRadius * MathHelper.sin(theta);
 
             Color color;
             if (colorCount > 1) {
                 float colorIndex = (float) i / segmentCount * (colorCount - 1);
                 int startColorIndex = (int) colorIndex;
-                int endColorIndex = min(startColorIndex + 1, colorCount - 1);
+                int endColorIndex = MathHelper.min(startColorIndex + 1, colorCount - 1);
                 float factor = colorIndex - startColorIndex;
 
                 Color startColor = colors[startColorIndex];

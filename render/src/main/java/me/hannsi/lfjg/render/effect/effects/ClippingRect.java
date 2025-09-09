@@ -1,12 +1,11 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector4f;
-
-import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class ClippingRect extends EffectBase {
     private float x1 = 0f;
@@ -16,7 +15,7 @@ public class ClippingRect extends EffectBase {
     private boolean invert = false;
 
     ClippingRect(String name) {
-        super(name,false);
+        super(name, false);
     }
 
     public static ClippingRect createClippingRect(String name) {
@@ -90,9 +89,9 @@ public class ClippingRect extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.CLIPPING_RECT.getId());
-        shaderProgram.setUniform("clippingRectInvert", UploadUniformType.ON_CHANGE, invert);
-        shaderProgram.setUniform("clippingRectSize", UploadUniformType.ON_CHANGE, new Vector4f(x1, y1, x2, y2));
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.CLIPPING_RECT.getId());
+        LFJGRenderContext.shaderProgram.setUniform("clippingRectInvert", UploadUniformType.ON_CHANGE, invert);
+        LFJGRenderContext.shaderProgram.setUniform("clippingRectSize", UploadUniformType.ON_CHANGE, new Vector4f(x1, y1, x2, y2));
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

@@ -3,6 +3,7 @@ package me.hannsi.lfjg.render.effect.effects;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
+import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
@@ -10,8 +11,6 @@ import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-
-import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class Gradation extends EffectBase {
     private float centerX = 500f;
@@ -109,15 +108,15 @@ public class Gradation extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.GRADATION.getId());
-        shaderProgram.setUniform("gradationCenter", UploadUniformType.ON_CHANGE, new Vector2f(centerX, centerY));
-        shaderProgram.setUniform("gradationAngle", UploadUniformType.ON_CHANGE, angle);
-        shaderProgram.setUniform("gradationWidth", UploadUniformType.ON_CHANGE, width);
-        shaderProgram.setUniform("gradientShape", UploadUniformType.ON_CHANGE, shapeMode.getId());
-        shaderProgram.setUniform("gradationBlendMode", UploadUniformType.ON_CHANGE, blendType.getId());
-        shaderProgram.setUniform("gradationStartColor", UploadUniformType.ON_CHANGE, new Vector4f(startColor.getRedF(), startColor.getGreenF(), startColor.getBlueF(), startColor.getAlphaF()));
-        shaderProgram.setUniform("gradationEndColor", UploadUniformType.ON_CHANGE, new Vector4f(endColor.getRedF(), endColor.getGreenF(), endColor.getBlueF(), endColor.getAlphaF()));
-        shaderProgram.setUniform("gradationIntensity", UploadUniformType.ON_CHANGE, intensity);
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.GRADATION.getId());
+        LFJGRenderContext.shaderProgram.setUniform("gradationCenter", UploadUniformType.ON_CHANGE, new Vector2f(centerX, centerY));
+        LFJGRenderContext.shaderProgram.setUniform("gradationAngle", UploadUniformType.ON_CHANGE, angle);
+        LFJGRenderContext.shaderProgram.setUniform("gradationWidth", UploadUniformType.ON_CHANGE, width);
+        LFJGRenderContext.shaderProgram.setUniform("gradientShape", UploadUniformType.ON_CHANGE, shapeMode.getId());
+        LFJGRenderContext.shaderProgram.setUniform("gradationBlendMode", UploadUniformType.ON_CHANGE, blendType.getId());
+        LFJGRenderContext.shaderProgram.setUniform("gradationStartColor", UploadUniformType.ON_CHANGE, new Vector4f(startColor.getRedF(), startColor.getGreenF(), startColor.getBlueF(), startColor.getAlphaF()));
+        LFJGRenderContext.shaderProgram.setUniform("gradationEndColor", UploadUniformType.ON_CHANGE, new Vector4f(endColor.getRedF(), endColor.getGreenF(), endColor.getBlueF(), endColor.getAlphaF()));
+        LFJGRenderContext.shaderProgram.setUniform("gradationIntensity", UploadUniformType.ON_CHANGE, intensity);
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

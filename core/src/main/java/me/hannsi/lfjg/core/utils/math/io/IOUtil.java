@@ -3,6 +3,7 @@ package me.hannsi.lfjg.core.utils.math.io;
 import me.hannsi.lfjg.core.utils.Util;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
+import org.lwjgl.system.MemoryUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -18,8 +19,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.zip.GZIPInputStream;
-
-import static org.lwjgl.system.MemoryUtil.*;
 
 public class IOUtil extends Util {
     public static ByteBuffer convertBufferedImageToByteBuffer(BufferedImage image, boolean flipVertically) {
@@ -225,7 +224,7 @@ public class IOUtil extends Util {
     }
 
     public static ByteBuffer svgToByteBuffer(Location fileLocation) {
-        ByteBuffer buffer = memAlloc(128 * 1024);
+        ByteBuffer buffer = MemoryUtil.memAlloc(128 * 1024);
         try (FileInputStream fis = new FileInputStream(fileLocation.path())) {
             boolean isGzip = fileLocation.path().endsWith(".gz");
 
@@ -242,13 +241,13 @@ public class IOUtil extends Util {
                     }
 
                     if (buffer.remaining() == 0) {
-                        buffer = memRealloc(buffer, (buffer.capacity() * 3) >> 1);
+                        buffer = MemoryUtil.memRealloc(buffer, (buffer.capacity() * 3) >> 1);
                     }
                 }
             }
 
         } catch (IOException e) {
-            memFree(buffer);
+            MemoryUtil.memFree(buffer);
             throw new RuntimeException(e);
         }
 
@@ -259,7 +258,7 @@ public class IOUtil extends Util {
     }
 
     public static ByteBuffer downloadSVG(Location spec) {
-        ByteBuffer buffer = memAlloc(128 * 1024);
+        ByteBuffer buffer = MemoryUtil.memAlloc(128 * 1024);
         try {
             URL url = spec.getURL();
 
@@ -274,12 +273,12 @@ public class IOUtil extends Util {
                 int c;
                 while ((c = rbc.read(buffer)) != -1) {
                     if (c == 0) {
-                        buffer = memRealloc(buffer, (buffer.capacity() * 3) >> 1);
+                        buffer = MemoryUtil.memRealloc(buffer, (buffer.capacity() * 3) >> 1);
                     }
                 }
             }
         } catch (IOException e) {
-            memFree(buffer);
+            MemoryUtil.memFree(buffer);
             throw new RuntimeException(e);
         }
         buffer.put((byte) 0);
@@ -311,7 +310,7 @@ public class IOUtil extends Util {
                 buffer.write(data, 0, nRead);
             }
 
-            ByteBuffer byteBuffer = memAlloc(buffer.size());
+            ByteBuffer byteBuffer = MemoryUtil.memAlloc(buffer.size());
             byteBuffer.put(buffer.toByteArray());
             byteBuffer.flip();
             return byteBuffer;

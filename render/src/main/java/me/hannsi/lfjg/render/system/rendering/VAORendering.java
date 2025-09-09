@@ -5,12 +5,9 @@ import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
-
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL40.glDrawArraysIndirect;
-import static org.lwjgl.opengl.GL40.glDrawElementsIndirect;
-import static org.lwjgl.opengl.GL43.glMultiDrawArraysIndirect;
-import static org.lwjgl.opengl.GL43.glMultiDrawElementsIndirect;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL40;
+import org.lwjgl.opengl.GL43;
 
 public class VAORendering {
     public void draw(GLObject glObject) {
@@ -18,7 +15,7 @@ public class VAORendering {
     }
 
     public void draw(Mesh mesh) {
-        draw(mesh, GL_POLYGON);
+        draw(mesh, GL11.GL_POLYGON);
     }
 
     public void draw(Mesh mesh, int drawType) {
@@ -46,16 +43,16 @@ public class VAORendering {
 
             int commandCount = mesh.getDrawCommandCount();
             if (commandCount > 1) {
-                glMultiDrawElementsIndirect(drawType, GL_UNSIGNED_INT, 0, commandCount, 0);
+                GL43.glMultiDrawElementsIndirect(drawType, GL11.GL_UNSIGNED_INT, 0, commandCount, 0);
             } else {
-                glDrawElementsIndirect(drawType, GL_UNSIGNED_INT, 0);
+                GL40.glDrawElementsIndirect(drawType, GL11.GL_UNSIGNED_INT, 0);
             }
         } else {
             int commandCount = mesh.getDrawCommandCount();
             if (commandCount > 1) {
-                glMultiDrawArraysIndirect(drawType, 0, commandCount, 0);
+                GL43.glMultiDrawArraysIndirect(drawType, 0, commandCount, 0);
             } else {
-                glDrawArraysIndirect(drawType, 0);
+                GL40.glDrawArraysIndirect(drawType, 0);
             }
         }
     }
@@ -64,9 +61,9 @@ public class VAORendering {
         if (mesh.isUseElementBufferObject()) {
             int eboId = mesh.getEboId().getBufferId();
             GLStateCache.bindElementArrayBuffer(eboId);
-            glDrawElements(drawType, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
+            GL11.glDrawElements(drawType, mesh.getNumVertices(), GL11.GL_UNSIGNED_INT, 0);
         } else {
-            glDrawArrays(drawType, 0, mesh.getCount());
+            GL11.glDrawArrays(drawType, 0, mesh.getCount());
         }
     }
 

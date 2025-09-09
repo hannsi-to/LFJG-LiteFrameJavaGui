@@ -2,23 +2,21 @@ package me.hannsi.lfjg.render.system.text;
 
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 
-import static me.hannsi.lfjg.render.system.text.Align.*;
-
 public enum AlignType implements IEnumTypeBase {
-    LEFT_TOP("LeftTop", ALIGN_LEFT | ALIGN_TOP),
-    LEFT_MIDDLE("LeftMiddle", ALIGN_LEFT | ALIGN_MIDDLE),
-    LEFT_BOTTOM("LeftBottom", ALIGN_LEFT | ALIGN_BOTTOM),
-    LEFT_BASELINE("LeftBaseLine", ALIGN_LEFT | ALIGN_BASELINE),
+    LEFT_TOP("LeftTop", Align.ALIGN_LEFT | Align.ALIGN_TOP),
+    LEFT_MIDDLE("LeftMiddle", Align.ALIGN_LEFT | Align.ALIGN_MIDDLE),
+    LEFT_BOTTOM("LeftBottom", Align.ALIGN_LEFT | Align.ALIGN_BOTTOM),
+    LEFT_BASELINE("LeftBaseLine", Align.ALIGN_LEFT | Align.ALIGN_BASELINE),
 
-    CENTER_TOP("CenterTop", ALIGN_CENTER | ALIGN_TOP),
-    CENTER_MIDDLE("CenterMiddle", ALIGN_CENTER | ALIGN_MIDDLE),
-    CENTER_BOTTOM("CenterBottom", ALIGN_CENTER | ALIGN_BOTTOM),
-    CENTER_BASELINE("CenterBaseLine", ALIGN_CENTER | ALIGN_BASELINE),
+    CENTER_TOP("CenterTop", Align.ALIGN_CENTER | Align.ALIGN_TOP),
+    CENTER_MIDDLE("CenterMiddle", Align.ALIGN_CENTER | Align.ALIGN_MIDDLE),
+    CENTER_BOTTOM("CenterBottom", Align.ALIGN_CENTER | Align.ALIGN_BOTTOM),
+    CENTER_BASELINE("CenterBaseLine", Align.ALIGN_CENTER | Align.ALIGN_BASELINE),
 
-    RIGHT_TOP("RightTop", ALIGN_RIGHT | ALIGN_TOP),
-    RIGHT_MIDDLE("RightMiddle", ALIGN_RIGHT | ALIGN_MIDDLE),
-    RIGHT_BOTTOM("RightBottom", ALIGN_RIGHT | ALIGN_BOTTOM),
-    RIGHT_BASELINE("RightBaseLine", ALIGN_RIGHT | ALIGN_BASELINE);
+    RIGHT_TOP("RightTop", Align.ALIGN_RIGHT | Align.ALIGN_TOP),
+    RIGHT_MIDDLE("RightMiddle", Align.ALIGN_RIGHT | Align.ALIGN_MIDDLE),
+    RIGHT_BOTTOM("RightBottom", Align.ALIGN_RIGHT | Align.ALIGN_BOTTOM),
+    RIGHT_BASELINE("RightBaseLine", Align.ALIGN_RIGHT | Align.ALIGN_BASELINE);
 
     final String name;
     final int id;

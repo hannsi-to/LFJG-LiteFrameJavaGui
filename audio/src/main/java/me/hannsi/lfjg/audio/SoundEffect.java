@@ -3,10 +3,9 @@ package me.hannsi.lfjg.audio;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
-
-import static org.lwjgl.openal.AL10.alSourcei;
-import static org.lwjgl.openal.AL11.alSource3i;
-import static org.lwjgl.openal.EXTEfx.*;
+import org.lwjgl.openal.AL10;
+import org.lwjgl.openal.AL11;
+import org.lwjgl.openal.EXTEfx;
 
 public class SoundEffect {
     private int effectId;
@@ -14,9 +13,9 @@ public class SoundEffect {
     private int filterId;
 
     SoundEffect() {
-        this.effectId = AL_EFFECT_NULL;
-        this.effectSlot = AL_EFFECTSLOT_NULL;
-        this.filterId = AL_FILTER_NULL;
+        this.effectId = EXTEfx.AL_EFFECT_NULL;
+        this.effectSlot = EXTEfx.AL_EFFECTSLOT_NULL;
+        this.filterId = EXTEfx.AL_FILTER_NULL;
     }
 
     public static SoundEffect builderCreate() {
@@ -24,45 +23,45 @@ public class SoundEffect {
     }
 
     public SoundEffect createEffect() {
-        this.effectId = alGenEffects();
-        this.effectSlot = alGenAuxiliaryEffectSlots();
+        this.effectId = EXTEfx.alGenEffects();
+        this.effectSlot = EXTEfx.alGenAuxiliaryEffectSlots();
         return this;
     }
 
     public SoundEffect createFilter() {
-        this.filterId = alGenFilters();
-        alFilteri(filterId, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
+        this.filterId = EXTEfx.alGenFilters();
+        EXTEfx.alFilteri(filterId, EXTEfx.AL_FILTER_TYPE, EXTEfx.AL_FILTER_LOWPASS);
         return this;
     }
 
     public SoundEffect addSoundFilter(SoundFilterType filterType, float value) {
-        alFilterf(filterId, filterType.getId(), value);
+        EXTEfx.alFilterf(filterId, filterType.getId(), value);
         return this;
     }
 
     public SoundEffect addSoundEffect(SoundEffectType effectType) {
-        alEffecti(effectId, AL_EFFECT_TYPE, effectType.getId());
+        EXTEfx.alEffecti(effectId, EXTEfx.AL_EFFECT_TYPE, effectType.getId());
         return this;
     }
 
     public void sendEffectSlot(int sourceId) {
-        alAuxiliaryEffectSloti(effectSlot, AL_EFFECTSLOT_EFFECT, effectId);
-        alSourcei(sourceId, AL_DIRECT_FILTER, filterId);
-        alSource3i(sourceId, AL_AUXILIARY_SEND_FILTER, effectSlot, 0, filterId);
+        EXTEfx.alAuxiliaryEffectSloti(effectSlot, EXTEfx.AL_EFFECTSLOT_EFFECT, effectId);
+        AL10.alSourcei(sourceId, EXTEfx.AL_DIRECT_FILTER, filterId);
+        AL11.alSource3i(sourceId, EXTEfx.AL_AUXILIARY_SEND_FILTER, effectSlot, 0, filterId);
     }
 
     public void cleanup() {
         String ids = "";
-        if (effectId != AL_EFFECT_NULL) {
-            alDeleteEffects(effectId);
+        if (effectId != EXTEfx.AL_EFFECT_NULL) {
+            EXTEfx.alDeleteEffects(effectId);
             ids = ids + "EffectId: " + effectId + " | ";
         }
-        if (effectSlot != AL_EFFECTSLOT_NULL) {
-            alDeleteAuxiliaryEffectSlots(effectSlot);
+        if (effectSlot != EXTEfx.AL_EFFECTSLOT_NULL) {
+            EXTEfx.alDeleteAuxiliaryEffectSlots(effectSlot);
             ids = ids + "EffectSlot: " + effectSlot + " | ";
         }
-        if (filterId != AL_FILTER_NULL) {
-            alDeleteFilters(filterId);
+        if (filterId != EXTEfx.AL_FILTER_NULL) {
+            EXTEfx.alDeleteFilters(filterId);
             ids = ids + "FilterId: " + filterId;
         }
 

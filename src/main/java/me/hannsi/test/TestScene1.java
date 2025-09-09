@@ -4,6 +4,7 @@ import me.hannsi.lfjg.audio.SoundCache;
 import me.hannsi.lfjg.audio.SoundData;
 import me.hannsi.lfjg.audio.SoundListener;
 import me.hannsi.lfjg.audio.SoundLoaderType;
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.graphics.image.ImageCapture;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
@@ -17,8 +18,6 @@ import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
 import org.joml.Vector3f;
 import org.lwjgl.openal.AL11;
-
-import static me.hannsi.lfjg.core.Core.frameBufferSize;
 
 public class TestScene1 implements IScene {
     public Scene scene;
@@ -108,7 +107,7 @@ public class TestScene1 implements IScene {
         gl1.rectWH(0, 0, 1920, 1080, Color.of(0, 0, 0, 0));
 
         glGround = new GLRect("Ground");
-        glGround.rect(0, 0, frameBufferSize.x, 1, Color.of(255, 255, 255, 255));
+        glGround.rect(0, 0, Core.frameBufferSize.x, 1, Color.of(255, 255, 255, 255));
 
         int alpha = 255;
 //        glFont = new GLFont("Font");

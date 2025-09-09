@@ -1,13 +1,12 @@
 package me.hannsi.lfjg.render.effect.effects;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
+import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector3f;
-
-import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class ChromaKey extends EffectBase {
     private Color chromaKeyColor = Color.GREEN;
@@ -17,7 +16,7 @@ public class ChromaKey extends EffectBase {
     private Color colorAdjustment = Color.of(0, 0, 0, 0);
 
     ChromaKey(String name) {
-        super(name,false);
+        super(name, false);
     }
 
     public static ChromaKey createChromaKey(String name) {
@@ -76,12 +75,12 @@ public class ChromaKey extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.CHROMA_KEY.getId());
-        shaderProgram.setUniform("chromaKeyColor", UploadUniformType.ON_CHANGE, new Vector3f(chromaKeyColor.getRedF(), chromaKeyColor.getGreenF(), chromaKeyColor.getBlueF()));
-        shaderProgram.setUniform("chromaKeyHueRange", UploadUniformType.ON_CHANGE, hueRange);
-        shaderProgram.setUniform("chromaKeySaturationRange", UploadUniformType.ON_CHANGE, saturationRange);
-        shaderProgram.setUniform("chromaKeyBoundarySmoothness", UploadUniformType.ON_CHANGE, boundarySmoothness);
-        shaderProgram.setUniform("chromaKeyColorAdjustment", UploadUniformType.ON_CHANGE, new Vector3f(colorAdjustment.getRedF(), colorAdjustment.getGreenF(), colorAdjustment.getBlueF()));
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.CHROMA_KEY.getId());
+        LFJGRenderContext.shaderProgram.setUniform("chromaKeyColor", UploadUniformType.ON_CHANGE, new Vector3f(chromaKeyColor.getRedF(), chromaKeyColor.getGreenF(), chromaKeyColor.getBlueF()));
+        LFJGRenderContext.shaderProgram.setUniform("chromaKeyHueRange", UploadUniformType.ON_CHANGE, hueRange);
+        LFJGRenderContext.shaderProgram.setUniform("chromaKeySaturationRange", UploadUniformType.ON_CHANGE, saturationRange);
+        LFJGRenderContext.shaderProgram.setUniform("chromaKeyBoundarySmoothness", UploadUniformType.ON_CHANGE, boundarySmoothness);
+        LFJGRenderContext.shaderProgram.setUniform("chromaKeyColorAdjustment", UploadUniformType.ON_CHANGE, new Vector3f(colorAdjustment.getRedF(), colorAdjustment.getGreenF(), colorAdjustment.getBlueF()));
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

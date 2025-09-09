@@ -8,8 +8,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ColorModel;
 
-import static me.hannsi.lfjg.core.utils.math.MathHelper.*;
-
 public class Color {
     public static final Color WHITE = new Color(255, 255, 255);
     public static final Color LIGHT_GRAY = new Color(192, 192, 192);
@@ -125,8 +123,8 @@ public class Color {
         if (saturation == 0) {
             r = g = b = (int) (brightness * 255.0f + 0.5f);
         } else {
-            float h = (hue - floor(hue)) * 6.0f;
-            float f = h - floor(h);
+            float h = (hue - MathHelper.floor(hue)) * 6.0f;
+            float f = h - MathHelper.floor(h);
             float p = brightness * (1.0f - saturation);
             float q = brightness * (1.0f - saturation * f);
             float t = brightness * (1.0f - (saturation * (1.0f - f)));
@@ -171,11 +169,11 @@ public class Color {
         if (hsbvals == null) {
             hsbvals = new float[3];
         }
-        int cmax = max(r, g);
+        int cmax = MathHelper.max(r, g);
         if (b > cmax) {
             cmax = b;
         }
-        int cmin = min(r, g);
+        int cmin = MathHelper.min(r, g);
         if (b < cmin) {
             cmin = b;
         }

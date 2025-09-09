@@ -24,13 +24,12 @@ import me.hannsi.lfjg.frame.system.LFJGFrame;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.Callbacks;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWNativeWin32;
 import org.lwjgl.system.MemoryUtil;
 
 import java.util.concurrent.locks.LockSupport;
-
-import static org.lwjgl.glfw.GLFW.*;
 
 public class Frame implements IFrame {
     private final LFJGFrame lfjgFrame;
@@ -56,7 +55,7 @@ public class Frame implements IFrame {
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             shouldCleanup = true;
-            glfwPostEmptyEvent();
+            GLFW.glfwPostEmptyEvent();
         }));
 
         this.threadName = threadName;
@@ -95,13 +94,13 @@ public class Frame implements IFrame {
     private void initGLFW() {
         GLFWDebug.getGLFWDebug(this);
 
-        if (!glfwInit()) {
+        if (!GLFW.glfwInit()) {
             throw new IllegalStateException("Unable to initialize GLFW");
         }
 
         glfwWindowHints();
 
-        windowID = glfwCreateWindow(getFrameSettingValue(WidthSetting.class), getFrameSettingValue(HeightSetting.class), getFrameSettingValue(TitleSetting.class).toString(), GLFWUtil.getMonitorTypeCode(getFrameSettingValue(MonitorSetting.class)), MemoryUtil.NULL);
+        windowID = GLFW.glfwCreateWindow(getFrameSettingValue(WidthSetting.class), getFrameSettingValue(HeightSetting.class), getFrameSettingValue(TitleSetting.class).toString(), GLFWUtil.getMonitorTypeCode(getFrameSettingValue(MonitorSetting.class)), MemoryUtil.NULL);
         if (windowID == MemoryUtil.NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
         }
@@ -116,9 +115,9 @@ public class Frame implements IFrame {
         contentScaleX = contentScale.x();
         contentScaleY = contentScale.y();
 
-        glfwMakeContextCurrent(windowID);
-        glfwSwapInterval(((VSyncType) getFrameSettingValue(VSyncSetting.class)).getId());
-        glfwShowWindow(windowID);
+        GLFW.glfwMakeContextCurrent(windowID);
+        GLFW.glfwSwapInterval(((VSyncType) getFrameSettingValue(VSyncSetting.class)).getId());
+        GLFW.glfwShowWindow(windowID);
     }
 
     private void registerManagers() {
@@ -144,9 +143,9 @@ public class Frame implements IFrame {
     }
 
     private void glfwWindowHints() {
-        glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE);
-        glfwWindowHint(GLFW_CENTER_CURSOR, GLFW_FALSE);
-        glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_TRUE);
+        GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED, GLFW.GLFW_FALSE);
+        GLFW.glfwWindowHint(GLFW.GLFW_CENTER_CURSOR, GLFW.GLFW_FALSE);
+        GLFW.glfwWindowHint(GLFW.GLFW_FOCUS_ON_SHOW, GLFW.GLFW_TRUE);
 
         frameSettingManager.updateFrameSettings(true);
     }
@@ -162,7 +161,7 @@ public class Frame implements IFrame {
 
         setAntiAliasing();
         Core.GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        while (!glfwWindowShouldClose(windowID)) {
+        while (!GLFW.glfwWindowShouldClose(windowID)) {
             currentTime = TimeSourceUtil.getTimeMills(timeSourceType);
 
             long currentTime2 = TimeSourceUtil.getNanoTime(timeSourceType);
@@ -173,8 +172,8 @@ public class Frame implements IFrame {
                 Core.GL11.glClear(Core.GL11.GL_COLOR_BUFFER_BIT | Core.GL11.GL_DEPTH_BUFFER_BIT);
                 draw();
 
-                glfwSwapBuffers(windowID);
-                glfwPollEvents();
+                GLFW.glfwSwapBuffers(windowID);
+                GLFW.glfwPollEvents();
 
                 frames2++;
 
@@ -262,7 +261,7 @@ public class Frame implements IFrame {
     }
 
     public void stopFrame() {
-        glfwSetWindowShouldClose(windowID, true);
+        GLFW.glfwSetWindowShouldClose(windowID, true);
     }
 
     private void setAntiAliasing() {
@@ -290,11 +289,11 @@ public class Frame implements IFrame {
                 throw new IllegalStateException("Unexpected value: " + renderingType);
         }
 
-        glfwDestroyWindow(windowID);
+        GLFW.glfwDestroyWindow(windowID);
 
-        glfwTerminate();
+        GLFW.glfwTerminate();
 
-        GLFWErrorCallback callback = glfwSetErrorCallback(null);
+        GLFWErrorCallback callback = GLFW.glfwSetErrorCallback(null);
         if (callback != null) {
             callback.free();
         }

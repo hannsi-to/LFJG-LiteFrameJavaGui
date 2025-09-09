@@ -1,11 +1,10 @@
 package me.hannsi.lfjg.render.animation.animations;
 
+import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.math.animation.Easing;
 import me.hannsi.lfjg.core.utils.math.animation.EasingUtil;
 import me.hannsi.lfjg.render.animation.system.AnimationBase;
 import me.hannsi.lfjg.render.renderers.GLObject;
-
-import static me.hannsi.lfjg.core.utils.math.MathHelper.*;
 
 public class Bounce extends AnimationBase {
     protected EasingUtil easingUtil;
@@ -47,9 +46,9 @@ public class Bounce extends AnimationBase {
         }
 
         float easeValue = easingUtil.get(millis);
-        float distance = abs(sin(toRadians(easeValue * 180))) * height;
-        float x = distance * cos(toRadians(degrees));
-        float y = distance * sin(toRadians(degrees));
+        float distance = MathHelper.abs(MathHelper.sin(MathHelper.toRadians(easeValue * 180))) * height;
+        float x = distance * MathHelper.cos(MathHelper.toRadians(degrees));
+        float y = distance * MathHelper.sin(MathHelper.toRadians(degrees));
 
         glObject.getTransform().translate(-lastX, -lastY, 0).translate(x, y, 0);
 

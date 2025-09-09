@@ -1,8 +1,8 @@
 package me.hannsi.lfjg.core.utils.graphics.image;
 
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerator;
-import me.hannsi.lfjg.core.utils.math.io.IOUtil;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.type.types.ColorFormatType;
 import me.hannsi.lfjg.core.utils.type.types.ImageLoaderType;
@@ -12,8 +12,6 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImageWrite;
 
 import java.nio.ByteBuffer;
-
-import static me.hannsi.lfjg.core.Core.frameBufferSize;
 
 public class ImageCapture {
     private final Location filePath;
@@ -31,8 +29,8 @@ public class ImageCapture {
     public ImageCapture(Location filePath) {
         this.filePath = filePath;
 
-        this.width = frameBufferSize.x();
-        this.height = frameBufferSize.y();
+        this.width = Core.frameBufferSize.x();
+        this.height = Core.frameBufferSize.y();
         this.imageLoaderType = ImageLoaderType.STB_IMAGE;
         this.javaCVImageFormat = JavaCVImageFormat.PNG;
         this.colorFormatType = ColorFormatType.RGB;

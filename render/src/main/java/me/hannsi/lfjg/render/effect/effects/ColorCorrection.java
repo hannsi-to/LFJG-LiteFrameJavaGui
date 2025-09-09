@@ -1,11 +1,10 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
-
-import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class ColorCorrection extends EffectBase {
     private float brightness = 0.5f;
@@ -14,7 +13,7 @@ public class ColorCorrection extends EffectBase {
     private float hue = 0.5f;
 
     ColorCorrection(String name) {
-        super(name,false);
+        super(name, false);
     }
 
     public static ColorCorrection createColorCorrection(String name) {
@@ -83,11 +82,11 @@ public class ColorCorrection extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.COLOR_CORRECTION.getId());
-        shaderProgram.setUniform("colorCorrectionBrightness", UploadUniformType.ON_CHANGE, brightness);
-        shaderProgram.setUniform("colorCorrectionContrast", UploadUniformType.ON_CHANGE, contrast);
-        shaderProgram.setUniform("colorCorrectionSaturation", UploadUniformType.ON_CHANGE, saturation);
-        shaderProgram.setUniform("colorCorrectionHue", UploadUniformType.ON_CHANGE, hue);
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.COLOR_CORRECTION.getId());
+        LFJGRenderContext.shaderProgram.setUniform("colorCorrectionBrightness", UploadUniformType.ON_CHANGE, brightness);
+        LFJGRenderContext.shaderProgram.setUniform("colorCorrectionContrast", UploadUniformType.ON_CHANGE, contrast);
+        LFJGRenderContext.shaderProgram.setUniform("colorCorrectionSaturation", UploadUniformType.ON_CHANGE, saturation);
+        LFJGRenderContext.shaderProgram.setUniform("colorCorrectionHue", UploadUniformType.ON_CHANGE, hue);
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

@@ -1,11 +1,10 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
-
-import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class Inversion extends EffectBase {
     private boolean flipVertical = true;
@@ -49,12 +48,12 @@ public class Inversion extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.INVERSION.getId());
-        shaderProgram.setUniform("inversionFlipVertical", UploadUniformType.ON_CHANGE, flipVertical);
-        shaderProgram.setUniform("inversionFlipHorizontal", UploadUniformType.ON_CHANGE, flipHorizontal);
-        shaderProgram.setUniform("inversionInvertBrightness", UploadUniformType.ON_CHANGE, invertBrightness);
-        shaderProgram.setUniform("inversionInvertHue", UploadUniformType.ON_CHANGE, invertHue);
-        shaderProgram.setUniform("inversionInvertAlpha", UploadUniformType.ON_CHANGE, invertAlpha);
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.INVERSION.getId());
+        LFJGRenderContext.shaderProgram.setUniform("inversionFlipVertical", UploadUniformType.ON_CHANGE, flipVertical);
+        LFJGRenderContext.shaderProgram.setUniform("inversionFlipHorizontal", UploadUniformType.ON_CHANGE, flipHorizontal);
+        LFJGRenderContext.shaderProgram.setUniform("inversionInvertBrightness", UploadUniformType.ON_CHANGE, invertBrightness);
+        LFJGRenderContext.shaderProgram.setUniform("inversionInvertHue", UploadUniformType.ON_CHANGE, invertHue);
+        LFJGRenderContext.shaderProgram.setUniform("inversionInvertAlpha", UploadUniformType.ON_CHANGE, invertAlpha);
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

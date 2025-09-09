@@ -1,9 +1,11 @@
 package me.hannsi.lfjg.render.system.rendering;
 
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
+import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.debug.exceptions.frameBuffer.CompleteFrameBufferException;
 import me.hannsi.lfjg.render.debug.exceptions.frameBuffer.CreatingFrameBufferException;
 import me.hannsi.lfjg.render.debug.exceptions.render.scene.CreatingRenderBufferException;
@@ -14,13 +16,11 @@ import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL30;
 
 import java.nio.ByteBuffer;
-
-import static me.hannsi.lfjg.core.Core.frameBufferSize;
-import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
-import static org.lwjgl.opengl.GL11.glGenTextures;
-import static org.lwjgl.opengl.GL30.*;
 
 public class FrameBuffer {
     private final int frameBufferId;
@@ -46,7 +46,7 @@ public class FrameBuffer {
     }
 
     public FrameBuffer(GLObject glObject) {
-        this(glObject, 0, 0, frameBufferSize.x(), frameBufferSize.y());
+        this(glObject, 0, 0, Core.frameBufferSize.x(), Core.frameBufferSize.y());
     }
 
     public FrameBuffer(GLObject glObject, float x, float y, float width, float height) {
@@ -55,17 +55,17 @@ public class FrameBuffer {
         this.width = width;
         this.height = height;
 
-        frameBufferId = glGenFramebuffers();
+        frameBufferId = GL30.glGenFramebuffers();
         if (frameBufferId == 0) {
             throw new CreatingFrameBufferException("Failed to create frame buffer");
         }
 
-        textureId = glGenTextures();
+        textureId = GL11.glGenTextures();
         if (textureId == 0) {
             throw new CreatingTextureException("Failed to create texture");
         }
 
-        renderBufferId = glGenRenderbuffers();
+        renderBufferId = GL30.glGenRenderbuffers();
         if (renderBufferId == 0) {
             throw new CreatingRenderBufferException("Failed to create render buffer");
         }
@@ -84,9 +84,9 @@ public class FrameBuffer {
     }
 
     public void cleanup() {
-        glDeleteFramebuffers(frameBufferId);
-        glDeleteTextures(textureId);
-        glDeleteRenderbuffers(renderBufferId);
+        GL30.glDeleteFramebuffers(frameBufferId);
+        GL11.glDeleteTextures(textureId);
+        GL30.glDeleteRenderbuffers(renderBufferId);
 
         vaoRendering.cleanup();
         mesh.cleanup();
@@ -111,24 +111,24 @@ public class FrameBuffer {
         }
 
         GLStateCache.bindFrameBuffer(frameBufferId);
-        GLStateCache.bindTexture(GL_TEXTURE_2D, textureId);
+        GLStateCache.bindTexture(GL11.GL_TEXTURE_2D, textureId);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (int) width, (int) height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureId, 0);
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, (int) width, (int) height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, (ByteBuffer) null);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+        GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, textureId, 0);
 
         bindRenderBuffer();
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH32F_STENCIL8, (int) width, (int) height);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, renderBufferId);
+        GL30.glRenderbufferStorage(GL30.GL_RENDERBUFFER, GL30.GL_DEPTH32F_STENCIL8, (int) width, (int) height);
+        GL30.glFramebufferRenderbuffer(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_STENCIL_ATTACHMENT, GL30.GL_RENDERBUFFER, renderBufferId);
 
-        int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-        if (status != GL_FRAMEBUFFER_COMPLETE) {
+        int status = GL30.glCheckFramebufferStatus(GL30.GL_FRAMEBUFFER);
+        if (status != GL30.GL_FRAMEBUFFER_COMPLETE) {
             throw new CompleteFrameBufferException("Frame Buffer not complete: 0x" + Integer.toHexString(status));
         }
 
         GLStateCache.bindRenderBuffer(0);
-        GLStateCache.bindTexture(GL_TEXTURE_2D, 0);
+        GLStateCache.bindTexture(GL11.GL_TEXTURE_2D, 0);
         GLStateCache.bindFrameBuffer(0);
     }
 
@@ -137,15 +137,15 @@ public class FrameBuffer {
     }
 
     public void drawFrameBuffer(boolean drawVAORendering) {
-        shaderProgram.bind();
+        LFJGRenderContext.shaderProgram.bind();
 
-        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.FRAME_BUFFER.getId());
-        shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix);
-        shaderProgram.setUniform("frameBufferSampler", UploadUniformType.ONCE, 3);
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.FRAME_BUFFER.getId());
+        LFJGRenderContext.shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix);
+        LFJGRenderContext.shaderProgram.setUniform("frameBufferSampler", UploadUniformType.ONCE, 3);
 
-        GLStateCache.enable(GL_BLEND);
-        GLStateCache.disable(GL_DEPTH_TEST);
-        GLStateCache.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        GLStateCache.enable(GL11.GL_BLEND);
+        GLStateCache.disable(GL11.GL_DEPTH_TEST);
+        GLStateCache.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
         bindTexture();
         if (drawVAORendering) {
@@ -158,13 +158,13 @@ public class FrameBuffer {
     }
 
     public void bindTexture(int unit) {
-        glActiveTexture(GL_TEXTURE0 + unit);
-        GLStateCache.bindTexture(GL_TEXTURE_2D, textureId);
+        GL13.glActiveTexture(GL13.GL_TEXTURE0 + unit);
+        GLStateCache.bindTexture(GL11.GL_TEXTURE_2D, textureId);
     }
 
     public void bindTexture() {
-        glActiveTexture(GL_TEXTURE3);
-        GLStateCache.bindTexture(GL_TEXTURE_2D, textureId);
+        GL13.glActiveTexture(GL13.GL_TEXTURE3);
+        GLStateCache.bindTexture(GL11.GL_TEXTURE_2D, textureId);
     }
 
     public void bindRenderBuffer() {
@@ -183,7 +183,7 @@ public class FrameBuffer {
         bindFrameBufferNoClear();
 
         GLStateCache.clearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
     }
 
     public void bindFrameBufferNoClear() {

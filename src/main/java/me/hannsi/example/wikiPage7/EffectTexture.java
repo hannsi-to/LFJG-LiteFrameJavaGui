@@ -4,11 +4,10 @@ import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
+import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
-
-import static me.hannsi.lfjg.render.LFJGRenderContext.textureCache;
 
 public class EffectTexture implements LFJGFrame {
     Frame frame;
@@ -23,7 +22,7 @@ public class EffectTexture implements LFJGFrame {
     public void init() {
         frame.updateLFJGLContext();
 
-        textureCache.createCache("Test1", Location.fromResource("texture/test/test1.jpg"));
+        LFJGRenderContext.textureCache.createCache("Test1", Location.fromResource("texture/test/test1.jpg"));
 
         glRect1 = new GLRect("GLRect1");
         glRect1.uv(0, 1, 1, 0);

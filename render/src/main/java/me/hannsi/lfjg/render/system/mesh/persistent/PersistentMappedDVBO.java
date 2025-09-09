@@ -1,22 +1,15 @@
 package me.hannsi.lfjg.render.system.mesh.persistent;
 
 import me.hannsi.lfjg.render.system.mesh.AttributeType;
+import me.hannsi.lfjg.render.system.mesh.MeshConstants;
+import org.lwjgl.opengl.*;
 
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 
-import static me.hannsi.lfjg.render.system.mesh.MeshConstants.DEFAULT_BUFFER_COUNT;
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL30.glMapBufferRange;
-import static org.lwjgl.opengl.GL41.glVertexAttribLPointer;
-import static org.lwjgl.opengl.GL42.glMemoryBarrier;
-import static org.lwjgl.opengl.GL44.GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT;
-import static org.lwjgl.opengl.GL44.glBufferStorage;
-
 public class PersistentMappedDVBO implements PersistentMappedBuffer {
-    private final int[] bufferIds = new int[DEFAULT_BUFFER_COUNT];
-    private final DoubleBuffer[] mappedBuffers = new DoubleBuffer[DEFAULT_BUFFER_COUNT];
+    private final int[] bufferIds = new int[MeshConstants.DEFAULT_BUFFER_COUNT];
+    private final DoubleBuffer[] mappedBuffers = new DoubleBuffer[MeshConstants.DEFAULT_BUFFER_COUNT];
     private final int sizeInBytes;
 
     private int currentIndex = 0;
@@ -24,13 +17,13 @@ public class PersistentMappedDVBO implements PersistentMappedBuffer {
     public PersistentMappedDVBO(int size, int flags) {
         this.sizeInBytes = size * Double.BYTES;
 
-        for (int i = 0; i < DEFAULT_BUFFER_COUNT; i++) {
-            bufferIds[i] = glGenBuffers();
+        for (int i = 0; i < MeshConstants.DEFAULT_BUFFER_COUNT; i++) {
+            bufferIds[i] = GL15.glGenBuffers();
 
-            glBindBuffer(GL_ARRAY_BUFFER, bufferIds[i]);
-            glBufferStorage(GL_ARRAY_BUFFER, sizeInBytes, flags);
+            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, bufferIds[i]);
+            GL44.glBufferStorage(GL15.GL_ARRAY_BUFFER, sizeInBytes, flags);
 
-            ByteBuffer byteBuffer = glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeInBytes, flags);
+            ByteBuffer byteBuffer = GL30.glMapBufferRange(GL15.GL_ARRAY_BUFFER, 0, sizeInBytes, flags);
             if (byteBuffer == null) {
                 throw new NullPointerException("glMapBufferRange failed at index " + i);
             }
@@ -38,7 +31,7 @@ public class PersistentMappedDVBO implements PersistentMappedBuffer {
             mappedBuffers[i] = byteBuffer.asDoubleBuffer();
         }
 
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
     }
 
     public PersistentMappedDVBO update(double[] newData) {
@@ -50,27 +43,27 @@ public class PersistentMappedDVBO implements PersistentMappedBuffer {
         buffer.position(0);
         buffer.put(newData);
 
-        glMemoryBarrier(GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT);
+        GL42.glMemoryBarrier(GL44.GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT);
 
         return this;
     }
 
     public PersistentMappedDVBO attribute(AttributeType attributeType) {
         int bufferId = bufferIds[currentIndex];
-        glBindBuffer(GL_ARRAY_BUFFER, bufferId);
-        glEnableVertexAttribArray(attributeType.getIndex());
-        glVertexAttribLPointer(attributeType.getIndex(), attributeType.getSize(), GL_DOUBLE, 0, 0L);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, bufferId);
+        GL20.glEnableVertexAttribArray(attributeType.getIndex());
+        GL41.glVertexAttribLPointer(attributeType.getIndex(), attributeType.getSize(), GL11.GL_DOUBLE, 0, 0L);
         return this;
     }
 
     public void finishFrame() {
-        currentIndex = (currentIndex + 1) % DEFAULT_BUFFER_COUNT;
+        currentIndex = (currentIndex + 1) % MeshConstants.DEFAULT_BUFFER_COUNT;
     }
 
     @Override
     public void cleanup() {
-        for (int i = 0; i < DEFAULT_BUFFER_COUNT; i++) {
-            glDeleteBuffers(bufferIds[i]);
+        for (int i = 0; i < MeshConstants.DEFAULT_BUFFER_COUNT; i++) {
+            GL15.glDeleteBuffers(bufferIds[i]);
         }
     }
 

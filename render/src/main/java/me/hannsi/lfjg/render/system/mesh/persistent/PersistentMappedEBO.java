@@ -1,14 +1,13 @@
 package me.hannsi.lfjg.render.system.mesh.persistent;
 
 
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL42;
+import org.lwjgl.opengl.GL44;
+
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL30.glMapBufferRange;
-import static org.lwjgl.opengl.GL42.glMemoryBarrier;
-import static org.lwjgl.opengl.GL44.GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT;
-import static org.lwjgl.opengl.GL44.glBufferStorage;
 
 public class PersistentMappedEBO implements PersistentMappedBuffer {
     private final int bufferId;
@@ -18,17 +17,17 @@ public class PersistentMappedEBO implements PersistentMappedBuffer {
     public PersistentMappedEBO(int size, int flags) {
         this.sizeInBytes = size * Integer.BYTES;
 
-        bufferId = glGenBuffers();
+        bufferId = GL15.glGenBuffers();
 
-        glBindBuffer(GL_ARRAY_BUFFER, bufferId);
-        glBufferStorage(
-                GL_ARRAY_BUFFER,
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, bufferId);
+        GL44.glBufferStorage(
+                GL15.GL_ARRAY_BUFFER,
                 sizeInBytes,
                 flags
         );
 
-        ByteBuffer byteBuffer = glMapBufferRange(
-                GL_ARRAY_BUFFER,
+        ByteBuffer byteBuffer = GL30.glMapBufferRange(
+                GL15.GL_ARRAY_BUFFER,
                 0,
                 sizeInBytes,
                 flags
@@ -39,7 +38,7 @@ public class PersistentMappedEBO implements PersistentMappedBuffer {
         }
         mappedBuffer = byteBuffer.asIntBuffer();
 
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
     }
 
     public PersistentMappedEBO update(int[] newData) {
@@ -50,14 +49,14 @@ public class PersistentMappedEBO implements PersistentMappedBuffer {
         mappedBuffer.clear();
         mappedBuffer.put(newData);
 
-        glMemoryBarrier(GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT);
+        GL42.glMemoryBarrier(GL44.GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT);
 
         return this;
     }
 
     @Override
     public void cleanup() {
-        glDeleteBuffers(bufferId);
+        GL15.glDeleteBuffers(bufferId);
     }
 
     public int getBufferId() {

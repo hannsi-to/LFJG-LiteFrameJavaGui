@@ -1,10 +1,9 @@
 package me.hannsi.lfjg.render.renderers.polygon;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
+import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import org.joml.Vector2f;
-
-import static me.hannsi.lfjg.core.utils.math.MathHelper.*;
 
 /**
  * Class representing a rounded rectangle renderer in OpenGL.
@@ -47,7 +46,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (leftBottom) {
             for (i = 0; i <= 90; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x + leftBottomRadius + sin(i * PI / 180.0D) * leftBottomRadius * -1.0D), (float) (y + leftBottomRadius + cos(i * PI / 180.0D) * leftBottomRadius * -1.0D))).color(bottomLeftColor).end();
+                put().vertex(new Vector2f((float) (x + leftBottomRadius + MathHelper.sin(i * MathHelper.PI / 180.0D) * leftBottomRadius * -1.0D), (float) (y + leftBottomRadius + MathHelper.cos(i * MathHelper.PI / 180.0D) * leftBottomRadius * -1.0D))).color(bottomLeftColor).end();
             }
         } else {
             put().vertex(new Vector2f(x, y)).color(bottomLeftColor).end();
@@ -55,7 +54,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (leftTop) {
             for (i = 90; i <= 180; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x + leftTopRadius + sin(i * PI / 180.0D) * leftTopRadius * -1.0D), (float) (y1 - leftTopRadius + cos(i * PI / 180.0D) * leftTopRadius * -1.0D))).color(topLeftColor).end();
+                put().vertex(new Vector2f((float) (x + leftTopRadius + MathHelper.sin(i * MathHelper.PI / 180.0D) * leftTopRadius * -1.0D), (float) (y1 - leftTopRadius + MathHelper.cos(i * MathHelper.PI / 180.0D) * leftTopRadius * -1.0D))).color(topLeftColor).end();
             }
         } else {
             put().vertex(new Vector2f(x, y1)).color(topLeftColor).end();
@@ -63,7 +62,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (rightTop) {
             for (i = 0; i <= 90; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x1 - rightTopRadius + sin(i * PI / 180.0D) * rightTopRadius), (float) (y1 - rightTopRadius + cos(i * PI / 180.0D) * rightTopRadius))).color(topRightColor).end();
+                put().vertex(new Vector2f((float) (x1 - rightTopRadius + MathHelper.sin(i * MathHelper.PI / 180.0D) * rightTopRadius), (float) (y1 - rightTopRadius + MathHelper.cos(i * MathHelper.PI / 180.0D) * rightTopRadius))).color(topRightColor).end();
             }
         } else {
             put().vertex(new Vector2f(x1, y1)).color(topRightColor).end();
@@ -71,7 +70,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (rightBottom) {
             for (i = 90; i <= 180; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x1 - rightBottomRadius + sin(i * PI / 180.0D) * rightBottomRadius), (float) (y + rightBottomRadius + cos(i * PI / 180.0D) * rightBottomRadius))).color(bottomRightColor).end();
+                put().vertex(new Vector2f((float) (x1 - rightBottomRadius + MathHelper.sin(i * MathHelper.PI / 180.0D) * rightBottomRadius), (float) (y + rightBottomRadius + MathHelper.cos(i * MathHelper.PI / 180.0D) * rightBottomRadius))).color(bottomRightColor).end();
             }
         } else {
             put().vertex(new Vector2f(x1, y)).color(bottomRightColor).end();
@@ -252,7 +251,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (leftBottom) {
             for (i = 0; i <= 90; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x + leftBottomRadius + sin(i * PI / 180.0D) * leftBottomRadius * -1.0D), (float) (y + leftBottomRadius + cos(i * PI / 180.0D) * leftBottomRadius * -1.0D))).color(bottomLeftColor).end();
+                put().vertex(new Vector2f((float) (x + leftBottomRadius + MathHelper.sin(i * MathHelper.PI / 180.0D) * leftBottomRadius * -1.0D), (float) (y + leftBottomRadius + MathHelper.cos(i * MathHelper.PI / 180.0D) * leftBottomRadius * -1.0D))).color(bottomLeftColor).end();
             }
         } else {
             put().vertex(new Vector2f(x, y)).color(bottomLeftColor).end();
@@ -260,7 +259,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (leftTop) {
             for (i = 90; i <= 180; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x + leftTopRadius + sin(i * PI / 180.0D) * leftTopRadius * -1.0D), (float) (y1 - leftTopRadius + cos(i * PI / 180.0D) * leftTopRadius * -1.0D))).color(topLeftColor).end();
+                put().vertex(new Vector2f((float) (x + leftTopRadius + MathHelper.sin(i * MathHelper.PI / 180.0D) * leftTopRadius * -1.0D), (float) (y1 - leftTopRadius + MathHelper.cos(i * MathHelper.PI / 180.0D) * leftTopRadius * -1.0D))).color(topLeftColor).end();
             }
         } else {
             put().vertex(new Vector2f(x, y1)).color(topLeftColor).end();
@@ -268,7 +267,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (rightTop) {
             for (i = 0; i <= 90; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x1 - rightTopRadius + sin(i * PI / 180.0D) * rightTopRadius), (float) (y1 - rightTopRadius + cos(i * PI / 180.0D) * rightTopRadius))).color(topRightColor).end();
+                put().vertex(new Vector2f((float) (x1 - rightTopRadius + MathHelper.sin(i * MathHelper.PI / 180.0D) * rightTopRadius), (float) (y1 - rightTopRadius + MathHelper.cos(i * MathHelper.PI / 180.0D) * rightTopRadius))).color(topRightColor).end();
             }
         } else {
             put().vertex(new Vector2f(x1, y1)).color(topRightColor).end();
@@ -276,7 +275,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (rightBottom) {
             for (i = 90; i <= 180; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x1 - rightBottomRadius + sin(i * PI / 180.0D) * rightBottomRadius), (float) (y + rightBottomRadius + cos(i * PI / 180.0D) * rightBottomRadius))).color(bottomRightColor).end();
+                put().vertex(new Vector2f((float) (x1 - rightBottomRadius + MathHelper.sin(i * MathHelper.PI / 180.0D) * rightBottomRadius), (float) (y + rightBottomRadius + MathHelper.cos(i * MathHelper.PI / 180.0D) * rightBottomRadius))).color(bottomRightColor).end();
             }
         } else {
             put().vertex(new Vector2f(x1, y)).color(bottomRightColor).end();
@@ -464,7 +463,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (leftBottom) {
             for (i = 0; i <= 90; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x + leftBottomRadius + sin(i * PI / 180.0) * leftBottomRadius * -1.0), (float) (y + leftBottomRadius + cos(i * PI / 180.0) * leftBottomRadius * -1.0))).color(bottomLeftColor).end();
+                put().vertex(new Vector2f((float) (x + leftBottomRadius + MathHelper.sin(i * MathHelper.PI / 180.0) * leftBottomRadius * -1.0), (float) (y + leftBottomRadius + MathHelper.cos(i * MathHelper.PI / 180.0) * leftBottomRadius * -1.0))).color(bottomLeftColor).end();
             }
         } else {
             put().vertex(new Vector2f((float) x, (float) y)).color(bottomLeftColor).end();
@@ -472,7 +471,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (leftTop) {
             for (i = 90; i <= 180; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x + leftTopRadius + sin(i * PI / 180.0) * leftTopRadius * -1.0), (float) (y1 - leftTopRadius + cos(i * PI / 180.0) * leftTopRadius * -1.0))).color(topLeftColor).end();
+                put().vertex(new Vector2f((float) (x + leftTopRadius + MathHelper.sin(i * MathHelper.PI / 180.0) * leftTopRadius * -1.0), (float) (y1 - leftTopRadius + MathHelper.cos(i * MathHelper.PI / 180.0) * leftTopRadius * -1.0))).color(topLeftColor).end();
             }
         } else {
             put().vertex(new Vector2f((float) x, (float) y1)).color(topLeftColor).end();
@@ -480,7 +479,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (rightTop) {
             for (i = 0; i <= 90; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x1 - rightTopRadius + sin(i * PI / 180.0) * rightTopRadius), (float) (y1 - rightTopRadius + cos(i * PI / 180.0) * rightTopRadius))).color(topRightColor).end();
+                put().vertex(new Vector2f((float) (x1 - rightTopRadius + MathHelper.sin(i * MathHelper.PI / 180.0) * rightTopRadius), (float) (y1 - rightTopRadius + MathHelper.cos(i * MathHelper.PI / 180.0) * rightTopRadius))).color(topRightColor).end();
             }
         } else {
             put().vertex(new Vector2f((float) x1, (float) y1)).color(topRightColor).end();
@@ -488,7 +487,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (rightBottom) {
             for (i = 90; i <= 180; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x1 - rightBottomRadius + sin(i * PI / 180.0) * rightBottomRadius), (float) (y + rightBottomRadius + cos(i * PI / 180.0) * rightBottomRadius))).color(bottomRightColor).end();
+                put().vertex(new Vector2f((float) (x1 - rightBottomRadius + MathHelper.sin(i * MathHelper.PI / 180.0) * rightBottomRadius), (float) (y + rightBottomRadius + MathHelper.cos(i * MathHelper.PI / 180.0) * rightBottomRadius))).color(bottomRightColor).end();
             }
         } else {
             put().vertex(new Vector2f((float) x1, (float) y)).color(bottomRightColor).end();
@@ -669,7 +668,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (leftBottom) {
             for (i = 0; i <= 90; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x + leftBottomRadius + sin(i * PI / 180.0D) * leftBottomRadius * -1.0D), (float) (y + leftBottomRadius + cos(i * PI / 180.0D) * leftBottomRadius * -1.0D))).color(bottomLeftColor).end();
+                put().vertex(new Vector2f((float) (x + leftBottomRadius + MathHelper.sin(i * MathHelper.PI / 180.0D) * leftBottomRadius * -1.0D), (float) (y + leftBottomRadius + MathHelper.cos(i * MathHelper.PI / 180.0D) * leftBottomRadius * -1.0D))).color(bottomLeftColor).end();
             }
         } else {
             put().vertex(new Vector2f((float) x, (float) y)).color(bottomLeftColor).end();
@@ -677,7 +676,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (leftTop) {
             for (i = 90; i <= 180; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x + leftTopRadius + sin(i * PI / 180.0D) * leftTopRadius * -1.0D), (float) (y1 - leftTopRadius + cos(i * PI / 180.0D) * leftTopRadius * -1.0D))).color(topLeftColor).end();
+                put().vertex(new Vector2f((float) (x + leftTopRadius + MathHelper.sin(i * MathHelper.PI / 180.0D) * leftTopRadius * -1.0D), (float) (y1 - leftTopRadius + MathHelper.cos(i * MathHelper.PI / 180.0D) * leftTopRadius * -1.0D))).color(topLeftColor).end();
             }
         } else {
             put().vertex(new Vector2f((float) x, (float) y1)).color(topLeftColor).end();
@@ -685,7 +684,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (rightTop) {
             for (i = 0; i <= 90; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x1 - rightTopRadius + sin(i * PI / 180.0D) * rightTopRadius), (float) (y1 - rightTopRadius + cos(i * PI / 180.0D) * rightTopRadius))).color(topRightColor).end();
+                put().vertex(new Vector2f((float) (x1 - rightTopRadius + MathHelper.sin(i * MathHelper.PI / 180.0D) * rightTopRadius), (float) (y1 - rightTopRadius + MathHelper.cos(i * MathHelper.PI / 180.0D) * rightTopRadius))).color(topRightColor).end();
             }
         } else {
             put().vertex(new Vector2f((float) x1, (float) y1)).color(topRightColor).end();
@@ -693,7 +692,7 @@ public class GLRoundedRect extends GLPolygon {
 
         if (rightBottom) {
             for (i = 90; i <= 180; i += segmentCount) {
-                put().vertex(new Vector2f((float) (x1 - rightBottomRadius + sin(i * PI / 180.0D) * rightBottomRadius), (float) (y + rightBottomRadius + cos(i * PI / 180.0D) * rightBottomRadius))).color(bottomRightColor).end();
+                put().vertex(new Vector2f((float) (x1 - rightBottomRadius + MathHelper.sin(i * MathHelper.PI / 180.0D) * rightBottomRadius), (float) (y + rightBottomRadius + MathHelper.cos(i * MathHelper.PI / 180.0D) * rightBottomRadius))).color(bottomRightColor).end();
             }
         } else {
             put().vertex(new Vector2f((float) x1, (float) y)).color(bottomRightColor).end();

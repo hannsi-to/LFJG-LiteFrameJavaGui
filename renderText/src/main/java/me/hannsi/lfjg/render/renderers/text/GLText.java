@@ -1,13 +1,12 @@
 package me.hannsi.lfjg.render.renderers.text;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
+import me.hannsi.lfjg.render.LFJGRenderTextContext;
 import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.text.AlignType;
 import me.hannsi.lfjg.render.system.text.font.Font;
 import org.joml.Vector2f;
-
-import static me.hannsi.lfjg.render.LFJGRenderTextContext.fontCache;
 
 public class GLText extends GLPolygon {
     private TextRenderer textRenderer;
@@ -21,7 +20,7 @@ public class GLText extends GLPolygon {
     }
 
     public void text(String name, String text, float x, float y, int fontSize, Color fontColor, boolean textFormat, AlignType alignType) {
-        Font font = fontCache.getFont(name);
+        Font font = LFJGRenderTextContext.fontCache.getFont(name);
 
         this.text = text;
         this.fontSize = fontSize;

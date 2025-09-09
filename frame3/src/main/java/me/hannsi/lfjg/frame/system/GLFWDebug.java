@@ -4,9 +4,8 @@ import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.GLFWDebugSetting;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
-
-import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
 
 public class GLFWDebug {
     public static void getGLFWDebug(Frame frame) {
@@ -26,7 +25,7 @@ public class GLFWDebug {
                     ).logging(DebugLevel.ERROR);
                 }
             };
-            glfwSetErrorCallback(errorCallback);
+            GLFW.glfwSetErrorCallback(errorCallback);
         }
     }
 

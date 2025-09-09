@@ -6,6 +6,7 @@ import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.toolkit.StringUtil;
+import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.debug.exceptions.UnknownAlignType;
 import me.hannsi.lfjg.render.system.mesh.BufferObjectType;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
@@ -13,24 +14,17 @@ import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
-import me.hannsi.lfjg.render.system.text.AlignType;
-import me.hannsi.lfjg.render.system.text.CharState;
-import me.hannsi.lfjg.render.system.text.TextFormatType;
-import me.hannsi.lfjg.render.system.text.TextMeshBuilder;
+import me.hannsi.lfjg.render.system.text.*;
 import me.hannsi.lfjg.render.system.text.msdf.MSDFFont;
 import me.hannsi.lfjg.render.system.text.msdf.MSDFTextureLoader;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static me.hannsi.lfjg.core.utils.math.MathHelper.max;
-import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
-import static me.hannsi.lfjg.render.system.text.Align.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 
 public class TextRenderer {
     protected List<LineData> lineDatum;
@@ -120,7 +114,7 @@ public class TextRenderer {
             int codePoint = text.codePointAt(i);
 
             if (codePoint == '\n') {
-                maxWidth = max(maxWidth, currentLineWidth);
+                maxWidth = MathHelper.max(maxWidth, currentLineWidth);
                 currentLineWidth = 0f;
                 continue;
             }
@@ -131,7 +125,7 @@ public class TextRenderer {
             }
         }
 
-        maxWidth = max(maxWidth, currentLineWidth);
+        maxWidth = MathHelper.max(maxWidth, currentLineWidth);
         return maxWidth;
     }
 
@@ -156,23 +150,23 @@ public class TextRenderer {
     public float[] setAlignPos(String text) {
         float[] position = new float[2];
 
-        if ((align & ALIGN_LEFT) != 0) {
+        if ((align & Align.ALIGN_LEFT) != 0) {
             position[0] = pos.x();
-        } else if ((align & ALIGN_CENTER) != 0) {
+        } else if ((align & Align.ALIGN_CENTER) != 0) {
             position[0] = pos.x() - getTextWidth(text) / 2f;
-        } else if ((align & ALIGN_RIGHT) != 0) {
+        } else if ((align & Align.ALIGN_RIGHT) != 0) {
             position[0] = pos.x() - getTextWidth(text);
         } else {
             throw new UnknownAlignType("This alignment constant does not exist. const: " + align);
         }
 
-        if ((align & ALIGN_TOP) != 0) {
+        if ((align & Align.ALIGN_TOP) != 0) {
             position[1] = pos.y() - getTextHeight(text);
-        } else if ((align & ALIGN_MIDDLE) != 0) {
+        } else if ((align & Align.ALIGN_MIDDLE) != 0) {
             position[1] = pos.y() - getTextHeight(text) / 2f;
-        } else if ((align & ALIGN_BASELINE) != 0) {
+        } else if ((align & Align.ALIGN_BASELINE) != 0) {
             position[1] = pos.y();
-        } else if ((align & ALIGN_BOTTOM) != 0) {
+        } else if ((align & Align.ALIGN_BOTTOM) != 0) {
             float offset = metrics.getDescender();
             position[1] = pos.y() - (offset * size * 2);
         } else {
@@ -183,14 +177,14 @@ public class TextRenderer {
     }
 
     public TextRenderer draw(String text) {
-        GLStateCache.enable(GL_BLEND);
-        GLStateCache.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        GLStateCache.enable(GL_TEXTURE_2D);
-        GLStateCache.activeTexture(GL_TEXTURE1);
-        GLStateCache.bindTexture(GL_TEXTURE_2D, msdfTextureLoader.textureId);
+        GLStateCache.enable(GL11.GL_BLEND);
+        GLStateCache.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GLStateCache.enable(GL11.GL_TEXTURE_2D);
+        GLStateCache.activeTexture(GL13.GL_TEXTURE1);
+        GLStateCache.bindTexture(GL11.GL_TEXTURE_2D, msdfTextureLoader.textureId);
 
-        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.MSDF.getId());
-        shaderProgram.setUniform("fontAtlas", UploadUniformType.ONCE, 1);
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.MSDF.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fontAtlas", UploadUniformType.ONCE, 1);
 
         boolean code = false;
         TextFormatType textFormatType;
@@ -294,43 +288,43 @@ public class TextRenderer {
 
             if (!charState.skip) {
                 if (charState.italic) {
-                    shaderProgram.setUniform("italicSkew", UploadUniformType.ON_CHANGE, 0.4f);
+                    LFJGRenderContext.shaderProgram.setUniform("italicSkew", UploadUniformType.ON_CHANGE, 0.4f);
                 } else {
-                    shaderProgram.setUniform("italicSkew", UploadUniformType.ON_CHANGE, 0f);
+                    LFJGRenderContext.shaderProgram.setUniform("italicSkew", UploadUniformType.ON_CHANGE, 0f);
                 }
 
                 if (charState.bold) {
-                    shaderProgram.setUniform("msdfBoldness", UploadUniformType.ON_CHANGE, -0.2f);
+                    LFJGRenderContext.shaderProgram.setUniform("msdfBoldness", UploadUniformType.ON_CHANGE, -0.2f);
                 } else {
-                    shaderProgram.setUniform("msdfBoldness", UploadUniformType.ON_CHANGE, 0f);
+                    LFJGRenderContext.shaderProgram.setUniform("msdfBoldness", UploadUniformType.ON_CHANGE, 0f);
                 }
 
                 if (charState.ghost) {
-                    shaderProgram.setUniform("msdfGhost", UploadUniformType.ON_CHANGE, -0.5f);
+                    LFJGRenderContext.shaderProgram.setUniform("msdfGhost", UploadUniformType.ON_CHANGE, -0.5f);
                 } else {
-                    shaderProgram.setUniform("msdfGhost", UploadUniformType.ON_CHANGE, 0f);
+                    LFJGRenderContext.shaderProgram.setUniform("msdfGhost", UploadUniformType.ON_CHANGE, 0f);
                 }
 
                 if (charState.box) {
-                    shaderProgram.setUniform("msdfBox", UploadUniformType.PER_FRAME, true);
-                    shaderProgram.setUniform("msdfUVSize", UploadUniformType.PER_FRAME, new Vector4f(textMesh.uvs[0], textMesh.uvs[1], textMesh.uvs[2], textMesh.uvs[5]));
+                    LFJGRenderContext.shaderProgram.setUniform("msdfBox", UploadUniformType.PER_FRAME, true);
+                    LFJGRenderContext.shaderProgram.setUniform("msdfUVSize", UploadUniformType.PER_FRAME, new Vector4f(textMesh.uvs[0], textMesh.uvs[1], textMesh.uvs[2], textMesh.uvs[5]));
                 } else {
-                    shaderProgram.setUniform("msdfBox", UploadUniformType.ON_CHANGE, false);
+                    LFJGRenderContext.shaderProgram.setUniform("msdfBox", UploadUniformType.ON_CHANGE, false);
                 }
 
                 if (charState.outLine) {
-                    shaderProgram.setUniform("msdfOutline", UploadUniformType.ON_CHANGE, true);
-                    shaderProgram.setUniform("msdfOutlineWidth", UploadUniformType.ONCE, 0f);
+                    LFJGRenderContext.shaderProgram.setUniform("msdfOutline", UploadUniformType.ON_CHANGE, true);
+                    LFJGRenderContext.shaderProgram.setUniform("msdfOutlineWidth", UploadUniformType.ONCE, 0f);
                 } else {
-                    shaderProgram.setUniform("msdfOutline", UploadUniformType.ON_CHANGE, false);
+                    LFJGRenderContext.shaderProgram.setUniform("msdfOutline", UploadUniformType.ON_CHANGE, false);
                 }
 
                 float glyphYOffset = -glyph.getPlaneBounds().getBottom() * size;
                 modelMatrix.translate(cursorX + (charState.shadow ? size * 0.02f : 0), cursorY - bearingY + (charState.shadow ? size * 0.02f : 0) + glyphYOffset, 0).scale(size, size, 1);
-                shaderProgram.setUniform("msdfFontColor", UploadUniformType.ON_CHANGE, charState.color);
-                shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix);
+                LFJGRenderContext.shaderProgram.setUniform("msdfFontColor", UploadUniformType.ON_CHANGE, charState.color);
+                LFJGRenderContext.shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix);
                 assert textMesh != null;
-                vaoRendering.draw(textMesh.mesh, GL_TRIANGLES);
+                vaoRendering.draw(textMesh.mesh, GL11.GL_TRIANGLES);
             }
 
             float prevCursorX = cursorX;
@@ -405,14 +399,14 @@ public class TextRenderer {
                     throw new IllegalStateException("Unexpected value: " + data.lineType);
             }
 
-            shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.OBJECT.getId());
-            shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, lineMatrix.translate(x, y, 0).scale(width, thickness, 1));
-            shaderProgram.setUniform("objectColor", UploadUniformType.PER_FRAME, data.color);
-            shaderProgram.setUniform("objectReplaceColor", UploadUniformType.PER_FRAME, true);
+            LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.OBJECT.getId());
+            LFJGRenderContext.shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, lineMatrix.translate(x, y, 0).scale(width, thickness, 1));
+            LFJGRenderContext.shaderProgram.setUniform("objectColor", UploadUniformType.PER_FRAME, data.color);
+            LFJGRenderContext.shaderProgram.setUniform("objectReplaceColor", UploadUniformType.PER_FRAME, true);
 
             vaoRendering.draw(lineMesh);
 
-            shaderProgram.setUniform("objectReplaceColor", UploadUniformType.PER_FRAME, false);
+            LFJGRenderContext.shaderProgram.setUniform("objectReplaceColor", UploadUniformType.PER_FRAME, false);
 
             lineMatrix = new Matrix4f(baseMatrix);
         }

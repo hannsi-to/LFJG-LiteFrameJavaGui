@@ -4,6 +4,7 @@ import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.toolkit.UnicodeBlocks;
 import me.hannsi.lfjg.frame.Frame;
+import me.hannsi.lfjg.render.LFJGRenderTextContext;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.renderers.text.GLText;
 import me.hannsi.lfjg.render.system.scene.IScene;
@@ -11,8 +12,6 @@ import me.hannsi.lfjg.render.system.scene.Scene;
 import me.hannsi.lfjg.render.system.text.AlignType;
 import me.hannsi.lfjg.render.system.text.TextFormatType;
 import me.hannsi.lfjg.render.system.text.font.Font;
-
-import static me.hannsi.lfjg.render.LFJGRenderTextContext.fontCache;
 
 public class Demo2 implements IScene {
     Frame frame;
@@ -36,7 +35,7 @@ public class Demo2 implements IScene {
 
     @Override
     public void init() {
-        fontCache.createCache(
+        LFJGRenderTextContext.fontCache.createCache(
                 "Font1",
                 Font.createCustomFont()
                         .name("Font1")

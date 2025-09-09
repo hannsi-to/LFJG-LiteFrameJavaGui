@@ -1,11 +1,10 @@
 package me.hannsi.lfjg.render.effect.effects;
 
+import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
-
-import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class BoxBlur extends EffectBase {
     private int kernelX = 10;
@@ -31,9 +30,9 @@ public class BoxBlur extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.BOX_BLUR.getId());
-        shaderProgram.setUniform("boxBlurKernelX", UploadUniformType.ON_CHANGE, kernelX);
-        shaderProgram.setUniform("boxBlurKernelY", UploadUniformType.ON_CHANGE, kernelY);
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.BOX_BLUR.getId());
+        LFJGRenderContext.shaderProgram.setUniform("boxBlurKernelX", UploadUniformType.ON_CHANGE, kernelX);
+        LFJGRenderContext.shaderProgram.setUniform("boxBlurKernelY", UploadUniformType.ON_CHANGE, kernelY);
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

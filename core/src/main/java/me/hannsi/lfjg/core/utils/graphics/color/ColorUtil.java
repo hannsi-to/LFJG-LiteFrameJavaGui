@@ -1,8 +1,7 @@
 package me.hannsi.lfjg.core.utils.graphics.color;
 
 import me.hannsi.lfjg.core.utils.Util;
-
-import static me.hannsi.lfjg.core.utils.math.MathHelper.*;
+import me.hannsi.lfjg.core.utils.math.MathHelper;
 
 public class ColorUtil extends Util {
     public static Color getRainbow(int delay, float timing, float saturation, float brightness) {
@@ -66,7 +65,7 @@ public class ColorUtil extends Util {
         int[] checkColors = new int[]{checkRed, checkGreen, checkBlue, checkAlpha};
 
         for (int check : checkColors) {
-            return isWithinRange(check, 0, 255);
+            return MathHelper.isWithinRange(check, 0, 255);
         }
 
         return true;
@@ -76,14 +75,14 @@ public class ColorUtil extends Util {
         if (checkColorRange(fixRed, fixGreen, fixBlue, fixAlpha)) {
             return new Color(fixRed, fixGreen, fixBlue, fixAlpha);
         } else {
-            return new Color(clamp(fixRed, 0, 255), clamp(fixGreen, 0, 255), clamp(fixBlue, 0, 255), clamp(fixAlpha, 0, 255));
+            return new Color(MathHelper.clamp(fixRed, 0, 255), MathHelper.clamp(fixGreen, 0, 255), MathHelper.clamp(fixBlue, 0, 255), MathHelper.clamp(fixAlpha, 0, 255));
         }
     }
 
     public static Color applyGammaCorrection(Color color, float gamma) {
-        int r = clampColor((int) (pow(color.getRed() / 255.0, gamma) * 255));
-        int g = clampColor((int) (pow(color.getGreen() / 255.0, gamma) * 255));
-        int b = clampColor((int) (pow(color.getBlue() / 255.0, gamma) * 255));
+        int r = clampColor((int) (MathHelper.pow(color.getRed() / 255.0, gamma) * 255));
+        int g = clampColor((int) (MathHelper.pow(color.getGreen() / 255.0, gamma) * 255));
+        int b = clampColor((int) (MathHelper.pow(color.getBlue() / 255.0, gamma) * 255));
         int a = color.getAlpha();
         return new Color(r, g, b, a);
     }
@@ -119,10 +118,10 @@ public class ColorUtil extends Util {
     }
 
     private static float clampSaturation(float value) {
-        return max(0.0f, min(1.0f, value));
+        return MathHelper.max(0.0f, MathHelper.min(1.0f, value));
     }
 
     private static int clampColor(int value) {
-        return max(0, min(255, value));
+        return MathHelper.max(0, MathHelper.min(255, value));
     }
 }

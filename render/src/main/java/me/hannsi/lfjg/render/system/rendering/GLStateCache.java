@@ -1,17 +1,9 @@
 package me.hannsi.lfjg.render.system.rendering;
 
+import org.lwjgl.opengl.*;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
-import static org.lwjgl.opengl.GL14.glBlendEquation;
-import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.glBindBuffer;
-import static org.lwjgl.opengl.GL20.glUseProgram;
-import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.opengl.GL32.glSampleMaski;
-import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 
 public class GLStateCache {
     private static final Map<Integer, Boolean> STATE_CACHE = new HashMap<>();
@@ -50,7 +42,7 @@ public class GLStateCache {
     public static void enable(int cap) {
         Boolean enabled = STATE_CACHE.get(cap);
         if (enabled == null || !enabled) {
-            glEnable(cap);
+            GL11.glEnable(cap);
             STATE_CACHE.put(cap, true);
         }
     }
@@ -58,14 +50,14 @@ public class GLStateCache {
     public static void disable(int cap) {
         Boolean enabled = STATE_CACHE.get(cap);
         if (enabled == null || enabled) {
-            glDisable(cap);
+            GL11.glDisable(cap);
             STATE_CACHE.put(cap, false);
         }
     }
 
     public static void blendFunc(int sFactor, int dFactor) {
         if (lastBlendSrc != sFactor || lastBlendDst != dFactor) {
-            glBlendFunc(sFactor, dFactor);
+            GL11.glBlendFunc(sFactor, dFactor);
             lastBlendSrc = sFactor;
             lastBlendDst = dFactor;
         }
@@ -73,14 +65,14 @@ public class GLStateCache {
 
     public static void setBlendEquation(int equation) {
         if (lastBlendEquation != equation) {
-            glBlendEquation(equation);
+            GL14.glBlendEquation(equation);
             lastBlendEquation = equation;
         }
     }
 
     public static void activeTexture(int texture) {
         if (lastActiveTexture != texture) {
-            glActiveTexture(texture);
+            GL13.glActiveTexture(texture);
             lastActiveTexture = texture;
         }
     }
@@ -89,7 +81,7 @@ public class GLStateCache {
         int lastTarget = lastTexture[0];
         int lastTextureId = lastTexture[1];
         if (lastTarget != target || lastTextureId != texture) {
-            glBindTexture(target, texture);
+            GL11.glBindTexture(target, texture);
 
             lastTexture[0] = target;
             lastTexture[1] = texture;
@@ -98,56 +90,56 @@ public class GLStateCache {
 
     public static void useProgram(int program) {
         if (lastShaderProgram != program) {
-            glUseProgram(program);
+            GL20.glUseProgram(program);
             lastShaderProgram = program;
         }
     }
 
     public static void bindFrameBuffer(int frameBuffer) {
         if (lastFrameBuffer != frameBuffer) {
-            glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+            GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
             lastFrameBuffer = frameBuffer;
         }
     }
 
     public static void bindRenderBuffer(int renderBuffer) {
         if (lastRenderBuffer != renderBuffer) {
-            glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
+            GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, renderBuffer);
             lastRenderBuffer = renderBuffer;
         }
     }
 
     public static void bindDrawFrameBuffer(int frameBuffer) {
         if (lastDrawFrameBuffer != frameBuffer) {
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBuffer);
+            GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, frameBuffer);
             lastDrawFrameBuffer = frameBuffer;
         }
     }
 
     public static void bindReadFrameBuffer(int frameBuffer) {
         if (lastReadFrameBuffer != frameBuffer) {
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer);
+            GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, frameBuffer);
             lastReadFrameBuffer = frameBuffer;
         }
     }
 
     public static void bindVertexArray(int array) {
         if (lastVertexArray != array) {
-            glBindVertexArray(array);
+            GL30.glBindVertexArray(array);
             lastVertexArray = array;
         }
     }
 
     public static void bindIndirectBuffer(int buffer) {
         if (lastDrawIndirectBuffer != buffer) {
-            glBindBuffer(GL_DRAW_INDIRECT_BUFFER, buffer);
+            GL15.glBindBuffer(GL40.GL_DRAW_INDIRECT_BUFFER, buffer);
             lastDrawIndirectBuffer = buffer;
         }
     }
 
     public static void bindElementArrayBuffer(int buffer) {
         if (lastElementArrayBuffer != buffer) {
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+            GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer);
             lastElementArrayBuffer = buffer;
         }
     }
@@ -159,7 +151,7 @@ public class GLStateCache {
         float lastAlpha = lastClearColor[3];
 
         if (lastRed != red || lastGreen != green || lastBlue != blue || lastAlpha != alpha) {
-            glClearColor(red, green, blue, alpha);
+            GL11.glClearColor(red, green, blue, alpha);
 
             lastClearColor[0] = red;
             lastClearColor[1] = green;
@@ -175,7 +167,7 @@ public class GLStateCache {
         boolean lastAlpha = lastColorMask[3];
 
         if (lastRed != red || lastGreen != green || lastBlue != blue || lastAlpha != alpha) {
-            glColorMask(red, green, blue, alpha);
+            GL11.glColorMask(red, green, blue, alpha);
 
             lastColorMask[0] = red;
             lastColorMask[1] = green;
@@ -190,7 +182,7 @@ public class GLStateCache {
         int lastMask = lastStencilFunc[2];
 
         if (lastFunc != func || lastRef != ref || lastMask != mask) {
-            glStencilFunc(func, ref, mask);
+            GL11.glStencilFunc(func, ref, mask);
 
             lastStencilFunc[0] = func;
             lastStencilFunc[1] = ref;
@@ -204,7 +196,7 @@ public class GLStateCache {
         int lastDPPass = lastStencilOp[2];
 
         if (lastSFail != sfail || lastDPFail != dpfail || lastDPPass != dppass) {
-            glStencilOp(sfail, dpfail, dppass);
+            GL11.glStencilOp(sfail, dpfail, dppass);
 
             lastStencilOp[0] = sfail;
             lastStencilOp[1] = dpfail;
@@ -214,49 +206,49 @@ public class GLStateCache {
 
     public static void clearDepth(double depth) {
         if (lastClearDepth != depth) {
-            glClearDepth(depth);
+            GL11.glClearDepth(depth);
             lastClearDepth = depth;
         }
     }
 
     public static void clearStencil(int s) {
         if (lastClearStencil != s) {
-            glClearStencil(s);
+            GL11.glClearStencil(s);
             lastClearStencil = s;
         }
     }
 
     public static void depthMask(boolean flag) {
         if (lastDepthMask != flag) {
-            glDepthMask(flag);
+            GL11.glDepthMask(flag);
             lastDepthMask = flag;
         }
     }
 
     public static void depthFunc(int func) {
         if (lastDepthFunc != func) {
-            glDepthFunc(func);
+            GL11.glDepthFunc(func);
             lastDepthFunc = func;
         }
     }
 
     public static void cullFace(int mode) {
         if (lastCullFace != mode) {
-            glCullFace(mode);
+            GL11.glCullFace(mode);
             lastCullFace = mode;
         }
     }
 
     public static void frontFace(int dir) {
         if (lastFrontFace != dir) {
-            glFrontFace(dir);
+            GL11.glFrontFace(dir);
             lastFrontFace = dir;
         }
     }
 
     public static void polygonMode(int face, int mode) {
         if (lastPolygonMode[0] != face || lastPolygonMode[1] != mode) {
-            glPolygonMode(face, mode);
+            GL11.glPolygonMode(face, mode);
             lastPolygonMode[0] = face;
             lastPolygonMode[1] = mode;
         }
@@ -264,7 +256,7 @@ public class GLStateCache {
 
     public static void polygonOffset(float factor, float units) {
         if (lastPolygonOffset[0] != factor || lastPolygonOffset[1] != units) {
-            glPolygonOffset(factor, units);
+            GL11.glPolygonOffset(factor, units);
             lastPolygonOffset[0] = factor;
             lastPolygonOffset[1] = units;
         }
@@ -272,21 +264,21 @@ public class GLStateCache {
 
     public static void lineWidth(float width) {
         if (lastLineWidth != width) {
-            glLineWidth(width);
+            GL11.glLineWidth(width);
             lastLineWidth = width;
         }
     }
 
     public static void pointSize(float size) {
         if (lastPointSize != size) {
-            glPointSize(size);
+            GL11.glPointSize(size);
             lastPointSize = size;
         }
     }
 
     public static void scissor(int x, int y, int width, int height) {
         if (lastScissorBox[0] != x || lastScissorBox[1] != y || lastScissorBox[2] != width || lastScissorBox[3] != height) {
-            glScissor(x, y, width, height);
+            GL11.glScissor(x, y, width, height);
             lastScissorBox[0] = x;
             lastScissorBox[1] = y;
             lastScissorBox[2] = width;
@@ -296,7 +288,7 @@ public class GLStateCache {
 
     public static void viewport(int x, int y, int width, int height) {
         if (lastViewport[0] != x || lastViewport[1] != y || lastViewport[2] != width || lastViewport[3] != height) {
-            glViewport(x, y, width, height);
+            GL11.glViewport(x, y, width, height);
             lastViewport[0] = x;
             lastViewport[1] = y;
             lastViewport[2] = width;
@@ -306,7 +298,7 @@ public class GLStateCache {
 
     public static void depthRange(float near, float far) {
         if (lastDepthRange[0] != near || lastDepthRange[1] != far) {
-            glDepthRange(near, far);
+            GL11.glDepthRange(near, far);
             lastDepthRange[0] = near;
             lastDepthRange[1] = far;
         }
@@ -314,7 +306,7 @@ public class GLStateCache {
 
     public static void sampleMaski(int maskNumber, int mask) {
         if (lastSampleMaskValue != mask) {
-            glSampleMaski(maskNumber, mask);
+            GL32.glSampleMaski(maskNumber, mask);
             lastSampleMaskValue = mask;
         }
     }
