@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.core.debug;
 
 import me.hannsi.lfjg.core.utils.toolkit.ANSIFormat;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -8,7 +9,13 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 public class DebugLog {
-    private static final Logger LOGGER = LogManager.getLogger(DebugLog.class);
+    private static final Logger LOGGER = LogManager.getLogger();
+    public static boolean fabricDebug = false;
+
+    static {
+        ((org.apache.logging.log4j.core.Logger) LOGGER).setLevel(Level.DEBUG);
+    }
+
     private Class<?> clazz;
     private DebugType debugType;
     private Exception exception;
@@ -97,6 +104,10 @@ public class DebugLog {
         new DebugLog(clazz, DebugType.ERROR, error, DebugLevel.WARNING);
     }
 
+    public static Logger getLOGGER() {
+        return LOGGER;
+    }
+
     private String getDescription() {
         String description = "[" + clazz.getSimpleName() + "] ";
 
@@ -127,7 +138,11 @@ public class DebugLog {
         switch (debugLevel) {
             case DEBUG:
                 System.out.print(ANSIFormat.RESET);
-                LOGGER.debug("{}{}{}", ANSIFormat.RESET, description, ANSIFormat.RESET);
+                if (fabricDebug) {
+                    LOGGER.info("{}{}{}", ANSIFormat.RESET, description, ANSIFormat.RESET);
+                } else {
+                    LOGGER.debug("{}{}{}", ANSIFormat.RESET, description, ANSIFormat.RESET);
+                }
                 break;
             case INFO:
                 System.out.print(ANSIFormat.BLUE);
