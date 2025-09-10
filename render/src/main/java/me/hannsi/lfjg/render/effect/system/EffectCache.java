@@ -5,6 +5,7 @@ import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
+import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 
 import java.util.LinkedHashMap;
@@ -23,6 +24,26 @@ public class EffectCache {
         return new EffectCache();
     }
 
+
+    public EffectCache attachGLObjectCache(GLObjectCache glObjectCache) {
+        for (Map.Entry<Long, GLObject> glObjectEntry : glObjectCache.getGlObjects().entrySet()) {
+            GLObject glObject = glObjectEntry.getValue();
+            glObject.setEffectCache(this);
+
+            for (Map.Entry<String, EffectBase> effectBaseEntry : effectBases.entrySet()) {
+                effectBaseEntry.getValue().create(glObject);
+
+                if (effectBaseEntry.getValue().isNoUseFrameBuffer()) {
+                    continue;
+                }
+
+                needFrameBuffer = true;
+            }
+        }
+
+        return this;
+    }
+
     public EffectCache attachGLObject(GLObject glObject) {
         glObject.setEffectCache(this);
 
@@ -32,6 +53,7 @@ public class EffectCache {
             if (effectBaseEntry.getValue().isNoUseFrameBuffer()) {
                 continue;
             }
+
             needFrameBuffer = true;
         }
 
