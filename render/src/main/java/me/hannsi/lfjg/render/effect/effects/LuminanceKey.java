@@ -47,7 +47,7 @@ public class LuminanceKey extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.LUMINANCE_KEY.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.LUMINANCE_KEY.getId());
         LFJGRenderContext.shaderProgram.setUniform("luminanceKeyThreshold", UploadUniformType.ON_CHANGE, threshold);
         LFJGRenderContext.shaderProgram.setUniform("luminanceKeyBlurAmount", UploadUniformType.ON_CHANGE, blurAmount);
         LFJGRenderContext.shaderProgram.setUniform("luminanceKeyMode", UploadUniformType.ON_CHANGE, luminanceMode.getId());

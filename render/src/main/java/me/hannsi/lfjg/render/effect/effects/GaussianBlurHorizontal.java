@@ -34,7 +34,7 @@ public class GaussianBlurHorizontal extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.GAUSSIAN_BLUR_HORIZONTAL.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.GAUSSIAN_BLUR_HORIZONTAL.getId());
         LFJGRenderContext.shaderProgram.setUniform("gaussianBlurDirection", UploadUniformType.ON_CHANGE, new Vector2f(1, 0));
         LFJGRenderContext.shaderProgram.setUniform("gaussianBlurRadius", UploadUniformType.ON_CHANGE, radiusX);
 

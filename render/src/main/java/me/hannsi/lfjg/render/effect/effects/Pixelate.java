@@ -29,7 +29,7 @@ public class Pixelate extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.PIXELATE.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.PIXELATE.getId());
         LFJGRenderContext.shaderProgram.setUniform("pixelateMosaicSize", UploadUniformType.ON_CHANGE, mosaicSize);
 
         super.drawFrameBuffer(latestFrameBuffer);

@@ -63,7 +63,7 @@ public class LensBlur extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.LENS_BLUR.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.LENS_BLUR.getId());
         LFJGRenderContext.shaderProgram.setUniform("lensBlurRange", UploadUniformType.ON_CHANGE, range);
         LFJGRenderContext.shaderProgram.setUniform("lensBlurIntensity", UploadUniformType.ON_CHANGE, intensity);
         LFJGRenderContext.shaderProgram.setUniform("lensBlurSigma", UploadUniformType.ON_CHANGE, sigma);

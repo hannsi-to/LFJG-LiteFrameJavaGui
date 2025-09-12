@@ -27,7 +27,8 @@ public class MainFrame implements LFJGFrame {
                 .addScene(new Demo2(LFJGContext.frame).getScene())
                 .addScene(new Demo3(LFJGContext.frame).getScene())
                 .addScene(new Demo4(LFJGContext.frame).getScene())
-                .setCurrentScene("Demo2")
+                .addScene(new Demo5(LFJGContext.frame).getScene())
+                .setCurrentScene("Demo5")
                 .initScenes();
     }
 

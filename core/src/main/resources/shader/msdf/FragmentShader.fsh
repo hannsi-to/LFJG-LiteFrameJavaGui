@@ -27,7 +27,7 @@ void msdfMain() {
     float outlineOnlyAlpha = clamp(outlineAlpha * (1.0 - fillAlpha), 0.0, 1.0);
 
     vec4 resultColor;
-    vec4 uOutlineColor = vec4(1, 0, 0, 1);
+    vec4 uOutlineColor = msdfFontColor;
 
     if (msdfOutline) {
         resultColor = vec4(uOutlineColor.rgb, outlineOnlyAlpha * uOutlineColor.a);

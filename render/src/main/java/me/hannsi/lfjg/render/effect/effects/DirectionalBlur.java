@@ -46,7 +46,7 @@ public class DirectionalBlur extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.DIRECTION_BLUR.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.DIRECTION_BLUR.getId());
         LFJGRenderContext.shaderProgram.setUniform("directionalBlurRadius", UploadUniformType.ON_CHANGE, radius * 10);
         LFJGRenderContext.shaderProgram.setUniform("directionalBlurAngle", UploadUniformType.ON_CHANGE, angle);
 

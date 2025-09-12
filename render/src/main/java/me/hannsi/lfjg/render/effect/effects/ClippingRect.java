@@ -89,7 +89,7 @@ public class ClippingRect extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.CLIPPING_RECT.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.CLIPPING_RECT.getId());
         LFJGRenderContext.shaderProgram.setUniform("clippingRectInvert", UploadUniformType.ON_CHANGE, invert);
         LFJGRenderContext.shaderProgram.setUniform("clippingRectSize", UploadUniformType.ON_CHANGE, new Vector4f(x1, y1, x2, y2));
 

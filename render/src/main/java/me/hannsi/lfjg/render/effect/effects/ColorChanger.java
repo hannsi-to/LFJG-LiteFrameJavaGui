@@ -37,7 +37,7 @@ public class ColorChanger extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.COLOR_CHANGER.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.COLOR_CHANGER.getId());
         LFJGRenderContext.shaderProgram.setUniform("colorChangerAlpha", UploadUniformType.ON_CHANGE, alpha);
         LFJGRenderContext.shaderProgram.setUniform("colorChangerTargetColor", UploadUniformType.ON_CHANGE, targetColor);
         LFJGRenderContext.shaderProgram.setUniform("colorChangerNewColor", UploadUniformType.ON_CHANGE, newColor);

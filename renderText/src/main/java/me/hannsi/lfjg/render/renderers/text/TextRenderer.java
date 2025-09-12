@@ -183,7 +183,7 @@ public class TextRenderer {
         GLStateCache.activeTexture(GL13.GL_TEXTURE1);
         GLStateCache.bindTexture(GL11.GL_TEXTURE_2D, msdfTextureLoader.textureId);
 
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.MSDF.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.MSDF.getId());
         LFJGRenderContext.shaderProgram.setUniform("fontAtlas", UploadUniformType.ONCE, 1);
 
         boolean code = false;
@@ -399,7 +399,7 @@ public class TextRenderer {
                     throw new IllegalStateException("Unexpected value: " + data.lineType);
             }
 
-            LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.OBJECT.getId());
+            LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.OBJECT.getId());
             LFJGRenderContext.shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, lineMatrix.translate(x, y, 0).scale(width, thickness, 1));
             LFJGRenderContext.shaderProgram.setUniform("objectColor", UploadUniformType.PER_FRAME, data.color);
             LFJGRenderContext.shaderProgram.setUniform("objectReplaceColor", UploadUniformType.PER_FRAME, true);

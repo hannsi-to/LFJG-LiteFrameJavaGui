@@ -75,7 +75,7 @@ public class DiagonalClipping extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.DIAGONAL_CLIPPING.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.DIAGONAL_CLIPPING.getId());
         LFJGRenderContext.shaderProgram.setUniform("diagonalClippingClipCenter", UploadUniformType.ON_CHANGE, new Vector2f(centerX, centerY));
         LFJGRenderContext.shaderProgram.setUniform("diagonalClippingClipAngle", UploadUniformType.ON_CHANGE, clipAngle);
         LFJGRenderContext.shaderProgram.setUniform("diagonalClippingBlurWidth", UploadUniformType.ON_CHANGE, blurWidth);

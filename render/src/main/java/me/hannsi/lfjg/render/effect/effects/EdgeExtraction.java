@@ -60,7 +60,7 @@ public class EdgeExtraction extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.EDGE_EXTRACTION.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.EDGE_EXTRACTION.getId());
         LFJGRenderContext.shaderProgram.setUniform("edgeExtractionEdgeStrength", UploadUniformType.ON_CHANGE, edgeStrength);
         LFJGRenderContext.shaderProgram.setUniform("edgeExtractionThreshold", UploadUniformType.ON_CHANGE, threshold);
         LFJGRenderContext.shaderProgram.setUniform("edgeExtractionEnableLuminanceEdge", UploadUniformType.ON_CHANGE, enableLuminanceEdge);

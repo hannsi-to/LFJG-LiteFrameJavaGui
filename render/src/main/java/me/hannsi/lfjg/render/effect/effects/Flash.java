@@ -67,7 +67,7 @@ public class Flash extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.FLASH.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.FLASH.getId());
         LFJGRenderContext.shaderProgram.setUniform("flashIntensity", UploadUniformType.ON_CHANGE, intensity);
         LFJGRenderContext.shaderProgram.setUniform("flashScreenPosition", UploadUniformType.ON_CHANGE, new Vector2f(x, y));
         LFJGRenderContext.shaderProgram.setUniform("flashBlendMode", UploadUniformType.ON_CHANGE, flashBlendMode.getId());

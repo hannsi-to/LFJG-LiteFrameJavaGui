@@ -51,7 +51,7 @@ public class Bloom extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.BLOOM.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.BLOOM.getId());
         LFJGRenderContext.shaderProgram.setUniform("bloomSpread", UploadUniformType.ON_CHANGE, spread);
         LFJGRenderContext.shaderProgram.setUniform("bloomIntensity", UploadUniformType.ON_CHANGE, intensity);
         LFJGRenderContext.shaderProgram.setUniform("bloomThreshold", UploadUniformType.ON_CHANGE, threshold);

@@ -71,7 +71,7 @@ public class Glow extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.GLOW.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.GLOW.getId());
         LFJGRenderContext.shaderProgram.setUniform("glowIntensity", UploadUniformType.ON_CHANGE, intensity);
         LFJGRenderContext.shaderProgram.setUniform("glowThreshold", UploadUniformType.ON_CHANGE, threshold);
         LFJGRenderContext.shaderProgram.setUniform("glowSpread", UploadUniformType.ON_CHANGE, spread);

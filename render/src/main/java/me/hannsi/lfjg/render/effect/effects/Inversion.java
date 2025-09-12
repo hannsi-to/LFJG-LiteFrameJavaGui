@@ -48,7 +48,7 @@ public class Inversion extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.INVERSION.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.INVERSION.getId());
         LFJGRenderContext.shaderProgram.setUniform("inversionFlipVertical", UploadUniformType.ON_CHANGE, flipVertical);
         LFJGRenderContext.shaderProgram.setUniform("inversionFlipHorizontal", UploadUniformType.ON_CHANGE, flipHorizontal);
         LFJGRenderContext.shaderProgram.setUniform("inversionInvertBrightness", UploadUniformType.ON_CHANGE, invertBrightness);

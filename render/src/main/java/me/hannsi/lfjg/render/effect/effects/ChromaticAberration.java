@@ -69,7 +69,7 @@ public class ChromaticAberration extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.CHROMATIC_ABERRATION.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.CHROMATIC_ABERRATION.getId());
         LFJGRenderContext.shaderProgram.setUniform("chromaticAberrationOffsetAmount", UploadUniformType.ON_CHANGE, offsetAmount);
         LFJGRenderContext.shaderProgram.setUniform("chromaticAberrationAngle", UploadUniformType.ON_CHANGE, angle);
         LFJGRenderContext.shaderProgram.setUniform("chromaticAberrationStrength", UploadUniformType.ON_CHANGE, strength);

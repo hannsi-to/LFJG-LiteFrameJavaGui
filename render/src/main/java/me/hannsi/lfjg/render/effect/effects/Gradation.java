@@ -108,7 +108,7 @@ public class Gradation extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.GRADATION.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.GRADATION.getId());
         LFJGRenderContext.shaderProgram.setUniform("gradationCenter", UploadUniformType.ON_CHANGE, new Vector2f(centerX, centerY));
         LFJGRenderContext.shaderProgram.setUniform("gradationAngle", UploadUniformType.ON_CHANGE, angle);
         LFJGRenderContext.shaderProgram.setUniform("gradationWidth", UploadUniformType.ON_CHANGE, width);

@@ -139,7 +139,7 @@ public class FrameBuffer {
     public void drawFrameBuffer(boolean drawVAORendering) {
         LFJGRenderContext.shaderProgram.bind();
 
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.FRAME_BUFFER.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.FRAME_BUFFER.getId());
         LFJGRenderContext.shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix);
         LFJGRenderContext.shaderProgram.setUniform("frameBufferSampler", UploadUniformType.ONCE, 3);
 

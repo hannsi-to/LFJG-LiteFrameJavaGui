@@ -24,7 +24,7 @@ public class FXAA extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.FXAA.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.FXAA.getId());
         LFJGRenderContext.shaderProgram.setUniform("fxaaUseAlpha", UploadUniformType.ON_CHANGE, useAlpha);
 
         super.drawFrameBuffer(latestFrameBuffer);

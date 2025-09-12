@@ -75,7 +75,7 @@ public class ChromaKey extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.CHROMA_KEY.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.CHROMA_KEY.getId());
         LFJGRenderContext.shaderProgram.setUniform("chromaKeyColor", UploadUniformType.ON_CHANGE, new Vector3f(chromaKeyColor.getRedF(), chromaKeyColor.getGreenF(), chromaKeyColor.getBlueF()));
         LFJGRenderContext.shaderProgram.setUniform("chromaKeyHueRange", UploadUniformType.ON_CHANGE, hueRange);
         LFJGRenderContext.shaderProgram.setUniform("chromaKeySaturationRange", UploadUniformType.ON_CHANGE, saturationRange);

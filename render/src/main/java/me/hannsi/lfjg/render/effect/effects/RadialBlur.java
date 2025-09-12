@@ -52,7 +52,7 @@ public class RadialBlur extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.RADIAL_BLUR.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.RADIAL_BLUR.getId());
         LFJGRenderContext.shaderProgram.setUniform("radialBlurRange", UploadUniformType.ON_CHANGE, range);
         LFJGRenderContext.shaderProgram.setUniform("radialBlurCenterX", UploadUniformType.ON_CHANGE, centerX);
         LFJGRenderContext.shaderProgram.setUniform("radialBlurCenterY", UploadUniformType.ON_CHANGE, centerY);

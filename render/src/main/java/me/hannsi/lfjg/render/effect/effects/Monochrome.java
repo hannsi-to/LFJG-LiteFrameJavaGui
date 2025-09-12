@@ -43,7 +43,7 @@ public class Monochrome extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.PER_FRAME, FragmentShaderType.MONOCHROME.getId());
+        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.MONOCHROME.getId());
         LFJGRenderContext.shaderProgram.setUniform("monochromeIntensity", UploadUniformType.ON_CHANGE, intensity);
         LFJGRenderContext.shaderProgram.setUniform("monochromeColor", UploadUniformType.ON_CHANGE, new Vector3f(color.getRedF(), color.getGreenF(), color.getBlueF()));
         LFJGRenderContext.shaderProgram.setUniform("monochromePreserveBrightness", UploadUniformType.ON_CHANGE, preserveBrightness);
