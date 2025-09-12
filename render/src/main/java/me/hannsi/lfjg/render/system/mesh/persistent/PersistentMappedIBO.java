@@ -14,7 +14,10 @@ public class PersistentMappedIBO implements PersistentMappedBuffer {
     private final int sizeInBytes;
     private final int maxCommands;
 
+    private int flags;
+
     public PersistentMappedIBO(int maxCommands, int flags) {
+        this.flags = flags;
         this.maxCommands = maxCommands;
         this.sizeInBytes = DrawCommand.SIZE_BYTE * maxCommands;
 
@@ -49,7 +52,9 @@ public class PersistentMappedIBO implements PersistentMappedBuffer {
             cmd.putIntoBuffer(mappedBuffer);
         }
 
-        GL42.glMemoryBarrier(GL44.GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT);
+        if ((flags & GL44.GL_MAP_COHERENT_BIT) == 0) {
+            GL42.glMemoryBarrier(GL44.GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT);
+        }
 
         return this;
     }
@@ -57,6 +62,14 @@ public class PersistentMappedIBO implements PersistentMappedBuffer {
     @Override
     public void cleanup() {
         GL15.glDeleteBuffers(bufferId);
+    }
+
+    public int getFlags() {
+        return flags;
+    }
+
+    public void setFlags(int flags) {
+        this.flags = flags;
     }
 
     public int getBufferId() {

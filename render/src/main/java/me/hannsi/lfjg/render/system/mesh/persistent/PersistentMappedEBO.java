@@ -14,7 +14,10 @@ public class PersistentMappedEBO implements PersistentMappedBuffer {
     private final IntBuffer mappedBuffer;
     private final int sizeInBytes;
 
+    private int flags;
+
     public PersistentMappedEBO(int size, int flags) {
+        this.flags = flags;
         this.sizeInBytes = size * Integer.BYTES;
 
         bufferId = GL15.glGenBuffers();
@@ -49,7 +52,9 @@ public class PersistentMappedEBO implements PersistentMappedBuffer {
         mappedBuffer.clear();
         mappedBuffer.put(newData);
 
-        GL42.glMemoryBarrier(GL44.GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT);
+        if ((flags & GL44.GL_MAP_COHERENT_BIT) == 0) {
+            GL42.glMemoryBarrier(GL44.GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT);
+        }
 
         return this;
     }
@@ -57,6 +62,14 @@ public class PersistentMappedEBO implements PersistentMappedBuffer {
     @Override
     public void cleanup() {
         GL15.glDeleteBuffers(bufferId);
+    }
+
+    public int getFlags() {
+        return flags;
+    }
+
+    public void setFlags(int flags) {
+        this.flags = flags;
     }
 
     public int getBufferId() {

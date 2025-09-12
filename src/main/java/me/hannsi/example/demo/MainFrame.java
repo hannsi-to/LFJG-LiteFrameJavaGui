@@ -2,6 +2,7 @@ package me.hannsi.example.demo;
 
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.LFJGContext;
+import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.system.scene.SceneSystem;
 
@@ -26,13 +27,15 @@ public class MainFrame implements LFJGFrame {
                 .addScene(new Demo2(LFJGContext.frame).getScene())
                 .addScene(new Demo3(LFJGContext.frame).getScene())
                 .addScene(new Demo4(LFJGContext.frame).getScene())
-                .setCurrentScene("Demo4")
+                .setCurrentScene("Demo2")
                 .initScenes();
     }
 
     @Override
     public void drawFrame() {
         sceneSystem.drawFrameScenes();
+
+        System.out.println(LFJGContext.frame.getFps());
     }
 
     @Override
@@ -43,6 +46,6 @@ public class MainFrame implements LFJGFrame {
 
     @Override
     public void setFrameSetting() {
-
+        LFJGContext.frame.setFrameSettingValue(RefreshRateSetting.class, -1);
     }
 }

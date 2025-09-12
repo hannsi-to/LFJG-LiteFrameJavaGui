@@ -13,8 +13,10 @@ public class PersistentMappedDVBO implements PersistentMappedBuffer {
     private final int sizeInBytes;
 
     private int currentIndex = 0;
+    private int flags;
 
     public PersistentMappedDVBO(int size, int flags) {
+        this.flags = flags;
         this.sizeInBytes = size * Double.BYTES;
 
         for (int i = 0; i < MeshConstants.DEFAULT_BUFFER_COUNT; i++) {
@@ -43,7 +45,9 @@ public class PersistentMappedDVBO implements PersistentMappedBuffer {
         buffer.position(0);
         buffer.put(newData);
 
-        GL42.glMemoryBarrier(GL44.GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT);
+        if ((flags & GL44.GL_MAP_COHERENT_BIT) == 0) {
+            GL42.glMemoryBarrier(GL44.GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT);
+        }
 
         return this;
     }
@@ -67,6 +71,14 @@ public class PersistentMappedDVBO implements PersistentMappedBuffer {
         }
     }
 
+    public int getFlags() {
+        return flags;
+    }
+
+    public void setFlags(int flags) {
+        this.flags = flags;
+    }
+
     public int[] getBufferIds() {
         return bufferIds;
     }
@@ -81,5 +93,9 @@ public class PersistentMappedDVBO implements PersistentMappedBuffer {
 
     public int getCurrentIndex() {
         return currentIndex;
+    }
+
+    public void setCurrentIndex(int currentIndex) {
+        this.currentIndex = currentIndex;
     }
 }
