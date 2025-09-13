@@ -1,4 +1,4 @@
-#version 330
+#version 430 core
 
 in vec4 outPosition;
 in vec4 outColor;

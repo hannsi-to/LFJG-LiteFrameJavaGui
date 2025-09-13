@@ -164,7 +164,7 @@ public class GLObject implements Cloneable {
 
     private void uploadUniforms() {
         LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.OBJECT.getId());
-        LFJGRenderContext.shaderProgram.setUniform("projectionMatrix", UploadUniformType.PER_FRAME, Core.projection2D.getProjMatrix());
+        LFJGRenderContext.shaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());
         LFJGRenderContext.shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, transform.getModelMatrix());
         LFJGRenderContext.shaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, viewMatrix);
         LFJGRenderContext.shaderProgram.setUniform("resolution", UploadUniformType.ON_CHANGE, Core.frameBufferSize);
@@ -175,6 +175,7 @@ public class GLObject implements Cloneable {
 
     private void bindResources() {
         LFJGRenderContext.shaderProgram.bind();
+        LFJGRenderContext.shaderProgram.getMatrix().bind();
     }
 
     public GLObject copy(String objectName) {

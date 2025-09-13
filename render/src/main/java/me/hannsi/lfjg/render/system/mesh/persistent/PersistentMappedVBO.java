@@ -25,7 +25,13 @@ public class PersistentMappedVBO implements PersistentMappedBuffer {
             GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, bufferIds[i]);
             GL44.glBufferStorage(GL15.GL_ARRAY_BUFFER, sizeInBytes, flags);
 
-            ByteBuffer byteBuffer = GL30.glMapBufferRange(GL15.GL_ARRAY_BUFFER, 0, sizeInBytes, flags);
+            ByteBuffer byteBuffer = GL30.glMapBufferRange(
+                    GL15.GL_ARRAY_BUFFER,
+                    0,
+                    sizeInBytes,
+                    flags
+            );
+
             if (byteBuffer == null) {
                 throw new NullPointerException("glMapBufferRange failed at index " + i);
             }

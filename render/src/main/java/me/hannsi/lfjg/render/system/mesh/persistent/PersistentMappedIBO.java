@@ -4,7 +4,6 @@ import me.hannsi.lfjg.render.system.mesh.DrawCommand;
 import org.lwjgl.opengl.*;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class PersistentMappedIBO implements PersistentMappedBuffer {
             throw new NullPointerException("Failed to map indirect buffer");
         }
 
-        mappedBuffer = byteBuffer.order(ByteOrder.nativeOrder()).asIntBuffer();
+        mappedBuffer = byteBuffer.asIntBuffer();
 
         GL15.glBindBuffer(GL40.GL_DRAW_INDIRECT_BUFFER, 0);
     }

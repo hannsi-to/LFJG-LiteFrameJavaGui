@@ -3,7 +3,6 @@ package me.hannsi.lfjg.render.renderers.model;
 import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureLoader;
-import me.hannsi.lfjg.core.utils.toolkit.Camera;
 import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.debug.exceptions.model.ModelException;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
@@ -26,12 +25,9 @@ public class ModelRender {
 
     private ModelCache modelCache;
     private TextureCache textureCache;
-    private Camera camera;
 
     ModelRender() {
         vaoRendering = new VAORendering();
-
-        camera = new Camera();
     }
 
     public static ModelRender createModelRender() {
@@ -48,11 +44,6 @@ public class ModelRender {
         return this;
     }
 
-    public ModelRender camera(Camera camera) {
-        this.camera = camera;
-        return this;
-    }
-
     public void render() {
         GLStateCache.enable(GL11.GL_DEPTH_TEST);
 
@@ -61,7 +52,7 @@ public class ModelRender {
         LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.MODEL.getId());
         LFJGRenderContext.shaderProgram.setUniform("textureSampler", UploadUniformType.ONCE, 0);
         LFJGRenderContext.shaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection3D.getProjMatrix());
-        LFJGRenderContext.shaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, camera.getViewMatrix());
+        LFJGRenderContext.shaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, LFJGRenderContext.mainCamera.getViewMatrix());
 
         Collection<Model> models = modelCache.getModels().values();
         for (Model model : models) {
@@ -124,13 +115,5 @@ public class ModelRender {
 
     public void setTextureCache(TextureCache textureCache) {
         this.textureCache = textureCache;
-    }
-
-    public Camera getCamera() {
-        return camera;
-    }
-
-    public void setCamera(Camera camera) {
-        this.camera = camera;
     }
 }
