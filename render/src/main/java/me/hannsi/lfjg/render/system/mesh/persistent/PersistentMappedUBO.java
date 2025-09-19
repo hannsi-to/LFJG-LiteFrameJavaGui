@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.render.system.mesh.persistent;
 
+import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.*;
 
@@ -20,7 +21,7 @@ public class PersistentMappedUBO implements PersistentMappedBuffer {
         this.sizeInBytes = 3 * 16 * Float.BYTES;
 
         bufferId = GL15.glGenBuffers();
-        GL15.glBindBuffer(GL31.GL_UNIFORM_BUFFER, bufferId);
+        GLStateCache.bindUniformBuffer(bufferId);
         GL44.glBufferStorage(GL31.GL_UNIFORM_BUFFER, sizeInBytes, flags);
         bind();
 
@@ -34,12 +35,10 @@ public class PersistentMappedUBO implements PersistentMappedBuffer {
         if (mappedBuffer == null) {
             throw new NullPointerException("Failed to map indirect buffer");
         }
-
-        GL15.glBindBuffer(GL31.GL_UNIFORM_BUFFER, 0);
     }
 
     public void bind() {
-        GL30C.glBindBufferBase(GL31C.GL_UNIFORM_BUFFER, uboData.getBinding(), bufferId);
+        GL30.glBindBufferBase(GL31.GL_UNIFORM_BUFFER, uboData.getBinding(), bufferId);
     }
 
     public PersistentMappedUBO update(Matrix4f projectionMatrix, Matrix4f viewMatrix, Matrix4f modelMatrix) {
@@ -56,9 +55,8 @@ public class PersistentMappedUBO implements PersistentMappedBuffer {
 
     @Override
     public void cleanup() {
-        GL15.glBindBuffer(GL31.GL_UNIFORM_BUFFER, bufferId);
+        GLStateCache.bindUniformBuffer(bufferId);
         GL30.glUnmapBuffer(GL31.GL_UNIFORM_BUFFER);
-        GL15.glBindBuffer(GL31.GL_UNIFORM_BUFFER, 0);
         GL15.glDeleteBuffers(bufferId);
     }
 
