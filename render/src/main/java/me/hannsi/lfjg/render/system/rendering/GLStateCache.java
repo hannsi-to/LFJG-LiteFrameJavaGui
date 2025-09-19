@@ -29,6 +29,7 @@ public class GLStateCache {
     private static int lastVertexArray = -1;
     private static int lastDrawIndirectBuffer = -1;
     private static int lastElementArrayBuffer = -1;
+    private static int lastArrayBuffer = -1;
     private static double lastClearDepth = -1.0;
     private static int lastClearStencil = -1;
     private static boolean lastDepthMask = true;
@@ -141,6 +142,13 @@ public class GLStateCache {
         if (lastElementArrayBuffer != buffer) {
             GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer);
             lastElementArrayBuffer = buffer;
+        }
+    }
+
+    public static void bindArrayBuffer(int buffer) {
+        if (lastArrayBuffer != buffer) {
+            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, buffer);
+            lastArrayBuffer = buffer;
         }
     }
 

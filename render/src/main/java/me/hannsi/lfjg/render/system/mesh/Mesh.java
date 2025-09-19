@@ -8,6 +8,7 @@ import me.hannsi.lfjg.render.debug.exceptions.render.meshBuilder.MeshBuilderExce
 import me.hannsi.lfjg.render.system.mesh.persistent.PersistentMappedEBO;
 import me.hannsi.lfjg.render.system.mesh.persistent.PersistentMappedIBO;
 import me.hannsi.lfjg.render.system.mesh.persistent.PersistentMappedVBO;
+import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.lwjgl.opengl.GL30;
 
 import java.util.*;
@@ -35,7 +36,7 @@ public class Mesh {
         this.useIndirect = MeshConstants.DEFAULT_USE_INDIRECT;
         this.drawCommands = new ArrayList<>();
 
-        GL30.glBindVertexArray(vaoId);
+        GLStateCache.bindVertexArray(vaoId);
     }
 
     public static Mesh createMesh() {

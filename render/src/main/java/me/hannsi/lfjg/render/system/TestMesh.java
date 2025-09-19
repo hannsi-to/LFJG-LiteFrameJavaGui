@@ -3,6 +3,7 @@ package me.hannsi.lfjg.render.system;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.system.mesh.MeshConstants;
 import me.hannsi.lfjg.render.system.mesh.persistent.PersistentMappedVBO;
+import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.lwjgl.opengl.GL30;
 
 public class TestMesh {
@@ -23,7 +24,7 @@ public class TestMesh {
         this.useElementBufferObject = MeshConstants.DEFAULT_USE_ELEMENT_BUFFER_OBJECT;
         this.useIndirect = MeshConstants.DEFAULT_USE_INDIRECT;
 
-        GL30.glBindVertexArray(vaoId);
+        GLStateCache.bindVertexArray(vaoId);
     }
 
 
