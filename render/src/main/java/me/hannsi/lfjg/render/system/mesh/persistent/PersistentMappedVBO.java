@@ -43,26 +43,29 @@ public class PersistentMappedVBO implements PersistentMappedBuffer {
     }
 
     public PersistentMappedVBO update(float[] newData) {
+        return updatePartial(newData, 0, newData.length);
+    }
+
+    public PersistentMappedVBO updatePartial(float[] newData, int offset, int length) {
         FloatBuffer buffer = mappedBuffers[currentIndex];
-        if (newData.length > buffer.capacity()) {
+        if (offset + length > buffer.capacity()) {
             throw new IllegalArgumentException("Data exceeds buffer capacity.");
         }
 
-        buffer.position(0);
-        buffer.put(newData);
+        buffer.position(offset);
+        buffer.put(newData, 0, length);
 
         if ((flags & GL44.GL_MAP_COHERENT_BIT) == 0) {
             GL42.glMemoryBarrier(GL44.GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT);
         }
-
         return this;
     }
 
-    public PersistentMappedVBO attribute(AttributeType attributeType) {
+    public PersistentMappedVBO attribute(AttributeType attributeType, int stride, int pointer) {
         int bufferId = bufferIds[currentIndex];
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, bufferId);
         GL20.glEnableVertexAttribArray(attributeType.getIndex());
-        GL20.glVertexAttribPointer(attributeType.getIndex(), attributeType.getSize(), GL11.GL_FLOAT, false, 0, 0);
+        GL20.glVertexAttribPointer(attributeType.getIndex(), attributeType.getSize(), GL11.GL_FLOAT, false, stride, pointer);
         return this;
     }
 
