@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.render.system.mesh.persistent;
 
 
+import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL42;
@@ -22,7 +23,7 @@ public class PersistentMappedEBO implements PersistentMappedBuffer {
 
         bufferId = GL15.glGenBuffers();
 
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, bufferId);
+        GLStateCache.bindArrayBuffer(bufferId);
         GL44.glBufferStorage(
                 GL15.GL_ARRAY_BUFFER,
                 sizeInBytes,
@@ -40,8 +41,6 @@ public class PersistentMappedEBO implements PersistentMappedBuffer {
             throw new NullPointerException();
         }
         mappedBuffer = byteBuffer.asIntBuffer();
-
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
     }
 
     public PersistentMappedEBO update(int[] newData) {
