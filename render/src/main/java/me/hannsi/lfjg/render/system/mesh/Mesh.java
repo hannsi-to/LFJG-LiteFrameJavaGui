@@ -296,7 +296,7 @@ public class Mesh {
     }
 
     public Mesh builderClose() {
-        GL30.glBindVertexArray(0);
+        GLStateCache.bindVertexArray(0);
         return this;
     }
 
