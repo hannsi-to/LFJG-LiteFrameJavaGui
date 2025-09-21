@@ -158,12 +158,12 @@ public class FrameBuffer {
     }
 
     public void bindTexture(int unit) {
-        GL13.glActiveTexture(GL13.GL_TEXTURE0 + unit);
+        GLStateCache.activeTexture(GL13.GL_TEXTURE0 + unit);
         GLStateCache.bindTexture(GL11.GL_TEXTURE_2D, textureId);
     }
 
     public void bindTexture() {
-        GL13.glActiveTexture(GL13.GL_TEXTURE3);
+        GLStateCache.activeTexture(GL13.GL_TEXTURE3);
         GLStateCache.bindTexture(GL11.GL_TEXTURE_2D, textureId);
     }
 

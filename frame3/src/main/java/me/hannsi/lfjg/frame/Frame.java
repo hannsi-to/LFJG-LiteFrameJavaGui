@@ -267,10 +267,10 @@ public class Frame implements IFrame {
     private void setAntiAliasing() {
         switch (((AntiAliasingType) getFrameSettingValue(AntiAliasingSetting.class))) {
             case MSAA:
-                Core.GL11.glEnable(Core.GL13.GL_MULTISAMPLE);
+                Core.GLStateCache.enable(Core.GL13.GL_MULTISAMPLE);
                 break;
             case OFF:
-                Core.GL11.glDisable(Core.GL13.GL_MULTISAMPLE);
+                Core.GLStateCache.disable(Core.GL13.GL_MULTISAMPLE);
                 break;
         }
     }

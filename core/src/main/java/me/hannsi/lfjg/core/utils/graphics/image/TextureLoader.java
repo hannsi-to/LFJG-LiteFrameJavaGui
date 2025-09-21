@@ -107,7 +107,7 @@ public class TextureLoader {
             throw Core.CreatingTextureException.createCreatingTextureException("Could not create texture");
         }
 
-        Core.GL11.glBindTexture(Core.GL11.GL_TEXTURE_2D, textureId);
+        Core.GLStateCache.bindTexture(Core.GL11.GL_TEXTURE_2D, textureId);
         Core.GL11.glPixelStorei(Core.GL11.GL_UNPACK_ALIGNMENT, 1);
 
         Core.GL11.glTexImage2D(Core.GL11.GL_TEXTURE_2D, 0, Core.GL11.GL_RGBA, width, height, 0, Core.GL11.GL_RGBA, Core.GL11.GL_UNSIGNED_BYTE, buf);
@@ -118,15 +118,15 @@ public class TextureLoader {
         Core.GL11.glTexParameteri(Core.GL11.GL_TEXTURE_2D, Core.GL11.GL_TEXTURE_MAG_FILTER, Core.GL11.GL_NEAREST);
         Core.GL30.glGenerateMipmap(Core.GL11.GL_TEXTURE_2D);
 
-        Core.GL11.glBindTexture(Core.GL11.GL_TEXTURE_2D, 0);
+        Core.GLStateCache.bindTexture(Core.GL11.GL_TEXTURE_2D, 0);
     }
 
     public void bind() {
-        Core.GL11.glBindTexture(Core.GL11.GL_TEXTURE_2D, textureId);
+        Core.GLStateCache.bindTexture(Core.GL11.GL_TEXTURE_2D, textureId);
     }
 
     public void unbind() {
-        Core.GL11.glBindTexture(Core.GL11.GL_TEXTURE_2D, 0);
+        Core.GLStateCache.bindTexture(Core.GL11.GL_TEXTURE_2D, 0);
     }
 
     public ImageLoaderType getTextureLoaderType() {

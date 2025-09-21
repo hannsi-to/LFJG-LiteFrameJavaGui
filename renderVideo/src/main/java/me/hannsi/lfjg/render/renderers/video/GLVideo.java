@@ -48,8 +48,8 @@ public class GLVideo extends GLRect {
             this.getShaderProgram().setUniform("objectBlendMode", UploadUniformType.ON_CHANGE, blendType.getId());
 
             GLStateCache.enable(GL11.GL_TEXTURE_2D);
-            GL13.glActiveTexture(GL13.GL_TEXTURE0);
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, videoFrameSystem.getTextureId());
+            GLStateCache.activeTexture(GL13.GL_TEXTURE0);
+            GLStateCache.bindTexture(GL11.GL_TEXTURE_2D, videoFrameSystem.getTextureId());
             super.drawVAORendering();
         }
     }

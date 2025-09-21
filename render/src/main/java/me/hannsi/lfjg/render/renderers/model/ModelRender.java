@@ -70,7 +70,7 @@ public class ModelRender {
                             throw new ModelException("To use a texture material, TextureCache must be set.");
                         }
 
-                        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+                        GLStateCache.activeTexture(GL13.GL_TEXTURE0);
                         GLStateCache.enable(GL11.GL_TEXTURE_2D);
 
                         TextureLoader textureLoader = textureCache.getTexture(material.getTextureLocation().path());

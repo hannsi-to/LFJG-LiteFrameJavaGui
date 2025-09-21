@@ -312,22 +312,6 @@ public class Core {
             Object ignore = invokeStaticMethod(PACKAGE, "glClear", mask);
         }
 
-        public static void glEnable(int target) {
-            if (!enableLFJGRenderSystem) {
-                return;
-            }
-
-            Object ignore = invokeStaticMethod(PACKAGE, "glEnable", target);
-        }
-
-        public static void glDisable(int target) {
-            if (!enableLFJGRenderSystem) {
-                return;
-            }
-
-            Object ignore = invokeStaticMethod(PACKAGE, "glDisable", target);
-        }
-
         public static void glViewport(int x, int y, int w, int h) {
             if (!enableLFJGRenderSystem) {
                 return;
@@ -754,6 +738,34 @@ public class Core {
             }
 
             Object ignore = invokeStaticMethod(PACKAGE, "getOpenGLDebug", mainThreadName, severitiesId);
+        }
+    }
+
+    public static class GLStateCache {
+        public static final String PACKAGE = DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + ".system.rendering.GLStateCache";
+
+        public static void enable(int target) {
+            if (!enableLFJGRenderSystem) {
+                return;
+            }
+
+            Object ignore = invokeStaticMethod(PACKAGE, "enable", target);
+        }
+
+        public static void disable(int target) {
+            if (!enableLFJGRenderSystem) {
+                return;
+            }
+
+            Object ignore = invokeStaticMethod(PACKAGE, "disable", target);
+        }
+
+        public static void bindTexture(int target, int texture) {
+            if (!enableLFJGRenderSystem) {
+                return;
+            }
+
+            Object ignore = invokeStaticMethod(PACKAGE, "bindTexture", target, texture);
         }
     }
 
