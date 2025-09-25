@@ -56,15 +56,15 @@ public class MSDFGenerator {
         DebugLog.info(getClass(), "Extracted msdf-atlas-gen to temporary directory: " + this.executable.getAbsolutePath());
     }
 
-    public void cleanup(){
+    public static MSDFGenerator createMSDFGenerator() throws IOException {
+        return new MSDFGenerator();
+    }
+
+    public void cleanup() {
         command.clear();
         charsetFile = null;
         textureOutputLocation = null;
         jsonOutputLocation = null;
-    }
-
-    public static MSDFGenerator createMSDFGenerator() throws IOException {
-        return new MSDFGenerator();
     }
 
     public MSDFGenerator ttfPath(Location ttfPath) {

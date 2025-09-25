@@ -52,6 +52,7 @@ public final class CefCookie {
      */
     public final boolean hasExpires;
     public final Date expires;
+
     public CefCookie(String name, String value, String domain, String path, boolean secure, boolean httponly, Date creation, Date lastAccess, boolean hasExpires, Date expires) {
         this.name = name;
         this.value = value;

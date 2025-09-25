@@ -1,12 +1,12 @@
 package me.hannsi.test;
 
+import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.physic.PhysicWorld;
 import me.hannsi.lfjg.physic.RigidBody;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
-import me.hannsi.lfjg.core.utils.graphics.color.Color;
 
 public class TestPhysic1 implements IScene {
     private final Scene scene;

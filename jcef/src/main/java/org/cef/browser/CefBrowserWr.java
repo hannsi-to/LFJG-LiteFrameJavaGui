@@ -110,31 +110,7 @@ class CefBrowserWr extends CefBrowser_N {
     };
     private long window_handle_ = 0;
     private boolean justCreated_ = false;
-    private double scaleFactor_ = 1.0;    private final Timer delayedUpdate_ = new Timer(100, new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            SwingUtilities.invokeLater(() -> {
-                if (isClosed()) {
-                    return;
-                }
-
-                boolean hasCreatedUI = createBrowserIfRequired(true);
-
-                if (hasCreatedUI) {
-                    delayedUpdate_.restart();
-                } else {
-                    // If on Mac, this is needed due to the quirk described below
-                    // (in org.cef.browser.CefBrowserWr.CefBrowserWr(...).new JPanel()
-                    // {...}.paint(Graphics)). If on Linux, this is needed to invoke an
-                    // XMoveResizeWindow call shortly after the UI was created. That seems to be
-                    // necessary to actually get a windowed renderer to display something.
-                    if (OS.isMacintosh() || OS.isLinux()) {
-                        doUpdate();
-                    }
-                }
-            });
-        }
-    });
+    private double scaleFactor_ = 1.0;
 
     CefBrowserWr(CefClient client, String url, CefRequestContext context, CefBrowserSettings settings) {
         this(client, url, context, null, null, settings);
@@ -256,7 +232,31 @@ class CefBrowserWr extends CefBrowser_N {
                 setWindowVisibility(e.getChanged().isVisible());
             }
         });
-    }
+    }    private final Timer delayedUpdate_ = new Timer(100, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            SwingUtilities.invokeLater(() -> {
+                if (isClosed()) {
+                    return;
+                }
+
+                boolean hasCreatedUI = createBrowserIfRequired(true);
+
+                if (hasCreatedUI) {
+                    delayedUpdate_.restart();
+                } else {
+                    // If on Mac, this is needed due to the quirk described below
+                    // (in org.cef.browser.CefBrowserWr.CefBrowserWr(...).new JPanel()
+                    // {...}.paint(Graphics)). If on Linux, this is needed to invoke an
+                    // XMoveResizeWindow call shortly after the UI was created. That seems to be
+                    // necessary to actually get a windowed renderer to display something.
+                    if (OS.isMacintosh() || OS.isLinux()) {
+                        doUpdate();
+                    }
+                }
+            });
+        }
+    });
 
     private static long getWindowHandle(Component component) {
         if (OS.isMacintosh()) {
@@ -391,6 +391,8 @@ class CefBrowserWr extends CefBrowser_N {
     public void setWindowlessFrameRate(int frameRate) {
         throw new UnsupportedOperationException("You can only set windowless framerate on OSR browser");
     }
+
+
 
 
 }

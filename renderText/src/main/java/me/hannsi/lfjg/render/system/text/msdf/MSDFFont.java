@@ -10,7 +10,7 @@ public class MSDFFont {
     private List<Glyph> glyphs;
     private List<Object> kerning;
 
-    public void cleanup(){
+    public void cleanup() {
         atlas = null;
         metrics = null;
         glyphs.clear();

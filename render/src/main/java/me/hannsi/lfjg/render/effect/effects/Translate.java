@@ -13,10 +13,10 @@ public class Translate extends EffectBase {
     private float z = 0f;
 
     Translate(String name) {
-        super(name,true);
+        super(name, true);
     }
 
-    public static Translate createTranslate(String name){
+    public static Translate createTranslate(String name) {
         return new Translate(name);
     }
 
