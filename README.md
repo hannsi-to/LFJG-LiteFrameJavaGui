@@ -1,4 +1,4 @@
-lol# LiteFrameJavaGui
+# LiteFrameJavaGui
 
 LiteFrameJavaGui is a lightweight Java GUI framework.
 
