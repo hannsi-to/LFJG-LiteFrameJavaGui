@@ -99,10 +99,10 @@ public class GLPolygon extends GLObject {
         }
 
         if (!Arrays.equals(vertex, latestVertex)) {
-            mesh.updateVBOData(BufferObjectType.POSITIONS_BUFFER, vertex);
+            mesh.updateVBOData(BufferObjectType.POSITION_2D_BUFFER, vertex);
         }
         if (!Arrays.equals(color, latestColor)) {
-            mesh.updateVBOData(BufferObjectType.COLORS_BUFFER, color);
+            mesh.updateVBOData(BufferObjectType.COLOR_BUFFER, color);
         }
         if (!Arrays.equals(texture, latestTexture)) {
             mesh.updateVBOData(BufferObjectType.TEXTURE_BUFFER, texture);
@@ -122,10 +122,7 @@ public class GLPolygon extends GLObject {
         } else {
             isUpdate = true;
 
-            Mesh mesh = Mesh.createMesh()
-                    .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
-                    .createBufferObject2D(vertex, color, texture)
-                    .builderClose();
+            Mesh mesh = Mesh.createMesh().projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION).createBufferObject2D(vertex, color, texture).builderClose();
 
             setMesh(mesh);
 

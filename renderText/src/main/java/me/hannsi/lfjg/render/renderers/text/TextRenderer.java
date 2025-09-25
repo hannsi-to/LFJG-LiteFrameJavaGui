@@ -82,7 +82,7 @@ public class TextRenderer {
 
     public TextRenderer defaultFontColor(Color defaultFontColor) {
         this.defaultFontColor = defaultFontColor;
-        this.lineMesh.updateVBOData(BufferObjectType.COLORS_BUFFER, defaultFontColor.getFloatArray(4));
+        this.lineMesh.updateVBOData(BufferObjectType.COLOR_BUFFER, defaultFontColor.getFloatArray(4));
         return this;
     }
 

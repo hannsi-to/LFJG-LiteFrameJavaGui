@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.render.system.mesh.persistent;
 
-import me.hannsi.lfjg.render.system.mesh.AttributeType;
+import me.hannsi.lfjg.render.system.mesh.BufferObjectType;
 import me.hannsi.lfjg.render.system.mesh.MeshConstants;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.lwjgl.opengl.*;
@@ -60,11 +60,11 @@ public class PersistentMappedVBO implements PersistentMappedBuffer {
         return this;
     }
 
-    public PersistentMappedVBO attribute(AttributeType attributeType, int stride, int pointer) {
+    public PersistentMappedVBO attribute(BufferObjectType bufferObjectType, int stride, int pointer) {
         int bufferId = bufferIds[currentIndex];
         GLStateCache.bindArrayBuffer(bufferId);
-        GL20.glEnableVertexAttribArray(attributeType.getIndex());
-        GL20.glVertexAttribPointer(attributeType.getIndex(), attributeType.getSize(), GL11.GL_FLOAT, false, stride, pointer);
+        GL20.glEnableVertexAttribArray(bufferObjectType.getAttributeIndex());
+        GL20.glVertexAttribPointer(bufferObjectType.getAttributeIndex(), bufferObjectType.getAttributeSize(), GL11.GL_FLOAT, false, stride, pointer);
         return this;
     }
 

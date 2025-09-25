@@ -61,7 +61,7 @@ public class Material {
     private String checkPerformance(Mesh mesh) {
         String message = "";
 
-        boolean color = mesh.getVboIds().get(BufferObjectType.COLORS_BUFFER) != null;
+        boolean color = mesh.getVboIds().get(BufferObjectType.COLOR_BUFFER) != null;
         boolean texture = mesh.getVboIds().get(BufferObjectType.TEXTURE_BUFFER) != null;
         switch (materialType) {
             case NO_MATERIAL:
@@ -99,10 +99,10 @@ public class Material {
         BufferObjectType bufferObjectType;
         switch (materialType) {
             case NO_MATERIAL:
-                bufferObjectType = BufferObjectType.POSITIONS_BUFFER;
+                bufferObjectType = BufferObjectType.POSITION_3D_BUFFER;
                 break;
             case COLOR:
-                bufferObjectType = BufferObjectType.COLORS_BUFFER;
+                bufferObjectType = BufferObjectType.COLOR_BUFFER;
                 break;
             case TEXTURE:
                 bufferObjectType = BufferObjectType.TEXTURE_BUFFER;

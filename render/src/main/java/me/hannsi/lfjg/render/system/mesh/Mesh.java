@@ -141,11 +141,11 @@ public class Mesh {
         if (colors != null) {
             if (colors.length != 0) {
                 vboIds.put(
-                        BufferObjectType.COLORS_BUFFER,
+                        BufferObjectType.COLOR_BUFFER,
                         new PersistentMappedVBO(
                                 colors.length,
                                 flagsHint
-                        ).update(colors).attribute(AttributeType.COLOR, 0, 0)
+                        ).update(colors).attribute(BufferObjectType.COLOR_BUFFER, 0, 0)
                 );
             }
         }
@@ -157,7 +157,7 @@ public class Mesh {
                         new PersistentMappedVBO(
                                 textures.length,
                                 flagsHint
-                        ).update(textures).attribute(AttributeType.TEXTURE, 0, 0)
+                        ).update(textures).attribute(BufferObjectType.TEXTURE_BUFFER, 0, 0)
                 );
             }
         }
@@ -171,11 +171,11 @@ public class Mesh {
 
     public Mesh createBufferObject2D(float[] positions, float[] colors, float[] textures, int[] indices) {
         vboIds.put(
-                BufferObjectType.POSITIONS_BUFFER,
+                BufferObjectType.POSITION_2D_BUFFER,
                 new PersistentMappedVBO(
                         positions.length,
                         flagsHint
-                ).update(positions).attribute(AttributeType.POSITION_3D, 0, 0)
+                ).update(positions).attribute(BufferObjectType.POSITION_2D_BUFFER, 0, 0)
         );
         count = positions.length / projectionType.getStride();
 
@@ -191,11 +191,11 @@ public class Mesh {
 
         if (colors != null) {
             vboIds.put(
-                    BufferObjectType.COLORS_BUFFER,
+                    BufferObjectType.COLOR_BUFFER,
                     new PersistentMappedVBO(
                             colors.length,
                             flagsHint
-                    ).update(colors).attribute(AttributeType.COLOR, 0, 0)
+                    ).update(colors).attribute(BufferObjectType.COLOR_BUFFER, 0, 0)
             );
         }
 
@@ -205,7 +205,7 @@ public class Mesh {
                     new PersistentMappedVBO(
                             textures.length,
                             flagsHint
-                    ).update(textures).attribute(AttributeType.TEXTURE, 0, 0)
+                    ).update(textures).attribute(BufferObjectType.TEXTURE_BUFFER, 0, 0)
             );
         }
 
@@ -218,11 +218,11 @@ public class Mesh {
 
     public Mesh createBufferObject3D(float[] positions, int[] indices, float[] colors, float[] textures, float[] normals) {
         vboIds.put(
-                BufferObjectType.POSITIONS_BUFFER,
+                BufferObjectType.POSITION_3D_BUFFER,
                 new PersistentMappedVBO(
                         positions.length,
                         flagsHint
-                ).update(positions).attribute(AttributeType.POSITION_3D, 0, 0)
+                ).update(positions).attribute(BufferObjectType.POSITION_3D_BUFFER, 0, 0)
         );
         count = positions.length / projectionType.getStride();
 
@@ -238,11 +238,11 @@ public class Mesh {
 
         if (colors != null) {
             vboIds.put(
-                    BufferObjectType.COLORS_BUFFER,
+                    BufferObjectType.COLOR_BUFFER,
                     new PersistentMappedVBO(
                             colors.length,
                             flagsHint
-                    ).update(colors).attribute(AttributeType.COLOR, 0, 0)
+                    ).update(colors).attribute(BufferObjectType.COLOR_BUFFER, 0, 0)
             );
         }
 
@@ -252,17 +252,17 @@ public class Mesh {
                     new PersistentMappedVBO(
                             textures.length,
                             flagsHint
-                    ).update(textures).attribute(AttributeType.TEXTURE, 0, 0)
+                    ).update(textures).attribute(BufferObjectType.TEXTURE_BUFFER, 0, 0)
             );
         }
 
         if (normals != null) {
             vboIds.put(
-                    BufferObjectType.NORMALS_BUFFER,
+                    BufferObjectType.NORMAL_3D_BUFFER,
                     new PersistentMappedVBO(
                             normals.length,
                             flagsHint
-                    ).update(normals).attribute(AttributeType.NORMAL_3D, 0, 0)
+                    ).update(normals).attribute(BufferObjectType.NORMAL_3D_BUFFER, 0, 0)
             );
         }
 
@@ -279,7 +279,7 @@ public class Mesh {
             return;
         }
 
-        if (bufferObjectType == BufferObjectType.POSITIONS_BUFFER) {
+        if (bufferObjectType == BufferObjectType.POSITION_2D_BUFFER || bufferObjectType == BufferObjectType.POSITION_3D_BUFFER) {
             if (useElementBufferObject) {
                 ElementPair elementPair = getElementPositions(values);
                 numVertices = elementPair.indices.length;
@@ -310,11 +310,11 @@ public class Mesh {
             numVertices = elementPair.indices.length;
 
             vboIds.put(
-                    BufferObjectType.POSITIONS_BUFFER,
+                    BufferObjectType.POSITION_2D_BUFFER,
                     new PersistentMappedVBO(
                             elementPair.positions.length,
                             flagsHint
-                    ).update(elementPair.positions).attribute(AttributeType.POSITION_2D, 0, 0)
+                    ).update(elementPair.positions).attribute(BufferObjectType.POSITION_2D_BUFFER, 0, 0)
             );
 
             eboId = new PersistentMappedEBO(
@@ -323,11 +323,11 @@ public class Mesh {
             ).update(elementPair.indices);
         } else {
             vboIds.put(
-                    BufferObjectType.POSITIONS_BUFFER,
+                    BufferObjectType.POSITION_2D_BUFFER,
                     new PersistentMappedVBO(
                             positions.length,
                             flagsHint
-                    ).update(positions).attribute(AttributeType.POSITION_2D, 0, 0)
+                    ).update(positions).attribute(BufferObjectType.POSITION_2D_BUFFER, 0, 0)
             );
             count = positions.length / projectionType.getStride();
         }
