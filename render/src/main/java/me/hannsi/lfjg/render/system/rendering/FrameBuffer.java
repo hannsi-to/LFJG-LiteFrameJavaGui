@@ -77,7 +77,7 @@ public class FrameBuffer {
 
         mesh = Mesh.createMesh()
                 .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
-                .createBufferObject2D(positions, null, uvs)
+                .createBufferObject2D(DrawType.QUADS, positions, null, uvs)
                 .builderClose();
 
         this.glObject = glObject;

@@ -2,6 +2,7 @@ package me.hannsi.lfjg.render.system.text;
 
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
+import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.text.msdf.MSDFFont;
 
 import java.util.HashMap;
@@ -125,7 +126,7 @@ public class TextMeshBuilder {
             mesh = Mesh.createMesh()
                     .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
                     .useElementBufferObject(false)
-                    .createBufferObject2D(positions, null, uvs);
+                    .createBufferObject2D(DrawType.QUADS, positions, null, uvs);
 
             return this;
         }

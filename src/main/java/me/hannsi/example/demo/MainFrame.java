@@ -2,7 +2,9 @@ package me.hannsi.example.demo;
 
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.LFJGContext;
+import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
+import me.hannsi.lfjg.frame.setting.settings.SeverityType;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.system.scene.SceneSystem;
 
@@ -28,7 +30,7 @@ public class MainFrame implements LFJGFrame {
                 .addScene(new Demo3(LFJGContext.frame).getScene())
                 .addScene(new Demo4(LFJGContext.frame).getScene())
                 .addScene(new Demo5(LFJGContext.frame).getScene())
-                .setCurrentScene("Demo5")
+                .setCurrentScene("Demo1")
                 .initScenes();
     }
 
@@ -48,5 +50,6 @@ public class MainFrame implements LFJGFrame {
     @Override
     public void setFrameSetting() {
         LFJGContext.frame.setFrameSettingValue(RefreshRateSetting.class, -1);
+        LFJGContext.frame.setFrameSettingValue(CheckSeveritiesSetting.class, new SeverityType[]{SeverityType.LOW, SeverityType.MEDIUM, SeverityType.HIGH});
     }
 }

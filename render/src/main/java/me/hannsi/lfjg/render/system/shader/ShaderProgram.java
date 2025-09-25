@@ -10,12 +10,9 @@ import me.hannsi.lfjg.render.debug.exceptions.shader.CompilingShaderException;
 import me.hannsi.lfjg.render.debug.exceptions.shader.CreatingShaderException;
 import me.hannsi.lfjg.render.debug.exceptions.shader.CreatingShaderProgramException;
 import me.hannsi.lfjg.render.debug.exceptions.shader.LinkingShaderException;
-import me.hannsi.lfjg.render.system.mesh.MeshConstants;
-import me.hannsi.lfjg.render.system.mesh.persistent.PersistentMappedUBO;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.joml.*;
 import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL31;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.FloatBuffer;
@@ -26,7 +23,7 @@ public class ShaderProgram {
     private final int programId;
     private final Map<String, UniformValue> uniformValues;
     private final Map<String, Integer> uniformCache;
-    private PersistentMappedUBO matrix;
+//    private PersistentMappedUBO matrix;
 
     private int vertexShaderId;
     private int fragmentShaderId;
@@ -68,7 +65,7 @@ public class ShaderProgram {
     }
 
     public void cleanup() {
-        matrix.cleanup();
+//        matrix.cleanup();
 
         if (vertexShaderId != 0) {
             GL20.glDeleteShader(vertexShaderId);
@@ -130,9 +127,9 @@ public class ShaderProgram {
             DebugLog.warning(getClass(), "Warning validating Shader code: " + GL20.glGetProgramInfoLog(programId));
         }
 
-        matrix = new PersistentMappedUBO(new PersistentMappedUBO.UBOData("Matrices", 0), MeshConstants.DEFAULT_FLAGS_HINT);
-        int uniformBlockIndex = GL31.glGetUniformBlockIndex(programId, matrix.getUboData().getName());
-        GL31.glUniformBlockBinding(programId, uniformBlockIndex, matrix.getUboData().getBinding());
+//        matrix = new PersistentMappedUBO(new PersistentMappedUBO.UBOData("Matrices", 0), MeshConstants.DEFAULT_FLAGS_HINT);
+//        int uniformBlockIndex = GL31.glGetUniformBlockIndex(programId, matrix.getUboData().getName());
+//        GL31.glUniformBlockBinding(programId, uniformBlockIndex, matrix.getUboData().getBinding());
     }
 
     private int getUniformLocation(String name) {
@@ -252,9 +249,9 @@ public class ShaderProgram {
         }
     }
 
-    public PersistentMappedUBO getMatrix() {
-        return matrix;
-    }
+//    public PersistentMappedUBO getMatrix() {
+//        return matrix;
+//    }
 
     public Map<String, UniformValue> getUniformValues() {
         return uniformValues;

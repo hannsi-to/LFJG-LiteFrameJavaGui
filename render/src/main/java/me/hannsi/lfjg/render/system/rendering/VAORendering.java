@@ -20,6 +20,10 @@ public class VAORendering {
 
     public void draw(Mesh mesh, int drawType) {
         int vaoId = mesh.getVaoId();
+
+//        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+//        GL11.glLineWidth(0.1f);
+
         GLStateCache.bindVertexArray(vaoId);
 
         mesh.startFrame();

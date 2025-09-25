@@ -9,8 +9,6 @@ public enum DrawType implements IEnumTypeBase {
     LINE_STRIP(GL11.GL_LINE_STRIP, "LineStrip", -1),
     LINE_LOOP(GL11.GL_LINE_LOOP, "LineLoop", -1),
     TRIANGLES(GL11.GL_TRIANGLES, "Triangles", 3),
-    TRIANGLE_STRIP(GL11.GL_TRIANGLE_STRIP, "TriangleStrip", 3),
-    TRIANGLE_FAN(GL11.GL_TRIANGLE_FAN, "TriangleFan", 3),
     QUADS(GL11.GL_TRIANGLES, "Quads", 4),
     POLYGON(GL11.GL_TRIANGLES, "Polygon", -1);
 

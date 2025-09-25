@@ -175,7 +175,7 @@ public class GLObject implements Cloneable {
 
     private void bindResources() {
         LFJGRenderContext.shaderProgram.bind();
-        LFJGRenderContext.shaderProgram.getMatrix().bind();
+//        LFJGRenderContext.shaderProgram.getMatrix().bind();
     }
 
     public GLObject copy(String objectName) {

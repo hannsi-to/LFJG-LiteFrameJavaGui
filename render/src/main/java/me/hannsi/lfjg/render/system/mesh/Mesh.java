@@ -4,10 +4,11 @@ import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
-import me.hannsi.lfjg.render.debug.exceptions.render.meshBuilder.MeshBuilderException;
+import me.hannsi.lfjg.render.debug.exceptions.render.mesh.MeshBuilderException;
 import me.hannsi.lfjg.render.system.mesh.persistent.PersistentMappedEBO;
 import me.hannsi.lfjg.render.system.mesh.persistent.PersistentMappedIBO;
 import me.hannsi.lfjg.render.system.mesh.persistent.PersistentMappedVBO;
+import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.lwjgl.opengl.GL30;
 
@@ -129,10 +130,10 @@ public class Mesh {
         return this;
     }
 
-    public Mesh createBufferObject2D(float[] positions, float[] colors, float[] textures) {
+    public Mesh createBufferObject2D(DrawType drawType, float[] positions, float[] colors, float[] textures) {
         if (positions != null) {
             if (positions.length != 0) {
-                createPositionsVBO(positions);
+                createPositionsVBO(positions, drawType);
             }
         } else {
             throw new MeshBuilderException("Can not create mesh object. positions = null");
@@ -273,7 +274,7 @@ public class Mesh {
         return this;
     }
 
-    public void updateVBOData(BufferObjectType bufferObjectType, float[] values) {
+    public void updateVBOData(DrawType drawType, BufferObjectType bufferObjectType, float[] values) {
         PersistentMappedVBO persistentMappedVBO = vboIds.get(bufferObjectType);
         if (persistentMappedVBO == null) {
             return;
@@ -281,7 +282,7 @@ public class Mesh {
 
         if (bufferObjectType == BufferObjectType.POSITION_2D_BUFFER || bufferObjectType == BufferObjectType.POSITION_3D_BUFFER) {
             if (useElementBufferObject) {
-                ElementPair elementPair = getElementPositions(values);
+                ElementPair elementPair = getElementPositions(values, drawType, bufferObjectType == BufferObjectType.POSITION_2D_BUFFER ? ProjectionType.ORTHOGRAPHIC_PROJECTION : ProjectionType.PERSPECTIVE_PROJECTION);
                 numVertices = elementPair.indices.length;
                 eboId.update(elementPair.indices);
                 count = elementPair.positions.length / projectionType.getStride();
@@ -304,9 +305,9 @@ public class Mesh {
         return drawCommands.size();
     }
 
-    private void createPositionsVBO(float[] positions) {
+    private void createPositionsVBO(float[] positions, DrawType drawType) {
         if (useElementBufferObject) {
-            ElementPair elementPair = getElementPositions(positions);
+            ElementPair elementPair = getElementPositions(positions, drawType, ProjectionType.ORTHOGRAPHIC_PROJECTION);
             numVertices = elementPair.indices.length;
 
             vboIds.put(
@@ -333,28 +334,13 @@ public class Mesh {
         }
     }
 
-    private ElementPair getElementPositions(float[] positions) {
-        Map<VertexKey, Integer> uniqueVertices = new HashMap<>();
-        int stride = projectionType.getStride();
-        int[] indices = new int[positions.length / stride];
-        float[] uniquePositions = new float[positions.length];
-        int uniqueCount = 0;
-
-        for (int i = 0, idx = 0; i < positions.length; i += stride, idx++) {
-            VertexKey key = new VertexKey(positions, i, stride);
-            Integer existingIndex = uniqueVertices.get(key);
-            if (existingIndex != null) {
-                indices[idx] = existingIndex;
-            } else {
-                uniqueVertices.put(key, uniqueCount);
-                indices[idx] = uniqueCount;
-                System.arraycopy(positions, i, uniquePositions, uniqueCount * stride, stride);
-                uniqueCount++;
-            }
-        }
-
-        float[] finalPositions = Arrays.copyOf(uniquePositions, uniqueCount * stride);
-        return new ElementPair(finalPositions, indices);
+    private ElementPair getElementPositions(float[] positions, DrawType drawType, ProjectionType projectionType) {
+        return PolygonTriangulator.createPolygonTriangulator()
+                .drawType(drawType)
+                .projectionType(projectionType)
+                .positions(positions)
+                .process()
+                .getResult();
     }
 
     public void startFrame() {

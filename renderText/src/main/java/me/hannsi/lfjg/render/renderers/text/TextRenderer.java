@@ -10,6 +10,7 @@ import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.debug.exceptions.UnknownAlignType;
 import me.hannsi.lfjg.render.system.mesh.BufferObjectType;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
+import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
@@ -51,7 +52,7 @@ public class TextRenderer {
         float[] positions = new float[]{0, 0, 0, 1, 1, 1, 1, 0};
         float[] colors = defaultFontColor.getFloatArray(4);
         this.lineMesh = Mesh.createMesh()
-                .createBufferObject2D(positions, colors, null);
+                .createBufferObject2D(DrawType.QUADS, positions, colors, null);
 
         this.vaoRendering = new VAORendering();
     }
@@ -82,7 +83,7 @@ public class TextRenderer {
 
     public TextRenderer defaultFontColor(Color defaultFontColor) {
         this.defaultFontColor = defaultFontColor;
-        this.lineMesh.updateVBOData(BufferObjectType.COLOR_BUFFER, defaultFontColor.getFloatArray(4));
+        this.lineMesh.updateVBOData(DrawType.QUADS, BufferObjectType.COLOR_BUFFER, defaultFontColor.getFloatArray(4));
         return this;
     }
 

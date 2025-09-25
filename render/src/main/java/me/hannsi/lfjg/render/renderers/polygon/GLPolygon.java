@@ -3,7 +3,7 @@ package me.hannsi.lfjg.render.renderers.polygon;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
-import me.hannsi.lfjg.render.debug.exceptions.render.meshBuilder.MeshBuilderException;
+import me.hannsi.lfjg.render.debug.exceptions.render.mesh.MeshBuilderException;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.mesh.BufferObjectType;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
@@ -99,13 +99,13 @@ public class GLPolygon extends GLObject {
         }
 
         if (!Arrays.equals(vertex, latestVertex)) {
-            mesh.updateVBOData(BufferObjectType.POSITION_2D_BUFFER, vertex);
+            mesh.updateVBOData(getDrawType(), BufferObjectType.POSITION_2D_BUFFER, vertex);
         }
         if (!Arrays.equals(color, latestColor)) {
-            mesh.updateVBOData(BufferObjectType.COLOR_BUFFER, color);
+            mesh.updateVBOData(getDrawType(), BufferObjectType.COLOR_BUFFER, color);
         }
         if (!Arrays.equals(texture, latestTexture)) {
-            mesh.updateVBOData(BufferObjectType.TEXTURE_BUFFER, texture);
+            mesh.updateVBOData(getDrawType(), BufferObjectType.TEXTURE_BUFFER, texture);
         }
 
         latestVertex = vertex;
@@ -122,7 +122,7 @@ public class GLPolygon extends GLObject {
         } else {
             isUpdate = true;
 
-            Mesh mesh = Mesh.createMesh().projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION).createBufferObject2D(vertex, color, texture).builderClose();
+            Mesh mesh = Mesh.createMesh().projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION).createBufferObject2D(getDrawType(), vertex, color, texture).builderClose();
 
             setMesh(mesh);
 
