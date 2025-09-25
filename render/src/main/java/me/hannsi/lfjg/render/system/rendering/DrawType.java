@@ -11,9 +11,8 @@ public enum DrawType implements IEnumTypeBase {
     TRIANGLES(GL11.GL_TRIANGLES, "Triangles", 3),
     TRIANGLE_STRIP(GL11.GL_TRIANGLE_STRIP, "TriangleStrip", 3),
     TRIANGLE_FAN(GL11.GL_TRIANGLE_FAN, "TriangleFan", 3),
-    QUADS(GL11.GL_QUADS, "Quads", 4),
-    QUAD_STRIP(GL11.GL_QUAD_STRIP, "QuadStrip", 4),
-    POLYGON(GL11.GL_POLYGON, "Polygon", -1);
+    QUADS(GL11.GL_TRIANGLES, "Quads", 4),
+    POLYGON(GL11.GL_TRIANGLES, "Polygon", -1);
 
     final int id;
     final String name;
