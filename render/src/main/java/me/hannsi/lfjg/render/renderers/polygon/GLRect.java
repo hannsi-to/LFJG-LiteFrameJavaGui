@@ -8,7 +8,6 @@ import org.joml.Vector2f;
  * Class representing a rectangle renderer in OpenGL.
  */
 public class GLRect extends GLPolygon {
-
     /**
      * Constructs a new GLRect with the specified name.
      *

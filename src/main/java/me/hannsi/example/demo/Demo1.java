@@ -95,14 +95,17 @@ public class Demo1 implements IScene {
 
         float offsetX = 20;
         float offsetY = 80;
-        glPoint1 = new GLPoint("GLPoint1");
-        glPoint1.point(offsetX + offset / 2f, offsetY + offset / 2f, 5, Color.BLACK);
+        glPoint1 = GLPoint.createGLPoint("GLPoint1")
+                .x_y_color(offsetX + offset / 2f, offsetY + offset / 2f, Color.BLACK)
+                .pointSize(5);
         offsetX += offset + step;
-        glPoint2 = new GLPoint("GLPoint2");
-        glPoint2.point(offsetX + offset / 2f, offsetY + offset / 2f, 10, Color.BLACK);
+        glPoint2 = GLPoint.createGLPoint("GLPoint2")
+                .x_y_color(offsetX + offset / 2f, offsetY + offset / 2f, Color.BLACK)
+                .pointSize(10);
         offsetX += offset + step;
-        glPoint3 = new GLPoint("GLPoint3");
-        glPoint3.point(offsetX + offset / 2f, offsetY + offset / 2f, 15, Color.BLACK);
+        glPoint3 = GLPoint.createGLPoint("GLPoint3")
+                .x_y_color(offsetX + offset / 2f, offsetY + offset / 2f, Color.BLACK)
+                .pointSize(15);
         offsetX += offset + step;
         glLine1 = new GLLine("GLLine1");
         glLine1.line(offsetX, offsetY, offsetX + offset, offsetY + offset, 2, Color.BLACK);

@@ -8,40 +8,49 @@ import org.joml.Vector2f;
  * Class representing a point renderer in OpenGL.
  */
 public class GLPoint extends GLPolygon {
-
-    /**
-     * Constructs a new GLPoint with the specified name.
-     *
-     * @param name the name of the point renderer
-     */
-    public GLPoint(String name) {
+    GLPoint(String name, float x, float y, Color color, float pointSize) {
         super(name);
-    }
 
-    /**
-     * Draws a point with the specified parameters.
-     *
-     * @param x         the x-coordinate of the point
-     * @param y         the y-coordinate of the point
-     * @param pointSize the size of the point
-     * @param color     the color of the point
-     */
-    public void point(float x, float y, float pointSize, Color color) {
         put().vertex(new Vector2f(x, y)).color(color).end();
 
         setDrawType(DrawType.POINTS).setPointSize(pointSize);
         rendering();
     }
 
-    /**
-     * Draws a point with the specified parameters.
-     *
-     * @param x         the x-coordinate of the point
-     * @param y         the y-coordinate of the point
-     * @param pointSize the size of the point
-     * @param color     the color of the point
-     */
-    public void point(double x, double y, double pointSize, Color color) {
-        point((float) x, (float) y, (float) pointSize, color);
+    public static VertexDataStep createGLPoint(String name) {
+        return new Builder(name);
+    }
+
+    public interface VertexDataStep {
+        PointSizeStep x_y_color(float x, float y, Color color);
+    }
+
+    public interface PointSizeStep {
+        GLPoint pointSize(float pointSize);
+    }
+
+    private static class Builder implements VertexDataStep, PointSizeStep {
+        private final String name;
+        private float x;
+        private float y;
+        private Color color;
+
+        public Builder(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public PointSizeStep x_y_color(float x, float y, Color color) {
+            this.x = x;
+            this.y = y;
+            this.color = color;
+
+            return this;
+        }
+
+        @Override
+        public GLPoint pointSize(float pointSize) {
+            return new GLPoint(name, x, y, color, pointSize);
+        }
     }
 }
