@@ -153,19 +153,6 @@ public class Core {
         return result;
     }
 
-    private static String getParamTypesKey(Class<?>[] paramTypes) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Class<?> clazz : paramTypes) {
-            stringBuilder.append(clazz.getName()).append(".");
-        }
-
-        return stringBuilder.toString();
-    }
-
-    private static Class<?> getReturnType(Class<?> clazz, String methodName, Class<?> paramTypes) throws NoSuchMethodException {
-        return clazz.getDeclaredMethod(methodName, paramTypes).getReturnType();
-    }
-
     public static Object getStaticFieldValue(String className, String fieldName) {
         Object result = null;
         try {
