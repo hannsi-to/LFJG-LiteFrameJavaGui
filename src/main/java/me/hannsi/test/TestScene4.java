@@ -31,8 +31,11 @@ public class TestScene4 implements IScene {
         textureCache = TextureCache.createTextureCache()
                 .createCache("Texture1", Location.fromResource("texture/test/test_image_3840x2160.jpg"));
 
-        GLTriangle triangleClipping = new GLTriangle("TriangleClipping");
-        triangleClipping.triangle(200, 200, 500, 500, 700, 200, Color.of(0, 0, 0, 0));
+        GLTriangle triangleClipping = GLTriangle.createGLTriangle("TriangleClipping")
+                .x1_y1_color1(200, 200, Color.of(0, 0, 0, 0))
+                .x2_y2_color2(500, 500, Color.of(0, 0, 0, 0))
+                .x3_y3_color3(700, 200, Color.of(0, 0, 0, 0))
+                .fill();
 
         clippingCache = GLObjectCache.createGLObjectCache()
                 .createCache(triangleClipping);

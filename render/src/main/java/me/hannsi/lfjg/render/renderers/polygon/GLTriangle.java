@@ -1,132 +1,145 @@
 package me.hannsi.lfjg.render.renderers.polygon;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
+import me.hannsi.lfjg.render.renderers.PaintType;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import org.joml.Vector2f;
 
 public class GLTriangle extends GLPolygon {
-    /**
-     * Constructs a new GLPolygon with the specified name.
-     *
-     * @param name the name of the polygon renderer
-     */
-    public GLTriangle(String name) {
+    public GLTriangle(String name, float x1, float y1, Color color1, float x2, float y2, Color color2, float x3, float y3, Color color3, PaintType paintType, float lineWidth) {
         super(name);
-    }
 
-    public void triangle(float x1, float y1, float x2, float y2, float x3, float y3, Color color1, Color color2, Color color3) {
         put().vertex(new Vector2f(x1, y1)).color(color1).end();
         put().vertex(new Vector2f(x2, y2)).color(color2).end();
         put().vertex(new Vector2f(x3, y3)).color(color3).end();
 
-        setDrawType(DrawType.TRIANGLES);
+        switch (paintType) {
+            case FILL:
+                setDrawType(DrawType.TRIANGLES);
+                break;
+            case OUT_LINE:
+                setDrawType(DrawType.LINE_LOOP).setLineWidth(lineWidth);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + paintType);
+        }
+
         rendering();
     }
 
-    public void triangleWH(float x, float y, float width1, float height1, float width2, float height2, Color color1, Color color2, Color color3) {
-        triangle(x, y, x + width1, y + height1, x + width2, y + height2, color1, color2, color3);
+    public static VertexData1Step createGLTriangle(String name) {
+        return new Builder(name);
     }
 
-    public void triangle(float x1, float y1, float x2, float y2, float x3, float y3, Color color1, Color color2) {
-        triangle(x1, y1, x2, y2, x3, y3, color1, color2, color2);
+    public interface VertexData1Step {
+        VertexData2Step x1_y1_color1(float x1, float y1, Color color1);
     }
 
-    public void triangleWH(float x, float y, float width1, float height1, float width2, float height2, Color color1, Color color2) {
-        triangleWH(x, y, width1, height1, width2, height2, color1, color2, color2);
+    public interface VertexData2Step {
+        VertexData3Step x2_y2_color2(float x2, float y2, Color color2);
+
+        VertexData3Step width2_height2_color2(float width2, float height2, Color color2);
     }
 
-    public void triangle(float x1, float y1, float x2, float y2, float x3, float y3, Color color) {
-        triangle(x1, y1, x2, y2, x3, y3, color, color, color);
+    public interface VertexData3Step {
+        PaintTypeStep x3_y3_color3(float x3, float y3, Color color3);
+
+        PaintTypeStep width3_height3_color3(float width3, float height3, Color color3);
     }
 
-    public void triangleWH(float x, float y, float width1, float height1, float width2, float height2, Color color) {
-        triangleWH(x, y, width1, height1, width2, height2, color, color, color);
+    public interface PaintTypeStep {
+        GLTriangle fill();
+
+        LineWidthStep outLine();
     }
 
-    public void triangleOutLine(float x1, float y1, float x2, float y2, float x3, float y3, float lineWidth, Color color1, Color color2, Color color3) {
-        put().vertex(new Vector2f(x1, y1)).color(color1).end();
-        put().vertex(new Vector2f(x2, y2)).color(color2).end();
-        put().vertex(new Vector2f(x3, y3)).color(color3).end();
-
-        setDrawType(DrawType.LINE_LOOP).setLineWidth(lineWidth);
-        rendering();
+    public interface LineWidthStep {
+        GLTriangle lineWidth(float lineWidth);
     }
 
-    public void triangleWHOutLine(float x, float y, float width1, float height1, float width2, float height2, float lineWidth, Color color1, Color color2, Color color3) {
-        triangleOutLine(x, y, x + width1, y + height1, x + width2, y + height2, lineWidth, color1, color2, color3);
-    }
+    public static class Builder implements VertexData1Step, VertexData2Step, VertexData3Step, PaintTypeStep, LineWidthStep {
+        private final String name;
+        private float x1;
+        private float y1;
+        private Color color1;
+        private float x2;
+        private float y2;
+        private Color color2;
+        private float x3;
+        private float y3;
+        private Color color3;
+        private PaintType paintType;
+        private float lineWidth;
 
-    public void triangleOutLine(float x1, float y1, float x2, float y2, float x3, float y3, float lineWidth, Color color1, Color color2) {
-        triangleOutLine(x1, y1, x2, y2, x3, y3, lineWidth, color1, color2, color2);
-    }
+        public Builder(String name) {
+            this.name = name;
+        }
 
-    public void triangleWHOutLine(float x, float y, float width1, float height1, float width2, float height2, float lineWidth, Color color1, Color color2) {
-        triangleWHOutLine(x, y, width1, height1, width2, height2, lineWidth, color1, color2, color2);
-    }
+        @Override
+        public VertexData2Step x1_y1_color1(float x1, float y1, Color color1) {
+            this.x1 = x1;
+            this.y1 = y1;
+            this.color1 = color1;
 
-    public void triangleOutLine(float x1, float y1, float x2, float y2, float x3, float y3, float lineWidth, Color color) {
-        triangleOutLine(x1, y1, x2, y2, x3, y3, lineWidth, color, color, color);
-    }
+            return this;
+        }
 
-    public void triangleWHOutLine(float x, float y, float width1, float height1, float width2, float height2, float lineWidth, Color color) {
-        triangleWHOutLine(x, y, width1, height1, width2, height2, lineWidth, color, color, color);
-    }
+        @Override
+        public VertexData3Step x2_y2_color2(float x2, float y2, Color color2) {
+            this.x2 = x2;
+            this.y2 = y2;
+            this.color2 = color2;
 
-    public void triangle(double x1, double y1, double x2, double y2, double x3, double y3, Color color1, Color color2, Color color3) {
-        put().vertex(new Vector2f((float) x1, (float) y1)).color(color1).end();
-        put().vertex(new Vector2f((float) x2, (float) y2)).color(color2).end();
-        put().vertex(new Vector2f((float) x3, (float) y3)).color(color3).end();
+            return this;
+        }
 
-        setDrawType(DrawType.TRIANGLES);
-        rendering();
-    }
+        @Override
+        public VertexData3Step width2_height2_color2(float width2, float height2, Color color2) {
+            this.x2 = x1 + width2;
+            this.y2 = y1 + height2;
+            this.color2 = color2;
 
-    public void triangleWH(double x, double y, double width1, double height1, double width2, double height2, Color color1, Color color2, Color color3) {
-        triangle(x, y, x + width1, y + height1, x + width2, y + height2, color1, color2, color3);
-    }
+            return this;
+        }
 
-    public void triangle(double x1, double y1, double x2, double y2, double x3, double y3, Color color1, Color color2) {
-        triangle(x1, y1, x2, y2, x3, y3, color1, color2, color2);
-    }
+        @Override
+        public PaintTypeStep x3_y3_color3(float x3, float y3, Color color3) {
+            this.x3 = x3;
+            this.y3 = y3;
+            this.color3 = color3;
 
-    public void triangleWH(double x, double y, double width1, double height1, double width2, double height2, Color color1, Color color2) {
-        triangleWH(x, y, width1, height1, width2, height2, color1, color2, color2);
-    }
+            return this;
+        }
 
-    public void triangle(double x1, double y1, double x2, double y2, double x3, double y3, Color color) {
-        triangle(x1, y1, x2, y2, x3, y3, color, color, color);
-    }
+        @Override
+        public PaintTypeStep width3_height3_color3(float width3, float height3, Color color3) {
+            this.x3 = x2 + width3;
+            this.y3 = y2 + height3;
+            this.color3 = color3;
 
-    public void triangleWH(double x, double y, double width1, double height1, double width2, double height2, Color color) {
-        triangleWH(x, y, width1, height1, width2, height2, color, color, color);
-    }
+            return this;
+        }
 
-    public void triangleOutLine(double x1, double y1, double x2, double y2, double x3, double y3, double lineWidth, Color color1, Color color2, Color color3) {
-        put().vertex(new Vector2f((float) x1, (float) y1)).color(color1).end();
-        put().vertex(new Vector2f((float) x2, (float) y2)).color(color2).end();
-        put().vertex(new Vector2f((float) x3, (float) y3)).color(color3).end();
+        @Override
+        public GLTriangle fill() {
+            this.paintType = PaintType.FILL;
+            this.lineWidth = -1;
 
-        setDrawType(DrawType.LINE_LOOP).setLineWidth((float) lineWidth);
-        rendering();
-    }
+            return new GLTriangle(name, x1, y1, color1, x2, y2, color2, x3, y3, color3, paintType, lineWidth);
+        }
 
-    public void triangleWHOutLine(double x, double y, double width1, double height1, double width2, double height2, double lineWidth, Color color1, Color color2, Color color3) {
-        triangleOutLine(x, y, x + width1, y + height1, x + width2, y + height2, lineWidth, color1, color2, color3);
-    }
+        @Override
+        public LineWidthStep outLine() {
+            this.paintType = PaintType.OUT_LINE;
 
-    public void triangleOutLine(double x1, double y1, double x2, double y2, double x3, double y3, double lineWidth, Color color1, Color color2) {
-        triangleOutLine(x1, y1, x2, y2, x3, y3, lineWidth, color1, color2, color2);
-    }
+            return this;
+        }
 
-    public void triangleWHOutLine(double x, double y, double width1, double height1, double width2, double height2, double lineWidth, Color color1, Color color2) {
-        triangleWHOutLine(x, y, width1, height1, width2, height2, lineWidth, color1, color2, color2);
-    }
+        @Override
+        public GLTriangle lineWidth(float lineWidth) {
+            this.lineWidth = lineWidth;
 
-    public void triangleOutLine(double x1, double y1, double x2, double y2, double x3, double y3, double lineWidth, Color color) {
-        triangleOutLine(x1, y1, x2, y2, x3, y3, lineWidth, color, color, color);
-    }
-
-    public void triangleWHOutLine(double x, double y, double width1, double height1, double width2, double height2, double lineWidth, Color color) {
-        triangleWHOutLine(x, y, width1, height1, width2, height2, lineWidth, color, color, color);
+            return new GLTriangle(name, x1, y1, color1, x2, y2, color2, x3, y3, color3, paintType, lineWidth);
+        }
     }
 }

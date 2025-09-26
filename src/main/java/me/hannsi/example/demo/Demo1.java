@@ -333,14 +333,23 @@ public class Demo1 implements IScene {
         glPolygon9.setDrawType(DrawType.LINE_LOOP).setLineWidth(2);
         glPolygon9.rendering();
         offsetX += offset + step;
-        glTriangle1 = new GLTriangle("GLTriangle1");
-        glTriangle1.triangle(offsetX, offsetY, offsetX + offset, offsetY, offsetX + offset / 2, offsetY + offset, Color.SILVER);
+        glTriangle1 = GLTriangle.createGLTriangle("GLTriangle1")
+                .x1_y1_color1(offsetX, offsetY, Color.SILVER)
+                .x2_y2_color2(offsetX + offset, offsetY, Color.SILVER)
+                .x3_y3_color3(offsetX + offset / 2, offsetY + offset, Color.SILVER)
+                .fill();
         offsetX += offset + step;
-        glTriangle2 = new GLTriangle("GLTriangle2");
-        glTriangle2.triangleOutLine(offsetX, offsetY, offsetX + offset, offsetY, offsetX + offset / 2, offsetY + offset, 6f, Color.SILVER);
+        glTriangle2 = GLTriangle.createGLTriangle("GLTriangle2")
+                .x1_y1_color1(offsetX, offsetY, Color.SILVER)
+                .x2_y2_color2(offsetX + offset, offsetY, Color.SILVER)
+                .x3_y3_color3(offsetX + offset / 2, offsetY + offset, Color.SILVER)
+                .outLine().lineWidth(6f);
         offsetX += offset + step;
-        glTriangle3 = new GLTriangle("GLTriangle3");
-        glTriangle3.triangleOutLine(offsetX, offsetY, offsetX + offset, offsetY, offsetX + offset / 2, offsetY + offset, 2f, Color.SILVER);
+        glTriangle3 = GLTriangle.createGLTriangle("GLTriangle3")
+                .x1_y1_color1(offsetX, offsetY, Color.SILVER)
+                .x2_y2_color2(offsetX + offset, offsetY, Color.SILVER)
+                .x3_y3_color3(offsetX + offset / 2, offsetY + offset, Color.SILVER)
+                .outLine().lineWidth(2f);
         offsetX = 20;
         offsetY += offset + step;
         Color color1 = Theme.PLEASANT_OCEAN_BLUE.getMainColor();

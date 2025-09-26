@@ -114,8 +114,11 @@ public class TestScene1 implements IScene {
 //        glFont.setFont(fontCache, font, 64);
 //        glFont.font(TextFormat.SPASE_X + "{100}" + "字間を確認" + TextFormat.RESET + "字間を確認" + TextFormat.SPASE_Y + "{100}" + TextFormat.NEWLINE + TextFormat.RESET_POINT_X + TextFormat.RED + "Ka" + TextFormat.BOLD + "zu" + TextFormat.ITALIC + "bon" + "です!" + TextFormat.OBFUSCATED + "test sdaasd aaaa", 0, 200, 1f, Color.of(255, 255, 255, alpha));
 
-        glTriangle = new GLTriangle("test3");
-        glTriangle.triangle(0, 0, 500, 0, 250, 500, Color.of(255, 255, 255, alpha), Color.of(255, 255, 0, alpha), Color.of(255, 255, 255, alpha));
+        glTriangle = GLTriangle.createGLTriangle("test3")
+                .x1_y1_color1(0, 0, Color.of(255, 255, 255, alpha))
+                .x2_y2_color2(500, 0, Color.of(255, 255, 0, alpha))
+                .x3_y3_color3(250, 500, Color.of(255, 255, 255, alpha))
+                .fill();
 
 //        glSVG = new GLSVG("SVG1");
 //        glSVG.svg(new ResourcesLocation("svg/delete.svg"), 100, 100, 5, 5);
