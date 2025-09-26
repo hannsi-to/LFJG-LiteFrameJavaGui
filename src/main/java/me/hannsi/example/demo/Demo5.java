@@ -172,14 +172,20 @@ public class Demo5 implements IScene {
                 .x_y_color(offsetX + offset / 2f, offsetY + offset / 2f, Color.BLACK)
                 .pointSize(15);
         offsetX += offset + step;
-        glLine1 = new GLLine("GLLine1");
-        glLine1.line(offsetX, offsetY, offsetX + offset, offsetY + offset, 2, Color.BLACK);
+        glLine1 = GLLine.createGLLine("GLLine1")
+                .x1_y1_color1(offsetX, offsetY, Color.BLACK)
+                .x2_y2_color2(offsetX + offset, offsetY + offset, Color.BLACK)
+                .lineWidth(2);
         offsetX += offset + step;
-        glLine2 = new GLLine("GLLine2");
-        glLine2.line(offsetX, offsetY, offsetX + offset, offsetY + offset, 4, Color.BLACK);
+        glLine2 = GLLine.createGLLine("GLLine2")
+                .x1_y1_color1(offsetX, offsetY, Color.BLACK)
+                .x2_y2_color2(offsetX + offset, offsetY + offset, Color.BLACK)
+                .lineWidth(4);
         offsetX += offset + step;
-        glLine3 = new GLLine("GLLine3");
-        glLine3.line(offsetX, offsetY, offsetX + offset, offsetY + offset, 6, Color.BLACK);
+        glLine3 = GLLine.createGLLine("GLLine3")
+                .x1_y1_color1(offsetX, offsetY, Color.BLACK)
+                .x2_y2_color2(offsetX + offset, offsetY + offset, Color.BLACK)
+                .lineWidth(6);
         offsetX += offset + step;
         glPolygon1 = new GLPolygon("GLPolygon1");
         glPolygon1.put().vertex(new Vector2f(offsetX, offsetY)).color(Color.BLACK);
