@@ -18,15 +18,15 @@ public class GLLine extends GLPolygon {
         rendering();
     }
 
-    public static Vertex1DataStep createGLLine(String name) {
+    public static VertexData1Step createGLLine(String name) {
         return new Builder(name);
     }
 
-    public interface Vertex1DataStep {
-        Vertex2DataStep x1_y1_color1(float x1, float y1, Color color1);
+    public interface VertexData1Step {
+        VertexData2Step x1_y1_color1(float x1, float y1, Color color1);
     }
 
-    public interface Vertex2DataStep {
+    public interface VertexData2Step {
         LineWidthStep x2_y2_color2(float x2, float y2, Color color2);
 
         LineWidthStep width_height_color2(float width, float height, Color color2);
@@ -36,7 +36,7 @@ public class GLLine extends GLPolygon {
         GLLine lineWidth(float lineWidth);
     }
 
-    private static class Builder implements Vertex1DataStep, Vertex2DataStep, LineWidthStep {
+    private static class Builder implements VertexData1Step, VertexData2Step, LineWidthStep {
         private final String name;
         private float x1;
         private float y1;
@@ -50,7 +50,7 @@ public class GLLine extends GLPolygon {
         }
 
         @Override
-        public Vertex2DataStep x1_y1_color1(float x1, float y1, Color color1) {
+        public VertexData2Step x1_y1_color1(float x1, float y1, Color color1) {
             this.x1 = x1;
             this.y1 = y1;
             this.color1 = color1;
