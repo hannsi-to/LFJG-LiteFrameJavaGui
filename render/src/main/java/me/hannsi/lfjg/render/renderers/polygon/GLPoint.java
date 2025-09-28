@@ -7,18 +7,25 @@ import org.joml.Vector2f;
 /**
  * Class representing a point renderer in OpenGL.
  */
-public class GLPoint extends GLPolygon {
-    GLPoint(String name, float x, float y, Color color, float pointSize) {
+public class GLPoint extends GLPolygon<GLPoint> {
+    private final Builder builder;
+
+    GLPoint(String name, Builder builder) {
         super(name);
-
-        put().vertex(new Vector2f(x, y)).color(color).end();
-
-        setDrawType(DrawType.POINTS).setPointSize(pointSize);
-        rendering();
+        this.builder = builder;
     }
 
     public static VertexDataStep createGLPoint(String name) {
         return new Builder(name);
+    }
+
+    public GLPoint update() {
+        put().vertex(new Vector2f(builder.x, builder.y)).color(builder.color).end();
+
+        setDrawType(DrawType.POINTS).setPointSize(builder.pointSize);
+        rendering();
+
+        return this;
     }
 
     public interface VertexDataStep {
@@ -34,6 +41,9 @@ public class GLPoint extends GLPolygon {
         private float x;
         private float y;
         private Color color;
+        private float pointSize;
+
+        private GLPoint glPoint;
 
         public Builder(String name) {
             this.name = name;
@@ -50,7 +60,16 @@ public class GLPoint extends GLPolygon {
 
         @Override
         public GLPoint pointSize(float pointSize) {
-            return new GLPoint(name, x, y, color, pointSize);
+            this.pointSize = pointSize;
+            return build();
+        }
+
+        private GLPoint build() {
+            if (glPoint == null) {
+                return glPoint = new GLPoint(name, this);
+            } else {
+                return glPoint.update();
+            }
         }
     }
 }

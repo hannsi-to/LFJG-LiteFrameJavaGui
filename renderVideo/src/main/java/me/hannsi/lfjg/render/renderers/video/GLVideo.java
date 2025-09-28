@@ -12,7 +12,7 @@ import org.joml.Vector2f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
-public class GLVideo extends GLPolygon {
+public class GLVideo extends GLPolygon<GLVideo> {
     private final VideoFrameSystem videoFrameSystem;
     private final Builder builder;
 
@@ -185,7 +185,7 @@ public class GLVideo extends GLPolygon {
             this.x4 = x1;
             this.y4 = y3;
 
-            return build((name));
+            return build();
         }
 
         @Override
@@ -197,7 +197,7 @@ public class GLVideo extends GLPolygon {
             this.x4 = x1;
             this.y4 = y1 + height3;
 
-            return build((name));
+            return build();
         }
 
         @Override
@@ -205,7 +205,7 @@ public class GLVideo extends GLPolygon {
             this.x4 = x4;
             this.y4 = y4;
 
-            return build((name));
+            return build();
         }
 
         @Override
@@ -213,10 +213,10 @@ public class GLVideo extends GLPolygon {
             this.x4 = x3 + width4;
             this.y4 = y3 + height4;
 
-            return build((name));
+            return build();
         }
 
-        private GLVideo build(String name) {
+        private GLVideo build() {
             if (glVideo == null) {
                 return glVideo = new GLVideo(name, this);
             } else {

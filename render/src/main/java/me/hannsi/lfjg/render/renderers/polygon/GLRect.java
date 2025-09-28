@@ -214,7 +214,7 @@ public class GLRect extends GLPolygon<GLRect> {
             this.paintType = PaintType.FILL;
             this.lineWidth = -1;
 
-            return build(name);
+            return build();
         }
 
         @Override
@@ -228,11 +228,11 @@ public class GLRect extends GLPolygon<GLRect> {
         public GLRect lineWidth(float lineWidth) {
             this.lineWidth = lineWidth;
 
-            return build(name);
+            return build();
         }
 
 
-        private GLRect build(String name) {
+        private GLRect build() {
             if (glRect == null) {
                 return glRect = new GLRect(name, this);
             } else {
