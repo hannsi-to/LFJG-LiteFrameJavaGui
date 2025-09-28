@@ -1,603 +1,243 @@
 package me.hannsi.lfjg.render.renderers.polygon;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
+import me.hannsi.lfjg.render.renderers.PaintType;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import org.joml.Vector2f;
 
 /**
  * Class representing a rectangle renderer in OpenGL.
  */
-public class GLRect extends GLPolygon {
-    /**
-     * Constructs a new GLRect with the specified name.
-     *
-     * @param name the name of the rectangle renderer
-     */
-    public GLRect(String name) {
+public class GLRect extends GLPolygon<GLRect> {
+    private final Builder builder;
+
+    GLRect(String name, Builder builder) {
         super(name);
+        this.builder = builder;
     }
 
-    /**
-     * Draws a rectangle with the specified coordinates and color.
-     *
-     * @param x1    the x-coordinate of the first vertex
-     * @param y1    the y-coordinate of the first vertex
-     * @param x2    the x-coordinate of the second vertex
-     * @param y2    the y-coordinate of the second vertex
-     * @param color the color of the rectangle
-     */
-    public void rect(float x1, float y1, float x2, float y2, Color color) {
-        put().vertex(new Vector2f(x1, y1)).color(color).end();
-        put().vertex(new Vector2f(x2, y1)).color(color).end();
-        put().vertex(new Vector2f(x2, y2)).color(color).end();
-        put().vertex(new Vector2f(x1, y2)).color(color).end();
+    public static VertexData1Step createGLRect(String name) {
+        return new Builder(name);
+    }
 
-        setDrawType(DrawType.QUADS);
+    public GLRect update() {
+        put().vertex(new Vector2f(builder.x1, builder.y1)).color(builder.color1).end();
+        put().vertex(new Vector2f(builder.x2, builder.y2)).color(builder.color2).end();
+        put().vertex(new Vector2f(builder.x3, builder.y3)).color(builder.color3).end();
+        put().vertex(new Vector2f(builder.x4, builder.y4)).color(builder.color4).end();
+
+        switch (builder.paintType) {
+            case FILL:
+                setDrawType(DrawType.QUADS);
+                break;
+            case OUT_LINE:
+                setDrawType(DrawType.LINE_LOOP).setLineWidth(builder.lineWidth);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + builder.paintType);
+        }
+
         rendering();
+
+        return this;
     }
 
-    /**
-     * Draws a rectangle with the specified width and height.
-     *
-     * @param x      the x-coordinate of the first vertex
-     * @param y      the y-coordinate of the first vertex
-     * @param width  the width of the rectangle
-     * @param height the height of the rectangle
-     * @param color  the color of the rectangle
-     */
-    public void rectWH(float x, float y, float width, float height, Color color) {
-        rect(x, y, x + width, y + height, color);
+    public Builder getBuilder() {
+        return builder;
     }
 
-    /**
-     * Draws a rectangle with the specified coordinates and gradient colors.
-     *
-     * @param x1     the x-coordinate of the first vertex
-     * @param y1     the y-coordinate of the first vertex
-     * @param x2     the x-coordinate of the second vertex
-     * @param y2     the y-coordinate of the second vertex
-     * @param color1 the color of the first vertex
-     * @param color2 the color of the second vertex
-     */
-    public void rect(float x1, float y1, float x2, float y2, Color color1, Color color2) {
-        put().vertex(new Vector2f(x1, y1)).color(color1).end();
-        put().vertex(new Vector2f(x2, y1)).color(color2).end();
-        put().vertex(new Vector2f(x2, y2)).color(color1).end();
-        put().vertex(new Vector2f(x1, y2)).color(color1).end();
+    public interface VertexData1Step {
+        VertexData2Step x1_y1_color1(float x1, float y1, Color color1);
 
-        setDrawType(DrawType.QUADS);
-        rendering();
+        VertexData3Step x1_y1_color1_2p(float x1, float y1, Color color1);
     }
 
-    /**
-     * Draws a rectangle with the specified width, height, and gradient colors.
-     *
-     * @param x      the x-coordinate of the first vertex
-     * @param y      the y-coordinate of the first vertex
-     * @param width  the width of the rectangle
-     * @param height the height of the rectangle
-     * @param color1 the color of the first vertex
-     * @param color2 the color of the second vertex
-     */
-    public void rectWH(float x, float y, float width, float height, Color color1, Color color2) {
-        rect(x, y, x + width, y + height, color1, color2);
+    public interface VertexData2Step {
+        VertexData3Step x2_y2_color2(float x2, float y2, Color color2);
+
+        VertexData3Step width2_height2_color2(float width2, float height2, Color color2);
     }
 
-    /**
-     * Draws a rectangle with the specified coordinates and gradient colors.
-     *
-     * @param x1     the x-coordinate of the first vertex
-     * @param y1     the y-coordinate of the first vertex
-     * @param x2     the x-coordinate of the second vertex
-     * @param y2     the y-coordinate of the second vertex
-     * @param color1 the color of the first vertex
-     * @param color2 the color of the second vertex
-     * @param color3 the color of the third vertex
-     */
-    public void rect(float x1, float y1, float x2, float y2, Color color1, Color color2, Color color3) {
-        put().vertex(new Vector2f(x1, y1)).color(color1).end();
-        put().vertex(new Vector2f(x2, y1)).color(color2).end();
-        put().vertex(new Vector2f(x2, y2)).color(color3).end();
-        put().vertex(new Vector2f(x1, y2)).color(color1).end();
+    public interface VertexData3Step {
+        VertexData4Step x3_y3_color3(float x3, float y3, Color color3);
 
-        setDrawType(DrawType.QUADS);
-        rendering();
+        VertexData4Step width3_height3_color3(float width3, float height3, Color color3);
+
+        PaintTypeStep x3_y3_color3_2p(float x3, float y3, Color color3);
+
+        PaintTypeStep width3_height3_color3_2p(float width3, float height3, Color color3);
     }
 
-    /**
-     * Draws a rectangle with the specified width, height, and gradient colors.
-     *
-     * @param x      the x-coordinate of the first vertex
-     * @param y      the y-coordinate of the first vertex
-     * @param width  the width of the rectangle
-     * @param height the height of the rectangle
-     * @param color1 the color of the first vertex
-     * @param color2 the color of the second vertex
-     * @param color3 the color of the third vertex
-     */
-    public void rectWH(float x, float y, float width, float height, Color color1, Color color2, Color color3) {
-        rect(x, y, x + width, y + height, color1, color2, color3);
+    public interface VertexData4Step {
+        PaintTypeStep x4_y4_color4(float x4, float y4, Color color4);
+
+        PaintTypeStep width4_height4_color4(float width4, float height4, Color color4);
     }
 
-    /**
-     * Draws a rectangle with the specified coordinates and gradient colors.
-     *
-     * @param x1     the x-coordinate of the first vertex
-     * @param y1     the y-coordinate of the first vertex
-     * @param x2     the x-coordinate of the second vertex
-     * @param y2     the y-coordinate of the second vertex
-     * @param color1 the color of the first vertex
-     * @param color2 the color of the second vertex
-     * @param color3 the color of the third vertex
-     * @param color4 the color of the fourth vertex
-     */
-    public void rect(float x1, float y1, float x2, float y2, Color color1, Color color2, Color color3, Color color4) {
-        put().vertex(new Vector2f(x1, y1)).color(color1).end();
-        put().vertex(new Vector2f(x2, y1)).color(color2).end();
-        put().vertex(new Vector2f(x2, y2)).color(color3).end();
-        put().vertex(new Vector2f(x1, y2)).color(color4).end();
+    public interface PaintTypeStep {
+        GLRect fill();
 
-        setDrawType(DrawType.QUADS);
-        rendering();
+        LineWidthStep outLine();
     }
 
-    /**
-     * Draws a rectangle with the specified width, height, and gradient colors.
-     *
-     * @param x      the x-coordinate of the first vertex
-     * @param y      the y-coordinate of the first vertex
-     * @param width  the width of the rectangle
-     * @param height the height of the rectangle
-     * @param color1 the color of the first vertex
-     * @param color2 the color of the second vertex
-     * @param color3 the color of the third vertex
-     * @param color4 the color of the fourth vertex
-     */
-    public void rectWH(float x, float y, float width, float height, Color color1, Color color2, Color color3, Color color4) {
-        rect(x, y, x + width, y + height, color1, color2, color3, color4);
+    public interface LineWidthStep {
+        GLRect lineWidth(float lineWidth);
     }
 
-    /**
-     * Draws a rectangle outline with the specified coordinates, line width, and color.
-     *
-     * @param x1        the x-coordinate of the first vertex
-     * @param y1        the y-coordinate of the first vertex
-     * @param x2        the x-coordinate of the second vertex
-     * @param y2        the y-coordinate of the second vertex
-     * @param lineWidth the width of the line
-     * @param color     the color of the outline
-     */
-    public void rectOutLine(float x1, float y1, float x2, float y2, float lineWidth, Color color) {
-        put().vertex(new Vector2f(x1, y1)).color(color).end();
-        put().vertex(new Vector2f(x2, y1)).color(color).end();
-        put().vertex(new Vector2f(x2, y2)).color(color).end();
-        put().vertex(new Vector2f(x1, y2)).color(color).end();
-        setLineWidth(lineWidth);
+    public static class Builder implements VertexData1Step, VertexData2Step, VertexData3Step, VertexData4Step, PaintTypeStep, LineWidthStep {
+        protected final String name;
+        protected float x1;
+        protected float y1;
+        protected Color color1;
+        protected float x2;
+        protected float y2;
+        protected Color color2;
+        protected float x3;
+        protected float y3;
+        protected Color color3;
+        protected float x4;
+        protected float y4;
+        protected Color color4;
+        protected PaintType paintType;
+        protected float lineWidth;
 
-        setDrawType(DrawType.LINE_LOOP);
-        rendering();
-    }
+        private GLRect glRect;
 
-    /**
-     * Draws a rectangle outline with the specified width, height, line width, and color.
-     *
-     * @param x         the x-coordinate of the first vertex
-     * @param y         the y-coordinate of the first vertex
-     * @param width     the width of the rectangle
-     * @param height    the height of the rectangle
-     * @param lineWidth the width of the line
-     * @param color     the color of the outline
-     */
-    public void rectWHOutLine(float x, float y, float width, float height, float lineWidth, Color color) {
-        rectOutLine(x, y, x + width, y + height, lineWidth, color);
-    }
+        public Builder(String name) {
+            this.name = name;
+        }
 
-    /**
-     * Draws a rectangle outline with the specified coordinates, line width, and gradient colors.
-     *
-     * @param x1        the x-coordinate of the first vertex
-     * @param y1        the y-coordinate of the first vertex
-     * @param x2        the x-coordinate of the second vertex
-     * @param y2        the y-coordinate of the second vertex
-     * @param lineWidth the width of the line
-     * @param color1    the color of the first vertex
-     * @param color2    the color of the second vertex
-     */
-    public void rectOutLine(float x1, float y1, float x2, float y2, float lineWidth, Color color1, Color color2) {
-        put().vertex(new Vector2f(x1, y1)).color(color1).end();
-        put().vertex(new Vector2f(x2, y1)).color(color2).end();
-        put().vertex(new Vector2f(x2, y2)).color(color1).end();
-        put().vertex(new Vector2f(x1, y2)).color(color1).end();
-        setLineWidth(lineWidth);
+        @Override
+        public VertexData2Step x1_y1_color1(float x1, float y1, Color color1) {
+            this.x1 = x1;
+            this.y1 = y1;
+            this.color1 = color1;
 
-        setDrawType(DrawType.QUADS);
-        rendering();
-    }
+            return this;
+        }
 
-    /**
-     * Draws a rectangle outline with the specified width, height, line width, and gradient colors.
-     *
-     * @param x         the x-coordinate of the first vertex
-     * @param y         the y-coordinate of the first vertex
-     * @param width     the width of the rectangle
-     * @param height    the height of the rectangle
-     * @param lineWidth the width of the line
-     * @param color1    the color of the first vertex
-     * @param color2    the color of the second vertex
-     */
-    public void rectWHOutLine(float x, float y, float width, float height, float lineWidth, Color color1, Color color2) {
-        rectOutLine(x, y, x + width, y + height, lineWidth, color1, color2);
-    }
+        @Override
+        public VertexData3Step x1_y1_color1_2p(float x1, float y1, Color color1) {
+            this.x1 = x1;
+            this.y1 = y1;
+            this.color1 = color1;
 
-    /**
-     * Draws a rectangle outline with the specified coordinates, line width, and gradient colors.
-     *
-     * @param x1        the x-coordinate of the first vertex
-     * @param y1        the y-coordinate of the first vertex
-     * @param x2        the x-coordinate of the second vertex
-     * @param y2        the y-coordinate of the second vertex
-     * @param lineWidth the width of the line
-     * @param color1    the color of the first vertex
-     * @param color2    the color of the second vertex
-     * @param color3    the color of the third vertex
-     */
-    public void rectOutLine(float x1, float y1, float x2, float y2, float lineWidth, Color color1, Color color2, Color color3) {
-        put().vertex(new Vector2f(x1, y1)).color(color1).end();
-        put().vertex(new Vector2f(x2, y1)).color(color2).end();
-        put().vertex(new Vector2f(x2, y2)).color(color3).end();
-        put().vertex(new Vector2f(x1, y2)).color(color1).end();
-        setLineWidth(lineWidth);
+            return this;
+        }
 
-        setDrawType(DrawType.QUADS);
-        rendering();
-    }
+        @Override
+        public VertexData3Step x2_y2_color2(float x2, float y2, Color color2) {
+            this.x2 = x2;
+            this.y2 = y2;
+            this.color2 = color2;
 
-    /**
-     * Draws a rectangle outline with the specified width, height, line width, and gradient colors.
-     *
-     * @param x         the x-coordinate of the first vertex
-     * @param y         the y-coordinate of the first vertex
-     * @param width     the width of the rectangle
-     * @param height    the height of the rectangle
-     * @param lineWidth the width of the line
-     * @param color1    the color of the first vertex
-     * @param color2    the color of the second vertex
-     * @param color3    the color of the third vertex
-     */
-    public void rectWHOutLine(float x, float y, float width, float height, float lineWidth, Color color1, Color color2, Color color3) {
-        rectOutLine(x, y, x + width, y + height, lineWidth, color1, color2, color3);
-    }
+            return this;
+        }
 
-    /**
-     * Draws a rectangle outline with the specified coordinates, line width, and gradient colors.
-     *
-     * @param x1        the x-coordinate of the first vertex
-     * @param y1        the y-coordinate of the first vertex
-     * @param x2        the x-coordinate of the second vertex
-     * @param y2        the y-coordinate of the second vertex
-     * @param lineWidth the width of the line
-     * @param color1    the color of the first vertex
-     * @param color2    the color of the second vertex
-     * @param color3    the color of the third vertex
-     * @param color4    the color of the fourth vertex
-     */
-    public void rectOutLine(float x1, float y1, float x2, float y2, float lineWidth, Color color1, Color color2, Color color3, Color color4) {
-        put().vertex(new Vector2f(x1, y1)).color(color1).end();
-        put().vertex(new Vector2f(x2, y1)).color(color2).end();
-        put().vertex(new Vector2f(x2, y2)).color(color3).end();
-        put().vertex(new Vector2f(x1, y2)).color(color4).end();
-        setLineWidth(lineWidth);
+        @Override
+        public VertexData3Step width2_height2_color2(float width2, float height2, Color color2) {
+            this.x2 = x1 + width2;
+            this.y2 = y1 + height2;
+            this.color2 = color2;
 
-        setDrawType(DrawType.QUADS);
-        rendering();
-    }
+            return this;
+        }
 
-    /**
-     * Draws a rectangle outline with the specified width, height, line width, and gradient colors.
-     *
-     * @param x         the x-coordinate of the first vertex
-     * @param y         the y-coordinate of the first vertex
-     * @param width     the width of the rectangle
-     * @param height    the height of the rectangle
-     * @param lineWidth the width of the line
-     * @param color1    the color of the first vertex
-     * @param color2    the color of the second vertex
-     * @param color3    the color of the third vertex
-     * @param color4    the color of the fourth vertex
-     */
-    public void rectWHOutLine(float x, float y, float width, float height, float lineWidth, Color color1, Color color2, Color color3, Color color4) {
-        rectOutLine(x, y, x + width, y + height, lineWidth, color1, color2, color3, color4);
-    }
+        @Override
+        public VertexData4Step x3_y3_color3(float x3, float y3, Color color3) {
+            this.x3 = x3;
+            this.y3 = y3;
+            this.color3 = color3;
 
-    /**
-     * Draws a rectangle with the specified coordinates and color.
-     *
-     * @param x1    the x-coordinate of the first vertex
-     * @param y1    the y-coordinate of the first vertex
-     * @param x2    the x-coordinate of the second vertex
-     * @param y2    the y-coordinate of the second vertex
-     * @param color the color of the rectangle
-     */
-    public void rect(double x1, double y1, double x2, double y2, Color color) {
-        put().vertex(new Vector2f((float) x1, (float) y1)).color(color).end();
-        put().vertex(new Vector2f((float) x2, (float) y1)).color(color).end();
-        put().vertex(new Vector2f((float) x2, (float) y2)).color(color).end();
-        put().vertex(new Vector2f((float) x1, (float) y2)).color(color).end();
+            return this;
+        }
 
-        setDrawType(DrawType.QUADS);
-        rendering();
-    }
+        @Override
+        public VertexData4Step width3_height3_color3(float width3, float height3, Color color3) {
+            this.x3 = x1 + width3;
+            this.y3 = y1 + height3;
+            this.color3 = color3;
 
-    /**
-     * Draws a rectangle with the specified width and height.
-     *
-     * @param x      the x-coordinate of the first vertex
-     * @param y      the y-coordinate of the first vertex
-     * @param width  the width of the rectangle
-     * @param height the height of the rectangle
-     * @param color  the color of the rectangle
-     */
-    public void rectWH(double x, double y, double width, double height, Color color) {
-        rect(x, y, x + width, y + height, color);
-    }
+            return this;
+        }
 
-    /**
-     * Draws a rectangle with the specified coordinates and gradient colors.
-     *
-     * @param x1     the x-coordinate of the first vertex
-     * @param y1     the y-coordinate of the first vertex
-     * @param x2     the x-coordinate of the second vertex
-     * @param y2     the y-coordinate of the second vertex
-     * @param color1 the color of the first vertex
-     * @param color2 the color of the second vertex
-     */
-    public void rect(double x1, double y1, double x2, double y2, Color color1, Color color2) {
-        put().vertex(new Vector2f((float) x1, (float) y1)).color(color1).end();
-        put().vertex(new Vector2f((float) x2, (float) y1)).color(color2).end();
-        put().vertex(new Vector2f((float) x2, (float) y2)).color(color1).end();
-        put().vertex(new Vector2f((float) x1, (float) y2)).color(color1).end();
+        @Override
+        public PaintTypeStep x3_y3_color3_2p(float x3, float y3, Color color3) {
+            this.x2 = x3;
+            this.y2 = y1;
+            this.x3 = x3;
+            this.y3 = y3;
+            this.x4 = x1;
+            this.y4 = y3;
+            this.color2 = color1;
+            this.color3 = color3;
+            this.color4 = color3;
 
-        setDrawType(DrawType.QUADS);
-        rendering();
-    }
+            return this;
+        }
 
-    /**
-     * Draws a rectangle with the specified width, height, and gradient colors.
-     *
-     * @param x      the x-coordinate of the first vertex
-     * @param y      the y-coordinate of the first vertex
-     * @param width  the width of the rectangle
-     * @param height the height of the rectangle
-     * @param color1 the color of the first vertex
-     * @param color2 the color of the second vertex
-     */
-    public void rectWH(double x, double y, double width, double height, Color color1, Color color2) {
-        rect(x, y, x + width, y + height, color1, color2);
-    }
+        @Override
+        public PaintTypeStep width3_height3_color3_2p(float width3, float height3, Color color3) {
+            this.x2 = x1 + width3;
+            this.y2 = y1;
+            this.x3 = x1 + width3;
+            this.y3 = y1 + height3;
+            this.x4 = x1;
+            this.y4 = y1 + height3;
+            this.color2 = color1;
+            this.color3 = color3;
+            this.color4 = color3;
 
-    /**
-     * Draws a rectangle with the specified coordinates and gradient colors.
-     *
-     * @param x1     the x-coordinate of the first vertex
-     * @param y1     the y-coordinate of the first vertex
-     * @param x2     the x-coordinate of the second vertex
-     * @param y2     the y-coordinate of the second vertex
-     * @param color1 the color of the first vertex
-     * @param color2 the color of the second vertex
-     * @param color3 the color of the third vertex
-     */
-    public void rect(double x1, double y1, double x2, double y2, Color color1, Color color2, Color color3) {
-        put().vertex(new Vector2f((float) x1, (float) y1)).color(color1).end();
-        put().vertex(new Vector2f((float) x2, (float) y1)).color(color2).end();
-        put().vertex(new Vector2f((float) x2, (float) y2)).color(color3).end();
-        put().vertex(new Vector2f((float) x1, (float) y2)).color(color1).end();
+            return this;
+        }
 
-        setDrawType(DrawType.QUADS);
-        rendering();
-    }
+        @Override
+        public PaintTypeStep x4_y4_color4(float x4, float y4, Color color4) {
+            this.x4 = x4;
+            this.y4 = y4;
+            this.color4 = color4;
 
-    /**
-     * Draws a rectangle with the specified width, height, and gradient colors.
-     *
-     * @param x      the x-coordinate of the first vertex
-     * @param y      the y-coordinate of the first vertex
-     * @param width  the width of the rectangle
-     * @param height the height of the rectangle
-     * @param color1 the color of the first vertex
-     * @param color2 the color of the second vertex
-     * @param color3 the color of the third vertex
-     */
-    public void rectWH(double x, double y, double width, double height, Color color1, Color color2, Color color3) {
-        rect(x, y, x + width, y + height, color1, color2, color3);
-    }
+            return this;
+        }
 
-    /**
-     * Draws a rectangle with the specified coordinates and gradient colors.
-     *
-     * @param x1     the x-coordinate of the first vertex
-     * @param y1     the y-coordinate of the first vertex
-     * @param x2     the x-coordinate of the second vertex
-     * @param y2     the y-coordinate of the second vertex
-     * @param color1 the color of the first vertex
-     * @param color2 the color of the second vertex
-     * @param color3 the color of the third vertex
-     * @param color4 the color of the fourth vertex
-     */
-    public void rect(double x1, double y1, double x2, double y2, Color color1, Color color2, Color color3, Color color4) {
-        put().vertex(new Vector2f((float) x1, (float) y1)).color(color1).end();
-        put().vertex(new Vector2f((float) x2, (float) y1)).color(color2).end();
-        put().vertex(new Vector2f((float) x2, (float) y2)).color(color3).end();
-        put().vertex(new Vector2f((float) x1, (float) y2)).color(color4).end();
+        @Override
+        public PaintTypeStep width4_height4_color4(float width4, float height4, Color color4) {
+            this.x4 = x1 + width4;
+            this.y4 = y1 + height4;
+            this.color4 = color4;
 
-        setDrawType(DrawType.QUADS);
-        rendering();
-    }
+            return this;
+        }
 
-    /**
-     * Draws a rectangle with the specified width, height, and gradient colors.
-     *
-     * @param x      the x-coordinate of the first vertex
-     * @param y      the y-coordinate of the first vertex
-     * @param width  the width of the rectangle
-     * @param height the height of the rectangle
-     * @param color1 the color of the first vertex
-     * @param color2 the color of the second vertex
-     * @param color3 the color of the third vertex
-     * @param color4 the color of the fourth vertex
-     */
-    public void rectWH(double x, double y, double width, double height, Color color1, Color color2, Color color3, Color color4) {
-        rect(x, y, x + width, y + height, color1, color2, color3, color4);
-    }
+        @Override
+        public GLRect fill() {
+            this.paintType = PaintType.FILL;
+            this.lineWidth = -1;
 
-    /**
-     * Draws a rectangle outline with the specified coordinates, line width, and color.
-     *
-     * @param x1        the x-coordinate of the first vertex
-     * @param y1        the y-coordinate of the first vertex
-     * @param x2        the x-coordinate of the second vertex
-     * @param y2        the y-coordinate of the second vertex
-     * @param lineWidth the width of the line
-     * @param color     the color of the outline
-     */
-    public void rectOutLine(double x1, double y1, double x2, double y2, double lineWidth, Color color) {
-        put().vertex(new Vector2f((float) x1, (float) y1)).color(color).end();
-        put().vertex(new Vector2f((float) x2, (float) y1)).color(color).end();
-        put().vertex(new Vector2f((float) x2, (float) y2)).color(color).end();
-        put().vertex(new Vector2f((float) x1, (float) y2)).color(color).end();
-        setLineWidth((float) lineWidth);
+            return build(name);
+        }
 
-        setDrawType(DrawType.QUADS);
-        rendering();
-    }
+        @Override
+        public LineWidthStep outLine() {
+            this.paintType = PaintType.OUT_LINE;
 
-    /**
-     * Draws a rectangle outline with the specified width, height, line width, and color.
-     *
-     * @param x         the x-coordinate of the first vertex
-     * @param y         the y-coordinate of the first vertex
-     * @param width     the width of the rectangle
-     * @param height    the height of the rectangle
-     * @param lineWidth the width of the line
-     * @param color     the color of the outline
-     */
-    public void rectWHOutLine(double x, double y, double width, double height, double lineWidth, Color color) {
-        rectOutLine(x, y, x + width, y + height, lineWidth, color);
-    }
+            return this;
+        }
 
-    /**
-     * Draws a rectangle outline with the specified coordinates, line width, and gradient colors.
-     *
-     * @param x1        the x-coordinate of the first vertex
-     * @param y1        the y-coordinate of the first vertex
-     * @param x2        the x-coordinate of the second vertex
-     * @param y2        the y-coordinate of the second vertex
-     * @param lineWidth the width of the line
-     * @param color1    the color of the first vertex
-     * @param color2    the color of the second vertex
-     */
-    public void rectOutLine(double x1, double y1, double x2, double y2, double lineWidth, Color color1, Color color2) {
-        put().vertex(new Vector2f((float) x1, (float) y1)).color(color1).end();
-        put().vertex(new Vector2f((float) x2, (float) y1)).color(color2).end();
-        put().vertex(new Vector2f((float) x2, (float) y2)).color(color1).end();
-        put().vertex(new Vector2f((float) x1, (float) y2)).color(color1).end();
-        setLineWidth((float) lineWidth);
+        @Override
+        public GLRect lineWidth(float lineWidth) {
+            this.lineWidth = lineWidth;
 
-        setDrawType(DrawType.QUADS);
-        rendering();
-    }
+            return build(name);
+        }
 
-    /**
-     * Draws a rectangle outline with the specified width, height, line width, and gradient colors.
-     *
-     * @param x         the x-coordinate of the first vertex
-     * @param y         the y-coordinate of the first vertex
-     * @param width     the width of the rectangle
-     * @param height    the height of the rectangle
-     * @param lineWidth the width of the line
-     * @param color1    the color of the first vertex
-     * @param color2    the color of the second vertex
-     */
-    public void rectWHOutLine(double x, double y, double width, double height, double lineWidth, Color color1, Color color2) {
-        rectOutLine(x, y, x + width, y + height, lineWidth, color1, color2);
-    }
 
-    /**
-     * Draws a rectangle outline with the specified coordinates, line width, and gradient colors.
-     *
-     * @param x1        the x-coordinate of the first vertex
-     * @param y1        the y-coordinate of the first vertex
-     * @param x2        the x-coordinate of the second vertex
-     * @param y2        the y-coordinate of the second vertex
-     * @param lineWidth the width of the line
-     * @param color1    the color of the first vertex
-     * @param color2    the color of the second vertex
-     * @param color3    the color of the third vertex
-     */
-    public void rectOutLine(double x1, double y1, double x2, double y2, double lineWidth, Color color1, Color color2, Color color3) {
-        put().vertex(new Vector2f((float) x1, (float) y1)).color(color1).end();
-        put().vertex(new Vector2f((float) x2, (float) y1)).color(color2).end();
-        put().vertex(new Vector2f((float) x2, (float) y2)).color(color3).end();
-        put().vertex(new Vector2f((float) x1, (float) y2)).color(color1).end();
-        setLineWidth((float) lineWidth);
-
-        setDrawType(DrawType.QUADS);
-        rendering();
-    }
-
-    /**
-     * Draws a rectangle outline with the specified width, height, line width, and gradient colors.
-     *
-     * @param x         the x-coordinate of the first vertex
-     * @param y         the y-coordinate of the first vertex
-     * @param width     the width of the rectangle
-     * @param height    the height of the rectangle
-     * @param lineWidth the width of the line
-     * @param color1    the color of the first vertex
-     * @param color2    the color of the second vertex
-     * @param color3    the color of the third vertex
-     */
-    public void rectWHOutLine(double x, double y, double width, double height, double lineWidth, Color color1, Color color2, Color color3) {
-        rectOutLine(x, y, x + width, y + height, lineWidth, color1, color2, color3);
-    }
-
-    /**
-     * Draws a rectangle outline with the specified coordinates, line width, and gradient colors.
-     *
-     * @param x1        the x-coordinate of the first vertex
-     * @param y1        the y-coordinate of the first vertex
-     * @param x2        the x-coordinate of the second vertex
-     * @param y2        the y-coordinate of the second vertex
-     * @param lineWidth the width of the line
-     * @param color1    the color of the first vertex
-     * @param color2    the color of the second vertex
-     * @param color3    the color of the third vertex
-     * @param color4    the color of the fourth vertex
-     */
-    public void rectOutLine(double x1, double y1, double x2, double y2, double lineWidth, Color color1, Color color2, Color color3, Color color4) {
-        put().vertex(new Vector2f((float) x1, (float) y1)).color(color1).end();
-        put().vertex(new Vector2f((float) x2, (float) y1)).color(color2).end();
-        put().vertex(new Vector2f((float) x2, (float) y2)).color(color3).end();
-        put().vertex(new Vector2f((float) x1, (float) y2)).color(color4).end();
-        setLineWidth((float) lineWidth);
-
-        setDrawType(DrawType.QUADS);
-        rendering();
-    }
-
-    /**
-     * Draws a rectangle outline with the specified width, height, line width, and gradient colors.
-     *
-     * @param x         the x-coordinate of the first vertex
-     * @param y         the y-coordinate of the first vertex
-     * @param width     the width of the rectangle
-     * @param height    the height of the rectangle
-     * @param lineWidth the width of the line
-     * @param color1    the color of the first vertex
-     * @param color2    the color of the second vertex
-     * @param color3    the color of the third vertex
-     * @param color4    the color of the fourth vertex
-     */
-    public void rectWHOutLine(double x, double y, double width, double height, double lineWidth, Color color1, Color color2, Color color3, Color color4) {
-        rectOutLine(x, y, x + width, y + height, lineWidth, color1, color2, color3, color4);
+        private GLRect build(String name) {
+            if (glRect == null) {
+                return glRect = new GLRect(name, this);
+            } else {
+                return glRect.update();
+            }
+        }
     }
 }
