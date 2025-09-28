@@ -15,7 +15,7 @@ import java.util.Arrays;
 /**
  * Class representing a polygon renderer in OpenGL.
  */
-public class GLPolygon extends GLObject {
+public class GLPolygon<T extends GLPolygon<T>> extends GLObject {
     protected float[] latestVertex;
     protected float[] latestColor;
     protected float[] latestTexture;
@@ -30,11 +30,11 @@ public class GLPolygon extends GLObject {
         super(name);
     }
 
-    public GLPolygon put() {
+    public GLPolygon<T> put() {
         return this;
     }
 
-    public GLPolygon vertex(Vector2f vector2f) {
+    public GLPolygon<T> vertex(Vector2f vector2f) {
         if (vertex == null) {
             vertex = new float[0];
         }
@@ -47,7 +47,7 @@ public class GLPolygon extends GLObject {
         return this;
     }
 
-    public GLPolygon color(Color c) {
+    public GLPolygon<T> color(Color c) {
         if (color == null) {
             color = new float[0];
         }
@@ -62,16 +62,18 @@ public class GLPolygon extends GLObject {
         return this;
     }
 
-    public GLPolygon uv(float u1, float v1, float u2, float v2) {
+    @SuppressWarnings("unchecked")
+    public T uv(float u1, float v1, float u2, float v2) {
         put().uv(new Vector2f(u1, v1)).end();
         put().uv(new Vector2f(u2, v1)).end();
         put().uv(new Vector2f(u2, v2)).end();
         put().uv(new Vector2f(u1, v2)).end();
 
-        return this;
+        return (T) this;
     }
 
-    public GLPolygon uv(Vector2f vector2f) {
+    @SuppressWarnings("unchecked")
+    public T uv(Vector2f vector2f) {
         if (texture == null) {
             texture = new float[0];
         }
@@ -81,7 +83,7 @@ public class GLPolygon extends GLObject {
         texture[texture.length - 2] = vector2f.x();
         texture[texture.length - 1] = vector2f.y();
 
-        return this;
+        return (T) this;
     }
 
     public void end() {

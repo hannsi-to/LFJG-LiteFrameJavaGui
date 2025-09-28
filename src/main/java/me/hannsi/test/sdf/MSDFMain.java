@@ -53,9 +53,9 @@ public class MSDFMain implements LFJGFrame {
         glText = new GLText("GLText1");
         glText.text("Font1", TextFormatType.UNDERLINE + "abcdefghijkl" + TextFormatType.STRIKETHROUGH + "mnopqrstuvwxyz", 0, 100, 64, Color.WHITE, true, AlignType.LEFT_BASELINE);
 
-        glRect = new GLRect("GLRect1");
-        glRect.uv(0, 1, 1, 0);
-        glRect.rectWH(0, 0, 1920, 1080, Color.of(0, 0, 0, 0));
+//        glRect = new GLRect("GLRect1");
+//        glRect.uv(0, 1, 1, 0);
+//        glRect.rectWH(0, 0, 1920, 1080, Color.of(0, 0, 0, 0));
 
         LFJGRenderContext.textureCache.createCache("Test1", Location.fromResource("texture/test/test1.jpg"));
 

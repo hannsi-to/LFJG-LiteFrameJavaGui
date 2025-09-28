@@ -24,9 +24,9 @@ public class TestScene4 implements IScene {
 
     @Override
     public void init() {
-        glRect = new GLRect("glRect");
-        glRect.uv(0, 1f, 1f, 0);
-        glRect.rect(0, 0, 1920, 1080, Color.of(0, 0, 0, 0));
+//        glRect = new GLRect("glRect");
+//        glRect.uv(0, 1f, 1f, 0);
+//        glRect.rect(0, 0, 1920, 1080, Color.of(0, 0, 0, 0));
 
         textureCache = TextureCache.createTextureCache()
                 .createCache("Texture1", Location.fromResource("texture/test/test_image_3840x2160.jpg"));

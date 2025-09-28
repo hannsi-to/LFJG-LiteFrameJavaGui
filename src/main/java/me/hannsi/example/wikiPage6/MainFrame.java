@@ -21,8 +21,12 @@ public class MainFrame implements LFJGFrame {
     public void init() {
         frame.updateLFJGLContext();
 
-        glRect1 = new GLRect("Rect1");
-        glRect1.rect(500, 500, 1000, 1000, Color.RED);
+        glRect1 = GLRect.createGLRect("Rect1")
+                .x1_y1_color1_2p(500, 500, Color.RED)
+                .x3_y3_color3_2p(1000, 1000, Color.RED)
+                .fill()
+                .update();
+
         effectCache1 = EffectCache.createEffectCache()
                 .createCache(Rotate.createRotate("Rotate1").zDegree(45).cx(500).cy(500))
                 .attachGLObject(glRect1);

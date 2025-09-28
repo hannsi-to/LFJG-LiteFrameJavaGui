@@ -1,7 +1,6 @@
 package me.hannsi.test.test1;
 
 import me.hannsi.lfjg.core.Core;
-import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.math.Projection;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.frame.Frame;
@@ -31,8 +30,8 @@ public class TestGuiFrame2 implements LFJGFrame {
         frame.updateLFJGLContext();
         Core.projection2D = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, frame.getFrameBufferWidth(), frame.getFrameBufferHeight());
 
-        glRect1 = new GLRect("Rect1");
-        glRect1.rect(500, 500, 1000, 1000, Color.RED);
+//        glRect1 = new GLRect("Rect1");
+//        glRect1.rect(500, 500, 1000, 1000, Color.RED);
 
         glRect1EffectCache = EffectCache.createEffectCache();
 

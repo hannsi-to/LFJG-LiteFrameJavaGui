@@ -1,6 +1,5 @@
 package me.hannsi.test;
 
-import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
@@ -29,18 +28,18 @@ public class TestScene5 implements IScene {
 
     @Override
     public void init() {
-        glRect = new GLRect("glRect");
-        glRect.uv(0, 1f, 1f, 0);
-        glRect.rectWH(0, 0, 100, 100, Color.of(0, 0, 0, 0));
-        glRect2 = new GLRect("glRect2");
-        glRect2.uv(0, 1f, 1f, 0);
-        glRect2.rectWH(110, 0, 100, 100, Color.of(0, 0, 0, 0));
-        glRect3 = new GLRect("glRect3");
-        glRect3.uv(0, 1f, 1f, 0);
-        glRect3.rectWH(220, 0, 100, 100, Color.of(0, 0, 0, 0));
-        glRect4 = new GLRect("glRect4");
-        glRect4.uv(0, 1f, 1f, 0);
-        glRect4.rectWH(330, 0, 100, 100, Color.of(0, 0, 0, 0));
+//        glRect = new GLRect("glRect");
+//        glRect.uv(0, 1f, 1f, 0);
+//        glRect.rectWH(0, 0, 100, 100, Color.of(0, 0, 0, 0));
+//        glRect2 = new GLRect("glRect2");
+//        glRect2.uv(0, 1f, 1f, 0);
+//        glRect2.rectWH(110, 0, 100, 100, Color.of(0, 0, 0, 0));
+//        glRect3 = new GLRect("glRect3");
+//        glRect3.uv(0, 1f, 1f, 0);
+//        glRect3.rectWH(220, 0, 100, 100, Color.of(0, 0, 0, 0));
+//        glRect4 = new GLRect("glRect4");
+//        glRect4.uv(0, 1f, 1f, 0);
+//        glRect4.rectWH(330, 0, 100, 100, Color.of(0, 0, 0, 0));
 
         glObjectCache = GLObjectCache.createGLObjectCache()
                 .createCache(glRect)

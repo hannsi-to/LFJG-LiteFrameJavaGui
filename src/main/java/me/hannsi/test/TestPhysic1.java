@@ -1,6 +1,5 @@
 package me.hannsi.test;
 
-import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.physic.PhysicWorld;
 import me.hannsi.lfjg.physic.RigidBody;
@@ -23,11 +22,11 @@ public class TestPhysic1 implements IScene {
 
     @Override
     public void init() {
-        glGround = new GLRect("Ground");
-        glGround.rectWH(0, 0, frame.getFrameBufferWidth(), 10, Color.of(255, 255, 255, 255));
-
-        glRect = new GLRect("Rect");
-        glRect.rectWH(600, 600, 100, 100, Color.of(255, 255, 255, 255));
+//        glGround = new GLRect("Ground");
+//        glGround.rectWH(0, 0, frame.getFrameBufferWidth(), 10, Color.of(255, 255, 255, 255));
+//
+//        glRect = new GLRect("Rect");
+//        glRect.rectWH(600, 600, 100, 100, Color.of(255, 255, 255, 255));
 
         physicWorld = PhysicWorld.initPhysicWorld()
                 .addRigidBody(

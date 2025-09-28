@@ -90,8 +90,11 @@ public class Demo1 implements IScene {
 
     @Override
     public void init() {
-        glBackGround = new GLRect("GLBackGround");
-        glBackGround.rect(0, 0, frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), Color.WHITE);
+        glBackGround = GLRect.createGLRect("GLBackGround")
+                .x1_y1_color1_2p(0, 0, Color.WHITE)
+                .x3_y3_color3_2p(frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), Color.WHITE)
+                .fill()
+                .update();
 
         float offsetX = 20;
         float offsetY = 80;
@@ -178,8 +181,11 @@ public class Demo1 implements IScene {
         offsetX = 20;
         offsetY += offset + step;
         Color color = Color.GREEN;
-        glRect1 = new GLRect("GLRect1");
-        glRect1.rectWH(offsetX, offsetY, offset * 1.5f, offset, color);
+        glRect1 = GLRect.createGLRect("GLRect1")
+                .x1_y1_color1_2p(offsetX, offsetY, color)
+                .width3_height3_color3_2p(offset * 1.5f, offset, color)
+                .fill()
+                .update();
         offsetX += offset * 1.5f + step;
         glRoundedRect1 = new GLRoundedRect("GLRoundedRect1");
         glRoundedRect1.roundedRectWH(offsetX, offsetY, offset * 1.5f, offset, 15, color);
@@ -204,8 +210,11 @@ public class Demo1 implements IScene {
         offsetX = 20;
         offsetY += offset + step;
         color = Color.ORANGE;
-        glRect11 = new GLRect("GLRect11");
-        glRect11.rectWHOutLine(offsetX, offsetY, offset * 1.5f, offset, 6, color);
+        glRect11 = GLRect.createGLRect("GLRect11")
+                .x1_y1_color1_2p(offsetX, offsetY, color)
+                .width3_height3_color3_2p(offset * 1.5f, offset, color)
+                .outLine().lineWidth(6)
+                .update();
         offsetX += offset * 1.5f + step;
         glRoundedRect11 = new GLRoundedRect("GLRoundedRect11");
         glRoundedRect11.roundedRectWHOutLine(offsetX, offsetY, offset * 1.5f, offset, 6, 15, color);
@@ -230,8 +239,11 @@ public class Demo1 implements IScene {
         offsetX = 20;
         offsetY += offset + step;
         color = Color.PINK;
-        glRect21 = new GLRect("GLRect21");
-        glRect21.rectWHOutLine(offsetX, offsetY, offset * 1.5f, offset, 2, color);
+        glRect21 = GLRect.createGLRect("GLRect21")
+                .x1_y1_color1_2p(offsetX, offsetY, color)
+                .width3_height3_color3_2p(offset * 1.5f, offset, color)
+                .outLine().lineWidth(2)
+                .update();
         offsetX += offset * 1.5f + step;
         glRoundedRect21 = new GLRoundedRect("GLRoundedRect21");
         glRoundedRect21.roundedRectWHOutLine(offsetX, offsetY, offset * 1.5f, offset, 2, 15, color);
@@ -356,8 +368,13 @@ public class Demo1 implements IScene {
         Color color2 = Theme.PLEASANT_OCEAN_BLUE.getSubColor1();
         Color color3 = Theme.PLEASANT_OCEAN_BLUE.getSubColor2();
         Color color4 = Theme.PLEASANT_OCEAN_BLUE.getSubColor3();
-        glRect31 = new GLRect("GLRect31");
-        glRect31.rectWH(offsetX, offsetY, offset * 1.5f, offset, color1, color2, color3, color4);
+        glRect31 = GLRect.createGLRect("GLRect31")
+                .x1_y1_color1(offsetX, offsetY, color1)
+                .width2_height2_color2(offset * 1.5f, 0, color2)
+                .width3_height3_color3(offset * 1.5f, offset, color3)
+                .width4_height4_color4(0, offset, color4)
+                .fill()
+                .update();
         offsetX += offset * 1.5f + step;
         glRoundedRect31 = new GLRoundedRect("GLRoundedRect31");
         glRoundedRect31.roundedRectWH(offsetX, offsetY, offset * 1.5f, offset, 15, color1, color2, color3, color4);

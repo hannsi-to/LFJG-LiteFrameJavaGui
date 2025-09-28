@@ -155,8 +155,10 @@ public class Demo5 implements IScene {
 
     @Override
     public void init() {
-        glBackGround = new GLRect("GLBackGround");
-        glBackGround.rect(0, 0, frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), Color.WHITE);
+        glBackGround = GLRect.createGLRect("GLBackGround")
+                .x1_y1_color1_2p(0, 0, Color.WHITE)
+                .x3_y3_color3_2p(frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), Color.WHITE)
+                .fill();
 
         float offsetX = 20;
         float offsetY = 80;
@@ -243,8 +245,10 @@ public class Demo5 implements IScene {
         offsetX = 20;
         offsetY += offset + step;
         Color color = Color.GREEN;
-        glRect1 = new GLRect("GLRect1");
-        glRect1.rectWH(offsetX, offsetY, offset * 1.5f, offset, color);
+        glRect1 = GLRect.createGLRect("GLRect1")
+                .x1_y1_color1_2p(offsetX, offsetY, color)
+                .width3_height3_color3_2p(offset * 1.5f, offset, color)
+                .fill();
         offsetX += offset * 1.5f + step;
         glRoundedRect1 = new GLRoundedRect("GLRoundedRect1");
         glRoundedRect1.roundedRectWH(offsetX, offsetY, offset * 1.5f, offset, 15, color);
@@ -269,8 +273,10 @@ public class Demo5 implements IScene {
         offsetX = 20;
         offsetY += offset + step;
         color = Color.ORANGE;
-        glRect11 = new GLRect("GLRect11");
-        glRect11.rectWHOutLine(offsetX, offsetY, offset * 1.5f, offset, 6, color);
+        glRect11 = GLRect.createGLRect("GLRect11")
+                .x1_y1_color1_2p(offsetX, offsetY, color)
+                .width3_height3_color3_2p(offset * 1.5f, offset, color)
+                .outLine().lineWidth(6);
         offsetX += offset * 1.5f + step;
         glRoundedRect11 = new GLRoundedRect("GLRoundedRect11");
         glRoundedRect11.roundedRectWHOutLine(offsetX, offsetY, offset * 1.5f, offset, 6, 15, color);
@@ -295,8 +301,10 @@ public class Demo5 implements IScene {
         offsetX = 20;
         offsetY += offset + step;
         color = Color.PINK;
-        glRect21 = new GLRect("GLRect21");
-        glRect21.rectWHOutLine(offsetX, offsetY, offset * 1.5f, offset, 2, color);
+        glRect21 = GLRect.createGLRect("GLRect21")
+                .x1_y1_color1_2p(offsetX, offsetY, color)
+                .width3_height3_color3_2p(offset * 1.5f, offset, color)
+                .outLine().lineWidth(2);
         offsetX += offset * 1.5f + step;
         glRoundedRect21 = new GLRoundedRect("GLRoundedRect21");
         glRoundedRect21.roundedRectWHOutLine(offsetX, offsetY, offset * 1.5f, offset, 2, 15, color);
@@ -421,8 +429,12 @@ public class Demo5 implements IScene {
         Color color2 = Theme.PLEASANT_OCEAN_BLUE.getSubColor1();
         Color color3 = Theme.PLEASANT_OCEAN_BLUE.getSubColor2();
         Color color4 = Theme.PLEASANT_OCEAN_BLUE.getSubColor3();
-        glRect31 = new GLRect("GLRect31");
-        glRect31.rectWH(offsetX, offsetY, offset * 1.5f, offset, color1, color2, color3, color4);
+        glRect31 = GLRect.createGLRect("GLRect31")
+                .x1_y1_color1(offsetX, offsetY, color1)
+                .width2_height2_color2(offset * 1.5f, 0, color2)
+                .width3_height3_color3(offset * 1.5f, offset, color3)
+                .width4_height4_color4(0, offset, color4)
+                .fill();
         offsetX += offset * 1.5f + step;
         glRoundedRect31 = new GLRoundedRect("GLRoundedRect31");
         glRoundedRect31.roundedRectWH(offsetX, offsetY, offset * 1.5f, offset, 15, color1, color2, color3, color4);
@@ -602,180 +614,224 @@ public class Demo5 implements IScene {
         float stepY = 1440 / 8f - 20;
         offsetX = 20;
         offsetY = frame.getWindowHeight() - stepY;
-        glRect1a = new GLRect("GLRect1");
+        glRect1a = GLRect.createGLRect("GLRect1")
+                .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
+                .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
+                .fill();
         glRect1a.uv(0, 1, 1, 0);
-        glRect1a.rectWH(offsetX, offsetY, 1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0));
         effectCache1 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .attachGLObject(glRect1a);
         offsetX += stepX;
-        glRect2 = new GLRect("GLRect2");
+        glRect2 = GLRect.createGLRect("GLRect2")
+                .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
+                .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
+                .fill();
         glRect2.uv(0, 1, 1, 0);
-        glRect2.rectWH(offsetX, offsetY, 1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0));
         effectCache2 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(BoxBlur.createBoxBlur("BoxBlusr1"))
                 .attachGLObject(glRect2);
         offsetX += stepX;
-        glRect3 = new GLRect("GLRect3");
+        glRect3 = GLRect.createGLRect("GLRect3")
+                .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
+                .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
+                .fill();
         glRect3.uv(0, 1, 1, 0);
-        glRect3.rectWH(offsetX, offsetY, 1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0));
         effectCache3 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(ChromaKey.createChromaKey("ChromaKey1").chromaKeyColor(Color.of(205, 107, 23, 255)))
                 .attachGLObject(glRect3);
         offsetX += stepX;
-        glRect4 = new GLRect("GLRect4");
+        glRect4 = GLRect.createGLRect("GLRect4")
+                .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
+                .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
+                .fill();
         glRect4.uv(0, 1, 1, 0);
-        glRect4.rectWH(offsetX, offsetY, 1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0));
         effectCache4 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(ChromaticAberration.createChromaticAberration("ChromaticAberration1"))
                 .attachGLObject(glRect4);
         offsetX += stepX;
-        glRect5 = new GLRect("GLRect5");
+        glRect5 = GLRect.createGLRect("GLRect5")
+                .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
+                .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
+                .fill();
         glRect5.uv(0, 1, 1, 0);
-        glRect5.rectWH(offsetX, offsetY, 1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0));
         effectCache5 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(Bloom.createBloom("Bloom"))
                 .attachGLObject(glRect5);
         offsetX += stepX;
-        glRect6 = new GLRect("GLRect6");
+        glRect6 = GLRect.createGLRect("GLRect6")
+                .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
+                .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
+                .fill();
         glRect6.uv(0, 1, 1, 0);
-        glRect6.rectWH(offsetX, offsetY, 1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0));
         effectCache6 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(ColorChanger.createColorChanger("ColorChanger1").targetColor(Color.of(17, 40, 133, 255)).newColor(Color.of(255, 0, 0, 255)))
                 .attachGLObject(glRect6);
         offsetX += stepX;
-        glRect7 = new GLRect("GLRect7");
+        glRect7 = GLRect.createGLRect("GLRect7")
+                .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
+                .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
+                .fill();
         glRect7.uv(0, 1, 1, 0);
-        glRect7.rectWH(offsetX, offsetY, 1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0));
         effectCache7 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(ColorCorrection.createColorCorrection("ColorCorrection1"))
                 .attachGLObject(glRect7);
         offsetX = 20;
         offsetY -= stepY + 40;
-        glRect8 = new GLRect("GLRect8");
+        glRect8 = GLRect.createGLRect("GLRect8")
+                .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
+                .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
+                .fill();
         glRect8.uv(0, 1, 1, 0);
-        glRect8.rectWH(offsetX, offsetY, 1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0));
         effectCache8 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(DiagonalClipping.createDiagonalClipping("DiagonalClipping").centerX(offsetX + (1920 / 8f) / 2f).centerY(offsetY + (1440 / 8f) / 2f))
                 .attachGLObject(glRect8);
         offsetX += stepX;
-        glRect9 = new GLRect("GLRect9");
+        glRect9 = GLRect.createGLRect("GLRect9")
+                .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
+                .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
+                .fill();
         glRect9.uv(0, 1, 1, 0);
-        glRect9.rectWH(offsetX, offsetY, 1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0));
         effectCache9 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(DirectionalBlur.createDirectionBlur("DirectionalBlur1"))
                 .attachGLObject(glRect9);
         offsetX += stepX;
-        glRect10 = new GLRect("GLRect10");
+        glRect10 = GLRect.createGLRect("GLRect10")
+                .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
+                .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
+                .fill();
         glRect10.uv(0, 1, 1, 0);
-        glRect10.rectWH(offsetX, offsetY, 1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0));
         effectCache10 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(EdgeExtraction.createEdgeExtraction("EdgeExtraction1"))
                 .attachGLObject(glRect10);
         offsetX += stepX;
-        glRect11a = new GLRect("GLRect11");
-        glRect11a.uv(0, 1, 1, 0);
-        glRect11a.rectWH(offsetX, offsetY, 1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0));
+        glRect11 = GLRect.createGLRect("GLRect11")
+                .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
+                .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
+                .fill();
+        glRect11.uv(0, 1, 1, 0);
         effectCache11 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(FXAA.createFXAA("FXAA1").useAlpha(true))
-                .attachGLObject(glRect11a);
+                .attachGLObject(glRect11);
         offsetX += stepX;
-        glRect12 = new GLRect("GLRect12");
+        glRect12 = GLRect.createGLRect("GLRect12")
+                .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
+                .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
+                .fill();
         glRect12.uv(0, 1, 1, 0);
-        glRect12.rectWH(offsetX, offsetY, 1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0));
         effectCache12 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(Flash.createFlash("Flash1"))
                 .attachGLObject(glRect12);
         offsetX += stepX;
-        glRect13 = new GLRect("GLRect13");
+        glRect13 = GLRect.createGLRect("GLRect13")
+                .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
+                .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
+                .fill();
         glRect13.uv(0, 1, 1, 0);
-        glRect13.rectWH(offsetX, offsetY, 1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0));
         effectCache13 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(GaussianBlurHorizontal.createGaussianBlurHorizontal("GaussianBlurHorizontal1"))
                 .attachGLObject(glRect13);
         offsetX += stepX;
-        glRect14 = new GLRect("GLRect14");
+        glRect14 = GLRect.createGLRect("GLRect14")
+                .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
+                .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
+                .fill();
         glRect14.uv(0, 1, 1, 0);
-        glRect14.rectWH(offsetX, offsetY, 1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0));
         effectCache14 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(GaussianBlurVertical.createGaussianBlurVertical("GaussianBlurVertical1"))
                 .attachGLObject(glRect14);
         offsetX = 20;
         offsetY -= stepY + 40;
-        glRect15 = new GLRect("GLRect15");
+        glRect15 = GLRect.createGLRect("GLRect15")
+                .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
+                .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
+                .fill();
         glRect15.uv(0, 1, 1, 0);
-        glRect15.rectWH(offsetX, offsetY, 1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0));
         effectCache15 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(Glow.createGlow("Glow1"))
                 .attachGLObject(glRect15);
         offsetX += stepX;
-        glRect16 = new GLRect("GLRect16");
+        glRect16 = GLRect.createGLRect("GLRect16")
+                .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
+                .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
+                .fill();
         glRect16.uv(0, 1, 1, 0);
-        glRect16.rectWH(offsetX, offsetY, 1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0));
         effectCache16 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(Gradation.createGradation("Gradation1"))
                 .attachGLObject(glRect16);
         offsetX += stepX;
-        glRect17 = new GLRect("GLRect17");
+        glRect17 = GLRect.createGLRect("GLRect17")
+                .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
+                .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
+                .fill();
         glRect17.uv(0, 1, 1, 0);
-        glRect17.rectWH(offsetX, offsetY, 1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0));
         effectCache17 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(Inversion.createInversion("Inversion1"))
                 .createCache(Translate.createTranslate("Translate1").x(600).y(-121))
                 .attachGLObject(glRect17);
         offsetX += stepX;
-        glRect18 = new GLRect("GLRect18");
+        glRect18 = GLRect.createGLRect("GLRect18")
+                .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
+                .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
+                .fill();
         glRect18.uv(0, 1, 1, 0);
-        glRect18.rectWH(offsetX, offsetY, 1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0));
         effectCache18 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(LensBlur.createLensBlur("LensBlur1"))
                 .attachGLObject(glRect18);
         offsetX += stepX;
-        glRect19 = new GLRect("GLRect19");
+        glRect19 = GLRect.createGLRect("GLRect19")
+                .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
+                .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
+                .fill();
         glRect19.uv(0, 1, 1, 0);
-        glRect19.rectWH(offsetX, offsetY, 1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0));
         effectCache19 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(LuminanceKey.createLuminanceKey("LuminanceKey1"))
                 .attachGLObject(glRect19);
         offsetX += stepX;
-        glRect20 = new GLRect("GLRect20");
+        glRect20 = GLRect.createGLRect("GLRect20")
+                .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
+                .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
+                .fill();
         glRect20.uv(0, 1, 1, 0);
-        glRect20.rectWH(offsetX, offsetY, 1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0));
         effectCache20 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(Monochrome.createMonochrome("Monochrome"))
                 .attachGLObject(glRect20);
         offsetX += stepX;
-        glRect21a = new GLRect("GLRect21");
-        glRect21a.uv(0, 1, 1, 0);
-        glRect21a.rectWH(offsetX, offsetY, 1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0));
+        glRect21 = GLRect.createGLRect("GLRect21")
+                .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
+                .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
+                .fill();
+        glRect21.uv(0, 1, 1, 0);
         effectCache21 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(Pixelate.createPixelate("Pixelate1"))
-                .attachGLObject(glRect21a);
+                .attachGLObject(glRect21);
         offsetX = 20;
         offsetY -= stepY + 40;
-        glRect22 = new GLRect("GLRect22");
+        glRect22 = GLRect.createGLRect("GLRect22")
+                .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
+                .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
+                .fill();
         glRect22.uv(0, 1, 1, 0);
-        glRect22.rectWH(offsetX, offsetY, 1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0));
         effectCache22 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(RadialBlur.createRadialBlur("RadialBlur1").centerX(offsetX + (1920 / 8f) / 2f).centerY(offsetY + (1440 / 8f) / 2f))

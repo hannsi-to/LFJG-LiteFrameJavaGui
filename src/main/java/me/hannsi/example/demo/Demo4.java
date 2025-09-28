@@ -19,8 +19,10 @@ public class Demo4 implements IScene {
 
     @Override
     public void init() {
-        glVideo = new GLVideo("GLVideo1");
-        glVideo.video(Location.fromResource("video/sample.mp4"), 0, 0, frame.getWindowWidth(), frame.getWindowHeight());
+        glVideo = GLVideo.createGLVideo("GLVideo1")
+                .location(Location.fromResource("video/sample.mp4"))
+                .x1_y1_color1_2p(0, 0)
+                .width3_height3_color3_2p(frame.getWindowWidth(), frame.getWindowHeight());
     }
 
     @Override

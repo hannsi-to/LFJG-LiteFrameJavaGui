@@ -26,8 +26,10 @@ public class TestVideo1 implements IScene {
 
     @Override
     public void init() {
-        glVideo = new GLVideo("TestVideo1");
-        glVideo.video(Location.fromResource("video/[FMV] world.execute(me); - MILI [cn4M-fH08XY].webm"), 0, 0, frame.getWindowWidth(), frame.getWindowHeight());
+        glVideo = GLVideo.createGLVideo("TestVideo1")
+                .location(Location.fromResource("video/[FMV] world.execute(me); - MILI [cn4M-fH08XY].webm"))
+                .x1_y1_color1_2p(0, 0)
+                .width3_height3_color3_2p(frame.getWindowWidth(), frame.getWindowHeight());
     }
 
     @Override

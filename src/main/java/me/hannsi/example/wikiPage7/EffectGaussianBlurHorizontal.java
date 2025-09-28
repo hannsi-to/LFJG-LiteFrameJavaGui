@@ -25,9 +25,12 @@ public class EffectGaussianBlurHorizontal implements LFJGFrame {
 
         LFJGRenderContext.textureCache.createCache("Test1", Location.fromResource("texture/test/test1.jpg"));
 
-        glRect1 = new GLRect("GLRect1");
-        glRect1.uv(0, 1, 1, 0);
-        glRect1.rect(0, 0, frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), Color.of(0, 0, 0, 0));
+        glRect1 = GLRect.createGLRect("GLRect1")
+                .x1_y1_color1_2p(0, 0, Color.of(0, 0, 0, 0))
+                .x3_y3_color3_2p(frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), Color.of(0, 0, 0, 0))
+                .fill()
+                .uv(0, 1, 1, 0)
+                .update();
         effectCache1 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Test1"))
                 .createCache(GaussianBlurHorizontal.createGaussianBlurHorizontal("GaussianBlurHorizontal"))

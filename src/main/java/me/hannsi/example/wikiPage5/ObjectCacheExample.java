@@ -22,11 +22,17 @@ public class ObjectCacheExample implements LFJGFrame {
     public void init() {
         frame.updateLFJGLContext();
 
-        glRect1 = new GLRect("Rect1");
-        glRect1.rect(0, 0, 100, 100, Color.RED);
+        glRect1 = GLRect.createGLRect("Rect1")
+                .x1_y1_color1_2p(0, 0, Color.RED)
+                .x3_y3_color3_2p(100, 100, Color.RED)
+                .fill()
+                .update();
 
-        glRect2 = new GLRect("Rect2");
-        glRect2.rect(100, 100, 200, 200, Color.BLUE);
+        glRect2 = GLRect.createGLRect("Rect2")
+                .x1_y1_color1_2p(100, 100, Color.BLUE)
+                .x3_y3_color3_2p(200, 200, Color.BLUE)
+                .fill()
+                .update();
 
         glTriangle1 = GLTriangle.createGLTriangle("Triangle1")
                 .x1_y1_color1(100, 100, Color.GREEN)

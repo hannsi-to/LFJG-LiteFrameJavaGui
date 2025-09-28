@@ -44,8 +44,10 @@ public class Demo2 implements IScene {
                         .createCache()
         );
 
-        glBackGround = new GLRect("GLBackGround");
-        glBackGround.rect(0, 0, frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), Color.WHITE);
+        glBackGround = GLRect.createGLRect("GLBackGround")
+                .x1_y1_color1_2p(0, 0, Color.WHITE)
+                .x3_y3_color3_2p(frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), Color.WHITE)
+                .fill();
 
         float offsetY = frame.getWindowHeight() - 80;
         glText1 = new GLText("GLText1");
