@@ -5,30 +5,37 @@ import me.hannsi.lfjg.render.renderers.PaintType;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import org.joml.Vector2f;
 
-public class GLTriangle extends GLPolygon {
-    public GLTriangle(String name, float x1, float y1, Color color1, float x2, float y2, Color color2, float x3, float y3, Color color3, PaintType paintType, float lineWidth) {
+public class GLTriangle extends GLPolygon<GLTriangle> {
+    private final Builder builder;
+
+    public GLTriangle(String name, Builder builder) {
         super(name);
-
-        put().vertex(new Vector2f(x1, y1)).color(color1).end();
-        put().vertex(new Vector2f(x2, y2)).color(color2).end();
-        put().vertex(new Vector2f(x3, y3)).color(color3).end();
-
-        switch (paintType) {
-            case FILL:
-                setDrawType(DrawType.TRIANGLES);
-                break;
-            case OUT_LINE:
-                setDrawType(DrawType.LINE_LOOP).setLineWidth(lineWidth);
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + paintType);
-        }
-
-        rendering();
+        this.builder = builder;
     }
 
     public static VertexData1Step createGLTriangle(String name) {
         return new Builder(name);
+    }
+
+    public GLTriangle update() {
+        put().vertex(new Vector2f(builder.x1, builder.y1)).color(builder.color1).end();
+        put().vertex(new Vector2f(builder.x2, builder.y2)).color(builder.color2).end();
+        put().vertex(new Vector2f(builder.x3, builder.y3)).color(builder.color3).end();
+
+        switch (builder.paintType) {
+            case FILL:
+                setDrawType(DrawType.TRIANGLES);
+                break;
+            case OUT_LINE:
+                setDrawType(DrawType.LINE_LOOP).setLineWidth(builder.lineWidth);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + builder.paintType);
+        }
+
+        rendering();
+
+        return this;
     }
 
     public interface VertexData1Step {
@@ -70,6 +77,8 @@ public class GLTriangle extends GLPolygon {
         private Color color3;
         private PaintType paintType;
         private float lineWidth;
+
+        private GLTriangle glTriangle;
 
         public Builder(String name) {
             this.name = name;
@@ -125,7 +134,7 @@ public class GLTriangle extends GLPolygon {
             this.paintType = PaintType.FILL;
             this.lineWidth = -1;
 
-            return new GLTriangle(name, x1, y1, color1, x2, y2, color2, x3, y3, color3, paintType, lineWidth);
+            return build();
         }
 
         @Override
@@ -139,7 +148,15 @@ public class GLTriangle extends GLPolygon {
         public GLTriangle lineWidth(float lineWidth) {
             this.lineWidth = lineWidth;
 
-            return new GLTriangle(name, x1, y1, color1, x2, y2, color2, x3, y3, color3, paintType, lineWidth);
+            return build();
+        }
+
+        private GLTriangle build() {
+            if (glTriangle == null) {
+                return glTriangle = new GLTriangle(name, this);
+            } else {
+                return glTriangle.update();
+            }
         }
     }
 }

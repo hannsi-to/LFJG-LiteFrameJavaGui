@@ -355,19 +355,22 @@ public class Demo1 implements IScene {
                 .x1_y1_color1(offsetX, offsetY, Color.SILVER)
                 .x2_y2_color2(offsetX + offset, offsetY, Color.SILVER)
                 .x3_y3_color3(offsetX + offset / 2, offsetY + offset, Color.SILVER)
-                .fill();
+                .fill()
+                .update();
         offsetX += offset + step;
         glTriangle2 = GLTriangle.createGLTriangle("GLTriangle2")
                 .x1_y1_color1(offsetX, offsetY, Color.SILVER)
                 .x2_y2_color2(offsetX + offset, offsetY, Color.SILVER)
                 .x3_y3_color3(offsetX + offset / 2, offsetY + offset, Color.SILVER)
-                .outLine().lineWidth(6f);
+                .outLine().lineWidth(6f)
+                .update();
         offsetX += offset + step;
         glTriangle3 = GLTriangle.createGLTriangle("GLTriangle3")
                 .x1_y1_color1(offsetX, offsetY, Color.SILVER)
                 .x2_y2_color2(offsetX + offset, offsetY, Color.SILVER)
                 .x3_y3_color3(offsetX + offset / 2, offsetY + offset, Color.SILVER)
-                .outLine().lineWidth(2f);
+                .outLine().lineWidth(2f)
+                .update();
         offsetX = 20;
         offsetY += offset + step;
         Color color1 = Theme.PLEASANT_OCEAN_BLUE.getMainColor();

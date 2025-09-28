@@ -38,7 +38,8 @@ public class ObjectCacheExample implements LFJGFrame {
                 .x1_y1_color1(100, 100, Color.GREEN)
                 .x2_y2_color2(200, 100, Color.GREEN)
                 .x3_y3_color3(150, 200, Color.GREEN)
-                .fill();
+                .fill()
+                .update();
 
         glObjectCache = GLObjectCache.createGLObjectCache()
                 .createCache(glRect1)

@@ -35,7 +35,8 @@ public class TestScene4 implements IScene {
                 .x1_y1_color1(200, 200, Color.of(0, 0, 0, 0))
                 .x2_y2_color2(500, 500, Color.of(0, 0, 0, 0))
                 .x3_y3_color3(700, 200, Color.of(0, 0, 0, 0))
-                .fill();
+                .fill()
+                .update();
 
         clippingCache = GLObjectCache.createGLObjectCache()
                 .createCache(triangleClipping);

@@ -117,7 +117,8 @@ public class TestScene1 implements IScene {
                 .x1_y1_color1(0, 0, Color.of(255, 255, 255, alpha))
                 .x2_y2_color2(500, 0, Color.of(255, 255, 0, alpha))
                 .x3_y3_color3(250, 500, Color.of(255, 255, 255, alpha))
-                .fill();
+                .fill()
+                .update();
 
 //        glSVG = new GLSVG("SVG1");
 //        glSVG.svg(new ResourcesLocation("svg/delete.svg"), 100, 100, 5, 5);
