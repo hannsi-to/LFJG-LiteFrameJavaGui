@@ -20,7 +20,8 @@ public class MainFrame implements LFJGFrame {
         glVideo = GLVideo.createGLVideo("TestVideo1")
                 .location(Location.fromResource("video/sample.mp4"))
                 .x1_y1_color1_2p(0, 0)
-                .width3_height3_color3_2p(frame.getWindowWidth(), frame.getWindowHeight());
+                .width3_height3_color3_2p(frame.getWindowWidth(), frame.getWindowHeight())
+                .update();
     }
 
     @Override

@@ -7,19 +7,27 @@ import org.joml.Vector2f;
 /**
  * Class representing a line renderer in OpenGL.
  */
-public class GLLine extends GLPolygon {
-    public GLLine(String name, float x1, float y1, Color color1, float x2, float y2, Color color2, float lineWidth) {
+public class GLLine extends GLPolygon<GLLine> {
+    private final Builder builder;
+
+    public GLLine(String name, Builder builder) {
         super(name);
 
-        put().vertex(new Vector2f(x1, y1)).color(color1).end();
-        put().vertex(new Vector2f(x2, y2)).color(color2).end();
-
-        setDrawType(DrawType.LINES).setLineWidth(lineWidth);
-        rendering();
+        this.builder = builder;
     }
 
     public static VertexData1Step createGLLine(String name) {
         return new Builder(name);
+    }
+
+    public GLLine update() {
+        put().vertex(new Vector2f(builder.x1, builder.y1)).color(builder.color1).end();
+        put().vertex(new Vector2f(builder.x2, builder.y2)).color(builder.color2).end();
+
+        setDrawType(DrawType.LINES).setLineWidth(builder.lineWidth);
+        rendering();
+
+        return this;
     }
 
     public interface VertexData1Step {
@@ -36,7 +44,7 @@ public class GLLine extends GLPolygon {
         GLLine lineWidth(float lineWidth);
     }
 
-    private static class Builder implements VertexData1Step, VertexData2Step, LineWidthStep {
+    public static class Builder implements VertexData1Step, VertexData2Step, LineWidthStep {
         private final String name;
         private float x1;
         private float y1;
@@ -44,6 +52,9 @@ public class GLLine extends GLPolygon {
         private float x2;
         private float y2;
         private Color color2;
+        private float lineWidth;
+
+        private GLLine glLine;
 
         public Builder(String name) {
             this.name = name;
@@ -78,7 +89,17 @@ public class GLLine extends GLPolygon {
 
         @Override
         public GLLine lineWidth(float lineWidth) {
-            return new GLLine(name, x1, y1, color1, x2, y2, color2, lineWidth);
+            this.lineWidth = lineWidth;
+
+            return build();
+        }
+
+        private GLLine build() {
+            if (glLine == null) {
+                return glLine = new GLLine(name, this);
+            } else {
+                return glLine.update();
+            }
         }
     }
 }

@@ -116,17 +116,20 @@ public class Demo1 implements IScene {
         glLine1 = GLLine.createGLLine("GLLine1")
                 .x1_y1_color1(offsetX, offsetY, Color.BLACK)
                 .x2_y2_color2(offsetX + offset, offsetY + offset, Color.BLACK)
-                .lineWidth(2);
+                .lineWidth(2)
+                .update();
         offsetX += offset + step;
         glLine2 = GLLine.createGLLine("GLLine2")
                 .x1_y1_color1(offsetX, offsetY, Color.BLACK)
                 .x2_y2_color2(offsetX + offset, offsetY + offset, Color.BLACK)
-                .lineWidth(4);
+                .lineWidth(4)
+                .update();
         offsetX += offset + step;
         glLine3 = GLLine.createGLLine("GLLine3")
                 .x1_y1_color1(offsetX, offsetY, Color.BLACK)
                 .x2_y2_color2(offsetX + offset, offsetY + offset, Color.BLACK)
-                .lineWidth(6);
+                .lineWidth(6)
+                .update();
         offsetX += offset + step;
         glPolygon1 = new GLPolygon("GLPolygon1");
         glPolygon1.put().vertex(new Vector2f(offsetX, offsetY)).color(Color.BLACK);

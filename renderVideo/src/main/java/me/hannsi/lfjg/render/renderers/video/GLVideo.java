@@ -24,15 +24,13 @@ public class GLVideo extends GLPolygon<GLVideo> {
                 .createFFmpegFrameGrabber(builder.location)
                 .createJava2DFrameConverter()
                 .startVideoLoad();
-
-        update();
     }
 
     public static LocationStep createGLVideo(String name) {
         return new Builder(name);
     }
 
-    private GLVideo update() {
+    public GLVideo update() {
         uv(0, 0, 1, 1);
         put().vertex(new Vector2f(builder.x1, builder.y1)).color(Color.of(0, 0, 0, 0)).end();
         put().vertex(new Vector2f(builder.x2, builder.y2)).color(Color.of(0, 0, 0, 0)).end();
