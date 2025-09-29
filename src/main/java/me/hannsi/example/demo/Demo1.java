@@ -241,11 +241,21 @@ public class Demo1 implements IScene {
                 .fill()
                 .update();
         offsetX += offset * 1.5f + step;
-        glCircle1 = new GLCircle("GLCircle1");
-        glCircle1.circle(offsetX + offset / 2f, offsetY + offset / 2f, offset / 2f, 360, color);
+        glCircle1 = GLCircle.createGLCirce("GLCircle1")
+                .cx_xRadius(offsetX + offset / 2f, offset / 2f)
+                .cy_yRadius(offsetY + offset / 2f, offset / 2f)
+                .segment(360)
+                .colors(color)
+                .fill()
+                .update();
         offsetX += offset * 1.3f + step;
-        glCircle2 = new GLCircle("GLCircle2");
-        glCircle2.circle(offsetX + offset / 2f, offsetY + offset / 2f, offset * 1.5f / 2f, offset / 2f, 360, color);
+        glCircle2 = GLCircle.createGLCirce("GLCircle2")
+                .cx_xRadius(offsetX + offset / 2f, offset * 1.5f / 2f)
+                .cy_yRadius(offsetY + offset / 2f, offset / 2f)
+                .segment(360)
+                .colors(color)
+                .fill()
+                .update();
         offsetX = 20;
         offsetY += offset + step;
         color = Color.ORANGE;
@@ -303,11 +313,21 @@ public class Demo1 implements IScene {
                 .outLine().lineWidth(6)
                 .update();
         offsetX += offset * 1.5f + step;
-        glCircle11 = new GLCircle("GLCircle11");
-        glCircle11.circleOutLine(offsetX + offset / 2f, offsetY + offset / 2f, offset / 2f, 360, 6, color);
+        glCircle11 = GLCircle.createGLCirce("GLCircle11")
+                .cx_xRadius(offsetX + offset / 2f, offset / 2f)
+                .cy_yRadius(offsetY + offset / 2f, offset / 2f)
+                .segment(360)
+                .colors(color)
+                .outLine().lineWidth(6)
+                .update();
         offsetX += offset * 1.3f + step;
-        glCircle12 = new GLCircle("GLCircle12");
-        glCircle12.circleOutLine(offsetX + offset / 2f, offsetY + offset / 2f, offset * 1.5f / 2f, offset / 2f, 360, 6, color);
+        glCircle12 = GLCircle.createGLCirce("GLCircle12")
+                .cx_xRadius(offsetX + offset / 2f, offset * 1.5f / 2f)
+                .cy_yRadius(offsetY + offset / 2f, offset / 2f)
+                .segment(360)
+                .colors(color)
+                .outLine().lineWidth(6)
+                .update();
         offsetX = 20;
         offsetY += offset + step;
         color = Color.PINK;
@@ -365,11 +385,21 @@ public class Demo1 implements IScene {
                 .outLine().lineWidth(2)
                 .update();
         offsetX += offset * 1.5f + step;
-        glCircle21 = new GLCircle("GLCircle21");
-        glCircle21.circleOutLine(offsetX + offset / 2f, offsetY + offset / 2f, offset / 2f, 360, 2, color);
+        glCircle21 = GLCircle.createGLCirce("GLCircle21")
+                .cx_xRadius(offsetX + offset / 2f, offset / 2f)
+                .cy_yRadius(offsetY + offset / 2f, offset / 2f)
+                .segment(360)
+                .colors(color)
+                .outLine().lineWidth(2)
+                .update();
         offsetX += offset * 1.3f + step;
-        glCircle22 = new GLCircle("GLCircle22");
-        glCircle22.circleOutLine(offsetX + offset / 2f, offsetY + offset / 2f, offset * 1.5f / 2f, offset / 2f, 360, 2, color);
+        glCircle22 = GLCircle.createGLCirce("GLCircle22")
+                .cx_xRadius(offsetX + offset / 2f, offset * 1.5f / 2f)
+                .cy_yRadius(offsetY + offset / 2f, offset / 2f)
+                .segment(360)
+                .colors(color)
+                .outLine().lineWidth(2)
+                .update();
         offsetX = 20;
         offsetY += offset + step;
         glPolygon4 = new GLPolygon("GLPolygon4");
@@ -544,36 +574,86 @@ public class Demo1 implements IScene {
                 .fill()
                 .update();
         offsetX += offset * 1.5f + step;
-        glCircle31 = new GLCircle("GLCircle31");
-        glCircle31.circle(offsetX + offset / 2f, offsetY + offset / 2f, offset / 2f, 360, color1, color2, color3, color4);
+        glCircle31 = GLCircle.createGLCirce("GLCircle31")
+                .cx_xRadius(offsetX + offset / 2f, offset / 2f)
+                .cy_yRadius(offsetY + offset / 2f, offset / 2f)
+                .segment(360)
+                .colors(color1, color2, color3, color4)
+                .fill()
+                .update();
         offsetX += offset * 1.3f + step;
-        glCircle32 = new GLCircle("GLCircle32");
-        glCircle32.circle(offsetX + offset / 2f, offsetY + offset / 2f, offset * 1.5f / 2f, offset / 2f, 360, color1, color2, color3, color4);
+        glCircle32 = GLCircle.createGLCirce("GLCircle32")
+                .cx_xRadius(offsetX + offset / 2f, offset * 1.5f / 2f)
+                .cy_yRadius(offsetY + offset / 2f, offset / 2f)
+                .segment(360)
+                .colors(color1, color2, color3, color4)
+                .fill()
+                .update();
         offsetX = 20;
         offsetY += offset + step;
-        glCircle13 = new GLCircle("GLCircle13");
-        glCircle13.circle(offsetX + offset / 2f, offsetY + offset / 2f, offset / 2f, 5, Theme.PLEASANT_OCEAN_BLUE.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor3());
+        glCircle13 = GLCircle.createGLCirce("GLCircle13")
+                .cx_xRadius(offsetX + offset / 2f, offset / 2f)
+                .cy_yRadius(offsetY + offset / 2f, offset / 2f)
+                .segment(5)
+                .colors(Theme.PLEASANT_OCEAN_BLUE.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor3())
+                .fill()
+                .update();
         offsetX += offset + step;
-        glCircle14 = new GLCircle("GLCircle14");
-        glCircle14.circle(offsetX + offset / 2f, offsetY + offset / 2f, offset / 2f, 6, Theme.PLEASANT_OCEAN_BLUE.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor3());
+        glCircle14 = GLCircle.createGLCirce("GLCircle14")
+                .cx_xRadius(offsetX + offset / 2f, offset / 2f)
+                .cy_yRadius(offsetY + offset / 2f, offset / 2f)
+                .segment(6)
+                .colors(Theme.PLEASANT_OCEAN_BLUE.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor3())
+                .fill()
+                .update();
         offsetX += offset + step;
-        glCircle15 = new GLCircle("GLCircle15");
-        glCircle15.circle(offsetX + offset / 2f, offsetY + offset / 2f, offset / 2f, 7, Theme.PLEASANT_OCEAN_BLUE.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor3());
+        glCircle15 = GLCircle.createGLCirce("GLCircle15")
+                .cx_xRadius(offsetX + offset / 2f, offset / 2f)
+                .cy_yRadius(offsetY + offset / 2f, offset / 2f)
+                .segment(7)
+                .colors(Theme.PLEASANT_OCEAN_BLUE.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor3())
+                .fill()
+                .update();
         offsetX += offset + step;
-        glCircle16 = new GLCircle("GLCircle16");
-        glCircle16.circle(offsetX + offset / 2f, offsetY + offset / 2f, offset / 2f, 8, Theme.PLEASANT_OCEAN_BLUE.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor1(), Theme.ELEGANT_BEIGE_GREEN.getSubColor3());
+        glCircle16 = GLCircle.createGLCirce("GLCircle16")
+                .cx_xRadius(offsetX + offset / 2f, offset / 2f)
+                .cy_yRadius(offsetY + offset / 2f, offset / 2f)
+                .segment(8)
+                .colors(Theme.PLEASANT_OCEAN_BLUE.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor1(), Theme.ELEGANT_BEIGE_GREEN.getSubColor3())
+                .fill()
+                .update();
         offsetX += offset + step;
-        glCircle17 = new GLCircle("GLCircle17");
-        glCircle17.circle(offsetX + offset / 2f, offsetY + offset / 2f, offset / 2f, 9, Theme.PLEASANT_OCEAN_BLUE.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor1(), Theme.ELEGANT_BEIGE_GREEN.getSubColor3());
+        glCircle17 = GLCircle.createGLCirce("GLCircle17")
+                .cx_xRadius(offsetX + offset / 2f, offset / 2f)
+                .cy_yRadius(offsetY + offset / 2f, offset / 2f)
+                .segment(9)
+                .colors(Theme.PLEASANT_OCEAN_BLUE.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor1(), Theme.ELEGANT_BEIGE_GREEN.getSubColor3())
+                .fill()
+                .update();
         offsetX += offset + step;
-        glCircle18 = new GLCircle("GLCircle18");
-        glCircle18.circle(offsetX + offset / 2f, offsetY + offset / 2f, offset / 2f, 10, Theme.PLEASANT_OCEAN_BLUE.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor2());
+        glCircle18 = GLCircle.createGLCirce("GLCircle18")
+                .cx_xRadius(offsetX + offset / 2f, offset / 2f)
+                .cy_yRadius(offsetY + offset / 2f, offset / 2f)
+                .segment(10)
+                .colors(Theme.PLEASANT_OCEAN_BLUE.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor2())
+                .fill()
+                .update();
         offsetX += offset + step;
-        glCircle19 = new GLCircle("GLCircle19");
-        glCircle19.circle(offsetX + offset / 2f, offsetY + offset / 2f, offset / 2f, 11, Theme.PLEASANT_OCEAN_BLUE.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor2());
+        glCircle19 = GLCircle.createGLCirce("GLCircle19")
+                .cx_xRadius(offsetX + offset / 2f, offset / 2f)
+                .cy_yRadius(offsetY + offset / 2f, offset / 2f)
+                .segment(11)
+                .colors(Theme.PLEASANT_OCEAN_BLUE.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor2())
+                .fill()
+                .update();
         offsetX += offset + step;
-        glCircle20 = new GLCircle("GLCircle20");
-        glCircle20.circle(offsetX + offset / 2f, offsetY + offset / 2f, offset / 2f, 12, Theme.PLEASANT_OCEAN_BLUE.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor2());
+        glCircle20 = GLCircle.createGLCirce("GLCircle20")
+                .cx_xRadius(offsetX + offset / 2f, offset / 2f)
+                .cy_yRadius(offsetY + offset / 2f, offset / 2f)
+                .segment(12)
+                .colors(Theme.PLEASANT_OCEAN_BLUE.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor1(), Theme.POPPY_CHOCOLATE_MINT.getSubColor2())
+                .fill()
+                .update();
         offsetX = 20;
         offsetY += offset + step;
         glBezierLine4 = new GLBezierLine("GlBezierLine4");

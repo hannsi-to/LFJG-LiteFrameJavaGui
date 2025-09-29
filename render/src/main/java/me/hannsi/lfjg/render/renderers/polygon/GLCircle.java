@@ -2,203 +2,231 @@ package me.hannsi.lfjg.render.renderers.polygon;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
+import me.hannsi.lfjg.render.renderers.PaintType;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import org.joml.Vector2f;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class representing a circle renderer in OpenGL.
  */
-public class GLCircle extends GLPolygon {
-    /**
-     * Constructs a new GLCircle with the specified name.
-     *
-     * @param name the name of the circle renderer
-     */
-    public GLCircle(String name) {
+public class GLCircle extends GLPolygon<GLCircle> {
+    public static final int DEFAULT_SEGMENT = 16;
+
+    private final Builder builder;
+
+    GLCircle(String name, Builder builder) {
         super(name);
+        this.builder = builder;
     }
 
-    /**
-     * Draws a filled circle with the specified parameters.
-     *
-     * @param xCenter      the x-coordinate of the circle center
-     * @param yCenter      the y-coordinate of the circle center
-     * @param radius       the radius of the circle
-     * @param segmentCount the number of segments to use for the circle
-     * @param colors       the colors to use for the circle
-     */
-    public void circle(double xCenter, double yCenter, double radius, int segmentCount, Color... colors) {
-        circle((float) xCenter, (float) yCenter, (float) radius, (float) radius, segmentCount, colors);
+    public static CenterXDataStep createGLCirce(String name) {
+        return new Builder(name);
     }
 
-    /**
-     * Draws a filled circle with the specified parameters.
-     *
-     * @param xCenter      the x-coordinate of the circle center
-     * @param yCenter      the y-coordinate of the circle center
-     * @param radius       the radius of the circle
-     * @param segmentCount the number of segments to use for the circle
-     * @param colors       the colors to use for the circle
-     */
-    public void circle(float xCenter, float yCenter, float radius, int segmentCount, Color... colors) {
-        circle(xCenter, yCenter, radius, radius, segmentCount, colors);
-    }
+    public GLCircle update() {
+        List<float[]> vertices = new ArrayList<>();
 
-    /**
-     * Draws a filled circle with the specified parameters.
-     *
-     * @param xCenter      the x-coordinate of the circle center
-     * @param yCenter      the y-coordinate of the circle center
-     * @param xRadius      the x-radius of the circle
-     * @param yRadius      the y-radius of the circle
-     * @param segmentCount the number of segments to use for the circle
-     * @param colors       the colors to use for the circle
-     */
-    public void circle(double xCenter, double yCenter, double xRadius, double yRadius, int segmentCount, Color... colors) {
-        circle((float) xCenter, (float) yCenter, (float) xRadius, (float) yRadius, segmentCount, colors);
-    }
+        for (int i = 0; i <= builder.segment; i++) {
+            double angle = 2.0 * Math.PI * i / builder.segment;
+            float px = (float) (builder.cx + MathHelper.cos(angle) * builder.xRadius);
+            float py = (float) (builder.cy + MathHelper.sin(angle) * builder.yRadius);
 
-    /**
-     * Draws a filled circle with the specified parameters.
-     *
-     * @param xCenter      the x-coordinate of the circle center
-     * @param yCenter      the y-coordinate of the circle center
-     * @param xRadius      the x-radius of the circle
-     * @param yRadius      the y-radius of the circle
-     * @param segmentCount the number of segments to use for the circle
-     * @param colors       the colors to use for the circle
-     */
-    public void circle(float xCenter, float yCenter, float xRadius, float yRadius, int segmentCount, Color... colors) {
-        int colorCount = colors.length;
-
-        if (colorCount < 1) {
-            return;
+            vertices.add(new float[]{px, py});
         }
 
-        for (int i = 0; i <= segmentCount; i++) {
-            float theta = 2.0f * MathHelper.PI * i / segmentCount;
-            float x = xCenter + xRadius * MathHelper.cos(theta);
-            float y = yCenter + yRadius * MathHelper.sin(theta);
+        switch (builder.paintType) {
+            case FILL:
+                setDrawType(DrawType.TRIANGLE_FAN);
 
-            Color color;
-            if (colorCount > 1) {
-                float colorIndex = (float) i / segmentCount * (colorCount - 1);
-                int startColorIndex = (int) colorIndex;
-                int endColorIndex = MathHelper.min(startColorIndex + 1, colorCount - 1);
-                float factor = colorIndex - startColorIndex;
+                Color centerColor = getCenterColor();
+                put().vertex(new Vector2f(builder.cx, builder.cy)).color(centerColor).end();
 
-                Color startColor = colors[startColorIndex];
-                Color endColor = colors[endColorIndex];
+                for (float[] v : vertices) {
+                    Color useColor = getCornerBlend(v[0], v[1]);
+                    put().vertex(new Vector2f(v[0], v[1])).color(useColor).end();
+                }
 
-                float r = startColor.getRed() / 255.0f + factor * (endColor.getRed() / 255.0f - startColor.getRed() / 255.0f);
-                float g = startColor.getGreen() / 255.0f + factor * (endColor.getGreen() / 255.0f - startColor.getGreen() / 255.0f);
-                float b = startColor.getBlue() / 255.0f + factor * (endColor.getBlue() / 255.0f - startColor.getBlue() / 255.0f);
-                float a = startColor.getAlpha() / 255.0f + factor * (endColor.getAlpha() / 255.0f - startColor.getAlpha() / 255.0f);
+                break;
+            case OUT_LINE:
+                setDrawType(DrawType.LINE_LOOP).setLineWidth(builder.lineWidth);
 
-                color = new Color(r, g, b, a);
-            } else {
-                Color color2 = colors[0];
-                color = new Color(color2.getRed() / 255.0f, color2.getGreen() / 255.0f, color2.getBlue() / 255.0f, color2.getAlpha() / 255.0f);
-            }
+                for (float[] v : vertices) {
+                    Color useColor = getCornerBlend(v[0], v[1]);
+                    put().vertex(new Vector2f(v[0], v[1])).color(useColor).end();
+                }
 
-            put().vertex(new Vector2f(x, y)).color(color).end();
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + builder.paintType);
         }
 
-        setDrawType(DrawType.POLYGON);
         rendering();
+
+        return this;
     }
 
-    /**
-     * Draws a circle outline with the specified parameters.
-     *
-     * @param xCenter      the x-coordinate of the circle center
-     * @param yCenter      the y-coordinate of the circle center
-     * @param radius       the radius of the circle
-     * @param segmentCount the number of segments to use for the circle
-     * @param lineWidth    the width of the outline
-     * @param colors       the colors to use for the circle
-     */
-    public void circleOutLine(double xCenter, double yCenter, double radius, int segmentCount, double lineWidth, Color... colors) {
-        circleOutLine((float) xCenter, (float) yCenter, (float) radius, (float) radius, segmentCount, (float) lineWidth, colors);
-    }
-
-    /**
-     * Draws a circle outline with the specified parameters.
-     *
-     * @param xCenter      the x-coordinate of the circle center
-     * @param yCenter      the y-coordinate of the circle center
-     * @param radius       the radius of the circle
-     * @param segmentCount the number of segments to use for the circle
-     * @param lineWidth    the width of the outline
-     * @param colors       the colors to use for the circle
-     */
-    public void circleOutLine(float xCenter, float yCenter, float radius, int segmentCount, float lineWidth, Color... colors) {
-        circleOutLine(xCenter, yCenter, radius, radius, segmentCount, lineWidth, colors);
-    }
-
-    /**
-     * Draws a circle outline with the specified parameters.
-     *
-     * @param xCenter      the x-coordinate of the circle center
-     * @param yCenter      the y-coordinate of the circle center
-     * @param xRadius      the x-radius of the circle
-     * @param yRadius      the y-radius of the circle
-     * @param segmentCount the number of segments to use for the circle
-     * @param lineWidth    the width of the outline
-     * @param colors       the colors to use for the circle
-     */
-    public void circleOutLine(double xCenter, double yCenter, double xRadius, double yRadius, int segmentCount, double lineWidth, Color... colors) {
-        circleOutLine((float) xCenter, (float) yCenter, (float) xRadius, (float) yRadius, segmentCount, (float) lineWidth, colors);
-    }
-
-    /**
-     * Draws a circle outline with the specified parameters.
-     *
-     * @param xCenter      the x-coordinate of the circle center
-     * @param yCenter      the y-coordinate of the circle center
-     * @param xRadius      the x-radius of the circle
-     * @param yRadius      the y-radius of the circle
-     * @param segmentCount the number of segments to use for the circle
-     * @param lineWidth    the width of the outline
-     * @param colors       the colors to use for the circle
-     */
-    public void circleOutLine(float xCenter, float yCenter, float xRadius, float yRadius, int segmentCount, float lineWidth, Color... colors) {
-        int colorCount = colors.length;
-
-        if (colorCount < 1) {
-            return;
+    private Color getCenterColor() {
+        int blendR = 0;
+        int blendG = 0;
+        int blendB = 0;
+        int blendA = 0;
+        for (Color c : builder.colors) {
+            blendR += c.getRed();
+            blendG += c.getGreen();
+            blendB += c.getBlue();
+            blendA += c.getAlpha();
         }
 
-        for (int i = 0; i <= segmentCount; i++) {
-            float theta = 2.0f * MathHelper.PI * i / segmentCount;
-            float x = xCenter + xRadius * MathHelper.cos(theta);
-            float y = yCenter + yRadius * MathHelper.sin(theta);
+        return new Color(
+                blendR / builder.colors.length,
+                blendG / builder.colors.length,
+                blendB / builder.colors.length,
+                blendA / builder.colors.length
+        );
+    }
 
-            Color color;
-            if (colorCount > 1) {
-                float colorIndex = (float) i / segmentCount * (colorCount - 1);
-                int startColorIndex = (int) colorIndex;
-                int endColorIndex = MathHelper.min(startColorIndex + 1, colorCount - 1);
-                float factor = colorIndex - startColorIndex;
+    private Color getCornerBlend(float px, float py) {
+        if (builder.colors.length == 1) {
+            return builder.colors[0];
+        } else if (builder.colors.length == 2) {
+            float ty = (py - (builder.cy - builder.yRadius)) / (2 * builder.yRadius);
 
-                Color startColor = colors[startColorIndex];
-                Color endColor = colors[endColorIndex];
+            return MathHelper.lerpColor(builder.colors[0], builder.colors[1], ty);
+        } else if (builder.colors.length == 3) {
+            float tx = (px - (builder.cx - builder.xRadius)) / (2 * builder.xRadius);
+            float ty = (py - (builder.cy - builder.yRadius)) / (2 * builder.yRadius);
 
-                float r = startColor.getRed() / 255.0f + factor * (endColor.getRed() / 255.0f - startColor.getRed() / 255.0f);
-                float g = startColor.getGreen() / 255.0f + factor * (endColor.getGreen() / 255.0f - startColor.getGreen() / 255.0f);
-                float b = startColor.getBlue() / 255.0f + factor * (endColor.getBlue() / 255.0f - startColor.getBlue() / 255.0f);
-                float a = startColor.getAlpha() / 255.0f + factor * (endColor.getAlpha() / 255.0f - startColor.getAlpha() / 255.0f);
+            Color top = MathHelper.lerpColor(builder.colors[0], builder.colors[1], tx);
+            Color bottom = builder.colors[2];
 
-                color = new Color(r, g, b, a);
+            return MathHelper.lerpColor(top, bottom, ty);
+        } else if (builder.colors.length >= 4) {
+            float tx = (px - (builder.cx - builder.xRadius)) / (2 * builder.xRadius);
+            float ty = (py - (builder.cy - builder.yRadius)) / (2 * builder.yRadius);
+
+            Color top = MathHelper.lerpColor(builder.colors[0], builder.colors[1], tx);
+            Color bottom = MathHelper.lerpColor(builder.colors[3], builder.colors[2], tx);
+
+            return MathHelper.lerpColor(top, bottom, ty);
+        } else {
+            throw new IllegalArgumentException("The colors array is invalid: " + builder.colors.length);
+        }
+    }
+
+    public interface CenterXDataStep {
+        CenterYDataStep cx_xRadius(float cx, float xRadius);
+    }
+
+    public interface CenterYDataStep {
+        SegmentStep cy_yRadius(float cy, float yRadius);
+    }
+
+    public interface SegmentStep {
+        ColorsStep segment();
+
+        ColorsStep segment(int segment);
+    }
+
+    public interface ColorsStep {
+        PaintTypeStep colors(Color... colors);
+    }
+
+    public interface PaintTypeStep {
+        GLCircle fill();
+
+        LineWidthStep outLine();
+    }
+
+    public interface LineWidthStep {
+        GLCircle lineWidth(float lineWidth);
+    }
+
+    public static class Builder implements CenterXDataStep, CenterYDataStep, SegmentStep, ColorsStep, PaintTypeStep, LineWidthStep {
+        protected final String name;
+        protected float cx;
+        protected float xRadius;
+        protected float cy;
+        protected float yRadius;
+        protected int segment;
+        protected Color[] colors;
+        protected PaintType paintType;
+        protected float lineWidth;
+
+        private GLCircle glCircle;
+
+        public Builder(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public CenterYDataStep cx_xRadius(float cx, float xRadius) {
+            this.cx = cx;
+            this.xRadius = xRadius;
+
+            return this;
+        }
+
+        @Override
+        public SegmentStep cy_yRadius(float cy, float yRadius) {
+            this.cy = cy;
+            this.yRadius = yRadius;
+
+            return this;
+        }
+
+        @Override
+        public ColorsStep segment() {
+            segment = DEFAULT_SEGMENT;
+
+            return this;
+        }
+
+        @Override
+        public ColorsStep segment(int segment) {
+            this.segment = segment;
+
+            return this;
+        }
+
+        @Override
+        public PaintTypeStep colors(Color... colors) {
+            this.colors = colors;
+
+            return this;
+        }
+
+        @Override
+        public GLCircle fill() {
+            this.paintType = PaintType.FILL;
+            this.lineWidth = -1;
+
+            return build();
+        }
+
+        @Override
+        public LineWidthStep outLine() {
+            this.paintType = PaintType.OUT_LINE;
+
+            return this;
+        }
+
+        @Override
+        public GLCircle lineWidth(float lineWidth) {
+            this.lineWidth = lineWidth;
+
+            return build();
+        }
+
+        private GLCircle build() {
+            if (glCircle == null) {
+                return glCircle = new GLCircle(name, this);
             } else {
-                Color color2 = colors[0];
-                color = new Color(color2.getRed() / 255.0f, color2.getGreen() / 255.0f, color2.getBlue() / 255.0f, color2.getAlpha() / 255.0f);
+                return glCircle.update();
             }
-
-            put().vertex(new Vector2f(x, y)).color(color).end();
         }
 
-        setDrawType(DrawType.LINE_LOOP).setLineWidth(lineWidth);
-        rendering();
     }
 }
