@@ -7,7 +7,7 @@ import me.hannsi.lfjg.render.renderers.polygon.GLBezierLine;
 import org.joml.Vector2f;
 
 public class MainFrame implements LFJGFrame {
-    GLBezierLine gLBezierLine;
+    GLBezierLine glBezierLine;
     private Frame frame;
 
     public static void main(String[] args) {
@@ -18,25 +18,24 @@ public class MainFrame implements LFJGFrame {
     public void init() {
         frame.updateLFJGLContext();
 
-        gLBezierLine = new GLBezierLine("GLBezierLine1");
-
-        GLBezierLine.BezierPoint[] points = new GLBezierLine.BezierPoint[]{
-                new GLBezierLine.BezierPoint(new Vector2f(500, 500), Color.WHITE),
-                new GLBezierLine.BezierPoint(new Vector2f(550, 600), Color.WHITE),
-                new GLBezierLine.BezierPoint(new Vector2f(600, 500), Color.WHITE)
-        };
-
-        gLBezierLine.bezierLine(points, 2.0f, 64);
+        glBezierLine = GLBezierLine.createGLBezierLine("GLBezierLine1")
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(500, 500), Color.WHITE))
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(550, 600), Color.WHITE))
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(600, 500), Color.WHITE))
+                .end()
+                .segment(64)
+                .lineWidth(2f)
+                .update();
     }
 
     @Override
     public void drawFrame() {
-        gLBezierLine.draw();
+        glBezierLine.draw();
     }
 
     @Override
     public void stopFrame() {
-        gLBezierLine.cleanup();
+        glBezierLine.cleanup();
     }
 
     @Override

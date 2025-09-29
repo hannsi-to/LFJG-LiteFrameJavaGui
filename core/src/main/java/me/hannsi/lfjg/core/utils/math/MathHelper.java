@@ -761,6 +761,12 @@ public class MathHelper {
         return new Color(r, g, b, a);
     }
 
+    public static Vector2f lerpVertex2f(Vector2f a, Vector2f b, float t) {
+        float x = a.x + t * (b.x - a.x);
+        float y = a.y + t * (b.y - a.y);
+        return new Vector2f(x, y);
+    }
+
     /**
      * Performs a linear interpolation between two float values.
      *

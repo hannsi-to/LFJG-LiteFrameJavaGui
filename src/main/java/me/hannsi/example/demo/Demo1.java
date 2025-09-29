@@ -155,35 +155,35 @@ public class Demo1 implements IScene {
         glPolygon3.setDrawType(DrawType.LINE_STRIP).setLineWidth(6);
         glPolygon3.rendering();
         offsetX += offset + step;
-        glBezierLine1 = new GLBezierLine("GLBezierLine1");
-        glBezierLine1.bezierLine(
-                new GLBezierLine.BezierPoint[]{
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX, offsetY), Color.BLACK),
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX + offset / 3, offsetY + offset), Color.BLACK),
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX + (offset / 3) * 2, offsetY), Color.BLACK),
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX + offset, offsetY + offset), Color.BLACK)
-                }, 2, (int) offset
-        );
+        glBezierLine1 = GLBezierLine.createGLBezierLine("GLBezierLine1")
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX, offsetY), Color.BLACK))
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX + offset / 3, offsetY + offset), Color.BLACK))
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX + (offset / 3) * 2, offsetY), Color.BLACK))
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX + offset, offsetY + offset), Color.BLACK))
+                .end()
+                .segment((int) offset)
+                .lineWidth(2)
+                .update();
         offsetX += offset + step;
-        glBezierLine2 = new GLBezierLine("GLBezierLine2");
-        glBezierLine2.bezierLine(
-                new GLBezierLine.BezierPoint[]{
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX, offsetY), Color.BLACK),
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX + offset / 3, offsetY + offset), Color.BLACK),
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX + (offset / 3) * 2, offsetY), Color.BLACK),
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX + offset, offsetY + offset), Color.BLACK)
-                }, 4, (int) offset
-        );
+        glBezierLine2 = GLBezierLine.createGLBezierLine("GLBezierLine2")
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX, offsetY), Color.BLACK))
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX + offset / 3, offsetY + offset), Color.BLACK))
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX + (offset / 3) * 2, offsetY), Color.BLACK))
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX + offset, offsetY + offset), Color.BLACK))
+                .end()
+                .segment((int) offset)
+                .lineWidth(4)
+                .update();
         offsetX += offset + step;
-        glBezierLine3 = new GLBezierLine("GLBezierLine3");
-        glBezierLine3.bezierLine(
-                new GLBezierLine.BezierPoint[]{
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX, offsetY), Color.BLACK),
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX + offset / 3, offsetY + offset), Color.BLACK),
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX + (offset / 3) * 2, offsetY), Color.BLACK),
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX + offset, offsetY + offset), Color.BLACK)
-                }, 6, (int) offset
-        );
+        glBezierLine3 = GLBezierLine.createGLBezierLine("GLBezierLine3")
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX, offsetY), Color.BLACK))
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX + offset / 3, offsetY + offset), Color.BLACK))
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX + (offset / 3) * 2, offsetY), Color.BLACK))
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX + offset, offsetY + offset), Color.BLACK))
+                .end()
+                .segment((int) offset)
+                .lineWidth(6)
+                .update();
         offsetX = 20;
         offsetY += offset + step;
         Color color = Color.GREEN;
@@ -656,37 +656,37 @@ public class Demo1 implements IScene {
                 .update();
         offsetX = 20;
         offsetY += offset + step;
-        glBezierLine4 = new GLBezierLine("GlBezierLine4");
-        glBezierLine4.bezierLine(
-                new GLBezierLine.BezierPoint[]{
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX, offsetY), Theme.MUTED_ICE_CREAM_COLOR.getMainColor()),
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX + (offset * 10) / 5, offsetY + offset), Theme.MUTED_ICE_CREAM_COLOR.getSubColor1()),
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX + ((offset * 10) / 5) * 3, offsetY + offset), Theme.MUTED_ICE_CREAM_COLOR.getSubColor3()),
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX + ((offset * 10) / 5) * 5, offsetY + offset), Theme.MUTED_ICE_CREAM_COLOR.getSubColor3())
-                }, 4, (int) offset
-        );
+        glBezierLine4 = GLBezierLine.createGLBezierLine("GLBezierLine4")
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX, offsetY), Theme.MUTED_ICE_CREAM_COLOR.getMainColor()))
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX + (offset * 10) / 5, offsetY + offset), Theme.MUTED_ICE_CREAM_COLOR.getSubColor1()))
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX + ((offset * 10) / 5) * 3, offsetY + offset), Theme.MUTED_ICE_CREAM_COLOR.getSubColor3()))
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX + ((offset * 10) / 5) * 5, offsetY + offset), Theme.MUTED_ICE_CREAM_COLOR.getSubColor3()))
+                .end()
+                .segment((int) offset)
+                .lineWidth(4)
+                .update();
         offsetX = 20;
         offsetY += offset / 2f + step;
-        glBezierLine5 = new GLBezierLine("GlBezierLine5");
-        glBezierLine5.bezierLine(
-                new GLBezierLine.BezierPoint[]{
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX, offsetY), Theme.MUTED_ICE_CREAM_COLOR.getMainColor()),
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX + (offset * 10) / 5, offsetY + offset), Theme.MUTED_ICE_CREAM_COLOR.getSubColor1()),
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX + ((offset * 10) / 5) * 3, offsetY + offset), Theme.MUTED_ICE_CREAM_COLOR.getSubColor3()),
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX + ((offset * 10) / 5) * 5, offsetY + offset), Theme.MUTED_ICE_CREAM_COLOR.getSubColor3())
-                }, 4, (int) offset
-        );
+        glBezierLine5 = GLBezierLine.createGLBezierLine("GLBezierLine5")
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX, offsetY), Theme.MUTED_ICE_CREAM_COLOR.getMainColor()))
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX + (offset * 10) / 5, offsetY + offset), Theme.MUTED_ICE_CREAM_COLOR.getSubColor1()))
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX + ((offset * 10) / 5) * 3, offsetY + offset), Theme.MUTED_ICE_CREAM_COLOR.getSubColor3()))
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX + ((offset * 10) / 5) * 5, offsetY + offset), Theme.MUTED_ICE_CREAM_COLOR.getSubColor3()))
+                .end()
+                .segment((int) offset)
+                .lineWidth(4)
+                .update();
         offsetX = 20;
         offsetY += offset / 2f + step;
-        glBezierLine6 = new GLBezierLine("GlBezierLine6");
-        glBezierLine6.bezierLine(
-                new GLBezierLine.BezierPoint[]{
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX, offsetY), Theme.MUTED_ICE_CREAM_COLOR.getMainColor()),
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX + (offset * 10) / 5, offsetY + offset), Theme.MUTED_ICE_CREAM_COLOR.getSubColor1()),
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX + ((offset * 10) / 5) * 3, offsetY + offset), Theme.MUTED_ICE_CREAM_COLOR.getSubColor3()),
-                        new GLBezierLine.BezierPoint(new Vector2f(offsetX + ((offset * 10) / 5) * 5, offsetY + offset), Theme.MUTED_ICE_CREAM_COLOR.getSubColor3())
-                }, 4, (int) offset
-        );
+        glBezierLine6 = GLBezierLine.createGLBezierLine("GLBezierLine6")
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX, offsetY), Theme.MUTED_ICE_CREAM_COLOR.getMainColor()))
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX + (offset * 10) / 5, offsetY + offset), Theme.MUTED_ICE_CREAM_COLOR.getSubColor1()))
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX + ((offset * 10) / 5) * 3, offsetY + offset), Theme.MUTED_ICE_CREAM_COLOR.getSubColor3()))
+                .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(offsetX + ((offset * 10) / 5) * 5, offsetY + offset), Theme.MUTED_ICE_CREAM_COLOR.getSubColor3()))
+                .end()
+                .segment((int) offset)
+                .lineWidth(4)
+                .update();
     }
 
     @Override

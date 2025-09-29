@@ -1,11 +1,9 @@
 package me.hannsi.test;
 
-import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.renderers.polygon.GLBezierLine;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
-import org.joml.Vector2f;
 
 public class TestScene2 implements IScene {
     public Scene scene;
@@ -21,15 +19,15 @@ public class TestScene2 implements IScene {
 
     @Override
     public void init() {
-        GLBezierLine.BezierPoint[] points = {
-                new GLBezierLine.BezierPoint(new Vector2f(0, 0), Color.BLUE),
-                new GLBezierLine.BezierPoint(new Vector2f(200, 300), Color.GREEN),
-                new GLBezierLine.BezierPoint(new Vector2f(400, 300), Color.RED),
-                new GLBezierLine.BezierPoint(new Vector2f(1000, 1000), Color.YELLOW)
-        };
-
-        glBezierLine = new GLBezierLine("GLBezierLine");
-        glBezierLine.bezierLine(points, 1.0f, 64);
+//        GLBezierLine.BezierPoint[] points = {
+//                new GLBezierLine.BezierPoint(new Vector2f(0, 0), Color.BLUE),
+//                new GLBezierLine.BezierPoint(new Vector2f(200, 300), Color.GREEN),
+//                new GLBezierLine.BezierPoint(new Vector2f(400, 300), Color.RED),
+//                new GLBezierLine.BezierPoint(new Vector2f(1000, 1000), Color.YELLOW)
+//        };
+//
+//        glBezierLine = new GLBezierLine("GLBezierLine");
+//        glBezierLine.bezierLine(points, 1.0f, 64);
     }
 
     @Override
