@@ -62,6 +62,7 @@ public class PolygonTriangulator {
                 case LINE_STRIP:
                 case LINE_LOOP:
                 case TRIANGLES:
+                case TRIANGLE_FAN:
                     int triCount = positions.length / stride;
                     int[] triIndices = new int[triCount];
                     for (int i = 0; i < triCount; i++) {
@@ -69,7 +70,6 @@ public class PolygonTriangulator {
                     }
 
                     return new ElementPair(outPositions, triIndices);
-
                 case QUADS:
                     List<Integer> idxListQ = new ArrayList<>();
                     int quadVertices = positions.length / stride;

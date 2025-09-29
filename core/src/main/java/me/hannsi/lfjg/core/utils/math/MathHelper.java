@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.core.utils.math;
 
+import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import org.joml.Math;
 import org.joml.Vector2d;
 import org.joml.Vector2f;
@@ -749,6 +750,15 @@ public class MathHelper {
     public static float interpolateHue(float h1, float h2, float t) {
         float delta = ((h2 - h1 + 540f) % 360f) - 180f;
         return (h1 + delta * t + 360f) % 360f;
+    }
+
+    public static Color lerpColor(Color c1, Color c2, float t) {
+        int r = (int) (c1.getRed() * (1 - t) + c2.getRed() * t);
+        int g = (int) (c1.getGreen() * (1 - t) + c2.getGreen() * t);
+        int b = (int) (c1.getBlue() * (1 - t) + c2.getBlue() * t);
+        int a = (int) (c1.getAlpha() * (1 - t) + c2.getAlpha() * t);
+
+        return new Color(r, g, b, a);
     }
 
     /**

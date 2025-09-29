@@ -250,20 +250,45 @@ public class Demo5 implements IScene {
                 .width3_height3_color3_2p(offset * 1.5f, offset, color)
                 .fill();
         offsetX += offset * 1.5f + step;
-        glRoundedRect1 = new GLRoundedRect("GLRoundedRect1");
-        glRoundedRect1.roundedRectWH(offsetX, offsetY, offset * 1.5f, offset, 15, color);
+        glRect1 = GLRect.createGLRect("GLRect1")
+                .x1_y1_color1_2p(offsetX, offsetY, color)
+                .width3_height3_color3_2p(offset * 1.5f, offset, color)
+                .fill()
+                .update();
         offsetX += offset * 1.5f + step;
-        glRoundedRect2 = new GLRoundedRect("GLRoundedRect2");
-        glRoundedRect2.roundedRectWH(offsetX, offsetY, offset * 1.5f, offset, 20, 0, 20, 0, color, color, color, color);
+        glRoundedRect1 = GLRoundedRect.createRoundedRect("GLRoundedRect1")
+                .x1_y1_color1_2p(offsetX, offsetY, color)
+                .width3_height3_color3_2p(offset * 1.5f, offset, color)
+                .toggleRadius1_radius1_2p(true, 15f)
+                .toggleRadius3_radius3_2p(true, 15f)
+                .fill();
         offsetX += offset * 1.5f + step;
-        glRoundedRect3 = new GLRoundedRect("GLRoundedRect3");
-        glRoundedRect3.roundedRectWH(offsetX, offsetY, offset * 1.5f, offset, 0, 20, 20, 20, color, color, color, color);
+        glRoundedRect2 = GLRoundedRect.createRoundedRect("GLRoundedRect2")
+                .x1_y1_color1_2p(offsetX, offsetY, color)
+                .width3_height3_color3_2p(offset * 1.5f, offset, color)
+                .toggleRadius1_radius1(true, 20f)
+                .toggleRadius2_radius2(false, 0f)
+                .toggleRadius3_radius3(true, 20f)
+                .toggleRadius4_radius4(false, 0f)
+                .fill();
         offsetX += offset * 1.5f + step;
-        glRoundedRect5 = new GLRoundedRect("GLRoundedRect5");
-        glRoundedRect5.roundedRectWH(offsetX, offsetY, offset * 1.5f, offset, 20, 20, 0, 20, color, color, color, color);
+        glRoundedRect3 = GLRoundedRect.createRoundedRect("GLRoundedRect3")
+                .x1_y1_color1_2p(offsetX, offsetY, color)
+                .width3_height3_color3_2p(offset * 1.5f, offset, color)
+                .toggleRadius1_radius1(false, 0f)
+                .toggleRadius2_radius2(true, 20f)
+                .toggleRadius3_radius3(true, 20f)
+                .toggleRadius4_radius4(true, 20f)
+                .fill();
         offsetX += offset * 1.5f + step;
-        glRoundedRect4 = new GLRoundedRect("GLRoundedRect4");
-        glRoundedRect4.roundedRectWH(offsetX, offsetY, offset * 1.5f, offset, offset / 2f, offset / 2f, offset / 2f, offset / 2f, color, color, color, color);
+        glRoundedRect5 = GLRoundedRect.createRoundedRect("GLRoundedRect5")
+                .x1_y1_color1_2p(offsetX, offsetY, color)
+                .width3_height3_color3_2p(offset * 1.5f, offset, color)
+                .toggleRadius1_radius1(true, 20f)
+                .toggleRadius2_radius2(true, 20f)
+                .toggleRadius3_radius3(false, 0f)
+                .toggleRadius4_radius4(true, 20f)
+                .fill();
         offsetX += offset * 1.5f + step;
         glCircle1 = new GLCircle("GLCircle1");
         glCircle1.circle(offsetX + offset / 2f, offsetY + offset / 2f, offset / 2f, 360, color);
@@ -278,20 +303,53 @@ public class Demo5 implements IScene {
                 .width3_height3_color3_2p(offset * 1.5f, offset, color)
                 .outLine().lineWidth(6);
         offsetX += offset * 1.5f + step;
-        glRoundedRect11 = new GLRoundedRect("GLRoundedRect11");
-        glRoundedRect11.roundedRectWHOutLine(offsetX, offsetY, offset * 1.5f, offset, 6, 15, color);
+        glRoundedRect11 = GLRoundedRect.createRoundedRect("GLRoundedRect11")
+                .x1_y1_color1_2p(offsetX, offsetY, color)
+                .width3_height3_color3_2p(offset * 1.5f, offset, color)
+                .toggleRadius1_radius1_2p(true, 15f)
+                .toggleRadius3_radius3_2p(true, 15f)
+                .outLine().lineWidth(6)
+                .update();
         offsetX += offset * 1.5f + step;
-        glRoundedRect12 = new GLRoundedRect("GLRoundedRect12");
-        glRoundedRect12.roundedRectWHOutLine(offsetX, offsetY, offset * 1.5f, offset, 6, 20, 0, 20, 0, color, color, color, color);
+        glRoundedRect12 = GLRoundedRect.createRoundedRect("GLRoundedRect12")
+                .x1_y1_color1_2p(offsetX, offsetY, color)
+                .width3_height3_color3_2p(offset * 1.5f, offset, color)
+                .toggleRadius1_radius1(true, 20f)
+                .toggleRadius2_radius2(false, 0f)
+                .toggleRadius3_radius3(true, 20f)
+                .toggleRadius4_radius4(false, 0f)
+                .outLine().lineWidth(6)
+                .update();
         offsetX += offset * 1.5f + step;
-        glRoundedRect13 = new GLRoundedRect("GLRoundedRect13");
-        glRoundedRect13.roundedRectWHOutLine(offsetX, offsetY, offset * 1.5f, offset, 6, 0, 20, 20, 20, color, color, color, color);
+        glRoundedRect13 = GLRoundedRect.createRoundedRect("GLRoundedRect13")
+                .x1_y1_color1_2p(offsetX, offsetY, color)
+                .width3_height3_color3_2p(offset * 1.5f, offset, color)
+                .toggleRadius1_radius1(false, 0f)
+                .toggleRadius2_radius2(true, 20f)
+                .toggleRadius3_radius3(true, 20f)
+                .toggleRadius4_radius4(true, 20f)
+                .outLine().lineWidth(6)
+                .update();
         offsetX += offset * 1.5f + step;
-        glRoundedRect15 = new GLRoundedRect("GLRoundedRect15");
-        glRoundedRect15.roundedRectWHOutLine(offsetX, offsetY, offset * 1.5f, offset, 6, 20, 20, 0, 20, color, color, color, color);
+        glRoundedRect15 = GLRoundedRect.createRoundedRect("GLRoundedRect15")
+                .x1_y1_color1_2p(offsetX, offsetY, color)
+                .width3_height3_color3_2p(offset * 1.5f, offset, color)
+                .toggleRadius1_radius1(true, 20f)
+                .toggleRadius2_radius2(true, 20f)
+                .toggleRadius3_radius3(false, 0f)
+                .toggleRadius4_radius4(true, 20f)
+                .outLine().lineWidth(6)
+                .update();
         offsetX += offset * 1.5f + step;
-        glRoundedRect14 = new GLRoundedRect("GLRoundedRect14");
-        glRoundedRect14.roundedRectWHOutLine(offsetX, offsetY, offset * 1.5f, offset, 6, offset / 2f, offset / 2f, offset / 2f, offset / 2f, color, color, color, color);
+        glRoundedRect14 = GLRoundedRect.createRoundedRect("GLRoundedRect14")
+                .x1_y1_color1_2p(offsetX, offsetY, color)
+                .width3_height3_color3_2p(offset * 1.5f, offset, color)
+                .toggleRadius1_radius1(true, offset / 2f)
+                .toggleRadius2_radius2(true, offset / 2f)
+                .toggleRadius3_radius3(true, offset / 2f)
+                .toggleRadius4_radius4(true, offset / 2f)
+                .outLine().lineWidth(6)
+                .update();
         offsetX += offset * 1.5f + step;
         glCircle11 = new GLCircle("GLCircle11");
         glCircle11.circleOutLine(offsetX + offset / 2f, offsetY + offset / 2f, offset / 2f, 360, 6, color);
@@ -306,20 +364,53 @@ public class Demo5 implements IScene {
                 .width3_height3_color3_2p(offset * 1.5f, offset, color)
                 .outLine().lineWidth(2);
         offsetX += offset * 1.5f + step;
-        glRoundedRect21 = new GLRoundedRect("GLRoundedRect21");
-        glRoundedRect21.roundedRectWHOutLine(offsetX, offsetY, offset * 1.5f, offset, 2, 15, color);
+        glRoundedRect21 = GLRoundedRect.createRoundedRect("GLRoundedRect21")
+                .x1_y1_color1_2p(offsetX, offsetY, color)
+                .width3_height3_color3_2p(offset * 1.5f, offset, color)
+                .toggleRadius1_radius1_2p(true, 15f)
+                .toggleRadius3_radius3_2p(true, 15f)
+                .outLine().lineWidth(2)
+                .update();
         offsetX += offset * 1.5f + step;
-        glRoundedRect22 = new GLRoundedRect("GLRoundedRect22");
-        glRoundedRect22.roundedRectWHOutLine(offsetX, offsetY, offset * 1.5f, offset, 2, 20, 0, 20, 0, color, color, color, color);
+        glRoundedRect22 = GLRoundedRect.createRoundedRect("GLRoundedRect22")
+                .x1_y1_color1_2p(offsetX, offsetY, color)
+                .width3_height3_color3_2p(offset * 1.5f, offset, color)
+                .toggleRadius1_radius1(true, 20f)
+                .toggleRadius2_radius2(false, 0f)
+                .toggleRadius3_radius3(true, 20f)
+                .toggleRadius4_radius4(false, 0f)
+                .outLine().lineWidth(2)
+                .update();
         offsetX += offset * 1.5f + step;
-        glRoundedRect23 = new GLRoundedRect("GLRoundedRect23");
-        glRoundedRect23.roundedRectWHOutLine(offsetX, offsetY, offset * 1.5f, offset, 2, 0, 20, 20, 20, color, color, color, color);
+        glRoundedRect23 = GLRoundedRect.createRoundedRect("GLRoundedRect23")
+                .x1_y1_color1_2p(offsetX, offsetY, color)
+                .width3_height3_color3_2p(offset * 1.5f, offset, color)
+                .toggleRadius1_radius1(false, 0f)
+                .toggleRadius2_radius2(true, 20f)
+                .toggleRadius3_radius3(true, 20f)
+                .toggleRadius4_radius4(true, 20f)
+                .outLine().lineWidth(2)
+                .update();
         offsetX += offset * 1.5f + step;
-        glRoundedRect25 = new GLRoundedRect("GLRoundedRect25");
-        glRoundedRect25.roundedRectWHOutLine(offsetX, offsetY, offset * 1.5f, offset, 2, 20, 20, 0, 20, color, color, color, color);
+        glRoundedRect25 = GLRoundedRect.createRoundedRect("GLRoundedRect25")
+                .x1_y1_color1_2p(offsetX, offsetY, color)
+                .width3_height3_color3_2p(offset * 1.5f, offset, color)
+                .toggleRadius1_radius1(true, 20f)
+                .toggleRadius2_radius2(true, 20f)
+                .toggleRadius3_radius3(false, 0f)
+                .toggleRadius4_radius4(true, 20f)
+                .outLine().lineWidth(2)
+                .update();
         offsetX += offset * 1.5f + step;
-        glRoundedRect24 = new GLRoundedRect("GLRoundedRect24");
-        glRoundedRect24.roundedRectWHOutLine(offsetX, offsetY, offset * 1.5f, offset, 2, offset / 2f, offset / 2f, offset / 2f, offset / 2f, color, color, color, color);
+        glRoundedRect24 = GLRoundedRect.createRoundedRect("GLRoundedRect24")
+                .x1_y1_color1_2p(offsetX, offsetY, color)
+                .width3_height3_color3_2p(offset * 1.5f, offset, color)
+                .toggleRadius1_radius1(true, offset / 2f)
+                .toggleRadius2_radius2(true, offset / 2f)
+                .toggleRadius3_radius3(true, offset / 2f)
+                .toggleRadius4_radius4(true, offset / 2f)
+                .outLine().lineWidth(2)
+                .update();
         offsetX += offset * 1.5f + step;
         glCircle21 = new GLCircle("GLCircle21");
         glCircle21.circleOutLine(offsetX + offset / 2f, offsetY + offset / 2f, offset / 2f, 360, 2, color);
@@ -436,20 +527,65 @@ public class Demo5 implements IScene {
                 .width4_height4_color4(0, offset, color4)
                 .fill();
         offsetX += offset * 1.5f + step;
-        glRoundedRect31 = new GLRoundedRect("GLRoundedRect31");
-        glRoundedRect31.roundedRectWH(offsetX, offsetY, offset * 1.5f, offset, 15, color1, color2, color3, color4);
+        glRoundedRect31 = GLRoundedRect.createRoundedRect("GLRoundedRect31")
+                .x1_y1_color1(offsetX, offsetY, color1)
+                .width2_height2_color2(offset * 1.5f, 0, color2)
+                .width3_height3_color3(offset * 1.5f, offset, color3)
+                .width4_height4_color4(0, offset, color4)
+                .toggleRadius1_radius1(true, 15f)
+                .toggleRadius2_radius2(true, 15f)
+                .toggleRadius3_radius3(true, 15f)
+                .toggleRadius4_radius4(true, 15f)
+                .fill()
+                .update();
         offsetX += offset * 1.5f + step;
-        glRoundedRect32 = new GLRoundedRect("GLRoundedRect32");
-        glRoundedRect32.roundedRectWH(offsetX, offsetY, offset * 1.5f, offset, 20, 0, 20, 0, color1, color2, color3, color4);
+        glRoundedRect32 = GLRoundedRect.createRoundedRect("GLRoundedRect32")
+                .x1_y1_color1(offsetX, offsetY, color1)
+                .width2_height2_color2(offset * 1.5f, 0, color2)
+                .width3_height3_color3(offset * 1.5f, offset, color3)
+                .width4_height4_color4(0, offset, color4)
+                .toggleRadius1_radius1(true, 15f)
+                .toggleRadius2_radius2(false, 0f)
+                .toggleRadius3_radius3(true, 15f)
+                .toggleRadius4_radius4(false, 0f)
+                .fill()
+                .update();
         offsetX += offset * 1.5f + step;
-        glRoundedRect33 = new GLRoundedRect("GLRoundedRect33");
-        glRoundedRect33.roundedRectWH(offsetX, offsetY, offset * 1.5f, offset, 0, 20, 20, 20, color1, color2, color3, color4);
+        glRoundedRect33 = GLRoundedRect.createRoundedRect("GLRoundedRect33")
+                .x1_y1_color1(offsetX, offsetY, color1)
+                .width2_height2_color2(offset * 1.5f, 0, color2)
+                .width3_height3_color3(offset * 1.5f, offset, color3)
+                .width4_height4_color4(0, offset, color4)
+                .toggleRadius1_radius1(false, 0f)
+                .toggleRadius2_radius2(true, 20f)
+                .toggleRadius3_radius3(true, 20f)
+                .toggleRadius4_radius4(true, 20f)
+                .fill()
+                .update();
         offsetX += offset * 1.5f + step;
-        glRoundedRect35 = new GLRoundedRect("GLRoundedRect35");
-        glRoundedRect35.roundedRectWH(offsetX, offsetY, offset * 1.5f, offset, 20, 20, 0, 20, color1, color2, color3, color4);
+        glRoundedRect35 = GLRoundedRect.createRoundedRect("GLRoundedRect35")
+                .x1_y1_color1(offsetX, offsetY, color1)
+                .width2_height2_color2(offset * 1.5f, 0, color2)
+                .width3_height3_color3(offset * 1.5f, offset, color3)
+                .width4_height4_color4(0, offset, color4)
+                .toggleRadius1_radius1(true, 20f)
+                .toggleRadius2_radius2(true, 20f)
+                .toggleRadius3_radius3(false, 0f)
+                .toggleRadius4_radius4(true, 20f)
+                .fill()
+                .update();
         offsetX += offset * 1.5f + step;
-        glRoundedRect34 = new GLRoundedRect("GLRoundedRect34");
-        glRoundedRect34.roundedRectWH(offsetX, offsetY, offset * 1.5f, offset, offset / 2f, offset / 2f, offset / 2f, offset / 2f, color1, color2, color3, color4);
+        glRoundedRect34 = GLRoundedRect.createRoundedRect("GLRoundedRect34")
+                .x1_y1_color1(offsetX, offsetY, color1)
+                .width2_height2_color2(offset * 1.5f, 0, color2)
+                .width3_height3_color3(offset * 1.5f, offset, color3)
+                .width4_height4_color4(0, offset, color4)
+                .toggleRadius1_radius1(true, offset / 2f)
+                .toggleRadius2_radius2(true, offset / 2f)
+                .toggleRadius3_radius3(true, offset / 2f)
+                .toggleRadius4_radius4(true, offset / 2f)
+                .fill()
+                .update();
         offsetX += offset * 1.5f + step;
         glCircle31 = new GLCircle("GLCircle31");
         glCircle31.circle(offsetX + offset / 2f, offsetY + offset / 2f, offset / 2f, 360, color1, color2, color3, color4);
