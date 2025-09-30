@@ -42,9 +42,10 @@ public class PersistentMappedUBO implements PersistentMappedBuffer {
     }
 
     public PersistentMappedUBO update(Matrix4f projectionMatrix, Matrix4f viewMatrix, Matrix4f modelMatrix) {
-        projectionMatrix.get((FloatBuffer) mappedBuffer.asFloatBuffer().position(0));
-        viewMatrix.get((FloatBuffer) mappedBuffer.asFloatBuffer().position(0));
-        modelMatrix.get((FloatBuffer) mappedBuffer.asFloatBuffer().position(0));
+        FloatBuffer floatBuffer = mappedBuffer.asFloatBuffer();
+        projectionMatrix.get((FloatBuffer) floatBuffer.position(0));
+        viewMatrix.get((FloatBuffer) floatBuffer.position(16));
+        modelMatrix.get((FloatBuffer) floatBuffer.position(32));
 
         if ((flags & GL44.GL_MAP_COHERENT_BIT) == 0) {
             GL42.glMemoryBarrier(GL44.GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT);
