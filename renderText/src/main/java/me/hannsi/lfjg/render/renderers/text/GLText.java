@@ -8,7 +8,7 @@ import me.hannsi.lfjg.render.system.text.AlignType;
 import me.hannsi.lfjg.render.system.text.font.Font;
 import org.joml.Vector2f;
 
-public class GLText extends GLPolygon {
+public class GLText extends GLPolygon<GLText> {
     private TextRenderer textRenderer;
     private String text;
     private int fontSize;
