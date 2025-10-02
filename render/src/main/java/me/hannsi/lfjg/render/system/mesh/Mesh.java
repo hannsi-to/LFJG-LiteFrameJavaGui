@@ -172,11 +172,11 @@ public class Mesh {
 
     public Mesh createBufferObject2D(float[] positions, float[] colors, float[] textures, int[] indices) {
         vboIds.put(
-                BufferObjectType.POSITION_2D_BUFFER,
+                BufferObjectType.POSITION_BUFFER,
                 new PersistentMappedVBO(
                         positions.length,
                         flagsHint
-                ).update(positions).attribute(BufferObjectType.POSITION_2D_BUFFER, 0, 0)
+                ).update(positions).attribute(BufferObjectType.POSITION_BUFFER, 0, 0)
         );
         count = positions.length / projectionType.getStride();
 
@@ -219,11 +219,11 @@ public class Mesh {
 
     public Mesh createBufferObject3D(float[] positions, int[] indices, float[] colors, float[] textures, float[] normals) {
         vboIds.put(
-                BufferObjectType.POSITION_3D_BUFFER,
+                BufferObjectType.POSITION_BUFFER,
                 new PersistentMappedVBO(
                         positions.length,
                         flagsHint
-                ).update(positions).attribute(BufferObjectType.POSITION_3D_BUFFER, 0, 0)
+                ).update(positions).attribute(BufferObjectType.POSITION_BUFFER, 0, 0)
         );
         count = positions.length / projectionType.getStride();
 
@@ -259,11 +259,11 @@ public class Mesh {
 
         if (normals != null) {
             vboIds.put(
-                    BufferObjectType.NORMAL_3D_BUFFER,
+                    BufferObjectType.NORMAL_BUFFER,
                     new PersistentMappedVBO(
                             normals.length,
                             flagsHint
-                    ).update(normals).attribute(BufferObjectType.NORMAL_3D_BUFFER, 0, 0)
+                    ).update(normals).attribute(BufferObjectType.NORMAL_BUFFER, 0, 0)
             );
         }
 
@@ -280,9 +280,9 @@ public class Mesh {
             return;
         }
 
-        if (bufferObjectType == BufferObjectType.POSITION_2D_BUFFER || bufferObjectType == BufferObjectType.POSITION_3D_BUFFER) {
+        if (bufferObjectType == BufferObjectType.POSITION_BUFFER || bufferObjectType == BufferObjectType.POSITION_BUFFER) {
             if (useElementBufferObject) {
-                ElementPair elementPair = getElementPositions(values, drawType, bufferObjectType == BufferObjectType.POSITION_2D_BUFFER ? ProjectionType.ORTHOGRAPHIC_PROJECTION : ProjectionType.PERSPECTIVE_PROJECTION);
+                ElementPair elementPair = getElementPositions(values, drawType, bufferObjectType == BufferObjectType.POSITION_BUFFER ? ProjectionType.ORTHOGRAPHIC_PROJECTION : ProjectionType.PERSPECTIVE_PROJECTION);
                 numVertices = elementPair.indices.length;
                 eboId.update(elementPair.indices);
                 count = elementPair.positions.length / projectionType.getStride();
@@ -311,11 +311,11 @@ public class Mesh {
             numVertices = elementPair.indices.length;
 
             vboIds.put(
-                    BufferObjectType.POSITION_2D_BUFFER,
+                    BufferObjectType.POSITION_BUFFER,
                     new PersistentMappedVBO(
                             elementPair.positions.length,
                             flagsHint
-                    ).update(elementPair.positions).attribute(BufferObjectType.POSITION_2D_BUFFER, 0, 0)
+                    ).update(elementPair.positions).attribute(BufferObjectType.POSITION_BUFFER, 0, 0)
             );
 
             eboId = new PersistentMappedEBO(
@@ -324,11 +324,11 @@ public class Mesh {
             ).update(elementPair.indices);
         } else {
             vboIds.put(
-                    BufferObjectType.POSITION_2D_BUFFER,
+                    BufferObjectType.POSITION_BUFFER,
                     new PersistentMappedVBO(
                             positions.length,
                             flagsHint
-                    ).update(positions).attribute(BufferObjectType.POSITION_2D_BUFFER, 0, 0)
+                    ).update(positions).attribute(BufferObjectType.POSITION_BUFFER, 0, 0)
             );
             count = positions.length / projectionType.getStride();
         }

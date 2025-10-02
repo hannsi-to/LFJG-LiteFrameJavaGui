@@ -99,7 +99,7 @@ public class Material {
         BufferObjectType bufferObjectType;
         switch (materialType) {
             case NO_MATERIAL:
-                bufferObjectType = BufferObjectType.POSITION_3D_BUFFER;
+                bufferObjectType = BufferObjectType.POSITION_BUFFER;
                 break;
             case COLOR:
                 bufferObjectType = BufferObjectType.COLOR_BUFFER;

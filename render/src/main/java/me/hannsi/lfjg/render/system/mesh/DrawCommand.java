@@ -49,14 +49,16 @@ public final class DrawCommand {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
         DrawCommand that = (DrawCommand) obj;
-        return this.count == that.count &&
-                this.instanceCount == that.instanceCount &&
-                this.firstIndex == that.firstIndex &&
-                this.baseVertex == that.baseVertex &&
-                this.baseInstance == that.baseInstance;
+
+        return this.count == that.count && this.instanceCount == that.instanceCount && this.firstIndex == that.firstIndex && this.baseVertex == that.baseVertex && this.baseInstance == that.baseInstance;
     }
 
     @Override
@@ -73,5 +75,4 @@ public final class DrawCommand {
                 "baseVertex=" + baseVertex + ", " +
                 "baseInstance=" + baseInstance + ']';
     }
-
 }

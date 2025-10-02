@@ -101,7 +101,7 @@ public class GLPolygon<T extends GLPolygon<T>> extends GLObject {
         }
 
         if (!Arrays.equals(vertex, latestVertex)) {
-            mesh.updateVBOData(getDrawType(), BufferObjectType.POSITION_2D_BUFFER, vertex);
+            mesh.updateVBOData(getDrawType(), BufferObjectType.POSITION_BUFFER, vertex);
         }
         if (!Arrays.equals(color, latestColor)) {
             mesh.updateVBOData(getDrawType(), BufferObjectType.COLOR_BUFFER, color);
