@@ -74,7 +74,7 @@ public class ShaderProgram {
             GL20.glDeleteShader(fragmentShaderId);
         }
         if (programId != 0) {
-            GL20.glDeleteProgram(programId);
+            GLStateCache.deleteProgram(programId);
         }
 
         new LogGenerator(

@@ -84,9 +84,9 @@ public class FrameBuffer {
     }
 
     public void cleanup() {
-        GL30.glDeleteFramebuffers(frameBufferId);
-        GL11.glDeleteTextures(textureId);
-        GL30.glDeleteRenderbuffers(renderBufferId);
+        GLStateCache.deleteFrameBuffer(frameBufferId);
+        GLStateCache.deleteTexture(GL11.GL_TEXTURE_2D, textureId);
+        GLStateCache.deleteRenderBuffer(renderBufferId);
 
         vaoRendering.cleanup();
         mesh.cleanup();

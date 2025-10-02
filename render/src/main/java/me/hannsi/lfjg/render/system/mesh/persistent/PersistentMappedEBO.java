@@ -64,7 +64,7 @@ public class PersistentMappedEBO implements PersistentMappedBuffer {
 
     @Override
     public void cleanup() {
-        GL15.glDeleteBuffers(bufferId);
+        GLStateCache.deleteElementArrayBuffer(bufferId);
     }
 
     public int getFlags() {

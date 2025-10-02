@@ -358,4 +358,3 @@ public class PolygonTriangulator {
 
     private enum VertexType {START, END, SPLIT, MERGE, REGULAR}
 }
-

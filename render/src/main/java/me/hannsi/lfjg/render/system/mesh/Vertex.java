@@ -28,4 +28,20 @@ public class Vertex {
         this.normalsY = normalsY;
         this.normalsZ = normalsZ;
     }
+
+    public float[] getPositions() {
+        return new float[]{x, y, z};
+    }
+
+    public float[] getColors() {
+        return new float[]{red, green, blue, alpha};
+    }
+
+    public float[] getTextures() {
+        return new float[]{u, v};
+    }
+
+    public float[] getNormals() {
+        return new float[]{normalsX, normalsY, normalsZ};
+    }
 }

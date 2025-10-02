@@ -75,7 +75,7 @@ public class PersistentMappedVBO implements PersistentMappedBuffer {
     @Override
     public void cleanup() {
         for (int i = 0; i < MeshConstants.DEFAULT_BUFFER_COUNT; i++) {
-            GL15.glDeleteBuffers(bufferIds[i]);
+            GLStateCache.deleteArrayBuffer(bufferIds[i]);
         }
     }
 

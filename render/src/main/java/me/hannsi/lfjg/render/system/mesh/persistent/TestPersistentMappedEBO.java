@@ -29,7 +29,7 @@ public class TestPersistentMappedEBO implements PersistentMappedBuffer {
 
         int sizeInBytes = maxIndices * Integer.BYTES;
         if (bufferId != 0) {
-            GL15.glDeleteBuffers(bufferId);
+            GLStateCache.deleteElementArrayBuffer(bufferId);
         }
 
         bufferId = GL15.glGenBuffers();
@@ -102,6 +102,15 @@ public class TestPersistentMappedEBO implements PersistentMappedBuffer {
         changedIndices.clear();
         fullUpdate = true;
         dirty = true;
+        return this;
+    }
+
+    public TestPersistentMappedEBO linkVertexArrayObject(int[] vaoIds) {
+        for (int vaoId : vaoIds) {
+            GLStateCache.bindVertexArray(vaoId);
+            GLStateCache.bindElementArrayBuffer(bufferId);
+        }
+
         return this;
     }
 
@@ -181,7 +190,7 @@ public class TestPersistentMappedEBO implements PersistentMappedBuffer {
     @Override
     public void cleanup() {
         if (bufferId != 0) {
-            GL15.glDeleteBuffers(bufferId);
+            GLStateCache.deleteElementArrayBuffer(bufferId);
             bufferId = 0;
         }
         mappedBuffer = null;

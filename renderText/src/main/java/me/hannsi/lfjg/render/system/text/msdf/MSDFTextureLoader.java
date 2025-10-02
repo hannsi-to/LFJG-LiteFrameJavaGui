@@ -24,7 +24,7 @@ public class MSDFTextureLoader {
     }
 
     public void cleanup() {
-        GL11.glDeleteTextures(textureId);
+        GLStateCache.deleteTexture(GL11.GL_TEXTURE_2D, textureId);
         textureId = -1;
     }
 

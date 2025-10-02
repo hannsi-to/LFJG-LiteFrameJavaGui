@@ -58,7 +58,7 @@ public class PersistentMappedUBO implements PersistentMappedBuffer {
     public void cleanup() {
         GLStateCache.bindUniformBuffer(bufferId);
         GL30.glUnmapBuffer(GL31.GL_UNIFORM_BUFFER);
-        GL15.glDeleteBuffers(bufferId);
+        GLStateCache.deleteUniformBuffer(bufferId);
     }
 
     public UBOData getUboData() {

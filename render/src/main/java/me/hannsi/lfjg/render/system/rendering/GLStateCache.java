@@ -90,11 +90,30 @@ public class GLStateCache {
         }
     }
 
+    public static void deleteTexture(int target, int texture) {
+        if (lastTexture[0] == target && lastTexture[1] == texture) {
+            GL11.glBindTexture(target, 0);
+            lastTexture[0] = -1;
+            lastTexture[1] = -1;
+        }
+
+        GL11.glDeleteTextures(texture);
+    }
+
     public static void useProgram(int program) {
         if (lastShaderProgram != program) {
             GL20.glUseProgram(program);
             lastShaderProgram = program;
         }
+    }
+
+    public static void deleteProgram(int program) {
+        if (lastShaderProgram == program) {
+            useProgram(0);
+            lastShaderProgram = -1;
+        }
+
+        GL20.glDeleteProgram(program);
     }
 
     public static void bindFrameBuffer(int frameBuffer) {
@@ -104,11 +123,29 @@ public class GLStateCache {
         }
     }
 
+    public static void deleteFrameBuffer(int frameBuffer) {
+        if (lastFrameBuffer == frameBuffer) {
+            bindFrameBuffer(0);
+            lastFrameBuffer = -1;
+        }
+
+        GL30.glDeleteFramebuffers(frameBuffer);
+    }
+
     public static void bindRenderBuffer(int renderBuffer) {
         if (lastRenderBuffer != renderBuffer) {
             GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, renderBuffer);
             lastRenderBuffer = renderBuffer;
         }
+    }
+
+    public static void deleteRenderBuffer(int renderBuffer) {
+        if (lastRenderBuffer == renderBuffer) {
+            bindRenderBuffer(0);
+            lastRenderBuffer = -1;
+        }
+
+        GL30.glDeleteRenderbuffers(renderBuffer);
     }
 
     public static void bindDrawFrameBuffer(int frameBuffer) {
@@ -132,11 +169,29 @@ public class GLStateCache {
         }
     }
 
+    public static void deleteVertexArray(int array) {
+        if (lastVertexArray == array) {
+            bindVertexArray(0);
+            lastVertexArray = -1;
+        }
+
+        GL30.glDeleteVertexArrays(array);
+    }
+
     public static void bindIndirectBuffer(int buffer) {
         if (lastDrawIndirectBuffer != buffer) {
             GL15.glBindBuffer(GL40.GL_DRAW_INDIRECT_BUFFER, buffer);
             lastDrawIndirectBuffer = buffer;
         }
+    }
+
+    public static void deleteIndirectBuffer(int buffer) {
+        if (lastDrawIndirectBuffer == buffer) {
+            bindIndirectBuffer(0);
+            lastDrawIndirectBuffer = -1;
+        }
+
+        GL15.glDeleteBuffers(buffer);
     }
 
     public static void bindElementArrayBuffer(int buffer) {
@@ -146,6 +201,14 @@ public class GLStateCache {
         }
     }
 
+    public static void deleteElementArrayBuffer(int buffer) {
+        if (lastElementArrayBuffer == buffer) {
+            bindElementArrayBuffer(0);
+            lastElementArrayBuffer = -1;
+        }
+        GL15.glDeleteBuffers(buffer);
+    }
+
     public static void bindArrayBuffer(int buffer) {
         if (lastArrayBuffer != buffer) {
             GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, buffer);
@@ -153,11 +216,27 @@ public class GLStateCache {
         }
     }
 
+    public static void deleteArrayBuffer(int buffer) {
+        if (lastArrayBuffer == buffer) {
+            bindArrayBuffer(0);
+            lastArrayBuffer = -1;
+        }
+        GL15.glDeleteBuffers(buffer);
+    }
+
     public static void bindUniformBuffer(int buffer) {
         if (lastUniformBuffer != buffer) {
             GL15.glBindBuffer(GL31.GL_UNIFORM_BUFFER, buffer);
             lastUniformBuffer = buffer;
         }
+    }
+
+    public static void deleteUniformBuffer(int buffer) {
+        if (lastUniformBuffer == buffer) {
+            bindUniformBuffer(0);
+            lastUniformBuffer = -1;
+        }
+        GL15.glDeleteBuffers(buffer);
     }
 
     public static void clearColor(float red, float green, float blue, float alpha) {

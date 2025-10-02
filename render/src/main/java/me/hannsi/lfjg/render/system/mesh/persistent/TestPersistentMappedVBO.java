@@ -21,9 +21,9 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
     private boolean dirty = false;
     private boolean fullUpdate = false;
 
-    public TestPersistentMappedVBO(int flags, int initialCapacity) {
+    public TestPersistentMappedVBO(int flags, int initialVerticesCapacity) {
         this.flags = flags;
-        updateBufferStorage(initialCapacity);
+        updateBufferStorage(initialVerticesCapacity);
     }
 
     private void updateBufferStorage(int maxVertices) {
@@ -31,7 +31,7 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
 
         int sizeInBytes = maxVertices * MeshConstants.FLOATS_PER_VERTEX * Float.BYTES;
         if (bufferId != 0) {
-            GL15.glDeleteBuffers(bufferId);
+            GLStateCache.deleteArrayBuffer(bufferId);
         }
 
         bufferId = GL15.glGenBuffers();
@@ -236,7 +236,7 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
     @Override
     public void cleanup() {
         if (bufferId != 0) {
-            GL15.glDeleteBuffers(bufferId);
+            GLStateCache.deleteArrayBuffer(bufferId);
             bufferId = 0;
         }
         mappedBuffer = null;

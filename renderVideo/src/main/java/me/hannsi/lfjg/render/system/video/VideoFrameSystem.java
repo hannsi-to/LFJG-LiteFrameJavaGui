@@ -56,7 +56,7 @@ public class VideoFrameSystem {
         }
 
         if (textureId != -1) {
-            GL11.glDeleteTextures(textureId);
+            GLStateCache.deleteTexture(GL11.GL_TEXTURE_2D, textureId);
             textureId = -1;
         }
 

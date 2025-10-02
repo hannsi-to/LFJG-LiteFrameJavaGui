@@ -94,7 +94,7 @@ public class Mesh {
             ids.append("IndirectBufferObject: ").append(id).append(" | ");
         }
 
-        GL30.glDeleteVertexArrays(vaoId);
+        GLStateCache.deleteVertexArray(vaoId);
         ids.append("VertexArrayObject: ").append(vaoId);
 
         new LogGenerator(
@@ -280,9 +280,9 @@ public class Mesh {
             return;
         }
 
-        if (bufferObjectType == BufferObjectType.POSITION_BUFFER || bufferObjectType == BufferObjectType.POSITION_BUFFER) {
+        if (bufferObjectType == BufferObjectType.POSITION_BUFFER) {
             if (useElementBufferObject) {
-                ElementPair elementPair = getElementPositions(values, drawType, bufferObjectType == BufferObjectType.POSITION_BUFFER ? ProjectionType.ORTHOGRAPHIC_PROJECTION : ProjectionType.PERSPECTIVE_PROJECTION);
+                ElementPair elementPair = getElementPositions(values, drawType, ProjectionType.ORTHOGRAPHIC_PROJECTION);
                 numVertices = elementPair.indices.length;
                 eboId.update(elementPair.indices);
                 count = elementPair.positions.length / projectionType.getStride();

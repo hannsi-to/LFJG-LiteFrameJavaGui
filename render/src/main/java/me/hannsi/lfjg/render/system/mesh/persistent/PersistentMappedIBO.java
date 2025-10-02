@@ -59,7 +59,7 @@ public class PersistentMappedIBO implements PersistentMappedBuffer {
 
     @Override
     public void cleanup() {
-        GL15.glDeleteBuffers(bufferId);
+        GLStateCache.deleteIndirectBuffer(bufferId);
     }
 
     public int getFlags() {
