@@ -53,26 +53,27 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
         dirty = true;
     }
 
-    public TestPersistentMappedVBO createVertexAttribute(int[] vaoIds, BufferObjectType... bufferObjectType) {
-        for (int vaoId : vaoIds) {
-            GLStateCache.bindVertexArray(vaoId);
-            GLStateCache.bindArrayBuffer(bufferId);
+    public TestPersistentMappedVBO createVertexAttribute(int vaoId, BufferObjectType... bufferObjectType) {
+        GLStateCache.bindVertexArray(vaoId);
 
-            int stride = MeshConstants.FLOATS_PER_VERTEX * Float.BYTES;
-            int pointer = 0;
-            for (BufferObjectType objectType : bufferObjectType) {
-                GL20.glEnableVertexAttribArray(objectType.getAttributeIndex());
-                GL20.glVertexAttribPointer(
-                        objectType.getAttributeIndex(),
-                        objectType.getAttributeSize(),
-                        GL11.GL_FLOAT,
-                        false,
-                        stride,
-                        (long) pointer * Float.BYTES
-                );
-                pointer += objectType.getAttributeSize();
-            }
+        GLStateCache.bindArrayBuffer(bufferId);
+
+        int stride = MeshConstants.FLOATS_PER_VERTEX * Float.BYTES;
+        int pointer = 0;
+        for (BufferObjectType objectType : bufferObjectType) {
+            GL20.glEnableVertexAttribArray(objectType.getAttributeIndex());
+            GL20.glVertexAttribPointer(
+                    objectType.getAttributeIndex(),
+                    objectType.getAttributeSize(),
+                    GL11.GL_FLOAT,
+                    false,
+                    stride,
+                    (long) pointer * Float.BYTES
+            );
+            pointer += objectType.getAttributeSize();
         }
+
+        GL30.glBindVertexArray(0);
 
         return this;
     }

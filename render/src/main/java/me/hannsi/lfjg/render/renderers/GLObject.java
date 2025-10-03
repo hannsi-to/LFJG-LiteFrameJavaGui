@@ -28,6 +28,7 @@ public class GLObject implements Cloneable {
     private Mesh mesh;
     private FrameBuffer frameBuffer;
 
+    private Transform transform;
     private Matrix4f viewMatrix;
 
     private EffectCache effectCache;
@@ -37,7 +38,6 @@ public class GLObject implements Cloneable {
     private float lineWidth;
     private float pointSize;
 
-    private Transform transform;
 
     public GLObject(String name) {
         this.name = name;

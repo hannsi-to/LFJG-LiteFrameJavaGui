@@ -2,45 +2,47 @@ package me.hannsi.lfjg.render.system.mesh;
 
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedEBO;
+import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedIBO;
 import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedVBO;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
+import me.hannsi.lfjg.render.system.rendering.GLStateCache;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.lwjgl.opengl.GL43;
 
 public class TestMesh {
     private final TestPersistentMappedVBO persistentMappedVBO;
     private final TestPersistentMappedEBO persistentMappedEBO;
-    private final List<Integer> counts;
-    private final List<Integer> offsets;
-    private final int[] vaoIds;
-    private DrawCommand drawCommand;
+    private final TestPersistentMappedIBO persistentMappedIBO;
+
+    private final int vaoId;
     private int currentIndex;
     private int vertexCount;
 
-    TestMesh() {
-        this.persistentMappedVBO = new TestPersistentMappedVBO(MeshConstants.DEFAULT_FLAGS_HINT, 64);
-        this.persistentMappedEBO = new TestPersistentMappedEBO(MeshConstants.DEFAULT_FLAGS_HINT, 64);
-        this.counts = new ArrayList<>();
-        this.offsets = new ArrayList<>();
-        this.vaoIds = new int[MeshConstants.DEFAULT_BUFFER_COUNT];
+    TestMesh(int initialVBOCapacity, int initialEBOCapacity, int initialIBOCapacity) {
+        this.persistentMappedVBO = new TestPersistentMappedVBO(MeshConstants.DEFAULT_FLAGS_HINT, initialVBOCapacity);
+        this.persistentMappedEBO = new TestPersistentMappedEBO(MeshConstants.DEFAULT_FLAGS_HINT, initialEBOCapacity);
+        this.persistentMappedIBO = new TestPersistentMappedIBO(MeshConstants.DEFAULT_FLAGS_HINT, initialIBOCapacity);
 
+        this.vaoId = GL30.glGenVertexArrays();
         this.currentIndex = 0;
         this.vertexCount = 0;
+    }
 
-        for (int i = 0; i < MeshConstants.DEFAULT_BUFFER_COUNT; i++) {
-            this.vaoIds[i] = GL30.glGenVertexArrays();
-        }
+    public static TestMesh createMesh(int initialVBOCapacity, int initialEBOCapacity, int initialIBOCapacity) {
+        return new TestMesh(initialVBOCapacity, initialEBOCapacity, initialIBOCapacity);
     }
 
     public TestMesh initBufferObject() {
-        persistentMappedVBO.createVertexAttribute(vaoIds, BufferObjectType.POSITION_BUFFER, BufferObjectType.COLOR_BUFFER, BufferObjectType.TEXTURE_BUFFER, BufferObjectType.NORMAL_BUFFER)
+        persistentMappedVBO.createVertexAttribute(vaoId, BufferObjectType.POSITION_BUFFER, BufferObjectType.COLOR_BUFFER, BufferObjectType.TEXTURE_BUFFER, BufferObjectType.NORMAL_BUFFER)
                 .syncToGPU();
 
-        persistentMappedEBO.linkVertexArrayObject(vaoIds)
-                .syncToGPU();
+        persistentMappedEBO.linkVertexArrayObject(vaoId).
+                syncToGPU();
 
+        persistentMappedIBO.syncToGPU();
+
+        GLStateCache.bindVertexArray(0);
         return this;
     }
 
@@ -59,11 +61,18 @@ public class TestMesh {
         ElementPair elementPair = setupElementBufferObject(projectionType, drawType, positions);
         int startOffset = persistentMappedEBO.getIndexCount();
         for (int index : elementPair.indices) {
-            persistentMappedEBO.add(index + vertexCount);
+            persistentMappedEBO.add(index);
         }
 
-        counts.add(elementPair.indices.length);
-        offsets.add(startOffset * Integer.BYTES);
+        persistentMappedIBO.addCommand(
+                new DrawElementsIndirectCommand(
+                        elementPair.indices.length,
+                        1,
+                        startOffset,
+                        vertexCount,
+                        0
+                )
+        );
 
         vertexCount += vertices.length;
 
@@ -77,6 +86,40 @@ public class TestMesh {
                 .positions(positions)
                 .process()
                 .getResult();
+    }
+
+    public void debugDraw(int mode) {
+        persistentMappedVBO.syncToGPU();
+        persistentMappedEBO.syncToGPU();
+        persistentMappedIBO.syncToGPU();
+
+        GLStateCache.bindVertexArrayForce(vaoId);
+        GLStateCache.bindElementArrayBufferForce(persistentMappedEBO.getBufferId());
+        GLStateCache.bindIndirectBufferForce(persistentMappedIBO.getBufferId());
+
+        GL43.glMultiDrawElementsIndirect(
+                mode,
+                GL11.GL_UNSIGNED_INT,
+                0,
+                persistentMappedIBO.getCommandCount(),
+                0
+        );
+    }
+
+    public int getVaoId() {
+        return vaoId;
+    }
+
+    public int getCurrentIndex() {
+        return currentIndex;
+    }
+
+    public int getVertexCount() {
+        return vertexCount;
+    }
+
+    public TestPersistentMappedVBO getPersistentMappedVBO() {
+        return persistentMappedVBO;
     }
 
     public TestMesh rotate() {
