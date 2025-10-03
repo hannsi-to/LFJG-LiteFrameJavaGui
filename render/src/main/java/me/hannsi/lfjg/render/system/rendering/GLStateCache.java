@@ -169,6 +169,11 @@ public class GLStateCache {
         }
     }
 
+    public static void bindVertexArrayForce(int array) {
+        GL30.glBindVertexArray(array);
+        lastVertexArray = array;
+    }
+
     public static void deleteVertexArray(int array) {
         if (lastVertexArray == array) {
             bindVertexArray(0);
@@ -185,6 +190,11 @@ public class GLStateCache {
         }
     }
 
+    public static void bindIndirectBufferForce(int buffer) {
+        GL15.glBindBuffer(GL40.GL_DRAW_INDIRECT_BUFFER, buffer);
+        lastDrawIndirectBuffer = buffer;
+    }
+
     public static void deleteIndirectBuffer(int buffer) {
         if (lastDrawIndirectBuffer == buffer) {
             bindIndirectBuffer(0);
@@ -199,6 +209,11 @@ public class GLStateCache {
             GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer);
             lastElementArrayBuffer = buffer;
         }
+    }
+
+    public static void bindElementArrayBufferForce(int buffer) {
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer);
+        lastElementArrayBuffer = buffer;
     }
 
     public static void deleteElementArrayBuffer(int buffer) {
