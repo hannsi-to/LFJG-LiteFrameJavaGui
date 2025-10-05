@@ -47,18 +47,22 @@ public class TestMesh {
     }
 
     public TestMesh addObject(ProjectionType projectionType, DrawType drawType, Vertex... vertices) {
-        float[] positions = new float[vertices.length * 3];
-        for (int i = 0, index = 0; i < vertices.length; i++, index += 3) {
-            Vertex vertex = vertices[i];
-            float[] pos = vertex.getPositions();
-            positions[index] = pos[0];
-            positions[index + 1] = pos[1];
-            positions[index + 2] = pos[2];
+//        float[] positions = new float[vertices.length * 3];
+//        for (int i = 0, index = 0; i < vertices.length; i++, index += 3) {
+//            Vertex vertex = vertices[i];
+//            float[] pos = vertex.getPositions();
+//            positions[index] = pos[0];
+//            positions[index + 1] = pos[1];
+//            positions[index + 2] = pos[2];
+//
+//
+//        }
 
+        TestElementPair elementPair = setupElementBufferObject(projectionType, drawType, vertices);
+        for (Vertex vertex : elementPair.vertices) {
             persistentMappedVBO.add(vertex);
         }
 
-        ElementPair elementPair = setupElementBufferObject(projectionType, drawType, positions);
         int startOffset = persistentMappedEBO.getIndexCount();
         for (int index : elementPair.indices) {
             persistentMappedEBO.add(index);
@@ -79,11 +83,11 @@ public class TestMesh {
         return this;
     }
 
-    private ElementPair setupElementBufferObject(ProjectionType projectionType, DrawType drawType, float[] positions) {
-        return PolygonTriangulator.createPolygonTriangulator()
+    private TestElementPair setupElementBufferObject(ProjectionType projectionType, DrawType drawType, Vertex[] vertices) {
+        return TestPolygonTriangulator.createPolygonTriangulator()
                 .drawType(drawType)
                 .projectionType(projectionType)
-                .positions(positions)
+                .vertices(vertices)
                 .process()
                 .getResult();
     }

@@ -1,7 +1,6 @@
 package me.hannsi.lfjg.render.system.mesh;
 
 import me.hannsi.lfjg.core.debug.DebugLog;
-import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.debug.exceptions.render.mesh.PolygonTriangulatorException;
 import me.hannsi.lfjg.render.renderers.JointType;
@@ -9,7 +8,7 @@ import me.hannsi.lfjg.render.system.rendering.DrawType;
 
 import java.util.*;
 
-public class PolygonTriangulator {
+public class TestPolygonTriangulator {
     public static final boolean DEBUG = false;
 
     private ProjectionType projectionType;
@@ -17,65 +16,73 @@ public class PolygonTriangulator {
     private float lineWidth;
     private JointType lineJointType;
     private float pointSize;
-    private float[] positions;
-    private ElementPair result;
+    private Vertex[] vertices;
+    private float[] outPositions;
+    private TestElementPair result;
 
-    public static PolygonTriangulator createPolygonTriangulator() {
-        return new PolygonTriangulator();
+    public static TestPolygonTriangulator createPolygonTriangulator() {
+        return new TestPolygonTriangulator();
     }
 
-    public PolygonTriangulator projectionType(ProjectionType projectionType) {
+    public TestPolygonTriangulator projectionType(ProjectionType projectionType) {
         this.projectionType = projectionType;
         return this;
     }
 
-    public PolygonTriangulator drawType(DrawType drawType) {
+    public TestPolygonTriangulator drawType(DrawType drawType) {
         this.drawType = drawType;
         return this;
     }
 
-    public PolygonTriangulator lineWidth(float lineWidth) {
+    public TestPolygonTriangulator lineWidth(float lineWidth) {
         this.lineWidth = lineWidth;
         return this;
     }
 
-    public PolygonTriangulator lineJointType(JointType lineJointType) {
+    public TestPolygonTriangulator lineJointType(JointType lineJointType) {
         this.lineJointType = lineJointType;
         return this;
     }
 
-    public PolygonTriangulator positions(float[] positions) {
-        this.positions = positions;
+    public TestPolygonTriangulator vertices(Vertex... vertices) {
+        this.vertices = vertices;
         return this;
     }
 
-    public PolygonTriangulator process() {
+    public TestPolygonTriangulator process() {
         try {
             result = processTriangulator();
         } catch (Exception e) {
             DebugLog.error(getClass(), e);
             DebugLog.error(getClass(), new PolygonTriangulatorException("Triangulation failed"));
-            result = new ElementPair(new float[0], new int[0]);
+            result = new TestElementPair(new Vertex[0], new int[0]);
         }
 
         return this;
     }
 
-    private ElementPair processTriangulator() {
-        if (positions == null || positions.length < projectionType.getStride()) {
+    private TestElementPair processTriangulator() {
+        if (vertices == null || vertices.length < projectionType.getStride()) {
             DebugLog.warning(getClass(), "Positions are null or too short");
-            return new ElementPair(new float[0], new int[0]);
+            return new TestElementPair(new Vertex[0], new int[0]);
+        }
+
+        outPositions = new float[vertices.length * 3];
+        for (int i = 0, index = 0; i < vertices.length; i++, index += 3) {
+            Vertex vertex = vertices[i];
+            float[] pos = vertex.getPositions();
+            outPositions[index] = pos[0];
+            outPositions[index + 1] = pos[1];
+            outPositions[index + 2] = pos[2];
         }
 
         int stride = projectionType.getStride();
-        float[] outPositions = positions.clone();
-
         try {
             switch (drawType) {
                 case POINTS:
                 case LINES:
                     checkLineParameter();
-                    int lineCount = (int) (positions.length / 2f);
+                    int lineCount = (int) (outPositions.length / 2f);
 
                     float x1;
                     float y1;
@@ -86,21 +93,21 @@ public class PolygonTriangulator {
                     float nx;
                     float ny;
                     for (int i = 0; i < lineCount * 4; i += 4) {
-                        x1 = positions[i];
-                        y1 = positions[i + 1];
-                        x2 = positions[i + 2];
-                        y2 = positions[i + 3];
-
-                        dx = x2 - x1;
-                        dy = y2 - y1;
-                        nx = -dy;
-                        ny = dx;
-
-                        float length = MathHelper.sqrt(nx * nx + ny * ny);
-                        nx = nx / length * (lineWidth / 2);
-                        ny = ny / length * (lineWidth / 2);
-
-                        List<Integer> idxListQ = new ArrayList<>();
+//                        x1 = vertices[i];
+//                        y1 = vertices[i + 1];
+//                        x2 = vertices[i + 2];
+//                        y2 = vertices[i + 3];
+//
+//                        dx = x2 - x1;
+//                        dy = y2 - y1;
+//                        nx = -dy;
+//                        ny = dx;
+//
+//                        float length = MathHelper.sqrt(nx * nx + ny * ny);
+//                        nx = nx / length * (lineWidth / 2);
+//                        ny = ny / length * (lineWidth / 2);
+//
+//                        List<Integer> idxListQ = new ArrayList<>();
 
                     }
 
@@ -110,16 +117,16 @@ public class PolygonTriangulator {
                     checkLineParameter();
                 case TRIANGLES:
                 case TRIANGLE_FAN:
-                    int triCount = positions.length / stride;
+                    int triCount = outPositions.length / stride;
                     int[] triIndices = new int[triCount];
                     for (int i = 0; i < triCount; i++) {
                         triIndices[i] = i;
                     }
 
-                    return new ElementPair(outPositions, triIndices);
+                    return new TestElementPair(vertices, triIndices);
                 case QUADS:
                     List<Integer> idxListQ = new ArrayList<>();
-                    int quadVertices = positions.length / stride;
+                    int quadVertices = outPositions.length / stride;
                     for (int q = 0; q + 3 < quadVertices; q += 4) {
                         idxListQ.add(q);
                         idxListQ.add(q + 1);
@@ -130,15 +137,15 @@ public class PolygonTriangulator {
                         idxListQ.add(q + 3);
                     }
 
-                    return new ElementPair(outPositions, idxListQ.stream().mapToInt(i -> i).toArray());
+                    return new TestElementPair(vertices, idxListQ.stream().mapToInt(i -> i).toArray());
 
                 case POLYGON:
                     try {
-                        return handlePolygon(outPositions, stride);
+                        return handlePolygon(vertices, stride);
                     } catch (Exception e) {
                         DebugLog.error(getClass(), e);
                         DebugLog.error(getClass(), new PolygonTriangulatorException("Polygon triangulation failed"));
-                        return new ElementPair(new float[0], new int[0]);
+                        return new TestElementPair(vertices, new int[0]);
                     }
 
                 default:
@@ -147,7 +154,7 @@ public class PolygonTriangulator {
         } catch (Exception e) {
             DebugLog.error(getClass(), e);
             DebugLog.error(getClass(), new PolygonTriangulatorException("Triangulation process failed"));
-            return new ElementPair(new float[0], new int[0]);
+            return new TestElementPair(vertices, new int[0]);
         }
     }
 
@@ -160,11 +167,11 @@ public class PolygonTriangulator {
         }
     }
 
-    private ElementPair handlePolygon(float[] outPositions, int stride) {
+    private TestElementPair handlePolygon(Vertex[] outVertices, int stride) {
         List<float[]> vertices = new ArrayList<>();
-        for (int i = 0; i < positions.length; i += stride) {
+        for (int i = 0; i < this.outPositions.length; i += stride) {
             float[] v = new float[stride];
-            System.arraycopy(positions, i, v, 0, stride);
+            System.arraycopy(this.outPositions, i, v, 0, stride);
             vertices.add(v);
         }
 
@@ -188,7 +195,7 @@ public class PolygonTriangulator {
             info(getClass(), "Generated triangles: " + Arrays.deepToString(t.toArray()));
         }
 
-        return new ElementPair(outPositions, triangles.stream().flatMapToInt(Arrays::stream).toArray());
+        return new TestElementPair(outVertices, triangles.stream().flatMapToInt(Arrays::stream).toArray());
     }
 
     private void ensureCCW(List<float[]> vertices) {
@@ -226,7 +233,7 @@ public class PolygonTriangulator {
             return Float.compare(vertices.get(i1)[0], vertices.get(i2)[0]);
         });
 
-        VertexType[] types = new VertexType[n];
+        TestPolygonTriangulator.VertexType[] types = new TestPolygonTriangulator.VertexType[n];
         for (int i = 0; i < n; i++) {
             types[i] = classifyVertex(vertices, i);
             info(getClass(), "Vertex " + i + " type: " + types[i]);
@@ -339,18 +346,18 @@ public class PolygonTriangulator {
         return polygons;
     }
 
-    private VertexType classifyVertex(List<float[]> v, int i) {
+    private TestPolygonTriangulator.VertexType classifyVertex(List<float[]> v, int i) {
         int n = v.size();
         float[] prev = v.get((i + n - 1) % n);
         float[] curr = v.get(i);
         float[] next = v.get((i + 1) % n);
         if (curr[1] > prev[1] && curr[1] > next[1]) {
-            return isLeft(prev, curr, next) ? VertexType.START : VertexType.SPLIT;
+            return isLeft(prev, curr, next) ? TestPolygonTriangulator.VertexType.START : TestPolygonTriangulator.VertexType.SPLIT;
         } else if (curr[1] < prev[1] && curr[1] < next[1]) {
-            return isLeft(prev, curr, next) ? VertexType.END : VertexType.MERGE;
+            return isLeft(prev, curr, next) ? TestPolygonTriangulator.VertexType.END : TestPolygonTriangulator.VertexType.MERGE;
         }
 
-        return VertexType.REGULAR;
+        return TestPolygonTriangulator.VertexType.REGULAR;
     }
 
     private boolean isLeft(float[] a, float[] b, float[] c) {
@@ -401,7 +408,7 @@ public class PolygonTriangulator {
         return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]) > 0;
     }
 
-    public ElementPair getResult() {
+    public TestElementPair getResult() {
         return result;
     }
 
