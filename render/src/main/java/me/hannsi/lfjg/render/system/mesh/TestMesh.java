@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.render.system.mesh;
 
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
+import me.hannsi.lfjg.render.renderers.JointType;
 import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedEBO;
 import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedIBO;
 import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedVBO;
@@ -46,7 +47,7 @@ public class TestMesh {
         return this;
     }
 
-    public TestMesh addObject(ProjectionType projectionType, DrawType drawType, Vertex... vertices) {
+    public TestMesh addObject(ProjectionType projectionType, DrawType drawType, float lineWidth, JointType jointType, Vertex... vertices) {
 //        float[] positions = new float[vertices.length * 3];
 //        for (int i = 0, index = 0; i < vertices.length; i++, index += 3) {
 //            Vertex vertex = vertices[i];
@@ -58,7 +59,7 @@ public class TestMesh {
 //
 //        }
 
-        TestElementPair elementPair = setupElementBufferObject(projectionType, drawType, vertices);
+        TestElementPair elementPair = setupElementBufferObject(projectionType, drawType, lineWidth, jointType, vertices);
         for (Vertex vertex : elementPair.vertices) {
             persistentMappedVBO.add(vertex);
         }
@@ -83,9 +84,11 @@ public class TestMesh {
         return this;
     }
 
-    private TestElementPair setupElementBufferObject(ProjectionType projectionType, DrawType drawType, Vertex[] vertices) {
+    private TestElementPair setupElementBufferObject(ProjectionType projectionType, DrawType drawType, float lineWidth, JointType jointType, Vertex[] vertices) {
         return TestPolygonTriangulator.createPolygonTriangulator()
                 .drawType(drawType)
+                .lineWidth(lineWidth)
+                .lineJointType(jointType)
                 .projectionType(projectionType)
                 .vertices(vertices)
                 .process()

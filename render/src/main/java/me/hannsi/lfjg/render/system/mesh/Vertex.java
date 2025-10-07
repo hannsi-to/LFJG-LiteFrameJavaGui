@@ -14,7 +14,7 @@ public class Vertex {
     public float normalsY;
     public float normalsZ;
 
-    public Vertex(float x, float y, float z, float red, float green, float blue, float alpha, float u, float uvY, float normalsX, float normalsY, float normalsZ) {
+    public Vertex(float x, float y, float z, float red, float green, float blue, float alpha, float u, float v, float normalsX, float normalsY, float normalsZ) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -23,7 +23,7 @@ public class Vertex {
         this.blue = blue;
         this.alpha = alpha;
         this.u = u;
-        this.v = uvY;
+        this.v = v;
         this.normalsX = normalsX;
         this.normalsY = normalsY;
         this.normalsZ = normalsZ;

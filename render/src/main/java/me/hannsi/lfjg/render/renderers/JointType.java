@@ -3,9 +3,10 @@ package me.hannsi.lfjg.render.renderers;
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 
 public enum JointType implements IEnumTypeBase {
-    MITER(0, "Miter"),
-    BEVEL(1, "Bevel"),
-    ROUND(2, "Round");
+    NONE(0, "None"),
+    MITER(1, "Miter"),
+    BEVEL(2, "Bevel"),
+    ROUND(3, "Round");
 
     final int id;
     final String name;

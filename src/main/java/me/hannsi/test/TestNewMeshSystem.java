@@ -8,6 +8,7 @@ import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.renderers.BlendType;
+import me.hannsi.lfjg.render.renderers.JointType;
 import me.hannsi.lfjg.render.system.mesh.TestMesh;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
@@ -33,53 +34,121 @@ public class TestNewMeshSystem implements LFJGFrame {
     public void init() {
         LFJGContext.frame.updateLFJGLContext();
 
-        int numObjects = 1000000;
+        int numObjects = 1;
+        int numVerticesPerStrip = 10;
         float minX = 0;
         float maxX = 1920;
         float minY = 0;
         float maxY = 1080;
-        float minSize = 10.0f;
-        float maxSize = 20.0f;
+        float minSize = 100.0f;
+        float maxSize = 500.0f;
 
         Random random = new Random();
 
         testMesh = TestMesh.createMesh(
-                (numObjects * 3 * 12),
-                (numObjects * 3),
+                (numObjects * numVerticesPerStrip * 5 * 12),
+                (numObjects * numVerticesPerStrip * 100),
                 numObjects
         );
 
+//        for (int i = 0; i < numObjects; i++) {
+//            float x = minX + random.nextFloat() * (maxX - minX);
+//            float y = minY + random.nextFloat() * (maxY - minY);
+//
+//            List<Vertex> vertices = new ArrayList<>();
+//
+//            for (int j = 0; j < numVerticesPerStrip; j++) {
+//                float r = random.nextFloat();
+//                float g = random.nextFloat();
+//                float b = random.nextFloat();
+//
+//                Vertex v = new Vertex(x, y, 0, r, g, b, 0.5f, 0, 0, 0, 0, 1);
+//                vertices.add(v);
+//
+//                float angle = (float) (random.nextFloat() * Math.PI * 2.0);
+//                float step = minSize + random.nextFloat() * (maxSize - minSize);
+//                x += (float) (Math.cos(angle) * step);
+//                y += (float) (Math.sin(angle) * step);
+//            }
+//
+//            testMesh.addObject(
+//                    ProjectionType.ORTHOGRAPHIC_PROJECTION,
+//                    DrawType.LINE_STRIP,
+//                    10f,
+//                    JointType.BEVEL,
+//                    vertices.toArray(new Vertex[0])
+//            );
+//        }
 
-        for (int i = 0; i < numObjects; i++) {
-            float centerX = minX + random.nextFloat() * (maxX - minX);
-            float centerY = minY + random.nextFloat() * (maxY - minY);
-            float size = minSize + random.nextFloat() * (maxSize - minSize);
+        Vertex vertex1 = new Vertex(100, 100, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
+        Vertex vertex2 = new Vertex(200, 500, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
+        Vertex vertex3 = new Vertex(300, 100, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
+        Vertex vertex4 = new Vertex(1500, 500, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
 
-            float r = random.nextFloat();
-            float g = random.nextFloat();
-            float b = random.nextFloat();
+        testMesh.addObject(
+                ProjectionType.ORTHOGRAPHIC_PROJECTION,
+                DrawType.LINE_STRIP,
+                10f,
+                JointType.MITER,
+                vertex1, vertex2, vertex3, vertex4
+        );
 
-            Vertex v1 = new Vertex(
-                    centerX - size / 2, centerY - size / 2, 0f,
-                    r, g, b, 1f,
-                    0f, 0f,
-                    0f, 0f, 1f
-            );
-            Vertex v2 = new Vertex(
-                    centerX + size / 2, centerY - size / 2, 0f,
-                    r, g, b, 1f,
-                    1f, 0f,
-                    0f, 0f, 1f
-            );
-            Vertex v3 = new Vertex(
-                    centerX, centerY + size / 2, 0f,
-                    r, g, b, 1f,
-                    0.5f, 1f,
-                    0f, 0f, 1f
-            );
+//        for (int i = 0; i < numObjects; i++) {
+//            float x1 = minX + random.nextFloat() * (maxX - minX);
+//            float y1 = minY + random.nextFloat() * (maxY - minY);
+//
+//            float angle = (float) (random.nextFloat() * Math.PI * 2.0);
+//            float length = minSize + random.nextFloat() * (maxSize - minSize);
+//
+//            float x2 = x1 + (float) Math.cos(angle) * length;
+//            float y2 = y1 + (float) Math.sin(angle) * length;
+//
+//            float r = random.nextFloat();
+//            float g = random.nextFloat();
+//            float b = random.nextFloat();
+//
+//            Vertex v1 = new Vertex(x1, y1, 0, r, g, b, 1, 0, 0, 0, 0, 1);
+//            Vertex v2 = new Vertex(x2, y2, 0, r, g, b, 1, 0, 0, 0, 0, 1);
+//
+//            testMesh.addObject(
+//                    ProjectionType.ORTHOGRAPHIC_PROJECTION,
+//                    DrawType.LINES,
+//                    1f,
+//                    JointType.MITER,
+//                    v1, v2
+//            );
+//        }
 
-            testMesh.addObject(ProjectionType.PERSPECTIVE_PROJECTION, DrawType.TRIANGLES, v1, v2, v3);
-        }
+//        for (int i = 0; i < numObjects; i++) {
+//            float centerX = minX + random.nextFloat() * (maxX - minX);
+//            float centerY = minY + random.nextFloat() * (maxY - minY);
+//            float size = minSize + random.nextFloat() * (maxSize - minSize);
+//
+//            float r = random.nextFloat();
+//            float g = random.nextFloat();
+//            float b = random.nextFloat();
+//
+//            Vertex v1 = new Vertex(
+//                    centerX - size / 2, centerY - size / 2, 0f,
+//                    r, g, b, 1f,
+//                    0f, 0f,
+//                    0f, 0f, 1f
+//            );
+//            Vertex v2 = new Vertex(
+//                    centerX + size / 2, centerY - size / 2, 0f,
+//                    r, g, b, 1f,
+//                    1f, 0f,
+//                    0f, 0f, 1f
+//            );
+//            Vertex v3 = new Vertex(
+//                    centerX, centerY + size / 2, 0f,
+//                    r, g, b, 1f,
+//                    0.5f, 1f,
+//                    0f, 0f, 1f
+//            );
+//
+//            testMesh.addObject(ProjectionType.ORTHOGRAPHIC_PROJECTION, DrawType.TRIANGLES, v1, v2, v3);
+//        }
 
         testMesh.initBufferObject();
 
