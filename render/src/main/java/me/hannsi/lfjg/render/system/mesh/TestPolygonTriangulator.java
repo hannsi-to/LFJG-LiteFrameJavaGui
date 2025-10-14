@@ -107,7 +107,6 @@ public class TestPolygonTriangulator {
         int lineCount = vertices.length / 2;
         List<Vertex> newVertices = new ArrayList<>();
         List<Integer> indices = new ArrayList<>();
-        int prevBase = -1;
         try {
             switch (drawType) {
                 case POINTS:
