@@ -44,4 +44,8 @@ public class Vertex {
     public float[] getNormals() {
         return new float[]{normalsX, normalsY, normalsZ};
     }
+
+    public Vertex copy() {
+        return new Vertex(x, y, z, red, green, blue, alpha, u, v, normalsX, normalsY, normalsZ);
+    }
 }

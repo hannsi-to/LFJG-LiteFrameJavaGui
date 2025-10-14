@@ -1,7 +1,6 @@
 package me.hannsi.lfjg.render.system.mesh;
 
 import me.hannsi.lfjg.core.debug.DebugLog;
-import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.debug.exceptions.render.mesh.PolygonTriangulatorException;
 import me.hannsi.lfjg.render.renderers.JointType;
@@ -9,6 +8,8 @@ import me.hannsi.lfjg.render.system.rendering.DrawType;
 import org.joml.Vector2f;
 
 import java.util.*;
+
+import static me.hannsi.lfjg.core.utils.math.MathHelper.*;
 
 public class TestPolygonTriangulator {
     public static final boolean DEBUG = false;
@@ -28,11 +29,14 @@ public class TestPolygonTriangulator {
     }
 
     public static Vector2f computeLineIntersection(Vector2f p1, Vector2f p2, Vector2f p3, Vector2f p4) {
-
-        float x1 = p1.x, y1 = p1.y;
-        float x2 = p2.x, y2 = p2.y;
-        float x3 = p3.x, y3 = p3.y;
-        float x4 = p4.x, y4 = p4.y;
+        float x1 = p1.x;
+        float y1 = p1.y;
+        float x2 = p2.x;
+        float y2 = p2.y;
+        float x3 = p3.x;
+        float y3 = p3.y;
+        float x4 = p4.x;
+        float y4 = p4.y;
 
         float denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
         if (denom == 0) {
@@ -114,7 +118,7 @@ public class TestPolygonTriangulator {
                     }
 
                     for (int i = 0; i < vertices.length - 1; i += 2) {
-                        makeLineQuad(vertices[i], vertices[i + 1], lineWidth, newVertices, indices);
+                        makeLines(vertices[i], vertices[i + 1], lineWidth, newVertices, indices);
                     }
 
                     return new TestElementPair(newVertices.toArray(new Vertex[0]), indices.stream().mapToInt(Integer::intValue).toArray());
@@ -122,22 +126,22 @@ public class TestPolygonTriangulator {
                 case LINE_STRIP:
                     checkLineParameter();
                     if (lineCount < 1) {
-                        throw new PolygonTriangulatorException("When DrawType.LINES is specified, vertex information must be two or more.");
+                        throw new PolygonTriangulatorException("When DrawType.LINE_STRIP is specified, vertex information must be two or more.");
                     }
 
-                    for (int i = 0; i < vertices.length - 1; i++) {
-                        makeLineQuadStrip(i, newVertices, indices);
-                    }
+                    lineCount = vertices.length - 1;
+                    makeLineStrip(lineCount, newVertices, indices);
                     return new TestElementPair(newVertices.toArray(new Vertex[0]), indices.stream().mapToInt(Integer::intValue).toArray());
 
                 case LINE_LOOP:
                     checkLineParameter();
                     if (lineCount < 1) {
-                        throw new PolygonTriangulatorException("When DrawType.LINES is specified, vertex information must be two or more.");
+                        throw new PolygonTriangulatorException("When DrawType.LINE_LOOP is specified, vertex information must be two or more.");
                     }
 
-                    for (int i = 0; i < vertices.length; i++) {
-                        makeLineQuad(vertices[i], vertices[(i + 1) % vertices.length], lineWidth, newVertices, indices);
+                    lineCount = vertices.length == 2 ? 1 : vertices.length;
+                    for (int i = 0; i < lineCount; i++) {
+                        makeLines(vertices[i], vertices[(i + 1) % vertices.length], lineWidth, newVertices, indices);
                     }
                     return new TestElementPair(newVertices.toArray(new Vertex[0]), indices.stream().mapToInt(Integer::intValue).toArray());
 
@@ -184,154 +188,181 @@ public class TestPolygonTriangulator {
         }
     }
 
-    private void makeLineQuad(Vertex v1, Vertex v2, float lineWidth, List<Vertex> newVertices, List<Integer> indices) {
+    private void makeLines(Vertex v1, Vertex v2, float lineWidth, List<Vertex> newVertices, List<Integer> indices) {
         float dx = v2.x - v1.x;
         float dy = v2.y - v1.y;
         float nx = -dy;
         float ny = dx;
-        float length = MathHelper.sqrt(MathHelper.pow(nx, 2) + MathHelper.pow(ny, 2));
+        float length = sqrt(pow(nx, 2) + pow(ny, 2));
         nx = nx / length * (lineWidth / 2f);
         ny = ny / length * (lineWidth / 2f);
 
-        int base = newVertices.size();
-        indices.add(base);
-        indices.add(base + 1);
-        indices.add(base + 2);
-        indices.add(base + 2);
-        indices.add(base + 1);
-        indices.add(base + 3);
-
-        newVertices.add(new Vertex(v1.x + nx, v1.y + ny, v1.z, v1.red, v1.green, v1.blue, v1.alpha, 0, 0, v1.normalsX, v1.normalsY, v1.normalsZ));
-        newVertices.add(new Vertex(v1.x - nx, v1.y - ny, v1.z, v1.red, v1.green, v1.blue, v1.alpha, 0, 1, v1.normalsX, v1.normalsY, v1.normalsZ));
-        newVertices.add(new Vertex(v2.x + nx, v2.y + ny, v2.z, v2.red, v2.green, v2.blue, v2.alpha, 1, 0, v2.normalsX, v2.normalsY, v2.normalsZ));
-        newVertices.add(new Vertex(v2.x - nx, v2.y - ny, v2.z, v2.red, v2.green, v2.blue, v2.alpha, 1, 1, v2.normalsX, v2.normalsY, v2.normalsZ));
+        makeLineQuad(
+                new Vertex(v1.x + nx, v1.y + ny, v1.z, v1.red, v1.green, v1.blue, v1.alpha, 0, 0, v1.normalsX, v1.normalsY, v1.normalsZ),
+                new Vertex(v1.x - nx, v1.y - ny, v1.z, v1.red, v1.green, v1.blue, v1.alpha, 0, 1, v1.normalsX, v1.normalsY, v1.normalsZ),
+                new Vertex(v2.x + nx, v2.y + ny, v2.z, v2.red, v2.green, v2.blue, v2.alpha, 1, 0, v2.normalsX, v2.normalsY, v2.normalsZ),
+                new Vertex(v2.x - nx, v2.y - ny, v2.z, v2.red, v2.green, v2.blue, v2.alpha, 1, 1, v2.normalsX, v2.normalsY, v2.normalsZ),
+                newVertices, indices
+        );
     }
 
-    private void makeLineQuadStrip(int vertexCount, List<Vertex> newVertices, List<Integer> indices) {
-        Vertex prev;
-        Vertex center = vertices[vertexCount];
-        Vertex next = vertices[vertexCount + 1];
+    private void makeLineStrip(int lineCount, List<Vertex> newVertices, List<Integer> indices) {
+        if (lineCount == 1) {
+            Vertex v1 = vertices[0];
+            Vertex v2 = vertices[1];
+            float dx = v2.x - v1.x;
+            float dy = v2.y - v1.y;
+            float length = sqrt(pow(dx, 2) + pow(dy, 2));
+            float nx = -dy / length * (lineWidth / 2f);
+            float ny = dx / length * (lineWidth / 2f);
 
-        float dx2 = next.x - center.x;
-        float dy2 = next.y - center.y;
-        float len2 = MathHelper.sqrt(dx2 * dx2 + dy2 * dy2);
-        float nx2 = -dy2 / len2 * (lineWidth / 2f);
-        float ny2 = dx2 / len2 * (lineWidth / 2f);
-        if (vertexCount == 0) {
-            float nx = -dy2;
-            float ny = dx2;
-            float length = MathHelper.sqrt(MathHelper.pow(nx, 2) + MathHelper.pow(ny, 2));
-            nx = nx / length * (lineWidth / 2f);
-            ny = ny / length * (lineWidth / 2f);
+            makeLineQuad(
+                    new Vertex(v1.x + nx, v1.y + ny, v1.z, v1.red, v1.green, v1.blue, v1.alpha, 0, 0, v1.normalsX, v1.normalsY, v1.normalsZ),
+                    new Vertex(v1.x - nx, v1.y - ny, v1.z, v1.red, v1.green, v1.blue, v1.alpha, 0, 1, v1.normalsX, v1.normalsY, v1.normalsZ),
+                    new Vertex(v2.x + nx, v2.y + ny, v2.z, v2.red, v2.green, v2.blue, v2.alpha, 1, 0, v2.normalsX, v2.normalsY, v2.normalsZ),
+                    new Vertex(v2.x - nx, v2.y - ny, v2.z, v2.red, v2.green, v2.blue, v2.alpha, 1, 1, v2.normalsX, v2.normalsY, v2.normalsZ),
+                    newVertices, indices
+            );
 
-            int base = newVertices.size();
-            indices.add(base);
-            indices.add(base + 1);
-            indices.add(base + 2);
-            indices.add(base + 2);
-            indices.add(base + 3);
-            indices.add(base + 1);
+            return;
+        }
 
-            newVertices.add(new Vertex(center.x + nx, center.y + ny, center.z, center.red, center.green, center.blue, center.alpha, 0, 0, center.normalsX, center.normalsY, center.normalsZ));
-            newVertices.add(new Vertex(center.x - nx, center.y - ny, center.z, center.red, center.green, center.blue, center.alpha, 0, 1, center.normalsX, center.normalsY, center.normalsZ));
-            newVertices.add(new Vertex(next.x + nx, next.y + ny, next.z, next.red, next.green, next.blue, next.alpha, 1, 0, next.normalsX, next.normalsY, next.normalsZ));
-            newVertices.add(new Vertex(next.x - nx, next.y - ny, next.z, next.red, next.green, next.blue, next.alpha, 1, 1, next.normalsX, next.normalsY, next.normalsZ));
-        } else {
-            prev = vertices[vertexCount - 1];
+        Vertex vertex1;
+        Vertex vertex2;
+        Vertex vertex3;
+        Vertex vertex4;
+        Vertex vertex5;
+        Vertex vertex6;
+        Vector2f lastJointVertex = null;
+        float lastSign = 0;
+        for (int i = 1; i < vertices.length - 1; i++) {
+            Vertex prevVertex = vertices[i - 1];
+            Vertex currentVertex = vertices[i];
+            Vertex nextVertex = vertices[i + 1];
 
-            float dx1 = center.x - prev.x;
-            float dy1 = center.y - prev.y;
-            float len1 = MathHelper.sqrt(dx1 * dx1 + dy1 * dy1);
-            float nx1 = -dy1 / len1 * (lineWidth / 2f);
-            float ny1 = dx1 / len1 * (lineWidth / 2f);
+            float dx1 = currentVertex.x - prevVertex.x;
+            float dy1 = currentVertex.y - prevVertex.y;
+            float length1 = sqrt(pow(dx1, 2) + pow(dy1, 2));
+            float normalX1 = -dy1 / length1 * (lineWidth / 2f);
+            float normalY1 = dx1 / length1 * (lineWidth / 2f);
+
+            float dx2 = nextVertex.x - currentVertex.x;
+            float dy2 = nextVertex.y - currentVertex.y;
+            float length2 = sqrt(pow(dx2, 2) + pow(dy2, 2));
+            float normalX2 = -dy2 / length2 * (lineWidth / 2f);
+            float normalY2 = dx2 / length2 * (lineWidth / 2f);
 
             float dot = dx1 * dx2 + dy1 * dy2;
             float cross = dx1 * dy2 - dy1 * dx2;
-            float angle = MathHelper.atan2(cross, dot);
-
+            float angle = atan2(cross, dot);
             float sign = (angle < 0) ? -1 : 1;
-            Vector2f offset1 = new Vector2f(nx1 * sign, ny1 * sign);
-            Vector2f offset2 = new Vector2f(nx2 * sign, ny2 * sign);
+            Vector2f offset1 = new Vector2f(normalX1 * sign, normalY1 * sign);
+            Vector2f offset2 = new Vector2f(normalX2 * sign, normalY2 * sign);
 
-            Vector2f p1 = new Vector2f(prev.x + offset1.x, prev.y + offset1.y);
-            Vector2f p2 = new Vector2f(center.x + offset1.x, center.y + offset1.y);
-            Vector2f p3 = new Vector2f(center.x + offset2.x, center.y + offset2.y);
-            Vector2f p4 = new Vector2f(next.x + offset2.x, next.y + offset2.y);
+            Vector2f p1 = new Vector2f(prevVertex.x + offset1.x, prevVertex.y + offset1.y);
+            Vector2f p2 = new Vector2f(currentVertex.x + offset1.x, currentVertex.y + offset1.y);
+            Vector2f p3 = new Vector2f(currentVertex.x + offset2.x, currentVertex.y + offset2.y);
+            Vector2f p4 = new Vector2f(nextVertex.x + offset2.x, nextVertex.y + offset2.y);
 
             Vector2f jointVertex2f = computeLineIntersection(p1, p2, p3, p4);
 
-            float nx = -dy2;
-            float ny = dx2;
-            float length = MathHelper.sqrt(MathHelper.pow(nx, 2) + MathHelper.pow(ny, 2));
-            nx = nx / length * (lineWidth / 2f);
-            ny = ny / length * (lineWidth / 2f);
-
-            if (jointVertex2f == null) {
-                int base = newVertices.size();
-                indices.add(base);
-                indices.add(base + 1);
-                indices.add(base + 2);
-                indices.add(base + 2);
-                indices.add(base + 3);
-                indices.add(base + 1);
-
-                newVertices.add(new Vertex(center.x + nx, center.y + ny, center.z, center.red, center.green, center.blue, center.alpha, 0, 0, center.normalsX, center.normalsY, center.normalsZ));
-                newVertices.add(new Vertex(center.x - nx, center.y - ny, center.z, center.red, center.green, center.blue, center.alpha, 0, 1, center.normalsX, center.normalsY, center.normalsZ));
-                newVertices.add(new Vertex(next.x + nx, next.y + ny, next.z, next.red, next.green, next.blue, next.alpha, 1, 0, next.normalsX, next.normalsY, next.normalsZ));
-                newVertices.add(new Vertex(next.x - nx, next.y - ny, next.z, next.red, next.green, next.blue, next.alpha, 1, 1, next.normalsX, next.normalsY, next.normalsZ));
-
-                return;
+            vertex1 = new Vertex(prevVertex.x + normalX1, prevVertex.y + normalY1, prevVertex.z, prevVertex.red, prevVertex.green, prevVertex.blue, prevVertex.alpha, 0, 0, prevVertex.normalsX, prevVertex.normalsY, prevVertex.normalsZ);
+            vertex2 = new Vertex(prevVertex.x - normalX1, prevVertex.y - normalY1, prevVertex.z, prevVertex.red, prevVertex.green, prevVertex.blue, prevVertex.alpha, 0, 1, prevVertex.normalsX, prevVertex.normalsY, prevVertex.normalsZ);
+            if (lastJointVertex != null) {
+                if (lastSign == -1) {
+                    vertex2 = new Vertex(lastJointVertex.x, lastJointVertex.y, prevVertex.z, prevVertex.red, prevVertex.green, prevVertex.blue, prevVertex.alpha, 0, 1, prevVertex.normalsX, prevVertex.normalsY, prevVertex.normalsZ);
+                } else {
+                    vertex1 = new Vertex(lastJointVertex.x, lastJointVertex.y, prevVertex.z, prevVertex.red, prevVertex.green, prevVertex.blue, prevVertex.alpha, 0, 0, prevVertex.normalsX, prevVertex.normalsY, prevVertex.normalsZ);
+                }
             }
 
-            Vertex joint = new Vertex(jointVertex2f.x, jointVertex2f.y, center.z, center.red, center.green, center.blue, center.alpha, 0, 0, center.normalsX, center.normalsY, center.normalsZ);
-            if (sign == 1) {
-                newVertices.remove(newVertices.size() - 2);
-                newVertices.add(newVertices.size() - 1, joint);
-
-                int base = newVertices.size();
-                indices.add(base);
-                indices.add(base + 1);
-                indices.add(base + 2);
-                indices.add(base + 2);
-                indices.add(base + 3);
-                indices.add(base + 1);
-
-                newVertices.add(joint);
-                newVertices.add(new Vertex(center.x - nx, center.y - ny, center.z, center.red, center.green, center.blue, center.alpha, 0, 1, center.normalsX, center.normalsY, center.normalsZ));
-            } else {
-                newVertices.remove(newVertices.size() - 1);
-                newVertices.add(joint);
-
-                int base = newVertices.size();
-                indices.add(base);
-                indices.add(base + 1);
-                indices.add(base + 2);
-                indices.add(base + 2);
-                indices.add(base + 3);
-                indices.add(base + 1);
-
-                newVertices.add(new Vertex(center.x + nx, center.y + ny, center.z, center.red, center.green, center.blue, center.alpha, 0, 0, center.normalsX, center.normalsY, center.normalsZ));
-                newVertices.add(joint);
+            vertex3 = new Vertex(currentVertex.x + normalX1, currentVertex.y + normalY1, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 0, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
+            vertex4 = new Vertex(currentVertex.x - normalX1, currentVertex.y - normalY1, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 1, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
+            vertex5 = new Vertex(currentVertex.x + normalX2, currentVertex.y + normalY2, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 0, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
+            vertex6 = new Vertex(currentVertex.x - normalX2, currentVertex.y - normalY2, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 1, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
+            if (jointVertex2f != null) {
+                if (sign == -1) {
+                    vertex4 = new Vertex(jointVertex2f.x, jointVertex2f.y, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 1, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
+                    vertex6 = new Vertex(jointVertex2f.x, jointVertex2f.y, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 1, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
+                } else {
+                    vertex3 = new Vertex(jointVertex2f.x, jointVertex2f.y, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 0, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
+                    vertex5 = new Vertex(jointVertex2f.x, jointVertex2f.y, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 0, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
+                }
             }
-            joint(angle, sign, prev, joint, next, newVertices, indices);
-            newVertices.add(new Vertex(next.x + nx, next.y + ny, next.z, next.red, next.green, next.blue, next.alpha, 1, 0, next.normalsX, next.normalsY, next.normalsZ));
-            newVertices.add(new Vertex(next.x - nx, next.y - ny, next.z, next.red, next.green, next.blue, next.alpha, 1, 1, next.normalsX, next.normalsY, next.normalsZ));
+
+            makeLineQuad(
+                    vertex1,
+                    vertex2,
+                    vertex3,
+                    vertex4,
+                    newVertices, indices
+            );
+
+            makeJoint(
+                    vertex3,
+                    vertex4,
+                    vertex5,
+                    vertex6,
+                    sign, newVertices, indices
+            );
+
+            lastJointVertex = jointVertex2f;
+            lastSign = sign;
         }
+
+        Vertex prevVertex = vertices[vertices.length - 2];
+        Vertex currentVertex = vertices[vertices.length - 1];
+
+        float dx1 = currentVertex.x - prevVertex.x;
+        float dy1 = currentVertex.y - prevVertex.y;
+        float length1 = sqrt(pow(dx1, 2) + pow(dy1, 2));
+        float normalX1 = -dy1 / length1 * (lineWidth / 2f);
+        float normalY1 = dx1 / length1 * (lineWidth / 2f);
+
+        vertex1 = new Vertex(prevVertex.x + normalX1, prevVertex.y + normalY1, prevVertex.z, prevVertex.red, prevVertex.green, prevVertex.blue, prevVertex.alpha, 0, 0, prevVertex.normalsX, prevVertex.normalsY, prevVertex.normalsZ);
+        vertex2 = new Vertex(prevVertex.x - normalX1, prevVertex.y - normalY1, prevVertex.z, prevVertex.red, prevVertex.green, prevVertex.blue, prevVertex.alpha, 0, 1, prevVertex.normalsX, prevVertex.normalsY, prevVertex.normalsZ);
+        if (lastJointVertex != null) {
+            if (lastSign == -1) {
+                vertex2 = new Vertex(lastJointVertex.x, lastJointVertex.y, prevVertex.z, prevVertex.red, prevVertex.green, prevVertex.blue, prevVertex.alpha, 0, 1, prevVertex.normalsX, prevVertex.normalsY, prevVertex.normalsZ);
+            } else {
+                vertex1 = new Vertex(lastJointVertex.x, lastJointVertex.y, prevVertex.z, prevVertex.red, prevVertex.green, prevVertex.blue, prevVertex.alpha, 0, 0, prevVertex.normalsX, prevVertex.normalsY, prevVertex.normalsZ);
+            }
+        }
+
+        vertex3 = new Vertex(currentVertex.x + normalX1, currentVertex.y + normalY1, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 0, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
+        vertex4 = new Vertex(currentVertex.x - normalX1, currentVertex.y - normalY1, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 1, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
+
+        makeLineQuad(
+                vertex1,
+                vertex2,
+                vertex3,
+                vertex4,
+                newVertices, indices
+        );
     }
 
-    private void joint(float angle, float sign, Vertex preVertex, Vertex jointVertex, Vertex nextVertex, List<Vertex> newVertices, List<Integer> indices) {
+    private void makeJoint(Vertex vertex3, Vertex vertex4, Vertex vertex5, Vertex vertex6, float sign, List<Vertex> newVertices, List<Integer> indices) {
         switch (lineJointType) {
             case NONE:
                 break;
             case MITER:
-                if ((1 / MathHelper.sin(MathHelper.abs(angle) / 2f)) <= MITER_LIMIT) {
-
-                } else {
-                    doBevel(sign, newVertices, indices);
-                }
+//                makeLineQuad(
+//
+//                );
                 break;
             case BEVEL:
-                doBevel(sign, newVertices, indices);
+                int base = newVertices.size();
+                newVertices.add(vertex3.copy());
+                newVertices.add(vertex4.copy());
+                if (sign == -1) {
+                    newVertices.add(vertex5.copy());
+                } else {
+                    newVertices.add(vertex6.copy());
+                }
+
+                indices.add(base);
+                indices.add(base + 1);
+                indices.add(base + 2);
                 break;
             case ROUND:
                 break;
@@ -340,19 +371,19 @@ public class TestPolygonTriangulator {
         }
     }
 
-    private void doMiter(List<Vertex> newVertices, List<Integer> indices) {
-
-    }
-
-    private void doBevel(float sign, List<Vertex> newVertices, List<Integer> indices) {
+    private void makeLineQuad(Vertex v1, Vertex v2, Vertex v3, Vertex v4, List<Vertex> newVertices, List<Integer> indices) {
         int base = newVertices.size();
-        indices.add(base - 1);
-        indices.add(base - 2);
-        if (sign == 1) {
-            indices.add(base - 3);
-        } else {
-            indices.add(base - 4);
-        }
+        newVertices.add(v1.copy());
+        newVertices.add(v2.copy());
+        newVertices.add(v3.copy());
+        newVertices.add(v4.copy());
+
+        indices.add(base);
+        indices.add(base + 1);
+        indices.add(base + 2);
+        indices.add(base + 2);
+        indices.add(base + 1);
+        indices.add(base + 3);
     }
 
     private void checkLineParameter() {
