@@ -359,15 +359,16 @@ public class TestPolygonTriangulator {
     private void makeJoint(Vertex vertex3, Vertex vertex4, Vertex vertex5, Vertex vertex6, Vertex crossVertex, float angle, float sign, List<Vertex> newVertices, List<Integer> indices) {
         JointType tempJoinType = lineJointType;
         float sinHalfAngle = (float) Math.sin(angle * 0.5f);
-        if (Math.abs(sinHalfAngle) < 1e-5f) {
-            tempJoinType = JointType.MITER;
-        } else {
-            float miterLengthRatio = 1f / Math.abs(sinHalfAngle);
-            if (miterLengthRatio < MITER_LIMIT) {
-                tempJoinType = JointType.BEVEL;
+        if (tempJoinType == JointType.MITER) {
+            if (!(Math.abs(sinHalfAngle) < 1e-5f)) {
+                float miterLengthRatio = 1f / Math.abs(sinHalfAngle);
+                if (miterLengthRatio < MITER_LIMIT) {
+                    tempJoinType = JointType.BEVEL;
+                }
             }
         }
 
+        int base;
         switch (tempJoinType) {
             case NONE:
                 break;
@@ -395,7 +396,7 @@ public class TestPolygonTriangulator {
                 }
                 break;
             case BEVEL:
-                int base = newVertices.size();
+                base = newVertices.size();
                 newVertices.add(vertex3.copy());
                 newVertices.add(vertex4.copy());
                 if (sign == -1) {
@@ -409,7 +410,53 @@ public class TestPolygonTriangulator {
                 indices.add(base + 2);
                 break;
             case ROUND:
+                // TODO
+
+//                base = newVertices.size();
+//
+//                Vertex center;
+//                float dx0;
+//                float dy0;
+//                float dx2;
+//                float dy2;
+//                if (sign == -1) {
+//                    center = vertex4.copy();
+//                } else {
+//                    center = vertex5.copy();
+//                }
+//                newVertices.add(center);
+//
+//                float radius = lineWidth;
+//                int segments = 20;
+//
+//                float startAngle = 0;
+//                float endAngle = angle;
+//                if (sign < 0) {
+//                    float tmp = startAngle;
+//                    startAngle = endAngle;
+//                    endAngle = tmp;
+//                }
+//
+//                for (int i = 0; i <= segments; i++) {
+//                    float t = i / (float) segments;
+//                    float theta = startAngle + (endAngle - startAngle) * t;
+//
+//                    float x = center.x + cos(theta) * radius;
+//                    float y = center.y + sin(theta) * radius;
+//
+//                    Vertex v = center.copy();
+//                    v.x = x;
+//                    v.y = y;
+//                    newVertices.add(v);
+//                }
+//
+//                for (int i = 0; i < segments; i++) {
+//                    indices.add(base);
+//                    indices.add(base + i + 1);
+//                    indices.add(base + i + 2);
+//                }
                 break;
+
             default:
                 throw new IllegalStateException("Unexpected value: " + lineJointType);
         }

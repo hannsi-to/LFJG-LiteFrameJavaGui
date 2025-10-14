@@ -19,8 +19,6 @@ import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class TestNewMeshSystem implements LFJGFrame {
@@ -55,47 +53,47 @@ public class TestNewMeshSystem implements LFJGFrame {
                 numObjects
         );
 
-        for (int i = 0; i < numObjects; i++) {
-            float x = minX + random.nextFloat() * (maxX - minX);
-            float y = minY + random.nextFloat() * (maxY - minY);
-
-            List<Vertex> vertices = new ArrayList<>();
-
-            for (int j = 0; j < numVerticesPerStrip; j++) {
-                float r = random.nextFloat();
-                float g = random.nextFloat();
-                float b = random.nextFloat();
-
-                Vertex v = new Vertex(x, y, 0, r, g, b, 0.5f, 0, 0, 0, 0, 1);
-                vertices.add(v);
-
-                float angle = (float) (random.nextFloat() * Math.PI * 2.0);
-                float step = minSize + random.nextFloat() * (maxSize - minSize);
-                x += (float) (Math.cos(angle) * step);
-                y += (float) (Math.sin(angle) * step);
-            }
-
-            testMesh.addObject(
-                    ProjectionType.ORTHOGRAPHIC_PROJECTION,
-                    DrawType.LINE_STRIP,
-                    10f,
-                    JointType.MITER,
-                    vertices.toArray(new Vertex[0])
-            );
-        }
-
-//        Vertex vertex1 = new Vertex(100, 100, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
-//        Vertex vertex2 = new Vertex(120, 500, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
-//        Vertex vertex3 = new Vertex(140, 100, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
-//        Vertex vertex4 = new Vertex(1500, 500, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
+//        for (int i = 0; i < numObjects; i++) {
+//            float x = minX + random.nextFloat() * (maxX - minX);
+//            float y = minY + random.nextFloat() * (maxY - minY);
 //
-//        testMesh.addObject(
-//                ProjectionType.ORTHOGRAPHIC_PROJECTION,
-//                DrawType.LINE_STRIP,
-//                10f,
-//                JointType.MITER,
-//                vertex1, vertex2, vertex3, vertex4
-//        );
+//            List<Vertex> vertices = new ArrayList<>();
+//
+//            for (int j = 0; j < numVerticesPerStrip; j++) {
+//                float r = random.nextFloat();
+//                float g = random.nextFloat();
+//                float b = random.nextFloat();
+//
+//                Vertex v = new Vertex(x, y, 0, r, g, b, 0.5f, 0, 0, 0, 0, 1);
+//                vertices.add(v);
+//
+//                float angle = (float) (random.nextFloat() * Math.PI * 2.0);
+//                float step = minSize + random.nextFloat() * (maxSize - minSize);
+//                x += (float) (Math.cos(angle) * step);
+//                y += (float) (Math.sin(angle) * step);
+//            }
+//
+//            testMesh.addObject(
+//                    ProjectionType.ORTHOGRAPHIC_PROJECTION,
+//                    DrawType.LINE_STRIP,
+//                    10f,
+//                    JointType.ROUND,
+//                    vertices.toArray(new Vertex[0])
+//            );
+//        }
+
+        Vertex vertex1 = new Vertex(100, 100, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
+        Vertex vertex2 = new Vertex(300, 500, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
+        Vertex vertex3 = new Vertex(600, 100, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
+        Vertex vertex4 = new Vertex(1500, 500, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
+
+        testMesh.addObject(
+                ProjectionType.ORTHOGRAPHIC_PROJECTION,
+                DrawType.LINE_STRIP,
+                50f,
+                JointType.ROUND,
+                vertex1, vertex2, vertex3, vertex4
+        );
 
 //        for (int i = 0; i < numObjects; i++) {
 //            float x1 = minX + random.nextFloat() * (maxX - minX);
