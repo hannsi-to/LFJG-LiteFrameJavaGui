@@ -140,9 +140,7 @@ public class TestPolygonTriangulator {
                     }
 
                     lineCount = vertices.length == 2 ? 1 : vertices.length;
-                    for (int i = 0; i < lineCount; i++) {
-                        makeLines(vertices[i], vertices[(i + 1) % vertices.length], lineWidth, newVertices, indices);
-                    }
+                    makeLineStrip(lineCount, newVertices, indices);
                     return new TestElementPair(newVertices.toArray(new Vertex[0]), indices.stream().mapToInt(Integer::intValue).toArray());
 
                 case TRIANGLES:

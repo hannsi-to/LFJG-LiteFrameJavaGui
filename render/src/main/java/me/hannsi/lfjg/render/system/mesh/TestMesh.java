@@ -48,18 +48,9 @@ public class TestMesh {
     }
 
     public TestMesh addObject(ProjectionType projectionType, DrawType drawType, float lineWidth, JointType jointType, Vertex... vertices) {
-//        float[] positions = new float[vertices.length * 3];
-//        for (int i = 0, index = 0; i < vertices.length; i++, index += 3) {
-//            Vertex vertex = vertices[i];
-//            float[] pos = vertex.getPositions();
-//            positions[index] = pos[0];
-//            positions[index + 1] = pos[1];
-//            positions[index + 2] = pos[2];
-//
-//
-//        }
-
         TestElementPair elementPair = setupElementBufferObject(projectionType, drawType, lineWidth, jointType, vertices);
+        int baseVertex = vertexCount;
+
         for (Vertex vertex : elementPair.vertices) {
             persistentMappedVBO.add(vertex);
         }
@@ -69,17 +60,17 @@ public class TestMesh {
             persistentMappedEBO.add(index);
         }
 
+        vertexCount += elementPair.vertices.length;
+
         persistentMappedIBO.addCommand(
                 new DrawElementsIndirectCommand(
                         elementPair.indices.length,
                         1,
                         startOffset,
-                        vertexCount,
+                        baseVertex,
                         0
                 )
         );
-
-        vertexCount += vertices.length;
 
         return this;
     }
