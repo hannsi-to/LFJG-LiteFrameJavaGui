@@ -13,7 +13,7 @@ import static me.hannsi.lfjg.core.utils.math.MathHelper.*;
 
 public class TestPolygonTriangulator {
     public static final boolean DEBUG = false;
-    private static final float MITER_LIMIT = 4;
+    private static final float MITER_LIMIT = 4.0f;
 
     private ProjectionType projectionType;
     private DrawType drawType;
@@ -233,6 +233,7 @@ public class TestPolygonTriangulator {
         Vertex vertex4;
         Vertex vertex5;
         Vertex vertex6;
+        Vertex crossVertex = null;
         Vector2f lastJointVertex = null;
         float lastSign = 0;
         for (int i = 1; i < vertices.length - 1; i++) {
@@ -266,6 +267,15 @@ public class TestPolygonTriangulator {
 
             Vector2f jointVertex2f = computeLineIntersection(p1, p2, p3, p4);
 
+            offset1 = new Vector2f(normalX1 * -sign, normalY1 * -sign);
+            offset2 = new Vector2f(normalX2 * -sign, normalY2 * -sign);
+            p1 = new Vector2f(prevVertex.x + offset1.x, prevVertex.y + offset1.y);
+            p2 = new Vector2f(currentVertex.x + offset1.x, currentVertex.y + offset1.y);
+            p3 = new Vector2f(currentVertex.x + offset2.x, currentVertex.y + offset2.y);
+            p4 = new Vector2f(nextVertex.x + offset2.x, nextVertex.y + offset2.y);
+
+            Vector2f crossVertex2f = computeLineIntersection(p1, p2, p3, p4);
+
             vertex1 = new Vertex(prevVertex.x + normalX1, prevVertex.y + normalY1, prevVertex.z, prevVertex.red, prevVertex.green, prevVertex.blue, prevVertex.alpha, 0, 0, prevVertex.normalsX, prevVertex.normalsY, prevVertex.normalsZ);
             vertex2 = new Vertex(prevVertex.x - normalX1, prevVertex.y - normalY1, prevVertex.z, prevVertex.red, prevVertex.green, prevVertex.blue, prevVertex.alpha, 0, 1, prevVertex.normalsX, prevVertex.normalsY, prevVertex.normalsZ);
             if (lastJointVertex != null) {
@@ -290,6 +300,10 @@ public class TestPolygonTriangulator {
                 }
             }
 
+            if (crossVertex2f != null) {
+                crossVertex = new Vertex(crossVertex2f.x, crossVertex2f.y, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 0, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
+            }
+
             makeLineQuad(
                     vertex1,
                     vertex2,
@@ -303,7 +317,8 @@ public class TestPolygonTriangulator {
                     vertex4,
                     vertex5,
                     vertex6,
-                    sign, newVertices, indices
+                    crossVertex,
+                    angle, sign, newVertices, indices
             );
 
             lastJointVertex = jointVertex2f;
@@ -341,14 +356,43 @@ public class TestPolygonTriangulator {
         );
     }
 
-    private void makeJoint(Vertex vertex3, Vertex vertex4, Vertex vertex5, Vertex vertex6, float sign, List<Vertex> newVertices, List<Integer> indices) {
-        switch (lineJointType) {
+    private void makeJoint(Vertex vertex3, Vertex vertex4, Vertex vertex5, Vertex vertex6, Vertex crossVertex, float angle, float sign, List<Vertex> newVertices, List<Integer> indices) {
+        JointType tempJoinType = lineJointType;
+        float sinHalfAngle = (float) Math.sin(angle * 0.5f);
+        if (Math.abs(sinHalfAngle) < 1e-5f) {
+            tempJoinType = JointType.MITER;
+        } else {
+            float miterLengthRatio = 1f / Math.abs(sinHalfAngle);
+            if (miterLengthRatio < MITER_LIMIT) {
+                tempJoinType = JointType.BEVEL;
+            }
+        }
+
+        switch (tempJoinType) {
             case NONE:
                 break;
             case MITER:
-//                makeLineQuad(
-//
-//                );
+                if (crossVertex == null) {
+                    return;
+                }
+
+                if (sign == -1) {
+                    makeLineQuad(
+                            crossVertex,
+                            vertex3,
+                            vertex5,
+                            vertex6,
+                            newVertices, indices
+                    );
+                } else {
+                    makeLineQuad(
+                            vertex4,
+                            crossVertex,
+                            vertex5,
+                            vertex6,
+                            newVertices, indices
+                    );
+                }
                 break;
             case BEVEL:
                 int base = newVertices.size();

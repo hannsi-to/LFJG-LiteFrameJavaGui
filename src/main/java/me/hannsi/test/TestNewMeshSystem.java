@@ -79,21 +79,21 @@ public class TestNewMeshSystem implements LFJGFrame {
                     ProjectionType.ORTHOGRAPHIC_PROJECTION,
                     DrawType.LINE_STRIP,
                     10f,
-                    JointType.BEVEL,
+                    JointType.MITER,
                     vertices.toArray(new Vertex[0])
             );
         }
 
 //        Vertex vertex1 = new Vertex(100, 100, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
-//        Vertex vertex2 = new Vertex(200, 500, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
-//        Vertex vertex3 = new Vertex(300, 100, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
+//        Vertex vertex2 = new Vertex(120, 500, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
+//        Vertex vertex3 = new Vertex(140, 100, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
 //        Vertex vertex4 = new Vertex(1500, 500, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
 //
 //        testMesh.addObject(
 //                ProjectionType.ORTHOGRAPHIC_PROJECTION,
 //                DrawType.LINE_STRIP,
 //                10f,
-//                JointType.BEVEL,
+//                JointType.MITER,
 //                vertex1, vertex2, vertex3, vertex4
 //        );
 
