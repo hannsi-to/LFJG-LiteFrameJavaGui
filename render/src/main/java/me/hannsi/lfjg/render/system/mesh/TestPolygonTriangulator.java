@@ -15,6 +15,7 @@ import static me.hannsi.lfjg.core.utils.math.MathHelper.*;
 public class TestPolygonTriangulator {
     public static final boolean DEBUG = false;
     private static final float MITER_LIMIT = 4.0f;
+    private static final float TOLERANCE = 1.0f;
 
     private ProjectionType projectionType;
     private DrawType drawType;
@@ -28,52 +29,6 @@ public class TestPolygonTriangulator {
 
     public static TestPolygonTriangulator createPolygonTriangulator() {
         return new TestPolygonTriangulator();
-    }
-
-    public static Vector2f computeLineIntersection(Vector2f p1, Vector2f p2, Vector2f p3, Vector2f p4) {
-        float x1 = p1.x;
-        float y1 = p1.y;
-        float x2 = p2.x;
-        float y2 = p2.y;
-        float x3 = p3.x;
-        float y3 = p3.y;
-        float x4 = p4.x;
-        float y4 = p4.y;
-
-        float denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
-        if (denom == 0) {
-            return null;
-        }
-
-        float t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / denom;
-
-        float ix = x1 + t * (x2 - x1);
-        float iy = y1 + t * (y2 - y1);
-
-        return new Vector2f(ix, iy);
-    }
-
-    private static int calculateSegmentCount(float pointSize) {
-        if (pointSize <= 2f) {
-            return 6;
-        }
-        if (pointSize <= 5f) {
-            return 8;
-        }
-        if (pointSize <= 10f) {
-            return 12;
-        }
-        if (pointSize <= 20f) {
-            return 18;
-        }
-        if (pointSize <= 40f) {
-            return 24;
-        }
-        if (pointSize <= 80f) {
-            return 36;
-        }
-
-        return Math.min(64, (int) (pointSize * 1.2f));
     }
 
     public TestPolygonTriangulator projectionType(ProjectionType projectionType) {
@@ -245,6 +200,36 @@ public class TestPolygonTriangulator {
             DebugLog.error(getClass(), new PolygonTriangulatorException("Triangulation process failed"));
             return new TestElementPair(vertices, new int[0]);
         }
+    }
+
+    private Vector2f computeLineIntersection(Vector2f p1, Vector2f p2, Vector2f p3, Vector2f p4) {
+        float x1 = p1.x;
+        float y1 = p1.y;
+        float x2 = p2.x;
+        float y2 = p2.y;
+        float x3 = p3.x;
+        float y3 = p3.y;
+        float x4 = p4.x;
+        float y4 = p4.y;
+
+        float denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+        if (abs(denom) < 1e-6f) {
+            return null;
+        }
+
+        float t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / denom;
+
+        float ix = x1 + t * (x2 - x1);
+        float iy = y1 + t * (y2 - y1);
+
+        return new Vector2f(ix, iy);
+    }
+
+    private int calculateSegmentCount(float pointSize) {
+        float circumference = (float) (Math.PI * pointSize);
+        int segments = Math.max(6, (int) (circumference / TOLERANCE));
+
+        return Math.min(segments, 128);
     }
 
     private void makeCircle(Vertex center, int segmentCount, List<Vertex> newVertices, List<Integer> indices) {
