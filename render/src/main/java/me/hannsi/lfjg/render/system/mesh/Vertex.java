@@ -29,6 +29,14 @@ public class Vertex {
         this.normalsZ = normalsZ;
     }
 
+    public Vertex replaceXYZ(float x, float y, float z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+
+        return this;
+    }
+
     public float[] getPositions() {
         return new float[]{x, y, z};
     }

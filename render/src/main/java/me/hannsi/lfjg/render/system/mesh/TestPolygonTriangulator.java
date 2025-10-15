@@ -4,6 +4,7 @@ import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.debug.exceptions.render.mesh.PolygonTriangulatorException;
 import me.hannsi.lfjg.render.renderers.JointType;
+import me.hannsi.lfjg.render.renderers.PointType;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import org.joml.Vector2f;
 
@@ -20,6 +21,7 @@ public class TestPolygonTriangulator {
     private float lineWidth;
     private JointType lineJointType;
     private float pointSize;
+    private PointType pointType;
     private Vertex[] vertices;
     private float[] outPositions;
     private TestElementPair result;
@@ -71,6 +73,16 @@ public class TestPolygonTriangulator {
         return this;
     }
 
+    public TestPolygonTriangulator pointSize(float pointSize) {
+        this.pointSize = pointSize;
+        return this;
+    }
+
+    public TestPolygonTriangulator pointType(PointType pointType) {
+        this.pointType = pointType;
+        return this;
+    }
+
     public TestPolygonTriangulator vertices(Vertex... vertices) {
         this.vertices = vertices;
         return this;
@@ -110,6 +122,28 @@ public class TestPolygonTriangulator {
         try {
             switch (drawType) {
                 case POINTS:
+                    switch (pointType) {
+                        case SQUARE:
+                            for (Vertex vertex : vertices) {
+                                float offset = sqrt(pow(pointSize, 2f) / 2f);
+                                Vertex p1 = vertex.copy().replaceXYZ(vertex.x - offset, vertex.y + offset, vertex.z);
+                                Vertex p2 = vertex.copy().replaceXYZ(vertex.x - offset, vertex.y - offset, vertex.z);
+                                Vertex p3 = vertex.copy().replaceXYZ(vertex.x + offset, vertex.y + offset, vertex.z);
+                                Vertex p4 = vertex.copy().replaceXYZ(vertex.x + offset, vertex.y - offset, vertex.z);
+
+                                makeLineQuad(
+                                        p1, p2, p3, p4,
+                                        newVertices, indices
+                                );
+                            }
+
+                            return new TestElementPair(newVertices.toArray(new Vertex[0]), indices.stream().mapToInt(Integer::intValue).toArray());
+                            
+                        case ROUND:
+                            break;
+                        default:
+                            throw new IllegalStateException("Unexpected value: " + pointType);
+                    }
                 case LINES:
                     checkLineParameter();
                     if (lineCount < 1) {
@@ -451,10 +485,10 @@ public class TestPolygonTriangulator {
 
     private void makeJoint(Vertex vertex3, Vertex vertex4, Vertex vertex5, Vertex vertex6, Vertex crossVertex, float angle, float sign, List<Vertex> newVertices, List<Integer> indices) {
         JointType tempJoinType = lineJointType;
-        float sinHalfAngle = (float) Math.sin(angle * 0.5f);
+        float sinHalfAngle = sin(angle * 0.5f);
         if (tempJoinType == JointType.MITER) {
-            if (!(Math.abs(sinHalfAngle) < 1e-5f)) {
-                float miterLengthRatio = 1f / Math.abs(sinHalfAngle);
+            if (!(abs(sinHalfAngle) < 1e-5f)) {
+                float miterLengthRatio = 1f / abs(sinHalfAngle);
                 if (miterLengthRatio < MITER_LIMIT) {
                     tempJoinType = JointType.BEVEL;
                 }
@@ -638,7 +672,7 @@ public class TestPolygonTriangulator {
 
         order.sort((i1, i2) -> {
             float dy = vertices.get(i2)[1] - vertices.get(i1)[1];
-            if (Math.abs(dy) > 1e-6) {
+            if (abs(dy) > 1e-6) {
                 return dy > 0 ? 1 : -1;
             }
 

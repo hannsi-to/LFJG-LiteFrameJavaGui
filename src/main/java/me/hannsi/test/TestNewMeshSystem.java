@@ -12,6 +12,7 @@ import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.JointType;
+import me.hannsi.lfjg.render.renderers.PointType;
 import me.hannsi.lfjg.render.system.mesh.TestMesh;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
@@ -79,12 +80,43 @@ public class TestNewMeshSystem implements LFJGFrame {
 
             testMesh.addObject(
                     ProjectionType.ORTHOGRAPHIC_PROJECTION,
-                    DrawType.LINE_LOOP,
+                    DrawType.POINTS,
                     30,
                     JointType.MITER,
+                    10f,
+                    PointType.SQUARE,
                     vertices.toArray(new Vertex[0])
             );
         }
+
+//        for (int i = 0; i < numObjects; i++) {
+//            float x = minX + random.nextFloat() * (maxX - minX);
+//            float y = minY + random.nextFloat() * (maxY - minY);
+//
+//            List<Vertex> vertices = new ArrayList<>();
+//
+//            for (int j = 0; j < numVerticesPerStrip; j++) {
+//                float r = random.nextFloat();
+//                float g = random.nextFloat();
+//                float b = random.nextFloat();
+//
+//                Vertex v = new Vertex(x, y, 0, r, g, b, 0.5f, 0, 0, 0, 0, 1);
+//                vertices.add(v);
+//
+//                float angle = (float) (random.nextFloat() * Math.PI * 2.0);
+//                float step = minSize + random.nextFloat() * (maxSize - minSize);
+//                x += (float) (Math.cos(angle) * step);
+//                y += (float) (Math.sin(angle) * step);
+//            }
+//
+//            testMesh.addObject(
+//                    ProjectionType.ORTHOGRAPHIC_PROJECTION,
+//                    DrawType.LINE_LOOP,
+//                    30,
+//                    JointType.MITER,
+//                    vertices.toArray(new Vertex[0])
+//            );
+//        }
 
 //        Vertex vertex1 = new Vertex(100, 100, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
 //        Vertex vertex2 = new Vertex(300, 500, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
@@ -184,7 +216,7 @@ public class TestNewMeshSystem implements LFJGFrame {
         LFJGRenderContext.shaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, viewMatrix);
         LFJGRenderContext.shaderProgram.setUniform("resolution", UploadUniformType.ON_CHANGE, Core.frameBufferSize);
 
-        testMesh.debugDraw(DrawType.TRIANGLES.getId(), true);
+        testMesh.debugDraw(DrawType.TRIANGLES.getId(), false);
 
         if (timer.passed(2000)) {
             System.out.println(LFJGContext.frame.getFps());

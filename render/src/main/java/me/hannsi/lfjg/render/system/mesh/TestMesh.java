@@ -4,6 +4,7 @@ import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.renderers.JointType;
+import me.hannsi.lfjg.render.renderers.PointType;
 import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedEBO;
 import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedIBO;
 import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedVBO;
@@ -52,8 +53,8 @@ public class TestMesh {
         return this;
     }
 
-    public TestMesh addObject(ProjectionType projectionType, DrawType drawType, float lineWidth, JointType jointType, Vertex... vertices) {
-        TestElementPair elementPair = setupElementBufferObject(projectionType, drawType, lineWidth, jointType, vertices);
+    public TestMesh addObject(ProjectionType projectionType, DrawType drawType, float lineWidth, JointType jointType, float pointSize, PointType pointType, Vertex... vertices) {
+        TestElementPair elementPair = setupElementBufferObject(projectionType, drawType, lineWidth, jointType, pointSize, pointType, vertices);
         int baseVertex = vertexCount;
 
         for (Vertex vertex : elementPair.vertices) {
@@ -80,11 +81,13 @@ public class TestMesh {
         return this;
     }
 
-    private TestElementPair setupElementBufferObject(ProjectionType projectionType, DrawType drawType, float lineWidth, JointType jointType, Vertex[] vertices) {
+    private TestElementPair setupElementBufferObject(ProjectionType projectionType, DrawType drawType, float lineWidth, JointType jointType, float pointSize, PointType pointType, Vertex[] vertices) {
         return TestPolygonTriangulator.createPolygonTriangulator()
                 .drawType(drawType)
                 .lineWidth(lineWidth)
                 .lineJointType(jointType)
+                .pointSize(pointSize)
+                .pointType(pointType)
                 .projectionType(projectionType)
                 .vertices(vertices)
                 .process()
