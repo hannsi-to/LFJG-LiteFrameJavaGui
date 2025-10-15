@@ -129,7 +129,7 @@ public class TestPolygonTriangulator {
                     }
 
                     lineCount = vertices.length - 1;
-                    makeLineStrip(lineCount, newVertices, indices);
+                    makeLine(false, lineCount, newVertices, indices);
                     return new TestElementPair(newVertices.toArray(new Vertex[0]), indices.stream().mapToInt(Integer::intValue).toArray());
 
                 case LINE_LOOP:
@@ -138,8 +138,8 @@ public class TestPolygonTriangulator {
                         throw new PolygonTriangulatorException("When DrawType.LINE_LOOP is specified, vertex information must be two or more.");
                     }
 
-                    lineCount = vertices.length == 2 ? 1 : vertices.length;
-                    makeLineStrip(lineCount, newVertices, indices);
+                    lineCount = vertices.length - 1;
+                    makeLine(true, lineCount, newVertices, indices);
                     return new TestElementPair(newVertices.toArray(new Vertex[0]), indices.stream().mapToInt(Integer::intValue).toArray());
 
                 case TRIANGLES:
@@ -203,7 +203,7 @@ public class TestPolygonTriangulator {
         );
     }
 
-    private void makeLineStrip(int lineCount, List<Vertex> newVertices, List<Integer> indices) {
+    private void makeLine(boolean loop, int lineCount, List<Vertex> newVertices, List<Integer> indices) {
         if (lineCount == 1) {
             Vertex v1 = vertices[0];
             Vertex v2 = vertices[1];
@@ -224,6 +224,11 @@ public class TestPolygonTriangulator {
             return;
         }
 
+        if (loop) {
+            vertices = Arrays.copyOf(vertices, vertices.length + 1);
+            vertices[vertices.length - 1] = vertices[0];
+        }
+
         Vertex vertex1;
         Vertex vertex2;
         Vertex vertex3;
@@ -233,10 +238,106 @@ public class TestPolygonTriangulator {
         Vertex crossVertex = null;
         Vector2f lastJointVertex = null;
         float lastSign = 0;
-        for (int i = 1; i < vertices.length - 1; i++) {
-            Vertex prevVertex = vertices[i - 1];
+        for (int i = 0; i < vertices.length - 1; i++) {
+            Vertex prevVertex;
+            if (i == 0) {
+                prevVertex = vertices[vertices.length - 2];
+            } else {
+                prevVertex = vertices[i - 1];
+            }
             Vertex currentVertex = vertices[i];
             Vertex nextVertex = vertices[i + 1];
+
+            float dx1 = currentVertex.x - prevVertex.x;
+            float dy1 = currentVertex.y - prevVertex.y;
+            float length1 = sqrt(pow(dx1, 2) + pow(dy1, 2));
+            float normalX1 = -dy1 / length1 * (lineWidth / 2f);
+            float normalY1 = dx1 / length1 * (lineWidth / 2f);
+
+            float dx2 = nextVertex.x - currentVertex.x;
+            float dy2 = nextVertex.y - currentVertex.y;
+            float length2 = sqrt(pow(dx2, 2) + pow(dy2, 2));
+            float normalX2 = -dy2 / length2 * (lineWidth / 2f);
+            float normalY2 = dx2 / length2 * (lineWidth / 2f);
+
+            float dot = dx1 * dx2 + dy1 * dy2;
+            float cross = dx1 * dy2 - dy1 * dx2;
+            float angle = atan2(cross, dot);
+            float sign = (angle < 0) ? -1 : 1;
+            Vector2f offset1 = new Vector2f(normalX1 * sign, normalY1 * sign);
+            Vector2f offset2 = new Vector2f(normalX2 * sign, normalY2 * sign);
+
+            Vector2f p1 = new Vector2f(prevVertex.x + offset1.x, prevVertex.y + offset1.y);
+            Vector2f p2 = new Vector2f(currentVertex.x + offset1.x, currentVertex.y + offset1.y);
+            Vector2f p3 = new Vector2f(currentVertex.x + offset2.x, currentVertex.y + offset2.y);
+            Vector2f p4 = new Vector2f(nextVertex.x + offset2.x, nextVertex.y + offset2.y);
+
+            Vector2f jointVertex2f = computeLineIntersection(p1, p2, p3, p4);
+
+            offset1 = new Vector2f(normalX1 * -sign, normalY1 * -sign);
+            offset2 = new Vector2f(normalX2 * -sign, normalY2 * -sign);
+            p1 = new Vector2f(prevVertex.x + offset1.x, prevVertex.y + offset1.y);
+            p2 = new Vector2f(currentVertex.x + offset1.x, currentVertex.y + offset1.y);
+            p3 = new Vector2f(currentVertex.x + offset2.x, currentVertex.y + offset2.y);
+            p4 = new Vector2f(nextVertex.x + offset2.x, nextVertex.y + offset2.y);
+
+            Vector2f crossVertex2f = computeLineIntersection(p1, p2, p3, p4);
+
+            vertex1 = new Vertex(prevVertex.x + normalX1, prevVertex.y + normalY1, prevVertex.z, prevVertex.red, prevVertex.green, prevVertex.blue, prevVertex.alpha, 0, 0, prevVertex.normalsX, prevVertex.normalsY, prevVertex.normalsZ);
+            vertex2 = new Vertex(prevVertex.x - normalX1, prevVertex.y - normalY1, prevVertex.z, prevVertex.red, prevVertex.green, prevVertex.blue, prevVertex.alpha, 0, 1, prevVertex.normalsX, prevVertex.normalsY, prevVertex.normalsZ);
+            if (lastJointVertex != null) {
+                if (lastSign == -1) {
+                    vertex2 = new Vertex(lastJointVertex.x, lastJointVertex.y, prevVertex.z, prevVertex.red, prevVertex.green, prevVertex.blue, prevVertex.alpha, 0, 1, prevVertex.normalsX, prevVertex.normalsY, prevVertex.normalsZ);
+                } else {
+                    vertex1 = new Vertex(lastJointVertex.x, lastJointVertex.y, prevVertex.z, prevVertex.red, prevVertex.green, prevVertex.blue, prevVertex.alpha, 0, 0, prevVertex.normalsX, prevVertex.normalsY, prevVertex.normalsZ);
+                }
+            }
+
+            vertex3 = new Vertex(currentVertex.x + normalX1, currentVertex.y + normalY1, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 0, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
+            vertex4 = new Vertex(currentVertex.x - normalX1, currentVertex.y - normalY1, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 1, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
+            vertex5 = new Vertex(currentVertex.x + normalX2, currentVertex.y + normalY2, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 0, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
+            vertex6 = new Vertex(currentVertex.x - normalX2, currentVertex.y - normalY2, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 1, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
+            if (jointVertex2f != null) {
+                if (sign == -1) {
+                    vertex4 = new Vertex(jointVertex2f.x, jointVertex2f.y, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 1, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
+                    vertex6 = new Vertex(jointVertex2f.x, jointVertex2f.y, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 1, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
+                } else {
+                    vertex3 = new Vertex(jointVertex2f.x, jointVertex2f.y, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 0, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
+                    vertex5 = new Vertex(jointVertex2f.x, jointVertex2f.y, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 0, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
+                }
+            }
+
+            if (crossVertex2f != null) {
+                crossVertex = new Vertex(crossVertex2f.x, crossVertex2f.y, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 0, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
+            }
+
+            if (i >= 1) {
+                makeLineQuad(
+                        vertex1,
+                        vertex2,
+                        vertex3,
+                        vertex4,
+                        newVertices, indices
+                );
+
+                makeJoint(
+                        vertex3,
+                        vertex4,
+                        vertex5,
+                        vertex6,
+                        crossVertex,
+                        angle, sign, newVertices, indices
+                );
+            }
+
+            lastJointVertex = jointVertex2f;
+            lastSign = sign;
+        }
+
+        Vertex prevVertex = vertices[vertices.length - 2];
+        Vertex currentVertex = vertices[vertices.length - 1];
+        if (loop) {
+            Vertex nextVertex = vertices[1];
 
             float dx1 = currentVertex.x - prevVertex.x;
             float dy1 = currentVertex.y - prevVertex.y;
@@ -317,40 +418,35 @@ public class TestPolygonTriangulator {
                     crossVertex,
                     angle, sign, newVertices, indices
             );
+        } else {
 
-            lastJointVertex = jointVertex2f;
-            lastSign = sign;
-        }
+            float dx1 = currentVertex.x - prevVertex.x;
+            float dy1 = currentVertex.y - prevVertex.y;
+            float length1 = sqrt(pow(dx1, 2) + pow(dy1, 2));
+            float normalX1 = -dy1 / length1 * (lineWidth / 2f);
+            float normalY1 = dx1 / length1 * (lineWidth / 2f);
 
-        Vertex prevVertex = vertices[vertices.length - 2];
-        Vertex currentVertex = vertices[vertices.length - 1];
-
-        float dx1 = currentVertex.x - prevVertex.x;
-        float dy1 = currentVertex.y - prevVertex.y;
-        float length1 = sqrt(pow(dx1, 2) + pow(dy1, 2));
-        float normalX1 = -dy1 / length1 * (lineWidth / 2f);
-        float normalY1 = dx1 / length1 * (lineWidth / 2f);
-
-        vertex1 = new Vertex(prevVertex.x + normalX1, prevVertex.y + normalY1, prevVertex.z, prevVertex.red, prevVertex.green, prevVertex.blue, prevVertex.alpha, 0, 0, prevVertex.normalsX, prevVertex.normalsY, prevVertex.normalsZ);
-        vertex2 = new Vertex(prevVertex.x - normalX1, prevVertex.y - normalY1, prevVertex.z, prevVertex.red, prevVertex.green, prevVertex.blue, prevVertex.alpha, 0, 1, prevVertex.normalsX, prevVertex.normalsY, prevVertex.normalsZ);
-        if (lastJointVertex != null) {
-            if (lastSign == -1) {
-                vertex2 = new Vertex(lastJointVertex.x, lastJointVertex.y, prevVertex.z, prevVertex.red, prevVertex.green, prevVertex.blue, prevVertex.alpha, 0, 1, prevVertex.normalsX, prevVertex.normalsY, prevVertex.normalsZ);
-            } else {
-                vertex1 = new Vertex(lastJointVertex.x, lastJointVertex.y, prevVertex.z, prevVertex.red, prevVertex.green, prevVertex.blue, prevVertex.alpha, 0, 0, prevVertex.normalsX, prevVertex.normalsY, prevVertex.normalsZ);
+            vertex1 = new Vertex(prevVertex.x + normalX1, prevVertex.y + normalY1, prevVertex.z, prevVertex.red, prevVertex.green, prevVertex.blue, prevVertex.alpha, 0, 0, prevVertex.normalsX, prevVertex.normalsY, prevVertex.normalsZ);
+            vertex2 = new Vertex(prevVertex.x - normalX1, prevVertex.y - normalY1, prevVertex.z, prevVertex.red, prevVertex.green, prevVertex.blue, prevVertex.alpha, 0, 1, prevVertex.normalsX, prevVertex.normalsY, prevVertex.normalsZ);
+            if (lastJointVertex != null) {
+                if (lastSign == -1) {
+                    vertex2 = new Vertex(lastJointVertex.x, lastJointVertex.y, prevVertex.z, prevVertex.red, prevVertex.green, prevVertex.blue, prevVertex.alpha, 0, 1, prevVertex.normalsX, prevVertex.normalsY, prevVertex.normalsZ);
+                } else {
+                    vertex1 = new Vertex(lastJointVertex.x, lastJointVertex.y, prevVertex.z, prevVertex.red, prevVertex.green, prevVertex.blue, prevVertex.alpha, 0, 0, prevVertex.normalsX, prevVertex.normalsY, prevVertex.normalsZ);
+                }
             }
+
+            vertex3 = new Vertex(currentVertex.x + normalX1, currentVertex.y + normalY1, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 0, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
+            vertex4 = new Vertex(currentVertex.x - normalX1, currentVertex.y - normalY1, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 1, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
+
+            makeLineQuad(
+                    vertex1,
+                    vertex2,
+                    vertex3,
+                    vertex4,
+                    newVertices, indices
+            );
         }
-
-        vertex3 = new Vertex(currentVertex.x + normalX1, currentVertex.y + normalY1, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 0, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
-        vertex4 = new Vertex(currentVertex.x - normalX1, currentVertex.y - normalY1, currentVertex.z, currentVertex.red, currentVertex.green, currentVertex.blue, currentVertex.alpha, 1, 1, currentVertex.normalsX, currentVertex.normalsY, currentVertex.normalsZ);
-
-        makeLineQuad(
-                vertex1,
-                vertex2,
-                vertex3,
-                vertex4,
-                newVertices, indices
-        );
     }
 
     private void makeJoint(Vertex vertex3, Vertex vertex4, Vertex vertex5, Vertex vertex6, Vertex crossVertex, float angle, float sign, List<Vertex> newVertices, List<Integer> indices) {

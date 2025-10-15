@@ -77,7 +77,7 @@ public class TestNewMeshSystem implements LFJGFrame {
 
             testMesh.addObject(
                     ProjectionType.ORTHOGRAPHIC_PROJECTION,
-                    DrawType.LINE_STRIP,
+                    DrawType.LINE_LOOP,
                     10f,
                     JointType.MITER,
                     vertices.toArray(new Vertex[0])
@@ -86,15 +86,15 @@ public class TestNewMeshSystem implements LFJGFrame {
 
         Vertex vertex1 = new Vertex(100, 100, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
         Vertex vertex2 = new Vertex(300, 500, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
-//        Vertex vertex3 = new Vertex(600, 100, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
-//        Vertex vertex4 = new Vertex(1500, 500, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
+        Vertex vertex3 = new Vertex(600, 100, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
+        Vertex vertex4 = new Vertex(1500, 500, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
 
         testMesh.addObject(
                 ProjectionType.ORTHOGRAPHIC_PROJECTION,
-                DrawType.LINE_STRIP,
+                DrawType.LINE_LOOP,
                 50f,
                 JointType.BEVEL,
-                vertex1, vertex2
+                vertex1, vertex2, vertex3, vertex4
         );
 
 //        for (int i = 0; i < numObjects; i++) {
