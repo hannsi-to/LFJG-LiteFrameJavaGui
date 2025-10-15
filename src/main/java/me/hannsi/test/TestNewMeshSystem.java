@@ -21,6 +21,8 @@ import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class TestNewMeshSystem implements LFJGFrame {
@@ -38,7 +40,7 @@ public class TestNewMeshSystem implements LFJGFrame {
     public void init() {
         LFJGContext.frame.updateLFJGLContext();
 
-        int numObjects = 100;
+        int numObjects = 1;
         int numVerticesPerStrip = 10;
         float minX = 0;
         float maxX = 1920;
@@ -55,34 +57,34 @@ public class TestNewMeshSystem implements LFJGFrame {
                 numObjects
         );
 
-//        for (int i = 0; i < numObjects; i++) {
-//            float x = minX + random.nextFloat() * (maxX - minX);
-//            float y = minY + random.nextFloat() * (maxY - minY);
-//
-//            List<Vertex> vertices = new ArrayList<>();
-//
-//            for (int j = 0; j < numVerticesPerStrip; j++) {
-//                float r = random.nextFloat();
-//                float g = random.nextFloat();
-//                float b = random.nextFloat();
-//
-//                Vertex v = new Vertex(x, y, 0, r, g, b, 0.5f, 0, 0, 0, 0, 1);
-//                vertices.add(v);
-//
-//                float angle = (float) (random.nextFloat() * Math.PI * 2.0);
-//                float step = minSize + random.nextFloat() * (maxSize - minSize);
-//                x += (float) (Math.cos(angle) * step);
-//                y += (float) (Math.sin(angle) * step);
-//            }
-//
-//            testMesh.addObject(
-//                    ProjectionType.ORTHOGRAPHIC_PROJECTION,
-//                    DrawType.LINE_LOOP,
-//                    10f,
-//                    JointType.MITER,
-//                    vertices.toArray(new Vertex[0])
-//            );
-//        }
+        for (int i = 0; i < numObjects; i++) {
+            float x = minX + random.nextFloat() * (maxX - minX);
+            float y = minY + random.nextFloat() * (maxY - minY);
+
+            List<Vertex> vertices = new ArrayList<>();
+
+            for (int j = 0; j < numVerticesPerStrip; j++) {
+                float r = random.nextFloat();
+                float g = random.nextFloat();
+                float b = random.nextFloat();
+
+                Vertex v = new Vertex(x, y, 0, r, g, b, 0.5f, 0, 0, 0, 0, 1);
+                vertices.add(v);
+
+                float angle = (float) (random.nextFloat() * Math.PI * 2.0);
+                float step = minSize + random.nextFloat() * (maxSize - minSize);
+                x += (float) (Math.cos(angle) * step);
+                y += (float) (Math.sin(angle) * step);
+            }
+
+            testMesh.addObject(
+                    ProjectionType.ORTHOGRAPHIC_PROJECTION,
+                    DrawType.LINE_LOOP,
+                    30,
+                    JointType.MITER,
+                    vertices.toArray(new Vertex[0])
+            );
+        }
 
 //        Vertex vertex1 = new Vertex(100, 100, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
 //        Vertex vertex2 = new Vertex(300, 500, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
@@ -123,42 +125,42 @@ public class TestNewMeshSystem implements LFJGFrame {
 //            );
 //        }
 
-        for (int i = 0; i < numObjects; i++) {
-            float centerX = minX + random.nextFloat() * (maxX - minX);
-            float centerY = minY + random.nextFloat() * (maxY - minY);
-            float size = minSize + random.nextFloat() * (maxSize - minSize);
-
-            float r = random.nextFloat();
-            float g = random.nextFloat();
-            float b = random.nextFloat();
-
-            Vertex v1 = new Vertex(
-                    centerX - size / 2, centerY - size / 2, 0f,
-                    r, g, b, 1f,
-                    0f, 0f,
-                    0f, 0f, 1f
-            );
-            Vertex v2 = new Vertex(
-                    centerX + size / 2, centerY - size / 2, 0f,
-                    r, g, b, 1f,
-                    1f, 0f,
-                    0f, 0f, 1f
-            );
-            Vertex v3 = new Vertex(
-                    centerX, centerY + size / 2, 0f,
-                    r, g, b, 1f,
-                    0.5f, 1f,
-                    0f, 0f, 1f
-            );
-
-            testMesh.addObject(
-                    ProjectionType.ORTHOGRAPHIC_PROJECTION,
-                    DrawType.TRIANGLES,
-                    1f,
-                    JointType.MITER,
-                    v1, v2, v3
-            );
-        }
+//        for (int i = 0; i < numObjects; i++) {
+//            float centerX = minX + random.nextFloat() * (maxX - minX);
+//            float centerY = minY + random.nextFloat() * (maxY - minY);
+//            float size = minSize + random.nextFloat() * (maxSize - minSize);
+//
+//            float r = random.nextFloat();
+//            float g = random.nextFloat();
+//            float b = random.nextFloat();
+//
+//            Vertex v1 = new Vertex(
+//                    centerX - size / 2, centerY - size / 2, 0f,
+//                    r, g, b, 1f,
+//                    0f, 0f,
+//                    0f, 0f, 1f
+//            );
+//            Vertex v2 = new Vertex(
+//                    centerX + size / 2, centerY - size / 2, 0f,
+//                    r, g, b, 1f,
+//                    1f, 0f,
+//                    0f, 0f, 1f
+//            );
+//            Vertex v3 = new Vertex(
+//                    centerX, centerY + size / 2, 0f,
+//                    r, g, b, 1f,
+//                    0.5f, 1f,
+//                    0f, 0f, 1f
+//            );
+//
+//            testMesh.addObject(
+//                    ProjectionType.ORTHOGRAPHIC_PROJECTION,
+//                    DrawType.TRIANGLES,
+//                    1f,
+//                    JointType.MITER,
+//                    v1, v2, v3
+//            );
+//        }
 
         testMesh.initBufferObject();
 
@@ -182,7 +184,7 @@ public class TestNewMeshSystem implements LFJGFrame {
         LFJGRenderContext.shaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, viewMatrix);
         LFJGRenderContext.shaderProgram.setUniform("resolution", UploadUniformType.ON_CHANGE, Core.frameBufferSize);
 
-        testMesh.debugDraw(DrawType.TRIANGLES.getId());
+        testMesh.debugDraw(DrawType.TRIANGLES.getId(), true);
 
         if (timer.passed(2000)) {
             System.out.println(LFJGContext.frame.getFps());

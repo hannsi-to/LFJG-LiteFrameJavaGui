@@ -91,7 +91,15 @@ public class TestMesh {
                 .getResult();
     }
 
-    public void debugDraw(int mode) {
+    public void debugDraw(int mode, boolean frontAndBack) {
+        if (frontAndBack) {
+            GLStateCache.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+            GLStateCache.lineWidth(0.1f);
+        } else {
+            GLStateCache.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+            GLStateCache.lineWidth(1.0f);
+        }
+
         persistentMappedVBO.syncToGPU();
         persistentMappedEBO.syncToGPU();
         persistentMappedIBO.syncToGPU();
