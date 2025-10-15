@@ -53,6 +53,29 @@ public class TestPolygonTriangulator {
         return new Vector2f(ix, iy);
     }
 
+    private static int calculateSegmentCount(float pointSize) {
+        if (pointSize <= 2f) {
+            return 6;
+        }
+        if (pointSize <= 5f) {
+            return 8;
+        }
+        if (pointSize <= 10f) {
+            return 12;
+        }
+        if (pointSize <= 20f) {
+            return 18;
+        }
+        if (pointSize <= 40f) {
+            return 24;
+        }
+        if (pointSize <= 80f) {
+            return 36;
+        }
+
+        return Math.min(64, (int) (pointSize * 1.2f));
+    }
+
     public TestPolygonTriangulator projectionType(ProjectionType projectionType) {
         this.projectionType = projectionType;
         return this;
@@ -138,9 +161,14 @@ public class TestPolygonTriangulator {
                             }
 
                             return new TestElementPair(newVertices.toArray(new Vertex[0]), indices.stream().mapToInt(Integer::intValue).toArray());
-                            
+
                         case ROUND:
-                            break;
+                            for (Vertex vertex : vertices) {
+                                makeCircle(vertex.copy(), calculateSegmentCount(pointSize), newVertices, indices);
+                            }
+
+                            return new TestElementPair(newVertices.toArray(new Vertex[0]), indices.stream().mapToInt(Integer::intValue).toArray());
+
                         default:
                             throw new IllegalStateException("Unexpected value: " + pointType);
                     }
@@ -216,6 +244,25 @@ public class TestPolygonTriangulator {
             DebugLog.error(getClass(), e);
             DebugLog.error(getClass(), new PolygonTriangulatorException("Triangulation process failed"));
             return new TestElementPair(vertices, new int[0]);
+        }
+    }
+
+    private void makeCircle(Vertex center, int segmentCount, List<Vertex> newVertices, List<Integer> indices) {
+        int baseIndex = newVertices.size();
+
+        newVertices.add(center.copy());
+
+        for (int i = 0; i <= segmentCount; i++) {
+            double angle = Math.toRadians((360.0 / segmentCount) * i);
+            float x = (float) (center.x + Math.cos(angle) * pointSize);
+            float y = (float) (center.y + Math.sin(angle) * pointSize);
+            newVertices.add(center.copy().replaceXYZ(x, y, center.z));
+        }
+
+        for (int i = 1; i <= segmentCount; i++) {
+            indices.add(baseIndex);
+            indices.add(baseIndex + i);
+            indices.add(baseIndex + i + 1);
         }
     }
 

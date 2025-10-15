@@ -84,7 +84,7 @@ public class TestNewMeshSystem implements LFJGFrame {
                     30,
                     JointType.MITER,
                     10f,
-                    PointType.SQUARE,
+                    PointType.ROUND,
                     vertices.toArray(new Vertex[0])
             );
         }
