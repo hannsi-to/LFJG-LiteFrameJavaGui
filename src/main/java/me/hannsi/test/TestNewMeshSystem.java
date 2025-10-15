@@ -6,6 +6,8 @@ import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
+import me.hannsi.lfjg.frame.setting.settings.VSyncSetting;
+import me.hannsi.lfjg.frame.setting.settings.VSyncType;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.renderers.BlendType;
@@ -19,8 +21,6 @@ import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class TestNewMeshSystem implements LFJGFrame {
@@ -38,7 +38,7 @@ public class TestNewMeshSystem implements LFJGFrame {
     public void init() {
         LFJGContext.frame.updateLFJGLContext();
 
-        int numObjects = 10;
+        int numObjects = 100;
         int numVerticesPerStrip = 10;
         float minX = 0;
         float maxX = 1920;
@@ -55,47 +55,47 @@ public class TestNewMeshSystem implements LFJGFrame {
                 numObjects
         );
 
-        for (int i = 0; i < numObjects; i++) {
-            float x = minX + random.nextFloat() * (maxX - minX);
-            float y = minY + random.nextFloat() * (maxY - minY);
+//        for (int i = 0; i < numObjects; i++) {
+//            float x = minX + random.nextFloat() * (maxX - minX);
+//            float y = minY + random.nextFloat() * (maxY - minY);
+//
+//            List<Vertex> vertices = new ArrayList<>();
+//
+//            for (int j = 0; j < numVerticesPerStrip; j++) {
+//                float r = random.nextFloat();
+//                float g = random.nextFloat();
+//                float b = random.nextFloat();
+//
+//                Vertex v = new Vertex(x, y, 0, r, g, b, 0.5f, 0, 0, 0, 0, 1);
+//                vertices.add(v);
+//
+//                float angle = (float) (random.nextFloat() * Math.PI * 2.0);
+//                float step = minSize + random.nextFloat() * (maxSize - minSize);
+//                x += (float) (Math.cos(angle) * step);
+//                y += (float) (Math.sin(angle) * step);
+//            }
+//
+//            testMesh.addObject(
+//                    ProjectionType.ORTHOGRAPHIC_PROJECTION,
+//                    DrawType.LINE_LOOP,
+//                    10f,
+//                    JointType.MITER,
+//                    vertices.toArray(new Vertex[0])
+//            );
+//        }
 
-            List<Vertex> vertices = new ArrayList<>();
-
-            for (int j = 0; j < numVerticesPerStrip; j++) {
-                float r = random.nextFloat();
-                float g = random.nextFloat();
-                float b = random.nextFloat();
-
-                Vertex v = new Vertex(x, y, 0, r, g, b, 0.5f, 0, 0, 0, 0, 1);
-                vertices.add(v);
-
-                float angle = (float) (random.nextFloat() * Math.PI * 2.0);
-                float step = minSize + random.nextFloat() * (maxSize - minSize);
-                x += (float) (Math.cos(angle) * step);
-                y += (float) (Math.sin(angle) * step);
-            }
-
-            testMesh.addObject(
-                    ProjectionType.ORTHOGRAPHIC_PROJECTION,
-                    DrawType.LINE_LOOP,
-                    10f,
-                    JointType.MITER,
-                    vertices.toArray(new Vertex[0])
-            );
-        }
-
-        Vertex vertex1 = new Vertex(100, 100, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
-        Vertex vertex2 = new Vertex(300, 500, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
-        Vertex vertex3 = new Vertex(600, 100, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
-        Vertex vertex4 = new Vertex(1500, 500, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
-
-        testMesh.addObject(
-                ProjectionType.ORTHOGRAPHIC_PROJECTION,
-                DrawType.LINE_LOOP,
-                50f,
-                JointType.BEVEL,
-                vertex1, vertex2, vertex3, vertex4
-        );
+//        Vertex vertex1 = new Vertex(100, 100, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
+//        Vertex vertex2 = new Vertex(300, 500, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
+//        Vertex vertex3 = new Vertex(600, 100, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
+//        Vertex vertex4 = new Vertex(1500, 500, 0, 1, 1, 1, 0.5f, 0, 0, 0, 0, 1);
+//
+//        testMesh.addObject(
+//                ProjectionType.ORTHOGRAPHIC_PROJECTION,
+//                DrawType.LINE_LOOP,
+//                50f,
+//                JointType.BEVEL,
+//                vertex1, vertex2, vertex3, vertex4
+//        );
 
 //        for (int i = 0; i < numObjects; i++) {
 //            float x1 = minX + random.nextFloat() * (maxX - minX);
@@ -123,36 +123,42 @@ public class TestNewMeshSystem implements LFJGFrame {
 //            );
 //        }
 
-//        for (int i = 0; i < numObjects; i++) {
-//            float centerX = minX + random.nextFloat() * (maxX - minX);
-//            float centerY = minY + random.nextFloat() * (maxY - minY);
-//            float size = minSize + random.nextFloat() * (maxSize - minSize);
-//
-//            float r = random.nextFloat();
-//            float g = random.nextFloat();
-//            float b = random.nextFloat();
-//
-//            Vertex v1 = new Vertex(
-//                    centerX - size / 2, centerY - size / 2, 0f,
-//                    r, g, b, 1f,
-//                    0f, 0f,
-//                    0f, 0f, 1f
-//            );
-//            Vertex v2 = new Vertex(
-//                    centerX + size / 2, centerY - size / 2, 0f,
-//                    r, g, b, 1f,
-//                    1f, 0f,
-//                    0f, 0f, 1f
-//            );
-//            Vertex v3 = new Vertex(
-//                    centerX, centerY + size / 2, 0f,
-//                    r, g, b, 1f,
-//                    0.5f, 1f,
-//                    0f, 0f, 1f
-//            );
-//
-//            testMesh.addObject(ProjectionType.ORTHOGRAPHIC_PROJECTION, DrawType.TRIANGLES, v1, v2, v3);
-//        }
+        for (int i = 0; i < numObjects; i++) {
+            float centerX = minX + random.nextFloat() * (maxX - minX);
+            float centerY = minY + random.nextFloat() * (maxY - minY);
+            float size = minSize + random.nextFloat() * (maxSize - minSize);
+
+            float r = random.nextFloat();
+            float g = random.nextFloat();
+            float b = random.nextFloat();
+
+            Vertex v1 = new Vertex(
+                    centerX - size / 2, centerY - size / 2, 0f,
+                    r, g, b, 1f,
+                    0f, 0f,
+                    0f, 0f, 1f
+            );
+            Vertex v2 = new Vertex(
+                    centerX + size / 2, centerY - size / 2, 0f,
+                    r, g, b, 1f,
+                    1f, 0f,
+                    0f, 0f, 1f
+            );
+            Vertex v3 = new Vertex(
+                    centerX, centerY + size / 2, 0f,
+                    r, g, b, 1f,
+                    0.5f, 1f,
+                    0f, 0f, 1f
+            );
+
+            testMesh.addObject(
+                    ProjectionType.ORTHOGRAPHIC_PROJECTION,
+                    DrawType.TRIANGLES,
+                    1f,
+                    JointType.MITER,
+                    v1, v2, v3
+            );
+        }
 
         testMesh.initBufferObject();
 
@@ -180,6 +186,14 @@ public class TestNewMeshSystem implements LFJGFrame {
 
         if (timer.passed(2000)) {
             System.out.println(LFJGContext.frame.getFps());
+            testMesh.debugLogging(
+                    true,
+                    true,
+                    true,
+                    true,
+                    true,
+                    true
+            );
             timer.reset();
         }
     }
@@ -192,6 +206,7 @@ public class TestNewMeshSystem implements LFJGFrame {
     @Override
     public void setFrameSetting() {
         LFJGContext.frame.setFrameSettingValue(RefreshRateSetting.class, -1);
+        LFJGContext.frame.setFrameSettingValue(VSyncSetting.class, VSyncType.V_SYNC_OFF);
     }
 
     public void setFrame() {

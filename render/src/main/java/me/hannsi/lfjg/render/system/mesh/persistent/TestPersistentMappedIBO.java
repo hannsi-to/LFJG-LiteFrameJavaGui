@@ -93,6 +93,10 @@ public class TestPersistentMappedIBO implements PersistentMappedBuffer {
         return bufferId;
     }
 
+    public IntBuffer getMappedBuffer() {
+        return mappedBuffer;
+    }
+
     @Override
     public void cleanup() {
         if (bufferId != 0) {

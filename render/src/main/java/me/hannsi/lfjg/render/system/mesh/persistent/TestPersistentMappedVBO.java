@@ -234,6 +234,10 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
         return bufferId;
     }
 
+    public FloatBuffer getMappedBuffer() {
+        return mappedBuffer;
+    }
+
     @Override
     public void cleanup() {
         if (bufferId != 0) {

@@ -5,6 +5,7 @@ import me.hannsi.lfjg.core.utils.toolkit.StringUtil;
 
 public class LogGenerator {
     public static int barCount = 30;
+    private String bar = "-";
     private String title;
     private String[] texts;
 
@@ -50,12 +51,18 @@ public class LogGenerator {
         this.texts = texts;
     }
 
+    public LogGenerator bar(String bar) {
+        this.bar = bar;
+
+        return this;
+    }
+
     public String createLog() {
         StringBuilder log = new StringBuilder("\n");
         StringBuilder firstLine = new StringBuilder();
-        firstLine.append(StringUtil.repeat("-", MathHelper.max(0, barCount)));
+        firstLine.append(StringUtil.repeat(bar, MathHelper.max(0, barCount)));
         firstLine.append(" ").append(title).append(" ");
-        firstLine.append(StringUtil.repeat("-", MathHelper.max(0, barCount)));
+        firstLine.append(StringUtil.repeat(bar, MathHelper.max(0, barCount)));
 
         log.append(firstLine);
 
@@ -64,7 +71,7 @@ public class LogGenerator {
         }
 
         log.append("\n");
-        log.append(StringUtil.repeat("-", MathHelper.max(0, firstLine.length())));
+        log.append(StringUtil.repeat(bar, MathHelper.max(0, firstLine.length())));
         log.append("\n");
 
         return log.toString();

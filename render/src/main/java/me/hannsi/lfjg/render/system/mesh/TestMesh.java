@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.system.mesh;
 
+import me.hannsi.lfjg.core.debug.DebugLevel;
+import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.renderers.JointType;
 import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedEBO;
@@ -10,6 +12,9 @@ import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL43;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestMesh {
     private final TestPersistentMappedVBO persistentMappedVBO;
@@ -102,6 +107,54 @@ public class TestMesh {
                 persistentMappedIBO.getCommandCount(),
                 0
         );
+    }
+
+    public void debugLogging(boolean vaoID, boolean currentIndex, boolean totalVertexCount, boolean vbo, boolean ebo, boolean ibo) {
+        List<String> log = new ArrayList<>();
+        if (vaoID) {
+            log.add("VAO ID: " + vaoId);
+        }
+        if (currentIndex) {
+            log.add("Current Index (rotation buffer): " + this.currentIndex);
+        }
+        if (totalVertexCount) {
+            log.add("Total Vertex Count: " + vertexCount);
+        }
+        if (vbo) {
+            log.add(
+                    new LogGenerator(
+                            "VBO",
+                            "BufferID: " + persistentMappedVBO.getBufferId(),
+                            "Capacity: " + persistentMappedVBO.getMappedBuffer().capacity(),
+                            "Used: " + persistentMappedVBO.getVertexCount()
+                    ).createLog()
+            );
+        }
+        if (ebo) {
+            log.add(
+                    new LogGenerator(
+                            "EBO",
+                            "BufferID: " + persistentMappedEBO.getBufferId(),
+                            "Capacity: " + persistentMappedEBO.getMappedBuffer().capacity(),
+                            "Used: " + persistentMappedEBO.getIndexCount()
+                    ).createLog()
+            );
+        }
+        if (ibo) {
+            log.add(
+                    new LogGenerator(
+                            "IBO",
+                            "BufferID: " + persistentMappedIBO.getBufferId(),
+                            "Capacity: " + persistentMappedIBO.getMappedBuffer().capacity(),
+                            "Command Count: " + persistentMappedIBO.getCommandCount()
+                    ).createLog()
+            );
+        }
+
+        new LogGenerator(
+                getClass().getSimpleName() + " Debug Message",
+                log.toArray(new String[0])
+        ).bar("=").logging(DebugLevel.DEBUG);
     }
 
     public int getVaoId() {
