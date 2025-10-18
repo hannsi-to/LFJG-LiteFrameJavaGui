@@ -8,9 +8,11 @@ out vec4 outPosition;
 out vec4 outColor;
 out vec2  outTexture;
 
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
-uniform mat4 modelMatrix;
+layout(std140) uniform Matrices{
+    mat4 projectionMatrix;
+    mat4 viewMatrix;
+    mat4 modelMatrix;
+};
 
 uniform float italicSkew = 0;
 

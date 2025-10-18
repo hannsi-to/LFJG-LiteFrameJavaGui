@@ -9,7 +9,6 @@ import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.setting.settings.VSyncSetting;
 import me.hannsi.lfjg.frame.setting.settings.VSyncType;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.JointType;
 import me.hannsi.lfjg.render.renderers.PointType;
@@ -20,11 +19,18 @@ import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL30.glBindBufferBase;
+import static org.lwjgl.opengl.GL31.*;
 
 public class TestNewMeshSystem implements LFJGFrame {
     Timer timer = new Timer();
@@ -33,13 +39,36 @@ public class TestNewMeshSystem implements LFJGFrame {
     private Matrix4f viewMatrix;
     private BlendType blendType;
 
+    private int uboMatrices;
+
     public static void main(String[] args) {
         new TestNewMeshSystem().setFrame();
+    }
+
+    public void updateUBO(Matrix4f projection, Matrix4f view, Matrix4f model) {
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(16 * 3);
+
+        projection.get(0, buffer);
+        view.get(16, buffer);
+        model.get(32, buffer);
+
+        glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, buffer);
+        glBindBuffer(GL_UNIFORM_BUFFER, 0);
     }
 
     @Override
     public void init() {
         LFJGContext.frame.updateLFJGLContext();
+
+        uboMatrices = glGenBuffers();
+        glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
+        glBufferData(GL_UNIFORM_BUFFER, 3 * 16 * Float.BYTES, GL_DYNAMIC_DRAW);
+        glBindBufferBase(GL_UNIFORM_BUFFER, 0, uboMatrices);
+        glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+        int blockIndex = glGetUniformBlockIndex(shaderProgram.getProgramId(), "Matrices");
+        glUniformBlockBinding(shaderProgram.getProgramId(), blockIndex, 0);
 
         int numObjects = 1;
         int numVerticesPerStrip = 10;
@@ -203,18 +232,16 @@ public class TestNewMeshSystem implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-        LFJGRenderContext.shaderProgram.bind();
+        shaderProgram.bind();
 
         GLStateCache.blendFunc(blendType.getSfactor(), blendType.getDfactor());
         GLStateCache.setBlendEquation(blendType.getEquation());
         GLStateCache.enable(GL11.GL_BLEND);
         GLStateCache.disable(GL11.GL_DEPTH_TEST);
 
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.OBJECT.getId());
-        LFJGRenderContext.shaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());
-        LFJGRenderContext.shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix);
-        LFJGRenderContext.shaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, viewMatrix);
-        LFJGRenderContext.shaderProgram.setUniform("resolution", UploadUniformType.ON_CHANGE, Core.frameBufferSize);
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.OBJECT.getId());
+        shaderProgram.setUniform("resolution", UploadUniformType.ON_CHANGE, Core.frameBufferSize);
+        updateUBO(Core.projection2D.getProjMatrix(), viewMatrix, modelMatrix.translate(0.1f, 0, 0));
 
         testMesh.debugDraw(DrawType.TRIANGLES.getId(), false);
 
