@@ -98,7 +98,6 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
         final int GL_MAP_COHERENT_BIT = GL44.GL_MAP_COHERENT_BIT;
         if ((flags & GL_MAP_COHERENT_BIT) == 0) {
             GL44.glFlushMappedBufferRange(GL15.GL_ARRAY_BUFFER, byteOffset, byteLength);
-            GL42.glMemoryBarrier(GL42.GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
         }
     }
 

@@ -68,7 +68,7 @@ public class TestNewMeshSystem implements LFJGFrame {
         int blockIndex = glGetUniformBlockIndex(shaderProgram.getProgramId(), "Matrices");
         glUniformBlockBinding(shaderProgram.getProgramId(), blockIndex, 0);
 
-        int numObjects = 1;
+        int numObjects = 10;
         int numVerticesPerStrip = 10;
         float minX = 0;
         float maxX = 1920;
@@ -81,8 +81,8 @@ public class TestNewMeshSystem implements LFJGFrame {
 
         testMesh = TestMesh.createMesh(
                 (numObjects * numVerticesPerStrip * 100),
-                1,
-                numObjects
+                (numObjects * numVerticesPerStrip * 100),
+                1
         );
 
         for (int i = 0; i < numObjects; i++) {

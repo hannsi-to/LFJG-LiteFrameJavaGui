@@ -6,7 +6,6 @@ import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.GL42;
 import org.lwjgl.opengl.GL44;
 
 import java.nio.ByteBuffer;
@@ -31,7 +30,7 @@ public class TestPersistentMappedEBO implements PersistentMappedBuffer {
     }
 
     private void allocationBufferStorage(int capacity) {
-        gpuMemorySize = getIndicesSizeByte(capacity);
+        gpuMemorySize = capacity;
         if (bufferId != 0) {
             GLStateCache.deleteElementArrayBuffer(bufferId);
             bufferId = 0;
@@ -82,7 +81,6 @@ public class TestPersistentMappedEBO implements PersistentMappedBuffer {
         final int GL_MAP_COHERENT_BIT = GL44.GL_MAP_COHERENT_BIT;
         if ((flags & GL_MAP_COHERENT_BIT) == 0) {
             GL44.glFlushMappedBufferRange(GL15.GL_ELEMENT_ARRAY_BUFFER, byteOffset, byteLength);
-            GL42.glMemoryBarrier(GL42.GL_ELEMENT_ARRAY_BARRIER_BIT);
         }
     }
 
@@ -116,14 +114,14 @@ public class TestPersistentMappedEBO implements PersistentMappedBuffer {
                 "IndexCount: " + indexCount
         ).logging(getClass(), DebugLevel.INFO, true, true);
 
-        final int floatsToCopy = indexCount;
-        int[] backup = new int[Math.max(0, floatsToCopy)];
+        final int intsToCopy = indexCount;
+        int[] backup = new int[Math.max(0, intsToCopy)];
 
-        if (mappedBuffer != null && floatsToCopy > 0) {
+        if (mappedBuffer != null && intsToCopy > 0) {
             try {
                 IntBuffer reader = mappedBuffer.duplicate();
                 reader.position(0);
-                int safeLimit = Math.min(reader.capacity(), floatsToCopy);
+                int safeLimit = Math.min(reader.capacity(), intsToCopy);
                 reader.limit(safeLimit);
                 reader.get(backup, 0, safeLimit);
                 DebugLog.info(getClass(), String.format(
