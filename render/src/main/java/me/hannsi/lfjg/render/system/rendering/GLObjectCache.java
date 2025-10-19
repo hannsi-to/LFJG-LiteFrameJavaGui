@@ -27,7 +27,7 @@ public class GLObjectCache {
                 getClass(),
                 String.valueOf(glObject.getObjectId()),
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
 
         return this;
     }
@@ -74,7 +74,7 @@ public class GLObjectCache {
                 getClass(),
                 ids.toString(),
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
     }
 
     public GLObject getGLObject(long objectId) {

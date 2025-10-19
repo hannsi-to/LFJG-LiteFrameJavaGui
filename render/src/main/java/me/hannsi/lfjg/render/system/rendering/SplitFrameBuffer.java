@@ -55,7 +55,7 @@ public class SplitFrameBuffer {
                 getClass(),
                 ids.substring(0, ids.length() - 2),
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
     }
 
     public void createSmallFrameBuffers() {

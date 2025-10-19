@@ -218,7 +218,14 @@ public class TextRenderer {
                         cursorY += spaseY;
                     }
                 } else {
-                    new LogGenerator("TextFormat Message", "Source: GLFont", "Type: No Code", "ID: " + hashCode(), "Severity: Waring", "Message: Not font text format code: " + TextFormatType.PREFIX_CODE + ch).logging(DebugLevel.WARNING);
+                    new LogGenerator(
+                            "TextFormat Message",
+                            "Source: GLFont",
+                            "Type: No Code",
+                            "ID: " + hashCode(),
+                            "Severity: Waring",
+                            "Message: Not font text format code: " + TextFormatType.PREFIX_CODE + ch
+                    ).logging(getClass(), DebugLevel.WARNING);
                 }
 
                 continue;

@@ -97,7 +97,7 @@ public class FrameBuffer {
                 getClass(),
                 frameBufferId,
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
     }
 
     public void createMatrix(Matrix4f modelMatrix, Matrix4f viewMatrix) {

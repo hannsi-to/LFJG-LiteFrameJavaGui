@@ -22,7 +22,7 @@ public class GLFWDebug {
                             "ID: " + Integer.toHexString(error),
                             "Severity: Error",
                             "Message: " + errorMessage
-                    ).logging(DebugLevel.ERROR);
+                    ).logging(getClass(), DebugLevel.ERROR);
                 }
             };
             GLFW.glfwSetErrorCallback(errorCallback);

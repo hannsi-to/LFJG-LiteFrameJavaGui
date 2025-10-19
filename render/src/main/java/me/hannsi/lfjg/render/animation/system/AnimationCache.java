@@ -35,7 +35,7 @@ public class AnimationCache {
                 getClass(),
                 animationBase.getName(),
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
 
         return this;
     }
@@ -80,7 +80,7 @@ public class AnimationCache {
                 getClass(),
                 ids.substring(0, ids.length() - 2),
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
     }
 
     public LinkedHashMap<String, AnimationBase> getAnimationBases() {

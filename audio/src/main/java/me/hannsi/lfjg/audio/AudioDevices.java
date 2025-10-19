@@ -54,7 +54,7 @@ public class AudioDevices {
             devices[index] = String.format("[%2d] %s | Version: %-15s | Output: %s", index + 1, paddedName, version, output);
         });
 
-        new LogGenerator("Audio Output Devices", devices).logging(DebugLevel.DEBUG);
+        new LogGenerator("Audio Output Devices", devices).logging(getClass(), DebugLevel.DEBUG);
     }
 
     public void cleanup() {
@@ -66,6 +66,6 @@ public class AudioDevices {
                 getClass(),
                 hashCode(),
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
     }
 }

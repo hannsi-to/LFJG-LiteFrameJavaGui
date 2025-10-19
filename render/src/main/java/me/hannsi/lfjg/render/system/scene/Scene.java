@@ -31,7 +31,7 @@ public class Scene {
                 getClass(),
                 sceneId,
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
     }
 
     public boolean isInitialize() {

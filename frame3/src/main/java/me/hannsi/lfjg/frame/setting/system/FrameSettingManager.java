@@ -110,7 +110,7 @@ public class FrameSettingManager {
                 getClass(),
                 hashCode(),
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
     }
 
     public void register(FrameSettingBase<?> frameSetting) {

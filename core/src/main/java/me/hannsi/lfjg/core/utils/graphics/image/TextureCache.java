@@ -39,7 +39,7 @@ public class TextureCache {
                 getClass(),
                 ids.toString(),
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
     }
 
     public TextureCache createCache(String name, Location path) {
@@ -51,7 +51,7 @@ public class TextureCache {
                 getClass(),
                 name,
                 path.path()
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
 
         return this;
     }

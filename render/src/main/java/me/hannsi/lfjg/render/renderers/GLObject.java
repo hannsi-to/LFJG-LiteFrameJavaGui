@@ -78,7 +78,7 @@ public class GLObject implements Cloneable {
                 getClass(),
                 String.valueOf(objectId),
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
     }
 
     public void create() {
@@ -192,7 +192,7 @@ public class GLObject implements Cloneable {
                     "ID: " + glObject.getObjectId(),
                     "Severity: Info",
                     "Message: Create object copy: " + glObject.getName()
-            ).logging(DebugLevel.INFO);
+            ).logging(getClass(), DebugLevel.INFO);
         } catch (Exception e) {
             new LogGenerator(
                     getClass().getSimpleName() + " Debug Message",
@@ -201,7 +201,7 @@ public class GLObject implements Cloneable {
                     "ID: " + this.getObjectId(),
                     "Severity: Error",
                     "Message: Failed to create object copy: " + this.getName()
-            ).logging(DebugLevel.ERROR);
+            ).logging(getClass(), DebugLevel.ERROR);
             throw new RuntimeException(e);
         }
 

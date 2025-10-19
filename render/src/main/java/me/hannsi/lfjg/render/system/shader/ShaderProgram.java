@@ -82,7 +82,7 @@ public class ShaderProgram {
                 getClass(),
                 "ProgramId: " + programId + " | VertexShaderId: " + vertexShaderId + " | FragmentShaderId: " + fragmentShaderId,
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
     }
 
     public void createVertexShader(Location fileLocation) {

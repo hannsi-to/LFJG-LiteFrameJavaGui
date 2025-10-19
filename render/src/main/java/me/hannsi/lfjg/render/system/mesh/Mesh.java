@@ -102,7 +102,7 @@ public class Mesh {
                 getClass(),
                 ids.toString(),
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
     }
 
     public Mesh projectionType(ProjectionType projectionType) {

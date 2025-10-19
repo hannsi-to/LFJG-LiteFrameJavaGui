@@ -50,7 +50,7 @@ public class SoundCache {
                 getClass(),
                 name,
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
 
         return this;
     }
@@ -72,7 +72,7 @@ public class SoundCache {
                 getClass(),
                 String.valueOf(context),
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
     }
 
     public void playSoundData(String name) {

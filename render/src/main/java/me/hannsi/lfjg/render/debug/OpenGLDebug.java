@@ -49,13 +49,13 @@ public class OpenGLDebug {
                             );
 
                             if (type == GL43.GL_DEBUG_TYPE_ERROR || severity == GL43.GL_DEBUG_SEVERITY_HIGH) {
-                                logGenerator.logging(DebugLevel.ERROR);
+                                logGenerator.logging(getClass(), DebugLevel.ERROR);
                             } else if (severity == GL43.GL_DEBUG_SEVERITY_MEDIUM) {
-                                logGenerator.logging(DebugLevel.WARNING);
+                                logGenerator.logging(getClass(), DebugLevel.WARNING);
                             } else if (severity == GL43.GL_DEBUG_SEVERITY_LOW) {
-                                logGenerator.logging(DebugLevel.INFO);
+                                logGenerator.logging(getClass(), DebugLevel.INFO);
                             } else {
-                                logGenerator.logging(DebugLevel.DEBUG);
+                                logGenerator.logging(getClass(), DebugLevel.DEBUG);
                             }
                         }
                     }

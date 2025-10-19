@@ -27,7 +27,7 @@ public class FontCache {
                 getClass(),
                 name,
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
 
         return this;
     }
@@ -59,7 +59,7 @@ public class FontCache {
                 getClass(),
                 ids.toString(),
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
 
         return this;
     }

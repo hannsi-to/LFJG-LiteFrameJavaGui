@@ -32,7 +32,7 @@ public class SceneSystem {
                 "ID: " + currentScene.getSceneId(),
                 "Severity: Info",
                 "Message: Start change from " + currentSceneName + " to " + newCurrentSceneName + "."
-        ).logging(DebugLevel.INFO);
+        ).logging(getClass(), DebugLevel.INFO);
 
         currentScene.getIScene().stopFrame();
 
@@ -52,7 +52,7 @@ public class SceneSystem {
                 "ID: " + currentScene.getSceneId(),
                 "Severity: Info",
                 "Message: Finished changing from " + currentSceneName + " to " + newCurrentSceneName + "."
-        ).logging(DebugLevel.INFO);
+        ).logging(getClass(), DebugLevel.INFO);
     }
 
     public SceneSystem addScene(Scene scene) {
@@ -115,7 +115,7 @@ public class SceneSystem {
                 getClass(),
                 ids.substring(0, ids.length() - 2),
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
     }
 
     public List<Scene> getScenes() {
@@ -152,7 +152,7 @@ public class SceneSystem {
                 "ID: " + currentScene.getSceneId(),
                 "Severity: Info",
                 "Message: " + currentSceneName + " is set."
-        ).logging(DebugLevel.INFO);
+        ).logging(getClass(), DebugLevel.INFO);
 
         return this;
     }

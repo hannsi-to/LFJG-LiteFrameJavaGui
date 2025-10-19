@@ -23,7 +23,7 @@ public class ThreadCache {
                 "Severity: Info",
                 "Message: Create thread cache: " + thread.getName()
         );
-        logGenerator.logging(DebugLevel.DEBUG);
+        logGenerator.logging(getClass(), DebugLevel.DEBUG);
     }
 
     public void run() {
@@ -62,14 +62,14 @@ public class ThreadCache {
         thread.interrupt();
 
         LogGenerator logGenerator = new LogGenerator("Thread Stop", "Thread Name: " + thread.getName(), "Thread ID: " + thread.getName(), "State Before: " + thread.getState(), "Action: Interrupting thread");
-        logGenerator.logging(DebugLevel.DEBUG);
+        logGenerator.logging(getClass(), DebugLevel.DEBUG);
     }
 
     private void threadRun(Thread thread) {
         thread.start();
 
         LogGenerator logGenerator = new LogGenerator("Thread Start", "Thread Name: " + thread.getName(), "Thread ID: " + thread.getName(), "State Before: " + thread.getState(), "Action: Starting thread");
-        logGenerator.logging(DebugLevel.DEBUG);
+        logGenerator.logging(getClass(), DebugLevel.DEBUG);
     }
 
     public void cleanup() {

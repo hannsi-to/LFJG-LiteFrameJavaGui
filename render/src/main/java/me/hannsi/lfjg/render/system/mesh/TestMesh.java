@@ -164,7 +164,7 @@ public class TestMesh {
         new LogGenerator(
                 getClass().getSimpleName() + " Debug Message",
                 log.toArray(new String[0])
-        ).bar("=").logging(DebugLevel.DEBUG);
+        ).bar("=").logging(getClass(), DebugLevel.DEBUG);
     }
 
     public int getVaoId() {

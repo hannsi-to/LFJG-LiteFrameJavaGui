@@ -57,7 +57,7 @@ public class UnicodeBlocks {
                 unicodeDebug.append("NULL");
             }
 
-            new LogGenerator("Unicode", unicodeDebug.toString()).logging(DebugLevel.DEBUG);
+            new LogGenerator("Unicode", unicodeDebug.toString()).logging(UnicodeBlocks.class, DebugLevel.DEBUG);
         }
     }
 

@@ -51,7 +51,7 @@ public class Material {
                     "ID: " + mesh.getIds(),
                     "Severity: Low",
                     "Message: " + performanceMessage
-            ).logging(DebugLevel.WARNING);
+            ).logging(getClass(), DebugLevel.WARNING);
         }
 
         meshes.add(mesh);

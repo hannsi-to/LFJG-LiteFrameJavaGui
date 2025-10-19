@@ -130,7 +130,7 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
                 "OldSize: " + gpuMemorySize + " bytes",
                 "NewSize: " + newGpuMemorySizeBytes + " bytes",
                 "VertexCount: " + vertexCount
-        ).logging(DebugLevel.INFO);
+        ).logging(getClass(), DebugLevel.INFO, true, true);
 
         final int floatsToCopy = vertexCount * MeshConstants.FLOATS_PER_VERTEX;
         float[] backup = new float[Math.max(0, floatsToCopy)];
@@ -179,11 +179,11 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
                 mappedBuffer.put(backup, 0, backup.length);
                 mappedBuffer.position(vertexCount * MeshConstants.FLOATS_PER_VERTEX);
                 DebugLog.info(getClass(), String.format(
-                        "Restored %d floats to GPU buffer.\n    ", backup.length
+                        "Restored %d floats to GPU buffer.", backup.length
                 ));
             } catch (Exception e) {
                 DebugLog.error(getClass(), e);
-                DebugLog.error(getClass(), "Data restore failed: " + e.getMessage() + "\n");
+                DebugLog.error(getClass(), "Data restore failed: " + e.getMessage());
             }
         }
 
@@ -193,7 +193,7 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
                 "Grow Buffer Complete",
                 "OldSize: " + gpuMemorySize + " bytes",
                 "MappedBufferCapacity: " + (mappedBuffer != null ? mappedBuffer.capacity() : -1) + " bytes"
-        ).logging(DebugLevel.INFO);
+        ).logging(getClass(), DebugLevel.INFO, true, false);
     }
 
     private void writeVertex(FloatBuffer buf, int base, Vertex vertex) {

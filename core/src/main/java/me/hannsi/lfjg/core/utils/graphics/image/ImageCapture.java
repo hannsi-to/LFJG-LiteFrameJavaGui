@@ -63,7 +63,7 @@ public class ImageCapture {
                 break;
         }
 
-        logGenerator.logging(DebugLevel.INFO);
+        logGenerator.logging(getClass(), DebugLevel.INFO);
     }
 
     private LogGenerator writeJavaCV(String path, ByteBuffer imageBuffer) {

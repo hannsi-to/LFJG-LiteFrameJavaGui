@@ -25,7 +25,7 @@ public class GLSLCode {
                 getClass(),
                 hashCode(),
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
     }
 
     private String processIncludes(String shaderCode) {

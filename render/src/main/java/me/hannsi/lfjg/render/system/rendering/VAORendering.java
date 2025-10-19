@@ -73,6 +73,6 @@ public class VAORendering {
 
     public void cleanup() {
         new LogGenerator(LogGenerateType.CLEANUP, getClass(), hashCode(), "")
-                .logging(DebugLevel.DEBUG);
+                .logging(getClass(), DebugLevel.DEBUG);
     }
 }

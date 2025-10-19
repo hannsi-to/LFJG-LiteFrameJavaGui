@@ -35,7 +35,7 @@ public class EffectBase {
                 getClass(),
                 name,
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
     }
 
     public void pop(GLObject baseGLObject) {

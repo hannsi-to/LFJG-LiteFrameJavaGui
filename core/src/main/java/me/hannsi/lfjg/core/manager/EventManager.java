@@ -85,7 +85,7 @@ public class EventManager {
                 getClass(),
                 hashCode(),
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
     }
 
     public CopyOnWriteArrayList<Object> getHandlers() {

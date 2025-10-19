@@ -70,6 +70,6 @@ public class SoundEffect {
                 getClass(),
                 ids,
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
     }
 }

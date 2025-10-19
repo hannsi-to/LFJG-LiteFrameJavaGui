@@ -84,7 +84,7 @@ public class SoundData {
                 getClass(),
                 sourceId + ", " + bufferId,
                 ""
-        ).logging(DebugLevel.DEBUG);
+        ).logging(getClass(), DebugLevel.DEBUG);
     }
 
     public void updatePCMData(int sampleRate, int format) {

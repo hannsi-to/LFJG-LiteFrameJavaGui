@@ -57,7 +57,7 @@ public class AnimationBase {
         currentTime = 0;
 
         LogGenerator logGenerator = new LogGenerator(name, "Source: AnimationBase", "Type: Cleanup", "ID: " + this.hashCode(), "Severity: Debug", "Message: AnimationBase cleanup is complete.");
-        logGenerator.logging(DebugLevel.DEBUG);
+        logGenerator.logging(getClass(), DebugLevel.DEBUG);
     }
 
 
