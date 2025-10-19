@@ -19,19 +19,19 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
     private int gpuMemorySize;
     private int vertexCount;
 
-    public TestPersistentMappedVBO(int flags, int initialVerticesCapacity) {
+    public TestPersistentMappedVBO(int flags, int initialCapacity) {
         this.flags = flags;
         this.vertexCount = 0;
 
-        allocationBufferStorageVertices(initialVerticesCapacity);
+        allocationBufferStorageVertices(initialCapacity);
     }
 
-    private void allocationBufferStorageVertices(int maxVertices) {
-        allocationBufferStorage(getVerticesSizeByte(maxVertices));
+    private void allocationBufferStorageVertices(int capacity) {
+        allocationBufferStorage(getVerticesSizeByte(capacity));
     }
 
-    private void allocationBufferStorage(int maxBytes) {
-        gpuMemorySize = maxBytes;
+    private void allocationBufferStorage(int capacity) {
+        gpuMemorySize = capacity;
         if (bufferId != 0) {
             GLStateCache.deleteArrayBuffer(bufferId);
             bufferId = 0;

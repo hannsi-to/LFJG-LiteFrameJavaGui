@@ -1,108 +1,56 @@
 package me.hannsi.lfjg.render.system.mesh.persistent;
 
+import me.hannsi.lfjg.core.debug.DebugLevel;
+import me.hannsi.lfjg.core.debug.DebugLog;
+import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL42;
 import org.lwjgl.opengl.GL44;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.util.*;
 
 public class TestPersistentMappedEBO implements PersistentMappedBuffer {
     private final int flags;
-    private final List<Integer> indices = new ArrayList<>();
-    private final Set<Integer> changedIndices = new HashSet<>();
     private IntBuffer mappedBuffer;
-    private int maxIndices;
     private int bufferId;
-    private boolean dirty = false;
-    private boolean fullUpdate = false;
+    private int gpuMemorySize;
+    private int indexCount;
 
     public TestPersistentMappedEBO(int flags, int initialCapacity) {
         this.flags = flags;
-        updateBufferStorage(initialCapacity);
+        this.indexCount = 0;
+
+        allocationBufferStorageIndices(initialCapacity);
     }
 
-    private void updateBufferStorage(int maxIndices) {
-        this.maxIndices = maxIndices;
+    private void allocationBufferStorageIndices(int capacity) {
+        allocationBufferStorage(getIndicesSizeByte(capacity));
+    }
 
-        int sizeInBytes = maxIndices * Integer.BYTES;
+    private void allocationBufferStorage(int capacity) {
+        gpuMemorySize = getIndicesSizeByte(capacity);
         if (bufferId != 0) {
             GLStateCache.deleteElementArrayBuffer(bufferId);
+            bufferId = 0;
         }
 
         bufferId = GL15.glGenBuffers();
         GLStateCache.bindElementArrayBuffer(bufferId);
-        GL44.glBufferStorage(GL15.GL_ELEMENT_ARRAY_BUFFER, sizeInBytes, flags);
+        GL44.glBufferStorage(GL15.GL_ELEMENT_ARRAY_BUFFER, gpuMemorySize, flags);
 
         ByteBuffer byteBuffer = GL30.glMapBufferRange(
                 GL15.GL_ELEMENT_ARRAY_BUFFER,
                 0,
-                sizeInBytes,
+                gpuMemorySize,
                 flags
         );
         if (byteBuffer == null) {
             throw new RuntimeException("glMapBufferRange failed");
         }
         mappedBuffer = byteBuffer.asIntBuffer();
-
-        fullUpdate = true;
-        dirty = true;
-    }
-
-    public TestPersistentMappedEBO setIndex(int index, int value) {
-        if (index < 0) {
-            throw new IndexOutOfBoundsException(index + " < 0");
-        }
-        if (index >= indices.size()) {
-            throw new IndexOutOfBoundsException(index + " >= " + indices.size());
-        }
-
-        indices.set(index, value);
-        if (!fullUpdate) {
-            changedIndices.add(index);
-        }
-        dirty = true;
-
-        return this;
-    }
-
-    public TestPersistentMappedEBO add(int index) {
-        indices.add(index);
-        if (!fullUpdate) {
-            changedIndices.add(indices.size() - 1);
-        }
-        dirty = true;
-
-        return this;
-    }
-
-    public TestPersistentMappedEBO insert(int index, int value) {
-        if (index < 0) {
-            throw new IndexOutOfBoundsException(index + " < 0");
-        }
-        if (index > indices.size()) {
-            throw new IndexOutOfBoundsException(index + " > " + indices.size());
-        }
-
-        changedIndices.clear();
-        indices.add(index, value);
-        fullUpdate = true;
-        dirty = true;
-
-        return this;
-    }
-
-    public TestPersistentMappedEBO remove(int index) {
-        if (index < 0 || index >= indices.size()) {
-            throw new IndexOutOfBoundsException(index + " out of bounds");
-        }
-        indices.remove(index);
-        changedIndices.clear();
-        fullUpdate = true;
-        dirty = true;
-        return this;
     }
 
     public TestPersistentMappedEBO linkVertexArrayObject(int vaoId) {
@@ -113,73 +61,131 @@ public class TestPersistentMappedEBO implements PersistentMappedBuffer {
         return this;
     }
 
-    public void syncToGPU() {
-        if (!dirty) {
-            return;
-        }
-        if (indices.size() > maxIndices) {
-            updateBufferStorage(maxIndices * 2);
-        }
+    public TestPersistentMappedEBO add(int index) {
+        ensureCapacityForIndices(indexCount + 1);
 
-        boolean doFull = fullUpdate || changedIndices.isEmpty() || changedIndices.size() > Math.max(1, indices.size() / 2);
-        if (doFull) {
-            mappedBuffer.position(0);
-            for (int i : indices) {
-                mappedBuffer.put(i);
-            }
+        int base = indexCount;
+        mappedBuffer.put(base, index);
 
-            flushMappedRange(0, (long) indices.size() * Integer.BYTES);
-        } else {
-            int[] idxs = changedIndices.stream().mapToInt(Integer::intValue).toArray();
-            Arrays.sort(idxs);
+        indexCount++;
 
-            int start = -1;
-            int end = -1;
-            for (int idx : idxs) {
-                if (start == -1) {
-                    start = idx;
-                    end = idx + 1;
-                } else if (idx == end) {
-                    end = idx + 1;
-                } else {
-                    writeIndexRange(start, end);
-                    flushMappedRange(
-                            (long) start * Integer.BYTES,
-                            (long) (end - start) * Integer.BYTES
-                    );
-                    start = idx;
-                    end = idx + 1;
-                }
-            }
-            if (start != -1) {
-                writeIndexRange(start, end);
-                flushMappedRange(
-                        (long) start * Integer.BYTES,
-                        (long) (end - start) * Integer.BYTES
-                );
-            }
-        }
-
-        changedIndices.clear();
-        fullUpdate = false;
-        dirty = false;
+        return this;
     }
 
-    private void writeIndexRange(int start, int endExclusive) {
-        for (int i = start; i < endExclusive; i++) {
-            mappedBuffer.put(i, indices.get(i));
-        }
+    public TestPersistentMappedEBO syncToGPU() {
+        flushMappedRange(0, getIndicesSizeByte(indexCount));
+
+        return this;
     }
 
     private void flushMappedRange(long byteOffset, long byteLength) {
         final int GL_MAP_COHERENT_BIT = GL44.GL_MAP_COHERENT_BIT;
-        if ((flags & GL_MAP_COHERENT_BIT) != GL_MAP_COHERENT_BIT) {
+        if ((flags & GL_MAP_COHERENT_BIT) == 0) {
             GL44.glFlushMappedBufferRange(GL15.GL_ELEMENT_ARRAY_BUFFER, byteOffset, byteLength);
+            GL42.glMemoryBarrier(GL42.GL_ELEMENT_ARRAY_BARRIER_BIT);
         }
     }
 
+    private void ensureCapacityForIndices(int requiredIndices) {
+        int requiredBytes = getIndicesSizeByte(requiredIndices);
+        if (requiredBytes <= gpuMemorySize) {
+            return;
+        }
+
+        long newCapacity = gpuMemorySize + (gpuMemorySize >> 1);
+        if (newCapacity < requiredBytes) {
+            newCapacity = requiredBytes;
+        }
+
+        if (newCapacity == 0) {
+            newCapacity = requiredBytes;
+        }
+
+        growBuffer((int) newCapacity);
+    }
+
+    private void growBuffer(int newGpuMemorySizeBytes) {
+        if (newGpuMemorySizeBytes <= gpuMemorySize) {
+            return;
+        }
+
+        new LogGenerator(
+                "Grow Buffer Start",
+                "OldSize: " + gpuMemorySize + " bytes",
+                "NewSize: " + newGpuMemorySizeBytes + " bytes",
+                "IndexCount: " + indexCount
+        ).logging(getClass(), DebugLevel.INFO, true, true);
+
+        final int floatsToCopy = indexCount;
+        int[] backup = new int[Math.max(0, floatsToCopy)];
+
+        if (mappedBuffer != null && floatsToCopy > 0) {
+            try {
+                IntBuffer reader = mappedBuffer.duplicate();
+                reader.position(0);
+                int safeLimit = Math.min(reader.capacity(), floatsToCopy);
+                reader.limit(safeLimit);
+                reader.get(backup, 0, safeLimit);
+                DebugLog.info(getClass(), String.format(
+                        "Backup success: %d int copied (%.2f KB)",
+                        safeLimit, safeLimit * Integer.BYTES / 1024.0
+                ));
+            } catch (Exception e) {
+                DebugLog.error(getClass(), e);
+                DebugLog.error(getClass(), "Backup failed: " + e.getMessage());
+            }
+        } else {
+            DebugLog.warning(getClass(), "MappedBuffer is null or no indices to copy.");
+        }
+
+        if (bufferId != 0) {
+            GLStateCache.bindElementArrayBuffer(bufferId);
+            boolean unmapped = GL30.glUnmapBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER);
+            if (!unmapped) {
+                DebugLog.error(getClass(), "glUnmapBuffer returned false (may indicate corruption).");
+            } else {
+                DebugLog.info(getClass(), "Buffer unmapped successfully.");
+            }
+
+            GLStateCache.deleteElementArrayBuffer(bufferId);
+            DebugLog.info(getClass(), "Old buffer deleted (ID: " + bufferId + ")");
+            bufferId = 0;
+        }
+        mappedBuffer = null;
+
+        DebugLog.info(getClass(), "Allocating new GPU buffer...");
+        allocationBufferStorage(newGpuMemorySizeBytes);
+        DebugLog.info(getClass(), "New buffer allocated (ID: " + bufferId + ", " + newGpuMemorySizeBytes + " bytes)");
+
+        if (mappedBuffer != null && backup.length > 0) {
+            try {
+                mappedBuffer.position(0);
+                mappedBuffer.put(backup, 0, backup.length);
+                mappedBuffer.position(indexCount);
+                DebugLog.info(getClass(), String.format(
+                        "Restored %d int to GPU buffer.", backup.length
+                ));
+            } catch (Exception e) {
+                DebugLog.error(getClass(), e);
+                DebugLog.error(getClass(), "Data restore failed: " + e.getMessage());
+            }
+        }
+
+        gpuMemorySize = newGpuMemorySizeBytes;
+
+        new LogGenerator(
+                "Grow Buffer Complete",
+                "OldSize: " + gpuMemorySize + " bytes",
+                "MappedBufferCapacity: " + (mappedBuffer != null ? mappedBuffer.capacity() : -1) + " bytes"
+        ).logging(getClass(), DebugLevel.INFO, true, false);
+    }
+
+    private int getIndicesSizeByte(int indices) {
+        return indices * Integer.BYTES;
+    }
+
     public int getIndexCount() {
-        return indices.size();
+        return indexCount;
     }
 
     public int getBufferId() {
@@ -197,9 +203,5 @@ public class TestPersistentMappedEBO implements PersistentMappedBuffer {
             bufferId = 0;
         }
         mappedBuffer = null;
-        indices.clear();
-        changedIndices.clear();
-        dirty = false;
-        fullUpdate = false;
     }
 }

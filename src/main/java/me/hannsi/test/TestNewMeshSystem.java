@@ -80,8 +80,8 @@ public class TestNewMeshSystem implements LFJGFrame {
         Random random = new Random();
 
         testMesh = TestMesh.createMesh(
-                1,
                 (numObjects * numVerticesPerStrip * 100),
+                1,
                 numObjects
         );
 
