@@ -5,9 +5,7 @@ import me.hannsi.lfjg.core.utils.time.Timer;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.LFJGContext;
-import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
-import me.hannsi.lfjg.frame.setting.settings.VSyncSetting;
-import me.hannsi.lfjg.frame.setting.settings.VSyncType;
+import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.JointType;
@@ -82,7 +80,7 @@ public class TestNewMeshSystem implements LFJGFrame {
         Random random = new Random();
 
         testMesh = TestMesh.createMesh(
-                (numObjects * numVerticesPerStrip * 5 * 12),
+                1,
                 (numObjects * numVerticesPerStrip * 100),
                 numObjects
         );
@@ -268,6 +266,7 @@ public class TestNewMeshSystem implements LFJGFrame {
     public void setFrameSetting() {
         LFJGContext.frame.setFrameSettingValue(RefreshRateSetting.class, -1);
         LFJGContext.frame.setFrameSettingValue(VSyncSetting.class, VSyncType.V_SYNC_OFF);
+        LFJGContext.frame.setFrameSettingValue(CheckSeveritiesSetting.class, new SeverityType[]{SeverityType.LOW, SeverityType.MEDIUM, SeverityType.HIGH});
     }
 
     public void setFrame() {

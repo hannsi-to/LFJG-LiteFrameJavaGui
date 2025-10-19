@@ -44,8 +44,8 @@ public class TestMesh {
         persistentMappedVBO.createVertexAttribute(vaoId, BufferObjectType.POSITION_BUFFER, BufferObjectType.COLOR_BUFFER, BufferObjectType.TEXTURE_BUFFER, BufferObjectType.NORMAL_BUFFER)
                 .syncToGPU();
 
-        persistentMappedEBO.linkVertexArrayObject(vaoId).
-                syncToGPU();
+        persistentMappedEBO.linkVertexArrayObject(vaoId)
+                .syncToGPU();
 
         persistentMappedIBO.syncToGPU();
 
@@ -103,7 +103,6 @@ public class TestMesh {
             GLStateCache.lineWidth(1.0f);
         }
 
-        persistentMappedVBO.syncToGPU();
         persistentMappedEBO.syncToGPU();
         persistentMappedIBO.syncToGPU();
 
