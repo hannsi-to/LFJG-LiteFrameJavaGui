@@ -196,8 +196,8 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
         ).logging(getClass(), DebugLevel.INFO, true, false);
     }
 
-    private void writeVertex(FloatBuffer buf, int base, Vertex vertex) {
-        buf.put(base, vertex.x)
+    private void writeVertex(FloatBuffer buffer, int base, Vertex vertex) {
+        buffer.put(base, vertex.x)
                 .put(base + 1, vertex.y)
                 .put(base + 2, vertex.z)
                 .put(base + 3, vertex.red)
