@@ -80,9 +80,9 @@ public class TestNewMeshSystem implements LFJGFrame {
         Random random = new Random();
 
         testMesh = TestMesh.createMesh(
-                (numObjects * numVerticesPerStrip * 100),
-                (numObjects * numVerticesPerStrip * 100),
-                1
+                10000,
+                10000,
+                50
         );
 
         for (int i = 0; i < numObjects; i++) {
@@ -239,7 +239,7 @@ public class TestNewMeshSystem implements LFJGFrame {
 
         shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.OBJECT.getId());
         shaderProgram.setUniform("resolution", UploadUniformType.ON_CHANGE, Core.frameBufferSize);
-        updateUBO(Core.projection2D.getProjMatrix(), viewMatrix, modelMatrix.translate(0.1f, 0, 0));
+        updateUBO(Core.projection2D.getProjMatrix(), viewMatrix, modelMatrix);
 
         testMesh.debugDraw(DrawType.TRIANGLES.getId(), false);
 
