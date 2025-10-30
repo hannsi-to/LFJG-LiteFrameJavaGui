@@ -7,6 +7,7 @@ import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL44;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -63,8 +64,10 @@ public class TestPersistentMappedEBO implements PersistentMappedBuffer {
     public TestPersistentMappedEBO add(int index) {
         ensureCapacityForIndices(indexCount + 1);
 
-        int base = indexCount;
-        mappedBuffer.put(base, index);
+        long memoryAddress = MemoryUtil.memAddress(mappedBuffer);
+        long dst = memoryAddress + (long) indexCount * Integer.BYTES;
+
+        MemoryUtil.memPutInt(dst, index);
 
         indexCount++;
 

@@ -8,6 +8,7 @@ import me.hannsi.lfjg.render.system.mesh.MeshConstants;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.lwjgl.opengl.*;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -85,6 +86,18 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
         writeVertex(mappedBuffer, base, vertex);
 
         vertexCount++;
+        return this;
+    }
+
+    public TestPersistentMappedVBO delete(int baseVertexIndex) {
+        if (baseVertexIndex < 0 || baseVertexIndex >= vertexCount) {
+            throw new IndexOutOfBoundsException("baseVertexIndex: " + baseVertexIndex + " >= vertexCount: " + vertexCount);
+        }
+
+        int base = baseVertexIndex * MeshConstants.FLOATS_PER_VERTEX;
+        removeVertex(mappedBuffer, base);
+
+        vertexCount--;
         return this;
     }
 
@@ -196,18 +209,38 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
     }
 
     private void writeVertex(FloatBuffer buffer, int base, Vertex vertex) {
-        buffer.put(base, vertex.x)
-                .put(base + 1, vertex.y)
-                .put(base + 2, vertex.z)
-                .put(base + 3, vertex.red)
-                .put(base + 4, vertex.green)
-                .put(base + 5, vertex.blue)
-                .put(base + 6, vertex.alpha)
-                .put(base + 7, vertex.u)
-                .put(base + 8, vertex.v)
-                .put(base + 9, vertex.normalsX)
-                .put(base + 10, vertex.normalsY)
-                .put(base + 11, vertex.normalsZ);
+        long memoryAddress = MemoryUtil.memAddress(buffer);
+        long dst = memoryAddress + (long) base * Float.BYTES;
+
+        MemoryUtil.memPutFloat(dst, vertex.x);
+        MemoryUtil.memPutFloat(dst + Float.BYTES, vertex.y);
+        MemoryUtil.memPutFloat(dst + 2 * Float.BYTES, vertex.z);
+        MemoryUtil.memPutFloat(dst + 3 * Float.BYTES, vertex.red);
+        MemoryUtil.memPutFloat(dst + 4 * Float.BYTES, vertex.green);
+        MemoryUtil.memPutFloat(dst + 5 * Float.BYTES, vertex.blue);
+        MemoryUtil.memPutFloat(dst + 6 * Float.BYTES, vertex.alpha);
+        MemoryUtil.memPutFloat(dst + 7 * Float.BYTES, vertex.u);
+        MemoryUtil.memPutFloat(dst + 8 * Float.BYTES, vertex.v);
+        MemoryUtil.memPutFloat(dst + 9 * Float.BYTES, vertex.normalsX);
+        MemoryUtil.memPutFloat(dst + 10 * Float.BYTES, vertex.normalsY);
+        MemoryUtil.memPutFloat(dst + 11 * Float.BYTES, vertex.normalsZ);
+    }
+
+    private void removeVertex(FloatBuffer buffer, int base) {
+        int usedFloats = vertexCount * MeshConstants.FLOATS_PER_VERTEX;
+        int tailStart = base + MeshConstants.FLOATS_PER_VERTEX;
+        int remain = usedFloats - tailStart;
+
+        if (remain > 0) {
+            for (int i = 0; i < remain; i++) {
+                buffer.put(base + i, buffer.get(tailStart + i));
+            }
+        }
+
+        int endStart = (vertexCount - 1) * MeshConstants.FLOATS_PER_VERTEX;
+        for (int i = 0; i < MeshConstants.FLOATS_PER_VERTEX; i++) {
+            buffer.put(endStart + i, 0f);
+        }
     }
 
     private int getVerticesSizeByte(int vertices) {

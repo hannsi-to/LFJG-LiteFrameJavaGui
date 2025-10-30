@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL40;
 import org.lwjgl.opengl.GL44;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -97,11 +98,14 @@ public class TestPersistentMappedIBO implements PersistentMappedBuffer {
     }
 
     private void writeCommand(IntBuffer buffer, int base, DrawElementsIndirectCommand command) {
-        buffer.put(base, command.count)
-                .put(base + 1, command.instanceCount)
-                .put(base + 2, command.firstIndex)
-                .put(base + 3, command.baseVertex)
-                .put(base + 4, command.baseInstance);
+        long memoryAddress = MemoryUtil.memAddress(buffer);
+        long dst = memoryAddress + (long) base * Integer.BYTES;
+
+        MemoryUtil.memPutInt(dst, command.count);
+        MemoryUtil.memPutInt(dst + (long) Integer.BYTES, command.instanceCount);
+        MemoryUtil.memPutInt(dst + 2L * Integer.BYTES, command.firstIndex);
+        MemoryUtil.memPutInt(dst + 3L * Integer.BYTES, command.baseVertex);
+        MemoryUtil.memPutInt(dst + 4L * Integer.BYTES, command.baseInstance);
     }
 
     private void growBuffer(int newGpuMemorySizeBytes) {
