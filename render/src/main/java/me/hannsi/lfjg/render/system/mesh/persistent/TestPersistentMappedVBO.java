@@ -11,11 +11,11 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 
 public class TestPersistentMappedVBO implements PersistentMappedBuffer {
     private final int flags;
-    private FloatBuffer mappedBuffer;
+    private ByteBuffer mappedBuffer;
+    private long mappedAddress;
     private int bufferId;
     private int gpuMemorySize;
     private int vertexCount;
@@ -51,7 +51,8 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
         if (byteBuffer == null) {
             throw new RuntimeException("glMapBufferRange failed");
         }
-        mappedBuffer = byteBuffer.asFloatBuffer();
+        mappedBuffer = byteBuffer;
+        mappedAddress = MemoryUtil.memAddress(byteBuffer);
     }
 
     public TestPersistentMappedVBO createVertexAttribute(int vaoId, BufferObjectType... bufferObjectType) {
@@ -82,22 +83,10 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
     public TestPersistentMappedVBO add(Vertex vertex) {
         ensureCapacityForVertices(vertexCount + 1);
 
-        int base = vertexCount * MeshConstants.FLOATS_PER_VERTEX;
-        writeVertex(mappedBuffer, base, vertex);
+        long baseOffset = (long) vertexCount * MeshConstants.FLOATS_PER_VERTEX * Float.BYTES;
+        writeVertex(baseOffset, vertex);
 
         vertexCount++;
-        return this;
-    }
-
-    public TestPersistentMappedVBO delete(int baseVertexIndex) {
-        if (baseVertexIndex < 0 || baseVertexIndex >= vertexCount) {
-            throw new IndexOutOfBoundsException("baseVertexIndex: " + baseVertexIndex + " >= vertexCount: " + vertexCount);
-        }
-
-        int base = baseVertexIndex * MeshConstants.FLOATS_PER_VERTEX;
-        removeVertex(mappedBuffer, base);
-
-        vertexCount--;
         return this;
     }
 
@@ -137,110 +126,79 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
             return;
         }
 
-        new LogGenerator(
-                "Grow Buffer Start",
-                "OldSize: " + gpuMemorySize + " bytes",
-                "NewSize: " + newGpuMemorySizeBytes + " bytes",
-                "VertexCount: " + vertexCount
-        ).logging(getClass(), DebugLevel.INFO, true, true);
+        long oldAddr = mappedAddress;
+        int oldSize = gpuMemorySize;
+        int floatsToCopy = vertexCount * MeshConstants.FLOATS_PER_VERTEX;
+        long bytesToCopy = (long) floatsToCopy * Float.BYTES;
 
-        final int floatsToCopy = vertexCount * MeshConstants.FLOATS_PER_VERTEX;
-        float[] backup = new float[Math.max(0, floatsToCopy)];
+        if (bytesToCopy > oldSize) {
+            bytesToCopy = oldSize;
+        }
 
-        if (mappedBuffer != null && floatsToCopy > 0) {
+        if (oldAddr == 0 || mappedBuffer == null) {
+            DebugLog.warning(getClass(), "No existing mapped buffer to backup from.");
+        } else if (bytesToCopy > 0) {
+            long tmp = MemoryUtil.nmemAllocChecked(bytesToCopy);
             try {
-                FloatBuffer reader = mappedBuffer.duplicate();
-                reader.position(0);
-                int safeLimit = Math.min(reader.capacity(), floatsToCopy);
-                reader.limit(safeLimit);
-                reader.get(backup, 0, safeLimit);
-                DebugLog.info(getClass(), String.format(
-                        "Backup success: %d floats copied (%.2f KB)",
-                        safeLimit, safeLimit * Float.BYTES / 1024.0
-                ));
-            } catch (Exception e) {
-                DebugLog.error(getClass(), e);
-                DebugLog.error(getClass(), "Backup failed: " + e.getMessage());
+                MemoryUtil.memCopy(oldAddr, tmp, bytesToCopy);
+
+                boolean unmapped = GL30.glUnmapBuffer(GL15.GL_ARRAY_BUFFER);
+                if (!unmapped) {
+                    DebugLog.error(getClass(), "glUnmapBuffer returned false (may indicate corruption).");
+                }
+                GLStateCache.deleteArrayBuffer(bufferId);
+                bufferId = 0;
+                mappedBuffer = null;
+                mappedAddress = 0;
+
+                allocationBufferStorage(newGpuMemorySizeBytes);
+                if (mappedAddress == 0) {
+                    throw new RuntimeException("New buffer mappedAddress is 0");
+                }
+
+                MemoryUtil.memCopy(tmp, mappedAddress, bytesToCopy);
+            } finally {
+                MemoryUtil.nmemFree(tmp);
             }
         } else {
-            DebugLog.warning(getClass(), "MappedBuffer is null or no vertices to copy.");
-        }
-
-        if (bufferId != 0) {
-            GLStateCache.bindArrayBuffer(bufferId);
-            boolean unmapped = GL30.glUnmapBuffer(GL15.GL_ARRAY_BUFFER);
-            if (!unmapped) {
-                DebugLog.error(getClass(), "glUnmapBuffer returned false (may indicate corruption).");
-            } else {
-                DebugLog.info(getClass(), "Buffer unmapped successfully.");
-            }
-
+            GL30.glUnmapBuffer(GL15.GL_ARRAY_BUFFER);
             GLStateCache.deleteArrayBuffer(bufferId);
-            DebugLog.info(getClass(), "Old buffer deleted (ID: " + bufferId + ")");
             bufferId = 0;
-        }
-        mappedBuffer = null;
+            mappedBuffer = null;
+            mappedAddress = 0;
 
-        DebugLog.info(getClass(), "Allocating new GPU buffer...");
-        allocationBufferStorage(newGpuMemorySizeBytes);
-        DebugLog.info(getClass(), "New buffer allocated (ID: " + bufferId + ", " + newGpuMemorySizeBytes + " bytes)");
-
-        if (mappedBuffer != null && backup.length > 0) {
-            try {
-                mappedBuffer.position(0);
-                mappedBuffer.put(backup, 0, backup.length);
-                mappedBuffer.position(vertexCount * MeshConstants.FLOATS_PER_VERTEX);
-                DebugLog.info(getClass(), String.format(
-                        "Restored %d floats to GPU buffer.", backup.length
-                ));
-            } catch (Exception e) {
-                DebugLog.error(getClass(), e);
-                DebugLog.error(getClass(), "Data restore failed: " + e.getMessage());
-            }
+            allocationBufferStorage(newGpuMemorySizeBytes);
         }
 
         gpuMemorySize = newGpuMemorySizeBytes;
 
-        new LogGenerator(
-                "Grow Buffer Complete",
-                "OldSize: " + gpuMemorySize + " bytes",
-                "MappedBufferCapacity: " + (mappedBuffer != null ? mappedBuffer.capacity() : -1) + " bytes"
-        ).logging(getClass(), DebugLevel.INFO, true, false);
+        new LogGenerator("Grow Buffer")
+                .kvHex("oldAddress", oldAddr)
+                .kvBytes("oldSize", oldSize)
+                .text("\n")
+                .kvHex("newAddress", mappedAddress)
+                .kvBytes("newSize", newGpuMemorySizeBytes)
+                .text("\n")
+                .kvBytes("copiedBytes", bytesToCopy)
+                .kv("vertexCount", vertexCount)
+                .logging(getClass(), DebugLevel.INFO);
     }
 
-    private void writeVertex(FloatBuffer buffer, int base, Vertex vertex) {
-        long memoryAddress = MemoryUtil.memAddress(buffer);
-        long dst = memoryAddress + (long) base * Float.BYTES;
+    private void writeVertex(long baseByteOffset, Vertex vertex) {
+        long addr = mappedAddress + baseByteOffset;
 
-        MemoryUtil.memPutFloat(dst, vertex.x);
-        MemoryUtil.memPutFloat(dst + Float.BYTES, vertex.y);
-        MemoryUtil.memPutFloat(dst + 2 * Float.BYTES, vertex.z);
-        MemoryUtil.memPutFloat(dst + 3 * Float.BYTES, vertex.red);
-        MemoryUtil.memPutFloat(dst + 4 * Float.BYTES, vertex.green);
-        MemoryUtil.memPutFloat(dst + 5 * Float.BYTES, vertex.blue);
-        MemoryUtil.memPutFloat(dst + 6 * Float.BYTES, vertex.alpha);
-        MemoryUtil.memPutFloat(dst + 7 * Float.BYTES, vertex.u);
-        MemoryUtil.memPutFloat(dst + 8 * Float.BYTES, vertex.v);
-        MemoryUtil.memPutFloat(dst + 9 * Float.BYTES, vertex.normalsX);
-        MemoryUtil.memPutFloat(dst + 10 * Float.BYTES, vertex.normalsY);
-        MemoryUtil.memPutFloat(dst + 11 * Float.BYTES, vertex.normalsZ);
-    }
-
-    private void removeVertex(FloatBuffer buffer, int base) {
-        int usedFloats = vertexCount * MeshConstants.FLOATS_PER_VERTEX;
-        int tailStart = base + MeshConstants.FLOATS_PER_VERTEX;
-        int remain = usedFloats - tailStart;
-
-        if (remain > 0) {
-            for (int i = 0; i < remain; i++) {
-                buffer.put(base + i, buffer.get(tailStart + i));
-            }
-        }
-
-        int endStart = (vertexCount - 1) * MeshConstants.FLOATS_PER_VERTEX;
-        for (int i = 0; i < MeshConstants.FLOATS_PER_VERTEX; i++) {
-            buffer.put(endStart + i, 0f);
-        }
+        MemoryUtil.memPutFloat(addr, vertex.x);
+        MemoryUtil.memPutFloat(addr + 4, vertex.y);
+        MemoryUtil.memPutFloat(addr + 8, vertex.z);
+        MemoryUtil.memPutFloat(addr + 12, vertex.red);
+        MemoryUtil.memPutFloat(addr + 16, vertex.green);
+        MemoryUtil.memPutFloat(addr + 20, vertex.blue);
+        MemoryUtil.memPutFloat(addr + 24, vertex.alpha);
+        MemoryUtil.memPutFloat(addr + 28, vertex.u);
+        MemoryUtil.memPutFloat(addr + 32, vertex.v);
+        MemoryUtil.memPutFloat(addr + 36, vertex.normalsX);
+        MemoryUtil.memPutFloat(addr + 40, vertex.normalsY);
+        MemoryUtil.memPutFloat(addr + 44, vertex.normalsZ);
     }
 
     private int getVerticesSizeByte(int vertices) {
@@ -255,8 +213,12 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
         return bufferId;
     }
 
-    public FloatBuffer getMappedBuffer() {
+    public ByteBuffer getMappedBuffer() {
         return mappedBuffer;
+    }
+
+    public long getMappedAddress() {
+        return mappedAddress;
     }
 
     @Override
