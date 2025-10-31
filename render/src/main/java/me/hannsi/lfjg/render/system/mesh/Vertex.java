@@ -53,6 +53,10 @@ public class Vertex {
         return new float[]{normalsX, normalsY, normalsZ};
     }
 
+    public float[] toArray() {
+        return new float[]{x, y, z, red, green, blue, alpha, u, v, normalsX, normalsY, normalsZ};
+    }
+
     public Vertex copy() {
         return new Vertex(x, y, z, red, green, blue, alpha, u, v, normalsX, normalsY, normalsZ);
     }

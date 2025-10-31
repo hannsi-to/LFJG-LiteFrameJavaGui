@@ -776,7 +776,9 @@ public class TestPolygonTriangulator {
 
     private List<List<Integer>> splitPolygonByDiagonals(int n, List<int[]> diagonals) {
         List<Set<Integer>> graph = new ArrayList<>();
-        for (int i = 0; i < n; i++) graph.add(new HashSet<>());
+        for (int i = 0; i < n; i++) {
+            graph.add(new HashSet<>());
+        }
 
         for (int i = 0; i < n; i++) {
             int next = (i + 1) % n;
