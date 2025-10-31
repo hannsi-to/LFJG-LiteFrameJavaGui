@@ -7,6 +7,10 @@ public class Ref<T> {
         this.value = value;
     }
 
+    public Ref() {
+        this.value = null;
+    }
+
     @Override
     public String toString() {
         return String.valueOf(value);
