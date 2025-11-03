@@ -7,8 +7,10 @@ import me.hannsi.lfjg.core.utils.toolkit.KeyboardInfo;
 import me.hannsi.lfjg.core.utils.toolkit.MouseInfo;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
+import sun.misc.Unsafe;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 
 public class Core {
@@ -39,7 +41,7 @@ public class Core {
     public static final boolean enableLFJGRenderSystem;
     public static final boolean enableLFJGRenderTextSystem;
     public static final boolean enableLFJGRenderVideoSystem;
-
+    public static final Unsafe UNSAFE;
     public static ServiceData lfjgAudioServiceData = null;
     public static ServiceData lfjgFrameServiceData = null;
     public static ServiceData lfjgJCefServiceData = null;
@@ -47,9 +49,7 @@ public class Core {
     public static ServiceData lfjgRenderServiceData = null;
     public static ServiceData lfjgRenderTextServiceData = null;
     public static ServiceData lfjgRenderVideoServiceData = null;
-
     public static boolean CORE_SYSTEM_DEBUG = true;
-
     public static Projection projection2D;
     public static Projection projection3D;
     public static Vector2i frameBufferSize;
@@ -117,6 +117,14 @@ public class Core {
             Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_VIDEO_CORE_CLASS_NAME);
             lfjgRenderVideoServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
             DebugLog.info(instance.getClass(), lfjgRenderVideoServiceData.toString());
+        }
+
+        try {
+            Field f = Unsafe.class.getDeclaredField("theUnsafe");
+            f.setAccessible(true);
+            UNSAFE = (Unsafe) f.get(null);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

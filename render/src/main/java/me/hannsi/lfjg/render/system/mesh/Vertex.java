@@ -1,5 +1,9 @@
 package me.hannsi.lfjg.render.system.mesh;
 
+import org.lwjgl.BufferUtils;
+
+import java.nio.FloatBuffer;
+
 public class Vertex {
     public float x;
     public float y;
@@ -55,6 +59,10 @@ public class Vertex {
 
     public float[] toArray() {
         return new float[]{x, y, z, red, green, blue, alpha, u, v, normalsX, normalsY, normalsZ};
+    }
+
+    public FloatBuffer toBuffer() {
+        return (FloatBuffer) BufferUtils.createFloatBuffer(12).put(toArray()).flip();
     }
 
     public Vertex copy() {

@@ -2,15 +2,16 @@ package me.hannsi.lfjg.core.debug;
 
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.toolkit.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class LogGenerator {
-    private static final Logger log = LoggerFactory.getLogger(LogGenerator.class);
     public static int barCount = 30;
+    private final List<String> texts;
     private String bar = "-";
     private String title;
-    private String[] texts;
 
     public LogGenerator(LogGenerateType logGenerateType, Class<?> clazz, String id, String severity, String subMessage) {
         String title = clazz.getSimpleName() + " Debug Message";
@@ -38,7 +39,12 @@ public class LogGenerator {
         }
 
         this.title = title;
-        this.texts = new String[]{source, type, id, severity, message};
+        this.texts = new ArrayList<>();
+        this.texts.add(source);
+        this.texts.add(type);
+        this.texts.add(id);
+        this.texts.add(severity);
+        this.texts.add(message);
     }
 
     public LogGenerator(LogGenerateType logGenerateType, Class<?> clazz, String id, String subMessage) {
@@ -51,7 +57,39 @@ public class LogGenerator {
 
     public LogGenerator(String title, String... texts) {
         this.title = title;
-        this.texts = texts;
+        this.texts = new ArrayList<>();
+        this.texts.addAll(Arrays.asList(texts));
+    }
+
+    private static String humanBytes(long bytes) {
+        final String[] units = {"B", "KB", "MB", "GB", "TB"};
+        double val = bytes;
+        int idx = 0;
+        while (val >= 1024 && idx < units.length - 1) {
+            val /= 1024.0;
+            idx++;
+        }
+        return String.format("%.2f %s", val, units[idx]);
+    }
+
+    public LogGenerator kv(String key, Object value) {
+        texts.add("  " + key + ": " + value);
+        return this;
+    }
+
+    public LogGenerator kvBytes(String key, long bytes) {
+        texts.add("  " + key + ": " + humanBytes(bytes) + " (" + bytes + " B)");
+        return this;
+    }
+
+    public LogGenerator kvHex(String key, long addr) {
+        texts.add("  " + key + ": 0x" + Long.toHexString(addr));
+        return this;
+    }
+
+    public LogGenerator text(String text) {
+        texts.add(text);
+        return this;
     }
 
     public LogGenerator bar(String bar) {
@@ -146,11 +184,11 @@ public class LogGenerator {
         this.title = title;
     }
 
-    public String[] getTexts() {
-        return texts;
+    public String getBar() {
+        return bar;
     }
 
-    public void setTexts(String[] texts) {
-        this.texts = texts;
+    public List<String> getTexts() {
+        return texts;
     }
 }

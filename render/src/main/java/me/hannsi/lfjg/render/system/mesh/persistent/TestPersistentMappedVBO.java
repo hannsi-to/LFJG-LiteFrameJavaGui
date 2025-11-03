@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.render.system.mesh.persistent;
 
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerator;
@@ -9,10 +10,14 @@ import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryUtil;
+import sun.misc.Unsafe;
 
 import java.nio.ByteBuffer;
 
 public class TestPersistentMappedVBO implements PersistentMappedBuffer {
+    private static final float[] TEMP_BUFFER = new float[MeshConstants.FLOATS_PER_VERTEX];
+    private static final Unsafe UNSAFE = Core.UNSAFE;
+    private static final long FLOAT_BASE = UNSAFE.arrayBaseOffset(float[].class);
     private final int flags;
     private ByteBuffer mappedBuffer;
     private long mappedAddress;
@@ -185,20 +190,28 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
     }
 
     private void writeVertex(long baseByteOffset, Vertex vertex) {
-        long addr = mappedAddress + baseByteOffset;
+        TEMP_BUFFER[0] = vertex.x;
+        TEMP_BUFFER[1] = vertex.y;
+        TEMP_BUFFER[2] = vertex.z;
+        TEMP_BUFFER[3] = vertex.red;
+        TEMP_BUFFER[4] = vertex.green;
+        TEMP_BUFFER[5] = vertex.blue;
+        TEMP_BUFFER[6] = vertex.alpha;
+        TEMP_BUFFER[7] = vertex.u;
+        TEMP_BUFFER[8] = vertex.v;
+        TEMP_BUFFER[9] = vertex.normalsX;
+        TEMP_BUFFER[10] = vertex.normalsY;
+        TEMP_BUFFER[11] = vertex.normalsZ;
 
-        MemoryUtil.memPutFloat(addr, vertex.x);
-        MemoryUtil.memPutFloat(addr + 4, vertex.y);
-        MemoryUtil.memPutFloat(addr + 8, vertex.z);
-        MemoryUtil.memPutFloat(addr + 12, vertex.red);
-        MemoryUtil.memPutFloat(addr + 16, vertex.green);
-        MemoryUtil.memPutFloat(addr + 20, vertex.blue);
-        MemoryUtil.memPutFloat(addr + 24, vertex.alpha);
-        MemoryUtil.memPutFloat(addr + 28, vertex.u);
-        MemoryUtil.memPutFloat(addr + 32, vertex.v);
-        MemoryUtil.memPutFloat(addr + 36, vertex.normalsX);
-        MemoryUtil.memPutFloat(addr + 40, vertex.normalsY);
-        MemoryUtil.memPutFloat(addr + 44, vertex.normalsZ);
+        long dst = mappedAddress + baseByteOffset;
+
+        UNSAFE.copyMemory(
+                TEMP_BUFFER,
+                FLOAT_BASE,
+                null,
+                dst,
+                (long) MeshConstants.FLOATS_PER_VERTEX * Float.BYTES
+        );
     }
 
     private int getVerticesSizeByte(int vertices) {
