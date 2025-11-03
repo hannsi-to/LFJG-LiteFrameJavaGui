@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.system.mesh.persistent;
 
-import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerator;
@@ -10,13 +9,13 @@ import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryUtil;
-import sun.misc.Unsafe;
 
 import java.nio.ByteBuffer;
 
+import static me.hannsi.lfjg.core.Core.UNSAFE;
+
 public class TestPersistentMappedVBO implements PersistentMappedBuffer {
     private static final float[] TEMP_BUFFER = new float[MeshConstants.FLOATS_PER_VERTEX];
-    private static final Unsafe UNSAFE = Core.UNSAFE;
     private static final long FLOAT_BASE = UNSAFE.arrayBaseOffset(float[].class);
     private final int flags;
     private ByteBuffer mappedBuffer;
@@ -88,7 +87,7 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
     public TestPersistentMappedVBO add(Vertex vertex) {
         ensureCapacityForVertices(vertexCount + 1);
 
-        long baseOffset = (long) vertexCount * MeshConstants.FLOATS_PER_VERTEX * Float.BYTES;
+        long baseOffset = getVerticesSizeByte(vertexCount);
         writeVertex(baseOffset, vertex);
 
         vertexCount++;
@@ -210,7 +209,7 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
                 FLOAT_BASE,
                 null,
                 dst,
-                (long) MeshConstants.FLOATS_PER_VERTEX * Float.BYTES
+                getVerticesSizeByte(1)
         );
     }
 

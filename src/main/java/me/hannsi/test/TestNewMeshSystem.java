@@ -81,8 +81,8 @@ public class TestNewMeshSystem implements LFJGFrame {
 
         testMesh = TestMesh.createMesh(
                 1,
-                1000000,
-                1000000
+                1,
+                1
         );
 
         for (int i = 0; i < numObjects; i++) {

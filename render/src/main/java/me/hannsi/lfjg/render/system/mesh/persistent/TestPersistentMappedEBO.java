@@ -15,6 +15,7 @@ import java.nio.IntBuffer;
 public class TestPersistentMappedEBO implements PersistentMappedBuffer {
     private final int flags;
     private IntBuffer mappedBuffer;
+    private long mappedAddress;
     private int bufferId;
     private int gpuMemorySize;
     private int indexCount;
@@ -51,6 +52,7 @@ public class TestPersistentMappedEBO implements PersistentMappedBuffer {
             throw new RuntimeException("glMapBufferRange failed");
         }
         mappedBuffer = byteBuffer.asIntBuffer();
+        mappedAddress = MemoryUtil.memAddress(byteBuffer);
     }
 
     public TestPersistentMappedEBO linkVertexArrayObject(int vaoId) {
@@ -64,10 +66,7 @@ public class TestPersistentMappedEBO implements PersistentMappedBuffer {
     public TestPersistentMappedEBO add(int index) {
         ensureCapacityForIndices(indexCount + 1);
 
-        long memoryAddress = MemoryUtil.memAddress(mappedBuffer);
-        long dst = memoryAddress + (long) indexCount * Integer.BYTES;
-
-        MemoryUtil.memPutInt(dst, index);
+        MemoryUtil.memPutInt(mappedAddress + getIndicesSizeByte(indexCount), index);
 
         indexCount++;
 
@@ -110,75 +109,62 @@ public class TestPersistentMappedEBO implements PersistentMappedBuffer {
             return;
         }
 
-        new LogGenerator(
-                "Grow Buffer Start",
-                "OldSize: " + gpuMemorySize + " bytes",
-                "NewSize: " + newGpuMemorySizeBytes + " bytes",
-                "IndexCount: " + indexCount
-        ).logging(getClass(), DebugLevel.INFO, true, true);
+        long oldAddr = mappedAddress;
+        int oldSize = gpuMemorySize;
+        int floatsToCopy = indexCount;
+        long bytesToCopy = (long) floatsToCopy * Float.BYTES;
 
-        final int intsToCopy = indexCount;
-        int[] backup = new int[Math.max(0, intsToCopy)];
+        if (bytesToCopy > oldSize) {
+            bytesToCopy = oldSize;
+        }
 
-        if (mappedBuffer != null && intsToCopy > 0) {
+        if (oldAddr == 0 || mappedBuffer == null) {
+            DebugLog.warning(getClass(), "No existing mapped buffer to backup from.");
+        } else if (bytesToCopy > 0) {
+            long tmp = MemoryUtil.nmemAllocChecked(bytesToCopy);
             try {
-                IntBuffer reader = mappedBuffer.duplicate();
-                reader.position(0);
-                int safeLimit = Math.min(reader.capacity(), intsToCopy);
-                reader.limit(safeLimit);
-                reader.get(backup, 0, safeLimit);
-                DebugLog.info(getClass(), String.format(
-                        "Backup success: %d int copied (%.2f KB)",
-                        safeLimit, safeLimit * Integer.BYTES / 1024.0
-                ));
-            } catch (Exception e) {
-                DebugLog.error(getClass(), e);
-                DebugLog.error(getClass(), "Backup failed: " + e.getMessage());
+                MemoryUtil.memCopy(oldAddr, tmp, bytesToCopy);
+
+                boolean unmapped = GL30.glUnmapBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER);
+                if (!unmapped) {
+                    DebugLog.error(getClass(), "glUnmapBuffer returned false (may indicate corruption).");
+                }
+                GLStateCache.deleteElementArrayBuffer(bufferId);
+                bufferId = 0;
+                mappedBuffer = null;
+                mappedAddress = 0;
+
+                allocationBufferStorage(newGpuMemorySizeBytes);
+                if (mappedAddress == 0) {
+                    throw new RuntimeException("New buffer mappedAddress is 0");
+                }
+
+                MemoryUtil.memCopy(tmp, mappedAddress, bytesToCopy);
+            } finally {
+                MemoryUtil.nmemFree(tmp);
             }
         } else {
-            DebugLog.warning(getClass(), "MappedBuffer is null or no indices to copy.");
-        }
-
-        if (bufferId != 0) {
-            GLStateCache.bindElementArrayBuffer(bufferId);
-            boolean unmapped = GL30.glUnmapBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER);
-            if (!unmapped) {
-                DebugLog.error(getClass(), "glUnmapBuffer returned false (may indicate corruption).");
-            } else {
-                DebugLog.info(getClass(), "Buffer unmapped successfully.");
-            }
-
+            GL30.glUnmapBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER);
             GLStateCache.deleteElementArrayBuffer(bufferId);
-            DebugLog.info(getClass(), "Old buffer deleted (ID: " + bufferId + ")");
             bufferId = 0;
-        }
-        mappedBuffer = null;
+            mappedBuffer = null;
+            mappedAddress = 0;
 
-        DebugLog.info(getClass(), "Allocating new GPU buffer...");
-        allocationBufferStorage(newGpuMemorySizeBytes);
-        DebugLog.info(getClass(), "New buffer allocated (ID: " + bufferId + ", " + newGpuMemorySizeBytes + " bytes)");
-
-        if (mappedBuffer != null && backup.length > 0) {
-            try {
-                mappedBuffer.position(0);
-                mappedBuffer.put(backup, 0, backup.length);
-                mappedBuffer.position(indexCount);
-                DebugLog.info(getClass(), String.format(
-                        "Restored %d int to GPU buffer.", backup.length
-                ));
-            } catch (Exception e) {
-                DebugLog.error(getClass(), e);
-                DebugLog.error(getClass(), "Data restore failed: " + e.getMessage());
-            }
+            allocationBufferStorage(newGpuMemorySizeBytes);
         }
 
         gpuMemorySize = newGpuMemorySizeBytes;
 
-        new LogGenerator(
-                "Grow Buffer Complete",
-                "OldSize: " + gpuMemorySize + " bytes",
-                "MappedBufferCapacity: " + (mappedBuffer != null ? mappedBuffer.capacity() : -1) + " bytes"
-        ).logging(getClass(), DebugLevel.INFO, true, false);
+        new LogGenerator("Grow Buffer")
+                .kvHex("oldAddress", oldAddr)
+                .kvBytes("oldSize", oldSize)
+                .text("\n")
+                .kvHex("newAddress", mappedAddress)
+                .kvBytes("newSize", newGpuMemorySizeBytes)
+                .text("\n")
+                .kvBytes("copiedBytes", bytesToCopy)
+                .kv("indexCount", indexCount)
+                .logging(getClass(), DebugLevel.INFO);
     }
 
     private int getIndicesSizeByte(int indices) {

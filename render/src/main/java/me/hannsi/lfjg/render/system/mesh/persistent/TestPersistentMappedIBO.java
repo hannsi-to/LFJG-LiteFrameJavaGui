@@ -14,9 +14,14 @@ import org.lwjgl.system.MemoryUtil;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
+import static me.hannsi.lfjg.core.Core.UNSAFE;
+
 public class TestPersistentMappedIBO implements PersistentMappedBuffer {
+    private static final int[] TEMP_BUFFER = new int[DrawElementsIndirectCommand.COMMAND_COUNT];
+    private static final long INT_BASE = UNSAFE.arrayBaseOffset(int[].class);
     private final int flags;
     private IntBuffer mappedBuffer;
+    private long mappedAddress;
     private int bufferId;
     private int gpuMemorySize;
     private int commandCount;
@@ -53,13 +58,14 @@ public class TestPersistentMappedIBO implements PersistentMappedBuffer {
             throw new RuntimeException("glMapBufferRange failed");
         }
         mappedBuffer = byteBuffer.asIntBuffer();
+        mappedAddress = MemoryUtil.memAddress(byteBuffer);
     }
 
     public TestPersistentMappedIBO addCommand(DrawElementsIndirectCommand cmd) {
         ensureCapacityForCommands(commandCount + 1);
 
-        int base = commandCount * DrawElementsIndirectCommand.COMMAND_COUNT;
-        writeCommand(mappedBuffer, base, cmd);
+        long baseOffset = getCommandsSizeByte(commandCount);
+        writeCommand(baseOffset, cmd);
 
         commandCount++;
 
@@ -97,15 +103,22 @@ public class TestPersistentMappedIBO implements PersistentMappedBuffer {
         growBuffer((int) newCapacity);
     }
 
-    private void writeCommand(IntBuffer buffer, int base, DrawElementsIndirectCommand command) {
-        long memoryAddress = MemoryUtil.memAddress(buffer);
-        long dst = memoryAddress + (long) base * Integer.BYTES;
+    private void writeCommand(long baseByteOffset, DrawElementsIndirectCommand cmd) {
+        TEMP_BUFFER[0] = cmd.count;
+        TEMP_BUFFER[1] = cmd.instanceCount;
+        TEMP_BUFFER[2] = cmd.firstIndex;
+        TEMP_BUFFER[3] = cmd.baseVertex;
+        TEMP_BUFFER[4] = cmd.baseInstance;
 
-        MemoryUtil.memPutInt(dst, command.count);
-        MemoryUtil.memPutInt(dst + (long) Integer.BYTES, command.instanceCount);
-        MemoryUtil.memPutInt(dst + 2L * Integer.BYTES, command.firstIndex);
-        MemoryUtil.memPutInt(dst + 3L * Integer.BYTES, command.baseVertex);
-        MemoryUtil.memPutInt(dst + 4L * Integer.BYTES, command.baseInstance);
+        long dst = mappedAddress + baseByteOffset;
+
+        UNSAFE.copyMemory(
+                TEMP_BUFFER,
+                INT_BASE,
+                null,
+                dst,
+                getCommandsSizeByte(1)
+        );
     }
 
     private void growBuffer(int newGpuMemorySizeBytes) {
@@ -113,75 +126,62 @@ public class TestPersistentMappedIBO implements PersistentMappedBuffer {
             return;
         }
 
-        new LogGenerator(
-                "Grow Buffer Start",
-                "OldSize: " + gpuMemorySize + " bytes",
-                "NewSize: " + newGpuMemorySizeBytes + " bytes",
-                "CommandCount: " + commandCount
-        ).logging(getClass(), DebugLevel.INFO, true, true);
+        long oldAddr = mappedAddress;
+        int oldSize = gpuMemorySize;
+        int floatsToCopy = commandCount * DrawElementsIndirectCommand.BYTES;
+        long bytesToCopy = (long) floatsToCopy * Float.BYTES;
 
-        final int intsToCopy = commandCount * DrawElementsIndirectCommand.COMMAND_COUNT;
-        int[] backup = new int[Math.max(0, intsToCopy)];
+        if (bytesToCopy > oldSize) {
+            bytesToCopy = oldSize;
+        }
 
-        if (mappedBuffer != null && intsToCopy > 0) {
+        if (oldAddr == 0 || mappedBuffer == null) {
+            DebugLog.warning(getClass(), "No existing mapped buffer to backup from.");
+        } else if (bytesToCopy > 0) {
+            long tmp = MemoryUtil.nmemAllocChecked(bytesToCopy);
             try {
-                IntBuffer reader = mappedBuffer.duplicate();
-                reader.position(0);
-                int safeLimit = Math.min(reader.capacity(), intsToCopy);
-                reader.limit(safeLimit);
-                reader.get(backup, 0, safeLimit);
-                DebugLog.info(getClass(), String.format(
-                        "Backup success: %d int copied (%.2f KB)",
-                        safeLimit, safeLimit * Integer.BYTES / 1024.0
-                ));
-            } catch (Exception e) {
-                DebugLog.error(getClass(), e);
-                DebugLog.error(getClass(), "Backup failed: " + e.getMessage());
+                MemoryUtil.memCopy(oldAddr, tmp, bytesToCopy);
+
+                boolean unmapped = GL30.glUnmapBuffer(GL40.GL_DRAW_INDIRECT_BUFFER);
+                if (!unmapped) {
+                    DebugLog.error(getClass(), "glUnmapBuffer returned false (may indicate corruption).");
+                }
+                GLStateCache.deleteIndirectBuffer(bufferId);
+                bufferId = 0;
+                mappedBuffer = null;
+                mappedAddress = 0;
+
+                allocationBufferStorage(newGpuMemorySizeBytes);
+                if (mappedAddress == 0) {
+                    throw new RuntimeException("New buffer mappedAddress is 0");
+                }
+
+                MemoryUtil.memCopy(tmp, mappedAddress, bytesToCopy);
+            } finally {
+                MemoryUtil.nmemFree(tmp);
             }
         } else {
-            DebugLog.warning(getClass(), "MappedBuffer is null or no indices to copy.");
-        }
-
-        if (bufferId != 0) {
-            GLStateCache.bindIndirectBuffer(bufferId);
-            boolean unmapped = GL30.glUnmapBuffer(GL40.GL_DRAW_INDIRECT_BUFFER);
-            if (!unmapped) {
-                DebugLog.error(getClass(), "glUnmapBuffer returned false (may indicate corruption).");
-            } else {
-                DebugLog.info(getClass(), "Buffer unmapped successfully.");
-            }
-
+            GL30.glUnmapBuffer(GL40.GL_DRAW_INDIRECT_BUFFER);
             GLStateCache.deleteIndirectBuffer(bufferId);
-            DebugLog.info(getClass(), "Old buffer deleted (ID: " + bufferId + ")");
             bufferId = 0;
-        }
-        mappedBuffer = null;
+            mappedBuffer = null;
+            mappedAddress = 0;
 
-        DebugLog.info(getClass(), "Allocating new GPU buffer...");
-        allocationBufferStorage(newGpuMemorySizeBytes);
-        DebugLog.info(getClass(), "New buffer allocated (ID: " + bufferId + ", " + newGpuMemorySizeBytes + " bytes)");
-
-        if (mappedBuffer != null && backup.length > 0) {
-            try {
-                mappedBuffer.position(0);
-                mappedBuffer.put(backup, 0, backup.length);
-                mappedBuffer.position(commandCount);
-                DebugLog.info(getClass(), String.format(
-                        "Restored %d int to GPU buffer.", backup.length
-                ));
-            } catch (Exception e) {
-                DebugLog.error(getClass(), e);
-                DebugLog.error(getClass(), "Data restore failed: " + e.getMessage());
-            }
+            allocationBufferStorage(newGpuMemorySizeBytes);
         }
 
         gpuMemorySize = newGpuMemorySizeBytes;
 
-        new LogGenerator(
-                "Grow Buffer Complete",
-                "OldSize: " + gpuMemorySize + " bytes",
-                "MappedBufferCapacity: " + (mappedBuffer != null ? mappedBuffer.capacity() : -1) + " bytes"
-        ).logging(getClass(), DebugLevel.INFO, true, false);
+        new LogGenerator("Grow Buffer")
+                .kvHex("oldAddress", oldAddr)
+                .kvBytes("oldSize", oldSize)
+                .text("\n")
+                .kvHex("newAddress", mappedAddress)
+                .kvBytes("newSize", newGpuMemorySizeBytes)
+                .text("\n")
+                .kvBytes("copiedBytes", bytesToCopy)
+                .kv("commandCount", commandCount)
+                .logging(getClass(), DebugLevel.INFO);
     }
 
     private int getCommandsSizeByte(int commands) {
