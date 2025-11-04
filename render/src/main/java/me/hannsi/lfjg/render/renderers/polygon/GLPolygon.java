@@ -3,7 +3,7 @@ package me.hannsi.lfjg.render.renderers.polygon;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
-import me.hannsi.lfjg.render.debug.exceptions.render.mesh.MeshBuilderException;
+import me.hannsi.lfjg.render.debug.exceptions.render.mesh.MeshException;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.mesh.BufferObjectType;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
@@ -97,7 +97,7 @@ public class GLPolygon<T extends GLPolygon<T>> extends GLObject {
         setGLObjectParameter();
         Mesh mesh = getMesh();
         if (mesh == null) {
-            throw new MeshBuilderException("MeshBuilder is null.");
+            throw new MeshException("MeshBuilder is null.");
         }
 
         if (!Arrays.equals(vertex, latestVertex)) {

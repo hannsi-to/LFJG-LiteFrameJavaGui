@@ -264,7 +264,7 @@ public class TestNewMeshSystem implements LFJGFrame {
             System.out.println(objectIds.toString());
 
             long id = objectIds.get((int) (MathHelper.random() * 100)).getValue();
-            testMesh.deleteObject(id);
+            testMesh.restoreDeleteObject(id);
         }
     }
 

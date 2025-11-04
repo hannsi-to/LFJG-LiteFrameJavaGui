@@ -4,6 +4,7 @@ import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.reflection.reference.LongRef;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
+import me.hannsi.lfjg.render.debug.exceptions.render.mesh.MeshException;
 import me.hannsi.lfjg.render.renderers.JointType;
 import me.hannsi.lfjg.render.renderers.PointType;
 import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedEBO;
@@ -95,9 +96,45 @@ public class TestMesh {
     }
 
     public TestMesh deleteObject(long objectId) {
+        if (glObjectPool.getDeletedObjects().get(objectId) != null) {
+            new LogGenerator(
+                    "DeleteObject Info",
+                    "ObjectId: " + objectId,
+                    "Message: This object ID has already been deleted."
+            ).logging(getClass(), DebugLevel.INFO);
+
+            return this;
+        }
+
         GLObjectData glObjectData = glObjectPool.getObjectData(objectId);
+        if (glObjectData == null) {
+            throw new MeshException("This object ID does not exist. objectId: " + objectId);
+        }
+
         glObjectPool.createDeletedObject(objectId, glObjectData);
         glObjectData.draw = false;
+
+        return this;
+    }
+
+    public TestMesh restoreDeleteObject(long objectId) {
+        GLObjectData glObjectData = glObjectPool.getObjectData(objectId);
+        if (glObjectData == null) {
+            throw new MeshException("This object ID does not exist. objectId: " + objectId);
+        }
+
+        if (glObjectData.draw) {
+            new LogGenerator(
+                    "RestoreDeleteObject Info",
+                    "ObjectId: " + objectId,
+                    "Message: This object ID is already authorized for drawing."
+            ).logging(getClass(), DebugLevel.INFO);
+
+            return this;
+        }
+
+        glObjectPool.destroyDeletedObject(objectId);
+        glObjectData.draw = true;
 
         return this;
     }
