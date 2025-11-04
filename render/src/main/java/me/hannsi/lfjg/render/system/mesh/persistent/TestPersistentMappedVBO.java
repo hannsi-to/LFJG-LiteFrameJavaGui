@@ -188,7 +188,7 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
                 .logging(getClass(), DebugLevel.INFO);
     }
 
-    private void writeVertex(long baseByteOffset, Vertex vertex) {
+    public void writeVertex(long baseByteOffset, Vertex vertex) {
         TEMP_BUFFER[0] = vertex.x;
         TEMP_BUFFER[1] = vertex.y;
         TEMP_BUFFER[2] = vertex.z;
@@ -213,7 +213,7 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
         );
     }
 
-    private int getVerticesSizeByte(int vertices) {
+    public int getVerticesSizeByte(int vertices) {
         return vertices * MeshConstants.FLOATS_PER_VERTEX * Float.BYTES;
     }
 

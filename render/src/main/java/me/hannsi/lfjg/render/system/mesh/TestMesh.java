@@ -17,6 +17,7 @@ import org.lwjgl.opengl.GL43;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static me.hannsi.lfjg.render.LFJGRenderContext.glObjectPool;
 
@@ -115,6 +116,19 @@ public class TestMesh {
             GLStateCache.lineWidth(1.0f);
         }
 
+        for (Map.Entry<Long, GLObjectData> entry : glObjectPool.getObjects().entrySet()) {
+            long id = entry.getKey();
+            GLObjectData glObjectData = entry.getValue();
+
+            long base = persistentMappedIBO.getCommandsSizeByte(glObjectData.baseCommand);
+            if (glObjectData.draw) {
+                persistentMappedIBO.directWriteCommand(base, 0, glObjectData.elementPair.indices.length);
+            } else {
+                persistentMappedIBO.directWriteCommand(base, 0, 0);
+            }
+        }
+
+        persistentMappedVBO.syncToGPU();
         persistentMappedEBO.syncToGPU();
         persistentMappedIBO.syncToGPU();
 

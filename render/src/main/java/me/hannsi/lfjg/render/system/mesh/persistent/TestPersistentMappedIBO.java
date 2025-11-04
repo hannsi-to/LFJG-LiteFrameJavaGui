@@ -103,7 +103,7 @@ public class TestPersistentMappedIBO implements PersistentMappedBuffer {
         growBuffer((int) newCapacity);
     }
 
-    private void writeCommand(long baseByteOffset, DrawElementsIndirectCommand cmd) {
+    public void writeCommand(long baseByteOffset, DrawElementsIndirectCommand cmd) {
         TEMP_BUFFER[0] = cmd.count;
         TEMP_BUFFER[1] = cmd.instanceCount;
         TEMP_BUFFER[2] = cmd.firstIndex;
@@ -119,6 +119,15 @@ public class TestPersistentMappedIBO implements PersistentMappedBuffer {
                 dst,
                 getCommandsSizeByte(1)
         );
+    }
+
+    public void directWriteCommand(long baseByteOffset, int offset, int value) {
+        long dst = mappedAddress + baseByteOffset + ((long) offset * Integer.BYTES);
+        if (UNSAFE.getInt(dst) == value) {
+            return;
+        }
+
+        UNSAFE.putInt(dst, value);
     }
 
     private void growBuffer(int newGpuMemorySizeBytes) {
@@ -184,7 +193,7 @@ public class TestPersistentMappedIBO implements PersistentMappedBuffer {
                 .logging(getClass(), DebugLevel.INFO);
     }
 
-    private int getCommandsSizeByte(int commands) {
+    public int getCommandsSizeByte(int commands) {
         return commands * DrawElementsIndirectCommand.BYTES;
     }
 

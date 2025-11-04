@@ -12,6 +12,8 @@ import org.lwjgl.system.MemoryUtil;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
+import static me.hannsi.lfjg.core.Core.UNSAFE;
+
 public class TestPersistentMappedEBO implements PersistentMappedBuffer {
     private final int flags;
     private IntBuffer mappedBuffer;
@@ -66,11 +68,20 @@ public class TestPersistentMappedEBO implements PersistentMappedBuffer {
     public TestPersistentMappedEBO add(int index) {
         ensureCapacityForIndices(indexCount + 1);
 
-        MemoryUtil.memPutInt(mappedAddress + getIndicesSizeByte(indexCount), index);
+        writeIndex(getIndicesSizeByte(indexCount), index);
 
         indexCount++;
 
         return this;
+    }
+
+    public void writeIndex(long baseByteOffset, int index) {
+        long dst = mappedAddress + baseByteOffset;
+
+        UNSAFE.putInt(
+                dst,
+                index
+        );
     }
 
     public TestPersistentMappedEBO syncToGPU() {
@@ -167,7 +178,7 @@ public class TestPersistentMappedEBO implements PersistentMappedBuffer {
                 .logging(getClass(), DebugLevel.INFO);
     }
 
-    private int getIndicesSizeByte(int indices) {
+    public int getIndicesSizeByte(int indices) {
         return indices * Integer.BYTES;
     }
 

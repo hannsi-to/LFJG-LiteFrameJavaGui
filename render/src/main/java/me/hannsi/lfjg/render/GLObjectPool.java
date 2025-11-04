@@ -30,6 +30,16 @@ public class GLObjectPool {
         return objects;
     }
 
+    public Map.Entry<Long, GLObjectData> getObject(long id) {
+        for (Map.Entry<Long, GLObjectData> entry : objects.entrySet()) {
+            if (entry.getKey() == id) {
+                return entry;
+            }
+        }
+
+        return null;
+    }
+
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();

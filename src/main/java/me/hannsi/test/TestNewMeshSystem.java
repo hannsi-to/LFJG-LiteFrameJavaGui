@@ -1,6 +1,7 @@
 package me.hannsi.test;
 
 import me.hannsi.lfjg.core.Core;
+import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.reflection.reference.LongRef;
 import me.hannsi.lfjg.core.utils.time.Timer;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
@@ -11,6 +12,7 @@ import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.JointType;
 import me.hannsi.lfjg.render.renderers.PointType;
+import me.hannsi.lfjg.render.system.mesh.GLObjectData;
 import me.hannsi.lfjg.render.system.mesh.TestMesh;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
@@ -24,8 +26,10 @@ import org.lwjgl.opengl.GL11;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
+import static me.hannsi.lfjg.render.LFJGRenderContext.glObjectPool;
 import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL30.glBindBufferBase;
@@ -261,6 +265,13 @@ public class TestNewMeshSystem implements LFJGFrame {
             timer.reset();
 
             System.out.println(objectIds.toString());
+
+            long id = objectIds.get((int) (MathHelper.random() * 100)).getValue();
+            for (Map.Entry<Long, GLObjectData> entry : glObjectPool.getObjects().entrySet()) {
+                if (entry.getKey() == id) {
+                    entry.getValue().draw = false;
+                }
+            }
         }
     }
 
