@@ -86,10 +86,18 @@ public class TestMesh {
                 )
         );
 
-        long id = glObjectPool.create(new GLObjectData(baseVertex, elementPair.vertices.length, startOffset, elementPair.indices.length, persistentMappedIBO.getCommandCount() - 1, elementPair));
+        long id = glObjectPool.createObject(new GLObjectData(baseVertex, elementPair.vertices.length, startOffset, elementPair.indices.length, persistentMappedIBO.getCommandCount() - 1, elementPair));
         if (objectIdPointer != null) {
             objectIdPointer.setValue(id);
         }
+
+        return this;
+    }
+
+    public TestMesh deleteObject(long objectId) {
+        GLObjectData glObjectData = glObjectPool.getObjectData(objectId);
+        glObjectPool.createDeletedObject(objectId, glObjectData);
+        glObjectData.draw = false;
 
         return this;
     }
@@ -117,7 +125,6 @@ public class TestMesh {
         }
 
         for (Map.Entry<Long, GLObjectData> entry : glObjectPool.getObjects().entrySet()) {
-            long id = entry.getKey();
             GLObjectData glObjectData = entry.getValue();
 
             long base = persistentMappedIBO.getCommandsSizeByte(glObjectData.baseCommand);
