@@ -6,11 +6,16 @@ import me.hannsi.lfjg.core.utils.toolkit.Camera;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 
 public class LFJGRenderContext {
+    public static IdPool idPool;
+    public static GLObjectPool glObjectPool;
     public static Camera mainCamera;
     public static ShaderProgram shaderProgram;
     public static TextureCache textureCache;
 
     static {
+        idPool = new IdPool();
+        glObjectPool = new GLObjectPool();
+
         mainCamera = new Camera();
 
         shaderProgram = new ShaderProgram();

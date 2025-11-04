@@ -34,4 +34,9 @@ public class TestElementPair {
     public int hashCode() {
         return Objects.hash(Arrays.hashCode(vertices), Arrays.hashCode(indices));
     }
+
+    @Override
+    public String toString() {
+        return "ElementPair{verticesLength: " + vertices.length + ", indicesLength: " + indices.length + "}";
+    }
 }

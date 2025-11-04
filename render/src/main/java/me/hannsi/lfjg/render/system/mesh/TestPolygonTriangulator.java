@@ -15,7 +15,7 @@ import static me.hannsi.lfjg.core.utils.math.MathHelper.*;
 public class TestPolygonTriangulator {
     public static final boolean DEBUG = false;
     private static final float MITER_LIMIT = 4.0f;
-    private static final float TOLERANCE = 1.0f;
+    private static final float TOLERANCE = 5f;
 
     private ProjectionType projectionType;
     private DrawType drawType;

@@ -1,6 +1,7 @@
 package me.hannsi.test;
 
 import me.hannsi.lfjg.core.Core;
+import me.hannsi.lfjg.core.utils.reflection.reference.LongRef;
 import me.hannsi.lfjg.core.utils.time.Timer;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.frame.Frame;
@@ -32,11 +33,11 @@ import static org.lwjgl.opengl.GL31.*;
 
 public class TestNewMeshSystem implements LFJGFrame {
     Timer timer = new Timer();
+    List<LongRef> objectIds = new ArrayList<>();
     private TestMesh testMesh;
     private Matrix4f modelMatrix;
     private Matrix4f viewMatrix;
     private BlendType blendType;
-
     private int uboMatrices;
 
     public static void main(String[] args) {
@@ -105,7 +106,9 @@ public class TestNewMeshSystem implements LFJGFrame {
                 y += (float) (Math.sin(angle) * step);
             }
 
+            LongRef id = new LongRef();
             testMesh.addObject(
+                    id,
                     ProjectionType.ORTHOGRAPHIC_PROJECTION,
                     DrawType.POINTS,
                     30,
@@ -114,6 +117,8 @@ public class TestNewMeshSystem implements LFJGFrame {
                     PointType.ROUND,
                     vertices.toArray(new Vertex[0])
             );
+
+            objectIds.add(id);
         }
 
 //        for (int i = 0; i < numObjects; i++) {
@@ -244,7 +249,7 @@ public class TestNewMeshSystem implements LFJGFrame {
         testMesh.debugDraw(DrawType.TRIANGLES.getId(), false);
 
         if (timer.passed(2000)) {
-            System.out.println(LFJGContext.frame.getFps());
+            System.out.println("FPS: " + LFJGContext.frame.getFps());
             testMesh.debugLogging(
                     true,
                     true,
@@ -254,6 +259,8 @@ public class TestNewMeshSystem implements LFJGFrame {
                     true
             );
             timer.reset();
+
+            System.out.println(objectIds.toString());
         }
     }
 

@@ -2,6 +2,7 @@ package me.hannsi.lfjg.render.system.mesh;
 
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerator;
+import me.hannsi.lfjg.core.utils.reflection.reference.LongRef;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.renderers.JointType;
 import me.hannsi.lfjg.render.renderers.PointType;
@@ -16,6 +17,8 @@ import org.lwjgl.opengl.GL43;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static me.hannsi.lfjg.render.LFJGRenderContext.glObjectPool;
 
 public class TestMesh {
     private final TestPersistentMappedVBO persistentMappedVBO;
@@ -54,6 +57,10 @@ public class TestMesh {
     }
 
     public TestMesh addObject(ProjectionType projectionType, DrawType drawType, float lineWidth, JointType jointType, float pointSize, PointType pointType, Vertex... vertices) {
+        return addObject(null, projectionType, drawType, lineWidth, jointType, pointSize, pointType, vertices);
+    }
+
+    public TestMesh addObject(LongRef objectIdPointer, ProjectionType projectionType, DrawType drawType, float lineWidth, JointType jointType, float pointSize, PointType pointType, Vertex... vertices) {
         TestElementPair elementPair = setupElementBufferObject(projectionType, drawType, lineWidth, jointType, pointSize, pointType, vertices);
         int baseVertex = vertexCount;
 
@@ -77,6 +84,11 @@ public class TestMesh {
                         0
                 )
         );
+
+        long id = glObjectPool.create(new GLObjectData(baseVertex, elementPair.vertices.length, startOffset, elementPair.indices.length, persistentMappedIBO.getCommandCount() - 1, elementPair));
+        if (objectIdPointer != null) {
+            objectIdPointer.setValue(id);
+        }
 
         return this;
     }
@@ -165,6 +177,9 @@ public class TestMesh {
                 getClass().getSimpleName() + " Debug Message",
                 log.toArray(new String[0])
         ).bar("=").logging(getClass(), DebugLevel.DEBUG);
+
+
+        new LogGenerator("GLObjectPool", glObjectPool.toString()).logging(getClass(), DebugLevel.DEBUG);
     }
 
     public int getVaoId() {
