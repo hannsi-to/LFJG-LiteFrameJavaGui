@@ -13,6 +13,7 @@ import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.Arrays;
 
 import static me.hannsi.lfjg.core.Core.UNSAFE;
 
@@ -61,13 +62,58 @@ public class TestPersistentMappedIBO implements PersistentMappedBuffer {
         mappedAddress = MemoryUtil.memAddress(byteBuffer);
     }
 
-    public TestPersistentMappedIBO addCommand(DrawElementsIndirectCommand cmd) {
+    public TestPersistentMappedIBO add(DrawElementsIndirectCommand cmd) {
         ensureCapacityForCommands(commandCount + 1);
 
         long baseOffset = getCommandsSizeByte(commandCount);
         writeCommand(baseOffset, cmd);
 
         commandCount++;
+
+        return this;
+    }
+
+    public TestPersistentMappedIBO remove(int[] removeIndices) {
+        if (removeIndices == null || removeIndices.length == 0) {
+            return this;
+        }
+
+        int[] sorted = Arrays.stream(removeIndices)
+                .distinct()
+                .sorted()
+                .filter(i -> i >= 0 && i < commandCount)
+                .toArray();
+
+        if (sorted.length == 0) {
+            return this;
+        }
+
+        long vertexSizeBytes = getCommandsSizeByte(1);
+
+        int writeIndex = sorted[0];
+        int readIndex = writeIndex;
+
+        int removePointer = 0;
+        int removeCount = sorted.length;
+
+        while (readIndex < commandCount) {
+            if (removePointer < removeCount && readIndex == sorted[removePointer]) {
+                removePointer++;
+            } else {
+                if (writeIndex != readIndex) {
+                    long src = mappedAddress + getCommandsSizeByte(readIndex);
+                    long dst = mappedAddress + getCommandsSizeByte(writeIndex);
+
+                    MemoryUtil.memCopy(src, dst, vertexSizeBytes);
+                }
+
+                writeIndex++;
+            }
+
+            readIndex++;
+        }
+
+        commandCount = writeIndex;
 
         return this;
     }
@@ -137,8 +183,8 @@ public class TestPersistentMappedIBO implements PersistentMappedBuffer {
 
         long oldAddr = mappedAddress;
         int oldSize = gpuMemorySize;
-        int floatsToCopy = commandCount * DrawElementsIndirectCommand.BYTES;
-        long bytesToCopy = (long) floatsToCopy * Float.BYTES;
+        int floatsToCopy = commandCount * DrawElementsIndirectCommand.COMMAND_COUNT;
+        long bytesToCopy = (long) floatsToCopy * Integer.BYTES;
 
         if (bytesToCopy > oldSize) {
             bytesToCopy = oldSize;
