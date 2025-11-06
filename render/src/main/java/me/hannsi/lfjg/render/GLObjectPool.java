@@ -1,15 +1,21 @@
 package me.hannsi.lfjg.render;
 
+import me.hannsi.lfjg.render.system.mesh.DrawElementsIndirectCommand;
 import me.hannsi.lfjg.render.system.mesh.GLObjectData;
+import me.hannsi.lfjg.render.system.mesh.MeshConstants;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static me.hannsi.lfjg.render.LFJGRenderContext.idPool;
+import static me.hannsi.lfjg.render.LFJGRenderContext.mesh;
 
 public class GLObjectPool {
+    public static final float REMOVE_RATIO_THRESHOLD = 0.3f;
     private final Map<Long, GLObjectData> objects;
     private final Map<Long, GLObjectData> deletedObjects;
+    private long totalPoolBytes = 0;
+    private long deletedBytes = 0;
 
     public GLObjectPool() {
         this.objects = new HashMap<>();
@@ -20,20 +26,63 @@ public class GLObjectPool {
         long id = idPool.acquire();
         objects.put(id, glObjectData);
 
+        totalPoolBytes += calculateBytes(glObjectData);
+
+        return id;
+    }
+
+    public long createObject(long requestedId, GLObjectData glObjectData) {
+        long id = idPool.acquire(requestedId);
+        objects.put(id, glObjectData);
+
+        totalPoolBytes += calculateBytes(glObjectData);
+
         return id;
     }
 
     public void destroyObject(long id) {
+        GLObjectData glObjectData = objects.get(id);
+
         objects.remove(id);
         idPool.release(id);
+
+        totalPoolBytes -= calculateBytes(glObjectData);
     }
 
     public void createDeletedObject(long id, GLObjectData glObjectData) {
         deletedObjects.put(id, glObjectData);
+        deletedBytes += calculateBytes(glObjectData);
+
+        if (totalPoolBytes > 0 && (float) deletedBytes / totalPoolBytes > REMOVE_RATIO_THRESHOLD) {
+            mesh.directDeleteObjects();
+        }
     }
 
     public void destroyDeletedObject(long id) {
+        GLObjectData glObjectData = deletedObjects.get(id);
         deletedObjects.remove(id);
+
+        deletedBytes -= calculateBytes(glObjectData);
+    }
+
+    public void clearObjects() {
+        for (Map.Entry<Long, GLObjectData> entry : objects.entrySet()) {
+            idPool.release(entry.getKey());
+        }
+
+        objects.clear();
+        totalPoolBytes = 0;
+    }
+
+    public void clearDeletedObjects() {
+        deletedObjects.clear();
+        deletedBytes = 0;
+    }
+
+    private long calculateBytes(GLObjectData data) {
+        return (long) data.elementPair.vertices.length * MeshConstants.FLOATS_PER_VERTEX * Float.BYTES +
+                (long) data.elementPair.indices.length * Float.BYTES +
+                DrawElementsIndirectCommand.BYTES;
     }
 
     public Map<Long, GLObjectData> getObjects() {

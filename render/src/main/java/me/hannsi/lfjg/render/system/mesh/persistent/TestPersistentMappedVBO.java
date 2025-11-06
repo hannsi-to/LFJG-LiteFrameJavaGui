@@ -11,17 +11,18 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 import static me.hannsi.lfjg.core.Core.UNSAFE;
 
-public class TestPersistentMappedVBO implements PersistentMappedBuffer {
+public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
     private static final float[] TEMP_BUFFER = new float[MeshConstants.FLOATS_PER_VERTEX];
     private static final long FLOAT_BASE = UNSAFE.arrayBaseOffset(float[].class);
     private final int flags;
     private ByteBuffer mappedBuffer;
     private long mappedAddress;
     private int bufferId;
-    private int gpuMemorySize;
+    private long gpuMemorySize;
     private int vertexCount;
 
     public TestPersistentMappedVBO(int flags, int initialCapacity) {
@@ -35,7 +36,8 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
         allocationBufferStorage(getVerticesSizeByte(capacity));
     }
 
-    private void allocationBufferStorage(int capacity) {
+    @Override
+    public void allocationBufferStorage(long capacity) {
         gpuMemorySize = capacity;
         if (bufferId != 0) {
             GLStateCache.deleteArrayBuffer(bufferId);
@@ -64,7 +66,7 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
 
         GLStateCache.bindArrayBuffer(bufferId);
 
-        int stride = getVerticesSizeByte(1);
+        long stride = getVerticesSizeByte(1);
         int pointer = 0;
         for (BufferObjectType objectType : bufferObjectType) {
             GL20.glEnableVertexAttribArray(objectType.getAttributeIndex());
@@ -73,7 +75,7 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
                     objectType.getAttributeSize(),
                     GL11.GL_FLOAT,
                     false,
-                    stride,
+                    (int) stride,
                     (long) pointer * Float.BYTES
             );
             pointer += objectType.getAttributeSize();
@@ -94,13 +96,60 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
         return this;
     }
 
+    public TestPersistentMappedVBO remove(int[] removeIndices) {
+        if (removeIndices == null || removeIndices.length == 0) {
+            return this;
+        }
+
+        int[] sorted = Arrays.stream(removeIndices)
+                .distinct()
+                .sorted()
+                .filter(i -> i >= 0 && i < vertexCount)
+                .toArray();
+
+        if (sorted.length == 0) {
+            return this;
+        }
+
+        long vertexSizeBytes = getVerticesSizeByte(1);
+
+        int writeIndex = sorted[0];
+        int readIndex = writeIndex;
+
+        int removePointer = 0;
+        int removeCount = sorted.length;
+
+        while (readIndex < vertexCount) {
+            if (removePointer < removeCount && readIndex == sorted[removePointer]) {
+                removePointer++;
+            } else {
+                if (writeIndex != readIndex) {
+                    long src = mappedAddress + getVerticesSizeByte(readIndex);
+                    long dst = mappedAddress + getVerticesSizeByte(writeIndex);
+
+                    MemoryUtil.memCopy(src, dst, vertexSizeBytes);
+                }
+
+                writeIndex++;
+            }
+
+            readIndex++;
+        }
+
+        vertexCount = writeIndex;
+
+        return this;
+    }
+
+    @Override
     public TestPersistentMappedVBO syncToGPU() {
         flushMappedRange(0, getVerticesSizeByte(vertexCount));
 
         return this;
     }
 
-    private void flushMappedRange(long byteOffset, long byteLength) {
+    @Override
+    public void flushMappedRange(long byteOffset, long byteLength) {
         final int GL_MAP_COHERENT_BIT = GL44.GL_MAP_COHERENT_BIT;
         if ((flags & GL_MAP_COHERENT_BIT) == 0) {
             GL44.glFlushMappedBufferRange(GL15.GL_ARRAY_BUFFER, byteOffset, byteLength);
@@ -108,7 +157,7 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
     }
 
     private void ensureCapacityForVertices(int requiredVertices) {
-        int requiredBytes = getVerticesSizeByte(requiredVertices);
+        long requiredBytes = getVerticesSizeByte(requiredVertices);
         if (requiredBytes <= gpuMemorySize) {
             return;
         }
@@ -125,13 +174,14 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
         growBuffer((int) newCapacity);
     }
 
-    private void growBuffer(int newGpuMemorySizeBytes) {
-        if (newGpuMemorySizeBytes <= gpuMemorySize) {
+    @Override
+    public void growBuffer(long newGPUMemorySizeBytes) {
+        if (newGPUMemorySizeBytes <= gpuMemorySize) {
             return;
         }
 
         long oldAddr = mappedAddress;
-        int oldSize = gpuMemorySize;
+        long oldSize = gpuMemorySize;
         int floatsToCopy = vertexCount * MeshConstants.FLOATS_PER_VERTEX;
         long bytesToCopy = (long) floatsToCopy * Float.BYTES;
 
@@ -155,7 +205,7 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
                 mappedBuffer = null;
                 mappedAddress = 0;
 
-                allocationBufferStorage(newGpuMemorySizeBytes);
+                allocationBufferStorage(newGPUMemorySizeBytes);
                 if (mappedAddress == 0) {
                     throw new RuntimeException("New buffer mappedAddress is 0");
                 }
@@ -171,17 +221,17 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
             mappedBuffer = null;
             mappedAddress = 0;
 
-            allocationBufferStorage(newGpuMemorySizeBytes);
+            allocationBufferStorage(newGPUMemorySizeBytes);
         }
 
-        gpuMemorySize = newGpuMemorySizeBytes;
+        gpuMemorySize = newGPUMemorySizeBytes;
 
         new LogGenerator("Grow Buffer")
                 .kvHex("oldAddress", oldAddr)
                 .kvBytes("oldSize", oldSize)
                 .text("\n")
                 .kvHex("newAddress", mappedAddress)
-                .kvBytes("newSize", newGpuMemorySizeBytes)
+                .kvBytes("newSize", newGPUMemorySizeBytes)
                 .text("\n")
                 .kvBytes("copiedBytes", bytesToCopy)
                 .kv("vertexCount", vertexCount)
@@ -213,24 +263,32 @@ public class TestPersistentMappedVBO implements PersistentMappedBuffer {
         );
     }
 
-    public int getVerticesSizeByte(int vertices) {
-        return vertices * MeshConstants.FLOATS_PER_VERTEX * Float.BYTES;
+    public long getVerticesSizeByte(int vertices) {
+        return (long) vertices * MeshConstants.FLOATS_PER_VERTEX * Float.BYTES;
     }
 
     public int getVertexCount() {
         return vertexCount;
     }
 
+    @Override
     public int getBufferId() {
         return bufferId;
     }
 
+    @Override
     public ByteBuffer getMappedBuffer() {
         return mappedBuffer;
     }
 
+    @Override
     public long getMappedAddress() {
         return mappedAddress;
+    }
+
+    @Override
+    public long getGPUMemorySize() {
+        return gpuMemorySize;
     }
 
     @Override

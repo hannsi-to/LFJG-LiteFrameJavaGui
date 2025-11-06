@@ -2,7 +2,7 @@ package me.hannsi.lfjg.render.system.mesh;
 
 public class DrawElementsIndirectCommand {
     public static final int COMMAND_COUNT = 5;
-    public static final int BYTES = COMMAND_COUNT * Integer.BYTES;
+    public static final long BYTES = COMMAND_COUNT * Integer.BYTES;
 
     public int count;
     public int instanceCount;

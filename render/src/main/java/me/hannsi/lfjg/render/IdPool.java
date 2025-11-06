@@ -6,11 +6,24 @@ public class IdPool {
     private final ArrayDeque<Long> pool = new ArrayDeque<>();
     private long next = Id.initialGLObjectId;
 
-    public synchronized long acquire() {
+    public long acquire() {
         return pool.isEmpty() ? next++ : pool.pop();
     }
 
-    public synchronized void release(long id) {
+    public void release(long id) {
         pool.push(id);
+    }
+
+    public long acquire(long requestedId) {
+        if (pool.remove(requestedId)) {
+            return requestedId;
+        }
+
+        if (requestedId < next) {
+            throw new IllegalArgumentException("ID already issued or invalid: " + requestedId);
+        }
+
+        next = requestedId + 1;
+        return requestedId;
     }
 }

@@ -12,7 +12,6 @@ import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.JointType;
 import me.hannsi.lfjg.render.renderers.PointType;
-import me.hannsi.lfjg.render.system.mesh.TestMesh;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
@@ -27,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static me.hannsi.lfjg.render.LFJGRenderContext.mesh;
 import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL30.glBindBufferBase;
@@ -35,7 +35,6 @@ import static org.lwjgl.opengl.GL31.*;
 public class TestNewMeshSystem implements LFJGFrame {
     Timer timer = new Timer();
     List<LongRef> objectIds = new ArrayList<>();
-    private TestMesh testMesh;
     private Matrix4f modelMatrix;
     private Matrix4f viewMatrix;
     private BlendType blendType;
@@ -81,12 +80,6 @@ public class TestNewMeshSystem implements LFJGFrame {
 
         Random random = new Random();
 
-        testMesh = TestMesh.createMesh(
-                1,
-                1,
-                1
-        );
-
         for (int i = 0; i < numObjects; i++) {
             float x = minX + random.nextFloat() * (maxX - minX);
             float y = minY + random.nextFloat() * (maxY - minY);
@@ -108,7 +101,7 @@ public class TestNewMeshSystem implements LFJGFrame {
             }
 
             LongRef id = new LongRef();
-            testMesh.addObject(
+            mesh.addObject(
                     id,
                     ProjectionType.ORTHOGRAPHIC_PROJECTION,
                     DrawType.POINTS,
@@ -227,7 +220,7 @@ public class TestNewMeshSystem implements LFJGFrame {
 //            );
 //        }
 
-        testMesh.initBufferObject();
+        mesh.initBufferObject();
 
         modelMatrix = new Matrix4f();
         viewMatrix = new Matrix4f();
@@ -247,11 +240,11 @@ public class TestNewMeshSystem implements LFJGFrame {
         shaderProgram.setUniform("resolution", UploadUniformType.ON_CHANGE, Core.frameBufferSize);
         updateUBO(Core.projection2D.getProjMatrix(), viewMatrix, modelMatrix);
 
-        testMesh.debugDraw(DrawType.TRIANGLES.getId(), false);
+        mesh.debugDraw(DrawType.TRIANGLES.getId(), false);
 
         if (timer.passed(2000)) {
             System.out.println("FPS: " + LFJGContext.frame.getFps());
-            testMesh.debugLogging(
+            mesh.debugLogging(
                     true,
                     true,
                     true,
@@ -263,8 +256,8 @@ public class TestNewMeshSystem implements LFJGFrame {
 
             System.out.println(objectIds.toString());
 
-            long id = objectIds.get((int) (MathHelper.random() * 100)).getValue();
-            testMesh.restoreDeleteObject(id);
+            long id = objectIds.get((int) (MathHelper.random() * objectIds.size())).getValue();
+            mesh.deleteObject(objectIds, id);
         }
     }
 

@@ -10,16 +10,16 @@ import org.lwjgl.opengl.GL44;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
+import java.util.Arrays;
 
 import static me.hannsi.lfjg.core.Core.UNSAFE;
 
-public class TestPersistentMappedEBO implements PersistentMappedBuffer {
+public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
     private final int flags;
-    private IntBuffer mappedBuffer;
+    private ByteBuffer mappedBuffer;
     private long mappedAddress;
     private int bufferId;
-    private int gpuMemorySize;
+    private long gpuMemorySize;
     private int indexCount;
 
     public TestPersistentMappedEBO(int flags, int initialCapacity) {
@@ -33,7 +33,8 @@ public class TestPersistentMappedEBO implements PersistentMappedBuffer {
         allocationBufferStorage(getIndicesSizeByte(capacity));
     }
 
-    private void allocationBufferStorage(int capacity) {
+    @Override
+    public void allocationBufferStorage(long capacity) {
         gpuMemorySize = capacity;
         if (bufferId != 0) {
             GLStateCache.deleteElementArrayBuffer(bufferId);
@@ -53,7 +54,7 @@ public class TestPersistentMappedEBO implements PersistentMappedBuffer {
         if (byteBuffer == null) {
             throw new RuntimeException("glMapBufferRange failed");
         }
-        mappedBuffer = byteBuffer.asIntBuffer();
+        mappedBuffer = byteBuffer;
         mappedAddress = MemoryUtil.memAddress(byteBuffer);
     }
 
@@ -75,6 +76,51 @@ public class TestPersistentMappedEBO implements PersistentMappedBuffer {
         return this;
     }
 
+    public TestPersistentMappedEBO remove(int[] removeIndices) {
+        if (removeIndices == null || removeIndices.length == 0) {
+            return this;
+        }
+
+        int[] sorted = Arrays.stream(removeIndices)
+                .distinct()
+                .sorted()
+                .filter(i -> i >= 0 && i < indexCount)
+                .toArray();
+
+        if (sorted.length == 0) {
+            return this;
+        }
+
+        long vertexSizeBytes = getIndicesSizeByte(1);
+
+        int writeIndex = sorted[0];
+        int readIndex = writeIndex;
+
+        int removePointer = 0;
+        int removeCount = sorted.length;
+
+        while (readIndex < indexCount) {
+            if (removePointer < removeCount && readIndex == sorted[removePointer]) {
+                removePointer++;
+            } else {
+                if (writeIndex != readIndex) {
+                    long src = mappedAddress + getIndicesSizeByte(readIndex);
+                    long dst = mappedAddress + getIndicesSizeByte(writeIndex);
+
+                    MemoryUtil.memCopy(src, dst, vertexSizeBytes);
+                }
+
+                writeIndex++;
+            }
+
+            readIndex++;
+        }
+
+        indexCount = writeIndex;
+
+        return this;
+    }
+
     public void writeIndex(long baseByteOffset, int index) {
         long dst = mappedAddress + baseByteOffset;
 
@@ -84,13 +130,15 @@ public class TestPersistentMappedEBO implements PersistentMappedBuffer {
         );
     }
 
+    @Override
     public TestPersistentMappedEBO syncToGPU() {
         flushMappedRange(0, getIndicesSizeByte(indexCount));
 
         return this;
     }
 
-    private void flushMappedRange(long byteOffset, long byteLength) {
+    @Override
+    public void flushMappedRange(long byteOffset, long byteLength) {
         final int GL_MAP_COHERENT_BIT = GL44.GL_MAP_COHERENT_BIT;
         if ((flags & GL_MAP_COHERENT_BIT) == 0) {
             GL44.glFlushMappedBufferRange(GL15.GL_ELEMENT_ARRAY_BUFFER, byteOffset, byteLength);
@@ -98,7 +146,7 @@ public class TestPersistentMappedEBO implements PersistentMappedBuffer {
     }
 
     private void ensureCapacityForIndices(int requiredIndices) {
-        int requiredBytes = getIndicesSizeByte(requiredIndices);
+        long requiredBytes = getIndicesSizeByte(requiredIndices);
         if (requiredBytes <= gpuMemorySize) {
             return;
         }
@@ -115,13 +163,14 @@ public class TestPersistentMappedEBO implements PersistentMappedBuffer {
         growBuffer((int) newCapacity);
     }
 
-    private void growBuffer(int newGpuMemorySizeBytes) {
-        if (newGpuMemorySizeBytes <= gpuMemorySize) {
+    @Override
+    public void growBuffer(long newGPUMemorySizeBytes) {
+        if (newGPUMemorySizeBytes <= gpuMemorySize) {
             return;
         }
 
         long oldAddr = mappedAddress;
-        int oldSize = gpuMemorySize;
+        long oldSize = gpuMemorySize;
         int floatsToCopy = indexCount;
         long bytesToCopy = (long) floatsToCopy * Float.BYTES;
 
@@ -145,7 +194,7 @@ public class TestPersistentMappedEBO implements PersistentMappedBuffer {
                 mappedBuffer = null;
                 mappedAddress = 0;
 
-                allocationBufferStorage(newGpuMemorySizeBytes);
+                allocationBufferStorage(newGPUMemorySizeBytes);
                 if (mappedAddress == 0) {
                     throw new RuntimeException("New buffer mappedAddress is 0");
                 }
@@ -161,37 +210,49 @@ public class TestPersistentMappedEBO implements PersistentMappedBuffer {
             mappedBuffer = null;
             mappedAddress = 0;
 
-            allocationBufferStorage(newGpuMemorySizeBytes);
+            allocationBufferStorage(newGPUMemorySizeBytes);
         }
 
-        gpuMemorySize = newGpuMemorySizeBytes;
+        gpuMemorySize = newGPUMemorySizeBytes;
 
         new LogGenerator("Grow Buffer")
                 .kvHex("oldAddress", oldAddr)
                 .kvBytes("oldSize", oldSize)
                 .text("\n")
                 .kvHex("newAddress", mappedAddress)
-                .kvBytes("newSize", newGpuMemorySizeBytes)
+                .kvBytes("newSize", newGPUMemorySizeBytes)
                 .text("\n")
                 .kvBytes("copiedBytes", bytesToCopy)
                 .kv("indexCount", indexCount)
                 .logging(getClass(), DebugLevel.INFO);
     }
 
-    public int getIndicesSizeByte(int indices) {
-        return indices * Integer.BYTES;
+    public long getIndicesSizeByte(int indices) {
+        return (long) indices * Integer.BYTES;
     }
 
     public int getIndexCount() {
         return indexCount;
     }
 
+    @Override
     public int getBufferId() {
         return bufferId;
     }
 
-    public IntBuffer getMappedBuffer() {
+    @Override
+    public ByteBuffer getMappedBuffer() {
         return mappedBuffer;
+    }
+
+    @Override
+    public long getGPUMemorySize() {
+        return gpuMemorySize;
+    }
+
+    @Override
+    public long getMappedAddress() {
+        return mappedAddress;
     }
 
     @Override

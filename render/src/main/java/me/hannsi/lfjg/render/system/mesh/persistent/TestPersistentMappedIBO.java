@@ -12,19 +12,18 @@ import org.lwjgl.opengl.GL44;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.util.Arrays;
 
 import static me.hannsi.lfjg.core.Core.UNSAFE;
 
-public class TestPersistentMappedIBO implements PersistentMappedBuffer {
+public class TestPersistentMappedIBO implements TestPersistentMappedBuffer {
     private static final int[] TEMP_BUFFER = new int[DrawElementsIndirectCommand.COMMAND_COUNT];
     private static final long INT_BASE = UNSAFE.arrayBaseOffset(int[].class);
     private final int flags;
-    private IntBuffer mappedBuffer;
+    private ByteBuffer mappedBuffer;
     private long mappedAddress;
     private int bufferId;
-    private int gpuMemorySize;
+    private long gpuMemorySize;
     private int commandCount;
 
     public TestPersistentMappedIBO(int flags, int initialCapacity) {
@@ -38,7 +37,8 @@ public class TestPersistentMappedIBO implements PersistentMappedBuffer {
         allocationBufferStorage(getCommandsSizeByte(capacity));
     }
 
-    private void allocationBufferStorage(int capacity) {
+    @Override
+    public void allocationBufferStorage(long capacity) {
         gpuMemorySize = capacity;
         if (bufferId != 0) {
             GLStateCache.deleteIndirectBuffer(bufferId);
@@ -58,7 +58,7 @@ public class TestPersistentMappedIBO implements PersistentMappedBuffer {
         if (byteBuffer == null) {
             throw new RuntimeException("glMapBufferRange failed");
         }
-        mappedBuffer = byteBuffer.asIntBuffer();
+        mappedBuffer = byteBuffer;
         mappedAddress = MemoryUtil.memAddress(byteBuffer);
     }
 
@@ -118,13 +118,15 @@ public class TestPersistentMappedIBO implements PersistentMappedBuffer {
         return this;
     }
 
+    @Override
     public TestPersistentMappedIBO syncToGPU() {
         flushMappedRange(0, getCommandsSizeByte(commandCount));
 
         return this;
     }
 
-    private void flushMappedRange(long byteOffset, long byteLength) {
+    @Override
+    public void flushMappedRange(long byteOffset, long byteLength) {
         final int GL_MAP_COHERENT_BIT = GL44.GL_MAP_COHERENT_BIT;
         if ((flags & GL_MAP_COHERENT_BIT) != GL_MAP_COHERENT_BIT) {
             GL44.glFlushMappedBufferRange(GL40.GL_DRAW_INDIRECT_BUFFER, byteOffset, byteLength);
@@ -132,7 +134,7 @@ public class TestPersistentMappedIBO implements PersistentMappedBuffer {
     }
 
     private void ensureCapacityForCommands(int requiredIndices) {
-        int requiredBytes = getCommandsSizeByte(requiredIndices);
+        long requiredBytes = getCommandsSizeByte(requiredIndices);
         if (requiredBytes <= gpuMemorySize) {
             return;
         }
@@ -168,24 +170,36 @@ public class TestPersistentMappedIBO implements PersistentMappedBuffer {
     }
 
     public void directWriteCommand(long baseByteOffset, int offset, int value) {
+        if (mappedAddress == 0 || mappedBuffer == null) {
+            DebugLog.error(getClass(), "directWriteCommand: buffer not mapped (base=" + baseByteOffset + ", off=" + offset + ")");
+            return;
+        }
+
         long dst = mappedAddress + baseByteOffset + ((long) offset * Integer.BYTES);
-        if (UNSAFE.getInt(dst) == value) {
+        long end = mappedAddress + gpuMemorySize;
+        if (dst < mappedAddress || dst + Integer.BYTES > end) {
+            DebugLog.error(getClass(), String.format("directWriteCommand out of bounds. mappedAddress=%d gpuMemorySize=%d base=%d offset=%d dst=%d end=%d", mappedAddress, gpuMemorySize, baseByteOffset, offset, dst, end));
+            return;
+        }
+
+        int current = UNSAFE.getInt(dst);
+        if (current == value) {
             return;
         }
 
         UNSAFE.putInt(dst, value);
     }
 
-    private void growBuffer(int newGpuMemorySizeBytes) {
-        if (newGpuMemorySizeBytes <= gpuMemorySize) {
+    @Override
+    public void growBuffer(long newGPUMemorySizeBytes) {
+        if (newGPUMemorySizeBytes <= gpuMemorySize) {
             return;
         }
 
         long oldAddr = mappedAddress;
-        int oldSize = gpuMemorySize;
-        int floatsToCopy = commandCount * DrawElementsIndirectCommand.COMMAND_COUNT;
-        long bytesToCopy = (long) floatsToCopy * Integer.BYTES;
+        long oldSize = gpuMemorySize;
 
+        long bytesToCopy = (long) commandCount * DrawElementsIndirectCommand.BYTES;
         if (bytesToCopy > oldSize) {
             bytesToCopy = oldSize;
         }
@@ -206,7 +220,7 @@ public class TestPersistentMappedIBO implements PersistentMappedBuffer {
                 mappedBuffer = null;
                 mappedAddress = 0;
 
-                allocationBufferStorage(newGpuMemorySizeBytes);
+                allocationBufferStorage(newGPUMemorySizeBytes);
                 if (mappedAddress == 0) {
                     throw new RuntimeException("New buffer mappedAddress is 0");
                 }
@@ -222,24 +236,24 @@ public class TestPersistentMappedIBO implements PersistentMappedBuffer {
             mappedBuffer = null;
             mappedAddress = 0;
 
-            allocationBufferStorage(newGpuMemorySizeBytes);
+            allocationBufferStorage(newGPUMemorySizeBytes);
         }
 
-        gpuMemorySize = newGpuMemorySizeBytes;
+        gpuMemorySize = newGPUMemorySizeBytes;
 
         new LogGenerator("Grow Buffer")
                 .kvHex("oldAddress", oldAddr)
                 .kvBytes("oldSize", oldSize)
                 .text("\n")
                 .kvHex("newAddress", mappedAddress)
-                .kvBytes("newSize", newGpuMemorySizeBytes)
+                .kvBytes("newSize", newGPUMemorySizeBytes)
                 .text("\n")
                 .kvBytes("copiedBytes", bytesToCopy)
                 .kv("commandCount", commandCount)
                 .logging(getClass(), DebugLevel.INFO);
     }
 
-    public int getCommandsSizeByte(int commands) {
+    public long getCommandsSizeByte(int commands) {
         return commands * DrawElementsIndirectCommand.BYTES;
     }
 
@@ -247,12 +261,24 @@ public class TestPersistentMappedIBO implements PersistentMappedBuffer {
         return commandCount;
     }
 
+    @Override
     public int getBufferId() {
         return bufferId;
     }
 
-    public IntBuffer getMappedBuffer() {
+    @Override
+    public ByteBuffer getMappedBuffer() {
         return mappedBuffer;
+    }
+
+    @Override
+    public long getMappedAddress() {
+        return mappedAddress;
+    }
+
+    @Override
+    public long getGPUMemorySize() {
+        return gpuMemorySize;
     }
 
     @Override
@@ -262,5 +288,9 @@ public class TestPersistentMappedIBO implements PersistentMappedBuffer {
             bufferId = 0;
         }
         mappedBuffer = null;
+    }
+
+    public long getGpuMemorySize() {
+        return gpuMemorySize;
     }
 }

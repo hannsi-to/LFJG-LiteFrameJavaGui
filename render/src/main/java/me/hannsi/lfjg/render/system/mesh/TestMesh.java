@@ -16,18 +16,19 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL43;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import static me.hannsi.lfjg.core.utils.math.MathHelper.max;
 import static me.hannsi.lfjg.render.LFJGRenderContext.glObjectPool;
 
 public class TestMesh {
-    private final TestPersistentMappedVBO persistentMappedVBO;
-    private final TestPersistentMappedEBO persistentMappedEBO;
-    private final TestPersistentMappedIBO persistentMappedIBO;
-
     private final int vaoId;
+    private int initialVBOCapacity;
+    private int initialEBOCapacity;
+    private int initialIBOCapacity;
+    private TestPersistentMappedVBO persistentMappedVBO;
+    private TestPersistentMappedEBO persistentMappedEBO;
+    private TestPersistentMappedIBO persistentMappedIBO;
     private int currentIndex;
     private int vertexCount;
 
@@ -35,6 +36,9 @@ public class TestMesh {
         this.persistentMappedVBO = new TestPersistentMappedVBO(MeshConstants.DEFAULT_FLAGS_HINT, initialVBOCapacity);
         this.persistentMappedEBO = new TestPersistentMappedEBO(MeshConstants.DEFAULT_FLAGS_HINT, initialEBOCapacity);
         this.persistentMappedIBO = new TestPersistentMappedIBO(MeshConstants.DEFAULT_FLAGS_HINT, initialIBOCapacity);
+        this.initialVBOCapacity = initialVBOCapacity;
+        this.initialEBOCapacity = initialEBOCapacity;
+        this.initialIBOCapacity = initialIBOCapacity;
 
         this.vaoId = GL30.glGenVertexArrays();
         this.currentIndex = 0;
@@ -77,7 +81,7 @@ public class TestMesh {
 
         vertexCount += elementPair.vertices.length;
 
-        persistentMappedIBO.addCommand(
+        persistentMappedIBO.add(
                 new DrawElementsIndirectCommand(
                         elementPair.indices.length,
                         1,
@@ -96,6 +100,10 @@ public class TestMesh {
     }
 
     public TestMesh deleteObject(long objectId) {
+        return deleteObject(null, objectId);
+    }
+
+    public TestMesh deleteObject(List<LongRef> ids, long objectId) {
         if (glObjectPool.getDeletedObjects().get(objectId) != null) {
             new LogGenerator(
                     "DeleteObject Info",
@@ -113,6 +121,84 @@ public class TestMesh {
 
         glObjectPool.createDeletedObject(objectId, glObjectData);
         glObjectData.draw = false;
+
+        if (ids != null) {
+            Set<Map.Entry<Long, GLObjectData>> set = glObjectPool.getObjects().entrySet();
+            ids.clear();
+            for (Map.Entry<Long, GLObjectData> entry : set) {
+                ids.add(new LongRef(entry.getKey()));
+            }
+        }
+
+        return this;
+    }
+
+    public TestMesh directDeleteObjects() {
+        Map<Long, GLObjectData> entryObject = new HashMap<>();
+        for (Map.Entry<Long, GLObjectData> objectEntry : glObjectPool.getObjects().entrySet()) {
+            if (glObjectPool.getDeletedObjects().containsKey(objectEntry.getKey())) {
+                continue;
+            }
+
+            entryObject.put(objectEntry.getKey(), objectEntry.getValue());
+        }
+
+        glObjectPool.clearObjects();
+        glObjectPool.clearDeletedObjects();
+
+        int newVBOCapacity = 0;
+        int newEBOCapacity = 0;
+        int newIBOCapacity = 0;
+        for (Map.Entry<Long, GLObjectData> entry : entryObject.entrySet()) {
+            GLObjectData glObjectData = entry.getValue();
+
+            newVBOCapacity += glObjectData.elementPair.vertices.length;
+            newEBOCapacity += glObjectData.elementPair.indices.length;
+            newIBOCapacity += 1;
+        }
+        initialVBOCapacity = max(newVBOCapacity, initialVBOCapacity);
+        initialEBOCapacity = max(newEBOCapacity, initialEBOCapacity);
+        initialIBOCapacity = max(newIBOCapacity, initialIBOCapacity);
+
+        persistentMappedVBO.cleanup();
+        persistentMappedEBO.cleanup();
+        persistentMappedIBO.cleanup();
+
+        persistentMappedVBO = new TestPersistentMappedVBO(MeshConstants.DEFAULT_FLAGS_HINT, initialVBOCapacity);
+        persistentMappedEBO = new TestPersistentMappedEBO(MeshConstants.DEFAULT_FLAGS_HINT, initialEBOCapacity);
+        persistentMappedIBO = new TestPersistentMappedIBO(MeshConstants.DEFAULT_FLAGS_HINT, initialIBOCapacity);
+
+        vertexCount = 0;
+
+        for (Map.Entry<Long, GLObjectData> entry : entryObject.entrySet()) {
+            TestElementPair elementPair = entry.getValue().elementPair;
+
+            int baseVertex = vertexCount;
+            for (Vertex vertex : elementPair.vertices) {
+                persistentMappedVBO.add(vertex);
+            }
+
+            int startOffset = persistentMappedEBO.getIndexCount();
+            for (int index : elementPair.indices) {
+                persistentMappedEBO.add(index);
+            }
+
+            vertexCount += elementPair.vertices.length;
+
+            persistentMappedIBO.add(
+                    new DrawElementsIndirectCommand(
+                            elementPair.indices.length,
+                            1,
+                            startOffset,
+                            baseVertex,
+                            0
+                    )
+            );
+
+            glObjectPool.createObject(entry.getKey(), new GLObjectData(baseVertex, elementPair.vertices.length, startOffset, elementPair.indices.length, persistentMappedIBO.getCommandCount() - 1, elementPair));
+        }
+
+        initBufferObject();
 
         return this;
     }
