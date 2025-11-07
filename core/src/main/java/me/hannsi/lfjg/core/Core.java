@@ -3,6 +3,7 @@ package me.hannsi.lfjg.core;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.utils.math.Projection;
 import me.hannsi.lfjg.core.utils.reflection.ClassUtil;
+import me.hannsi.lfjg.core.utils.toolkit.FastStringBuilder;
 import me.hannsi.lfjg.core.utils.toolkit.KeyboardInfo;
 import me.hannsi.lfjg.core.utils.toolkit.MouseInfo;
 import org.jetbrains.annotations.Nullable;
@@ -42,6 +43,7 @@ public class Core {
     public static final boolean enableLFJGRenderTextSystem;
     public static final boolean enableLFJGRenderVideoSystem;
     public static final Unsafe UNSAFE;
+    public static FastStringBuilder stringBuilder;
     public static ServiceData lfjgAudioServiceData = null;
     public static ServiceData lfjgFrameServiceData = null;
     public static ServiceData lfjgJCefServiceData = null;
@@ -126,6 +128,8 @@ public class Core {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        stringBuilder = new FastStringBuilder();
     }
 
     private static boolean isLWJGL3() {
