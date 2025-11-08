@@ -59,9 +59,7 @@ public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
     }
 
     public TestPersistentMappedEBO linkVertexArrayObject(int vaoId) {
-        GLStateCache.bindVertexArray(vaoId);
-        GLStateCache.bindElementArrayBuffer(bufferId);
-        GL30.glBindVertexArray(0);
+        GLStateCache.bindElementArrayBufferForce(bufferId);
 
         return this;
     }

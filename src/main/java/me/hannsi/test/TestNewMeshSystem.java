@@ -244,18 +244,18 @@ public class TestNewMeshSystem implements LFJGFrame {
 
         if (timer.passed(2000)) {
             System.out.println("FPS: " + LFJGContext.frame.getFps());
-            mesh.debugLogging(
-                    true,
-                    true,
-                    true,
-                    true,
-                    true,
-                    true
-            );
+//            mesh.debugLogging(
+//                    true,
+//                    true,
+//                    true,
+//                    true,
+//                    true,
+//                    true
+//            );
             timer.reset();
-
-            System.out.println(objectIds.toString());
-
+//
+//            System.out.println(objectIds.toString());
+//
             long id = objectIds.get((int) (MathHelper.random() * objectIds.size())).getValue();
             mesh.deleteObject(objectIds, id);
         }

@@ -62,8 +62,6 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
     }
 
     public TestPersistentMappedVBO createVertexAttribute(int vaoId, BufferObjectType... bufferObjectType) {
-        GLStateCache.bindVertexArray(vaoId);
-
         GLStateCache.bindArrayBuffer(bufferId);
 
         long stride = getVerticesSizeByte(1);
@@ -80,8 +78,6 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
             );
             pointer += objectType.getAttributeSize();
         }
-
-        GL30.glBindVertexArray(0);
 
         return this;
     }

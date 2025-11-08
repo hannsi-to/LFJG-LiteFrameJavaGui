@@ -50,6 +50,8 @@ public class TestMesh {
     }
 
     public TestMesh initBufferObject() {
+        GLStateCache.bindVertexArrayForce(vaoId);
+
         persistentMappedVBO.createVertexAttribute(vaoId, BufferObjectType.POSITION_BUFFER, BufferObjectType.COLOR_BUFFER, BufferObjectType.TEXTURE_BUFFER, BufferObjectType.NORMAL_BUFFER)
                 .syncToGPU();
 
@@ -58,7 +60,6 @@ public class TestMesh {
 
         persistentMappedIBO.syncToGPU();
 
-        GLStateCache.bindVertexArray(0);
         return this;
     }
 
@@ -262,9 +263,9 @@ public class TestMesh {
         persistentMappedEBO.syncToGPU();
         persistentMappedIBO.syncToGPU();
 
-        GLStateCache.bindVertexArrayForce(vaoId);
-        GLStateCache.bindElementArrayBufferForce(persistentMappedEBO.getBufferId());
-        GLStateCache.bindIndirectBufferForce(persistentMappedIBO.getBufferId());
+        GLStateCache.bindVertexArray(vaoId);
+        GLStateCache.bindElementArrayBuffer(persistentMappedEBO.getBufferId());
+        GLStateCache.bindIndirectBuffer(persistentMappedIBO.getBufferId());
 
         GL43.glMultiDrawElementsIndirect(
                 mode,
