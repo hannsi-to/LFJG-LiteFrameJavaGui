@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ClassUtil extends Util {
-    private static final Map<String, MethodHandle> METHOD_HANDLE_CACHE = new ConcurrentHashMap<>();
+    private static final Map<MethodSignature, MethodHandle> METHOD_HANDLE_CACHE = new ConcurrentHashMap<>();
 
     private static final Map<Class<?>, Class<?>> PRIMITIVE_MAP;
 
@@ -134,18 +134,21 @@ public class ClassUtil extends Util {
 
     public static Object invokeStaticMethod(String className, String methodName, Object... args) {
         try {
-            StringBuilder cacheKey = new StringBuilder().append(className).append("#").append(methodName).append("#").append(getParamTypesKey(args));
-            MethodHandle handle = METHOD_HANDLE_CACHE.get(cacheKey.toString());
+            Class<?>[] paramTypes = getParameterTypes(args);
+            MethodSignature key = new MethodSignature(className, methodName, paramTypes);
 
+            MethodHandle handle = METHOD_HANDLE_CACHE.get(key);
             if (handle == null) {
                 Class<?> clazz = Class.forName(className);
                 Method method = findMethod(clazz, methodName, args);
                 if (method == null) {
-                    throw new NoSuchMethodException("No static method named " + methodName + " found in " + className);
+                    throw new NoSuchMethodException("No static method " + methodName + " found in " + className);
                 }
+
                 MethodHandles.Lookup lookup = MethodHandles.lookup();
                 handle = lookup.unreflect(method);
-                METHOD_HANDLE_CACHE.put(cacheKey.toString(), handle);
+
+                METHOD_HANDLE_CACHE.put(key, handle);
             }
 
             return handle.invokeWithArguments(args);
