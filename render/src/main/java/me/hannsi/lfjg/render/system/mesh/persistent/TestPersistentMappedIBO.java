@@ -12,7 +12,6 @@ import org.lwjgl.opengl.GL44;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 import static me.hannsi.lfjg.core.Core.UNSAFE;
 
@@ -69,51 +68,6 @@ public class TestPersistentMappedIBO implements TestPersistentMappedBuffer {
         writeCommand(baseOffset, cmd);
 
         commandCount++;
-
-        return this;
-    }
-
-    public TestPersistentMappedIBO remove(int[] removeIndices) {
-        if (removeIndices == null || removeIndices.length == 0) {
-            return this;
-        }
-
-        int[] sorted = Arrays.stream(removeIndices)
-                .distinct()
-                .sorted()
-                .filter(i -> i >= 0 && i < commandCount)
-                .toArray();
-
-        if (sorted.length == 0) {
-            return this;
-        }
-
-        long vertexSizeBytes = getCommandsSizeByte(1);
-
-        int writeIndex = sorted[0];
-        int readIndex = writeIndex;
-
-        int removePointer = 0;
-        int removeCount = sorted.length;
-
-        while (readIndex < commandCount) {
-            if (removePointer < removeCount && readIndex == sorted[removePointer]) {
-                removePointer++;
-            } else {
-                if (writeIndex != readIndex) {
-                    long src = mappedAddress + getCommandsSizeByte(readIndex);
-                    long dst = mappedAddress + getCommandsSizeByte(writeIndex);
-
-                    MemoryUtil.memCopy(src, dst, vertexSizeBytes);
-                }
-
-                writeIndex++;
-            }
-
-            readIndex++;
-        }
-
-        commandCount = writeIndex;
 
         return this;
     }

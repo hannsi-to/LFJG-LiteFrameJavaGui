@@ -11,7 +11,6 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 import static me.hannsi.lfjg.core.Core.UNSAFE;
 
@@ -89,51 +88,6 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
         writeVertex(baseOffset, vertex);
 
         vertexCount++;
-        return this;
-    }
-
-    public TestPersistentMappedVBO remove(int[] removeIndices) {
-        if (removeIndices == null || removeIndices.length == 0) {
-            return this;
-        }
-
-        int[] sorted = Arrays.stream(removeIndices)
-                .distinct()
-                .sorted()
-                .filter(i -> i >= 0 && i < vertexCount)
-                .toArray();
-
-        if (sorted.length == 0) {
-            return this;
-        }
-
-        long vertexSizeBytes = getVerticesSizeByte(1);
-
-        int writeIndex = sorted[0];
-        int readIndex = writeIndex;
-
-        int removePointer = 0;
-        int removeCount = sorted.length;
-
-        while (readIndex < vertexCount) {
-            if (removePointer < removeCount && readIndex == sorted[removePointer]) {
-                removePointer++;
-            } else {
-                if (writeIndex != readIndex) {
-                    long src = mappedAddress + getVerticesSizeByte(readIndex);
-                    long dst = mappedAddress + getVerticesSizeByte(writeIndex);
-
-                    MemoryUtil.memCopy(src, dst, vertexSizeBytes);
-                }
-
-                writeIndex++;
-            }
-
-            readIndex++;
-        }
-
-        vertexCount = writeIndex;
-
         return this;
     }
 
