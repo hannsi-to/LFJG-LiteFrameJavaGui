@@ -4,20 +4,15 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="[%d{HH:mm:ss}] [%-level] %msg%n"/>
         </Console>
-        <RollingFile name="RollingFile" fileName="logs/app.log" filePattern="logs/app-%d{yyyy-MM-dd}-%i.log.gz">
+        <File name="File" fileName="logs/LiteFrameJavaGui.Log.${date:yyyy-MM-dd_HH-mm-ss}.log" append="true">
             <PatternLayout pattern="%d [%t] %-5level %logger{36} - %msg%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="10MB"/>
-                <TimeBasedTriggeringPolicy interval="1"/>
-            </Policies>
-            <DefaultRolloverStrategy max="7"/>
-        </RollingFile>
+        </File>
     </Appenders>
 
     <Loggers>
         <Root level="TRACE">
             <AppenderRef ref="Console"/>
-            <AppenderRef ref="RollingFile"/>
+            <AppenderRef ref="File"/>
         </Root>
     </Loggers>
 </Configuration>
