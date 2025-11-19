@@ -16,6 +16,7 @@ import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
+import me.hannsi.lfjg.render.system.shader.STD140UniformBlockType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
@@ -45,7 +46,7 @@ public class TestNewMeshSystem implements LFJGFrame {
     }
 
     public void updateUBO(Matrix4f projection, Matrix4f view, Matrix4f model) {
-        FloatBuffer buffer = BufferUtils.createFloatBuffer(16 * 3);
+        FloatBuffer buffer = BufferUtils.createFloatBuffer((STD140UniformBlockType.MAT4.getByteSize() * 3) / Float.BYTES);
 
         projection.get(0, buffer);
         view.get(16, buffer);
@@ -62,7 +63,7 @@ public class TestNewMeshSystem implements LFJGFrame {
 
         uboMatrices = glGenBuffers();
         glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
-        glBufferData(GL_UNIFORM_BUFFER, 3 * 16 * Float.BYTES, GL_DYNAMIC_DRAW);
+        glBufferData(GL_UNIFORM_BUFFER, STD140UniformBlockType.MAT4.getByteSize() * 3L, GL_DYNAMIC_DRAW);
         glBindBufferBase(GL_UNIFORM_BUFFER, 0, uboMatrices);
         glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
