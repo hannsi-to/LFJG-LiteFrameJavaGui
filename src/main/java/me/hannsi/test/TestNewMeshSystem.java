@@ -1,7 +1,6 @@
 package me.hannsi.test;
 
 import me.hannsi.lfjg.core.Core;
-import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.reflection.reference.LongRef;
 import me.hannsi.lfjg.core.utils.time.Timer;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
@@ -12,6 +11,7 @@ import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.JointType;
 import me.hannsi.lfjg.render.renderers.PointType;
+import me.hannsi.lfjg.render.system.mesh.MeshConstants;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
@@ -19,9 +19,12 @@ import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.STD140UniformBlockType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL31;
+import org.lwjgl.opengl.GL44;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +32,7 @@ import java.util.Random;
 
 import static me.hannsi.lfjg.render.LFJGRenderContext.mesh;
 import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL30.glBindBufferBase;
+import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL31.*;
 
 public class TestNewMeshSystem implements LFJGFrame {
@@ -40,21 +42,16 @@ public class TestNewMeshSystem implements LFJGFrame {
     private Matrix4f viewMatrix;
     private BlendType blendType;
     private int uboMatrices;
+    private FloatBuffer mappedBuffer;
 
     public static void main(String[] args) {
         new TestNewMeshSystem().setFrame();
     }
 
     public void updateUBO(Matrix4f projection, Matrix4f view, Matrix4f model) {
-        FloatBuffer buffer = BufferUtils.createFloatBuffer((STD140UniformBlockType.MAT4.getByteSize() * 3) / Float.BYTES);
-
-        projection.get(0, buffer);
-        view.get(16, buffer);
-        model.get(32, buffer);
-
-        glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
-        glBufferSubData(GL_UNIFORM_BUFFER, 0, buffer);
-        glBindBuffer(GL_UNIFORM_BUFFER, 0);
+        projection.get(0, mappedBuffer);
+        view.get(16, mappedBuffer);
+        model.get(32, mappedBuffer);
     }
 
     @Override
@@ -62,12 +59,23 @@ public class TestNewMeshSystem implements LFJGFrame {
         LFJGContext.frame.updateLFJGLContext();
 
         uboMatrices = glGenBuffers();
-        glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
-        glBufferData(GL_UNIFORM_BUFFER, STD140UniformBlockType.MAT4.getByteSize() * 3L, GL_DYNAMIC_DRAW);
-        glBindBufferBase(GL_UNIFORM_BUFFER, 0, uboMatrices);
-        glBindBuffer(GL_UNIFORM_BUFFER, 0);
+        GLStateCache.bindUniformBuffer(uboMatrices);
+        GL44.glBufferStorage(GL31.GL_UNIFORM_BUFFER, STD140UniformBlockType.MAT4.getByteSize() * 3L, MeshConstants.DEFAULT_FLAGS_HINT);
+
+        ByteBuffer byteBuffer = GL30.glMapBufferRange(
+                GL31.GL_UNIFORM_BUFFER,
+                0,
+                STD140UniformBlockType.MAT4.getByteSize() * 3L,
+                MeshConstants.DEFAULT_FLAGS_HINT
+        );
+        if (byteBuffer == null) {
+            throw new RuntimeException("glMapBufferRange failed");
+        }
+        mappedBuffer = byteBuffer.asFloatBuffer();
+        GLStateCache.bindUniformBuffer(0);
 
         int blockIndex = glGetUniformBlockIndex(shaderProgram.getProgramId(), "Matrices");
+        glBindBufferBase(GL_UNIFORM_BUFFER, 0, uboMatrices);
         glUniformBlockBinding(shaderProgram.getProgramId(), blockIndex, 0);
 
         int numObjects = 100;
@@ -239,7 +247,7 @@ public class TestNewMeshSystem implements LFJGFrame {
 
         shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.OBJECT.getId());
         shaderProgram.setUniform("resolution", UploadUniformType.ON_CHANGE, Core.frameBufferSize);
-        updateUBO(Core.projection2D.getProjMatrix(), viewMatrix, modelMatrix);
+        updateUBO(Core.projection2D.getProjMatrix(), viewMatrix, modelMatrix.translate(0.1f, 0, 0));
 
         mesh.debugDraw(DrawType.TRIANGLES.getId(), false);
 
@@ -257,8 +265,8 @@ public class TestNewMeshSystem implements LFJGFrame {
 //
 //            System.out.println(objectIds.toString());
 //
-            long id = objectIds.get((int) (MathHelper.random() * objectIds.size())).getValue();
-            mesh.deleteObject(objectIds, id);
+//            long id = objectIds.get((int) (MathHelper.random() * objectIds.size())).getValue();
+//            mesh.deleteObject(objectIds, id);
         }
     }
 
