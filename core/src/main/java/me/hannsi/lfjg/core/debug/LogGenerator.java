@@ -9,8 +9,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static me.hannsi.lfjg.core.SystemSetting.LOG_GENERATOR_BAR_COUNT;
+
 public class LogGenerator {
-    public static int barCount = 30;
     private final List<String> texts;
     private String bar = "-";
     private String title;
@@ -108,9 +109,9 @@ public class LogGenerator {
         Core.stringBuilder = new FastStringBuilder();
         Core.stringBuilder.append(first);
         Core.stringBuilder.counterPush()
-                .append(StringUtil.repeat(bar, MathHelper.max(0, barCount)))
+                .append(StringUtil.repeat(bar, MathHelper.max(0, LOG_GENERATOR_BAR_COUNT)))
                 .append(" ").append(title).append(" ")
-                .append(StringUtil.repeat(bar, MathHelper.max(0, barCount)));
+                .append(StringUtil.repeat(bar, MathHelper.max(0, LOG_GENERATOR_BAR_COUNT)));
         int barLength = Core.stringBuilder.counterPop();
         for (String text : texts) {
             Core.stringBuilder.append("\n\t").append(text);
@@ -167,14 +168,6 @@ public class LogGenerator {
 
     public void logging(Class<?> clazz, DebugLevel debugLevel) {
         logging(clazz, debugLevel, false, true);
-    }
-
-    public int getBarCount() {
-        return barCount;
-    }
-
-    public void setBarCount(int barCount) {
-        LogGenerator.barCount = barCount;
     }
 
     public String getTitle() {

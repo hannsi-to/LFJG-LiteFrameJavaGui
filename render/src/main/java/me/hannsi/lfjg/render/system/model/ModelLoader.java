@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static me.hannsi.lfjg.core.SystemSetting.MATERIAL_DEFAULT_COLOR;
+
 public class ModelLoader {
     private final String modelId;
     private Location modelLocation;
@@ -167,7 +169,7 @@ public class ModelLoader {
                 material.setMaterialType(MaterialType.TEXTURE);
                 material.setTextureLocation(Location.fromFile(modelDir + File.separator + new File(texturePath).getName()));
                 textureCache.createCache(material.getTextureLocation().path(), material.getTextureLocation());
-                material.setDiffuseColor(Material.DEFAULT_COLOR);
+                material.setDiffuseColor(MATERIAL_DEFAULT_COLOR);
             }
 
             return material;

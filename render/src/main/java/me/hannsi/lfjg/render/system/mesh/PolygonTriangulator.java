@@ -9,9 +9,9 @@ import me.hannsi.lfjg.render.system.rendering.DrawType;
 
 import java.util.*;
 
-public class PolygonTriangulator {
-    public static final boolean DEBUG = false;
+import static me.hannsi.lfjg.core.SystemSetting.POLYGON_TRIANGULATOR_DEBUG;
 
+public class PolygonTriangulator {
     private ProjectionType projectionType;
     private DrawType drawType;
     private float lineWidth;
@@ -291,7 +291,9 @@ public class PolygonTriangulator {
 
     private List<List<Integer>> splitPolygonByDiagonals(int n, List<int[]> diagonals) {
         List<Set<Integer>> graph = new ArrayList<>();
-        for (int i = 0; i < n; i++) graph.add(new HashSet<>());
+        for (int i = 0; i < n; i++) {
+            graph.add(new HashSet<>());
+        }
 
         for (int i = 0; i < n; i++) {
             int next = (i + 1) % n;
@@ -406,7 +408,7 @@ public class PolygonTriangulator {
     }
 
     private void info(Class<?> clazz, String text) {
-        if (!DEBUG) {
+        if (!POLYGON_TRIANGULATOR_DEBUG) {
             return;
         }
 

@@ -7,11 +7,11 @@ import me.hannsi.lfjg.render.system.mesh.MeshConstants;
 import java.util.HashMap;
 import java.util.Map;
 
+import static me.hannsi.lfjg.core.SystemSetting.GL_OBJECT_POOL_REMOVE_RATIO_THRESHOLD;
 import static me.hannsi.lfjg.render.LFJGRenderContext.idPool;
 import static me.hannsi.lfjg.render.LFJGRenderContext.mesh;
 
 public class GLObjectPool {
-    public static final float REMOVE_RATIO_THRESHOLD = 0.3f;
     private final Map<Long, GLObjectData> objects;
     private final Map<Long, GLObjectData> deletedObjects;
     private long totalPoolBytes = 0;
@@ -53,7 +53,7 @@ public class GLObjectPool {
         deletedObjects.put(id, glObjectData);
         deletedBytes += calculateBytes(glObjectData);
 
-        if (totalPoolBytes > 0 && (float) deletedBytes / totalPoolBytes > REMOVE_RATIO_THRESHOLD) {
+        if (totalPoolBytes > 0 && (float) deletedBytes / totalPoolBytes > GL_OBJECT_POOL_REMOVE_RATIO_THRESHOLD) {
             mesh.directDeleteObjects();
         }
     }

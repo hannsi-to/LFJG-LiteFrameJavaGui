@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
 
-public class StringUtil extends Util {
-    public static final String DEFAULT_CHARS_BASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+import static me.hannsi.lfjg.core.SystemSetting.STRING_UTIL_CHARACTERS;
 
+public class StringUtil extends Util {
     public static String repeat(String str, int count) {
         if (str == null || count <= 0) {
             return "";
@@ -185,7 +185,7 @@ public class StringUtil extends Util {
     }
 
     public static String getRandomString(int length) {
-        return getRandomString(DEFAULT_CHARS_BASE, length);
+        return getRandomString(STRING_UTIL_CHARACTERS, length);
     }
 
     public static String reverseString(String str) {

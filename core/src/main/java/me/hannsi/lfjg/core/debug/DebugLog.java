@@ -8,9 +8,10 @@ import org.apache.logging.log4j.Logger;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import static me.hannsi.lfjg.core.SystemSetting.DEBUG_LOG_FABRIC_DEBUG;
+
 public class DebugLog {
     private static final Logger LOGGER = LogManager.getLogger(DebugLog.class);
-    public static boolean fabricDebug = false;
 
     static {
         ((org.apache.logging.log4j.core.Logger) LOGGER).setLevel(Level.DEBUG);
@@ -138,7 +139,7 @@ public class DebugLog {
         switch (debugLevel) {
             case DEBUG:
                 System.out.print(ANSIFormat.RESET);
-                if (fabricDebug) {
+                if (DEBUG_LOG_FABRIC_DEBUG) {
                     LOGGER.info("{}{}{}", ANSIFormat.RESET, description, ANSIFormat.RESET);
                 } else {
                     LOGGER.debug("{}{}{}", ANSIFormat.RESET, description, ANSIFormat.RESET);

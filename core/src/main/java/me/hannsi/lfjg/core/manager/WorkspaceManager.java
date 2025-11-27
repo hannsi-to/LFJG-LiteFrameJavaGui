@@ -14,8 +14,9 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import static me.hannsi.lfjg.core.SystemSetting.WORKSPACE_MANAGER_DEFAULT_WORKSPACE_NAME;
+
 public class WorkspaceManager {
-    public static String DEFAULT_WORKSPACE_NAME = "lfjg/workspace";
     public static String currentWorkspace;
 
     private String workspace;
@@ -46,8 +47,8 @@ public class WorkspaceManager {
 
     public void createDirectories() {
         DebugLog.debug(getClass(), "Workspace set at: " + workspace);
-        
-        Path nestedDirPath = Paths.get(workspace, DEFAULT_WORKSPACE_NAME);
+
+        Path nestedDirPath = Paths.get(workspace, WORKSPACE_MANAGER_DEFAULT_WORKSPACE_NAME);
 
         try {
             if (Files.notExists(nestedDirPath)) {

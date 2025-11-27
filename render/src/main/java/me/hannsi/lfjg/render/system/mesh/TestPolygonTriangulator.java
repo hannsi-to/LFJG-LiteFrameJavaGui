@@ -10,13 +10,10 @@ import org.joml.Vector2f;
 
 import java.util.*;
 
+import static me.hannsi.lfjg.core.SystemSetting.*;
 import static me.hannsi.lfjg.core.utils.math.MathHelper.*;
 
 public class TestPolygonTriangulator {
-    public static final boolean DEBUG = false;
-    private static final float MITER_LIMIT = 4.0f;
-    private static final float TOLERANCE = 1.0f;
-
     private ProjectionType projectionType;
     private DrawType drawType;
     private float lineWidth;
@@ -227,7 +224,7 @@ public class TestPolygonTriangulator {
 
     private int calculateSegmentCount(float pointSize) {
         float circumference = (float) (Math.PI * pointSize);
-        int segments = Math.max(6, (int) (circumference / TOLERANCE));
+        int segments = Math.max(6, (int) (circumference / POLYGON_TRIANGULATOR_TOLERANCE));
 
         return Math.min(segments, 128);
     }
@@ -521,7 +518,7 @@ public class TestPolygonTriangulator {
         if (tempJoinType == JointType.MITER) {
             if (!(abs(sinHalfAngle) < 1e-5f)) {
                 float miterLengthRatio = 1f / abs(sinHalfAngle);
-                if (miterLengthRatio < MITER_LIMIT) {
+                if (miterLengthRatio < POLYGON_TRIANGULATOR_MITER_LIMIT) {
                     tempJoinType = JointType.BEVEL;
                 }
             }
@@ -893,7 +890,7 @@ public class TestPolygonTriangulator {
     }
 
     private void info(Class<?> clazz, String text) {
-        if (!DEBUG) {
+        if (!POLYGON_TRIANGULATOR_DEBUG) {
             return;
         }
 

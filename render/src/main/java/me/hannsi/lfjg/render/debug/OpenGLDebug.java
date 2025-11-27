@@ -10,19 +10,9 @@ import org.lwjgl.opengl.GL43;
 import org.lwjgl.opengl.GLDebugMessageCallback;
 import org.lwjgl.system.MemoryUtil;
 
-import java.util.HashMap;
-import java.util.Map;
+import static me.hannsi.lfjg.core.SystemSetting.OPEN_GL_DEBUG_SEVERITY_MAP;
 
 public class OpenGLDebug {
-    public static final Map<Integer, Integer> SEVERITY_MAP = new HashMap<>();
-
-    static {
-        SEVERITY_MAP.put(0, GL43.GL_DEBUG_SEVERITY_NOTIFICATION);
-        SEVERITY_MAP.put(1, GL43.GL_DEBUG_SEVERITY_LOW);
-        SEVERITY_MAP.put(2, GL43.GL_DEBUG_SEVERITY_MEDIUM);
-        SEVERITY_MAP.put(3, GL43.GL_DEBUG_SEVERITY_HIGH);
-    }
-
     public static void getOpenGLDebug(String mainThreadName, int[] severityTypes) {
         if (GL.getCapabilities().OpenGL43) {
             GLStateCache.enable(GL43.GL_DEBUG_OUTPUT);
@@ -37,7 +27,7 @@ public class OpenGLDebug {
                     String severityString = getSeverityString(severity);
 
                     for (int checkSeverity : severityTypes) {
-                        checkSeverity = SEVERITY_MAP.get(checkSeverity);
+                        checkSeverity = OPEN_GL_DEBUG_SEVERITY_MAP.get(checkSeverity);
 
                         if (checkSeverity == severity) {
                             LogGenerator logGenerator = new LogGenerator(

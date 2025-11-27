@@ -1,7 +1,6 @@
 package me.hannsi.lfjg.render.system.text.msdf;
 
 import me.hannsi.lfjg.core.debug.DebugLog;
-import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.toolkit.StringUtil;
@@ -16,6 +15,8 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+
+import static me.hannsi.lfjg.core.SystemSetting.LOG_GENERATOR_BAR_COUNT;
 
 public class MSDFGenerator {
     protected final File executable;
@@ -381,7 +382,7 @@ public class MSDFGenerator {
 
             Process process = pb.start();
 
-            DebugLog.debug(getClass(), StringUtil.repeat("-", MathHelper.max(0, LogGenerator.barCount)) + " " + "msdf-atlas-gen log start" + " " + StringUtil.repeat("-", MathHelper.max(0, LogGenerator.barCount)));
+            DebugLog.debug(getClass(), StringUtil.repeat("-", MathHelper.max(0, LOG_GENERATOR_BAR_COUNT)) + " " + "msdf-atlas-gen log start" + " " + StringUtil.repeat("-", MathHelper.max(0, LOG_GENERATOR_BAR_COUNT)));
 
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 String line;
@@ -390,7 +391,7 @@ public class MSDFGenerator {
                 }
             }
 
-            DebugLog.debug(getClass(), StringUtil.repeat("-", MathHelper.max(0, LogGenerator.barCount)) + " " + "msdf-atlas-gen log end" + " " + StringUtil.repeat("-", MathHelper.max(0, LogGenerator.barCount)));
+            DebugLog.debug(getClass(), StringUtil.repeat("-", MathHelper.max(0, LOG_GENERATOR_BAR_COUNT)) + " " + "msdf-atlas-gen log end" + " " + StringUtil.repeat("-", MathHelper.max(0, LOG_GENERATOR_BAR_COUNT)));
             int exitCode = process.waitFor();
 
             File pngFile = new File(outputName + ".png");

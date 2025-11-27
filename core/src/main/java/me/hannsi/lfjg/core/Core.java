@@ -14,6 +14,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 
+import static me.hannsi.lfjg.core.SystemSetting.CORE_SYSTEM_DEBUG;
+
 public class Core {
     public static final String DEFAULT_LFJG_PATH = "me.hannsi.lfjg";
 
@@ -51,7 +53,6 @@ public class Core {
     public static ServiceData lfjgRenderServiceData = null;
     public static ServiceData lfjgRenderTextServiceData = null;
     public static ServiceData lfjgRenderVideoServiceData = null;
-    public static boolean CORE_SYSTEM_DEBUG = true;
     public static Projection projection2D;
     public static Projection projection3D;
     public static Vector2i frameBufferSize;
@@ -189,6 +190,34 @@ public class Core {
         return (int) value;
     }
 
+    public static class GL44 {
+        public static final String PACKAGE = "org.lwjgl.opengl.GL44";
+
+        public static final int GL_MAP_PERSISTENT_BIT;
+        public static final int GL_MAP_COHERENT_BIT;
+
+        static {
+            GL_MAP_PERSISTENT_BIT = getStaticIntField(PACKAGE, "GL_MAP_PERSISTENT_BIT");
+            GL_MAP_COHERENT_BIT = getStaticIntField(PACKAGE, "GL_MAP_COHERENT_BIT");
+        }
+    }
+
+    public static class GL43 {
+        public static final String PACKAGE = "org.lwjgl.opengl.GL43";
+
+        public static final int GL_DEBUG_SEVERITY_HIGH;
+        public static final int GL_DEBUG_SEVERITY_MEDIUM;
+        public static final int GL_DEBUG_SEVERITY_LOW;
+        public static final int GL_DEBUG_SEVERITY_NOTIFICATION;
+
+        static {
+            GL_DEBUG_SEVERITY_HIGH = getStaticIntField(PACKAGE, "GL_DEBUG_SEVERITY_HIGH");
+            GL_DEBUG_SEVERITY_MEDIUM = getStaticIntField(PACKAGE, "GL_DEBUG_SEVERITY_MEDIUM");
+            GL_DEBUG_SEVERITY_LOW = getStaticIntField(PACKAGE, "GL_DEBUG_SEVERITY_LOW");
+            GL_DEBUG_SEVERITY_NOTIFICATION = getStaticIntField(PACKAGE, "GL_DEBUG_SEVERITY_NOTIFICATION");
+        }
+    }
+
     public static class GL30 {
         public static final String PACKAGE = "org.lwjgl.opengl.GL30";
 
@@ -198,6 +227,7 @@ public class Core {
         public static final int GL_RGB32F;
         public static final int GL_RGBA32F;
         public static final int GL_DEPTH_STENCIL;
+        public static final int GL_MAP_WRITE_BIT;
 
         static {
             GL_RG = getStaticIntField(PACKAGE, "GL_RG");
@@ -206,6 +236,7 @@ public class Core {
             GL_RGB32F = getStaticIntField(PACKAGE, "GL_RGB32F");
             GL_RGBA32F = getStaticIntField(PACKAGE, "GL_RGBA32F");
             GL_DEPTH_STENCIL = getStaticIntField(PACKAGE, "GL_DEPTH_STENCIL");
+            GL_MAP_WRITE_BIT = getStaticIntField(PACKAGE, "GL_MAP_WRITE_BIT");
         }
 
         public static void glGenerateMipmap(int target) {
