@@ -58,4 +58,7 @@ configurations {
 
 shadowJar {
     mergeServiceFiles()
+    manifest {
+        attributes "Main-Class": "me.hannsi.test.TestNewMeshSystem"
+    }
 }

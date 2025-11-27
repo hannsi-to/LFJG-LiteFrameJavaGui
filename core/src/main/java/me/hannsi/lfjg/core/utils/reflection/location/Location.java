@@ -81,8 +81,7 @@ public final class Location {
     }
 
     public byte[] getBytes() {
-        try (InputStream is = openStream();
-             ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+        try (InputStream is = openStream(); ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
             byte[] data = new byte[8192];
             int nRead;
             while ((nRead = is.read(data, 0, data.length)) != -1) {
@@ -149,8 +148,12 @@ public final class Location {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
         Location that = (Location) obj;
         return Objects.equals(this.path, that.path) &&
                 Objects.equals(this.locationType, that.locationType);
@@ -167,5 +170,4 @@ public final class Location {
                 "path=" + path + ", " +
                 "locationType=" + locationType + ']';
     }
-
 }

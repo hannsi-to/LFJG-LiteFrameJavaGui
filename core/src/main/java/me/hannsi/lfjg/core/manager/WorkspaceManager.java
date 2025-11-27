@@ -45,6 +45,8 @@ public class WorkspaceManager {
     }
 
     public void createDirectories() {
+        DebugLog.debug(getClass(), "Workspace set at: " + workspace);
+        
         Path nestedDirPath = Paths.get(workspace, DEFAULT_WORKSPACE_NAME);
 
         try {
@@ -56,7 +58,7 @@ public class WorkspaceManager {
         }
 
         currentWorkspace = nestedDirPath.toString();
-        DebugLog.debug(getClass(), "Workspace initialized at: " + currentWorkspace);
+        DebugLog.debug(getClass(), "CurrentWorkspace initialized at: " + currentWorkspace);
     }
 
     public void copyResourcesToWorkspace() {
