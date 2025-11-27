@@ -8,16 +8,19 @@ group = "me.hannsi.lfjg"
 version = "1.0-SNAPSHOT"
 
 ext {
+    javaVersion = 8
+
+    lwjglNatives = "natives-windows"
     lwjglVersion = 3
     lwjgl2Version = "2.9.3"
-    lwjgl3Version = "3.3.4"
-    jomlVersion = "1.10.7"
+    lwjgl3Version = "3.3.6"
     lwjgl3awtVersion = "0.1.8"
+
     steamworks4jVersion = "1.9.0"
     steamworks4jserverVersion = "1.9.0"
+
+    jomlVersion = "1.10.8"
     jomlprimitivesVersion = "1.10.0"
-    lwjglNatives = "natives-windows"
-    javaVersion = 8
 }
 
 repositories {

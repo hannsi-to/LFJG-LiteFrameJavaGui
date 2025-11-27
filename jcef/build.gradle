@@ -1,11 +1,11 @@
 plugins {
-    id 'java'
+    id "java"
     id "java-library"
     id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
-group = 'me.hannsi.lfjg'
-version = '1.0-SNAPSHOT'
+group = "me.hannsi.lfjg"
+version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -15,8 +15,8 @@ dependencies {
     implementation project(":core")
 
     // JOGL & GlueGen
-    implementation 'org.jogamp.jogl:jogl-all-main:2.3.2'
-    implementation 'org.jogamp.gluegen:gluegen-rt-main:2.3.2'
+    implementation "org.jogamp.jogl:jogl-all-main:2.3.2"
+    implementation "org.jogamp.gluegen:gluegen-rt-main:2.3.2"
 }
 
 tasks.withType(JavaCompile).configureEach {
