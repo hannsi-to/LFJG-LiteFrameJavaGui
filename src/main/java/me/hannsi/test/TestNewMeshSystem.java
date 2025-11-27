@@ -75,7 +75,7 @@ public class TestNewMeshSystem implements LFJGFrame {
         GLStateCache.bindUniformBuffer(0);
 
         int blockIndex = glGetUniformBlockIndex(shaderProgram.getProgramId(), "Matrices");
-        glBindBufferBase(GL_UNIFORM_BUFFER, 0, uboMatrices);
+        glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatrices, 0, STD140UniformBlockType.MAT4.getByteSize() * 3L);
         glUniformBlockBinding(shaderProgram.getProgramId(), blockIndex, 0);
 
         int numObjects = 100;

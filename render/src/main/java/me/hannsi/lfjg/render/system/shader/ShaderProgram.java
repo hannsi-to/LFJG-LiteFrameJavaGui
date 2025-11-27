@@ -23,7 +23,7 @@ public class ShaderProgram {
     private final int programId;
     private final Map<String, UniformValue> uniformValues;
     private final Map<String, Integer> uniformCache;
-//    private PersistentMappedUBO matrix;
+    private final Map<Integer, STD140UniformBlockType[]> uniformBlockObjectCache;
 
     private int vertexShaderId;
     private int fragmentShaderId;
@@ -31,6 +31,7 @@ public class ShaderProgram {
     public ShaderProgram() {
         uniformCache = new HashMap<>();
         uniformValues = new HashMap<>();
+        uniformBlockObjectCache = new HashMap<>();
 
         programId = GL20.glCreateProgram();
         if (programId == 0) {
@@ -65,7 +66,9 @@ public class ShaderProgram {
     }
 
     public void cleanup() {
-//        matrix.cleanup();
+        uniformValues.clear();
+        uniformCache.clear();
+        uniformBlockObjectCache.clear();
 
         if (vertexShaderId != 0) {
             GL20.glDeleteShader(vertexShaderId);
@@ -126,10 +129,6 @@ public class ShaderProgram {
         if (GL20.glGetProgrami(programId, GL20.GL_VALIDATE_STATUS) == 0) {
             DebugLog.warning(getClass(), "Warning validating Shader code: " + GL20.glGetProgramInfoLog(programId));
         }
-
-//        matrix = new PersistentMappedUBO(new PersistentMappedUBO.UBOData("Matrices", 0), MeshConstants.DEFAULT_FLAGS_HINT);
-//        int uniformBlockIndex = GL31.glGetUniformBlockIndex(programId, matrix.getUboData().getName());
-//        GL31.glUniformBlockBinding(programId, uniformBlockIndex, matrix.getUboData().getBinding());
     }
 
     private int getUniformLocation(String name) {
@@ -248,10 +247,6 @@ public class ShaderProgram {
             throw new IllegalArgumentException("Unsupported uniform value type: " + first.getClass());
         }
     }
-
-//    public PersistentMappedUBO getMatrix() {
-//        return matrix;
-//    }
 
     public Map<String, UniformValue> getUniformValues() {
         return uniformValues;
