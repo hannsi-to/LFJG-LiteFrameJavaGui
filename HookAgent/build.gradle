@@ -1,0 +1,50 @@
+plugins {
+    id 'java'
+    id "java-library"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
+}
+
+group = 'me.hannsi.lfjg.hookAgent'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(":core")
+
+    // ByteBuddy
+    implementation "net.bytebuddy:byte-buddy:1.18.1"
+    implementation "net.bytebuddy:byte-buddy-agent:1.18.1"
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+    options.compilerArgs << "-Xlint:deprecation"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(javaVersion)
+    }
+}
+
+configurations {
+    runtimeElements {
+        extendsFrom runtimeOnly
+    }
+}
+
+shadowJar {
+    mergeServiceFiles()
+    manifest {
+        attributes "Manifest-Version": 1.0
+        attributes "Can-Redefine-Classes": true
+        attributes "Premain-Class": "me.hannsi.lfjg.hookAgent.LFJGHookAgent"
+    }
+}

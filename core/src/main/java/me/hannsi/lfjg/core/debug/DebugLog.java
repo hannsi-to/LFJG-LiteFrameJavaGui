@@ -21,6 +21,7 @@ public class DebugLog {
     private DebugType debugType;
     private Exception exception;
     private Error error;
+    private Throwable throwable;
     private String debugText;
     private DebugLevel debugLevel;
 
@@ -30,6 +31,7 @@ public class DebugLog {
         this.exception = exception;
         this.debugText = null;
         this.error = null;
+        this.throwable = null;
         this.debugLevel = debugLevel;
 
         logging();
@@ -40,6 +42,19 @@ public class DebugLog {
         this.debugType = debugType;
         this.error = error;
         this.exception = null;
+        this.throwable = null;
+        this.debugText = null;
+        this.debugLevel = debugLevel;
+
+        logging();
+    }
+
+    public DebugLog(Class<?> clazz, DebugType debugType, Throwable throwable, DebugLevel debugLevel) {
+        this.clazz = clazz;
+        this.debugType = debugType;
+        this.throwable = throwable;
+        this.exception = null;
+        this.error = null;
         this.debugText = null;
         this.debugLevel = debugLevel;
 
@@ -51,6 +66,7 @@ public class DebugLog {
         this.debugType = debugType;
         this.exception = null;
         this.error = null;
+        this.throwable = null;
         this.debugText = debugText;
         this.debugLevel = debugLevel;
 
@@ -69,6 +85,10 @@ public class DebugLog {
         new DebugLog(clazz, DebugType.ERROR, error, DebugLevel.DEBUG);
     }
 
+    public static void debug(Class<?> clazz, Throwable throwable) {
+        new DebugLog(clazz, DebugType.THROWABLE, throwable, DebugLevel.DEBUG);
+    }
+
     public static void info(Class<?> clazz, String text) {
         new DebugLog(clazz, DebugType.TEXT, text, DebugLevel.INFO);
     }
@@ -79,6 +99,10 @@ public class DebugLog {
 
     public static void info(Class<?> clazz, Error error) {
         new DebugLog(clazz, DebugType.ERROR, error, DebugLevel.INFO);
+    }
+
+    public static void info(Class<?> clazz, Throwable throwable) {
+        new DebugLog(clazz, DebugType.THROWABLE, throwable, DebugLevel.INFO);
     }
 
     public static void error(Class<?> clazz, String text) {
@@ -93,6 +117,10 @@ public class DebugLog {
         new DebugLog(clazz, DebugType.ERROR, error, DebugLevel.ERROR);
     }
 
+    public static void error(Class<?> clazz, Throwable throwable) {
+        new DebugLog(clazz, DebugType.THROWABLE, throwable, DebugLevel.ERROR);
+    }
+
     public static void warning(Class<?> clazz, String text) {
         new DebugLog(clazz, DebugType.TEXT, text, DebugLevel.WARNING);
     }
@@ -103,6 +131,10 @@ public class DebugLog {
 
     public static void warning(Class<?> clazz, Error error) {
         new DebugLog(clazz, DebugType.ERROR, error, DebugLevel.WARNING);
+    }
+
+    public static void warning(Class<?> clazz, Throwable throwable) {
+        new DebugLog(clazz, DebugType.THROWABLE, throwable, DebugLevel.WARNING);
     }
 
     public static Logger getLOGGER() {
@@ -123,6 +155,9 @@ public class DebugLog {
                 error.printStackTrace(pw);
                 description += "\n" + sw;
                 break;
+            case THROWABLE:
+                throwable.printStackTrace(pw);
+                description += "\n" + sw;
             case TEXT:
                 description += debugText;
                 break;
@@ -190,6 +225,14 @@ public class DebugLog {
 
     public void setError(Error error) {
         this.error = error;
+    }
+
+    public Throwable getThrowable() {
+        return throwable;
+    }
+
+    public void setThrowable(Throwable throwable) {
+        this.throwable = throwable;
     }
 
     public String getDebugText() {

@@ -9,4 +9,5 @@ include 'renderVideo'
 include 'renderText'
 include 'frame2'
 include 'frame3'
+include 'HookAgent'
 

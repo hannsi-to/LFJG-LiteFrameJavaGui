@@ -442,6 +442,18 @@ public class Core {
 
             Object ignore = invokeStaticMethod(PACKAGE, "glTexParameteri", target, pname, param);
         }
+
+        public static Class<?> getGL11Class() {
+            if (!enableLFJGRenderSystem) {
+                return null;
+            }
+
+            try {
+                return Class.forName(PACKAGE);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public static class GL {

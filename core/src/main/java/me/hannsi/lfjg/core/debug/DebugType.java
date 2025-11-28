@@ -3,6 +3,7 @@ package me.hannsi.lfjg.core.debug;
 public enum DebugType {
     ERROR("Error"),
     EXCEPTION("Exception"),
+    THROWABLE("Throwable"),
     TEXT("Text");
 
     final String display;
