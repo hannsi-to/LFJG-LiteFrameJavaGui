@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.render.debug;
 
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerator;
@@ -10,9 +11,17 @@ import org.lwjgl.opengl.GL43;
 import org.lwjgl.opengl.GLDebugMessageCallback;
 import org.lwjgl.system.MemoryUtil;
 
-import static me.hannsi.lfjg.core.SystemSetting.OPEN_GL_DEBUG_SEVERITY_MAP;
+import java.util.HashMap;
+import java.util.Map;
 
 public class OpenGLDebug {
+    public static final Map<Integer, Integer> OPEN_GL_DEBUG_SEVERITY_MAP = new HashMap<Integer, Integer>() {{
+        put(0, Core.GL43.GL_DEBUG_SEVERITY_NOTIFICATION);
+        put(1, Core.GL43.GL_DEBUG_SEVERITY_LOW);
+        put(2, Core.GL43.GL_DEBUG_SEVERITY_MEDIUM);
+        put(3, Core.GL43.GL_DEBUG_SEVERITY_HIGH);
+    }};
+
     public static void getOpenGLDebug(String mainThreadName, int[] severityTypes) {
         if (GL.getCapabilities().OpenGL43) {
             GLStateCache.enable(GL43.GL_DEBUG_OUTPUT);

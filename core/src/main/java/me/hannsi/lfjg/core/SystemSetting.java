@@ -3,16 +3,7 @@ package me.hannsi.lfjg.core;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import org.joml.Vector4f;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class SystemSetting {
-    public static final Map<Integer, Integer> OPEN_GL_DEBUG_SEVERITY_MAP = new HashMap<Integer, Integer>() {{
-        put(0, Core.GL43.GL_DEBUG_SEVERITY_NOTIFICATION);
-        put(1, Core.GL43.GL_DEBUG_SEVERITY_LOW);
-        put(2, Core.GL43.GL_DEBUG_SEVERITY_MEDIUM);
-        put(3, Core.GL43.GL_DEBUG_SEVERITY_HIGH);
-    }};
     public static boolean CORE_SYSTEM_DEBUG = true;
     public static boolean DEBUG_LOG_FABRIC_DEBUG = false;
     public static int LOG_GENERATOR_BAR_COUNT = 30;
