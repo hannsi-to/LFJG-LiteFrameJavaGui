@@ -41,7 +41,11 @@ public class GLInterceptor {
             }
         }
 
-        EVENT_MANAGER.call(new OpenGLStaticMethodHookEvent(method, args, zuper));
+        OpenGLStaticMethodHookEvent openGLStaticMethodHookEvent = new OpenGLStaticMethodHookEvent(method, args, zuper);
+        EVENT_MANAGER.call(openGLStaticMethodHookEvent);
+        if (openGLStaticMethodHookEvent.isCanceled()) {
+            return null;
+        }
 
         try {
             return zuper.call();
