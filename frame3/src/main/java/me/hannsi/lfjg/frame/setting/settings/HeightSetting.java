@@ -4,7 +4,8 @@ import me.hannsi.lfjg.core.utils.graphics.DisplayUtil;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
-import org.lwjgl.glfw.GLFW;
+
+import static org.lwjgl.glfw.GLFW.glfwSetWindowSize;
 
 /**
  * Represents a setting for the height of a frame.
@@ -28,7 +29,7 @@ public class HeightSetting extends FrameSettingBase<Integer> {
     @Override
     public void updateSetting() {
         if (getFrame().getWindowID() != -1L) {
-            GLFW.glfwSetWindowSize(getFrame().getWindowID(), getFrame().getFrameSettingValue(WidthSetting.class), getValue());
+            glfwSetWindowSize(getFrame().getWindowID(), getFrame().getFrameSettingValue(WidthSetting.class), getValue());
         }
 
         super.updateSetting();

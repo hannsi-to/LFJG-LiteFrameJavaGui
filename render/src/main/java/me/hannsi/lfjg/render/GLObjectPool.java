@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static me.hannsi.lfjg.core.SystemSetting.GL_OBJECT_POOL_REMOVE_RATIO_THRESHOLD;
-import static me.hannsi.lfjg.render.LFJGRenderContext.idPool;
-import static me.hannsi.lfjg.render.LFJGRenderContext.mesh;
+import static me.hannsi.lfjg.render.LFJGRenderContext.ID_POOL;
+import static me.hannsi.lfjg.render.LFJGRenderContext.MESH;
 
 public class GLObjectPool {
     private final Map<Long, GLObjectData> objects;
@@ -23,7 +23,7 @@ public class GLObjectPool {
     }
 
     public long createObject(GLObjectData glObjectData) {
-        long id = idPool.acquire();
+        long id = ID_POOL.acquire();
         objects.put(id, glObjectData);
 
         totalPoolBytes += calculateBytes(glObjectData);
@@ -32,7 +32,7 @@ public class GLObjectPool {
     }
 
     public long createObject(long requestedId, GLObjectData glObjectData) {
-        long id = idPool.acquire(requestedId);
+        long id = ID_POOL.acquire(requestedId);
         objects.put(id, glObjectData);
 
         totalPoolBytes += calculateBytes(glObjectData);
@@ -44,7 +44,7 @@ public class GLObjectPool {
         GLObjectData glObjectData = objects.get(id);
 
         objects.remove(id);
-        idPool.release(id);
+        ID_POOL.release(id);
 
         totalPoolBytes -= calculateBytes(glObjectData);
     }
@@ -54,7 +54,7 @@ public class GLObjectPool {
         deletedBytes += calculateBytes(glObjectData);
 
         if (totalPoolBytes > 0 && (float) deletedBytes / totalPoolBytes > GL_OBJECT_POOL_REMOVE_RATIO_THRESHOLD) {
-            mesh.directDeleteObjects();
+            MESH.directDeleteObjects();
         }
     }
 
@@ -67,7 +67,7 @@ public class GLObjectPool {
 
     public void clearObjects() {
         for (Map.Entry<Long, GLObjectData> entry : objects.entrySet()) {
-            idPool.release(entry.getKey());
+            ID_POOL.release(entry.getKey());
         }
 
         objects.clear();

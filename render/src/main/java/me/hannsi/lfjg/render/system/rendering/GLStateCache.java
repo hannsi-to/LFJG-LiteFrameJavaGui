@@ -2,7 +2,6 @@ package me.hannsi.lfjg.render.system.rendering;
 
 import me.hannsi.lfjg.core.event.EventHandler;
 import me.hannsi.lfjg.core.event.events.OpenGLStaticMethodHookEvent;
-import org.lwjgl.opengl.*;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -10,6 +9,16 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import static me.hannsi.lfjg.core.Core.EVENT_MANAGER;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL14.glBlendEquation;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.glDeleteProgram;
+import static org.lwjgl.opengl.GL20.glUseProgram;
+import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL31.GL_UNIFORM_BUFFER;
+import static org.lwjgl.opengl.GL32.glSampleMaski;
+import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 
 public class GLStateCache {
     private final Map<Integer, Boolean> STATE_CACHE = new HashMap<>();
@@ -54,7 +63,7 @@ public class GLStateCache {
     public void enable(int cap) {
         Boolean enabled = STATE_CACHE.get(cap);
         if (enabled == null || !enabled) {
-            GL11.glEnable(cap);
+            glEnable(cap);
             STATE_CACHE.put(cap, true);
         }
     }
@@ -62,14 +71,14 @@ public class GLStateCache {
     public void disable(int cap) {
         Boolean enabled = STATE_CACHE.get(cap);
         if (enabled == null || enabled) {
-            GL11.glDisable(cap);
+            glDisable(cap);
             STATE_CACHE.put(cap, false);
         }
     }
 
     public void blendFunc(int sFactor, int dFactor) {
         if (lastBlendSrc != sFactor || lastBlendDst != dFactor) {
-            GL11.glBlendFunc(sFactor, dFactor);
+            glBlendFunc(sFactor, dFactor);
             lastBlendSrc = sFactor;
             lastBlendDst = dFactor;
         }
@@ -77,14 +86,14 @@ public class GLStateCache {
 
     public void setBlendEquation(int equation) {
         if (lastBlendEquation != equation) {
-            GL14.glBlendEquation(equation);
+            glBlendEquation(equation);
             lastBlendEquation = equation;
         }
     }
 
     public void activeTexture(int texture) {
         if (lastActiveTexture != texture) {
-            GL13.glActiveTexture(texture);
+            glActiveTexture(texture);
             lastActiveTexture = texture;
         }
     }
@@ -93,7 +102,7 @@ public class GLStateCache {
         int lastTarget = lastTexture[0];
         int lastTextureId = lastTexture[1];
         if (lastTarget != target || lastTextureId != texture) {
-            GL11.glBindTexture(target, texture);
+            glBindTexture(target, texture);
 
             lastTexture[0] = target;
             lastTexture[1] = texture;
@@ -102,17 +111,17 @@ public class GLStateCache {
 
     public void deleteTexture(int target, int texture) {
         if (lastTexture[0] == target && lastTexture[1] == texture) {
-            GL11.glBindTexture(target, 0);
+            glBindTexture(target, 0);
             lastTexture[0] = -1;
             lastTexture[1] = -1;
         }
 
-        GL11.glDeleteTextures(texture);
+        glDeleteTextures(texture);
     }
 
     public void useProgram(int program) {
         if (lastShaderProgram != program) {
-            GL20.glUseProgram(program);
+            glUseProgram(program);
             lastShaderProgram = program;
         }
     }
@@ -123,12 +132,12 @@ public class GLStateCache {
             lastShaderProgram = -1;
         }
 
-        GL20.glDeleteProgram(program);
+        glDeleteProgram(program);
     }
 
     public void bindFrameBuffer(int frameBuffer) {
         if (lastFrameBuffer != frameBuffer) {
-            GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
+            glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
             lastFrameBuffer = frameBuffer;
         }
     }
@@ -139,12 +148,12 @@ public class GLStateCache {
             lastFrameBuffer = -1;
         }
 
-        GL30.glDeleteFramebuffers(frameBuffer);
+        glDeleteFramebuffers(frameBuffer);
     }
 
     public void bindRenderBuffer(int renderBuffer) {
         if (lastRenderBuffer != renderBuffer) {
-            GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, renderBuffer);
+            glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
             lastRenderBuffer = renderBuffer;
         }
     }
@@ -155,32 +164,32 @@ public class GLStateCache {
             lastRenderBuffer = -1;
         }
 
-        GL30.glDeleteRenderbuffers(renderBuffer);
+        glDeleteRenderbuffers(renderBuffer);
     }
 
     public void bindDrawFrameBuffer(int frameBuffer) {
         if (lastDrawFrameBuffer != frameBuffer) {
-            GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, frameBuffer);
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBuffer);
             lastDrawFrameBuffer = frameBuffer;
         }
     }
 
     public void bindReadFrameBuffer(int frameBuffer) {
         if (lastReadFrameBuffer != frameBuffer) {
-            GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, frameBuffer);
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer);
             lastReadFrameBuffer = frameBuffer;
         }
     }
 
     public void bindVertexArray(int array) {
         if (lastVertexArray != array) {
-            GL30.glBindVertexArray(array);
+            glBindVertexArray(array);
             lastVertexArray = array;
         }
     }
 
     public void bindVertexArrayForce(int array) {
-        GL30.glBindVertexArray(array);
+        glBindVertexArray(array);
         lastVertexArray = array;
     }
 
@@ -190,18 +199,18 @@ public class GLStateCache {
             lastVertexArray = -1;
         }
 
-        GL30.glDeleteVertexArrays(array);
+        glDeleteVertexArrays(array);
     }
 
     public void bindIndirectBuffer(int buffer) {
         if (lastDrawIndirectBuffer != buffer) {
-            GL15.glBindBuffer(GL40.GL_DRAW_INDIRECT_BUFFER, buffer);
+            glBindBuffer(GL_DRAW_INDIRECT_BUFFER, buffer);
             lastDrawIndirectBuffer = buffer;
         }
     }
 
     public void bindIndirectBufferForce(int buffer) {
-        GL15.glBindBuffer(GL40.GL_DRAW_INDIRECT_BUFFER, buffer);
+        glBindBuffer(GL_DRAW_INDIRECT_BUFFER, buffer);
         lastDrawIndirectBuffer = buffer;
     }
 
@@ -211,18 +220,18 @@ public class GLStateCache {
             lastDrawIndirectBuffer = -1;
         }
 
-        GL15.glDeleteBuffers(buffer);
+        glDeleteBuffers(buffer);
     }
 
     public void bindElementArrayBuffer(int buffer) {
         if (lastElementArrayBuffer != buffer) {
-            GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
             lastElementArrayBuffer = buffer;
         }
     }
 
     public void bindElementArrayBufferForce(int buffer) {
-        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
         lastElementArrayBuffer = buffer;
     }
 
@@ -231,12 +240,12 @@ public class GLStateCache {
             bindElementArrayBuffer(0);
             lastElementArrayBuffer = -1;
         }
-        GL15.glDeleteBuffers(buffer);
+        glDeleteBuffers(buffer);
     }
 
     public void bindArrayBuffer(int buffer) {
         if (lastArrayBuffer != buffer) {
-            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, buffer);
+            glBindBuffer(GL_ARRAY_BUFFER, buffer);
             lastArrayBuffer = buffer;
         }
     }
@@ -246,12 +255,12 @@ public class GLStateCache {
             bindArrayBuffer(0);
             lastArrayBuffer = -1;
         }
-        GL15.glDeleteBuffers(buffer);
+        glDeleteBuffers(buffer);
     }
 
     public void bindUniformBuffer(int buffer) {
         if (lastUniformBuffer != buffer) {
-            GL15.glBindBuffer(GL31.GL_UNIFORM_BUFFER, buffer);
+            glBindBuffer(GL_UNIFORM_BUFFER, buffer);
             lastUniformBuffer = buffer;
         }
     }
@@ -261,7 +270,7 @@ public class GLStateCache {
             bindUniformBuffer(0);
             lastUniformBuffer = -1;
         }
-        GL15.glDeleteBuffers(buffer);
+        glDeleteBuffers(buffer);
     }
 
     public void clearColor(float red, float green, float blue, float alpha) {
@@ -271,7 +280,7 @@ public class GLStateCache {
         float lastAlpha = lastClearColor[3];
 
         if (lastRed != red || lastGreen != green || lastBlue != blue || lastAlpha != alpha) {
-            GL11.glClearColor(red, green, blue, alpha);
+            glClearColor(red, green, blue, alpha);
 
             lastClearColor[0] = red;
             lastClearColor[1] = green;
@@ -287,7 +296,7 @@ public class GLStateCache {
         boolean lastAlpha = lastColorMask[3];
 
         if (lastRed != red || lastGreen != green || lastBlue != blue || lastAlpha != alpha) {
-            GL11.glColorMask(red, green, blue, alpha);
+            glColorMask(red, green, blue, alpha);
 
             lastColorMask[0] = red;
             lastColorMask[1] = green;
@@ -302,7 +311,7 @@ public class GLStateCache {
         int lastMask = lastStencilFunc[2];
 
         if (lastFunc != func || lastRef != ref || lastMask != mask) {
-            GL11.glStencilFunc(func, ref, mask);
+            glStencilFunc(func, ref, mask);
 
             lastStencilFunc[0] = func;
             lastStencilFunc[1] = ref;
@@ -316,7 +325,7 @@ public class GLStateCache {
         int lastDPPass = lastStencilOp[2];
 
         if (lastSFail != sfail || lastDPFail != dpfail || lastDPPass != dppass) {
-            GL11.glStencilOp(sfail, dpfail, dppass);
+            glStencilOp(sfail, dpfail, dppass);
 
             lastStencilOp[0] = sfail;
             lastStencilOp[1] = dpfail;
@@ -326,49 +335,49 @@ public class GLStateCache {
 
     public void clearDepth(double depth) {
         if (lastClearDepth != depth) {
-            GL11.glClearDepth(depth);
+            glClearDepth(depth);
             lastClearDepth = depth;
         }
     }
 
     public void clearStencil(int s) {
         if (lastClearStencil != s) {
-            GL11.glClearStencil(s);
+            glClearStencil(s);
             lastClearStencil = s;
         }
     }
 
     public void depthMask(boolean flag) {
         if (lastDepthMask != flag) {
-            GL11.glDepthMask(flag);
+            glDepthMask(flag);
             lastDepthMask = flag;
         }
     }
 
     public void depthFunc(int func) {
         if (lastDepthFunc != func) {
-            GL11.glDepthFunc(func);
+            glDepthFunc(func);
             lastDepthFunc = func;
         }
     }
 
     public void cullFace(int mode) {
         if (lastCullFace != mode) {
-            GL11.glCullFace(mode);
+            glCullFace(mode);
             lastCullFace = mode;
         }
     }
 
     public void frontFace(int dir) {
         if (lastFrontFace != dir) {
-            GL11.glFrontFace(dir);
+            glFrontFace(dir);
             lastFrontFace = dir;
         }
     }
 
     public void polygonMode(int face, int mode) {
         if (lastPolygonMode[0] != face || lastPolygonMode[1] != mode) {
-            GL11.glPolygonMode(face, mode);
+            glPolygonMode(face, mode);
             lastPolygonMode[0] = face;
             lastPolygonMode[1] = mode;
         }
@@ -376,7 +385,7 @@ public class GLStateCache {
 
     public void polygonOffset(float factor, float units) {
         if (lastPolygonOffset[0] != factor || lastPolygonOffset[1] != units) {
-            GL11.glPolygonOffset(factor, units);
+            glPolygonOffset(factor, units);
             lastPolygonOffset[0] = factor;
             lastPolygonOffset[1] = units;
         }
@@ -384,21 +393,21 @@ public class GLStateCache {
 
     public void lineWidth(float width) {
         if (lastLineWidth != width) {
-            GL11.glLineWidth(width);
+            glLineWidth(width);
             lastLineWidth = width;
         }
     }
 
     public void pointSize(float size) {
         if (lastPointSize != size) {
-            GL11.glPointSize(size);
+            glPointSize(size);
             lastPointSize = size;
         }
     }
 
     public void scissor(int x, int y, int width, int height) {
         if (lastScissorBox[0] != x || lastScissorBox[1] != y || lastScissorBox[2] != width || lastScissorBox[3] != height) {
-            GL11.glScissor(x, y, width, height);
+            glScissor(x, y, width, height);
             lastScissorBox[0] = x;
             lastScissorBox[1] = y;
             lastScissorBox[2] = width;
@@ -408,7 +417,7 @@ public class GLStateCache {
 
     public void viewport(int x, int y, int width, int height) {
         if (lastViewport[0] != x || lastViewport[1] != y || lastViewport[2] != width || lastViewport[3] != height) {
-            GL11.glViewport(x, y, width, height);
+            glViewport(x, y, width, height);
             lastViewport[0] = x;
             lastViewport[1] = y;
             lastViewport[2] = width;
@@ -418,7 +427,7 @@ public class GLStateCache {
 
     public void depthRange(float near, float far) {
         if (lastDepthRange[0] != near || lastDepthRange[1] != far) {
-            GL11.glDepthRange(near, far);
+            glDepthRange(near, far);
             lastDepthRange[0] = near;
             lastDepthRange[1] = far;
         }
@@ -426,7 +435,7 @@ public class GLStateCache {
 
     public void sampleMaski(int maskNumber, int mask) {
         if (lastSampleMaskValue != mask) {
-            GL32.glSampleMaski(maskNumber, mask);
+            glSampleMaski(maskNumber, mask);
             lastSampleMaskValue = mask;
         }
     }
@@ -509,11 +518,11 @@ public class GLStateCache {
                 lastShaderProgram = (int) args[0];
                 break;
             case "glBindFramebuffer":
-                if ((int) args[0] == GL30.GL_FRAMEBUFFER) {
+                if ((int) args[0] == GL_FRAMEBUFFER) {
                     lastFrameBuffer = (int) args[1];
-                } else if ((int) args[0] == GL30.GL_DRAW_FRAMEBUFFER) {
+                } else if ((int) args[0] == GL_DRAW_FRAMEBUFFER) {
                     lastDrawFrameBuffer = (int) args[1];
-                } else if ((int) args[0] == GL30.GL_READ_FRAMEBUFFER) {
+                } else if ((int) args[0] == GL_READ_FRAMEBUFFER) {
                     lastReadFrameBuffer = (int) args[1];
                 }
                 break;
@@ -524,13 +533,13 @@ public class GLStateCache {
                 lastVertexArray = (int) args[0];
                 break;
             case "glBindBuffer":
-                if ((int) args[0] == GL40.GL_DRAW_INDIRECT_BUFFER) {
+                if ((int) args[0] == GL_DRAW_INDIRECT_BUFFER) {
                     lastDrawIndirectBuffer = (int) args[1];
-                } else if ((int) args[0] == GL40.GL_ELEMENT_ARRAY_BUFFER) {
+                } else if ((int) args[0] == GL_ELEMENT_ARRAY_BUFFER) {
                     lastElementArrayBuffer = (int) args[1];
-                } else if ((int) args[0] == GL15.GL_ARRAY_BUFFER) {
+                } else if ((int) args[0] == GL_ARRAY_BUFFER) {
                     lastArrayBuffer = (int) args[1];
-                } else if ((int) args[0] == GL31.GL_UNIFORM_BUFFER) {
+                } else if ((int) args[0] == GL_UNIFORM_BUFFER) {
                     lastUniformBuffer = (int) args[1];
                 }
                 break;

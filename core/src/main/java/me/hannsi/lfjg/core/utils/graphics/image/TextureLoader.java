@@ -1,10 +1,8 @@
 package me.hannsi.lfjg.core.utils.graphics.image;
 
-import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.type.types.ImageLoaderType;
 import me.hannsi.lfjg.core.utils.type.types.LocationType;
-import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
 import javax.imageio.ImageIO;
@@ -15,7 +13,13 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
+import static me.hannsi.lfjg.core.Core.CreatingTextureException;
+import static me.hannsi.lfjg.core.Core.GL11.*;
+import static me.hannsi.lfjg.core.Core.GL30.glGenerateMipmap;
+import static me.hannsi.lfjg.core.Core.LFJGRenderContext.bindTexture;
 import static me.hannsi.lfjg.core.Core.OPEN_GL_PARAMETER_NAME_MAP;
+import static org.lwjgl.stb.STBImage.stbi_image_free;
+import static org.lwjgl.stb.STBImage.stbi_load_from_memory;
 
 public class TextureLoader {
     private final Location texturePath;
@@ -30,7 +34,7 @@ public class TextureLoader {
     }
 
     public void cleanup() {
-        Core.GL11.glDeleteTextures(textureId);
+        glDeleteTextures(textureId);
     }
 
     private void loadTexture() {
@@ -42,14 +46,14 @@ public class TextureLoader {
                         IntBuffer height = stack.mallocInt(1);
                         IntBuffer channels = stack.mallocInt(1);
 
-                        ByteBuffer image = STBImage.stbi_load_from_memory(texturePath.getByteBuffer(), width, height, channels, 4);
+                        ByteBuffer image = stbi_load_from_memory(texturePath.getByteBuffer(), width, height, channels, 4);
                         if (image == null) {
                             throw new RuntimeException("Failed to load image: " + texturePath.path());
                         }
 
                         generateTexture(width.get(0), height.get(0), image);
 
-                        STBImage.stbi_image_free(image);
+                        stbi_image_free(image);
                     }
                     break;
                 case JAVA_CV://                    Mat bgrMat = opencv_imgcodecs.imdecode(new Mat(texturePath.getBytes()), opencv_imgcodecs.IMREAD_COLOR);
@@ -104,31 +108,31 @@ public class TextureLoader {
     }
 
     private void generateTexture(int width, int height, ByteBuffer buf) {
-        textureId = Core.GL11.glGenTextures();
+        textureId = glGenTextures();
         if (textureId == 0) {
-            throw Core.CreatingTextureException.createCreatingTextureException("Could not create texture");
+            throw CreatingTextureException.createCreatingTextureException("Could not create texture");
         }
 
-        Core.LFJGRenderContext.bindTexture(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), textureId);
-        Core.GL11.glPixelStorei(OPEN_GL_PARAMETER_NAME_MAP.get("GL_UNPACK_ALIGNMENT"), 1);
+        bindTexture(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), textureId);
+        glPixelStorei(OPEN_GL_PARAMETER_NAME_MAP.get("GL_UNPACK_ALIGNMENT"), 1);
 
-        Core.GL11.glTexImage2D(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), 0, OPEN_GL_PARAMETER_NAME_MAP.get("GL_RGBA"), width, height, 0, OPEN_GL_PARAMETER_NAME_MAP.get("GL_RGBA"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_UNSIGNED_BYTE"), buf);
+        glTexImage2D(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), 0, OPEN_GL_PARAMETER_NAME_MAP.get("GL_RGBA"), width, height, 0, OPEN_GL_PARAMETER_NAME_MAP.get("GL_RGBA"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_UNSIGNED_BYTE"), buf);
 
-        Core.GL11.glTexParameteri(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_WRAP_S"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_CLAMP_TO_EDGE"));
-        Core.GL11.glTexParameteri(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_WRAP_T"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_CLAMP_TO_EDGE"));
-        Core.GL11.glTexParameteri(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_MIN_FILTER"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_NEAREST"));
-        Core.GL11.glTexParameteri(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_MAG_FILTER"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_NEAREST"));
-        Core.GL30.glGenerateMipmap(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"));
+        glTexParameteri(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_WRAP_S"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_CLAMP_TO_EDGE"));
+        glTexParameteri(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_WRAP_T"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_CLAMP_TO_EDGE"));
+        glTexParameteri(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_MIN_FILTER"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_NEAREST"));
+        glTexParameteri(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_MAG_FILTER"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_NEAREST"));
+        glGenerateMipmap(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"));
 
-        Core.LFJGRenderContext.bindTexture(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), 0);
+        bindTexture(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), 0);
     }
 
     public void bind() {
-        Core.LFJGRenderContext.bindTexture(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), textureId);
+        bindTexture(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), textureId);
     }
 
     public void unbind() {
-        Core.LFJGRenderContext.bindTexture(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), 0);
+        bindTexture(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), 0);
     }
 
     public ImageLoaderType getTextureLoaderType() {

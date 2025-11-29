@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.core.utils.graphics.image;
 
-import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
@@ -9,9 +8,11 @@ import me.hannsi.lfjg.core.utils.type.types.ImageLoaderType;
 import me.hannsi.lfjg.core.utils.type.types.JavaCVImageFormat;
 import me.hannsi.lfjg.core.utils.type.types.STBImageFormat;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.stb.STBImageWrite;
 
 import java.nio.ByteBuffer;
+
+import static me.hannsi.lfjg.core.Core.frameBufferSize;
+import static org.lwjgl.stb.STBImageWrite.*;
 
 public class ImageCapture {
     private final Location filePath;
@@ -29,8 +30,8 @@ public class ImageCapture {
     public ImageCapture(Location filePath) {
         this.filePath = filePath;
 
-        this.width = Core.frameBufferSize.x();
-        this.height = Core.frameBufferSize.y();
+        this.width = frameBufferSize.x();
+        this.height = frameBufferSize.y();
         this.imageLoaderType = ImageLoaderType.STB_IMAGE;
         this.javaCVImageFormat = JavaCVImageFormat.PNG;
         this.colorFormatType = ColorFormatType.RGB;
@@ -96,7 +97,7 @@ public class ImageCapture {
         boolean success;
         switch (stbImageFormat) {
             case PNG:
-                success = STBImageWrite.stbi_write_png(
+                success = stbi_write_png(
                         path,
                         width,
                         height,
@@ -110,7 +111,7 @@ public class ImageCapture {
                 if (colorFormatType.getChannels() != 3) {
                     throw new IllegalArgumentException("JPEG format only supports 3 (RGB) channels.");
                 }
-                success = STBImageWrite.stbi_write_jpg(
+                success = stbi_write_jpg(
                         path,
                         width,
                         height,
@@ -121,7 +122,7 @@ public class ImageCapture {
                 break;
 
             case BMP:
-                success = STBImageWrite.stbi_write_bmp(
+                success = stbi_write_bmp(
                         path,
                         width,
                         height,
@@ -131,7 +132,7 @@ public class ImageCapture {
                 break;
 
             case TGA:
-                success = STBImageWrite.stbi_write_tga(
+                success = stbi_write_tga(
                         path,
                         width,
                         height,

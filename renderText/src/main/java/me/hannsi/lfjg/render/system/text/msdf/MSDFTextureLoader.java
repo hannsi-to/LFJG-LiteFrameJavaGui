@@ -1,15 +1,15 @@
 package me.hannsi.lfjg.render.system.text.msdf;
 
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
+import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 
 public class MSDFTextureLoader {
     public int textureId;
@@ -17,7 +17,7 @@ public class MSDFTextureLoader {
     private Location textureLocation;
 
     MSDFTextureLoader() {
-        this.textureId = GL11.glGenTextures();
+        this.textureId = glGenTextures();
     }
 
     public static MSDFTextureLoader createMSDFTextureLoader() {
@@ -25,7 +25,7 @@ public class MSDFTextureLoader {
     }
 
     public void cleanup() {
-        glStateCache.deleteTexture(GL11.GL_TEXTURE_2D, textureId);
+        GL_STATE_CACHE.deleteTexture(GL_TEXTURE_2D, textureId);
         textureId = -1;
     }
 
@@ -35,12 +35,12 @@ public class MSDFTextureLoader {
     }
 
     public MSDFTextureLoader loadTexture() {
-        glStateCache.bindTexture(GL11.GL_TEXTURE_2D, textureId);
+        GL_STATE_CACHE.bindTexture(GL_TEXTURE_2D, textureId);
 
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         try (MemoryStack stack = MemoryStack.stackPush()) {
             IntBuffer width = stack.mallocInt(1);
@@ -52,11 +52,11 @@ public class MSDFTextureLoader {
                 throw new RuntimeException("Failed to load image: " + textureLocation.path());
             }
 
-            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width.get(0), height.get(0), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, image);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width.get(0), height.get(0), 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
             STBImage.stbi_image_free(image);
         }
 
-        glStateCache.bindTexture(GL11.GL_TEXTURE_2D, 0);
+        GL_STATE_CACHE.bindTexture(GL_TEXTURE_2D, 0);
 
         return this;
     }

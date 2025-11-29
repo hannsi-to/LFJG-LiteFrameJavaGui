@@ -1,13 +1,12 @@
 package me.hannsi.test;
 
-import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.event.EventHandler;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.toolkit.Camera;
 import me.hannsi.lfjg.core.utils.toolkit.KeyboardInfo;
 import me.hannsi.lfjg.core.utils.toolkit.MouseInfo;
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.frame.LFJGContext;
+import me.hannsi.lfjg.frame.LFJGFrameContext;
 import me.hannsi.lfjg.frame.event.events.user.*;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
@@ -26,7 +25,8 @@ import org.lwjgl.glfw.GLFW;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
-import static me.hannsi.lfjg.core.Core.EVENT_MANAGER;
+import static me.hannsi.lfjg.core.Core.*;
+import static me.hannsi.lfjg.frame.LFJGFrameContext.frame;
 
 public class TestGuiFrame implements LFJGFrame {
     private static final String URL = "https://google.com";
@@ -49,21 +49,21 @@ public class TestGuiFrame implements LFJGFrame {
     private float height;
 
     public static void main(String[] args) {
-        LFJGContext.args = args;
+        LFJGFrameContext.args = args;
         new TestGuiFrame().setFrame();
     }
 
     public void setFrame() {
-        LFJGContext.frame = new Frame(this, "TestGuiFrame");
+        frame = new Frame(this, "TestGuiFrame");
     }
 
     @Override
     public void init() {
         EVENT_MANAGER.register(this);
 
-        LFJGContext.frame.updateLFJGLContext();
-        Core.mouseInfo = new MouseInfo();
-        Core.keyboardInfo = new KeyboardInfo();
+        frame.updateLFJGLContext();
+        mouseInfo = new MouseInfo();
+        keyboardInfo = new KeyboardInfo();
         camera = new Camera();
 
 //        LFJGRenderContext.fontCache = FontCache.initFontCache()
@@ -72,14 +72,14 @@ public class TestGuiFrame implements LFJGFrame {
 
         sceneSystem = SceneSystem.initSceneSystem()
                 .addScene(new TestScene1().getScene())
-                .addScene(new TestScene2(LFJGContext.frame).getScene())
-                .addScene(new TestScene3(LFJGContext.frame).getScene())
-                .addScene(new TestScene4(LFJGContext.frame).getScene())
-                .addScene(new TestScene5(LFJGContext.frame).getScene())
-                .addScene(new TestSound1(LFJGContext.frame).getScene())
-                .addScene(new TestVideo1(LFJGContext.frame).getScene())
-                .addScene(new TestPhysic1(LFJGContext.frame).getScene())
-                .addScene(new Test3D1(LFJGContext.frame, this).getScene())
+                .addScene(new TestScene2(frame).getScene())
+                .addScene(new TestScene3(frame).getScene())
+                .addScene(new TestScene4(frame).getScene())
+                .addScene(new TestScene5(frame).getScene())
+                .addScene(new TestSound1(frame).getScene())
+                .addScene(new TestVideo1(frame).getScene())
+                .addScene(new TestPhysic1(frame).getScene())
+                .addScene(new Test3D1(frame, this).getScene())
                 .setCurrentScene("TestScene5")
                 .initScenes();
 
@@ -183,16 +183,16 @@ public class TestGuiFrame implements LFJGFrame {
 
         float MOUSE_SENSITIVITY = 0.1f;
 
-        if (Core.mouseInfo.isRightButtonPressed()) {
-            Vector2f displVec = Core.mouseInfo.getDisplaySize();
+        if (mouseInfo.isRightButtonPressed()) {
+            Vector2f displVec = mouseInfo.getDisplaySize();
             camera.addRotation((float) Math.toRadians(-displVec.x * MOUSE_SENSITIVITY), (float) Math.toRadians(-displVec.y * MOUSE_SENSITIVITY));
         }
 
-        Core.mouseInfo.input();
+        mouseInfo.input();
     }
 
     public boolean isKeyPressed(int keyCode) {
-        return GLFW.glfwGetKey(LFJGContext.frame.getWindowID(), keyCode) == GLFW.GLFW_PRESS;
+        return GLFW.glfwGetKey(frame.getWindowID(), keyCode) == GLFW.GLFW_PRESS;
     }
 
     @Override
@@ -212,14 +212,14 @@ public class TestGuiFrame implements LFJGFrame {
 
     @Override
     public void setFrameSetting() {
-        LFJGContext.frame.setFrameSettingValue(RefreshRateSetting.class, -1);
-        LFJGContext.frame.setFrameSettingValue(MonitorSetting.class, MonitorType.BORDERLESS);
-        LFJGContext.frame.setFrameSettingValue(VSyncSetting.class, VSyncType.V_SYNC_OFF);
-        LFJGContext.frame.setFrameSettingValue(FloatingSetting.class, false);
-        LFJGContext.frame.setFrameSettingValue(IconSetting.class, Location.fromResource("icon/salad_x32.png"));
-        LFJGContext.frame.setFrameSettingValue(AntiAliasingSetting.class, AntiAliasingType.OFF);
-        LFJGContext.frame.setFrameSettingValue(WidthSetting.class, 1920);
-        LFJGContext.frame.setFrameSettingValue(HeightSetting.class, 1080);
+        frame.setFrameSettingValue(RefreshRateSetting.class, -1);
+        frame.setFrameSettingValue(MonitorSetting.class, MonitorType.BORDERLESS);
+        frame.setFrameSettingValue(VSyncSetting.class, VSyncType.V_SYNC_OFF);
+        frame.setFrameSettingValue(FloatingSetting.class, false);
+        frame.setFrameSettingValue(IconSetting.class, Location.fromResource("icon/salad_x32.png"));
+        frame.setFrameSettingValue(AntiAliasingSetting.class, AntiAliasingType.OFF);
+        frame.setFrameSettingValue(WidthSetting.class, 1920);
+        frame.setFrameSettingValue(HeightSetting.class, 1080);
     }
 
     @EventHandler
@@ -229,15 +229,15 @@ public class TestGuiFrame implements LFJGFrame {
 
     @EventHandler
     public void mouseButtonCallbackEvent(MouseButtonEvent event) {
-        Core.mouseInfo.updateMouseButton(event.getButton(), event.getAction());
+        mouseInfo.updateMouseButton(event.getButton(), event.getAction());
 
-        MouseEvent mouseEvent = mouseEventAdapter.convertGLFWMouseEvent(event.getButton(), event.getAction(), event.getMods(), Core.mouseInfo.getCurrentPos().x() - x, Core.mouseInfo.getCurrentPos().y() - y);
+        MouseEvent mouseEvent = mouseEventAdapter.convertGLFWMouseEvent(event.getButton(), event.getAction(), event.getMods(), mouseInfo.getCurrentPos().x() - x, mouseInfo.getCurrentPos().y() - y);
         ((CefBrowserOsr) browser).sendMouseEvent(mouseEvent);
     }
 
     @EventHandler
     public void keyCallbackEvent(KeyEvent event) {
-        Core.keyboardInfo.updateKeyState(event.getKey(), event.getAction());
+        keyboardInfo.updateKeyState(event.getKey(), event.getAction());
 
         java.awt.event.KeyEvent keyEvent = keyEventAdapter.convertGLFWKey(event.getKey(), event.getScancode(), event.getAction(), event.getMods());
         if (keyEvent != null) {
@@ -255,7 +255,7 @@ public class TestGuiFrame implements LFJGFrame {
 
     @EventHandler
     public void cursorEnterEvent(CursorEnterEvent event) {
-        Core.mouseInfo.updateInWindow(event.isEntered());
+        mouseInfo.updateInWindow(event.isEntered());
     }
 
     @EventHandler
@@ -265,7 +265,7 @@ public class TestGuiFrame implements LFJGFrame {
 
     @EventHandler
     public void cursorPosEvent(CursorPosEvent event) {
-        Core.mouseInfo.updateCursorPos((float) event.getXPos(), (float) event.getYPos());
+        mouseInfo.updateCursorPos((float) event.getXPos(), (float) event.getYPos());
 
         MouseEvent moveEvent = mouseEventAdapter.createMouseMovedEvent(event.getXPos() - x, event.getYPos() - y);
         ((CefBrowserOsr) browser).sendMouseEvent(moveEvent);
@@ -273,7 +273,7 @@ public class TestGuiFrame implements LFJGFrame {
 
     @EventHandler
     public void scrollEvent(ScrollEvent event) {
-        MouseWheelEvent mouseWheelEvent = mouseWheelEventAdapter.convertGLFWScroll(event.getXoffset(), event.getYoffset(), Core.mouseInfo.getCurrentPos().x() - x, Core.mouseInfo.getCurrentPos().y() - y);
+        MouseWheelEvent mouseWheelEvent = mouseWheelEventAdapter.convertGLFWScroll(event.getXoffset(), event.getYoffset(), mouseInfo.getCurrentPos().x() - x, mouseInfo.getCurrentPos().y() - y);
         ((CefBrowserOsr) browser).sendMouseWheelEvent(mouseWheelEvent);
     }
 

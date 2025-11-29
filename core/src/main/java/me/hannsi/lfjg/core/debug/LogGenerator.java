@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.core.debug;
 
-import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.toolkit.FastStringBuilder;
 import me.hannsi.lfjg.core.utils.toolkit.StringUtil;
@@ -9,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static me.hannsi.lfjg.core.Core.stringBuilder;
 import static me.hannsi.lfjg.core.SystemSetting.LOG_GENERATOR_BAR_COUNT;
 
 public class LogGenerator {
@@ -106,22 +106,22 @@ public class LogGenerator {
     }
 
     public String createLog(String first) {
-        Core.stringBuilder = new FastStringBuilder();
-        Core.stringBuilder.append(first);
-        Core.stringBuilder.counterPush()
+        stringBuilder = new FastStringBuilder();
+        stringBuilder.append(first);
+        stringBuilder.counterPush()
                 .append(StringUtil.repeat(bar, MathHelper.max(0, LOG_GENERATOR_BAR_COUNT)))
                 .append(" ").append(title).append(" ")
                 .append(StringUtil.repeat(bar, MathHelper.max(0, LOG_GENERATOR_BAR_COUNT)));
-        int barLength = Core.stringBuilder.counterPop();
+        int barLength = stringBuilder.counterPop();
         for (String text : texts) {
-            Core.stringBuilder.append("\n\t").append(text);
+            stringBuilder.append("\n\t").append(text);
         }
 
-        Core.stringBuilder.append("\n");
-        Core.stringBuilder.append(StringUtil.repeat(bar, MathHelper.max(0, barLength)));
-        Core.stringBuilder.append("\n");
+        stringBuilder.append("\n");
+        stringBuilder.append(StringUtil.repeat(bar, MathHelper.max(0, barLength)));
+        stringBuilder.append("\n");
 
-        return Core.stringBuilder.toString();
+        return stringBuilder.toString();
     }
 
     public void logging(Class<?> clazz, DebugLevel debugLevel, boolean oneLine, boolean firstln) {

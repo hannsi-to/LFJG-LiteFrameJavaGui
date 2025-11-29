@@ -6,13 +6,20 @@ import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.render.system.mesh.BufferObjectType;
 import me.hannsi.lfjg.render.system.mesh.MeshConstants;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.GL44;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 
 import static me.hannsi.lfjg.core.Core.UNSAFE;
-import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
+import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30.glFlushMappedBufferRange;
+import static org.lwjgl.opengl.GL30.glMapBufferRange;
+import static org.lwjgl.opengl.GL44.glBufferStorage;
 
 public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
     private static final float[] TEMP_BUFFER = new float[MeshConstants.FLOATS_PER_VERTEX];
@@ -39,16 +46,16 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
     public void allocationBufferStorage(long capacity) {
         gpuMemorySize = capacity;
         if (bufferId != 0) {
-            glStateCache.deleteArrayBuffer(bufferId);
+            GL_STATE_CACHE.deleteArrayBuffer(bufferId);
             bufferId = 0;
         }
 
-        bufferId = GL15.glGenBuffers();
-        glStateCache.bindArrayBuffer(bufferId);
-        GL44.glBufferStorage(GL15.GL_ARRAY_BUFFER, gpuMemorySize, flags);
+        bufferId = glGenBuffers();
+        GL_STATE_CACHE.bindArrayBuffer(bufferId);
+        glBufferStorage(GL_ARRAY_BUFFER, gpuMemorySize, flags);
 
-        ByteBuffer byteBuffer = GL30.glMapBufferRange(
-                GL15.GL_ARRAY_BUFFER,
+        ByteBuffer byteBuffer = glMapBufferRange(
+                GL_ARRAY_BUFFER,
                 0,
                 gpuMemorySize,
                 flags
@@ -61,16 +68,16 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
     }
 
     public TestPersistentMappedVBO createVertexAttribute(int vaoId, BufferObjectType... bufferObjectType) {
-        glStateCache.bindArrayBuffer(bufferId);
+        GL_STATE_CACHE.bindArrayBuffer(bufferId);
 
         long stride = getVerticesSizeByte(1);
         int pointer = 0;
         for (BufferObjectType objectType : bufferObjectType) {
-            GL20.glEnableVertexAttribArray(objectType.getAttributeIndex());
-            GL20.glVertexAttribPointer(
+            glEnableVertexAttribArray(objectType.getAttributeIndex());
+            glVertexAttribPointer(
                     objectType.getAttributeIndex(),
                     objectType.getAttributeSize(),
-                    GL11.GL_FLOAT,
+                    GL_FLOAT,
                     false,
                     (int) stride,
                     (long) pointer * Float.BYTES
@@ -102,7 +109,7 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
     public void flushMappedRange(long byteOffset, long byteLength) {
         final int GL_MAP_COHERENT_BIT = GL44.GL_MAP_COHERENT_BIT;
         if ((flags & GL_MAP_COHERENT_BIT) == 0) {
-            GL44.glFlushMappedBufferRange(GL15.GL_ARRAY_BUFFER, byteOffset, byteLength);
+            glFlushMappedBufferRange(GL_ARRAY_BUFFER, byteOffset, byteLength);
         }
     }
 
@@ -146,11 +153,11 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
             try {
                 MemoryUtil.memCopy(oldAddr, tmp, bytesToCopy);
 
-                boolean unmapped = GL30.glUnmapBuffer(GL15.GL_ARRAY_BUFFER);
+                boolean unmapped = glUnmapBuffer(GL_ARRAY_BUFFER);
                 if (!unmapped) {
                     DebugLog.error(getClass(), "glUnmapBuffer returned false (may indicate corruption).");
                 }
-                glStateCache.deleteArrayBuffer(bufferId);
+                GL_STATE_CACHE.deleteArrayBuffer(bufferId);
                 bufferId = 0;
                 mappedBuffer = null;
                 mappedAddress = 0;
@@ -165,8 +172,8 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
                 MemoryUtil.nmemFree(tmp);
             }
         } else {
-            GL30.glUnmapBuffer(GL15.GL_ARRAY_BUFFER);
-            glStateCache.deleteArrayBuffer(bufferId);
+            glUnmapBuffer(GL_ARRAY_BUFFER);
+            GL_STATE_CACHE.deleteArrayBuffer(bufferId);
             bufferId = 0;
             mappedBuffer = null;
             mappedAddress = 0;
@@ -244,7 +251,7 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
     @Override
     public void cleanup() {
         if (bufferId != 0) {
-            glStateCache.deleteArrayBuffer(bufferId);
+            GL_STATE_CACHE.deleteArrayBuffer(bufferId);
             bufferId = 0;
         }
         mappedBuffer = null;

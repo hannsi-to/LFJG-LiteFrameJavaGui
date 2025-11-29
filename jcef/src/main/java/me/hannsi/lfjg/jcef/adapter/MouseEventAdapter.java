@@ -1,10 +1,11 @@
 package me.hannsi.lfjg.jcef.adapter;
 
-import me.hannsi.lfjg.core.Core;
 import org.cef.browser.CefBrowserOsr;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+
+import static me.hannsi.lfjg.core.Core.GLFW.*;
 
 
 public class MouseEventAdapter {
@@ -32,11 +33,11 @@ public class MouseEventAdapter {
     }
 
     private int mapGLFWToAWTButton(int glfwButton) {
-        if (glfwButton == Core.GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (glfwButton == GLFW_MOUSE_BUTTON_LEFT) {
             return MouseEvent.BUTTON1;
-        } else if (glfwButton == Core.GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+        } else if (glfwButton == GLFW_MOUSE_BUTTON_MIDDLE) {
             return MouseEvent.BUTTON2;
-        } else if (glfwButton == Core.GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (glfwButton == GLFW_MOUSE_BUTTON_RIGHT) {
             return MouseEvent.BUTTON3;
         } else {
             return MouseEvent.NOBUTTON;
@@ -44,9 +45,9 @@ public class MouseEventAdapter {
     }
 
     private int mapGLFWActionToAWTEventID(int action) {
-        if (action == Core.GLFW.GLFW_PRESS) {
+        if (action == GLFW_PRESS) {
             return MouseEvent.MOUSE_PRESSED;
-        } else if (action == Core.GLFW.GLFW_RELEASE) {
+        } else if (action == GLFW_RELEASE) {
             return MouseEvent.MOUSE_RELEASED;
         } else {
             return MouseEvent.MOUSE_MOVED;

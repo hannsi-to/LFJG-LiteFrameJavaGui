@@ -3,7 +3,9 @@ package me.hannsi.lfjg.frame.setting.settings;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
-import org.lwjgl.glfw.GLFW;
+
+import static org.lwjgl.glfw.GLFW.GLFW_REFRESH_RATE;
+import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 
 /**
  * Represents a setting for the refresh rate of a frame.
@@ -26,6 +28,6 @@ public class RefreshRateSetting extends FrameSettingBase<Integer> {
      */
     @Override
     public void updateSetting() {
-        GLFW.glfwWindowHint(GLFW.GLFW_REFRESH_RATE, getValue());
+        glfwWindowHint(GLFW_REFRESH_RATE, getValue());
     }
 }

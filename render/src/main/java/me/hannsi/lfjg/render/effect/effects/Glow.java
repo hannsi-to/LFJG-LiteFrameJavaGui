@@ -1,12 +1,13 @@
 package me.hannsi.lfjg.render.effect.effects;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
-import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector3f;
+
+import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
 
 public class Glow extends EffectBase {
     private float intensity = 1.0f;
@@ -71,13 +72,13 @@ public class Glow extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.GLOW.getId());
-        LFJGRenderContext.shaderProgram.setUniform("glowIntensity", UploadUniformType.ON_CHANGE, intensity);
-        LFJGRenderContext.shaderProgram.setUniform("glowThreshold", UploadUniformType.ON_CHANGE, threshold);
-        LFJGRenderContext.shaderProgram.setUniform("glowSpread", UploadUniformType.ON_CHANGE, spread);
-        LFJGRenderContext.shaderProgram.setUniform("glowColor", UploadUniformType.ON_CHANGE, new Vector3f(glowColor.getRedF(), glowColor.getGreenF(), glowColor.getBlueF()));
-        LFJGRenderContext.shaderProgram.setUniform("glowUseOriginalColor", UploadUniformType.ON_CHANGE, useOriginalColor);
-        LFJGRenderContext.shaderProgram.setUniform("glowOnly", UploadUniformType.ON_CHANGE, glowOnly);
+        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.GLOW.getId());
+        SHADER_PROGRAM.setUniform("glowIntensity", UploadUniformType.ON_CHANGE, intensity);
+        SHADER_PROGRAM.setUniform("glowThreshold", UploadUniformType.ON_CHANGE, threshold);
+        SHADER_PROGRAM.setUniform("glowSpread", UploadUniformType.ON_CHANGE, spread);
+        SHADER_PROGRAM.setUniform("glowColor", UploadUniformType.ON_CHANGE, new Vector3f(glowColor.getRedF(), glowColor.getGreenF(), glowColor.getBlueF()));
+        SHADER_PROGRAM.setUniform("glowUseOriginalColor", UploadUniformType.ON_CHANGE, useOriginalColor);
+        SHADER_PROGRAM.setUniform("glowOnly", UploadUniformType.ON_CHANGE, glowOnly);
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

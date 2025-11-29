@@ -4,7 +4,8 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
 import me.hannsi.lfjg.frame.system.GLFWUtil;
-import org.lwjgl.glfw.GLFW;
+
+import static org.lwjgl.glfw.GLFW.GLFW_FOCUSED;
 
 /**
  * Represents a setting for focused windows in a frame.
@@ -27,7 +28,7 @@ public class FocusedSetting extends FrameSettingBase<Boolean> {
      */
     @Override
     public void updateSetting() {
-        GLFWUtil.windowHintBoolean(GLFW.GLFW_FOCUSED, getValue());
+        GLFWUtil.windowHintBoolean(GLFW_FOCUSED, getValue());
 
         super.updateSetting();
     }

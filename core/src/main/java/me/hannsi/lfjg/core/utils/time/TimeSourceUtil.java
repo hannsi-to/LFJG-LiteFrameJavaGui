@@ -1,12 +1,13 @@
 package me.hannsi.lfjg.core.utils.time;
 
-import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.Util;
 import me.hannsi.lfjg.core.utils.type.types.TimeSourceType;
 
+import static me.hannsi.lfjg.core.Core.GLFW.glfwGetTime;
+
 public class TimeSourceUtil extends Util {
     public static double getGLFWTime() {
-        return Core.GLFW.glfwGetTime();
+        return glfwGetTime();
     }
 
     public static long getGLFWTimeMills() {

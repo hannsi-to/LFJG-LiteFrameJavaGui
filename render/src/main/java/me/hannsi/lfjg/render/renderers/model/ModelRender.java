@@ -1,9 +1,7 @@
 package me.hannsi.lfjg.render.renderers.model;
 
-import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureLoader;
-import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.debug.exceptions.model.ModelException;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.render.system.model.Entity;
@@ -13,13 +11,14 @@ import me.hannsi.lfjg.render.system.model.ModelCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
 
 import java.util.Collection;
 import java.util.List;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
+import static me.hannsi.lfjg.core.Core.projection3D;
+import static me.hannsi.lfjg.render.LFJGRenderContext.*;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 
 public class ModelRender {
     private final VAORendering vaoRendering;
@@ -46,21 +45,21 @@ public class ModelRender {
     }
 
     public void render() {
-        glStateCache.enable(GL11.GL_DEPTH_TEST);
+        GL_STATE_CACHE.enable(GL_DEPTH_TEST);
 
-        LFJGRenderContext.shaderProgram.bind();
+        SHADER_PROGRAM.bind();
 
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.MODEL.getId());
-        LFJGRenderContext.shaderProgram.setUniform("textureSampler", UploadUniformType.ONCE, 0);
-        LFJGRenderContext.shaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection3D.getProjMatrix());
-        LFJGRenderContext.shaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, LFJGRenderContext.mainCamera.getViewMatrix());
+        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.MODEL.getId());
+        SHADER_PROGRAM.setUniform("textureSampler", UploadUniformType.ONCE, 0);
+        SHADER_PROGRAM.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, projection3D.getProjMatrix());
+        SHADER_PROGRAM.setUniform("viewMatrix", UploadUniformType.PER_FRAME, MAIN_CAMERA.getViewMatrix());
 
         Collection<Model> models = modelCache.getModels().values();
         for (Model model : models) {
             List<Entity> entities = model.getEntities();
 
             for (Material material : model.getMaterials()) {
-                LFJGRenderContext.shaderProgram.setUniform("modelMaterialType", UploadUniformType.PER_FRAME, material.getMaterialType().getId());
+                SHADER_PROGRAM.setUniform("modelMaterialType", UploadUniformType.PER_FRAME, material.getMaterialType().getId());
 
                 switch (material.getMaterialType()) {
                     case NO_MATERIAL:
@@ -71,8 +70,8 @@ public class ModelRender {
                             throw new ModelException("To use a texture material, TextureCache must be set.");
                         }
 
-                        glStateCache.activeTexture(GL13.GL_TEXTURE0);
-                        glStateCache.enable(GL11.GL_TEXTURE_2D);
+                        GL_STATE_CACHE.activeTexture(GL_TEXTURE0);
+                        GL_STATE_CACHE.enable(GL_TEXTURE_2D);
 
                         TextureLoader textureLoader = textureCache.getTexture(material.getTextureLocation().path());
                         if (textureLoader == null) {
@@ -86,8 +85,8 @@ public class ModelRender {
 
                 for (Mesh mesh : material.getMeshes()) {
                     for (Entity entity : entities) {
-                        LFJGRenderContext.shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, entity.getModelMatrix());
-                        vaoRendering.draw(mesh, GL11.GL_TRIANGLES);
+                        SHADER_PROGRAM.setUniform("modelMatrix", UploadUniformType.PER_FRAME, entity.getModelMatrix());
+                        vaoRendering.draw(mesh, GL_TRIANGLES);
                     }
                 }
             }

@@ -5,10 +5,11 @@ import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.toolkit.UnicodeBlocks;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.LFJGRenderTextContext;
 import me.hannsi.lfjg.render.renderers.text.GLText;
 import me.hannsi.lfjg.render.system.text.AlignType;
 import me.hannsi.lfjg.render.system.text.font.Font;
+
+import static me.hannsi.lfjg.render.LFJGRenderTextContext.FONT_CACHE;
 
 public class MainFrame implements LFJGFrame {
     GLText glText;
@@ -22,7 +23,7 @@ public class MainFrame implements LFJGFrame {
     public void init() {
         frame.updateLFJGLContext();
 
-        LFJGRenderTextContext.fontCache.createCache(
+        FONT_CACHE.createCache(
                 "Font1",
                 Font.createCustomFont()
                         .name("Font1")

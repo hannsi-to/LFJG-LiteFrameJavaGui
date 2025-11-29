@@ -3,12 +3,13 @@ package me.hannsi.example.demo;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.effect.effects.*;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
+
+import static me.hannsi.lfjg.render.LFJGRenderContext.TEXTURE_CACHE;
 
 public class Demo3 implements IScene {
     Frame frame;
@@ -66,7 +67,7 @@ public class Demo3 implements IScene {
 
     @Override
     public void init() {
-        LFJGRenderContext.textureCache.createCache("Demo3", Location.fromResource("texture/test/Demo3.jpg"));
+        TEXTURE_CACHE.createCache("Demo3", Location.fromResource("texture/test/Demo3.jpg"));
 
         float stepX = 1920 / 8f + 20;
         float stepY = 1440 / 8f - 20;

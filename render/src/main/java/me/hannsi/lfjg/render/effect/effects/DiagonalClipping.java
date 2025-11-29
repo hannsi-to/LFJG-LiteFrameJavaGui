@@ -1,12 +1,13 @@
 package me.hannsi.lfjg.render.effect.effects;
 
 import me.hannsi.lfjg.core.utils.math.MathHelper;
-import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector2f;
+
+import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
 
 public class DiagonalClipping extends EffectBase {
     private float centerX = 500;
@@ -75,11 +76,11 @@ public class DiagonalClipping extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.DIAGONAL_CLIPPING.getId());
-        LFJGRenderContext.shaderProgram.setUniform("diagonalClippingClipCenter", UploadUniformType.ON_CHANGE, new Vector2f(centerX, centerY));
-        LFJGRenderContext.shaderProgram.setUniform("diagonalClippingClipAngle", UploadUniformType.ON_CHANGE, clipAngle);
-        LFJGRenderContext.shaderProgram.setUniform("diagonalClippingBlurWidth", UploadUniformType.ON_CHANGE, blurWidth);
-        LFJGRenderContext.shaderProgram.setUniform("diagonalClippingInvertClip", UploadUniformType.ON_CHANGE, invertClip);
+        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.DIAGONAL_CLIPPING.getId());
+        SHADER_PROGRAM.setUniform("diagonalClippingClipCenter", UploadUniformType.ON_CHANGE, new Vector2f(centerX, centerY));
+        SHADER_PROGRAM.setUniform("diagonalClippingClipAngle", UploadUniformType.ON_CHANGE, clipAngle);
+        SHADER_PROGRAM.setUniform("diagonalClippingBlurWidth", UploadUniformType.ON_CHANGE, blurWidth);
+        SHADER_PROGRAM.setUniform("diagonalClippingInvertClip", UploadUniformType.ON_CHANGE, invertClip);
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

@@ -1,12 +1,13 @@
 package me.hannsi.lfjg.render.effect.effects;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
-import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector4f;
+
+import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
 
 public class EdgeExtraction extends EffectBase {
     private float edgeStrength = 0.5f;
@@ -60,12 +61,12 @@ public class EdgeExtraction extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.EDGE_EXTRACTION.getId());
-        LFJGRenderContext.shaderProgram.setUniform("edgeExtractionEdgeStrength", UploadUniformType.ON_CHANGE, edgeStrength);
-        LFJGRenderContext.shaderProgram.setUniform("edgeExtractionThreshold", UploadUniformType.ON_CHANGE, threshold);
-        LFJGRenderContext.shaderProgram.setUniform("edgeExtractionEnableLuminanceEdge", UploadUniformType.ON_CHANGE, enableLuminanceEdge);
-        LFJGRenderContext.shaderProgram.setUniform("edgeExtractionEnableAlphaEdge", UploadUniformType.ON_CHANGE, enableAlphaEdge);
-        LFJGRenderContext.shaderProgram.setUniform("edgeExtractionEdgeColor", UploadUniformType.ON_CHANGE, new Vector4f(edgeColor.getRedF(), edgeColor.getGreenF(), edgeColor.getBlueF(), edgeColor.getAlphaF()));
+        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.EDGE_EXTRACTION.getId());
+        SHADER_PROGRAM.setUniform("edgeExtractionEdgeStrength", UploadUniformType.ON_CHANGE, edgeStrength);
+        SHADER_PROGRAM.setUniform("edgeExtractionThreshold", UploadUniformType.ON_CHANGE, threshold);
+        SHADER_PROGRAM.setUniform("edgeExtractionEnableLuminanceEdge", UploadUniformType.ON_CHANGE, enableLuminanceEdge);
+        SHADER_PROGRAM.setUniform("edgeExtractionEnableAlphaEdge", UploadUniformType.ON_CHANGE, enableAlphaEdge);
+        SHADER_PROGRAM.setUniform("edgeExtractionEdgeColor", UploadUniformType.ON_CHANGE, new Vector4f(edgeColor.getRedF(), edgeColor.getGreenF(), edgeColor.getBlueF(), edgeColor.getAlphaF()));
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

@@ -5,8 +5,10 @@ import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
+
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_NEAREST;
+import static org.lwjgl.opengl.GL30.glBlitFramebuffer;
 
 public class SplitFrameBuffer {
     private final int cols;
@@ -92,7 +94,7 @@ public class SplitFrameBuffer {
                 int distX1 = (int) smallResolution.x();
                 int distY1 = (int) smallResolution.y();
 
-                GL30.glBlitFramebuffer(srcX0, srcY0, srcX1, srcY1, distX0, distY0, distX1, distY1, GL11.GL_COLOR_BUFFER_BIT, GL11.GL_NEAREST);
+                glBlitFramebuffer(srcX0, srcY0, srcX1, srcY1, distX0, distY0, distX1, distY1, GL_COLOR_BUFFER_BIT, GL_NEAREST);
             }
         }
     }

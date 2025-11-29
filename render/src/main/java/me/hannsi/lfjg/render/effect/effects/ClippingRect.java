@@ -1,11 +1,12 @@
 package me.hannsi.lfjg.render.effect.effects;
 
-import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector4f;
+
+import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
 
 public class ClippingRect extends EffectBase {
     private float x1 = 0f;
@@ -89,9 +90,9 @@ public class ClippingRect extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.CLIPPING_RECT.getId());
-        LFJGRenderContext.shaderProgram.setUniform("clippingRectInvert", UploadUniformType.ON_CHANGE, invert);
-        LFJGRenderContext.shaderProgram.setUniform("clippingRectSize", UploadUniformType.ON_CHANGE, new Vector4f(x1, y1, x2, y2));
+        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.CLIPPING_RECT.getId());
+        SHADER_PROGRAM.setUniform("clippingRectInvert", UploadUniformType.ON_CHANGE, invert);
+        SHADER_PROGRAM.setUniform("clippingRectSize", UploadUniformType.ON_CHANGE, new Vector4f(x1, y1, x2, y2));
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

@@ -11,14 +11,14 @@ import me.hannsi.lfjg.render.debug.exceptions.shader.CreatingShaderException;
 import me.hannsi.lfjg.render.debug.exceptions.shader.CreatingShaderProgramException;
 import me.hannsi.lfjg.render.debug.exceptions.shader.LinkingShaderException;
 import org.joml.*;
-import org.lwjgl.opengl.GL20;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
+import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static org.lwjgl.opengl.GL20.*;
 
 public class ShaderProgram {
     private final int programId;
@@ -34,7 +34,7 @@ public class ShaderProgram {
         uniformValues = new HashMap<>();
         uniformBlockObjectCache = new HashMap<>();
 
-        programId = GL20.glCreateProgram();
+        programId = glCreateProgram();
         if (programId == 0) {
             throw new CreatingShaderProgramException("Could not create Shader");
         }
@@ -72,13 +72,13 @@ public class ShaderProgram {
         uniformBlockObjectCache.clear();
 
         if (vertexShaderId != 0) {
-            GL20.glDeleteShader(vertexShaderId);
+            glDeleteShader(vertexShaderId);
         }
         if (fragmentShaderId != 0) {
-            GL20.glDeleteShader(fragmentShaderId);
+            glDeleteShader(fragmentShaderId);
         }
         if (programId != 0) {
-            glStateCache.deleteProgram(programId);
+            GL_STATE_CACHE.deleteProgram(programId);
         }
 
         new LogGenerator(
@@ -90,54 +90,54 @@ public class ShaderProgram {
     }
 
     public void createVertexShader(Location fileLocation) {
-        vertexShaderId = createShader(new GLSLCode(fileLocation).createCode(), GL20.GL_VERTEX_SHADER);
+        vertexShaderId = createShader(new GLSLCode(fileLocation).createCode(), GL_VERTEX_SHADER);
     }
 
     public void createFragmentShader(Location fileLocation) {
-        fragmentShaderId = createShader(new GLSLCode(fileLocation).createCode(), GL20.GL_FRAGMENT_SHADER);
+        fragmentShaderId = createShader(new GLSLCode(fileLocation).createCode(), GL_FRAGMENT_SHADER);
     }
 
     protected int createShader(String shaderCode, int shaderType) {
-        int shaderId = GL20.glCreateShader(shaderType);
+        int shaderId = glCreateShader(shaderType);
         if (shaderId == 0) {
             throw new CreatingShaderException("Error creating shader. Type: " + shaderType);
         }
 
-        GL20.glShaderSource(shaderId, shaderCode);
-        GL20.glCompileShader(shaderId);
-        if (GL20.glGetShaderi(shaderId, GL20.GL_COMPILE_STATUS) == 0) {
-            throw new CompilingShaderException("Error compiling Shader code: " + GL20.glGetShaderInfoLog(shaderId));
+        glShaderSource(shaderId, shaderCode);
+        glCompileShader(shaderId);
+        if (glGetShaderi(shaderId, GL_COMPILE_STATUS) == 0) {
+            throw new CompilingShaderException("Error compiling Shader code: " + glGetShaderInfoLog(shaderId));
         }
 
-        GL20.glAttachShader(programId, shaderId);
+        glAttachShader(programId, shaderId);
         return shaderId;
     }
 
     public void link() {
-        GL20.glLinkProgram(programId);
-        if (GL20.glGetProgrami(programId, GL20.GL_LINK_STATUS) == 0) {
-            throw new LinkingShaderException("Error linking Shader code: " + GL20.glGetProgramInfoLog(programId));
+        glLinkProgram(programId);
+        if (glGetProgrami(programId, GL_LINK_STATUS) == 0) {
+            throw new LinkingShaderException("Error linking Shader code: " + glGetProgramInfoLog(programId));
         }
 
         if (vertexShaderId != 0) {
-            GL20.glDetachShader(programId, vertexShaderId);
+            glDetachShader(programId, vertexShaderId);
         }
         if (fragmentShaderId != 0) {
-            GL20.glDetachShader(programId, fragmentShaderId);
+            glDetachShader(programId, fragmentShaderId);
         }
 
-        GL20.glValidateProgram(programId);
-        if (GL20.glGetProgrami(programId, GL20.GL_VALIDATE_STATUS) == 0) {
-            DebugLog.warning(getClass(), "Warning validating Shader code: " + GL20.glGetProgramInfoLog(programId));
+        glValidateProgram(programId);
+        if (glGetProgrami(programId, GL_VALIDATE_STATUS) == 0) {
+            DebugLog.warning(getClass(), "Warning validating Shader code: " + glGetProgramInfoLog(programId));
         }
     }
 
     private int getUniformLocation(String name) {
-        return uniformCache.computeIfAbsent(name, n -> GL20.glGetUniformLocation(programId, n));
+        return uniformCache.computeIfAbsent(name, n -> glGetUniformLocation(programId, n));
     }
 
     public void bind() {
-        glStateCache.useProgram(programId);
+        GL_STATE_CACHE.useProgram(programId);
     }
 
     @SuppressWarnings("unchecked")
@@ -155,21 +155,21 @@ public class ShaderProgram {
         Object first = values[0];
         if (first instanceof Boolean) {
             int booleanValue = ((boolean) first) ? 1 : 0;
-            GL20.glUniform1i(location, booleanValue);
+            glUniform1i(location, booleanValue);
         } else if (first instanceof Float) {
             float[] floatValues = toFloatArray(values);
             switch (floatValues.length) {
                 case 1:
-                    GL20.glUniform1f(location, floatValues[0]);
+                    glUniform1f(location, floatValues[0]);
                     break;
                 case 2:
-                    GL20.glUniform2f(location, floatValues[0], floatValues[1]);
+                    glUniform2f(location, floatValues[0], floatValues[1]);
                     break;
                 case 3:
-                    GL20.glUniform3f(location, floatValues[0], floatValues[1], floatValues[2]);
+                    glUniform3f(location, floatValues[0], floatValues[1], floatValues[2]);
                     break;
                 case 4:
-                    GL20.glUniform4f(location, floatValues[0], floatValues[1], floatValues[2], floatValues[3]);
+                    glUniform4f(location, floatValues[0], floatValues[1], floatValues[2], floatValues[3]);
                     break;
                 default:
                     throw new IllegalArgumentException("Unsupported float uniform size: " + floatValues.length);
@@ -178,16 +178,16 @@ public class ShaderProgram {
             int[] intValues = toIntArray(values);
             switch (intValues.length) {
                 case 1:
-                    GL20.glUniform1i(location, intValues[0]);
+                    glUniform1i(location, intValues[0]);
                     break;
                 case 2:
-                    GL20.glUniform2i(location, intValues[0], intValues[1]);
+                    glUniform2i(location, intValues[0], intValues[1]);
                     break;
                 case 3:
-                    GL20.glUniform3i(location, intValues[0], intValues[1], intValues[2]);
+                    glUniform3i(location, intValues[0], intValues[1], intValues[2]);
                     break;
                 case 4:
-                    GL20.glUniform4i(location, intValues[0], intValues[1], intValues[2], intValues[3]);
+                    glUniform4i(location, intValues[0], intValues[1], intValues[2], intValues[3]);
                     break;
                 default:
                     throw new IllegalArgumentException("Unsupported int uniform size: " + intValues.length);
@@ -197,23 +197,23 @@ public class ShaderProgram {
             int size = floatBuffer.remaining();
             switch (size) {
                 case 1:
-                    GL20.glUniform1fv(location, floatBuffer);
+                    glUniform1fv(location, floatBuffer);
                     break;
                 case 2:
-                    GL20.glUniform2fv(location, floatBuffer);
+                    glUniform2fv(location, floatBuffer);
                     break;
                 case 3:
-                    GL20.glUniform3fv(location, floatBuffer);
+                    glUniform3fv(location, floatBuffer);
                     break;
                 case 4:
-                    GL20.glUniform4fv(location, floatBuffer);
+                    glUniform4fv(location, floatBuffer);
                     break;
                 case 16:
-                    GL20.glUniformMatrix4fv(location, false, floatBuffer);
+                    glUniformMatrix4fv(location, false, floatBuffer);
                     break;
                 default:
                     if (size > 4 && size <= 256) {
-                        GL20.glUniform1fv(location, floatBuffer);
+                        glUniform1fv(location, floatBuffer);
                         break;
                     }
                     throw new IllegalArgumentException("Unsupported FloatBuffer size: " + floatBuffer.remaining());
@@ -221,29 +221,29 @@ public class ShaderProgram {
         } else if (first instanceof Matrix4f) {
             Matrix4f mat = (Matrix4f) first;
             try (MemoryStack stack = MemoryStack.stackPush()) {
-                GL20.glUniformMatrix4fv(location, false, mat.get(stack.mallocFloat(16)));
+                glUniformMatrix4fv(location, false, mat.get(stack.mallocFloat(16)));
             }
         } else if (first instanceof Vector2f) {
             Vector2f vec = (Vector2f) first;
-            GL20.glUniform2f(location, vec.x, vec.y);
+            glUniform2f(location, vec.x, vec.y);
         } else if (first instanceof Vector3f) {
             Vector3f vec = (Vector3f) first;
-            GL20.glUniform3f(location, vec.x, vec.y, vec.z);
+            glUniform3f(location, vec.x, vec.y, vec.z);
         } else if (first instanceof Vector4f) {
             Vector4f vec = (Vector4f) first;
-            GL20.glUniform4f(location, vec.x, vec.y, vec.z, vec.w);
+            glUniform4f(location, vec.x, vec.y, vec.z, vec.w);
         } else if (first instanceof Vector2i) {
             Vector2i vec = (Vector2i) first;
-            GL20.glUniform2i(location, vec.x, vec.y);
+            glUniform2i(location, vec.x, vec.y);
         } else if (first instanceof Vector3i) {
             Vector3i vec = (Vector3i) first;
-            GL20.glUniform3i(location, vec.x, vec.y, vec.z);
+            glUniform3i(location, vec.x, vec.y, vec.z);
         } else if (first instanceof Vector4i) {
             Vector4i vec = (Vector4i) first;
-            GL20.glUniform4i(location, vec.x, vec.y, vec.z, vec.w);
+            glUniform4i(location, vec.x, vec.y, vec.z, vec.w);
         } else if (first instanceof Color) {
             Color color = (Color) first;
-            GL20.glUniform4f(location, color.getRedF(), color.getGreenF(), color.getBlueF(), color.getAlphaF());
+            glUniform4f(location, color.getRedF(), color.getGreenF(), color.getBlueF(), color.getAlphaF());
         } else {
             throw new IllegalArgumentException("Unsupported uniform value type: " + first.getClass());
         }

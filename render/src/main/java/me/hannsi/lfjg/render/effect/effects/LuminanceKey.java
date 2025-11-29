@@ -1,11 +1,12 @@
 package me.hannsi.lfjg.render.effect.effects;
 
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
-import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
+
+import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
 
 public class LuminanceKey extends EffectBase {
     private float threshold = 0.6f;
@@ -47,10 +48,10 @@ public class LuminanceKey extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.LUMINANCE_KEY.getId());
-        LFJGRenderContext.shaderProgram.setUniform("luminanceKeyThreshold", UploadUniformType.ON_CHANGE, threshold);
-        LFJGRenderContext.shaderProgram.setUniform("luminanceKeyBlurAmount", UploadUniformType.ON_CHANGE, blurAmount);
-        LFJGRenderContext.shaderProgram.setUniform("luminanceKeyMode", UploadUniformType.ON_CHANGE, luminanceMode.getId());
+        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.LUMINANCE_KEY.getId());
+        SHADER_PROGRAM.setUniform("luminanceKeyThreshold", UploadUniformType.ON_CHANGE, threshold);
+        SHADER_PROGRAM.setUniform("luminanceKeyBlurAmount", UploadUniformType.ON_CHANGE, blurAmount);
+        SHADER_PROGRAM.setUniform("luminanceKeyMode", UploadUniformType.ON_CHANGE, luminanceMode.getId());
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

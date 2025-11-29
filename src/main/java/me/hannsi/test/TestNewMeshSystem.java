@@ -1,11 +1,9 @@
 package me.hannsi.test;
 
-import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.reflection.reference.LongRef;
 import me.hannsi.lfjg.core.utils.time.Timer;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.renderers.BlendType;
@@ -18,10 +16,6 @@ import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.STD140UniformBlockType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.GL31;
-import org.lwjgl.opengl.GL44;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -29,9 +23,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static me.hannsi.lfjg.core.Core.frameBufferSize;
+import static me.hannsi.lfjg.core.Core.projection2D;
+import static me.hannsi.lfjg.frame.LFJGFrameContext.frame;
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
+import static org.lwjgl.opengl.GL30.glBindBufferRange;
+import static org.lwjgl.opengl.GL30.glMapBufferRange;
 import static org.lwjgl.opengl.GL31.*;
+import static org.lwjgl.opengl.GL44.glBufferStorage;
 
 public class TestNewMeshSystem implements LFJGFrame {
     Timer timer = new Timer();
@@ -54,14 +56,14 @@ public class TestNewMeshSystem implements LFJGFrame {
 
     @Override
     public void init() {
-        LFJGContext.frame.updateLFJGLContext();
+        frame.updateLFJGLContext();
 
         uboMatrices = glGenBuffers();
-        glStateCache.bindUniformBuffer(uboMatrices);
-        GL44.glBufferStorage(GL31.GL_UNIFORM_BUFFER, STD140UniformBlockType.MAT4.getByteSize() * 3L, MeshConstants.DEFAULT_FLAGS_HINT);
+        GL_STATE_CACHE.bindUniformBuffer(uboMatrices);
+        glBufferStorage(GL_UNIFORM_BUFFER, STD140UniformBlockType.MAT4.getByteSize() * 3L, MeshConstants.DEFAULT_FLAGS_HINT);
 
-        ByteBuffer byteBuffer = GL30.glMapBufferRange(
-                GL31.GL_UNIFORM_BUFFER,
+        ByteBuffer byteBuffer = glMapBufferRange(
+                GL_UNIFORM_BUFFER,
                 0,
                 STD140UniformBlockType.MAT4.getByteSize() * 3L,
                 MeshConstants.DEFAULT_FLAGS_HINT
@@ -70,11 +72,11 @@ public class TestNewMeshSystem implements LFJGFrame {
             throw new RuntimeException("glMapBufferRange failed");
         }
         mappedBuffer = byteBuffer.asFloatBuffer();
-        glStateCache.bindUniformBuffer(0);
+        GL_STATE_CACHE.bindUniformBuffer(0);
 
-        int blockIndex = glGetUniformBlockIndex(shaderProgram.getProgramId(), "Matrices");
+        int blockIndex = glGetUniformBlockIndex(SHADER_PROGRAM.getProgramId(), "Matrices");
         glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatrices, 0, STD140UniformBlockType.MAT4.getByteSize() * 3L);
-        glUniformBlockBinding(shaderProgram.getProgramId(), blockIndex, 0);
+        glUniformBlockBinding(SHADER_PROGRAM.getProgramId(), blockIndex, 0);
 
         int numObjects = 100;
         int numVerticesPerStrip = 100;
@@ -108,7 +110,7 @@ public class TestNewMeshSystem implements LFJGFrame {
             }
 
             LongRef id = new LongRef();
-            mesh.addObject(
+            MESH.addObject(
                     id,
                     ProjectionType.ORTHOGRAPHIC_PROJECTION,
                     DrawType.POLYGON,
@@ -227,7 +229,7 @@ public class TestNewMeshSystem implements LFJGFrame {
 //            );
 //        }
 
-        mesh.initBufferObject();
+        MESH.initBufferObject();
 
         modelMatrix = new Matrix4f();
         viewMatrix = new Matrix4f();
@@ -236,21 +238,21 @@ public class TestNewMeshSystem implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-        shaderProgram.bind();
+        SHADER_PROGRAM.bind();
 
-        glStateCache.blendFunc(blendType.getSfactor(), blendType.getDfactor());
-        glStateCache.setBlendEquation(blendType.getEquation());
-        glStateCache.enable(GL11.GL_BLEND);
-        glStateCache.disable(GL11.GL_DEPTH_TEST);
+        GL_STATE_CACHE.blendFunc(blendType.getSfactor(), blendType.getDfactor());
+        GL_STATE_CACHE.setBlendEquation(blendType.getEquation());
+        GL_STATE_CACHE.enable(GL_BLEND);
+        GL_STATE_CACHE.disable(GL_DEPTH_TEST);
 
-        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.OBJECT.getId());
-        shaderProgram.setUniform("resolution", UploadUniformType.ON_CHANGE, Core.frameBufferSize);
-        updateUBO(Core.projection2D.getProjMatrix(), viewMatrix, modelMatrix.translate(0.1f, 0, 0));
+        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.OBJECT.getId());
+        SHADER_PROGRAM.setUniform("resolution", UploadUniformType.ON_CHANGE, frameBufferSize);
+        updateUBO(projection2D.getProjMatrix(), viewMatrix, modelMatrix.translate(0.1f, 0, 0));
 
-        mesh.debugDraw(DrawType.TRIANGLES.getId(), false);
+        MESH.debugDraw(DrawType.TRIANGLES.getId(), false);
 
         if (timer.passed(2000)) {
-            System.out.println("FPS: " + LFJGContext.frame.getFps());
+            System.out.println("FPS: " + frame.getFps());
 //            mesh.debugLogging(
 //                    true,
 //                    true,
@@ -275,12 +277,12 @@ public class TestNewMeshSystem implements LFJGFrame {
 
     @Override
     public void setFrameSetting() {
-        LFJGContext.frame.setFrameSettingValue(RefreshRateSetting.class, -1);
-        LFJGContext.frame.setFrameSettingValue(VSyncSetting.class, VSyncType.V_SYNC_OFF);
-        LFJGContext.frame.setFrameSettingValue(CheckSeveritiesSetting.class, new SeverityType[]{SeverityType.LOW, SeverityType.MEDIUM, SeverityType.HIGH});
+        frame.setFrameSettingValue(RefreshRateSetting.class, -1);
+        frame.setFrameSettingValue(VSyncSetting.class, VSyncType.V_SYNC_OFF);
+        frame.setFrameSettingValue(CheckSeveritiesSetting.class, new SeverityType[]{SeverityType.LOW, SeverityType.MEDIUM, SeverityType.HIGH});
     }
 
     public void setFrame() {
-        LFJGContext.frame = new Frame(this, "TestNewMeshSystem");
+        frame = new Frame(this, "TestNewMeshSystem");
     }
 }

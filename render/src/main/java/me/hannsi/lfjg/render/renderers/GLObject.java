@@ -1,11 +1,9 @@
 package me.hannsi.lfjg.render.renderers;
 
-import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.render.Id;
-import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.system.mesh.BufferObjectType;
@@ -17,9 +15,12 @@ import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL11;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
+import static me.hannsi.lfjg.core.Core.frameBufferSize;
+import static me.hannsi.lfjg.core.Core.projection2D;
+import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
+import static org.lwjgl.opengl.GL11.*;
 
 public class GLObject implements Cloneable {
     private String name;
@@ -151,31 +152,31 @@ public class GLObject implements Cloneable {
 
     private void setupRenderState() {
         if (lineWidth != -1f) {
-            GL11.glLineWidth(lineWidth);
+            glLineWidth(lineWidth);
         }
         if (pointSize != -1f) {
-            GL11.glPointSize(pointSize);
+            glPointSize(pointSize);
         }
 
-        glStateCache.blendFunc(blendType.getSfactor(), blendType.getDfactor());
-        glStateCache.setBlendEquation(blendType.getEquation());
-        glStateCache.enable(GL11.GL_BLEND);
-        glStateCache.disable(GL11.GL_DEPTH_TEST);
+        GL_STATE_CACHE.blendFunc(blendType.getSfactor(), blendType.getDfactor());
+        GL_STATE_CACHE.setBlendEquation(blendType.getEquation());
+        GL_STATE_CACHE.enable(GL_BLEND);
+        GL_STATE_CACHE.disable(GL_DEPTH_TEST);
     }
 
     private void uploadUniforms() {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.OBJECT.getId());
-        LFJGRenderContext.shaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, Core.projection2D.getProjMatrix());
-        LFJGRenderContext.shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, transform.getModelMatrix());
-        LFJGRenderContext.shaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, viewMatrix);
-        LFJGRenderContext.shaderProgram.setUniform("resolution", UploadUniformType.ON_CHANGE, Core.frameBufferSize);
+        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.OBJECT.getId());
+        SHADER_PROGRAM.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, projection2D.getProjMatrix());
+        SHADER_PROGRAM.setUniform("modelMatrix", UploadUniformType.PER_FRAME, transform.getModelMatrix());
+        SHADER_PROGRAM.setUniform("viewMatrix", UploadUniformType.PER_FRAME, viewMatrix);
+        SHADER_PROGRAM.setUniform("resolution", UploadUniformType.ON_CHANGE, frameBufferSize);
         if (mesh.getVboIds().get(BufferObjectType.TEXTURE_BUFFER) != null) {
-            LFJGRenderContext.shaderProgram.setUniform("textureSampler", UploadUniformType.ONCE, 0);
+            SHADER_PROGRAM.setUniform("textureSampler", UploadUniformType.ONCE, 0);
         }
     }
 
     private void bindResources() {
-        LFJGRenderContext.shaderProgram.bind();
+        SHADER_PROGRAM.bind();
 //        LFJGRenderContext.shaderProgram.getMatrix().bind();
     }
 
@@ -261,7 +262,7 @@ public class GLObject implements Cloneable {
     }
 
     public ShaderProgram getShaderProgram() {
-        return LFJGRenderContext.shaderProgram;
+        return SHADER_PROGRAM;
     }
 
     public Matrix4f getViewMatrix() {

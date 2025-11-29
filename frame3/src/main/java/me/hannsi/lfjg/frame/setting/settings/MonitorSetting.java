@@ -3,7 +3,8 @@ package me.hannsi.lfjg.frame.setting.settings;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
-import org.lwjgl.glfw.GLFW;
+
+import static org.lwjgl.glfw.GLFW.*;
 
 /**
  * Represents a setting for the monitor type of a frame.
@@ -27,10 +28,10 @@ public class MonitorSetting extends FrameSettingBase<MonitorType> {
     @Override
     public void updateSetting() {
         if (getValue() == MonitorType.FULL_SCREEN) {
-            GLFW.glfwWindowHint(GLFW.GLFW_AUTO_ICONIFY, GLFW.GLFW_TRUE);
+            glfwWindowHint(GLFW_AUTO_ICONIFY, GLFW_TRUE);
         }
         if (getValue() == MonitorType.BORDERLESS && getValue() == MonitorType.WINDOW) {
-            GLFW.glfwWindowHint(GLFW.GLFW_AUTO_ICONIFY, GLFW.GLFW_FALSE);
+            glfwWindowHint(GLFW_AUTO_ICONIFY, GLFW_FALSE);
         }
     }
 }

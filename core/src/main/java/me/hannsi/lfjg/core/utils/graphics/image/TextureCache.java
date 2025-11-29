@@ -1,6 +1,7 @@
 package me.hannsi.lfjg.core.utils.graphics.image;
 
 import me.hannsi.lfjg.core.debug.DebugLevel;
+import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
@@ -18,6 +19,35 @@ public class TextureCache {
 
     public static TextureCache createTextureCache() {
         return new TextureCache();
+    }
+
+    public void cleanup(String... names) {
+        StringBuilder ids = new StringBuilder();
+        int index = 0;
+        for (String name : names) {
+            TextureLoader textureLoader = textureCaches.get(name);
+            if (textureLoader == null) {
+                DebugLog.warning(getClass(), "The texture cache named " + name + " does not exist.");
+                continue;
+            }
+
+            if (index == 0) {
+                ids.append(textureLoader.getTextureId());
+            } else {
+                ids.append(", ").append(textureLoader.getTextureId());
+            }
+            textureLoader.cleanup();
+            index++;
+
+            textureCaches.remove(name);
+        }
+
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                ids.toString(),
+                ""
+        ).logging(getClass(), DebugLevel.DEBUG);
     }
 
     public void cleanup() {

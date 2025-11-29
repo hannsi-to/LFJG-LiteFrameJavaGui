@@ -3,7 +3,8 @@ package me.hannsi.lfjg.frame.setting.settings;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
-import org.lwjgl.glfw.GLFW;
+
+import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 
 /**
  * Represents a setting for enabling or disabling VSync for a frame.
@@ -27,7 +28,7 @@ public class VSyncSetting extends FrameSettingBase<VSyncType> {
     @Override
     public void updateSetting() {
         if (getFrame().getWindowID() != -1L) {
-            GLFW.glfwSwapInterval(getValue().getId());
+            glfwSwapInterval(getValue().getId());
         }
     }
 }

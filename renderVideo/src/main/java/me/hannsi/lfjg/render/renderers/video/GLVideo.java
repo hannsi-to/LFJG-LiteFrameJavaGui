@@ -8,10 +8,10 @@ import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import me.hannsi.lfjg.render.system.video.VideoFrameSystem;
 import org.joml.Vector2f;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
+import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 
 
 public class GLVideo extends GLPolygon<GLVideo> {
@@ -53,9 +53,9 @@ public class GLVideo extends GLPolygon<GLVideo> {
             this.getShaderProgram().setUniform("objectReplaceColor", UploadUniformType.ON_CHANGE, false);
             this.getShaderProgram().setUniform("objectBlendMode", UploadUniformType.ON_CHANGE, BlendType.NORMAL);
 
-            glStateCache.enable(GL11.GL_TEXTURE_2D);
-            glStateCache.activeTexture(GL13.GL_TEXTURE0);
-            glStateCache.bindTexture(GL11.GL_TEXTURE_2D, videoFrameSystem.getTextureId());
+            GL_STATE_CACHE.enable(GL_TEXTURE_2D);
+            GL_STATE_CACHE.activeTexture(GL_TEXTURE0);
+            GL_STATE_CACHE.bindTexture(GL_TEXTURE_2D, videoFrameSystem.getTextureId());
             super.drawVAORendering();
         }
     }

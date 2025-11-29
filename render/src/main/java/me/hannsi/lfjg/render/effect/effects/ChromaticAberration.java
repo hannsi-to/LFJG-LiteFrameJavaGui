@@ -2,11 +2,12 @@ package me.hannsi.lfjg.render.effect.effects;
 
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
-import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
+
+import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
 
 public class ChromaticAberration extends EffectBase {
     private float offsetAmount = 0.008f;
@@ -69,11 +70,11 @@ public class ChromaticAberration extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.CHROMATIC_ABERRATION.getId());
-        LFJGRenderContext.shaderProgram.setUniform("chromaticAberrationOffsetAmount", UploadUniformType.ON_CHANGE, offsetAmount);
-        LFJGRenderContext.shaderProgram.setUniform("chromaticAberrationAngle", UploadUniformType.ON_CHANGE, angle);
-        LFJGRenderContext.shaderProgram.setUniform("chromaticAberrationStrength", UploadUniformType.ON_CHANGE, strength);
-        LFJGRenderContext.shaderProgram.setUniform("aberrationType", UploadUniformType.ON_CHANGE, aberrationType.getId());
+        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.CHROMATIC_ABERRATION.getId());
+        SHADER_PROGRAM.setUniform("chromaticAberrationOffsetAmount", UploadUniformType.ON_CHANGE, offsetAmount);
+        SHADER_PROGRAM.setUniform("chromaticAberrationAngle", UploadUniformType.ON_CHANGE, angle);
+        SHADER_PROGRAM.setUniform("chromaticAberrationStrength", UploadUniformType.ON_CHANGE, strength);
+        SHADER_PROGRAM.setUniform("aberrationType", UploadUniformType.ON_CHANGE, aberrationType.getId());
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

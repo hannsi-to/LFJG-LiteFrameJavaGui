@@ -4,7 +4,8 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
 import me.hannsi.lfjg.frame.system.GLFWUtil;
-import org.lwjgl.glfw.GLFW;
+
+import static org.lwjgl.glfw.GLFW.GLFW_FLOATING;
 
 /**
  * Represents a setting for floating windows in a frame.
@@ -27,7 +28,7 @@ public class FloatingSetting extends FrameSettingBase<Boolean> {
      */
     @Override
     public void updateSetting() {
-        GLFWUtil.windowHintBoolean(GLFW.GLFW_FLOATING, getValue());
+        GLFWUtil.windowHintBoolean(GLFW_FLOATING, getValue());
 
         super.updateSetting();
     }

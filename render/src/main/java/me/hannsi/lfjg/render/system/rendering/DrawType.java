@@ -1,17 +1,18 @@
 package me.hannsi.lfjg.render.system.rendering;
 
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
-import org.lwjgl.opengl.GL11;
+
+import static org.lwjgl.opengl.GL11.*;
 
 public enum DrawType implements IEnumTypeBase {
-    POINTS(GL11.GL_POINTS, "Points", 1),
-    LINES(GL11.GL_LINES, "Lines", -1),
-    LINE_STRIP(GL11.GL_LINE_STRIP, "LineStrip", -1),
-    LINE_LOOP(GL11.GL_LINE_LOOP, "LineLoop", -1),
-    TRIANGLES(GL11.GL_TRIANGLES, "Triangles", 3),
-    TRIANGLE_FAN(GL11.GL_TRIANGLE_FAN, "TriangleFan", 3),
-    QUADS(GL11.GL_TRIANGLES, "Quads", 4),
-    POLYGON(GL11.GL_TRIANGLES, "Polygon", -1);
+    POINTS(GL_POINTS, "Points", 1),
+    LINES(GL_LINES, "Lines", -1),
+    LINE_STRIP(GL_LINE_STRIP, "LineStrip", -1),
+    LINE_LOOP(GL_LINE_LOOP, "LineLoop", -1),
+    TRIANGLES(GL_TRIANGLES, "Triangles", 3),
+    TRIANGLE_FAN(GL_TRIANGLE_FAN, "TriangleFan", 3),
+    QUADS(GL_TRIANGLES, "Quads", 4),
+    POLYGON(GL_TRIANGLES, "Polygon", -1);
 
     final int id;
     final String name;

@@ -3,15 +3,17 @@ package me.hannsi.lfjg.render.system.mesh.persistent;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerator;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL44;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 
 import static me.hannsi.lfjg.core.Core.UNSAFE;
-import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
+import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL30.glFlushMappedBufferRange;
+import static org.lwjgl.opengl.GL30.glMapBufferRange;
+import static org.lwjgl.opengl.GL44.glBufferStorage;
 
 public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
     private final int flags;
@@ -36,16 +38,16 @@ public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
     public void allocationBufferStorage(long capacity) {
         gpuMemorySize = capacity;
         if (bufferId != 0) {
-            glStateCache.deleteElementArrayBuffer(bufferId);
+            GL_STATE_CACHE.deleteElementArrayBuffer(bufferId);
             bufferId = 0;
         }
 
-        bufferId = GL15.glGenBuffers();
-        glStateCache.bindElementArrayBuffer(bufferId);
-        GL44.glBufferStorage(GL15.GL_ELEMENT_ARRAY_BUFFER, gpuMemorySize, flags);
+        bufferId = glGenBuffers();
+        GL_STATE_CACHE.bindElementArrayBuffer(bufferId);
+        glBufferStorage(GL_ELEMENT_ARRAY_BUFFER, gpuMemorySize, flags);
 
-        ByteBuffer byteBuffer = GL30.glMapBufferRange(
-                GL15.GL_ELEMENT_ARRAY_BUFFER,
+        ByteBuffer byteBuffer = glMapBufferRange(
+                GL_ELEMENT_ARRAY_BUFFER,
                 0,
                 gpuMemorySize,
                 flags
@@ -58,7 +60,7 @@ public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
     }
 
     public TestPersistentMappedEBO linkVertexArrayObject(int vaoId) {
-        glStateCache.bindElementArrayBufferForce(bufferId);
+        GL_STATE_CACHE.bindElementArrayBufferForce(bufferId);
 
         return this;
     }
@@ -93,7 +95,7 @@ public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
     public void flushMappedRange(long byteOffset, long byteLength) {
         final int GL_MAP_COHERENT_BIT = GL44.GL_MAP_COHERENT_BIT;
         if ((flags & GL_MAP_COHERENT_BIT) == 0) {
-            GL44.glFlushMappedBufferRange(GL15.GL_ELEMENT_ARRAY_BUFFER, byteOffset, byteLength);
+            glFlushMappedBufferRange(GL_ELEMENT_ARRAY_BUFFER, byteOffset, byteLength);
         }
     }
 
@@ -137,11 +139,11 @@ public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
             try {
                 MemoryUtil.memCopy(oldAddr, tmp, bytesToCopy);
 
-                boolean unmapped = GL30.glUnmapBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER);
+                boolean unmapped = glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
                 if (!unmapped) {
                     DebugLog.error(getClass(), "glUnmapBuffer returned false (may indicate corruption).");
                 }
-                glStateCache.deleteElementArrayBuffer(bufferId);
+                GL_STATE_CACHE.deleteElementArrayBuffer(bufferId);
                 bufferId = 0;
                 mappedBuffer = null;
                 mappedAddress = 0;
@@ -156,8 +158,8 @@ public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
                 MemoryUtil.nmemFree(tmp);
             }
         } else {
-            GL30.glUnmapBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER);
-            glStateCache.deleteElementArrayBuffer(bufferId);
+            glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+            GL_STATE_CACHE.deleteElementArrayBuffer(bufferId);
             bufferId = 0;
             mappedBuffer = null;
             mappedAddress = 0;
@@ -210,7 +212,7 @@ public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
     @Override
     public void cleanup() {
         if (bufferId != 0) {
-            glStateCache.deleteElementArrayBuffer(bufferId);
+            GL_STATE_CACHE.deleteElementArrayBuffer(bufferId);
             bufferId = 0;
         }
         mappedBuffer = null;

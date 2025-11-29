@@ -1,9 +1,6 @@
 package me.hannsi.lfjg.render.system.mesh.persistent;
 
 import me.hannsi.lfjg.render.system.shader.STD140UniformBlockType;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.GL31;
 import org.lwjgl.opengl.GL44;
 import org.lwjgl.system.MemoryUtil;
 
@@ -11,7 +8,13 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
+import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.glGenBuffers;
+import static org.lwjgl.opengl.GL30.glFlushMappedBufferRange;
+import static org.lwjgl.opengl.GL30.glMapBufferRange;
+import static org.lwjgl.opengl.GL31.GL_UNIFORM_BUFFER;
+import static org.lwjgl.opengl.GL44.glBufferStorage;
 
 
 public class TestPersistentMappedUBO implements TestPersistentMappedBuffer {
@@ -38,16 +41,16 @@ public class TestPersistentMappedUBO implements TestPersistentMappedBuffer {
     public void allocationBufferStorage(long capacity) {
         gpuMemorySize = capacity;
         if (bufferId != 0) {
-            glStateCache.deleteUniformBuffer(bufferId);
+            GL_STATE_CACHE.deleteUniformBuffer(bufferId);
             bufferId = 0;
         }
 
-        bufferId = GL15.glGenBuffers();
-        glStateCache.bindUniformBuffer(bufferId);
-        GL44.glBufferStorage(GL31.GL_UNIFORM_BUFFER, gpuMemorySize, flags);
+        bufferId = glGenBuffers();
+        GL_STATE_CACHE.bindUniformBuffer(bufferId);
+        glBufferStorage(GL_UNIFORM_BUFFER, gpuMemorySize, flags);
 
-        ByteBuffer byteBuffer = GL30.glMapBufferRange(
-                GL31.GL_UNIFORM_BUFFER,
+        ByteBuffer byteBuffer = glMapBufferRange(
+                GL_UNIFORM_BUFFER,
                 0,
                 gpuMemorySize,
                 flags
@@ -84,7 +87,7 @@ public class TestPersistentMappedUBO implements TestPersistentMappedBuffer {
     public void flushMappedRange(long byteOffset, long byteLength) {
         final int GL_MAP_COHERENT_BIT = GL44.GL_MAP_COHERENT_BIT;
         if ((flags & GL_MAP_COHERENT_BIT) == 0) {
-            GL44.glFlushMappedBufferRange(GL15.GL_ARRAY_BUFFER, byteOffset, byteLength);
+            glFlushMappedBufferRange(GL_ARRAY_BUFFER, byteOffset, byteLength);
         }
     }
 

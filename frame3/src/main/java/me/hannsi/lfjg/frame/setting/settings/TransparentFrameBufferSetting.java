@@ -4,7 +4,8 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
 import me.hannsi.lfjg.frame.system.GLFWUtil;
-import org.lwjgl.glfw.GLFW;
+
+import static org.lwjgl.glfw.GLFW.GLFW_TRANSPARENT_FRAMEBUFFER;
 
 /**
  * Represents a setting for enabling or disabling the transparent framebuffer property of a frame.
@@ -27,7 +28,7 @@ public class TransparentFrameBufferSetting extends FrameSettingBase<Boolean> {
      */
     @Override
     public void updateSetting() {
-        GLFWUtil.windowHintBoolean(GLFW.GLFW_TRANSPARENT_FRAMEBUFFER, getValue());
+        GLFWUtil.windowHintBoolean(GLFW_TRANSPARENT_FRAMEBUFFER, getValue());
 
         super.updateSetting();
     }

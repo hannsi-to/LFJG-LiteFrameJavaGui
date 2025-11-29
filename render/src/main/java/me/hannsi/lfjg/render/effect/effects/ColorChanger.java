@@ -1,11 +1,12 @@
 package me.hannsi.lfjg.render.effect.effects;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
-import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
+
+import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
 
 public class ColorChanger extends EffectBase {
     private boolean alpha = false;
@@ -37,10 +38,10 @@ public class ColorChanger extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.COLOR_CHANGER.getId());
-        LFJGRenderContext.shaderProgram.setUniform("colorChangerAlpha", UploadUniformType.ON_CHANGE, alpha);
-        LFJGRenderContext.shaderProgram.setUniform("colorChangerTargetColor", UploadUniformType.ON_CHANGE, targetColor);
-        LFJGRenderContext.shaderProgram.setUniform("colorChangerNewColor", UploadUniformType.ON_CHANGE, newColor);
+        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.COLOR_CHANGER.getId());
+        SHADER_PROGRAM.setUniform("colorChangerAlpha", UploadUniformType.ON_CHANGE, alpha);
+        SHADER_PROGRAM.setUniform("colorChangerTargetColor", UploadUniformType.ON_CHANGE, targetColor);
+        SHADER_PROGRAM.setUniform("colorChangerNewColor", UploadUniformType.ON_CHANGE, newColor);
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

@@ -13,6 +13,8 @@ import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
+import static me.hannsi.lfjg.audio.LFJGOpenALContext.openALDevice;
+
 public class SoundCache {
     private final long context;
     private final Map<String, SoundData> soundDataList;
@@ -21,12 +23,12 @@ public class SoundCache {
     SoundCache(String desiredDevice) {
         soundDataList = new HashMap<>();
 
-        LFJGOpenALContext.openALDevice = ALC10.alcOpenDevice(desiredDevice);
-        if (LFJGOpenALContext.openALDevice == MemoryUtil.NULL) {
+        openALDevice = ALC10.alcOpenDevice(desiredDevice);
+        if (openALDevice == MemoryUtil.NULL) {
             throw new IllegalStateException("Failed to open the default OpenAL device.");
         }
-        ALCCapabilities deviceCaps = ALC.createCapabilities(LFJGOpenALContext.openALDevice);
-        this.context = ALC10.alcCreateContext(LFJGOpenALContext.openALDevice, (IntBuffer) null);
+        ALCCapabilities deviceCaps = ALC.createCapabilities(openALDevice);
+        this.context = ALC10.alcCreateContext(openALDevice, (IntBuffer) null);
         if (context == MemoryUtil.NULL) {
             throw new IllegalStateException("Failed to create OpenAL context.");
         }
@@ -63,8 +65,8 @@ public class SoundCache {
         if (context != MemoryUtil.NULL) {
             ALC10.alcDestroyContext(context);
         }
-        if (LFJGOpenALContext.openALDevice != MemoryUtil.NULL) {
-            ALC10.alcCloseDevice(LFJGOpenALContext.openALDevice);
+        if (openALDevice != MemoryUtil.NULL) {
+            ALC10.alcCloseDevice(openALDevice);
         }
 
         new LogGenerator(
@@ -102,7 +104,7 @@ public class SoundCache {
     }
 
     public long getOpenALDevice() {
-        return LFJGOpenALContext.openALDevice;
+        return openALDevice;
     }
 
     public long getContext() {

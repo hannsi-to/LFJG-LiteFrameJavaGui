@@ -5,7 +5,8 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
 import me.hannsi.lfjg.frame.system.GLFWUtil;
-import org.lwjgl.glfw.GLFW;
+
+import static org.lwjgl.glfw.GLFW.glfwSetWindowIcon;
 
 /**
  * Represents a setting for the icon of a frame.
@@ -31,7 +32,7 @@ public class IconSetting extends FrameSettingBase<Location> {
     public void updateSetting() {
         if (getFrame().getWindowID() != -1L) {
             if (getValue() == null) {
-                GLFW.glfwSetWindowIcon(getFrame().getWindowID(), null);
+                glfwSetWindowIcon(getFrame().getWindowID(), null);
             } else {
                 GLFWUtil.setWindowIcon(getFrame().getWindowID(), getValue());
             }

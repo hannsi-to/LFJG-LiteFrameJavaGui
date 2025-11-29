@@ -10,33 +10,33 @@ import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import static me.hannsi.lfjg.core.SystemSetting.*;
 
 public class LFJGRenderContext {
-    public static IdPool idPool;
-    public static GLObjectPool glObjectPool;
-    public static Camera mainCamera;
-    public static ShaderProgram shaderProgram;
-    public static TestMesh mesh;
-    public static GLStateCache glStateCache;
-    public static TextureCache textureCache;
+    public static final IdPool ID_POOL;
+    public static final GLObjectPool GL_OBJECT_POOL;
+    public static final Camera MAIN_CAMERA;
+    public static final ShaderProgram SHADER_PROGRAM;
+    public static final TestMesh MESH;
+    public static final GLStateCache GL_STATE_CACHE;
+    public static final TextureCache TEXTURE_CACHE;
 
     static {
-        idPool = new IdPool();
-        glObjectPool = new GLObjectPool();
+        ID_POOL = new IdPool();
+        GL_OBJECT_POOL = new GLObjectPool();
 
-        mainCamera = new Camera();
+        MAIN_CAMERA = new Camera();
 
-        glStateCache = new GLStateCache();
+        GL_STATE_CACHE = new GLStateCache();
 
-        shaderProgram = new ShaderProgram();
-        shaderProgram.createVertexShader(Location.fromResource("shader/VertexShader.vsh"));
-        shaderProgram.createFragmentShader(Location.fromResource("shader/FragmentShader.fsh"));
-        shaderProgram.link();
+        SHADER_PROGRAM = new ShaderProgram();
+        SHADER_PROGRAM.createVertexShader(Location.fromResource("shader/VertexShader.vsh"));
+        SHADER_PROGRAM.createFragmentShader(Location.fromResource("shader/FragmentShader.fsh"));
+        SHADER_PROGRAM.link();
 
-        mesh = TestMesh.createMesh(
+        MESH = TestMesh.createMesh(
                 LFJG_RENDER_CONTEXT_INITIAL_VBO_CAPACITY,
                 LFJG_RENDER_CONTEXT_INITIAL_EBO_CAPACITY,
                 LFJG_RENDER_CONTEXT_INITIAL_IBO_CAPACITY
         );
 
-        textureCache = TextureCache.createTextureCache();
+        TEXTURE_CACHE = TextureCache.createTextureCache();
     }
 }

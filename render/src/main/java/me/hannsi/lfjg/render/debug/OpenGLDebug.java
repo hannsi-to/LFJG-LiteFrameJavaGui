@@ -5,7 +5,6 @@ import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.reflection.StackTraceUtil;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL43;
 import org.lwjgl.opengl.GLDebugMessageCallback;
 import org.lwjgl.system.MemoryUtil;
 
@@ -13,7 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static me.hannsi.lfjg.core.Core.OPEN_GL_PARAMETER_NAME_MAP;
-import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
+import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static org.lwjgl.opengl.GL43.*;
 
 public class OpenGLDebug {
     public static final Map<Integer, Integer> OPEN_GL_DEBUG_SEVERITY_MAP = new HashMap<Integer, Integer>() {{
@@ -25,9 +25,9 @@ public class OpenGLDebug {
 
     public static void getOpenGLDebug(String mainThreadName, int[] severityTypes) {
         if (GL.getCapabilities().OpenGL43) {
-            glStateCache.enable(GL43.GL_DEBUG_OUTPUT);
-            glStateCache.enable(GL43.GL_DEBUG_OUTPUT_SYNCHRONOUS);
-            GL43.glDebugMessageCallback(new GLDebugMessageCallback() {
+            GL_STATE_CACHE.enable(GL_DEBUG_OUTPUT);
+            GL_STATE_CACHE.enable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+            glDebugMessageCallback(new GLDebugMessageCallback() {
                 @Override
                 public void invoke(int source, int type, int id, int severity, int length, long message, long userParam) {
                     String errorMessage = MemoryUtil.memUTF8(message);
@@ -48,11 +48,11 @@ public class OpenGLDebug {
                                     "Stack Trace: \n" + stackTrace
                             );
 
-                            if (type == GL43.GL_DEBUG_TYPE_ERROR || severity == GL43.GL_DEBUG_SEVERITY_HIGH) {
+                            if (type == GL_DEBUG_TYPE_ERROR || severity == GL_DEBUG_SEVERITY_HIGH) {
                                 logGenerator.logging(getClass(), DebugLevel.ERROR);
-                            } else if (severity == GL43.GL_DEBUG_SEVERITY_MEDIUM) {
+                            } else if (severity == GL_DEBUG_SEVERITY_MEDIUM) {
                                 logGenerator.logging(getClass(), DebugLevel.WARNING);
-                            } else if (severity == GL43.GL_DEBUG_SEVERITY_LOW) {
+                            } else if (severity == GL_DEBUG_SEVERITY_LOW) {
                                 logGenerator.logging(getClass(), DebugLevel.INFO);
                             } else {
                                 logGenerator.logging(getClass(), DebugLevel.DEBUG);
@@ -68,17 +68,17 @@ public class OpenGLDebug {
 
     public static String getSourceString(int source) {
         switch (source) {
-            case GL43.GL_DEBUG_SOURCE_API:
+            case GL_DEBUG_SOURCE_API:
                 return "API";
-            case GL43.GL_DEBUG_SOURCE_WINDOW_SYSTEM:
+            case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
                 return "Window System";
-            case GL43.GL_DEBUG_SOURCE_SHADER_COMPILER:
+            case GL_DEBUG_SOURCE_SHADER_COMPILER:
                 return "Shader Compiler";
-            case GL43.GL_DEBUG_SOURCE_THIRD_PARTY:
+            case GL_DEBUG_SOURCE_THIRD_PARTY:
                 return "Third Party";
-            case GL43.GL_DEBUG_SOURCE_APPLICATION:
+            case GL_DEBUG_SOURCE_APPLICATION:
                 return "Application";
-            case GL43.GL_DEBUG_SOURCE_OTHER:
+            case GL_DEBUG_SOURCE_OTHER:
                 return "Other";
             default:
                 return "Unknown";
@@ -87,17 +87,17 @@ public class OpenGLDebug {
 
     public static String getTypeString(int type) {
         switch (type) {
-            case GL43.GL_DEBUG_TYPE_ERROR:
+            case GL_DEBUG_TYPE_ERROR:
                 return "Error";
-            case GL43.GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+            case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
                 return "Deprecated Behavior";
-            case GL43.GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+            case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
                 return "Undefined Behavior";
-            case GL43.GL_DEBUG_TYPE_PORTABILITY:
+            case GL_DEBUG_TYPE_PORTABILITY:
                 return "Portability";
-            case GL43.GL_DEBUG_TYPE_PERFORMANCE:
+            case GL_DEBUG_TYPE_PERFORMANCE:
                 return "Performance";
-            case GL43.GL_DEBUG_TYPE_OTHER:
+            case GL_DEBUG_TYPE_OTHER:
                 return "Other";
             default:
                 return "Unknown";
@@ -106,13 +106,13 @@ public class OpenGLDebug {
 
     public static String getSeverityString(int severity) {
         switch (severity) {
-            case GL43.GL_DEBUG_SEVERITY_NOTIFICATION:
+            case GL_DEBUG_SEVERITY_NOTIFICATION:
                 return "Notification";
-            case GL43.GL_DEBUG_SEVERITY_LOW:
+            case GL_DEBUG_SEVERITY_LOW:
                 return "Low";
-            case GL43.GL_DEBUG_SEVERITY_MEDIUM:
+            case GL_DEBUG_SEVERITY_MEDIUM:
                 return "Medium";
-            case GL43.GL_DEBUG_SEVERITY_HIGH:
+            case GL_DEBUG_SEVERITY_HIGH:
                 return "High";
             default:
                 return "Unknown";

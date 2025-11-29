@@ -5,12 +5,13 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.IntBuffer;
 import java.util.Objects;
+
+import static org.lwjgl.opengl.GL11.*;
 
 public class HelloWorld {
     private long window;
@@ -71,27 +72,27 @@ public class HelloWorld {
     private void loop() {
         GL.createCapabilities();
 
-        GL11.glViewport(0, 0, 1920, 1080);
+        glViewport(0, 0, 1920, 1080);
 
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
-        GL11.glLoadIdentity();
-        GL11.glOrtho(0, 1920, 0, 1080, -1, 1);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(0, 1920, 0, 1080, -1, 1);
 
-        GL11.glMatrixMode(GL11.GL_MODELVIEW);
-        GL11.glLoadIdentity();
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
 
-        GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
         while (!GLFW.glfwWindowShouldClose(window)) {
-            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            GL11.glBegin(GL11.GL_QUADS);
-            GL11.glColor4f(1f, 0f, 1f, 1f);
-            GL11.glVertex2f(200, 200);
-            GL11.glVertex2f(700, 200);
-            GL11.glVertex2f(700, 700);
-            GL11.glVertex2f(200, 700);
-            GL11.glEnd();
+            glBegin(GL_QUADS);
+            glColor4f(1f, 0f, 1f, 1f);
+            glVertex2f(200, 200);
+            glVertex2f(700, 200);
+            glVertex2f(700, 700);
+            glVertex2f(200, 700);
+            glEnd();
 
             GLFW.glfwSwapBuffers(window);
 

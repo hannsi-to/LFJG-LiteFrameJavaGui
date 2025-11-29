@@ -40,14 +40,14 @@ public class Core {
 
     public static final int LWJGL_VERSION;
 
-    public static final boolean enableLFJGAudioSystem;
-    public static final boolean enableLFJGFrame2System;
-    public static final boolean enableLFJGFrame3System;
-    public static final boolean enableLFJGJCefSystem;
-    public static final boolean enableLFJGPhysicSystem;
-    public static final boolean enableLFJGRenderSystem;
-    public static final boolean enableLFJGRenderTextSystem;
-    public static final boolean enableLFJGRenderVideoSystem;
+    public static final boolean ENABLE_LFJG_AUDIO_SYSTEM;
+    public static final boolean ENABLE_LFJG_FRAME_2_SYSTEM;
+    public static final boolean ENABLE_LFJG_FRAME_3_SYSTEM;
+    public static final boolean ENABLE_LFJGJ_CEF_SYSTEM;
+    public static final boolean ENABLE_LFJG_PHYSIC_SYSTEM;
+    public static final boolean ENABLE_LFJG_RENDER_SYSTEM;
+    public static final boolean ENABLE_LFJG_RENDER_TEXT_SYSTEM;
+    public static final boolean ENABLE_LFJG_RENDER_VIDEO_SYSTEM;
     public static final Unsafe UNSAFE;
     public static final Map<String, Integer> OPEN_GL_PARAMETER_NAME_MAP = new HashMap<>();
     public static final EventManager EVENT_MANAGER;
@@ -79,51 +79,51 @@ public class Core {
             DebugLog.error(Core.class, "LWJGL not found");
         }
 
-        enableLFJGAudioSystem = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_AUDIO_SYSTEM_PATH + DEFAULT_LFJG_AUDIO_CORE_CLASS_NAME);
-        enableLFJGFrame2System = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME2_CORE_CLASS_NAME);
-        enableLFJGFrame3System = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME3_CORE_CLASS_NAME);
-        enableLFJGJCefSystem = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_JCEF_SYSTEM_PATH + DEFAULT_LFJG_JCEF_CORE_CLASS_NAME);
-        enableLFJGPhysicSystem = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_PHYSIC_SYSTEM_PATH + DEFAULT_LFJG_PHYSIC_CORE_CLASS_NAME);
-        enableLFJGRenderSystem = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_CORE_CLASS_NAME);
-        enableLFJGRenderTextSystem = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_TEXT_CORE_CLASS_NAME);
-        enableLFJGRenderVideoSystem = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_VIDEO_CORE_CLASS_NAME);
+        ENABLE_LFJG_AUDIO_SYSTEM = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_AUDIO_SYSTEM_PATH + DEFAULT_LFJG_AUDIO_CORE_CLASS_NAME);
+        ENABLE_LFJG_FRAME_2_SYSTEM = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME2_CORE_CLASS_NAME);
+        ENABLE_LFJG_FRAME_3_SYSTEM = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME3_CORE_CLASS_NAME);
+        ENABLE_LFJGJ_CEF_SYSTEM = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_JCEF_SYSTEM_PATH + DEFAULT_LFJG_JCEF_CORE_CLASS_NAME);
+        ENABLE_LFJG_PHYSIC_SYSTEM = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_PHYSIC_SYSTEM_PATH + DEFAULT_LFJG_PHYSIC_CORE_CLASS_NAME);
+        ENABLE_LFJG_RENDER_SYSTEM = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_CORE_CLASS_NAME);
+        ENABLE_LFJG_RENDER_TEXT_SYSTEM = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_TEXT_CORE_CLASS_NAME);
+        ENABLE_LFJG_RENDER_VIDEO_SYSTEM = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_VIDEO_CORE_CLASS_NAME);
 
-        if (enableLFJGAudioSystem) {
+        if (ENABLE_LFJG_AUDIO_SYSTEM) {
             Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_AUDIO_SYSTEM_PATH + DEFAULT_LFJG_AUDIO_CORE_CLASS_NAME);
             lfjgAudioServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
             DebugLog.info(instance.getClass(), lfjgAudioServiceData.toString());
         }
-        if (enableLFJGFrame2System) {
+        if (ENABLE_LFJG_FRAME_2_SYSTEM) {
             Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME2_CORE_CLASS_NAME);
             lfjgFrameServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
             DebugLog.info(instance.getClass(), lfjgFrameServiceData.toString());
         }
-        if (enableLFJGFrame3System) {
+        if (ENABLE_LFJG_FRAME_3_SYSTEM) {
             Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME3_CORE_CLASS_NAME);
             lfjgFrameServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
             DebugLog.info(instance.getClass(), lfjgFrameServiceData.toString());
         }
-        if (enableLFJGJCefSystem) {
+        if (ENABLE_LFJGJ_CEF_SYSTEM) {
             Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_JCEF_SYSTEM_PATH + DEFAULT_LFJG_JCEF_CORE_CLASS_NAME);
             lfjgJCefServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
             DebugLog.info(instance.getClass(), lfjgJCefServiceData.toString());
         }
-        if (enableLFJGPhysicSystem) {
+        if (ENABLE_LFJG_PHYSIC_SYSTEM) {
             Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_PHYSIC_SYSTEM_PATH + DEFAULT_LFJG_PHYSIC_CORE_CLASS_NAME);
             lfjgPhysicServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
             DebugLog.info(instance.getClass(), lfjgPhysicServiceData.toString());
         }
-        if (enableLFJGRenderSystem) {
+        if (ENABLE_LFJG_RENDER_SYSTEM) {
             Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_CORE_CLASS_NAME);
             lfjgRenderServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
             DebugLog.info(instance.getClass(), lfjgRenderServiceData.toString());
         }
-        if (enableLFJGRenderTextSystem) {
+        if (ENABLE_LFJG_RENDER_TEXT_SYSTEM) {
             Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_TEXT_CORE_CLASS_NAME);
             lfjgRenderTextServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
             DebugLog.info(instance.getClass(), lfjgRenderTextServiceData.toString());
         }
-        if (enableLFJGRenderVideoSystem) {
+        if (ENABLE_LFJG_RENDER_VIDEO_SYSTEM) {
             Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_VIDEO_CORE_CLASS_NAME);
             lfjgRenderVideoServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
             DebugLog.info(instance.getClass(), lfjgRenderVideoServiceData.toString());
@@ -156,7 +156,6 @@ public class Core {
                     Class.forName(GL31.PACKAGE),
                     Class.forName(GL32.PACKAGE),
                     Class.forName(GL33.PACKAGE),
-                    Class.forName(GL43.PACKAGE),
                     Class.forName(GL40.PACKAGE),
                     Class.forName(GL41.PACKAGE),
                     Class.forName(GL42.PACKAGE),
@@ -285,7 +284,7 @@ public class Core {
         public static final String PACKAGE = "org.lwjgl.opengl.GL30";
 
         public static void glGenerateMipmap(int target) {
-            if (!enableLFJGRenderSystem) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
                 return;
             }
 
@@ -321,7 +320,7 @@ public class Core {
         public static final String PACKAGE = "org.lwjgl.opengl.GL11";
 
         public static void glClearColor(float red, float green, float blue, float alpha) {
-            if (!enableLFJGRenderSystem) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
                 return;
             }
 
@@ -329,7 +328,7 @@ public class Core {
         }
 
         public static void glClear(int mask) {
-            if (!enableLFJGRenderSystem) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
                 return;
             }
 
@@ -337,7 +336,7 @@ public class Core {
         }
 
         public static void glViewport(int x, int y, int w, int h) {
-            if (!enableLFJGRenderSystem) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
                 return;
             }
 
@@ -345,7 +344,7 @@ public class Core {
         }
 
         public static void glMatrixMode(int mode) {
-            if (!enableLFJGRenderSystem) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
                 return;
             }
 
@@ -353,7 +352,7 @@ public class Core {
         }
 
         public static void glLoadIdentity() {
-            if (!enableLFJGRenderSystem) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
                 return;
             }
 
@@ -361,7 +360,7 @@ public class Core {
         }
 
         public static void glOrtho(double l, double r, double b, double t, double n, double f) {
-            if (!enableLFJGRenderSystem) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
                 return;
             }
 
@@ -369,7 +368,7 @@ public class Core {
         }
 
         public static void glPushAttrib(int mask) {
-            if (!enableLFJGRenderSystem) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
                 return;
             }
 
@@ -377,7 +376,7 @@ public class Core {
         }
 
         public static void glPopAttrib() {
-            if (!enableLFJGRenderSystem) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
                 return;
             }
 
@@ -385,7 +384,7 @@ public class Core {
         }
 
         public static void glDeleteTextures(int texture) {
-            if (!enableLFJGRenderSystem) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
                 return;
             }
 
@@ -393,7 +392,7 @@ public class Core {
         }
 
         public static int glGenTextures() {
-            if (!enableLFJGRenderSystem) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
                 return -1;
             }
 
@@ -406,7 +405,7 @@ public class Core {
         }
 
         public static void glBindTexture(int target, int texture) {
-            if (!enableLFJGRenderSystem) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
                 return;
             }
 
@@ -414,7 +413,7 @@ public class Core {
         }
 
         public static void glPixelStorei(int pname, int param) {
-            if (!enableLFJGRenderSystem) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
                 return;
             }
 
@@ -422,7 +421,7 @@ public class Core {
         }
 
         public static void glTexImage2D(int target, int level, int internalformat, int width, int height, int border, int format, int type, @Nullable ByteBuffer pixels) {
-            if (!enableLFJGRenderSystem) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
                 return;
             }
 
@@ -430,7 +429,7 @@ public class Core {
         }
 
         public static void glTexParameteri(int target, int pname, int param) {
-            if (!enableLFJGRenderSystem) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
                 return;
             }
 
@@ -442,7 +441,7 @@ public class Core {
         public static final String PACKAGE = "org.lwjgl.opengl.GL";
 
         public static void createCapabilities() {
-            if (!enableLFJGRenderSystem) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
                 return;
             }
 
@@ -450,7 +449,7 @@ public class Core {
         }
 
         public static Object getCapabilities() {
-            if (!enableLFJGRenderSystem) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
                 return null;
             }
 
@@ -603,7 +602,7 @@ public class Core {
         public static final int GLFW_KEY_WORLD_2 = getStaticIntField(PACKAGE, "GLFW_KEY_WORLD_2");
 
         public static double glfwGetTime() {
-            if (!enableLFJGFrame3System) {
+            if (!ENABLE_LFJG_FRAME_3_SYSTEM) {
                 return -1d;
             }
 
@@ -620,7 +619,7 @@ public class Core {
         public static final String PACKAGE = DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + ".debug.OpenGLDebug";
 
         public static void getOpenGLDebug(String mainThreadName, int[] severitiesId) {
-            if (!enableLFJGRenderSystem) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
                 return;
             }
 
@@ -634,7 +633,7 @@ public class Core {
         public static final Object glStateCache = getStaticFieldValue(PACKAGE, "glStateCache");
 
         public static void enable(int target) {
-            if (!enableLFJGRenderSystem || glStateCache == null) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM || glStateCache == null) {
                 return;
             }
 
@@ -642,7 +641,7 @@ public class Core {
         }
 
         public static void disable(int target) {
-            if (!enableLFJGRenderSystem || glStateCache == null) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM || glStateCache == null) {
                 return;
             }
 
@@ -650,7 +649,7 @@ public class Core {
         }
 
         public static void bindTexture(int target, int texture) {
-            if (!enableLFJGRenderSystem || glStateCache == null) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM || glStateCache == null) {
                 return;
             }
 

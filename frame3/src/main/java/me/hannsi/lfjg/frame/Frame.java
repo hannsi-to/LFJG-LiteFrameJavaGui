@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.frame;
 
-import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.event.EventHandler;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
@@ -23,7 +22,6 @@ import me.hannsi.lfjg.frame.system.LFJGFrame;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.Callbacks;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWNativeWin32;
 import org.lwjgl.system.MemoryUtil;
@@ -31,6 +29,12 @@ import org.lwjgl.system.MemoryUtil;
 import java.util.concurrent.locks.LockSupport;
 
 import static me.hannsi.lfjg.core.Core.*;
+import static me.hannsi.lfjg.core.Core.GL.createCapabilities;
+import static me.hannsi.lfjg.core.Core.GL11.*;
+import static me.hannsi.lfjg.core.Core.LFJGRenderContext.disable;
+import static me.hannsi.lfjg.core.Core.LFJGRenderContext.enable;
+import static me.hannsi.lfjg.frame.LFJGFrameContext.windowSize;
+import static org.lwjgl.glfw.GLFW.*;
 
 public class Frame implements IFrame {
     private final LFJGFrame lfjgFrame;
@@ -56,7 +60,7 @@ public class Frame implements IFrame {
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             shouldCleanup = true;
-            GLFW.glfwPostEmptyEvent();
+            glfwPostEmptyEvent();
         }));
 
         this.threadName = threadName;
@@ -95,13 +99,13 @@ public class Frame implements IFrame {
     private void initGLFW() {
         GLFWDebug.getGLFWDebug(this);
 
-        if (!GLFW.glfwInit()) {
+        if (!glfwInit()) {
             throw new IllegalStateException("Unable to initialize GLFW");
         }
 
         glfwWindowHints();
 
-        windowID = GLFW.glfwCreateWindow(getFrameSettingValue(WidthSetting.class), getFrameSettingValue(HeightSetting.class), getFrameSettingValue(TitleSetting.class).toString(), GLFWUtil.getMonitorTypeCode(getFrameSettingValue(MonitorSetting.class)), MemoryUtil.NULL);
+        windowID = glfwCreateWindow(getFrameSettingValue(WidthSetting.class), getFrameSettingValue(HeightSetting.class), getFrameSettingValue(TitleSetting.class).toString(), GLFWUtil.getMonitorTypeCode(getFrameSettingValue(MonitorSetting.class)), MemoryUtil.NULL);
         if (windowID == MemoryUtil.NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
         }
@@ -116,9 +120,9 @@ public class Frame implements IFrame {
         contentScaleX = contentScale.x();
         contentScaleY = contentScale.y();
 
-        GLFW.glfwMakeContextCurrent(windowID);
-        GLFW.glfwSwapInterval(((VSyncType) getFrameSettingValue(VSyncSetting.class)).getId());
-        GLFW.glfwShowWindow(windowID);
+        glfwMakeContextCurrent(windowID);
+        glfwSwapInterval(((VSyncType) getFrameSettingValue(VSyncSetting.class)).getId());
+        glfwShowWindow(windowID);
     }
 
     private void registerManagers() {
@@ -133,10 +137,10 @@ public class Frame implements IFrame {
     private void initRendering() {
         switch (renderingType) {
             case OPEN_GL:
-                if (GLFW.glfwGetCurrentContext() == 0) {
+                if (glfwGetCurrentContext() == 0) {
                     throw new IllegalStateException("OpenGL context must be current before createCapabilities!");
                 }
-                Core.GL.createCapabilities();
+                createCapabilities();
                 break;
             case LIB_GDX:
             case VULKAN:
@@ -147,9 +151,9 @@ public class Frame implements IFrame {
     }
 
     private void glfwWindowHints() {
-        GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED, GLFW.GLFW_FALSE);
-        GLFW.glfwWindowHint(GLFW.GLFW_CENTER_CURSOR, GLFW.GLFW_FALSE);
-        GLFW.glfwWindowHint(GLFW.GLFW_FOCUS_ON_SHOW, GLFW.GLFW_TRUE);
+        glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE);
+        glfwWindowHint(GLFW_CENTER_CURSOR, GLFW_FALSE);
+        glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_TRUE);
 
         frameSettingManager.updateFrameSettings(true);
     }
@@ -164,8 +168,8 @@ public class Frame implements IFrame {
         startTime = TimeSourceUtil.getTimeMills(timeSourceType);
 
         setAntiAliasing();
-        Core.GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        while (!GLFW.glfwWindowShouldClose(windowID)) {
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        while (!glfwWindowShouldClose(windowID)) {
             currentTime = TimeSourceUtil.getTimeMills(timeSourceType);
 
             long currentTime2 = TimeSourceUtil.getNanoTime(timeSourceType);
@@ -173,11 +177,11 @@ public class Frame implements IFrame {
             lastTime2 = currentTime2;
 
             if (deltaTime2 >= targetTime) {
-                Core.GL11.glClear(OPEN_GL_PARAMETER_NAME_MAP.get("GL_COLOR_BUFFER_BIT") | OPEN_GL_PARAMETER_NAME_MAP.get("GL_DEPTH_BUFFER_BIT"));
+                glClear(OPEN_GL_PARAMETER_NAME_MAP.get("GL_COLOR_BUFFER_BIT") | OPEN_GL_PARAMETER_NAME_MAP.get("GL_DEPTH_BUFFER_BIT"));
                 draw();
 
-                GLFW.glfwSwapBuffers(windowID);
-                GLFW.glfwPollEvents();
+                glfwSwapBuffers(windowID);
+                glfwPollEvents();
 
                 frames2++;
 
@@ -227,22 +231,22 @@ public class Frame implements IFrame {
     }
 
     public void updateLFJGLContext() {
-        Core.frameBufferSize = new Vector2i(getFrameBufferWidth(), getFrameBufferHeight());
-        LFJGContext.windowSize = new Vector2i(getWindowWidth(), getWindowHeight());
+        frameBufferSize = new Vector2i(getFrameBufferWidth(), getFrameBufferHeight());
+        windowSize = new Vector2i(getWindowWidth(), getWindowHeight());
         float devicePixelRatioX = (float) frameBufferWidth / windowWidth;
         float devicePixelRatioY = (float) frameBufferHeight / windowHeight;
-        Core.devicePixelRatio = MathHelper.max(devicePixelRatioX, devicePixelRatioY);
+        devicePixelRatio = MathHelper.max(devicePixelRatioX, devicePixelRatioY);
 
-        if (Core.projection2D == null) {
-            Core.projection2D = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, getFrameBufferWidth(), getFrameBufferHeight());
+        if (projection2D == null) {
+            projection2D = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, getFrameBufferWidth(), getFrameBufferHeight());
         } else {
-            Core.projection2D.updateProjMatrix(Projection.DEFAULT_FOV, getFrameBufferWidth(), getFrameBufferHeight(), Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
+            projection2D.updateProjMatrix(Projection.DEFAULT_FOV, getFrameBufferWidth(), getFrameBufferHeight(), Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
         }
 
-        if (Core.projection3D == null) {
-            Core.projection3D = new Projection(ProjectionType.PERSPECTIVE_PROJECTION, getFrameBufferWidth(), getFrameBufferHeight());
+        if (projection3D == null) {
+            projection3D = new Projection(ProjectionType.PERSPECTIVE_PROJECTION, getFrameBufferWidth(), getFrameBufferHeight());
         } else {
-            Core.projection3D.updateProjMatrix(Projection.DEFAULT_FOV, getFrameBufferWidth(), getFrameBufferHeight(), Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
+            projection3D.updateProjMatrix(Projection.DEFAULT_FOV, getFrameBufferWidth(), getFrameBufferHeight(), Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
         }
     }
 
@@ -265,16 +269,16 @@ public class Frame implements IFrame {
     }
 
     public void stopFrame() {
-        GLFW.glfwSetWindowShouldClose(windowID, true);
+        glfwSetWindowShouldClose(windowID, true);
     }
 
     private void setAntiAliasing() {
         switch (((AntiAliasingType) getFrameSettingValue(AntiAliasingSetting.class))) {
             case MSAA:
-                Core.LFJGRenderContext.enable(OPEN_GL_PARAMETER_NAME_MAP.get("GL_MULTISAMPLE"));
+                enable(OPEN_GL_PARAMETER_NAME_MAP.get("GL_MULTISAMPLE"));
                 break;
             case OFF:
-                Core.LFJGRenderContext.disable(OPEN_GL_PARAMETER_NAME_MAP.get("GL_MULTISAMPLE"));
+                disable(OPEN_GL_PARAMETER_NAME_MAP.get("GL_MULTISAMPLE"));
                 break;
         }
     }
@@ -293,25 +297,25 @@ public class Frame implements IFrame {
                 throw new IllegalStateException("Unexpected value: " + renderingType);
         }
 
-        GLFW.glfwDestroyWindow(windowID);
+        glfwDestroyWindow(windowID);
 
-        GLFW.glfwTerminate();
+        glfwTerminate();
 
-        GLFWErrorCallback callback = GLFW.glfwSetErrorCallback(null);
+        GLFWErrorCallback callback = glfwSetErrorCallback(null);
         if (callback != null) {
             callback.free();
         }
     }
 
     public void updateViewport() {
-        Core.GL11.glViewport(0, 0, frameBufferWidth, frameBufferHeight);
+        glViewport(0, 0, frameBufferWidth, frameBufferHeight);
 
-        Core.GL11.glMatrixMode(OPEN_GL_PARAMETER_NAME_MAP.get("GL_PROJECTION"));
-        Core.GL11.glLoadIdentity();
-        Core.GL11.glOrtho(0, frameBufferWidth / contentScaleX, 0, frameBufferHeight / contentScaleY, -1, 1);
+        glMatrixMode(OPEN_GL_PARAMETER_NAME_MAP.get("GL_PROJECTION"));
+        glLoadIdentity();
+        glOrtho(0, frameBufferWidth / contentScaleX, 0, frameBufferHeight / contentScaleY, -1, 1);
 
-        Core.GL11.glMatrixMode(OPEN_GL_PARAMETER_NAME_MAP.get("GL_MODELVIEW"));
-        Core.GL11.glLoadIdentity();
+        glMatrixMode(OPEN_GL_PARAMETER_NAME_MAP.get("GL_MODELVIEW"));
+        glLoadIdentity();
     }
 
     public long getWin32Window() {

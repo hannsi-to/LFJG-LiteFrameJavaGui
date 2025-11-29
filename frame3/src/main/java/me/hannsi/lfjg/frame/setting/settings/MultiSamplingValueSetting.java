@@ -3,7 +3,9 @@ package me.hannsi.lfjg.frame.setting.settings;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
 import me.hannsi.lfjg.frame.setting.system.ReflectionsLevel;
-import org.lwjgl.glfw.GLFW;
+
+import static org.lwjgl.glfw.GLFW.GLFW_SAMPLES;
+import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 
 /**
  * Represents a setting for the multi-sampling value of a frame.
@@ -26,6 +28,6 @@ public class MultiSamplingValueSetting extends FrameSettingBase<Integer> {
      */
     @Override
     public void updateSetting() {
-        GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, getValue());
+        glfwWindowHint(GLFW_SAMPLES, getValue());
     }
 }

@@ -11,15 +11,15 @@ import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedEBO;
 import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedIBO;
 import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedVBO;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.GL43;
 
 import java.util.*;
 
 import static me.hannsi.lfjg.core.utils.math.MathHelper.max;
-import static me.hannsi.lfjg.render.LFJGRenderContext.glObjectPool;
-import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
+import static me.hannsi.lfjg.render.LFJGRenderContext.GL_OBJECT_POOL;
+import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import static org.lwjgl.opengl.GL43.glMultiDrawElementsIndirect;
 
 public class TestMesh {
     private final int vaoId;
@@ -40,7 +40,7 @@ public class TestMesh {
         this.initialEBOCapacity = initialEBOCapacity;
         this.initialIBOCapacity = initialIBOCapacity;
 
-        this.vaoId = GL30.glGenVertexArrays();
+        this.vaoId = glGenVertexArrays();
         this.currentIndex = 0;
         this.vertexCount = 0;
     }
@@ -50,7 +50,7 @@ public class TestMesh {
     }
 
     public TestMesh initBufferObject() {
-        glStateCache.bindVertexArrayForce(vaoId);
+        GL_STATE_CACHE.bindVertexArrayForce(vaoId);
 
         persistentMappedVBO.createVertexAttribute(vaoId, BufferObjectType.POSITION_BUFFER, BufferObjectType.COLOR_BUFFER, BufferObjectType.TEXTURE_BUFFER, BufferObjectType.NORMAL_BUFFER)
                 .syncToGPU();
@@ -92,7 +92,7 @@ public class TestMesh {
                 )
         );
 
-        long id = glObjectPool.createObject(new GLObjectData(baseVertex, elementPair.vertices.length, startOffset, elementPair.indices.length, persistentMappedIBO.getCommandCount() - 1, elementPair));
+        long id = GL_OBJECT_POOL.createObject(new GLObjectData(baseVertex, elementPair.vertices.length, startOffset, elementPair.indices.length, persistentMappedIBO.getCommandCount() - 1, elementPair));
         if (objectIdPointer != null) {
             objectIdPointer.setValue(id);
         }
@@ -105,7 +105,7 @@ public class TestMesh {
     }
 
     public TestMesh deleteObject(List<LongRef> ids, long objectId) {
-        if (glObjectPool.getDeletedObjects().get(objectId) != null) {
+        if (GL_OBJECT_POOL.getDeletedObjects().get(objectId) != null) {
             new LogGenerator(
                     "DeleteObject Info",
                     "ObjectId: " + objectId,
@@ -115,16 +115,16 @@ public class TestMesh {
             return this;
         }
 
-        GLObjectData glObjectData = glObjectPool.getObjectData(objectId);
+        GLObjectData glObjectData = GL_OBJECT_POOL.getObjectData(objectId);
         if (glObjectData == null) {
             throw new MeshException("This object ID does not exist. objectId: " + objectId);
         }
 
-        glObjectPool.createDeletedObject(objectId, glObjectData);
+        GL_OBJECT_POOL.createDeletedObject(objectId, glObjectData);
         glObjectData.draw = false;
 
         if (ids != null) {
-            Set<Map.Entry<Long, GLObjectData>> set = glObjectPool.getObjects().entrySet();
+            Set<Map.Entry<Long, GLObjectData>> set = GL_OBJECT_POOL.getObjects().entrySet();
             ids.clear();
             for (Map.Entry<Long, GLObjectData> entry : set) {
                 ids.add(new LongRef(entry.getKey()));
@@ -136,16 +136,16 @@ public class TestMesh {
 
     public TestMesh directDeleteObjects() {
         Map<Long, GLObjectData> entryObject = new HashMap<>();
-        for (Map.Entry<Long, GLObjectData> objectEntry : glObjectPool.getObjects().entrySet()) {
-            if (glObjectPool.getDeletedObjects().containsKey(objectEntry.getKey())) {
+        for (Map.Entry<Long, GLObjectData> objectEntry : GL_OBJECT_POOL.getObjects().entrySet()) {
+            if (GL_OBJECT_POOL.getDeletedObjects().containsKey(objectEntry.getKey())) {
                 continue;
             }
 
             entryObject.put(objectEntry.getKey(), objectEntry.getValue());
         }
 
-        glObjectPool.clearObjects();
-        glObjectPool.clearDeletedObjects();
+        GL_OBJECT_POOL.clearObjects();
+        GL_OBJECT_POOL.clearDeletedObjects();
 
         int newVBOCapacity = 0;
         int newEBOCapacity = 0;
@@ -196,7 +196,7 @@ public class TestMesh {
                     )
             );
 
-            glObjectPool.createObject(entry.getKey(), new GLObjectData(baseVertex, elementPair.vertices.length, startOffset, elementPair.indices.length, persistentMappedIBO.getCommandCount() - 1, elementPair));
+            GL_OBJECT_POOL.createObject(entry.getKey(), new GLObjectData(baseVertex, elementPair.vertices.length, startOffset, elementPair.indices.length, persistentMappedIBO.getCommandCount() - 1, elementPair));
         }
 
         initBufferObject();
@@ -205,7 +205,7 @@ public class TestMesh {
     }
 
     public TestMesh restoreDeleteObject(long objectId) {
-        GLObjectData glObjectData = glObjectPool.getObjectData(objectId);
+        GLObjectData glObjectData = GL_OBJECT_POOL.getObjectData(objectId);
         if (glObjectData == null) {
             throw new MeshException("This object ID does not exist. objectId: " + objectId);
         }
@@ -220,7 +220,7 @@ public class TestMesh {
             return this;
         }
 
-        glObjectPool.destroyDeletedObject(objectId);
+        GL_OBJECT_POOL.destroyDeletedObject(objectId);
         glObjectData.draw = true;
 
         return this;
@@ -241,14 +241,14 @@ public class TestMesh {
 
     public void debugDraw(int mode, boolean frontAndBack) {
         if (frontAndBack) {
-            glStateCache.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-            glStateCache.lineWidth(0.1f);
+            GL_STATE_CACHE.polygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            GL_STATE_CACHE.lineWidth(0.1f);
         } else {
-            glStateCache.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
-            glStateCache.lineWidth(1.0f);
+            GL_STATE_CACHE.polygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            GL_STATE_CACHE.lineWidth(1.0f);
         }
 
-        for (Map.Entry<Long, GLObjectData> entry : glObjectPool.getObjects().entrySet()) {
+        for (Map.Entry<Long, GLObjectData> entry : GL_OBJECT_POOL.getObjects().entrySet()) {
             GLObjectData glObjectData = entry.getValue();
 
             long base = persistentMappedIBO.getCommandsSizeByte(glObjectData.baseCommand);
@@ -263,13 +263,13 @@ public class TestMesh {
         persistentMappedEBO.syncToGPU();
         persistentMappedIBO.syncToGPU();
 
-        glStateCache.bindVertexArray(vaoId);
-        glStateCache.bindElementArrayBuffer(persistentMappedEBO.getBufferId());
-        glStateCache.bindIndirectBuffer(persistentMappedIBO.getBufferId());
+        GL_STATE_CACHE.bindVertexArray(vaoId);
+        GL_STATE_CACHE.bindElementArrayBuffer(persistentMappedEBO.getBufferId());
+        GL_STATE_CACHE.bindIndirectBuffer(persistentMappedIBO.getBufferId());
 
-        GL43.glMultiDrawElementsIndirect(
+        glMultiDrawElementsIndirect(
                 mode,
-                GL11.GL_UNSIGNED_INT,
+                GL_UNSIGNED_INT,
                 0,
                 persistentMappedIBO.getCommandCount(),
                 0
@@ -324,7 +324,7 @@ public class TestMesh {
         ).bar("=").logging(getClass(), DebugLevel.DEBUG);
 
 
-        new LogGenerator("GLObjectPool", glObjectPool.toString()).logging(getClass(), DebugLevel.DEBUG);
+        new LogGenerator("GLObjectPool", GL_OBJECT_POOL.toString()).logging(getClass(), DebugLevel.DEBUG);
     }
 
     public int getVaoId() {

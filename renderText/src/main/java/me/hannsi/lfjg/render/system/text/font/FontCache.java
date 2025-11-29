@@ -40,6 +40,37 @@ public class FontCache {
         return font;
     }
 
+    public FontCache cleanup(String... names) {
+        StringBuilder ids = new StringBuilder();
+        int index = 0;
+        for (String name : names) {
+            Font font = fontCaches.get(name);
+            if (font == null) {
+                DebugLog.warning(getClass(), "The font cache named " + name + " does not exist.");
+                continue;
+            }
+
+            if (index == 0) {
+                ids.append(name);
+            } else {
+                ids.append(", ").append(name);
+            }
+            font.cleanup();
+            index++;
+
+            fontCaches.remove(name);
+        }
+
+        new LogGenerator(
+                LogGenerateType.CLEANUP,
+                getClass(),
+                ids.toString(),
+                ""
+        ).logging(getClass(), DebugLevel.DEBUG);
+
+        return this;
+    }
+
     public FontCache cleanup() {
         StringBuilder ids = new StringBuilder();
         int index = 0;

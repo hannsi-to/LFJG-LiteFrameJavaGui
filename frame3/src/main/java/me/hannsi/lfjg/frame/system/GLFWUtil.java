@@ -7,10 +7,8 @@ import me.hannsi.lfjg.frame.setting.settings.MonitorType;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.lwjgl.PointerBuffer;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
@@ -18,6 +16,10 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.Objects;
+
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.stb.STBImage.stbi_image_free;
+import static org.lwjgl.stb.STBImage.stbi_load_from_memory;
 
 public class GLFWUtil extends Util {
     public static GLFWVidMode getGLFWVidMode(long windowId) {
@@ -27,29 +29,29 @@ public class GLFWUtil extends Util {
             IntBuffer pWidth = stack.mallocInt(1);
             IntBuffer pHeight = stack.mallocInt(1);
 
-            GLFW.glfwGetWindowSize(windowId, pWidth, pHeight);
-            videoMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+            glfwGetWindowSize(windowId, pWidth, pHeight);
+            videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         }
 
         return videoMode;
     }
 
     public static void windowHintBoolean(int hint, boolean value) {
-        windowHintValue(hint, (value ? GLFW.GLFW_TRUE : GLFW.GLFW_FALSE));
+        windowHintValue(hint, (value ? GLFW_TRUE : GLFW_FALSE));
     }
 
     public static void windowHintValue(int hint, int value) {
-        GLFW.glfwWindowHint(hint, value);
+        glfwWindowHint(hint, value);
     }
 
     public static void setWindowIcon(long windowID, Location location) {
         GLFWImage.Buffer iconBuffer = loadIconImageBuffer(location);
-        GLFW.glfwSetWindowIcon(windowID, iconBuffer);
+        glfwSetWindowIcon(windowID, iconBuffer);
         iconBuffer.free();
     }
 
     public static void setWindowIcon(long windowID, GLFWImage.Buffer iconBuffer) {
-        GLFW.glfwSetWindowIcon(windowID, iconBuffer);
+        glfwSetWindowIcon(windowID, iconBuffer);
     }
 
     public static GLFWImage.Buffer loadIconImageBuffer(Location location) {
@@ -58,7 +60,7 @@ public class GLFWUtil extends Util {
             IntBuffer height = stack.mallocInt(1);
             IntBuffer channels = stack.mallocInt(1);
 
-            ByteBuffer image = STBImage.stbi_load_from_memory(location.getByteBuffer(), width, height, channels, 4);
+            ByteBuffer image = stbi_load_from_memory(location.getByteBuffer(), width, height, channels, 4);
             if (image == null) {
                 throw new RuntimeException("Failed to load icon image: " + location.path());
             }
@@ -67,7 +69,7 @@ public class GLFWUtil extends Util {
             GLFWImage icon = iconBuffer.get(0);
             icon.set(width.get(0), height.get(0), image);
 
-            STBImage.stbi_image_free(image);
+            stbi_image_free(image);
 
             return iconBuffer;
         }
@@ -76,7 +78,7 @@ public class GLFWUtil extends Util {
     public static Vector2i getWindowSize(long windowId) {
         int[] width = new int[1];
         int[] height = new int[1];
-        GLFW.glfwGetWindowSize(windowId, width, height);
+        glfwGetWindowSize(windowId, width, height);
 
         return new Vector2i(width[0], height[0]);
     }
@@ -88,8 +90,8 @@ public class GLFWUtil extends Util {
             IntBuffer pWidth = stack.mallocInt(1);
             IntBuffer pHeight = stack.mallocInt(1);
 
-            GLFW.glfwGetWindowSize(windowId, pWidth, pHeight);
-            GLFWVidMode videoMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+            glfwGetWindowSize(windowId, pWidth, pHeight);
+            GLFWVidMode videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
             cx = (Objects.requireNonNull(videoMode).width() - pWidth.get(0)) / 2;
             cy = (videoMode.height() - pHeight.get(0)) / 2;
@@ -106,10 +108,10 @@ public class GLFWUtil extends Util {
                 monitor = MemoryUtil.NULL;
                 break;
             case FULL_SCREEN:
-                monitor = GLFW.glfwGetPrimaryMonitor();
+                monitor = glfwGetPrimaryMonitor();
                 break;
             case BORDERLESS:
-                GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
+                glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
                 monitor = MemoryUtil.NULL;
                 break;
             default:
@@ -126,7 +128,7 @@ public class GLFWUtil extends Util {
             FloatBuffer width = stack.mallocFloat(1);
             FloatBuffer height = stack.mallocFloat(1);
 
-            GLFW.glfwGetWindowContentScale(frame.getWindowID(), width, height);
+            glfwGetWindowContentScale(frame.getWindowID(), width, height);
 
             contentScale = new Vector2f(width.get(0), height.get(0));
         }
@@ -137,86 +139,86 @@ public class GLFWUtil extends Util {
     public static Vector2i getFrameBufferSize(long windowId) {
         int[] width = new int[1];
         int[] height = new int[1];
-        GLFW.glfwGetFramebufferSize(windowId, width, height);
+        glfwGetFramebufferSize(windowId, width, height);
 
         return new Vector2i(width[0], height[0]);
     }
 
     public static void maximizeWindow(long windowId) {
-        GLFW.glfwMaximizeWindow(windowId);
+        glfwMaximizeWindow(windowId);
     }
 
     public static void minimizeWindow(long windowId) {
-        GLFW.glfwIconifyWindow(windowId);
+        glfwIconifyWindow(windowId);
     }
 
     public static void restoreWindow(long windowId) {
-        GLFW.glfwRestoreWindow(windowId);
+        glfwRestoreWindow(windowId);
     }
 
     public static void hideCursor(long windowId) {
-        GLFW.glfwSetInputMode(windowId, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
+        glfwSetInputMode(windowId, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
     }
 
     public static void showCursor(long windowId) {
-        GLFW.glfwSetInputMode(windowId, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
+        glfwSetInputMode(windowId, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 
     public static void lockCursor(long windowId) {
-        GLFW.glfwSetInputMode(windowId, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
+        glfwSetInputMode(windowId, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
     public static void setWindowResizable(boolean resizable) {
-        GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, resizable ? GLFW.GLFW_TRUE : GLFW.GLFW_FALSE);
+        glfwWindowHint(GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
     }
 
     public static Vector2f getDpiScale(long windowId) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             FloatBuffer xScale = stack.mallocFloat(1);
             FloatBuffer yScale = stack.mallocFloat(1);
-            GLFW.glfwGetWindowContentScale(windowId, xScale, yScale);
+            glfwGetWindowContentScale(windowId, xScale, yScale);
             return new Vector2f(xScale.get(0), yScale.get(0));
         }
     }
 
     public static void setWindowTitle(long windowId, String title) {
-        GLFW.glfwSetWindowTitle(windowId, title);
+        glfwSetWindowTitle(windowId, title);
     }
 
     public static void setWindowOpacity(long windowId, float opacity) {
-        GLFW.glfwSetWindowOpacity(windowId, opacity);
+        glfwSetWindowOpacity(windowId, opacity);
     }
 
     public static void setWindowVisible(boolean value) {
-        GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, value ? GLFW.GLFW_TRUE : GLFW.GLFW_FALSE);
+        glfwWindowHint(GLFW_VISIBLE, value ? GLFW_TRUE : GLFW_FALSE);
     }
 
     public static Vector2i getWindowPosition(long windowId) {
         int[] x = new int[1];
         int[] y = new int[1];
-        GLFW.glfwGetWindowPos(windowId, x, y);
+        glfwGetWindowPos(windowId, x, y);
         return new Vector2i(x[0], y[0]);
     }
 
     public static void setWindowPosition(long windowId, int x, int y) {
-        GLFW.glfwSetWindowPos(windowId, x, y);
+        glfwSetWindowPos(windowId, x, y);
     }
 
     public static void focusWindow(long windowId) {
-        GLFW.glfwFocusWindow(windowId);
+        glfwFocusWindow(windowId);
     }
 
     public static boolean isWindowFocused(long windowId) {
-        return GLFW.glfwGetWindowAttrib(windowId, GLFW.GLFW_FOCUSED) == GLFW.GLFW_TRUE;
+        return glfwGetWindowAttrib(windowId, GLFW_FOCUSED) == GLFW_TRUE;
     }
 
     public static long getMonitorForWindow(long windowId) {
         int[] xPos = new int[1];
         int[] yPos = new int[1];
-        GLFW.glfwGetWindowPos(windowId, xPos, yPos);
+        glfwGetWindowPos(windowId, xPos, yPos);
 
         int monitorCount;
-        PointerBuffer monitors = GLFW.glfwGetMonitors();
+        PointerBuffer monitors = glfwGetMonitors();
         assert monitors != null;
         monitorCount = monitors.remaining();
 
@@ -225,10 +227,10 @@ public class GLFWUtil extends Util {
 
         for (int i = 0; i < monitorCount; i++) {
             long monitor = monitors.get(i);
-            GLFWVidMode videoMode = GLFW.glfwGetVideoMode(monitor);
+            GLFWVidMode videoMode = glfwGetVideoMode(monitor);
             int[] mx = new int[1];
             int[] my = new int[1];
-            GLFW.glfwGetMonitorPos(monitor, mx, my);
+            glfwGetMonitorPos(monitor, mx, my);
 
             assert videoMode != null;
             int mw = videoMode.width();
@@ -247,22 +249,22 @@ public class GLFWUtil extends Util {
     }
 
     public static boolean shouldClose(long windowId) {
-        return GLFW.glfwWindowShouldClose(windowId);
+        return glfwWindowShouldClose(windowId);
     }
 
     public static void setAlwaysOnTop(long windowId, boolean alwaysOnTop) {
-        GLFW.glfwSetWindowAttrib(windowId, GLFW.GLFW_FLOATING, alwaysOnTop ? GLFW.GLFW_TRUE : GLFW.GLFW_FALSE);
+        glfwSetWindowAttrib(windowId, GLFW_FLOATING, alwaysOnTop ? GLFW_TRUE : GLFW_FALSE);
     }
 
     public static void setMinWindowSize(long windowId, int minWidth, int minHeight) {
-        GLFW.glfwSetWindowSizeLimits(windowId, minWidth, minHeight, GLFW.GLFW_DONT_CARE, GLFW.GLFW_DONT_CARE);
+        glfwSetWindowSizeLimits(windowId, minWidth, minHeight, GLFW_DONT_CARE, GLFW_DONT_CARE);
     }
 
     public static void setMaxWindowSize(long windowId, int maxWidth, int maxHeight) {
-        GLFW.glfwSetWindowSizeLimits(windowId, GLFW.GLFW_DONT_CARE, GLFW.GLFW_DONT_CARE, maxWidth, maxHeight);
+        glfwSetWindowSizeLimits(windowId, GLFW_DONT_CARE, GLFW_DONT_CARE, maxWidth, maxHeight);
     }
 
     public static void setInputEnabled(long windowId, boolean enabled) {
-        GLFW.glfwSetInputMode(windowId, GLFW.GLFW_CURSOR, enabled ? GLFW.GLFW_CURSOR_NORMAL : GLFW.GLFW_CURSOR_DISABLED);
+        glfwSetInputMode(windowId, GLFW_CURSOR, enabled ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
     }
 }

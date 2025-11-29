@@ -5,11 +5,13 @@ import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL40;
-import org.lwjgl.opengl.GL43;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
+import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL40.glDrawArraysIndirect;
+import static org.lwjgl.opengl.GL40.glDrawElementsIndirect;
+import static org.lwjgl.opengl.GL43.glMultiDrawArraysIndirect;
+import static org.lwjgl.opengl.GL43.glMultiDrawElementsIndirect;
 
 public class VAORendering {
     public void draw(GLObject glObject) {
@@ -17,7 +19,7 @@ public class VAORendering {
     }
 
     public void draw(Mesh mesh) {
-        draw(mesh, GL11.GL_POLYGON);
+        draw(mesh, GL_POLYGON);
     }
 
     public void draw(Mesh mesh, int drawType) {
@@ -26,7 +28,7 @@ public class VAORendering {
 //        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 //        GL11.glLineWidth(0.1f);
 
-        glStateCache.bindVertexArray(vaoId);
+        GL_STATE_CACHE.bindVertexArray(vaoId);
 
         mesh.startFrame();
 
@@ -41,24 +43,24 @@ public class VAORendering {
 
     private void drawIndirect(Mesh mesh, int drawType) {
         int indirectBufferId = mesh.getIboId().getBufferId();
-        glStateCache.bindIndirectBuffer(indirectBufferId);
+        GL_STATE_CACHE.bindIndirectBuffer(indirectBufferId);
 
         if (mesh.isUseElementBufferObject()) {
             int eboId = mesh.getEboId().getBufferId();
-            glStateCache.bindElementArrayBuffer(eboId);
+            GL_STATE_CACHE.bindElementArrayBuffer(eboId);
 
             int commandCount = mesh.getDrawCommandCount();
             if (commandCount > 1) {
-                GL43.glMultiDrawElementsIndirect(drawType, GL11.GL_UNSIGNED_INT, 0, commandCount, 0);
+                glMultiDrawElementsIndirect(drawType, GL_UNSIGNED_INT, 0, commandCount, 0);
             } else {
-                GL40.glDrawElementsIndirect(drawType, GL11.GL_UNSIGNED_INT, 0);
+                glDrawElementsIndirect(drawType, GL_UNSIGNED_INT, 0);
             }
         } else {
             int commandCount = mesh.getDrawCommandCount();
             if (commandCount > 1) {
-                GL43.glMultiDrawArraysIndirect(drawType, 0, commandCount, 0);
+                glMultiDrawArraysIndirect(drawType, 0, commandCount, 0);
             } else {
-                GL40.glDrawArraysIndirect(drawType, 0);
+                glDrawArraysIndirect(drawType, 0);
             }
         }
     }
@@ -66,10 +68,10 @@ public class VAORendering {
     private void drawDirect(Mesh mesh, int drawType) {
         if (mesh.isUseElementBufferObject()) {
             int eboId = mesh.getEboId().getBufferId();
-            glStateCache.bindElementArrayBuffer(eboId);
-            GL11.glDrawElements(drawType, mesh.getNumVertices(), GL11.GL_UNSIGNED_INT, 0);
+            GL_STATE_CACHE.bindElementArrayBuffer(eboId);
+            glDrawElements(drawType, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
         } else {
-            GL11.glDrawArrays(drawType, 0, mesh.getCount());
+            glDrawArrays(drawType, 0, mesh.getCount());
         }
     }
 

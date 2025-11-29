@@ -2,7 +2,7 @@ package me.hannsi.lfjg.frame;
 
 import org.joml.Vector2i;
 
-public class LFJGContext {
+public class LFJGFrameContext {
     public static String[] args;
 
     public static Frame frame;

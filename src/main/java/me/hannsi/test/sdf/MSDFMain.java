@@ -7,8 +7,6 @@ import me.hannsi.lfjg.core.utils.toolkit.UnicodeBlocks;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.LFJGRenderContext;
-import me.hannsi.lfjg.render.LFJGRenderTextContext;
 import me.hannsi.lfjg.render.animation.animations.Bounce;
 import me.hannsi.lfjg.render.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.effect.effects.Pixelate;
@@ -19,6 +17,9 @@ import me.hannsi.lfjg.render.renderers.text.GLText;
 import me.hannsi.lfjg.render.system.text.AlignType;
 import me.hannsi.lfjg.render.system.text.TextFormatType;
 import me.hannsi.lfjg.render.system.text.font.Font;
+
+import static me.hannsi.lfjg.render.LFJGRenderContext.TEXTURE_CACHE;
+import static me.hannsi.lfjg.render.LFJGRenderTextContext.FONT_CACHE;
 
 public class MSDFMain implements LFJGFrame {
     GLText glText;
@@ -41,7 +42,7 @@ public class MSDFMain implements LFJGFrame {
     public void init() {
         frame.updateLFJGLContext();
 
-        LFJGRenderTextContext.fontCache.createCache(
+        FONT_CACHE.createCache(
                 "Font1",
                 Font.createCustomFont()
                         .name("Font1")
@@ -57,7 +58,7 @@ public class MSDFMain implements LFJGFrame {
 //        glRect.uv(0, 1, 1, 0);
 //        glRect.rectWH(0, 0, 1920, 1080, Color.of(0, 0, 0, 0));
 
-        LFJGRenderContext.textureCache.createCache("Test1", Location.fromResource("texture/test/test1.jpg"));
+        TEXTURE_CACHE.createCache("Test1", Location.fromResource("texture/test/test1.jpg"));
 
         effectCache = EffectCache.createEffectCache()
 //                .createCache(Translate.createTranslate("Translate1").x(100))

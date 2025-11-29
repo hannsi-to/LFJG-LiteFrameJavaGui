@@ -4,16 +4,19 @@ import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.render.system.mesh.DrawElementsIndirectCommand;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.GL40;
 import org.lwjgl.opengl.GL44;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 
 import static me.hannsi.lfjg.core.Core.UNSAFE;
-import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
+import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static org.lwjgl.opengl.GL15.glGenBuffers;
+import static org.lwjgl.opengl.GL15.glUnmapBuffer;
+import static org.lwjgl.opengl.GL30.glMapBufferRange;
+import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
+import static org.lwjgl.opengl.GL44.glBufferStorage;
+import static org.lwjgl.opengl.GL44.glFlushMappedBufferRange;
 
 public class TestPersistentMappedIBO implements TestPersistentMappedBuffer {
     private static final int[] TEMP_BUFFER = new int[DrawElementsIndirectCommand.COMMAND_COUNT];
@@ -40,16 +43,16 @@ public class TestPersistentMappedIBO implements TestPersistentMappedBuffer {
     public void allocationBufferStorage(long capacity) {
         gpuMemorySize = capacity;
         if (bufferId != 0) {
-            glStateCache.deleteIndirectBuffer(bufferId);
+            GL_STATE_CACHE.deleteIndirectBuffer(bufferId);
             bufferId = 0;
         }
 
-        bufferId = GL15.glGenBuffers();
-        glStateCache.bindIndirectBuffer(bufferId);
-        GL44.glBufferStorage(GL40.GL_DRAW_INDIRECT_BUFFER, gpuMemorySize, flags);
+        bufferId = glGenBuffers();
+        GL_STATE_CACHE.bindIndirectBuffer(bufferId);
+        glBufferStorage(GL_DRAW_INDIRECT_BUFFER, gpuMemorySize, flags);
 
-        ByteBuffer byteBuffer = GL30.glMapBufferRange(
-                GL40.GL_DRAW_INDIRECT_BUFFER,
+        ByteBuffer byteBuffer = glMapBufferRange(
+                GL_DRAW_INDIRECT_BUFFER,
                 0,
                 gpuMemorySize,
                 flags
@@ -83,7 +86,7 @@ public class TestPersistentMappedIBO implements TestPersistentMappedBuffer {
     public void flushMappedRange(long byteOffset, long byteLength) {
         final int GL_MAP_COHERENT_BIT = GL44.GL_MAP_COHERENT_BIT;
         if ((flags & GL_MAP_COHERENT_BIT) != GL_MAP_COHERENT_BIT) {
-            GL44.glFlushMappedBufferRange(GL40.GL_DRAW_INDIRECT_BUFFER, byteOffset, byteLength);
+            glFlushMappedBufferRange(GL_DRAW_INDIRECT_BUFFER, byteOffset, byteLength);
         }
     }
 
@@ -165,11 +168,11 @@ public class TestPersistentMappedIBO implements TestPersistentMappedBuffer {
             try {
                 MemoryUtil.memCopy(oldAddr, tmp, bytesToCopy);
 
-                boolean unmapped = GL30.glUnmapBuffer(GL40.GL_DRAW_INDIRECT_BUFFER);
+                boolean unmapped = glUnmapBuffer(GL_DRAW_INDIRECT_BUFFER);
                 if (!unmapped) {
                     DebugLog.error(getClass(), "glUnmapBuffer returned false (may indicate corruption).");
                 }
-                glStateCache.deleteIndirectBuffer(bufferId);
+                GL_STATE_CACHE.deleteIndirectBuffer(bufferId);
                 bufferId = 0;
                 mappedBuffer = null;
                 mappedAddress = 0;
@@ -184,8 +187,8 @@ public class TestPersistentMappedIBO implements TestPersistentMappedBuffer {
                 MemoryUtil.nmemFree(tmp);
             }
         } else {
-            GL30.glUnmapBuffer(GL40.GL_DRAW_INDIRECT_BUFFER);
-            glStateCache.deleteIndirectBuffer(bufferId);
+            glUnmapBuffer(GL_DRAW_INDIRECT_BUFFER);
+            GL_STATE_CACHE.deleteIndirectBuffer(bufferId);
             bufferId = 0;
             mappedBuffer = null;
             mappedAddress = 0;
@@ -238,7 +241,7 @@ public class TestPersistentMappedIBO implements TestPersistentMappedBuffer {
     @Override
     public void cleanup() {
         if (bufferId != 0) {
-            glStateCache.deleteIndirectBuffer(bufferId);
+            GL_STATE_CACHE.deleteIndirectBuffer(bufferId);
             bufferId = 0;
         }
         mappedBuffer = null;

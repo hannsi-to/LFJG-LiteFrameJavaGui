@@ -1,13 +1,17 @@
 package me.hannsi.lfjg.render.system.mesh.persistent;
 
 import me.hannsi.lfjg.render.system.mesh.DrawCommand;
-import org.lwjgl.opengl.*;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.List;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
+import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static org.lwjgl.opengl.GL15.glGenBuffers;
+import static org.lwjgl.opengl.GL30.glMapBufferRange;
+import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
+import static org.lwjgl.opengl.GL42.glMemoryBarrier;
+import static org.lwjgl.opengl.GL44.*;
 
 
 public class PersistentMappedIBO implements PersistentMappedBuffer {
@@ -23,13 +27,13 @@ public class PersistentMappedIBO implements PersistentMappedBuffer {
         this.maxCommands = maxCommands;
         this.sizeInBytes = DrawCommand.SIZE_BYTE * maxCommands;
 
-        bufferId = GL15.glGenBuffers();
+        bufferId = glGenBuffers();
 
-        glStateCache.bindIndirectBuffer(bufferId);
-        GL44.glBufferStorage(GL40.GL_DRAW_INDIRECT_BUFFER, sizeInBytes, flags);
+        GL_STATE_CACHE.bindIndirectBuffer(bufferId);
+        glBufferStorage(GL_DRAW_INDIRECT_BUFFER, sizeInBytes, flags);
 
-        ByteBuffer byteBuffer = GL30.glMapBufferRange(
-                GL40.GL_DRAW_INDIRECT_BUFFER,
+        ByteBuffer byteBuffer = glMapBufferRange(
+                GL_DRAW_INDIRECT_BUFFER,
                 0,
                 sizeInBytes,
                 flags
@@ -52,8 +56,8 @@ public class PersistentMappedIBO implements PersistentMappedBuffer {
             cmd.putIntoBuffer(mappedBuffer);
         }
 
-        if ((flags & GL44.GL_MAP_COHERENT_BIT) == 0) {
-            GL42.glMemoryBarrier(GL44.GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT);
+        if ((flags & GL_MAP_COHERENT_BIT) == 0) {
+            glMemoryBarrier(GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT);
         }
 
         return this;
@@ -61,7 +65,7 @@ public class PersistentMappedIBO implements PersistentMappedBuffer {
 
     @Override
     public void cleanup() {
-        glStateCache.deleteIndirectBuffer(bufferId);
+        GL_STATE_CACHE.deleteIndirectBuffer(bufferId);
     }
 
     public int getFlags() {

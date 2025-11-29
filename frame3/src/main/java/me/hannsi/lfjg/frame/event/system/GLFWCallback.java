@@ -1,8 +1,6 @@
 package me.hannsi.lfjg.frame.event.system;
 
-import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.frame.event.events.monitor.MonitorEvent;
 import me.hannsi.lfjg.frame.event.events.monitor.window.*;
 import me.hannsi.lfjg.frame.event.events.user.*;
@@ -15,6 +13,9 @@ import org.lwjgl.glfw.*;
 import java.util.Arrays;
 
 import static me.hannsi.lfjg.core.Core.EVENT_MANAGER;
+import static me.hannsi.lfjg.core.Core.OpenGLDebug.getOpenGLDebug;
+import static me.hannsi.lfjg.frame.LFJGFrameContext.windowSize;
+import static org.lwjgl.glfw.GLFW.*;
 
 public class GLFWCallback implements IFrame {
     private final Frame frame;
@@ -31,7 +32,7 @@ public class GLFWCallback implements IFrame {
                 EVENT_MANAGER.call(new WindowSizeEvent(window, width, height));
             }
         };
-        GLFW.glfwSetWindowSizeCallback(frame.getWindowID(), windowSizeCallback);
+        glfwSetWindowSizeCallback(frame.getWindowID(), windowSizeCallback);
 
         GLFWWindowPosCallback windowPosCallback = new GLFWWindowPosCallback() {
             @Override
@@ -39,7 +40,7 @@ public class GLFWCallback implements IFrame {
                 EVENT_MANAGER.call(new WindowPosEvent(window, xpos, ypos));
             }
         };
-        GLFW.glfwSetWindowPosCallback(frame.getWindowID(), windowPosCallback);
+        glfwSetWindowPosCallback(frame.getWindowID(), windowPosCallback);
 
         GLFWWindowCloseCallback windowCloseCallback = new GLFWWindowCloseCallback() {
             @Override
@@ -47,7 +48,7 @@ public class GLFWCallback implements IFrame {
                 EVENT_MANAGER.call(new WindowCloseEvent(window));
             }
         };
-        GLFW.glfwSetWindowCloseCallback(frame.getWindowID(), windowCloseCallback);
+        glfwSetWindowCloseCallback(frame.getWindowID(), windowCloseCallback);
 
         GLFWFramebufferSizeCallback framebufferSizeCallback = new GLFWFramebufferSizeCallback() {
             @Override
@@ -62,7 +63,7 @@ public class GLFWCallback implements IFrame {
                 frame.setFrameBufferHeight(height);
             }
         };
-        GLFW.glfwSetFramebufferSizeCallback(frame.getWindowID(), framebufferSizeCallback);
+        glfwSetFramebufferSizeCallback(frame.getWindowID(), framebufferSizeCallback);
 
         GLFWWindowRefreshCallback windowRefreshCallback = new GLFWWindowRefreshCallback() {
             @Override
@@ -70,7 +71,7 @@ public class GLFWCallback implements IFrame {
                 EVENT_MANAGER.call(new WindowRefreshEvent(window));
             }
         };
-        GLFW.glfwSetWindowRefreshCallback(frame.getWindowID(), windowRefreshCallback);
+        glfwSetWindowRefreshCallback(frame.getWindowID(), windowRefreshCallback);
 
         GLFWWindowFocusCallback windowFocusCallback = new GLFWWindowFocusCallback() {
             @Override
@@ -78,7 +79,7 @@ public class GLFWCallback implements IFrame {
                 EVENT_MANAGER.call(new WindowFocusEvent(window, focused));
             }
         };
-        GLFW.glfwSetWindowFocusCallback(frame.getWindowID(), windowFocusCallback);
+        glfwSetWindowFocusCallback(frame.getWindowID(), windowFocusCallback);
 
         GLFWWindowIconifyCallback windowIconifyCallback = new GLFWWindowIconifyCallback() {
             @Override
@@ -86,7 +87,7 @@ public class GLFWCallback implements IFrame {
                 EVENT_MANAGER.call(new WindowIconifyEvent(window, iconified));
             }
         };
-        GLFW.glfwSetWindowIconifyCallback(frame.getWindowID(), windowIconifyCallback);
+        glfwSetWindowIconifyCallback(frame.getWindowID(), windowIconifyCallback);
 
         GLFWWindowMaximizeCallback windowMaximizeCallback = new GLFWWindowMaximizeCallback() {
             @Override
@@ -94,7 +95,7 @@ public class GLFWCallback implements IFrame {
                 EVENT_MANAGER.call(new WindowMaximizeEvent(window, maximized));
             }
         };
-        GLFW.glfwSetWindowMaximizeCallback(frame.getWindowID(), windowMaximizeCallback);
+        glfwSetWindowMaximizeCallback(frame.getWindowID(), windowMaximizeCallback);
 
         GLFWWindowContentScaleCallback windowContentScaleCallback = new GLFWWindowContentScaleCallback() {
             @Override
@@ -109,20 +110,20 @@ public class GLFWCallback implements IFrame {
                 frame.setContentScaleY(yscale);
             }
         };
-        GLFW.glfwSetWindowContentScaleCallback(frame.getWindowID(), windowContentScaleCallback);
+        glfwSetWindowContentScaleCallback(frame.getWindowID(), windowContentScaleCallback);
 
         GLFWKeyCallback keyCallback = new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {
                 EVENT_MANAGER.call(new KeyEvent(window, key, scancode, action, mods));
-                if (action == GLFW.GLFW_PRESS) {
+                if (action == GLFW_PRESS) {
                     EVENT_MANAGER.call(new KeyPressEvent(key, scancode, mods, window));
-                } else if (action == GLFW.GLFW_RELEASE) {
+                } else if (action == GLFW_RELEASE) {
                     EVENT_MANAGER.call(new KeyReleasedEvent(key, scancode, mods, window));
                 }
             }
         };
-        GLFW.glfwSetKeyCallback(frame.getWindowID(), keyCallback);
+        glfwSetKeyCallback(frame.getWindowID(), keyCallback);
 
         GLFWCharCallback charCallback = new GLFWCharCallback() {
             @Override
@@ -130,28 +131,28 @@ public class GLFWCallback implements IFrame {
                 EVENT_MANAGER.call(new CharEvent(window, codepoint));
             }
         };
-        GLFW.glfwSetCharCallback(frame.getWindowID(), charCallback);
+        glfwSetCharCallback(frame.getWindowID(), charCallback);
 
         GLFWMouseButtonCallback mouseButtonCallback = new GLFWMouseButtonCallback() {
             @Override
             public void invoke(long window, int button, int action, int mods) {
                 EVENT_MANAGER.call(new MouseButtonEvent(window, button, action, mods));
-                if (action == GLFW.GLFW_PRESS) {
+                if (action == GLFW_PRESS) {
                     EVENT_MANAGER.call(new MouseButtonPressEvent(button, mods, window));
-                } else if (action == GLFW.GLFW_RELEASE) {
+                } else if (action == GLFW_RELEASE) {
                     EVENT_MANAGER.call(new MouseButtonReleasedEvent(button, mods, window));
                 }
             }
         };
-        GLFW.glfwSetMouseButtonCallback(frame.getWindowID(), mouseButtonCallback);
+        glfwSetMouseButtonCallback(frame.getWindowID(), mouseButtonCallback);
 
         GLFWCursorPosCallback cursorPosCallback = new GLFWCursorPosCallback() {
             @Override
             public void invoke(long window, double xpos, double ypos) {
-                EVENT_MANAGER.call(new CursorPosEvent(xpos, LFJGContext.windowSize.y() - ypos, window));
+                EVENT_MANAGER.call(new CursorPosEvent(xpos, windowSize.y() - ypos, window));
             }
         };
-        GLFW.glfwSetCursorPosCallback(frame.getWindowID(), cursorPosCallback);
+        glfwSetCursorPosCallback(frame.getWindowID(), cursorPosCallback);
 
         GLFWCursorEnterCallback cursorEnterCallback = new GLFWCursorEnterCallback() {
             @Override
@@ -159,7 +160,7 @@ public class GLFWCallback implements IFrame {
                 EVENT_MANAGER.call(new CursorEnterEvent(window, entered));
             }
         };
-        GLFW.glfwSetCursorEnterCallback(frame.getWindowID(), cursorEnterCallback);
+        glfwSetCursorEnterCallback(frame.getWindowID(), cursorEnterCallback);
 
         GLFWScrollCallback scrollCallback = new GLFWScrollCallback() {
             @Override
@@ -167,7 +168,7 @@ public class GLFWCallback implements IFrame {
                 EVENT_MANAGER.call(new ScrollEvent(window, xoffset, yoffset));
             }
         };
-        GLFW.glfwSetScrollCallback(frame.getWindowID(), scrollCallback);
+        glfwSetScrollCallback(frame.getWindowID(), scrollCallback);
 
         GLFWMonitorCallback monitorCallback = new GLFWMonitorCallback() {
             @Override
@@ -175,7 +176,7 @@ public class GLFWCallback implements IFrame {
                 EVENT_MANAGER.call(new MonitorEvent(monitor, event));
             }
         };
-        GLFW.glfwSetMonitorCallback(monitorCallback);
+        glfwSetMonitorCallback(monitorCallback);
 
         GLFWDropCallback dropCallback = new GLFWDropCallback() {
             @Override
@@ -183,7 +184,7 @@ public class GLFWCallback implements IFrame {
                 EVENT_MANAGER.call(new DropEvent(window, count, names));
             }
         };
-        GLFW.glfwSetDropCallback(frame.getWindowID(), dropCallback);
+        glfwSetDropCallback(frame.getWindowID(), dropCallback);
 
         GLFWJoystickCallback joystickCallback = new GLFWJoystickCallback() {
             @Override
@@ -191,12 +192,12 @@ public class GLFWCallback implements IFrame {
                 EVENT_MANAGER.call(new JoystickEvent(jid, event));
             }
         };
-        GLFW.glfwSetJoystickCallback(joystickCallback);
+        glfwSetJoystickCallback(joystickCallback);
 
         if (frame.getFrameSettingValue(OpenGLDebugSetting.class)) {
             int[] ids = Arrays.stream((SeverityType[]) frame.getFrameSettingValue(CheckSeveritiesSetting.class)).mapToInt(SeverityType::getId).toArray();
 
-            Core.OpenGLDebug.getOpenGLDebug(frame.getThreadName(), ids);
+            getOpenGLDebug(frame.getThreadName(), ids);
         }
     }
 }

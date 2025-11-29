@@ -1,7 +1,8 @@
 package me.hannsi.lfjg.core.utils.toolkit;
 
-import me.hannsi.lfjg.core.Core;
 import org.joml.Vector2f;
+
+import static me.hannsi.lfjg.core.Core.GLFW.*;
 
 public class MouseInfo {
     private Vector2f currentPos;
@@ -32,8 +33,8 @@ public class MouseInfo {
     }
 
     public void updateMouseButton(int button, int action) {
-        leftButtonPressed = button == Core.GLFW.GLFW_MOUSE_BUTTON_1 && action == Core.GLFW.GLFW_PRESS;
-        rightButtonPressed = button == Core.GLFW.GLFW_MOUSE_BUTTON_2 && action == Core.GLFW.GLFW_PRESS;
+        leftButtonPressed = button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS;
+        rightButtonPressed = button == GLFW_MOUSE_BUTTON_2 && action == GLFW_PRESS;
     }
 
     public void updateInWindow(boolean inWindow) {

@@ -10,7 +10,7 @@ import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
+import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
 
 
 public class EffectCache {
@@ -141,7 +141,7 @@ public class EffectCache {
             index++;
         }
 
-        glStateCache.bindFrameBuffer(0);
+        GL_STATE_CACHE.bindFrameBuffer(0);
         if (lastEffectBase != null) {
             push(glObject);
             lastEffectBase.getFrameBuffer().drawFrameBuffer();

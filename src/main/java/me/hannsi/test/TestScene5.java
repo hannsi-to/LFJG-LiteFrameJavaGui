@@ -1,15 +1,15 @@
 package me.hannsi.test;
 
-import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.render.LFJGRenderContext;
 import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
+
+import static me.hannsi.lfjg.render.LFJGRenderContext.TEXTURE_CACHE;
 
 public class TestScene5 implements IScene {
     public Scene scene;
@@ -48,8 +48,7 @@ public class TestScene5 implements IScene {
                 .createCache(glRect4);
 
 
-        LFJGRenderContext.textureCache = TextureCache.createTextureCache()
-                .createCache("Texture1", Location.fromResource("texture/test/test1.jpg"));
+        TEXTURE_CACHE.createCache("Texture1", Location.fromResource("texture/test/test1.jpg"));
 
         effectCache = EffectCache.createEffectCache()
                 .createCache(
