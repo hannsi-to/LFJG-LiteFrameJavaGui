@@ -9,10 +9,11 @@ import me.hannsi.lfjg.render.system.mesh.persistent.PersistentMappedEBO;
 import me.hannsi.lfjg.render.system.mesh.persistent.PersistentMappedIBO;
 import me.hannsi.lfjg.render.system.mesh.persistent.PersistentMappedVBO;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
-import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.lwjgl.opengl.GL30;
 
 import java.util.*;
+
+import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
 
 public class Mesh {
     private final int vaoId;
@@ -37,7 +38,7 @@ public class Mesh {
         this.useIndirect = MeshConstants.DEFAULT_USE_INDIRECT;
         this.drawCommands = new ArrayList<>();
 
-        GLStateCache.bindVertexArray(vaoId);
+        glStateCache.bindVertexArray(vaoId);
     }
 
     public static Mesh createMesh() {
@@ -94,7 +95,7 @@ public class Mesh {
             ids.append("IndirectBufferObject: ").append(id).append(" | ");
         }
 
-        GLStateCache.deleteVertexArray(vaoId);
+        glStateCache.deleteVertexArray(vaoId);
         ids.append("VertexArrayObject: ").append(vaoId);
 
         new LogGenerator(
@@ -297,7 +298,7 @@ public class Mesh {
     }
 
     public Mesh builderClose() {
-        GLStateCache.bindVertexArray(0);
+        glStateCache.bindVertexArray(0);
         return this;
     }
 

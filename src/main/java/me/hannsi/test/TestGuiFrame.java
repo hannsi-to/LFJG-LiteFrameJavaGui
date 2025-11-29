@@ -10,7 +10,6 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.LFJGContext;
 import me.hannsi.lfjg.frame.event.events.user.*;
 import me.hannsi.lfjg.frame.setting.settings.*;
-import me.hannsi.lfjg.frame.system.IFrame;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.jcef.adapter.KeyEventAdapter;
 import me.hannsi.lfjg.jcef.adapter.MouseEventAdapter;
@@ -26,6 +25,8 @@ import org.lwjgl.glfw.GLFW;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+
+import static me.hannsi.lfjg.core.Core.EVENT_MANAGER;
 
 public class TestGuiFrame implements LFJGFrame {
     private static final String URL = "https://google.com";
@@ -58,7 +59,7 @@ public class TestGuiFrame implements LFJGFrame {
 
     @Override
     public void init() {
-        IFrame.eventManager.register(this);
+        EVENT_MANAGER.register(this);
 
         LFJGContext.frame.updateLFJGLContext();
         Core.mouseInfo = new MouseInfo();

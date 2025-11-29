@@ -22,6 +22,8 @@ import org.lwjgl.opengl.GL30;
 
 import java.nio.ByteBuffer;
 
+import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
+
 public class FrameBuffer {
     private final int frameBufferId;
     private final int textureId;
@@ -84,9 +86,9 @@ public class FrameBuffer {
     }
 
     public void cleanup() {
-        GLStateCache.deleteFrameBuffer(frameBufferId);
-        GLStateCache.deleteTexture(GL11.GL_TEXTURE_2D, textureId);
-        GLStateCache.deleteRenderBuffer(renderBufferId);
+        glStateCache.deleteFrameBuffer(frameBufferId);
+        glStateCache.deleteTexture(GL11.GL_TEXTURE_2D, textureId);
+        glStateCache.deleteRenderBuffer(renderBufferId);
 
         vaoRendering.cleanup();
         mesh.cleanup();
@@ -110,8 +112,8 @@ public class FrameBuffer {
             throw new IllegalArgumentException("Framebuffer size must be > 0: width=" + width + ", height=" + height);
         }
 
-        GLStateCache.bindFrameBuffer(frameBufferId);
-        GLStateCache.bindTexture(GL11.GL_TEXTURE_2D, textureId);
+        glStateCache.bindFrameBuffer(frameBufferId);
+        glStateCache.bindTexture(GL11.GL_TEXTURE_2D, textureId);
 
         GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, (int) width, (int) height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, (ByteBuffer) null);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
@@ -127,9 +129,9 @@ public class FrameBuffer {
             throw new CompleteFrameBufferException("Frame Buffer not complete: 0x" + Integer.toHexString(status));
         }
 
-        GLStateCache.bindRenderBuffer(0);
-        GLStateCache.bindTexture(GL11.GL_TEXTURE_2D, 0);
-        GLStateCache.bindFrameBuffer(0);
+        glStateCache.bindRenderBuffer(0);
+        glStateCache.bindTexture(GL11.GL_TEXTURE_2D, 0);
+        glStateCache.bindFrameBuffer(0);
     }
 
     public void drawFrameBuffer() {
@@ -143,9 +145,9 @@ public class FrameBuffer {
         LFJGRenderContext.shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix);
         LFJGRenderContext.shaderProgram.setUniform("frameBufferSampler", UploadUniformType.ONCE, 3);
 
-        GLStateCache.enable(GL11.GL_BLEND);
-        GLStateCache.disable(GL11.GL_DEPTH_TEST);
-        GLStateCache.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        glStateCache.enable(GL11.GL_BLEND);
+        glStateCache.disable(GL11.GL_DEPTH_TEST);
+        glStateCache.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
         bindTexture();
         if (drawVAORendering) {
@@ -158,40 +160,40 @@ public class FrameBuffer {
     }
 
     public void bindTexture(int unit) {
-        GLStateCache.activeTexture(GL13.GL_TEXTURE0 + unit);
-        GLStateCache.bindTexture(GL11.GL_TEXTURE_2D, textureId);
+        glStateCache.activeTexture(GL13.GL_TEXTURE0 + unit);
+        glStateCache.bindTexture(GL11.GL_TEXTURE_2D, textureId);
     }
 
     public void bindTexture() {
-        GLStateCache.activeTexture(GL13.GL_TEXTURE3);
-        GLStateCache.bindTexture(GL11.GL_TEXTURE_2D, textureId);
+        glStateCache.activeTexture(GL13.GL_TEXTURE3);
+        glStateCache.bindTexture(GL11.GL_TEXTURE_2D, textureId);
     }
 
     public void bindRenderBuffer() {
-        GLStateCache.bindRenderBuffer(renderBufferId);
+        glStateCache.bindRenderBuffer(renderBufferId);
     }
 
     public void bindDrawFrameBuffer() {
-        GLStateCache.bindDrawFrameBuffer(frameBufferId);
+        glStateCache.bindDrawFrameBuffer(frameBufferId);
     }
 
     public void bindReadFrameBuffer() {
-        GLStateCache.bindReadFrameBuffer(frameBufferId);
+        glStateCache.bindReadFrameBuffer(frameBufferId);
     }
 
     public void bindFrameBuffer() {
         bindFrameBufferNoClear();
 
-        GLStateCache.clearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glStateCache.clearColor(0.0f, 0.0f, 0.0f, 0.0f);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
     }
 
     public void bindFrameBufferNoClear() {
-        GLStateCache.bindFrameBuffer(frameBufferId);
+        glStateCache.bindFrameBuffer(frameBufferId);
     }
 
     public void unbindFrameBuffer() {
-        GLStateCache.bindFrameBuffer(0);
+        glStateCache.bindFrameBuffer(0);
     }
 
     public int getFrameBufferId() {

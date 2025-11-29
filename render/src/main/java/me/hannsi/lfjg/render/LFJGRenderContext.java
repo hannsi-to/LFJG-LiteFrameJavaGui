@@ -4,6 +4,7 @@ import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.toolkit.Camera;
 import me.hannsi.lfjg.render.system.mesh.TestMesh;
+import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 
 import static me.hannsi.lfjg.core.SystemSetting.*;
@@ -14,6 +15,7 @@ public class LFJGRenderContext {
     public static Camera mainCamera;
     public static ShaderProgram shaderProgram;
     public static TestMesh mesh;
+    public static GLStateCache glStateCache;
     public static TextureCache textureCache;
 
     static {
@@ -21,6 +23,8 @@ public class LFJGRenderContext {
         glObjectPool = new GLObjectPool();
 
         mainCamera = new Camera();
+
+        glStateCache = new GLStateCache();
 
         shaderProgram = new ShaderProgram();
         shaderProgram.createVertexShader(Location.fromResource("shader/VertexShader.vsh"));

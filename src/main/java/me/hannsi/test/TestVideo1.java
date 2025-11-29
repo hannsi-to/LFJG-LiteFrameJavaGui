@@ -5,11 +5,12 @@ import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.event.events.user.KeyEvent;
 import me.hannsi.lfjg.frame.event.events.user.MouseButtonEvent;
-import me.hannsi.lfjg.frame.system.IFrame;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.video.GLVideo;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
+
+import static me.hannsi.lfjg.core.Core.EVENT_MANAGER;
 
 public class TestVideo1 implements IScene {
     public Scene scene;
@@ -21,7 +22,7 @@ public class TestVideo1 implements IScene {
         this.scene = new Scene("TestVideo1", this);
         this.frame = frame;
 
-        IFrame.eventManager.register(this);
+        EVENT_MANAGER.register(this);
     }
 
     @Override

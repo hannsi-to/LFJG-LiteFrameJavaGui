@@ -10,7 +10,6 @@ import me.hannsi.lfjg.render.debug.exceptions.shader.CompilingShaderException;
 import me.hannsi.lfjg.render.debug.exceptions.shader.CreatingShaderException;
 import me.hannsi.lfjg.render.debug.exceptions.shader.CreatingShaderProgramException;
 import me.hannsi.lfjg.render.debug.exceptions.shader.LinkingShaderException;
-import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.joml.*;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.system.MemoryStack;
@@ -18,6 +17,8 @@ import org.lwjgl.system.MemoryStack;
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
+
+import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
 
 public class ShaderProgram {
     private final int programId;
@@ -77,7 +78,7 @@ public class ShaderProgram {
             GL20.glDeleteShader(fragmentShaderId);
         }
         if (programId != 0) {
-            GLStateCache.deleteProgram(programId);
+            glStateCache.deleteProgram(programId);
         }
 
         new LogGenerator(
@@ -136,7 +137,7 @@ public class ShaderProgram {
     }
 
     public void bind() {
-        GLStateCache.useProgram(programId);
+        glStateCache.useProgram(programId);
     }
 
     @SuppressWarnings("unchecked")

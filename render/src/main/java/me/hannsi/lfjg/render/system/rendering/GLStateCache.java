@@ -1,47 +1,57 @@
 package me.hannsi.lfjg.render.system.rendering;
 
+import me.hannsi.lfjg.core.event.EventHandler;
+import me.hannsi.lfjg.core.event.events.OpenGLStaticMethodHookEvent;
 import org.lwjgl.opengl.*;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
+
+import static me.hannsi.lfjg.core.Core.EVENT_MANAGER;
 
 public class GLStateCache {
-    private static final Map<Integer, Boolean> STATE_CACHE = new HashMap<>();
-    private static final float[] lastClearColor = new float[]{-1f, -1f, -1f, -1f};
-    private static final boolean[] lastColorMask = new boolean[]{true, true, true, true};
-    private static final int[] lastStencilFunc = new int[]{-1, -1, -1};
-    private static final int[] lastStencilOp = new int[]{-1, -1, -1};
-    private static final int[] lastTexture = new int[]{-1, -1};
-    private static final int[] lastPolygonMode = new int[]{-1, -1};
-    private static final float[] lastPolygonOffset = new float[]{Float.NaN, Float.NaN};
-    private static final int[] lastScissorBox = new int[]{-1, -1, -1, -1};
-    private static final int[] lastViewport = new int[]{-1, -1, -1, -1};
-    private static final float[] lastDepthRange = new float[]{-1f, -1f};
-    private static int lastBlendSrc = -1;
-    private static int lastBlendDst = -1;
-    private static int lastBlendEquation = -1;
-    private static int lastActiveTexture = -1;
-    private static int lastShaderProgram = -1;
-    private static int lastFrameBuffer = -1;
-    private static int lastRenderBuffer = -1;
-    private static int lastDrawFrameBuffer = -1;
-    private static int lastReadFrameBuffer = -1;
-    private static int lastVertexArray = -1;
-    private static int lastDrawIndirectBuffer = -1;
-    private static int lastElementArrayBuffer = -1;
-    private static int lastArrayBuffer = -1;
-    private static int lastUniformBuffer = -1;
-    private static double lastClearDepth = -1.0;
-    private static int lastClearStencil = -1;
-    private static boolean lastDepthMask = true;
-    private static int lastDepthFunc = -1;
-    private static int lastCullFace = -1;
-    private static int lastFrontFace = -1;
-    private static float lastLineWidth = -1f;
-    private static float lastPointSize = -1f;
-    private static int lastSampleMaskValue = -1;
+    private final Map<Integer, Boolean> STATE_CACHE = new HashMap<>();
+    private final float[] lastClearColor = new float[]{-1f, -1f, -1f, -1f};
+    private final boolean[] lastColorMask = new boolean[]{true, true, true, true};
+    private final int[] lastStencilFunc = new int[]{-1, -1, -1};
+    private final int[] lastStencilOp = new int[]{-1, -1, -1};
+    private final int[] lastTexture = new int[]{-1, -1};
+    private final int[] lastPolygonMode = new int[]{-1, -1};
+    private final float[] lastPolygonOffset = new float[]{Float.NaN, Float.NaN};
+    private final int[] lastScissorBox = new int[]{-1, -1, -1, -1};
+    private final int[] lastViewport = new int[]{-1, -1, -1, -1};
+    private final float[] lastDepthRange = new float[]{-1f, -1f};
+    private int lastBlendSrc = -1;
+    private int lastBlendDst = -1;
+    private int lastBlendEquation = -1;
+    private int lastActiveTexture = -1;
+    private int lastShaderProgram = -1;
+    private int lastFrameBuffer = -1;
+    private int lastRenderBuffer = -1;
+    private int lastDrawFrameBuffer = -1;
+    private int lastReadFrameBuffer = -1;
+    private int lastVertexArray = -1;
+    private int lastDrawIndirectBuffer = -1;
+    private int lastElementArrayBuffer = -1;
+    private int lastArrayBuffer = -1;
+    private int lastUniformBuffer = -1;
+    private double lastClearDepth = -1.0;
+    private int lastClearStencil = -1;
+    private boolean lastDepthMask = true;
+    private int lastDepthFunc = -1;
+    private int lastCullFace = -1;
+    private int lastFrontFace = -1;
+    private float lastLineWidth = -1f;
+    private float lastPointSize = -1f;
+    private int lastSampleMaskValue = -1;
 
-    public static void enable(int cap) {
+    public GLStateCache() {
+        EVENT_MANAGER.register(this);
+    }
+
+    public void enable(int cap) {
         Boolean enabled = STATE_CACHE.get(cap);
         if (enabled == null || !enabled) {
             GL11.glEnable(cap);
@@ -49,7 +59,7 @@ public class GLStateCache {
         }
     }
 
-    public static void disable(int cap) {
+    public void disable(int cap) {
         Boolean enabled = STATE_CACHE.get(cap);
         if (enabled == null || enabled) {
             GL11.glDisable(cap);
@@ -57,7 +67,7 @@ public class GLStateCache {
         }
     }
 
-    public static void blendFunc(int sFactor, int dFactor) {
+    public void blendFunc(int sFactor, int dFactor) {
         if (lastBlendSrc != sFactor || lastBlendDst != dFactor) {
             GL11.glBlendFunc(sFactor, dFactor);
             lastBlendSrc = sFactor;
@@ -65,21 +75,21 @@ public class GLStateCache {
         }
     }
 
-    public static void setBlendEquation(int equation) {
+    public void setBlendEquation(int equation) {
         if (lastBlendEquation != equation) {
             GL14.glBlendEquation(equation);
             lastBlendEquation = equation;
         }
     }
 
-    public static void activeTexture(int texture) {
+    public void activeTexture(int texture) {
         if (lastActiveTexture != texture) {
             GL13.glActiveTexture(texture);
             lastActiveTexture = texture;
         }
     }
 
-    public static void bindTexture(int target, int texture) {
+    public void bindTexture(int target, int texture) {
         int lastTarget = lastTexture[0];
         int lastTextureId = lastTexture[1];
         if (lastTarget != target || lastTextureId != texture) {
@@ -90,7 +100,7 @@ public class GLStateCache {
         }
     }
 
-    public static void deleteTexture(int target, int texture) {
+    public void deleteTexture(int target, int texture) {
         if (lastTexture[0] == target && lastTexture[1] == texture) {
             GL11.glBindTexture(target, 0);
             lastTexture[0] = -1;
@@ -100,14 +110,14 @@ public class GLStateCache {
         GL11.glDeleteTextures(texture);
     }
 
-    public static void useProgram(int program) {
+    public void useProgram(int program) {
         if (lastShaderProgram != program) {
             GL20.glUseProgram(program);
             lastShaderProgram = program;
         }
     }
 
-    public static void deleteProgram(int program) {
+    public void deleteProgram(int program) {
         if (lastShaderProgram == program) {
             useProgram(0);
             lastShaderProgram = -1;
@@ -116,14 +126,14 @@ public class GLStateCache {
         GL20.glDeleteProgram(program);
     }
 
-    public static void bindFrameBuffer(int frameBuffer) {
+    public void bindFrameBuffer(int frameBuffer) {
         if (lastFrameBuffer != frameBuffer) {
             GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
             lastFrameBuffer = frameBuffer;
         }
     }
 
-    public static void deleteFrameBuffer(int frameBuffer) {
+    public void deleteFrameBuffer(int frameBuffer) {
         if (lastFrameBuffer == frameBuffer) {
             bindFrameBuffer(0);
             lastFrameBuffer = -1;
@@ -132,14 +142,14 @@ public class GLStateCache {
         GL30.glDeleteFramebuffers(frameBuffer);
     }
 
-    public static void bindRenderBuffer(int renderBuffer) {
+    public void bindRenderBuffer(int renderBuffer) {
         if (lastRenderBuffer != renderBuffer) {
             GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, renderBuffer);
             lastRenderBuffer = renderBuffer;
         }
     }
 
-    public static void deleteRenderBuffer(int renderBuffer) {
+    public void deleteRenderBuffer(int renderBuffer) {
         if (lastRenderBuffer == renderBuffer) {
             bindRenderBuffer(0);
             lastRenderBuffer = -1;
@@ -148,33 +158,33 @@ public class GLStateCache {
         GL30.glDeleteRenderbuffers(renderBuffer);
     }
 
-    public static void bindDrawFrameBuffer(int frameBuffer) {
+    public void bindDrawFrameBuffer(int frameBuffer) {
         if (lastDrawFrameBuffer != frameBuffer) {
             GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, frameBuffer);
             lastDrawFrameBuffer = frameBuffer;
         }
     }
 
-    public static void bindReadFrameBuffer(int frameBuffer) {
+    public void bindReadFrameBuffer(int frameBuffer) {
         if (lastReadFrameBuffer != frameBuffer) {
             GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, frameBuffer);
             lastReadFrameBuffer = frameBuffer;
         }
     }
 
-    public static void bindVertexArray(int array) {
+    public void bindVertexArray(int array) {
         if (lastVertexArray != array) {
             GL30.glBindVertexArray(array);
             lastVertexArray = array;
         }
     }
 
-    public static void bindVertexArrayForce(int array) {
+    public void bindVertexArrayForce(int array) {
         GL30.glBindVertexArray(array);
         lastVertexArray = array;
     }
 
-    public static void deleteVertexArray(int array) {
+    public void deleteVertexArray(int array) {
         if (lastVertexArray == array) {
             bindVertexArray(0);
             lastVertexArray = -1;
@@ -183,19 +193,19 @@ public class GLStateCache {
         GL30.glDeleteVertexArrays(array);
     }
 
-    public static void bindIndirectBuffer(int buffer) {
+    public void bindIndirectBuffer(int buffer) {
         if (lastDrawIndirectBuffer != buffer) {
             GL15.glBindBuffer(GL40.GL_DRAW_INDIRECT_BUFFER, buffer);
             lastDrawIndirectBuffer = buffer;
         }
     }
 
-    public static void bindIndirectBufferForce(int buffer) {
+    public void bindIndirectBufferForce(int buffer) {
         GL15.glBindBuffer(GL40.GL_DRAW_INDIRECT_BUFFER, buffer);
         lastDrawIndirectBuffer = buffer;
     }
 
-    public static void deleteIndirectBuffer(int buffer) {
+    public void deleteIndirectBuffer(int buffer) {
         if (lastDrawIndirectBuffer == buffer) {
             bindIndirectBuffer(0);
             lastDrawIndirectBuffer = -1;
@@ -204,19 +214,19 @@ public class GLStateCache {
         GL15.glDeleteBuffers(buffer);
     }
 
-    public static void bindElementArrayBuffer(int buffer) {
+    public void bindElementArrayBuffer(int buffer) {
         if (lastElementArrayBuffer != buffer) {
             GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer);
             lastElementArrayBuffer = buffer;
         }
     }
 
-    public static void bindElementArrayBufferForce(int buffer) {
+    public void bindElementArrayBufferForce(int buffer) {
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer);
         lastElementArrayBuffer = buffer;
     }
 
-    public static void deleteElementArrayBuffer(int buffer) {
+    public void deleteElementArrayBuffer(int buffer) {
         if (lastElementArrayBuffer == buffer) {
             bindElementArrayBuffer(0);
             lastElementArrayBuffer = -1;
@@ -224,14 +234,14 @@ public class GLStateCache {
         GL15.glDeleteBuffers(buffer);
     }
 
-    public static void bindArrayBuffer(int buffer) {
+    public void bindArrayBuffer(int buffer) {
         if (lastArrayBuffer != buffer) {
             GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, buffer);
             lastArrayBuffer = buffer;
         }
     }
 
-    public static void deleteArrayBuffer(int buffer) {
+    public void deleteArrayBuffer(int buffer) {
         if (lastArrayBuffer == buffer) {
             bindArrayBuffer(0);
             lastArrayBuffer = -1;
@@ -239,14 +249,14 @@ public class GLStateCache {
         GL15.glDeleteBuffers(buffer);
     }
 
-    public static void bindUniformBuffer(int buffer) {
+    public void bindUniformBuffer(int buffer) {
         if (lastUniformBuffer != buffer) {
             GL15.glBindBuffer(GL31.GL_UNIFORM_BUFFER, buffer);
             lastUniformBuffer = buffer;
         }
     }
 
-    public static void deleteUniformBuffer(int buffer) {
+    public void deleteUniformBuffer(int buffer) {
         if (lastUniformBuffer == buffer) {
             bindUniformBuffer(0);
             lastUniformBuffer = -1;
@@ -254,7 +264,7 @@ public class GLStateCache {
         GL15.glDeleteBuffers(buffer);
     }
 
-    public static void clearColor(float red, float green, float blue, float alpha) {
+    public void clearColor(float red, float green, float blue, float alpha) {
         float lastRed = lastClearColor[0];
         float lastGreen = lastClearColor[1];
         float lastBlue = lastClearColor[2];
@@ -270,7 +280,7 @@ public class GLStateCache {
         }
     }
 
-    public static void colorMask(boolean red, boolean green, boolean blue, boolean alpha) {
+    public void colorMask(boolean red, boolean green, boolean blue, boolean alpha) {
         boolean lastRed = lastColorMask[0];
         boolean lastGreen = lastColorMask[1];
         boolean lastBlue = lastColorMask[2];
@@ -286,7 +296,7 @@ public class GLStateCache {
         }
     }
 
-    public static void stencilFunc(int func, int ref, int mask) {
+    public void stencilFunc(int func, int ref, int mask) {
         int lastFunc = lastStencilFunc[0];
         int lastRef = lastStencilFunc[1];
         int lastMask = lastStencilFunc[2];
@@ -300,7 +310,7 @@ public class GLStateCache {
         }
     }
 
-    public static void stencilOp(int sfail, int dpfail, int dppass) {
+    public void stencilOp(int sfail, int dpfail, int dppass) {
         int lastSFail = lastStencilOp[0];
         int lastDPFail = lastStencilOp[1];
         int lastDPPass = lastStencilOp[2];
@@ -314,49 +324,49 @@ public class GLStateCache {
         }
     }
 
-    public static void clearDepth(double depth) {
+    public void clearDepth(double depth) {
         if (lastClearDepth != depth) {
             GL11.glClearDepth(depth);
             lastClearDepth = depth;
         }
     }
 
-    public static void clearStencil(int s) {
+    public void clearStencil(int s) {
         if (lastClearStencil != s) {
             GL11.glClearStencil(s);
             lastClearStencil = s;
         }
     }
 
-    public static void depthMask(boolean flag) {
+    public void depthMask(boolean flag) {
         if (lastDepthMask != flag) {
             GL11.glDepthMask(flag);
             lastDepthMask = flag;
         }
     }
 
-    public static void depthFunc(int func) {
+    public void depthFunc(int func) {
         if (lastDepthFunc != func) {
             GL11.glDepthFunc(func);
             lastDepthFunc = func;
         }
     }
 
-    public static void cullFace(int mode) {
+    public void cullFace(int mode) {
         if (lastCullFace != mode) {
             GL11.glCullFace(mode);
             lastCullFace = mode;
         }
     }
 
-    public static void frontFace(int dir) {
+    public void frontFace(int dir) {
         if (lastFrontFace != dir) {
             GL11.glFrontFace(dir);
             lastFrontFace = dir;
         }
     }
 
-    public static void polygonMode(int face, int mode) {
+    public void polygonMode(int face, int mode) {
         if (lastPolygonMode[0] != face || lastPolygonMode[1] != mode) {
             GL11.glPolygonMode(face, mode);
             lastPolygonMode[0] = face;
@@ -364,7 +374,7 @@ public class GLStateCache {
         }
     }
 
-    public static void polygonOffset(float factor, float units) {
+    public void polygonOffset(float factor, float units) {
         if (lastPolygonOffset[0] != factor || lastPolygonOffset[1] != units) {
             GL11.glPolygonOffset(factor, units);
             lastPolygonOffset[0] = factor;
@@ -372,21 +382,21 @@ public class GLStateCache {
         }
     }
 
-    public static void lineWidth(float width) {
+    public void lineWidth(float width) {
         if (lastLineWidth != width) {
             GL11.glLineWidth(width);
             lastLineWidth = width;
         }
     }
 
-    public static void pointSize(float size) {
+    public void pointSize(float size) {
         if (lastPointSize != size) {
             GL11.glPointSize(size);
             lastPointSize = size;
         }
     }
 
-    public static void scissor(int x, int y, int width, int height) {
+    public void scissor(int x, int y, int width, int height) {
         if (lastScissorBox[0] != x || lastScissorBox[1] != y || lastScissorBox[2] != width || lastScissorBox[3] != height) {
             GL11.glScissor(x, y, width, height);
             lastScissorBox[0] = x;
@@ -396,7 +406,7 @@ public class GLStateCache {
         }
     }
 
-    public static void viewport(int x, int y, int width, int height) {
+    public void viewport(int x, int y, int width, int height) {
         if (lastViewport[0] != x || lastViewport[1] != y || lastViewport[2] != width || lastViewport[3] != height) {
             GL11.glViewport(x, y, width, height);
             lastViewport[0] = x;
@@ -406,7 +416,7 @@ public class GLStateCache {
         }
     }
 
-    public static void depthRange(float near, float far) {
+    public void depthRange(float near, float far) {
         if (lastDepthRange[0] != near || lastDepthRange[1] != far) {
             GL11.glDepthRange(near, far);
             lastDepthRange[0] = near;
@@ -414,10 +424,143 @@ public class GLStateCache {
         }
     }
 
-    public static void sampleMaski(int maskNumber, int mask) {
+    public void sampleMaski(int maskNumber, int mask) {
         if (lastSampleMaskValue != mask) {
             GL32.glSampleMaski(maskNumber, mask);
             lastSampleMaskValue = mask;
+        }
+    }
+
+    @EventHandler
+    public void onOpenGLStaticMethodHookEvent(OpenGLStaticMethodHookEvent event) {
+        Method method = event.getMethod();
+        Object[] args = event.getArgs();
+        Callable<?> zuper = event.getSuper();
+
+        switch (method.getName()) {
+            case "glEnable":
+                STATE_CACHE.put((int) args[0], true);
+                break;
+            case "glDisable":
+                STATE_CACHE.put((int) args[0], false);
+                break;
+            case "glClearColor":
+                lastClearColor[0] = (float) args[0];
+                lastClearColor[1] = (float) args[1];
+                lastClearColor[2] = (float) args[2];
+                lastClearColor[3] = (float) args[3];
+                break;
+            case "glColorMash":
+                lastColorMask[0] = (boolean) args[0];
+                lastColorMask[1] = (boolean) args[1];
+                lastColorMask[2] = (boolean) args[2];
+                lastColorMask[3] = (boolean) args[3];
+                break;
+            case "glStencilFunc":
+                lastStencilFunc[0] = (int) args[0];
+                lastStencilFunc[1] = (int) args[1];
+                lastStencilFunc[2] = (int) args[2];
+                break;
+            case "glStencilOp":
+                lastStencilOp[0] = (int) args[0];
+                lastStencilOp[1] = (int) args[1];
+                lastStencilOp[2] = (int) args[2];
+                break;
+            case "glBindTexture":
+                lastTexture[0] = (int) args[0];
+                lastTexture[1] = (int) args[1];
+                break;
+            case "glPolygonMode":
+                lastPolygonMode[0] = (int) args[0];
+                lastPolygonMode[1] = (int) args[1];
+                break;
+            case "glPolygonOffset":
+                lastPolygonOffset[0] = (float) args[0];
+                lastPolygonOffset[1] = (float) args[1];
+                break;
+            case "glScissor":
+                lastScissorBox[0] = (int) args[0];
+                lastScissorBox[1] = (int) args[1];
+                lastScissorBox[2] = (int) args[2];
+                lastScissorBox[3] = (int) args[3];
+                break;
+            case "glViewport":
+                lastViewport[0] = (int) args[0];
+                lastViewport[1] = (int) args[1];
+                lastViewport[2] = (int) args[2];
+                lastViewport[3] = (int) args[3];
+                break;
+            case "glDepthRange":
+                lastDepthRange[0] = (int) args[0];
+                lastDepthRange[1] = (int) args[1];
+                lastDepthRange[2] = (int) args[2];
+                break;
+            case "glBlendFunc":
+                lastBlendSrc = (int) args[0];
+                lastBlendDst = (int) args[1];
+                break;
+            case "glBlendEquation":
+                lastBlendEquation = (int) args[0];
+                break;
+            case "glActiveTexture":
+                lastActiveTexture = (int) args[0];
+                break;
+            case "glUseProgram":
+                lastShaderProgram = (int) args[0];
+                break;
+            case "glBindFramebuffer":
+                if ((int) args[0] == GL30.GL_FRAMEBUFFER) {
+                    lastFrameBuffer = (int) args[1];
+                } else if ((int) args[0] == GL30.GL_DRAW_FRAMEBUFFER) {
+                    lastDrawFrameBuffer = (int) args[1];
+                } else if ((int) args[0] == GL30.GL_READ_FRAMEBUFFER) {
+                    lastReadFrameBuffer = (int) args[1];
+                }
+                break;
+            case "glBindRenderbuffer":
+                lastRenderBuffer = (int) args[0];
+                break;
+            case "glBindVertexArray":
+                lastVertexArray = (int) args[0];
+                break;
+            case "glBindBuffer":
+                if ((int) args[0] == GL40.GL_DRAW_INDIRECT_BUFFER) {
+                    lastDrawIndirectBuffer = (int) args[1];
+                } else if ((int) args[0] == GL40.GL_ELEMENT_ARRAY_BUFFER) {
+                    lastElementArrayBuffer = (int) args[1];
+                } else if ((int) args[0] == GL15.GL_ARRAY_BUFFER) {
+                    lastArrayBuffer = (int) args[1];
+                } else if ((int) args[0] == GL31.GL_UNIFORM_BUFFER) {
+                    lastUniformBuffer = (int) args[1];
+                }
+                break;
+            case "glClearDepth":
+                lastClearDepth = (int) args[0];
+                break;
+            case "glClearStencil":
+                lastClearStencil = (int) args[0];
+                break;
+            case "glDepthMask":
+                lastDepthMask = (boolean) args[0];
+                break;
+            case "glDepthFunc":
+                lastDepthFunc = (int) args[0];
+                break;
+            case "glCullFace":
+                lastCullFace = (int) args[0];
+                break;
+            case "glFrontFace":
+                lastFrontFace = (int) args[0];
+                break;
+            case "glLineWidth":
+                lastLineWidth = (float) args[0];
+                break;
+            case "glPointSize":
+                lastPointSize = (float) args[0];
+                break;
+            case "glSampleMaski":
+                lastSampleMaskValue = (int) args[1];
+                break;
         }
     }
 }

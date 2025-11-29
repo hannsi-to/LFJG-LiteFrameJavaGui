@@ -11,7 +11,6 @@ import me.hannsi.lfjg.render.debug.exceptions.UnknownAlignType;
 import me.hannsi.lfjg.render.system.mesh.BufferObjectType;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
-import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
@@ -26,6 +25,8 @@ import org.lwjgl.opengl.GL13;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
 
 public class TextRenderer {
     protected List<LineData> lineDatum;
@@ -178,11 +179,11 @@ public class TextRenderer {
     }
 
     public TextRenderer draw(String text) {
-        GLStateCache.enable(GL11.GL_BLEND);
-        GLStateCache.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GLStateCache.enable(GL11.GL_TEXTURE_2D);
-        GLStateCache.activeTexture(GL13.GL_TEXTURE1);
-        GLStateCache.bindTexture(GL11.GL_TEXTURE_2D, msdfTextureLoader.textureId);
+        glStateCache.enable(GL11.GL_BLEND);
+        glStateCache.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        glStateCache.enable(GL11.GL_TEXTURE_2D);
+        glStateCache.activeTexture(GL13.GL_TEXTURE1);
+        glStateCache.bindTexture(GL11.GL_TEXTURE_2D, msdfTextureLoader.textureId);
 
         LFJGRenderContext.shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.MSDF.getId());
         LFJGRenderContext.shaderProgram.setUniform("fontAtlas", UploadUniformType.ONCE, 1);

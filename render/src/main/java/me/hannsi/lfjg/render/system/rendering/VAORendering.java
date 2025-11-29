@@ -9,6 +9,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL40;
 import org.lwjgl.opengl.GL43;
 
+import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
+
 public class VAORendering {
     public void draw(GLObject glObject) {
         draw(glObject.getMesh(), glObject.getDrawType().getId());
@@ -24,7 +26,7 @@ public class VAORendering {
 //        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 //        GL11.glLineWidth(0.1f);
 
-        GLStateCache.bindVertexArray(vaoId);
+        glStateCache.bindVertexArray(vaoId);
 
         mesh.startFrame();
 
@@ -39,11 +41,11 @@ public class VAORendering {
 
     private void drawIndirect(Mesh mesh, int drawType) {
         int indirectBufferId = mesh.getIboId().getBufferId();
-        GLStateCache.bindIndirectBuffer(indirectBufferId);
+        glStateCache.bindIndirectBuffer(indirectBufferId);
 
         if (mesh.isUseElementBufferObject()) {
             int eboId = mesh.getEboId().getBufferId();
-            GLStateCache.bindElementArrayBuffer(eboId);
+            glStateCache.bindElementArrayBuffer(eboId);
 
             int commandCount = mesh.getDrawCommandCount();
             if (commandCount > 1) {
@@ -64,7 +66,7 @@ public class VAORendering {
     private void drawDirect(Mesh mesh, int drawType) {
         if (mesh.isUseElementBufferObject()) {
             int eboId = mesh.getEboId().getBufferId();
-            GLStateCache.bindElementArrayBuffer(eboId);
+            glStateCache.bindElementArrayBuffer(eboId);
             GL11.glDrawElements(drawType, mesh.getNumVertices(), GL11.GL_UNSIGNED_INT, 0);
         } else {
             GL11.glDrawArrays(drawType, 0, mesh.getCount());

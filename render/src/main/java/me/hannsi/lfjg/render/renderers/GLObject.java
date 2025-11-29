@@ -12,13 +12,14 @@ import me.hannsi.lfjg.render.system.mesh.BufferObjectType;
 import me.hannsi.lfjg.render.system.mesh.Mesh;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
-import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
+
+import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
 
 public class GLObject implements Cloneable {
     private String name;
@@ -156,10 +157,10 @@ public class GLObject implements Cloneable {
             GL11.glPointSize(pointSize);
         }
 
-        GLStateCache.blendFunc(blendType.getSfactor(), blendType.getDfactor());
-        GLStateCache.setBlendEquation(blendType.getEquation());
-        GLStateCache.enable(GL11.GL_BLEND);
-        GLStateCache.disable(GL11.GL_DEPTH_TEST);
+        glStateCache.blendFunc(blendType.getSfactor(), blendType.getDfactor());
+        glStateCache.setBlendEquation(blendType.getEquation());
+        glStateCache.enable(GL11.GL_BLEND);
+        glStateCache.disable(GL11.GL_DEPTH_TEST);
     }
 
     private void uploadUniforms() {

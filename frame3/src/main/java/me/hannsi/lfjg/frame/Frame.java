@@ -3,7 +3,6 @@ package me.hannsi.lfjg.frame;
 import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.event.EventHandler;
-import me.hannsi.lfjg.core.manager.WorkspaceManager;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.math.Projection;
 import me.hannsi.lfjg.core.utils.time.TimeCalculator;
@@ -30,6 +29,8 @@ import org.lwjgl.glfw.GLFWNativeWin32;
 import org.lwjgl.system.MemoryUtil;
 
 import java.util.concurrent.locks.LockSupport;
+
+import static me.hannsi.lfjg.core.Core.*;
 
 public class Frame implements IFrame {
     private final LFJGFrame lfjgFrame;
@@ -63,8 +64,8 @@ public class Frame implements IFrame {
     }
 
     public void createFrame() {
-        workspaceManager.createDirectories();
-        workspaceManager.copyResourcesToWorkspace();
+        WORKSPACE_MANAGER.createDirectories();
+        WORKSPACE_MANAGER.copyResourcesToWorkspace();
 
         registerManagers();
 
@@ -80,7 +81,7 @@ public class Frame implements IFrame {
         GLFWCallback glfwCallback = new GLFWCallback(this);
         glfwCallback.glfwInvoke();
 
-        eventManager.register(this);
+        EVENT_MANAGER.register(this);
 
         lfjgFrame.init();
         mainLoop();
@@ -132,6 +133,9 @@ public class Frame implements IFrame {
     private void initRendering() {
         switch (renderingType) {
             case OPEN_GL:
+                if (GLFW.glfwGetCurrentContext() == 0) {
+                    throw new IllegalStateException("OpenGL context must be current before createCapabilities!");
+                }
                 Core.GL.createCapabilities();
                 break;
             case LIB_GDX:
@@ -169,7 +173,7 @@ public class Frame implements IFrame {
             lastTime2 = currentTime2;
 
             if (deltaTime2 >= targetTime) {
-                Core.GL11.glClear(Core.GL11.GL_COLOR_BUFFER_BIT | Core.GL11.GL_DEPTH_BUFFER_BIT);
+                Core.GL11.glClear(OPEN_GL_PARAMETER_NAME_MAP.get("GL_COLOR_BUFFER_BIT") | OPEN_GL_PARAMETER_NAME_MAP.get("GL_DEPTH_BUFFER_BIT"));
                 draw();
 
                 GLFW.glfwSwapBuffers(windowID);
@@ -245,7 +249,7 @@ public class Frame implements IFrame {
     private void draw() {
         switch (renderingType) {
             case OPEN_GL:
-                eventManager.call(new DrawFrameWithOpenGLEvent());
+                EVENT_MANAGER.call(new DrawFrameWithOpenGLEvent());
                 break;
             case LIB_GDX:
             case VULKAN:
@@ -267,10 +271,10 @@ public class Frame implements IFrame {
     private void setAntiAliasing() {
         switch (((AntiAliasingType) getFrameSettingValue(AntiAliasingSetting.class))) {
             case MSAA:
-                Core.GLStateCache.enable(Core.GL13.GL_MULTISAMPLE);
+                Core.LFJGRenderContext.enable(OPEN_GL_PARAMETER_NAME_MAP.get("GL_MULTISAMPLE"));
                 break;
             case OFF:
-                Core.GLStateCache.disable(Core.GL13.GL_MULTISAMPLE);
+                Core.LFJGRenderContext.disable(OPEN_GL_PARAMETER_NAME_MAP.get("GL_MULTISAMPLE"));
                 break;
         }
     }
@@ -302,11 +306,11 @@ public class Frame implements IFrame {
     public void updateViewport() {
         Core.GL11.glViewport(0, 0, frameBufferWidth, frameBufferHeight);
 
-        Core.GL11.glMatrixMode(Core.GL11.GL_PROJECTION);
+        Core.GL11.glMatrixMode(OPEN_GL_PARAMETER_NAME_MAP.get("GL_PROJECTION"));
         Core.GL11.glLoadIdentity();
         Core.GL11.glOrtho(0, frameBufferWidth / contentScaleX, 0, frameBufferHeight / contentScaleY, -1, 1);
 
-        Core.GL11.glMatrixMode(Core.GL11.GL_MODELVIEW);
+        Core.GL11.glMatrixMode(OPEN_GL_PARAMETER_NAME_MAP.get("GL_MODELVIEW"));
         Core.GL11.glLoadIdentity();
     }
 
@@ -342,10 +346,6 @@ public class Frame implements IFrame {
 
     public <T> void setFrameSettingValue(Class<? extends FrameSettingBase<?>> frameSettingBase, T value) {
         getFrameSettingBase(frameSettingBase).setValue(value);
-    }
-
-    public WorkspaceManager getWorkspaceManager() {
-        return workspaceManager;
     }
 
     public LFJGFrame getLfjgFrame() {

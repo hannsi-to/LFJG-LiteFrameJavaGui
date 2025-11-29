@@ -14,7 +14,6 @@ import me.hannsi.lfjg.render.renderers.PointType;
 import me.hannsi.lfjg.render.system.mesh.MeshConstants;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
-import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.STD140UniformBlockType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
@@ -30,8 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.mesh;
-import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
+import static me.hannsi.lfjg.render.LFJGRenderContext.*;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL31.*;
 
@@ -59,7 +57,7 @@ public class TestNewMeshSystem implements LFJGFrame {
         LFJGContext.frame.updateLFJGLContext();
 
         uboMatrices = glGenBuffers();
-        GLStateCache.bindUniformBuffer(uboMatrices);
+        glStateCache.bindUniformBuffer(uboMatrices);
         GL44.glBufferStorage(GL31.GL_UNIFORM_BUFFER, STD140UniformBlockType.MAT4.getByteSize() * 3L, MeshConstants.DEFAULT_FLAGS_HINT);
 
         ByteBuffer byteBuffer = GL30.glMapBufferRange(
@@ -72,7 +70,7 @@ public class TestNewMeshSystem implements LFJGFrame {
             throw new RuntimeException("glMapBufferRange failed");
         }
         mappedBuffer = byteBuffer.asFloatBuffer();
-        GLStateCache.bindUniformBuffer(0);
+        glStateCache.bindUniformBuffer(0);
 
         int blockIndex = glGetUniformBlockIndex(shaderProgram.getProgramId(), "Matrices");
         glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatrices, 0, STD140UniformBlockType.MAT4.getByteSize() * 3L);
@@ -113,7 +111,7 @@ public class TestNewMeshSystem implements LFJGFrame {
             mesh.addObject(
                     id,
                     ProjectionType.ORTHOGRAPHIC_PROJECTION,
-                    DrawType.POINTS,
+                    DrawType.POLYGON,
                     30,
                     JointType.MITER,
                     10f,
@@ -240,10 +238,10 @@ public class TestNewMeshSystem implements LFJGFrame {
     public void drawFrame() {
         shaderProgram.bind();
 
-        GLStateCache.blendFunc(blendType.getSfactor(), blendType.getDfactor());
-        GLStateCache.setBlendEquation(blendType.getEquation());
-        GLStateCache.enable(GL11.GL_BLEND);
-        GLStateCache.disable(GL11.GL_DEPTH_TEST);
+        glStateCache.blendFunc(blendType.getSfactor(), blendType.getDfactor());
+        glStateCache.setBlendEquation(blendType.getEquation());
+        glStateCache.enable(GL11.GL_BLEND);
+        glStateCache.disable(GL11.GL_DEPTH_TEST);
 
         shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.OBJECT.getId());
         shaderProgram.setUniform("resolution", UploadUniformType.ON_CHANGE, Core.frameBufferSize);

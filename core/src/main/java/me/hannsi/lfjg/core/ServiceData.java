@@ -32,8 +32,12 @@ public final class ServiceData {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
         ServiceData that = (ServiceData) obj;
         return this.canUsed == that.canUsed &&
                 Objects.equals(this.serviceName, that.serviceName) &&

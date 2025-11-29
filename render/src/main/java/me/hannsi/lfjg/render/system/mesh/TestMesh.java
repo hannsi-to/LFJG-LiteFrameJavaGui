@@ -11,7 +11,6 @@ import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedEBO;
 import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedIBO;
 import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedVBO;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
-import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL43;
@@ -20,6 +19,7 @@ import java.util.*;
 
 import static me.hannsi.lfjg.core.utils.math.MathHelper.max;
 import static me.hannsi.lfjg.render.LFJGRenderContext.glObjectPool;
+import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
 
 public class TestMesh {
     private final int vaoId;
@@ -50,7 +50,7 @@ public class TestMesh {
     }
 
     public TestMesh initBufferObject() {
-        GLStateCache.bindVertexArrayForce(vaoId);
+        glStateCache.bindVertexArrayForce(vaoId);
 
         persistentMappedVBO.createVertexAttribute(vaoId, BufferObjectType.POSITION_BUFFER, BufferObjectType.COLOR_BUFFER, BufferObjectType.TEXTURE_BUFFER, BufferObjectType.NORMAL_BUFFER)
                 .syncToGPU();
@@ -241,11 +241,11 @@ public class TestMesh {
 
     public void debugDraw(int mode, boolean frontAndBack) {
         if (frontAndBack) {
-            GLStateCache.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-            GLStateCache.lineWidth(0.1f);
+            glStateCache.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+            glStateCache.lineWidth(0.1f);
         } else {
-            GLStateCache.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
-            GLStateCache.lineWidth(1.0f);
+            glStateCache.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+            glStateCache.lineWidth(1.0f);
         }
 
         for (Map.Entry<Long, GLObjectData> entry : glObjectPool.getObjects().entrySet()) {
@@ -263,9 +263,9 @@ public class TestMesh {
         persistentMappedEBO.syncToGPU();
         persistentMappedIBO.syncToGPU();
 
-        GLStateCache.bindVertexArray(vaoId);
-        GLStateCache.bindElementArrayBuffer(persistentMappedEBO.getBufferId());
-        GLStateCache.bindIndirectBuffer(persistentMappedIBO.getBufferId());
+        glStateCache.bindVertexArray(vaoId);
+        glStateCache.bindElementArrayBuffer(persistentMappedEBO.getBufferId());
+        glStateCache.bindIndirectBuffer(persistentMappedIBO.getBufferId());
 
         GL43.glMultiDrawElementsIndirect(
                 mode,

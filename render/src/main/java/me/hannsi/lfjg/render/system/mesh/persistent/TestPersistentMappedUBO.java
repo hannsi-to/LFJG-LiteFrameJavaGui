@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.system.mesh.persistent;
 
-import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.shader.STD140UniformBlockType;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
@@ -11,6 +10,9 @@ import org.lwjgl.system.MemoryUtil;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+
+import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
+
 
 public class TestPersistentMappedUBO implements TestPersistentMappedBuffer {
     public static long DEFAULT_UBO_CAPACITY = STD140UniformBlockType.MAT4.getByteSize() * 3L;
@@ -36,12 +38,12 @@ public class TestPersistentMappedUBO implements TestPersistentMappedBuffer {
     public void allocationBufferStorage(long capacity) {
         gpuMemorySize = capacity;
         if (bufferId != 0) {
-            GLStateCache.deleteUniformBuffer(bufferId);
+            glStateCache.deleteUniformBuffer(bufferId);
             bufferId = 0;
         }
 
         bufferId = GL15.glGenBuffers();
-        GLStateCache.bindUniformBuffer(bufferId);
+        glStateCache.bindUniformBuffer(bufferId);
         GL44.glBufferStorage(GL31.GL_UNIFORM_BUFFER, gpuMemorySize, flags);
 
         ByteBuffer byteBuffer = GL30.glMapBufferRange(

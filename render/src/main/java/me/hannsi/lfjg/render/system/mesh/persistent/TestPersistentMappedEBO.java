@@ -3,7 +3,6 @@ package me.hannsi.lfjg.render.system.mesh.persistent;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerator;
-import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL44;
@@ -12,6 +11,7 @@ import org.lwjgl.system.MemoryUtil;
 import java.nio.ByteBuffer;
 
 import static me.hannsi.lfjg.core.Core.UNSAFE;
+import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
 
 public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
     private final int flags;
@@ -36,12 +36,12 @@ public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
     public void allocationBufferStorage(long capacity) {
         gpuMemorySize = capacity;
         if (bufferId != 0) {
-            GLStateCache.deleteElementArrayBuffer(bufferId);
+            glStateCache.deleteElementArrayBuffer(bufferId);
             bufferId = 0;
         }
 
         bufferId = GL15.glGenBuffers();
-        GLStateCache.bindElementArrayBuffer(bufferId);
+        glStateCache.bindElementArrayBuffer(bufferId);
         GL44.glBufferStorage(GL15.GL_ELEMENT_ARRAY_BUFFER, gpuMemorySize, flags);
 
         ByteBuffer byteBuffer = GL30.glMapBufferRange(
@@ -58,7 +58,7 @@ public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
     }
 
     public TestPersistentMappedEBO linkVertexArrayObject(int vaoId) {
-        GLStateCache.bindElementArrayBufferForce(bufferId);
+        glStateCache.bindElementArrayBufferForce(bufferId);
 
         return this;
     }
@@ -141,7 +141,7 @@ public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
                 if (!unmapped) {
                     DebugLog.error(getClass(), "glUnmapBuffer returned false (may indicate corruption).");
                 }
-                GLStateCache.deleteElementArrayBuffer(bufferId);
+                glStateCache.deleteElementArrayBuffer(bufferId);
                 bufferId = 0;
                 mappedBuffer = null;
                 mappedAddress = 0;
@@ -157,7 +157,7 @@ public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
             }
         } else {
             GL30.glUnmapBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER);
-            GLStateCache.deleteElementArrayBuffer(bufferId);
+            glStateCache.deleteElementArrayBuffer(bufferId);
             bufferId = 0;
             mappedBuffer = null;
             mappedAddress = 0;
@@ -210,7 +210,7 @@ public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
     @Override
     public void cleanup() {
         if (bufferId != 0) {
-            GLStateCache.deleteElementArrayBuffer(bufferId);
+            glStateCache.deleteElementArrayBuffer(bufferId);
             bufferId = 0;
         }
         mappedBuffer = null;

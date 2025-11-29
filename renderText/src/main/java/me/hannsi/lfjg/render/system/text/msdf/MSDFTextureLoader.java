@@ -1,7 +1,6 @@
 package me.hannsi.lfjg.render.system.text.msdf;
 
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
-import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.stb.STBImage;
@@ -9,6 +8,8 @@ import org.lwjgl.system.MemoryStack;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+
+import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
 
 public class MSDFTextureLoader {
     public int textureId;
@@ -24,7 +25,7 @@ public class MSDFTextureLoader {
     }
 
     public void cleanup() {
-        GLStateCache.deleteTexture(GL11.GL_TEXTURE_2D, textureId);
+        glStateCache.deleteTexture(GL11.GL_TEXTURE_2D, textureId);
         textureId = -1;
     }
 
@@ -34,7 +35,7 @@ public class MSDFTextureLoader {
     }
 
     public MSDFTextureLoader loadTexture() {
-        GLStateCache.bindTexture(GL11.GL_TEXTURE_2D, textureId);
+        glStateCache.bindTexture(GL11.GL_TEXTURE_2D, textureId);
 
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
@@ -55,7 +56,7 @@ public class MSDFTextureLoader {
             STBImage.stbi_image_free(image);
         }
 
-        GLStateCache.bindTexture(GL11.GL_TEXTURE_2D, 0);
+        glStateCache.bindTexture(GL11.GL_TEXTURE_2D, 0);
 
         return this;
     }

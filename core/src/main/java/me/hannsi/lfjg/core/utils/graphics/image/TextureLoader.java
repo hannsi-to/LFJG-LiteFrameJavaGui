@@ -15,6 +15,8 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
+import static me.hannsi.lfjg.core.Core.OPEN_GL_PARAMETER_NAME_MAP;
+
 public class TextureLoader {
     private final Location texturePath;
     private final ImageLoaderType imageLoaderType;
@@ -107,26 +109,26 @@ public class TextureLoader {
             throw Core.CreatingTextureException.createCreatingTextureException("Could not create texture");
         }
 
-        Core.GLStateCache.bindTexture(Core.GL11.GL_TEXTURE_2D, textureId);
-        Core.GL11.glPixelStorei(Core.GL11.GL_UNPACK_ALIGNMENT, 1);
+        Core.LFJGRenderContext.bindTexture(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), textureId);
+        Core.GL11.glPixelStorei(OPEN_GL_PARAMETER_NAME_MAP.get("GL_UNPACK_ALIGNMENT"), 1);
 
-        Core.GL11.glTexImage2D(Core.GL11.GL_TEXTURE_2D, 0, Core.GL11.GL_RGBA, width, height, 0, Core.GL11.GL_RGBA, Core.GL11.GL_UNSIGNED_BYTE, buf);
+        Core.GL11.glTexImage2D(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), 0, OPEN_GL_PARAMETER_NAME_MAP.get("GL_RGBA"), width, height, 0, OPEN_GL_PARAMETER_NAME_MAP.get("GL_RGBA"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_UNSIGNED_BYTE"), buf);
 
-        Core.GL11.glTexParameteri(Core.GL11.GL_TEXTURE_2D, Core.GL11.GL_TEXTURE_WRAP_S, Core.GL12.GL_CLAMP_TO_EDGE);
-        Core.GL11.glTexParameteri(Core.GL11.GL_TEXTURE_2D, Core.GL11.GL_TEXTURE_WRAP_T, Core.GL12.GL_CLAMP_TO_EDGE);
-        Core.GL11.glTexParameteri(Core.GL11.GL_TEXTURE_2D, Core.GL11.GL_TEXTURE_MIN_FILTER, Core.GL11.GL_NEAREST);
-        Core.GL11.glTexParameteri(Core.GL11.GL_TEXTURE_2D, Core.GL11.GL_TEXTURE_MAG_FILTER, Core.GL11.GL_NEAREST);
-        Core.GL30.glGenerateMipmap(Core.GL11.GL_TEXTURE_2D);
+        Core.GL11.glTexParameteri(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_WRAP_S"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_CLAMP_TO_EDGE"));
+        Core.GL11.glTexParameteri(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_WRAP_T"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_CLAMP_TO_EDGE"));
+        Core.GL11.glTexParameteri(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_MIN_FILTER"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_NEAREST"));
+        Core.GL11.glTexParameteri(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_MAG_FILTER"), OPEN_GL_PARAMETER_NAME_MAP.get("GL_NEAREST"));
+        Core.GL30.glGenerateMipmap(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"));
 
-        Core.GLStateCache.bindTexture(Core.GL11.GL_TEXTURE_2D, 0);
+        Core.LFJGRenderContext.bindTexture(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), 0);
     }
 
     public void bind() {
-        Core.GLStateCache.bindTexture(Core.GL11.GL_TEXTURE_2D, textureId);
+        Core.LFJGRenderContext.bindTexture(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), textureId);
     }
 
     public void unbind() {
-        Core.GLStateCache.bindTexture(Core.GL11.GL_TEXTURE_2D, 0);
+        Core.LFJGRenderContext.bindTexture(OPEN_GL_PARAMETER_NAME_MAP.get("GL_TEXTURE_2D"), 0);
     }
 
     public ImageLoaderType getTextureLoaderType() {

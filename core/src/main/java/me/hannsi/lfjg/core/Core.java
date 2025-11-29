@@ -1,6 +1,8 @@
 package me.hannsi.lfjg.core;
 
 import me.hannsi.lfjg.core.debug.DebugLog;
+import me.hannsi.lfjg.core.manager.EventManager;
+import me.hannsi.lfjg.core.manager.WorkspaceManager;
 import me.hannsi.lfjg.core.utils.math.Projection;
 import me.hannsi.lfjg.core.utils.reflection.ClassUtil;
 import me.hannsi.lfjg.core.utils.toolkit.FastStringBuilder;
@@ -13,6 +15,8 @@ import sun.misc.Unsafe;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
 
 import static me.hannsi.lfjg.core.SystemSetting.CORE_SYSTEM_DEBUG;
 
@@ -45,6 +49,9 @@ public class Core {
     public static final boolean enableLFJGRenderTextSystem;
     public static final boolean enableLFJGRenderVideoSystem;
     public static final Unsafe UNSAFE;
+    public static final Map<String, Integer> OPEN_GL_PARAMETER_NAME_MAP = new HashMap<>();
+    public static final EventManager EVENT_MANAGER;
+    public static final WorkspaceManager WORKSPACE_MANAGER;
     public static FastStringBuilder stringBuilder;
     public static ServiceData lfjgAudioServiceData = null;
     public static ServiceData lfjgFrameServiceData = null;
@@ -122,6 +129,9 @@ public class Core {
             DebugLog.info(instance.getClass(), lfjgRenderVideoServiceData.toString());
         }
 
+        EVENT_MANAGER = new EventManager();
+        WORKSPACE_MANAGER = new WorkspaceManager();
+
         try {
             Field f = Unsafe.class.getDeclaredField("theUnsafe");
             f.setAccessible(true);
@@ -131,6 +141,47 @@ public class Core {
         }
 
         stringBuilder = new FastStringBuilder();
+
+        Class<?>[] glClasses;
+        try {
+            glClasses = new Class<?>[]{
+                    Class.forName(GL11.PACKAGE),
+                    Class.forName(GL12.PACKAGE),
+                    Class.forName(GL13.PACKAGE),
+                    Class.forName(GL14.PACKAGE),
+                    Class.forName(GL15.PACKAGE),
+                    Class.forName(GL20.PACKAGE),
+                    Class.forName(GL21.PACKAGE),
+                    Class.forName(GL30.PACKAGE),
+                    Class.forName(GL31.PACKAGE),
+                    Class.forName(GL32.PACKAGE),
+                    Class.forName(GL33.PACKAGE),
+                    Class.forName(GL43.PACKAGE),
+                    Class.forName(GL40.PACKAGE),
+                    Class.forName(GL41.PACKAGE),
+                    Class.forName(GL42.PACKAGE),
+                    Class.forName(GL43.PACKAGE),
+                    Class.forName(GL44.PACKAGE),
+                    Class.forName(GL45.PACKAGE),
+                    Class.forName(GL46.PACKAGE)
+            };
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        for (Class<?> glClass : glClasses) {
+            Field[] fields = glClass.getFields();
+            for (Field field : fields) {
+                if (field.getType() == int.class) {
+                    try {
+                        int fieldInt = field.getInt(null);
+                        String name = field.getName();
+                        OPEN_GL_PARAMETER_NAME_MAP.put(name, fieldInt);
+                    } catch (IllegalAccessException e) {
+                        DebugLog.warning(Core.class, e);
+                    }
+                }
+            }
+        }
     }
 
     private static boolean isLWJGL3() {
@@ -190,54 +241,48 @@ public class Core {
         return (int) value;
     }
 
+    public static class GL46 {
+        public static final String PACKAGE = "org.lwjgl.opengl.GL46";
+    }
+
+    public static class GL45 {
+        public static final String PACKAGE = "org.lwjgl.opengl.GL45";
+    }
+
     public static class GL44 {
         public static final String PACKAGE = "org.lwjgl.opengl.GL44";
-
-        public static final int GL_MAP_PERSISTENT_BIT;
-        public static final int GL_MAP_COHERENT_BIT;
-
-        static {
-            GL_MAP_PERSISTENT_BIT = getStaticIntField(PACKAGE, "GL_MAP_PERSISTENT_BIT");
-            GL_MAP_COHERENT_BIT = getStaticIntField(PACKAGE, "GL_MAP_COHERENT_BIT");
-        }
     }
 
     public static class GL43 {
         public static final String PACKAGE = "org.lwjgl.opengl.GL43";
+    }
 
-        public static final int GL_DEBUG_SEVERITY_HIGH;
-        public static final int GL_DEBUG_SEVERITY_MEDIUM;
-        public static final int GL_DEBUG_SEVERITY_LOW;
-        public static final int GL_DEBUG_SEVERITY_NOTIFICATION;
+    public static class GL42 {
+        public static final String PACKAGE = "org.lwjgl.opengl.GL42";
+    }
 
-        static {
-            GL_DEBUG_SEVERITY_HIGH = getStaticIntField(PACKAGE, "GL_DEBUG_SEVERITY_HIGH");
-            GL_DEBUG_SEVERITY_MEDIUM = getStaticIntField(PACKAGE, "GL_DEBUG_SEVERITY_MEDIUM");
-            GL_DEBUG_SEVERITY_LOW = getStaticIntField(PACKAGE, "GL_DEBUG_SEVERITY_LOW");
-            GL_DEBUG_SEVERITY_NOTIFICATION = getStaticIntField(PACKAGE, "GL_DEBUG_SEVERITY_NOTIFICATION");
-        }
+    public static class GL41 {
+        public static final String PACKAGE = "org.lwjgl.opengl.GL41";
+    }
+
+    public static class GL40 {
+        public static final String PACKAGE = "org.lwjgl.opengl.GL40";
+    }
+
+    public static class GL33 {
+        public static final String PACKAGE = "org.lwjgl.opengl.GL33";
+    }
+
+    public static class GL32 {
+        public static final String PACKAGE = "org.lwjgl.opengl.GL32";
+    }
+
+    public static class GL31 {
+        public static final String PACKAGE = "org.lwjgl.opengl.GL31";
     }
 
     public static class GL30 {
         public static final String PACKAGE = "org.lwjgl.opengl.GL30";
-
-        public static final int GL_RG;
-        public static final int GL_RGB16F;
-        public static final int GL_RGBA16F;
-        public static final int GL_RGB32F;
-        public static final int GL_RGBA32F;
-        public static final int GL_DEPTH_STENCIL;
-        public static final int GL_MAP_WRITE_BIT;
-
-        static {
-            GL_RG = getStaticIntField(PACKAGE, "GL_RG");
-            GL_RGB16F = getStaticIntField(PACKAGE, "GL_RGB16F");
-            GL_RGBA16F = getStaticIntField(PACKAGE, "GL_RGBA16F");
-            GL_RGB32F = getStaticIntField(PACKAGE, "GL_RGB32F");
-            GL_RGBA32F = getStaticIntField(PACKAGE, "GL_RGBA32F");
-            GL_DEPTH_STENCIL = getStaticIntField(PACKAGE, "GL_DEPTH_STENCIL");
-            GL_MAP_WRITE_BIT = getStaticIntField(PACKAGE, "GL_MAP_WRITE_BIT");
-        }
 
         public static void glGenerateMipmap(int target) {
             if (!enableLFJGRenderSystem) {
@@ -248,83 +293,32 @@ public class Core {
         }
     }
 
+    public static class GL21 {
+        public static final String PACKAGE = "org.lwjgl.opengl.GL21";
+    }
+
+    public static class GL20 {
+        public static final String PACKAGE = "org.lwjgl.opengl.GL20";
+    }
+
+    public static class GL15 {
+        public static final String PACKAGE = "org.lwjgl.opengl.GL15";
+    }
+
+    public static class GL14 {
+        public static final String PACKAGE = "org.lwjgl.opengl.GL14";
+    }
+
     public static class GL13 {
         public static final String PACKAGE = "org.lwjgl.opengl.GL13";
-
-        public static final int GL_MULTISAMPLE;
-
-        static {
-            GL_MULTISAMPLE = getStaticIntField(PACKAGE, "GL_MULTISAMPLE");
-        }
     }
 
     public static class GL12 {
         public static final String PACKAGE = "org.lwjgl.opengl.GL12";
-
-
-        public static final int GL_CLAMP_TO_EDGE;
-
-        static {
-            GL_CLAMP_TO_EDGE = getStaticIntField(PACKAGE, "GL_CLAMP_TO_EDGE");
-        }
     }
 
     public static class GL11 {
         public static final String PACKAGE = "org.lwjgl.opengl.GL11";
-
-        public static final int GL_ALL_ATTRIB_BITS;
-        public static final int GL_TEXTURE_2D;
-
-        public static final int GL_COLOR_BUFFER_BIT;
-        public static final int GL_DEPTH_BUFFER_BIT;
-
-        public static final int GL_UNSIGNED_BYTE;
-
-        public static final int GL_RED;
-        public static final int GL_RGB;
-        public static final int GL_RGBA;
-        public static final int GL_RGB8;
-        public static final int GL_RGBA8;
-        public static final int GL_DEPTH_COMPONENT;
-
-        public static final int GL_UNPACK_ALIGNMENT;
-
-        public static final int GL_TEXTURE_WRAP_S;
-        public static final int GL_TEXTURE_WRAP_T;
-        public static final int GL_TEXTURE_MIN_FILTER;
-        public static final int GL_TEXTURE_MAG_FILTER;
-        public static final int GL_NEAREST;
-
-        public static final int GL_PROJECTION;
-        public static final int GL_MODELVIEW;
-
-        static {
-            GL_ALL_ATTRIB_BITS = getStaticIntField(PACKAGE, "GL_ALL_ATTRIB_BITS");
-            GL_TEXTURE_2D = getStaticIntField(PACKAGE, "GL_TEXTURE_2D");
-
-            GL_COLOR_BUFFER_BIT = getStaticIntField(PACKAGE, "GL_COLOR_BUFFER_BIT");
-            GL_DEPTH_BUFFER_BIT = getStaticIntField(PACKAGE, "GL_DEPTH_BUFFER_BIT");
-
-            GL_UNSIGNED_BYTE = getStaticIntField(PACKAGE, "GL_UNSIGNED_BYTE");
-
-            GL_RED = getStaticIntField(PACKAGE, "GL_RED");
-            GL_RGB = getStaticIntField(PACKAGE, "GL_RGB");
-            GL_RGBA = getStaticIntField(PACKAGE, "GL_RGBA");
-            GL_RGB8 = getStaticIntField(PACKAGE, "GL_RGB8");
-            GL_RGBA8 = getStaticIntField(PACKAGE, "GL_RGBA8");
-            GL_DEPTH_COMPONENT = getStaticIntField(PACKAGE, "GL_DEPTH_COMPONENT");
-
-            GL_UNPACK_ALIGNMENT = getStaticIntField(PACKAGE, "GL_UNPACK_ALIGNMENT");
-
-            GL_TEXTURE_WRAP_S = getStaticIntField(PACKAGE, "GL_TEXTURE_WRAP_S");
-            GL_TEXTURE_WRAP_T = getStaticIntField(PACKAGE, "GL_TEXTURE_WRAP_T");
-            GL_TEXTURE_MIN_FILTER = getStaticIntField(PACKAGE, "GL_TEXTURE_MIN_FILTER");
-            GL_TEXTURE_MAG_FILTER = getStaticIntField(PACKAGE, "GL_TEXTURE_MAG_FILTER");
-            GL_NEAREST = getStaticIntField(PACKAGE, "GL_NEAREST");
-
-            GL_PROJECTION = getStaticIntField(PACKAGE, "GL_PROJECTION");
-            GL_MODELVIEW = getStaticIntField(PACKAGE, "GL_MODELVIEW");
-        }
 
         public static void glClearColor(float red, float green, float blue, float alpha) {
             if (!enableLFJGRenderSystem) {
@@ -442,18 +436,6 @@ public class Core {
 
             Object ignore = invokeStaticMethod(PACKAGE, "glTexParameteri", target, pname, param);
         }
-
-        public static Class<?> getGL11Class() {
-            if (!enableLFJGRenderSystem) {
-                return null;
-            }
-
-            try {
-                return Class.forName(PACKAGE);
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        }
     }
 
     public static class GL {
@@ -466,296 +448,159 @@ public class Core {
 
             Object ignore = invokeStaticMethod(PACKAGE, "createCapabilities");
         }
+
+        public static Object getCapabilities() {
+            if (!enableLFJGRenderSystem) {
+                return null;
+            }
+
+            return invokeStaticMethod(PACKAGE, "getCapabilities");
+        }
     }
 
     public static class GLFW {
         public static final String PACKAGE = "org.lwjgl.glfw.GLFW";
 
-        public static final int GLFW_MOUSE_BUTTON_1;
-        public static final int GLFW_MOUSE_BUTTON_2;
-        public static final int GLFW_MOUSE_BUTTON_3;
-        public static final int GLFW_MOUSE_BUTTON_LEFT;
-        public static final int GLFW_MOUSE_BUTTON_MIDDLE;
-        public static final int GLFW_MOUSE_BUTTON_RIGHT;
+        public static final int GLFW_MOUSE_BUTTON_1 = getStaticIntField(PACKAGE, "GLFW_MOUSE_BUTTON_1");
+        public static final int GLFW_MOUSE_BUTTON_LEFT = GLFW_MOUSE_BUTTON_1;
+        public static final int GLFW_MOUSE_BUTTON_2 = getStaticIntField(PACKAGE, "GLFW_MOUSE_BUTTON_2");
+        public static final int GLFW_MOUSE_BUTTON_RIGHT = GLFW_MOUSE_BUTTON_2;
+        public static final int GLFW_MOUSE_BUTTON_3 = getStaticIntField(PACKAGE, "GLFW_MOUSE_BUTTON_3");
+        public static final int GLFW_MOUSE_BUTTON_MIDDLE = GLFW_MOUSE_BUTTON_3;
+        public static final int GLFW_PRESS = getStaticIntField(PACKAGE, "GLFW_PRESS");
+        public static final int GLFW_RELEASE = getStaticIntField(PACKAGE, "GLFW_RELEASE");
 
-        public static final int GLFW_PRESS;
-        public static final int GLFW_RELEASE;
+        public static final int GLFW_MOD_SHIFT = getStaticIntField(PACKAGE, "GLFW_MOD_SHIFT");
+        public static final int GLFW_MOD_CONTROL = getStaticIntField(PACKAGE, "GLFW_MOD_CONTROL");
+        public static final int GLFW_MOD_ALT = getStaticIntField(PACKAGE, "GLFW_MOD_ALT");
+        public static final int GLFW_MOD_SUPER = getStaticIntField(PACKAGE, "GLFW_MOD_SUPER");
 
-        public static final int GLFW_MOD_SHIFT;
-        public static final int GLFW_MOD_CONTROL;
-        public static final int GLFW_MOD_ALT;
-        public static final int GLFW_MOD_SUPER;
+        public static final int GLFW_KEY_ENTER = getStaticIntField(PACKAGE, "GLFW_KEY_ENTER");
+        public static final int GLFW_KEY_BACKSPACE = getStaticIntField(PACKAGE, "GLFW_KEY_BACKSPACE");
+        public static final int GLFW_KEY_TAB = getStaticIntField(PACKAGE, "GLFW_KEY_TAB");
+        public static final int GLFW_KEY_ESCAPE = getStaticIntField(PACKAGE, "GLFW_KEY_ESCAPE");
+        public static final int GLFW_KEY_SPACE = getStaticIntField(PACKAGE, "GLFW_KEY_SPACE");
+        public static final int GLFW_KEY_LEFT = getStaticIntField(PACKAGE, "GLFW_KEY_LEFT");
+        public static final int GLFW_KEY_RIGHT = getStaticIntField(PACKAGE, "GLFW_KEY_RIGHT");
+        public static final int GLFW_KEY_UP = getStaticIntField(PACKAGE, "GLFW_KEY_UP");
+        public static final int GLFW_KEY_DOWN = getStaticIntField(PACKAGE, "GLFW_KEY_DOWN");
+        public static final int GLFW_KEY_DELETE = getStaticIntField(PACKAGE, "GLFW_KEY_DELETE");
+        public static final int GLFW_KEY_HOME = getStaticIntField(PACKAGE, "GLFW_KEY_HOME");
+        public static final int GLFW_KEY_END = getStaticIntField(PACKAGE, "GLFW_KEY_END");
+        public static final int GLFW_KEY_PAGE_UP = getStaticIntField(PACKAGE, "GLFW_KEY_PAGE_UP");
+        public static final int GLFW_KEY_PAGE_DOWN = getStaticIntField(PACKAGE, "GLFW_KEY_PAGE_DOWN");
+        public static final int GLFW_KEY_INSERT = getStaticIntField(PACKAGE, "GLFW_KEY_INSERT");
+        public static final int GLFW_KEY_CAPS_LOCK = getStaticIntField(PACKAGE, "GLFW_KEY_CAPS_LOCK");
+        public static final int GLFW_KEY_SCROLL_LOCK = getStaticIntField(PACKAGE, "GLFW_KEY_SCROLL_LOCK");
+        public static final int GLFW_KEY_NUM_LOCK = getStaticIntField(PACKAGE, "GLFW_KEY_NUM_LOCK");
+        public static final int GLFW_KEY_PRINT_SCREEN = getStaticIntField(PACKAGE, "GLFW_KEY_PRINT_SCREEN");
+        public static final int GLFW_KEY_PAUSE = getStaticIntField(PACKAGE, "GLFW_KEY_PAUSE");
 
-        public static final int GLFW_KEY_ENTER;
-        public static final int GLFW_KEY_BACKSPACE;
-        public static final int GLFW_KEY_TAB;
-        public static final int GLFW_KEY_ESCAPE;
-        public static final int GLFW_KEY_SPACE;
-        public static final int GLFW_KEY_LEFT;
-        public static final int GLFW_KEY_RIGHT;
-        public static final int GLFW_KEY_UP;
-        public static final int GLFW_KEY_DOWN;
-        public static final int GLFW_KEY_DELETE;
-        public static final int GLFW_KEY_HOME;
-        public static final int GLFW_KEY_END;
-        public static final int GLFW_KEY_PAGE_UP;
-        public static final int GLFW_KEY_PAGE_DOWN;
-        public static final int GLFW_KEY_INSERT;
-        public static final int GLFW_KEY_CAPS_LOCK;
-        public static final int GLFW_KEY_SCROLL_LOCK;
-        public static final int GLFW_KEY_NUM_LOCK;
-        public static final int GLFW_KEY_PRINT_SCREEN;
-        public static final int GLFW_KEY_PAUSE;
+        public static final int GLFW_KEY_A = getStaticIntField(PACKAGE, "GLFW_KEY_A");
+        public static final int GLFW_KEY_B = getStaticIntField(PACKAGE, "GLFW_KEY_B");
+        public static final int GLFW_KEY_C = getStaticIntField(PACKAGE, "GLFW_KEY_C");
+        public static final int GLFW_KEY_D = getStaticIntField(PACKAGE, "GLFW_KEY_D");
+        public static final int GLFW_KEY_E = getStaticIntField(PACKAGE, "GLFW_KEY_E");
+        public static final int GLFW_KEY_F = getStaticIntField(PACKAGE, "GLFW_KEY_F");
+        public static final int GLFW_KEY_G = getStaticIntField(PACKAGE, "GLFW_KEY_G");
+        public static final int GLFW_KEY_H = getStaticIntField(PACKAGE, "GLFW_KEY_H");
+        public static final int GLFW_KEY_I = getStaticIntField(PACKAGE, "GLFW_KEY_I");
+        public static final int GLFW_KEY_J = getStaticIntField(PACKAGE, "GLFW_KEY_J");
+        public static final int GLFW_KEY_K = getStaticIntField(PACKAGE, "GLFW_KEY_K");
+        public static final int GLFW_KEY_L = getStaticIntField(PACKAGE, "GLFW_KEY_L");
+        public static final int GLFW_KEY_M = getStaticIntField(PACKAGE, "GLFW_KEY_M");
+        public static final int GLFW_KEY_N = getStaticIntField(PACKAGE, "GLFW_KEY_N");
+        public static final int GLFW_KEY_O = getStaticIntField(PACKAGE, "GLFW_KEY_O");
+        public static final int GLFW_KEY_P = getStaticIntField(PACKAGE, "GLFW_KEY_P");
+        public static final int GLFW_KEY_Q = getStaticIntField(PACKAGE, "GLFW_KEY_Q");
+        public static final int GLFW_KEY_R = getStaticIntField(PACKAGE, "GLFW_KEY_R");
+        public static final int GLFW_KEY_S = getStaticIntField(PACKAGE, "GLFW_KEY_S");
+        public static final int GLFW_KEY_T = getStaticIntField(PACKAGE, "GLFW_KEY_T");
+        public static final int GLFW_KEY_U = getStaticIntField(PACKAGE, "GLFW_KEY_U");
+        public static final int GLFW_KEY_V = getStaticIntField(PACKAGE, "GLFW_KEY_V");
+        public static final int GLFW_KEY_W = getStaticIntField(PACKAGE, "GLFW_KEY_W");
+        public static final int GLFW_KEY_X = getStaticIntField(PACKAGE, "GLFW_KEY_X");
+        public static final int GLFW_KEY_Y = getStaticIntField(PACKAGE, "GLFW_KEY_Y");
+        public static final int GLFW_KEY_Z = getStaticIntField(PACKAGE, "GLFW_KEY_Z");
 
-        public static final int GLFW_KEY_A;
-        public static final int GLFW_KEY_B;
-        public static final int GLFW_KEY_C;
-        public static final int GLFW_KEY_D;
-        public static final int GLFW_KEY_E;
-        public static final int GLFW_KEY_F;
-        public static final int GLFW_KEY_G;
-        public static final int GLFW_KEY_H;
-        public static final int GLFW_KEY_I;
-        public static final int GLFW_KEY_J;
-        public static final int GLFW_KEY_K;
-        public static final int GLFW_KEY_L;
-        public static final int GLFW_KEY_M;
-        public static final int GLFW_KEY_N;
-        public static final int GLFW_KEY_O;
-        public static final int GLFW_KEY_P;
-        public static final int GLFW_KEY_Q;
-        public static final int GLFW_KEY_R;
-        public static final int GLFW_KEY_S;
-        public static final int GLFW_KEY_T;
-        public static final int GLFW_KEY_U;
-        public static final int GLFW_KEY_V;
-        public static final int GLFW_KEY_W;
-        public static final int GLFW_KEY_X;
-        public static final int GLFW_KEY_Y;
-        public static final int GLFW_KEY_Z;
+        public static final int GLFW_KEY_0 = getStaticIntField(PACKAGE, "GLFW_KEY_0");
+        public static final int GLFW_KEY_1 = getStaticIntField(PACKAGE, "GLFW_KEY_1");
+        public static final int GLFW_KEY_2 = getStaticIntField(PACKAGE, "GLFW_KEY_2");
+        public static final int GLFW_KEY_3 = getStaticIntField(PACKAGE, "GLFW_KEY_3");
+        public static final int GLFW_KEY_4 = getStaticIntField(PACKAGE, "GLFW_KEY_4");
+        public static final int GLFW_KEY_5 = getStaticIntField(PACKAGE, "GLFW_KEY_5");
+        public static final int GLFW_KEY_6 = getStaticIntField(PACKAGE, "GLFW_KEY_6");
+        public static final int GLFW_KEY_7 = getStaticIntField(PACKAGE, "GLFW_KEY_7");
+        public static final int GLFW_KEY_8 = getStaticIntField(PACKAGE, "GLFW_KEY_8");
+        public static final int GLFW_KEY_9 = getStaticIntField(PACKAGE, "GLFW_KEY_9");
 
-        public static final int GLFW_KEY_0;
-        public static final int GLFW_KEY_1;
-        public static final int GLFW_KEY_2;
-        public static final int GLFW_KEY_3;
-        public static final int GLFW_KEY_4;
-        public static final int GLFW_KEY_5;
-        public static final int GLFW_KEY_6;
-        public static final int GLFW_KEY_7;
-        public static final int GLFW_KEY_8;
-        public static final int GLFW_KEY_9;
+        public static final int GLFW_KEY_F1 = getStaticIntField(PACKAGE, "GLFW_KEY_F1");
+        public static final int GLFW_KEY_F2 = getStaticIntField(PACKAGE, "GLFW_KEY_F2");
+        public static final int GLFW_KEY_F3 = getStaticIntField(PACKAGE, "GLFW_KEY_F3");
+        public static final int GLFW_KEY_F4 = getStaticIntField(PACKAGE, "GLFW_KEY_F4");
+        public static final int GLFW_KEY_F5 = getStaticIntField(PACKAGE, "GLFW_KEY_F5");
+        public static final int GLFW_KEY_F6 = getStaticIntField(PACKAGE, "GLFW_KEY_F6");
+        public static final int GLFW_KEY_F7 = getStaticIntField(PACKAGE, "GLFW_KEY_F7");
+        public static final int GLFW_KEY_F8 = getStaticIntField(PACKAGE, "GLFW_KEY_F8");
+        public static final int GLFW_KEY_F9 = getStaticIntField(PACKAGE, "GLFW_KEY_F9");
+        public static final int GLFW_KEY_F10 = getStaticIntField(PACKAGE, "GLFW_KEY_F10");
+        public static final int GLFW_KEY_F11 = getStaticIntField(PACKAGE, "GLFW_KEY_F11");
+        public static final int GLFW_KEY_F12 = getStaticIntField(PACKAGE, "GLFW_KEY_F12");
+        public static final int GLFW_KEY_F13 = getStaticIntField(PACKAGE, "GLFW_KEY_F13");
+        public static final int GLFW_KEY_F14 = getStaticIntField(PACKAGE, "GLFW_KEY_F14");
+        public static final int GLFW_KEY_F15 = getStaticIntField(PACKAGE, "GLFW_KEY_F15");
+        public static final int GLFW_KEY_F16 = getStaticIntField(PACKAGE, "GLFW_KEY_F16");
+        public static final int GLFW_KEY_F17 = getStaticIntField(PACKAGE, "GLFW_KEY_F17");
+        public static final int GLFW_KEY_F18 = getStaticIntField(PACKAGE, "GLFW_KEY_F18");
+        public static final int GLFW_KEY_F19 = getStaticIntField(PACKAGE, "GLFW_KEY_F19");
+        public static final int GLFW_KEY_F20 = getStaticIntField(PACKAGE, "GLFW_KEY_F20");
+        public static final int GLFW_KEY_F21 = getStaticIntField(PACKAGE, "GLFW_KEY_F21");
+        public static final int GLFW_KEY_F22 = getStaticIntField(PACKAGE, "GLFW_KEY_F22");
+        public static final int GLFW_KEY_F23 = getStaticIntField(PACKAGE, "GLFW_KEY_F23");
+        public static final int GLFW_KEY_F24 = getStaticIntField(PACKAGE, "GLFW_KEY_F24");
+        public static final int GLFW_KEY_F25 = getStaticIntField(PACKAGE, "GLFW_KEY_F25");
 
-        public static final int GLFW_KEY_F1;
-        public static final int GLFW_KEY_F2;
-        public static final int GLFW_KEY_F3;
-        public static final int GLFW_KEY_F4;
-        public static final int GLFW_KEY_F5;
-        public static final int GLFW_KEY_F6;
-        public static final int GLFW_KEY_F7;
-        public static final int GLFW_KEY_F8;
-        public static final int GLFW_KEY_F9;
-        public static final int GLFW_KEY_F10;
-        public static final int GLFW_KEY_F11;
-        public static final int GLFW_KEY_F12;
-        public static final int GLFW_KEY_F13;
-        public static final int GLFW_KEY_F14;
-        public static final int GLFW_KEY_F15;
-        public static final int GLFW_KEY_F16;
-        public static final int GLFW_KEY_F17;
-        public static final int GLFW_KEY_F18;
-        public static final int GLFW_KEY_F19;
-        public static final int GLFW_KEY_F20;
-        public static final int GLFW_KEY_F21;
-        public static final int GLFW_KEY_F22;
-        public static final int GLFW_KEY_F23;
-        public static final int GLFW_KEY_F24;
-        public static final int GLFW_KEY_F25;
+        public static final int GLFW_KEY_KP_0 = getStaticIntField(PACKAGE, "GLFW_KEY_KP_0");
+        public static final int GLFW_KEY_KP_1 = getStaticIntField(PACKAGE, "GLFW_KEY_KP_1");
+        public static final int GLFW_KEY_KP_2 = getStaticIntField(PACKAGE, "GLFW_KEY_KP_2");
+        public static final int GLFW_KEY_KP_3 = getStaticIntField(PACKAGE, "GLFW_KEY_KP_3");
+        public static final int GLFW_KEY_KP_4 = getStaticIntField(PACKAGE, "GLFW_KEY_KP_4");
+        public static final int GLFW_KEY_KP_5 = getStaticIntField(PACKAGE, "GLFW_KEY_KP_5");
+        public static final int GLFW_KEY_KP_6 = getStaticIntField(PACKAGE, "GLFW_KEY_KP_6");
+        public static final int GLFW_KEY_KP_7 = getStaticIntField(PACKAGE, "GLFW_KEY_KP_7");
+        public static final int GLFW_KEY_KP_8 = getStaticIntField(PACKAGE, "GLFW_KEY_KP_8");
+        public static final int GLFW_KEY_KP_9 = getStaticIntField(PACKAGE, "GLFW_KEY_KP_9");
+        public static final int GLFW_KEY_KP_DECIMAL = getStaticIntField(PACKAGE, "GLFW_KEY_KP_DECIMAL");
+        public static final int GLFW_KEY_KP_DIVIDE = getStaticIntField(PACKAGE, "GLFW_KEY_KP_DIVIDE");
+        public static final int GLFW_KEY_KP_MULTIPLY = getStaticIntField(PACKAGE, "GLFW_KEY_KP_MULTIPLY");
+        public static final int GLFW_KEY_KP_SUBTRACT = getStaticIntField(PACKAGE, "GLFW_KEY_KP_SUBTRACT");
+        public static final int GLFW_KEY_KP_ADD = getStaticIntField(PACKAGE, "GLFW_KEY_KP_ADD");
+        public static final int GLFW_KEY_KP_ENTER = getStaticIntField(PACKAGE, "GLFW_KEY_KP_ENTER");
+        public static final int GLFW_KEY_KP_EQUAL = getStaticIntField(PACKAGE, "GLFW_KEY_KP_EQUAL");
 
-        public static final int GLFW_KEY_KP_0;
-        public static final int GLFW_KEY_KP_1;
-        public static final int GLFW_KEY_KP_2;
-        public static final int GLFW_KEY_KP_3;
-        public static final int GLFW_KEY_KP_4;
-        public static final int GLFW_KEY_KP_5;
-        public static final int GLFW_KEY_KP_6;
-        public static final int GLFW_KEY_KP_7;
-        public static final int GLFW_KEY_KP_8;
-        public static final int GLFW_KEY_KP_9;
-        public static final int GLFW_KEY_KP_DECIMAL;
-        public static final int GLFW_KEY_KP_DIVIDE;
-        public static final int GLFW_KEY_KP_MULTIPLY;
-        public static final int GLFW_KEY_KP_SUBTRACT;
-        public static final int GLFW_KEY_KP_ADD;
-        public static final int GLFW_KEY_KP_ENTER;
-        public static final int GLFW_KEY_KP_EQUAL;
+        public static final int GLFW_KEY_LEFT_SHIFT = getStaticIntField(PACKAGE, "GLFW_KEY_LEFT_SHIFT");
+        public static final int GLFW_KEY_RIGHT_SHIFT = getStaticIntField(PACKAGE, "GLFW_KEY_RIGHT_SHIFT");
+        public static final int GLFW_KEY_LEFT_CONTROL = getStaticIntField(PACKAGE, "GLFW_KEY_LEFT_CONTROL");
+        public static final int GLFW_KEY_RIGHT_CONTROL = getStaticIntField(PACKAGE, "GLFW_KEY_RIGHT_CONTROL");
+        public static final int GLFW_KEY_LEFT_ALT = getStaticIntField(PACKAGE, "GLFW_KEY_LEFT_ALT");
+        public static final int GLFW_KEY_RIGHT_ALT = getStaticIntField(PACKAGE, "GLFW_KEY_RIGHT_ALT");
+        public static final int GLFW_KEY_LEFT_SUPER = getStaticIntField(PACKAGE, "GLFW_KEY_LEFT_SUPER");
+        public static final int GLFW_KEY_RIGHT_SUPER = getStaticIntField(PACKAGE, "GLFW_KEY_RIGHT_SUPER");
+        public static final int GLFW_KEY_MENU = getStaticIntField(PACKAGE, "GLFW_KEY_MENU");
 
-        public static final int GLFW_KEY_LEFT_SHIFT;
-        public static final int GLFW_KEY_RIGHT_SHIFT;
-        public static final int GLFW_KEY_LEFT_CONTROL;
-        public static final int GLFW_KEY_RIGHT_CONTROL;
-        public static final int GLFW_KEY_LEFT_ALT;
-        public static final int GLFW_KEY_RIGHT_ALT;
-        public static final int GLFW_KEY_LEFT_SUPER;
-        public static final int GLFW_KEY_RIGHT_SUPER;
-        public static final int GLFW_KEY_MENU;
-
-        public static final int GLFW_KEY_MINUS;
-        public static final int GLFW_KEY_EQUAL;
-        public static final int GLFW_KEY_BACKSLASH;
-        public static final int GLFW_KEY_SEMICOLON;
-        public static final int GLFW_KEY_APOSTROPHE;
-        public static final int GLFW_KEY_COMMA;
-        public static final int GLFW_KEY_PERIOD;
-        public static final int GLFW_KEY_SLASH;
-        public static final int GLFW_KEY_GRAVE_ACCENT;
-        public static final int GLFW_KEY_LEFT_BRACKET;
-        public static final int GLFW_KEY_RIGHT_BRACKET;
-        public static final int GLFW_KEY_WORLD_1;
-        public static final int GLFW_KEY_WORLD_2;
-
-        static {
-            GLFW_MOUSE_BUTTON_1 = getStaticIntField(PACKAGE, "GLFW_MOUSE_BUTTON_1");
-            GLFW_MOUSE_BUTTON_2 = getStaticIntField(PACKAGE, "GLFW_MOUSE_BUTTON_2");
-            GLFW_MOUSE_BUTTON_3 = getStaticIntField(PACKAGE, "GLFW_MOUSE_BUTTON_3");
-            GLFW_MOUSE_BUTTON_LEFT = GLFW_MOUSE_BUTTON_1;
-            GLFW_MOUSE_BUTTON_RIGHT = GLFW_MOUSE_BUTTON_2;
-            GLFW_MOUSE_BUTTON_MIDDLE = GLFW_MOUSE_BUTTON_3;
-
-            GLFW_PRESS = getStaticIntField(PACKAGE, "GLFW_PRESS");
-            GLFW_RELEASE = getStaticIntField(PACKAGE, "GLFW_RELEASE");
-
-            GLFW_MOD_SHIFT = getStaticIntField(PACKAGE, "GLFW_MOD_SHIFT");
-            GLFW_MOD_CONTROL = getStaticIntField(PACKAGE, "GLFW_MOD_CONTROL");
-            GLFW_MOD_ALT = getStaticIntField(PACKAGE, "GLFW_MOD_ALT");
-            GLFW_MOD_SUPER = getStaticIntField(PACKAGE, "GLFW_MOD_SUPER");
-
-            GLFW_KEY_ENTER = getStaticIntField(PACKAGE, "GLFW_KEY_ENTER");
-            GLFW_KEY_BACKSPACE = getStaticIntField(PACKAGE, "GLFW_KEY_BACKSPACE");
-            GLFW_KEY_TAB = getStaticIntField(PACKAGE, "GLFW_KEY_TAB");
-            GLFW_KEY_ESCAPE = getStaticIntField(PACKAGE, "GLFW_KEY_ESCAPE");
-            GLFW_KEY_SPACE = getStaticIntField(PACKAGE, "GLFW_KEY_SPACE");
-            GLFW_KEY_LEFT = getStaticIntField(PACKAGE, "GLFW_KEY_LEFT");
-            GLFW_KEY_RIGHT = getStaticIntField(PACKAGE, "GLFW_KEY_RIGHT");
-            GLFW_KEY_UP = getStaticIntField(PACKAGE, "GLFW_KEY_UP");
-            GLFW_KEY_DOWN = getStaticIntField(PACKAGE, "GLFW_KEY_DOWN");
-            GLFW_KEY_DELETE = getStaticIntField(PACKAGE, "GLFW_KEY_DELETE");
-            GLFW_KEY_HOME = getStaticIntField(PACKAGE, "GLFW_KEY_HOME");
-            GLFW_KEY_END = getStaticIntField(PACKAGE, "GLFW_KEY_END");
-            GLFW_KEY_PAGE_UP = getStaticIntField(PACKAGE, "GLFW_KEY_PAGE_UP");
-            GLFW_KEY_PAGE_DOWN = getStaticIntField(PACKAGE, "GLFW_KEY_PAGE_DOWN");
-            GLFW_KEY_INSERT = getStaticIntField(PACKAGE, "GLFW_KEY_INSERT");
-            GLFW_KEY_CAPS_LOCK = getStaticIntField(PACKAGE, "GLFW_KEY_CAPS_LOCK");
-            GLFW_KEY_SCROLL_LOCK = getStaticIntField(PACKAGE, "GLFW_KEY_SCROLL_LOCK");
-            GLFW_KEY_NUM_LOCK = getStaticIntField(PACKAGE, "GLFW_KEY_NUM_LOCK");
-            GLFW_KEY_PRINT_SCREEN = getStaticIntField(PACKAGE, "GLFW_KEY_PRINT_SCREEN");
-            GLFW_KEY_PAUSE = getStaticIntField(PACKAGE, "GLFW_KEY_PAUSE");
-
-            GLFW_KEY_A = getStaticIntField(PACKAGE, "GLFW_KEY_A");
-            GLFW_KEY_B = getStaticIntField(PACKAGE, "GLFW_KEY_B");
-            GLFW_KEY_C = getStaticIntField(PACKAGE, "GLFW_KEY_C");
-            GLFW_KEY_D = getStaticIntField(PACKAGE, "GLFW_KEY_D");
-            GLFW_KEY_E = getStaticIntField(PACKAGE, "GLFW_KEY_E");
-            GLFW_KEY_F = getStaticIntField(PACKAGE, "GLFW_KEY_F");
-            GLFW_KEY_G = getStaticIntField(PACKAGE, "GLFW_KEY_G");
-            GLFW_KEY_H = getStaticIntField(PACKAGE, "GLFW_KEY_H");
-            GLFW_KEY_I = getStaticIntField(PACKAGE, "GLFW_KEY_I");
-            GLFW_KEY_J = getStaticIntField(PACKAGE, "GLFW_KEY_J");
-            GLFW_KEY_K = getStaticIntField(PACKAGE, "GLFW_KEY_K");
-            GLFW_KEY_L = getStaticIntField(PACKAGE, "GLFW_KEY_L");
-            GLFW_KEY_M = getStaticIntField(PACKAGE, "GLFW_KEY_M");
-            GLFW_KEY_N = getStaticIntField(PACKAGE, "GLFW_KEY_N");
-            GLFW_KEY_O = getStaticIntField(PACKAGE, "GLFW_KEY_O");
-            GLFW_KEY_P = getStaticIntField(PACKAGE, "GLFW_KEY_P");
-            GLFW_KEY_Q = getStaticIntField(PACKAGE, "GLFW_KEY_Q");
-            GLFW_KEY_R = getStaticIntField(PACKAGE, "GLFW_KEY_R");
-            GLFW_KEY_S = getStaticIntField(PACKAGE, "GLFW_KEY_S");
-            GLFW_KEY_T = getStaticIntField(PACKAGE, "GLFW_KEY_T");
-            GLFW_KEY_U = getStaticIntField(PACKAGE, "GLFW_KEY_U");
-            GLFW_KEY_V = getStaticIntField(PACKAGE, "GLFW_KEY_V");
-            GLFW_KEY_W = getStaticIntField(PACKAGE, "GLFW_KEY_W");
-            GLFW_KEY_X = getStaticIntField(PACKAGE, "GLFW_KEY_X");
-            GLFW_KEY_Y = getStaticIntField(PACKAGE, "GLFW_KEY_Y");
-            GLFW_KEY_Z = getStaticIntField(PACKAGE, "GLFW_KEY_Z");
-
-            GLFW_KEY_0 = getStaticIntField(PACKAGE, "GLFW_KEY_0");
-            GLFW_KEY_1 = getStaticIntField(PACKAGE, "GLFW_KEY_1");
-            GLFW_KEY_2 = getStaticIntField(PACKAGE, "GLFW_KEY_2");
-            GLFW_KEY_3 = getStaticIntField(PACKAGE, "GLFW_KEY_3");
-            GLFW_KEY_4 = getStaticIntField(PACKAGE, "GLFW_KEY_4");
-            GLFW_KEY_5 = getStaticIntField(PACKAGE, "GLFW_KEY_5");
-            GLFW_KEY_6 = getStaticIntField(PACKAGE, "GLFW_KEY_6");
-            GLFW_KEY_7 = getStaticIntField(PACKAGE, "GLFW_KEY_7");
-            GLFW_KEY_8 = getStaticIntField(PACKAGE, "GLFW_KEY_8");
-            GLFW_KEY_9 = getStaticIntField(PACKAGE, "GLFW_KEY_9");
-
-            GLFW_KEY_F1 = getStaticIntField(PACKAGE, "GLFW_KEY_F1");
-            GLFW_KEY_F2 = getStaticIntField(PACKAGE, "GLFW_KEY_F2");
-            GLFW_KEY_F3 = getStaticIntField(PACKAGE, "GLFW_KEY_F3");
-            GLFW_KEY_F4 = getStaticIntField(PACKAGE, "GLFW_KEY_F4");
-            GLFW_KEY_F5 = getStaticIntField(PACKAGE, "GLFW_KEY_F5");
-            GLFW_KEY_F6 = getStaticIntField(PACKAGE, "GLFW_KEY_F6");
-            GLFW_KEY_F7 = getStaticIntField(PACKAGE, "GLFW_KEY_F7");
-            GLFW_KEY_F8 = getStaticIntField(PACKAGE, "GLFW_KEY_F8");
-            GLFW_KEY_F9 = getStaticIntField(PACKAGE, "GLFW_KEY_F9");
-            GLFW_KEY_F10 = getStaticIntField(PACKAGE, "GLFW_KEY_F10");
-            GLFW_KEY_F11 = getStaticIntField(PACKAGE, "GLFW_KEY_F11");
-            GLFW_KEY_F12 = getStaticIntField(PACKAGE, "GLFW_KEY_F12");
-            GLFW_KEY_F13 = getStaticIntField(PACKAGE, "GLFW_KEY_F13");
-            GLFW_KEY_F14 = getStaticIntField(PACKAGE, "GLFW_KEY_F14");
-            GLFW_KEY_F15 = getStaticIntField(PACKAGE, "GLFW_KEY_F15");
-            GLFW_KEY_F16 = getStaticIntField(PACKAGE, "GLFW_KEY_F16");
-            GLFW_KEY_F17 = getStaticIntField(PACKAGE, "GLFW_KEY_F17");
-            GLFW_KEY_F18 = getStaticIntField(PACKAGE, "GLFW_KEY_F18");
-            GLFW_KEY_F19 = getStaticIntField(PACKAGE, "GLFW_KEY_F19");
-            GLFW_KEY_F20 = getStaticIntField(PACKAGE, "GLFW_KEY_F20");
-            GLFW_KEY_F21 = getStaticIntField(PACKAGE, "GLFW_KEY_F21");
-            GLFW_KEY_F22 = getStaticIntField(PACKAGE, "GLFW_KEY_F22");
-            GLFW_KEY_F23 = getStaticIntField(PACKAGE, "GLFW_KEY_F23");
-            GLFW_KEY_F24 = getStaticIntField(PACKAGE, "GLFW_KEY_F24");
-            GLFW_KEY_F25 = getStaticIntField(PACKAGE, "GLFW_KEY_F25");
-
-            GLFW_KEY_KP_0 = getStaticIntField(PACKAGE, "GLFW_KEY_KP_0");
-            GLFW_KEY_KP_1 = getStaticIntField(PACKAGE, "GLFW_KEY_KP_1");
-            GLFW_KEY_KP_2 = getStaticIntField(PACKAGE, "GLFW_KEY_KP_2");
-            GLFW_KEY_KP_3 = getStaticIntField(PACKAGE, "GLFW_KEY_KP_3");
-            GLFW_KEY_KP_4 = getStaticIntField(PACKAGE, "GLFW_KEY_KP_4");
-            GLFW_KEY_KP_5 = getStaticIntField(PACKAGE, "GLFW_KEY_KP_5");
-            GLFW_KEY_KP_6 = getStaticIntField(PACKAGE, "GLFW_KEY_KP_6");
-            GLFW_KEY_KP_7 = getStaticIntField(PACKAGE, "GLFW_KEY_KP_7");
-            GLFW_KEY_KP_8 = getStaticIntField(PACKAGE, "GLFW_KEY_KP_8");
-            GLFW_KEY_KP_9 = getStaticIntField(PACKAGE, "GLFW_KEY_KP_9");
-            GLFW_KEY_KP_DECIMAL = getStaticIntField(PACKAGE, "GLFW_KEY_KP_DECIMAL");
-            GLFW_KEY_KP_DIVIDE = getStaticIntField(PACKAGE, "GLFW_KEY_KP_DIVIDE");
-            GLFW_KEY_KP_MULTIPLY = getStaticIntField(PACKAGE, "GLFW_KEY_KP_MULTIPLY");
-            GLFW_KEY_KP_SUBTRACT = getStaticIntField(PACKAGE, "GLFW_KEY_KP_SUBTRACT");
-            GLFW_KEY_KP_ADD = getStaticIntField(PACKAGE, "GLFW_KEY_KP_ADD");
-            GLFW_KEY_KP_ENTER = getStaticIntField(PACKAGE, "GLFW_KEY_KP_ENTER");
-            GLFW_KEY_KP_EQUAL = getStaticIntField(PACKAGE, "GLFW_KEY_KP_EQUAL");
-
-            GLFW_KEY_LEFT_SHIFT = getStaticIntField(PACKAGE, "GLFW_KEY_LEFT_SHIFT");
-            GLFW_KEY_RIGHT_SHIFT = getStaticIntField(PACKAGE, "GLFW_KEY_RIGHT_SHIFT");
-            GLFW_KEY_LEFT_CONTROL = getStaticIntField(PACKAGE, "GLFW_KEY_LEFT_CONTROL");
-            GLFW_KEY_RIGHT_CONTROL = getStaticIntField(PACKAGE, "GLFW_KEY_RIGHT_CONTROL");
-            GLFW_KEY_LEFT_ALT = getStaticIntField(PACKAGE, "GLFW_KEY_LEFT_ALT");
-            GLFW_KEY_RIGHT_ALT = getStaticIntField(PACKAGE, "GLFW_KEY_RIGHT_ALT");
-            GLFW_KEY_LEFT_SUPER = getStaticIntField(PACKAGE, "GLFW_KEY_LEFT_SUPER");
-            GLFW_KEY_RIGHT_SUPER = getStaticIntField(PACKAGE, "GLFW_KEY_RIGHT_SUPER");
-            GLFW_KEY_MENU = getStaticIntField(PACKAGE, "GLFW_KEY_MENU");
-
-            GLFW_KEY_MINUS = getStaticIntField(PACKAGE, "GLFW_KEY_MINUS");
-            GLFW_KEY_EQUAL = getStaticIntField(PACKAGE, "GLFW_KEY_EQUAL");
-            GLFW_KEY_BACKSLASH = getStaticIntField(PACKAGE, "GLFW_KEY_BACKSLASH");
-            GLFW_KEY_SEMICOLON = getStaticIntField(PACKAGE, "GLFW_KEY_SEMICOLON");
-            GLFW_KEY_APOSTROPHE = getStaticIntField(PACKAGE, "GLFW_KEY_APOSTROPHE");
-            GLFW_KEY_COMMA = getStaticIntField(PACKAGE, "GLFW_KEY_COMMA");
-            GLFW_KEY_PERIOD = getStaticIntField(PACKAGE, "GLFW_KEY_PERIOD");
-            GLFW_KEY_SLASH = getStaticIntField(PACKAGE, "GLFW_KEY_SLASH");
-            GLFW_KEY_GRAVE_ACCENT = getStaticIntField(PACKAGE, "GLFW_KEY_GRAVE_ACCENT");
-            GLFW_KEY_LEFT_BRACKET = getStaticIntField(PACKAGE, "GLFW_KEY_LEFT_BRACKET");
-            GLFW_KEY_RIGHT_BRACKET = getStaticIntField(PACKAGE, "GLFW_KEY_RIGHT_BRACKET");
-            GLFW_KEY_WORLD_1 = getStaticIntField(PACKAGE, "GLFW_KEY_WORLD_1");
-            GLFW_KEY_WORLD_2 = getStaticIntField(PACKAGE, "GLFW_KEY_WORLD_2");
-        }
+        public static final int GLFW_KEY_MINUS = getStaticIntField(PACKAGE, "GLFW_KEY_MINUS");
+        public static final int GLFW_KEY_EQUAL = getStaticIntField(PACKAGE, "GLFW_KEY_EQUAL");
+        public static final int GLFW_KEY_BACKSLASH = getStaticIntField(PACKAGE, "GLFW_KEY_BACKSLASH");
+        public static final int GLFW_KEY_SEMICOLON = getStaticIntField(PACKAGE, "GLFW_KEY_SEMICOLON");
+        public static final int GLFW_KEY_APOSTROPHE = getStaticIntField(PACKAGE, "GLFW_KEY_APOSTROPHE");
+        public static final int GLFW_KEY_COMMA = getStaticIntField(PACKAGE, "GLFW_KEY_COMMA");
+        public static final int GLFW_KEY_PERIOD = getStaticIntField(PACKAGE, "GLFW_KEY_PERIOD");
+        public static final int GLFW_KEY_SLASH = getStaticIntField(PACKAGE, "GLFW_KEY_SLASH");
+        public static final int GLFW_KEY_GRAVE_ACCENT = getStaticIntField(PACKAGE, "GLFW_KEY_GRAVE_ACCENT");
+        public static final int GLFW_KEY_LEFT_BRACKET = getStaticIntField(PACKAGE, "GLFW_KEY_LEFT_BRACKET");
+        public static final int GLFW_KEY_RIGHT_BRACKET = getStaticIntField(PACKAGE, "GLFW_KEY_RIGHT_BRACKET");
+        public static final int GLFW_KEY_WORLD_1 = getStaticIntField(PACKAGE, "GLFW_KEY_WORLD_1");
+        public static final int GLFW_KEY_WORLD_2 = getStaticIntField(PACKAGE, "GLFW_KEY_WORLD_2");
 
         public static double glfwGetTime() {
             if (!enableLFJGFrame3System) {
@@ -783,31 +628,33 @@ public class Core {
         }
     }
 
-    public static class GLStateCache {
-        public static final String PACKAGE = DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + ".system.rendering.GLStateCache";
+    public static class LFJGRenderContext {
+        public static final String PACKAGE = DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + ".LFJGRenderContext";
+
+        public static final Object glStateCache = getStaticFieldValue(PACKAGE, "glStateCache");
 
         public static void enable(int target) {
-            if (!enableLFJGRenderSystem) {
+            if (!enableLFJGRenderSystem || glStateCache == null) {
                 return;
             }
 
-            Object ignore = invokeStaticMethod(PACKAGE, "enable", target);
+            ClassUtil.invokeMethodExact(glStateCache, "enable", target);
         }
 
         public static void disable(int target) {
-            if (!enableLFJGRenderSystem) {
+            if (!enableLFJGRenderSystem || glStateCache == null) {
                 return;
             }
 
-            Object ignore = invokeStaticMethod(PACKAGE, "disable", target);
+            ClassUtil.invokeMethodExact(glStateCache, "disable", target);
         }
 
         public static void bindTexture(int target, int texture) {
-            if (!enableLFJGRenderSystem) {
+            if (!enableLFJGRenderSystem || glStateCache == null) {
                 return;
             }
 
-            Object ignore = invokeStaticMethod(PACKAGE, "bindTexture", target, texture);
+            ClassUtil.invokeMethodExact(glStateCache, "bindTexture", target, texture);
         }
     }
 

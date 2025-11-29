@@ -10,7 +10,6 @@ import me.hannsi.lfjg.render.system.model.Entity;
 import me.hannsi.lfjg.render.system.model.Material;
 import me.hannsi.lfjg.render.system.model.Model;
 import me.hannsi.lfjg.render.system.model.ModelCache;
-import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
@@ -19,6 +18,8 @@ import org.lwjgl.opengl.GL13;
 
 import java.util.Collection;
 import java.util.List;
+
+import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
 
 public class ModelRender {
     private final VAORendering vaoRendering;
@@ -45,7 +46,7 @@ public class ModelRender {
     }
 
     public void render() {
-        GLStateCache.enable(GL11.GL_DEPTH_TEST);
+        glStateCache.enable(GL11.GL_DEPTH_TEST);
 
         LFJGRenderContext.shaderProgram.bind();
 
@@ -70,8 +71,8 @@ public class ModelRender {
                             throw new ModelException("To use a texture material, TextureCache must be set.");
                         }
 
-                        GLStateCache.activeTexture(GL13.GL_TEXTURE0);
-                        GLStateCache.enable(GL11.GL_TEXTURE_2D);
+                        glStateCache.activeTexture(GL13.GL_TEXTURE0);
+                        glStateCache.enable(GL11.GL_TEXTURE_2D);
 
                         TextureLoader textureLoader = textureCache.getTexture(material.getTextureLocation().path());
                         if (textureLoader == null) {

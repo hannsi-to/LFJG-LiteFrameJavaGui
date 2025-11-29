@@ -51,7 +51,9 @@ public class GLObjectCache {
 
     public void draw(Predicate<GLObject> filter) {
         for (GLObject glObject : glObjects.values()) {
-            if (filter != null && !filter.test(glObject)) continue;
+            if (filter != null && !filter.test(glObject)) {
+                continue;
+            }
             glObject.draw();
         }
     }

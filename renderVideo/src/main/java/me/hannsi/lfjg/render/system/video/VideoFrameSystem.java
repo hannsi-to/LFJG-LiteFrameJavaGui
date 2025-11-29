@@ -6,7 +6,6 @@ import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.math.io.IOUtil;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.type.types.LocationType;
-import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.Java2DFrameConverter;
@@ -16,6 +15,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.ByteBuffer;
+
+import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
 
 public class VideoFrameSystem {
     private Location location;
@@ -56,7 +57,7 @@ public class VideoFrameSystem {
         }
 
         if (textureId != -1) {
-            GLStateCache.deleteTexture(GL11.GL_TEXTURE_2D, textureId);
+            glStateCache.deleteTexture(GL11.GL_TEXTURE_2D, textureId);
             textureId = -1;
         }
 
@@ -186,13 +187,13 @@ public class VideoFrameSystem {
                 if (textureId == -1) {
                     textureId = GL11.glGenTextures();
 
-                    GLStateCache.bindTexture(GL11.GL_TEXTURE_2D, textureId);
+                    glStateCache.bindTexture(GL11.GL_TEXTURE_2D, textureId);
                     GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
                     GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
                     GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, byteImage);
                 }
 
-                GLStateCache.bindTexture(GL11.GL_TEXTURE_2D, textureId);
+                glStateCache.bindTexture(GL11.GL_TEXTURE_2D, textureId);
                 GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, 0, 0, width, height, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, byteImage);
             }
         }
