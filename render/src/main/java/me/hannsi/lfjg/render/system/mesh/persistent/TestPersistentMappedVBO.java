@@ -139,8 +139,8 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
 
         long oldAddr = mappedAddress;
         long oldSize = gpuMemorySize;
-        int floatsToCopy = vertexCount * MeshConstants.FLOATS_PER_VERTEX;
-        long bytesToCopy = (long) floatsToCopy * Float.BYTES;
+        long floatsToCopy = (long) vertexCount * MeshConstants.FLOATS_PER_VERTEX;
+        long bytesToCopy = floatsToCopy * Float.BYTES;
 
         if (bytesToCopy > oldSize) {
             bytesToCopy = oldSize;

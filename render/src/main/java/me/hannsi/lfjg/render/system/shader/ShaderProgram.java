@@ -10,21 +10,30 @@ import me.hannsi.lfjg.render.debug.exceptions.shader.CompilingShaderException;
 import me.hannsi.lfjg.render.debug.exceptions.shader.CreatingShaderException;
 import me.hannsi.lfjg.render.debug.exceptions.shader.CreatingShaderProgramException;
 import me.hannsi.lfjg.render.debug.exceptions.shader.LinkingShaderException;
+import me.hannsi.lfjg.render.system.mesh.MeshConstants;
 import org.joml.*;
 import org.lwjgl.system.MemoryStack;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
 import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
 import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL30.glBindBufferRange;
+import static org.lwjgl.opengl.GL30.glMapBufferRange;
+import static org.lwjgl.opengl.GL31.*;
+import static org.lwjgl.opengl.GL44.glBufferStorage;
 
 public class ShaderProgram {
     private final int programId;
     private final Map<String, UniformValue> uniformValues;
     private final Map<String, Integer> uniformCache;
-    private final Map<Integer, STD140UniformBlockType[]> uniformBlockObjectCache;
+    private final Map<String, UniformBlockValue> matrixUniformBlocksValues;
+    private final Map<String, Integer> matrixUniformBlocksCache;
+    private final FloatBuffer matrixUniformBlockMappedBuffer;
 
     private int vertexShaderId;
     private int fragmentShaderId;
@@ -32,12 +41,32 @@ public class ShaderProgram {
     public ShaderProgram() {
         uniformCache = new HashMap<>();
         uniformValues = new HashMap<>();
-        uniformBlockObjectCache = new HashMap<>();
+        matrixUniformBlocksCache = new HashMap<>();
+        matrixUniformBlocksValues = new HashMap<>();
 
         programId = glCreateProgram();
         if (programId == 0) {
             throw new CreatingShaderProgramException("Could not create Shader");
         }
+
+        int matrixUniformBlockId = glGenBuffers();
+        GL_STATE_CACHE.bindUniformBuffer(matrixUniformBlockId);
+        glBufferStorage(GL_UNIFORM_BUFFER, STD140UniformBlockType.MAT4.getByteSize() * 3L, MeshConstants.DEFAULT_FLAGS_HINT);
+
+        ByteBuffer byteBuffer = glMapBufferRange(
+                GL_UNIFORM_BUFFER,
+                0,
+                STD140UniformBlockType.MAT4.getByteSize() * 3L,
+                MeshConstants.DEFAULT_FLAGS_HINT
+        );
+        if (byteBuffer == null) {
+            throw new RuntimeException("glMapBufferRange failed");
+        }
+        matrixUniformBlockMappedBuffer = byteBuffer.asFloatBuffer();
+
+        int blockIndex = glGetUniformBlockIndex(programId, "Matrices");
+        glUniformBlockBinding(programId, blockIndex, 0);
+        glBindBufferRange(GL_UNIFORM_BUFFER, 0, matrixUniformBlockId, 0, STD140UniformBlockType.MAT4.getByteSize() * 3L);
     }
 
     private static float[] toFloatArray(Object[] values) {
@@ -69,7 +98,8 @@ public class ShaderProgram {
     public void cleanup() {
         uniformValues.clear();
         uniformCache.clear();
-        uniformBlockObjectCache.clear();
+        matrixUniformBlocksCache.clear();
+        matrixUniformBlocksValues.clear();
 
         if (vertexShaderId != 0) {
             glDeleteShader(vertexShaderId);
@@ -132,12 +162,22 @@ public class ShaderProgram {
         }
     }
 
+    private int getUniformBlockLocation(String name) {
+        return matrixUniformBlocksCache.computeIfAbsent(name, n -> glGetUniformBlockIndex(SHADER_PROGRAM.getProgramId(), name));
+    }
+
     private int getUniformLocation(String name) {
         return uniformCache.computeIfAbsent(name, n -> glGetUniformLocation(programId, n));
     }
 
     public void bind() {
         GL_STATE_CACHE.useProgram(programId);
+    }
+
+    public void updateMatrixUniformBlock(Matrix4f projection, Matrix4f view, Matrix4f model) {
+        projection.get(0, matrixUniformBlockMappedBuffer);
+        view.get(16, matrixUniformBlockMappedBuffer);
+        model.get(32, matrixUniformBlockMappedBuffer);
     }
 
     @SuppressWarnings("unchecked")
