@@ -107,9 +107,9 @@ public class GLRoundedRect extends GLPolygon<GLRoundedRect> {
                         float[] p1 = perimeter.get(i);
                         float[] p2 = perimeter.get(i + 1);
 
-                        put().vertex(new Vector2f(first[0], first[1])).color(getCornerBlend(first[0], first[1], minX, maxX, minY, maxY)).end();
-                        put().vertex(new Vector2f(p1[0], p1[1])).color(getCornerBlend(p1[0], p1[1], minX, maxX, minY, maxY)).end();
-                        put().vertex(new Vector2f(p2[0], p2[1])).color(getCornerBlend(p2[0], p2[1], minX, maxX, minY, maxY)).end();
+                        put().position(new Vector2f(first[0], first[1])).color(getCornerBlend(first[0], first[1], minX, maxX, minY, maxY)).end();
+                        put().position(new Vector2f(p1[0], p1[1])).color(getCornerBlend(p1[0], p1[1], minX, maxX, minY, maxY)).end();
+                        put().position(new Vector2f(p2[0], p2[1])).color(getCornerBlend(p2[0], p2[1], minX, maxX, minY, maxY)).end();
                     }
                 }
                 break;
@@ -120,7 +120,7 @@ public class GLRoundedRect extends GLPolygon<GLRoundedRect> {
                     float px = p[0], py = p[1];
                     Color useColor = getCornerBlend(px, py, minX, maxX, minY, maxY);
 
-                    put().vertex(new Vector2f(px, py)).color(useColor).end();
+                    put().position(new Vector2f(px, py)).color(useColor).end();
                 }
                 break;
 

@@ -132,26 +132,26 @@ public class Demo1 implements IScene {
                 .update();
         offsetX += offset + step;
         glPolygon1 = new GLPolygon("GLPolygon1");
-        glPolygon1.put().vertex(new Vector2f(offsetX, offsetY)).color(Color.BLACK);
-        glPolygon1.put().vertex(new Vector2f(offsetX + offset / 3, offsetY + offset)).color(Color.BLACK);
-        glPolygon1.put().vertex(new Vector2f(offsetX + (offset / 3) * 2, offsetY)).color(Color.BLACK);
-        glPolygon1.put().vertex(new Vector2f(offsetX + offset, offsetY + offset)).color(Color.BLACK);
+        glPolygon1.put().position(new Vector2f(offsetX, offsetY)).color(Color.BLACK);
+        glPolygon1.put().position(new Vector2f(offsetX + offset / 3, offsetY + offset)).color(Color.BLACK);
+        glPolygon1.put().position(new Vector2f(offsetX + (offset / 3) * 2, offsetY)).color(Color.BLACK);
+        glPolygon1.put().position(new Vector2f(offsetX + offset, offsetY + offset)).color(Color.BLACK);
         glPolygon1.setDrawType(DrawType.LINE_STRIP).setLineWidth(2);
         glPolygon1.rendering();
         offsetX += offset + step;
         glPolygon2 = new GLPolygon("GLPolygon2");
-        glPolygon2.put().vertex(new Vector2f(offsetX, offsetY)).color(Color.BLACK);
-        glPolygon2.put().vertex(new Vector2f(offsetX + offset / 3, offsetY + offset)).color(Color.BLACK);
-        glPolygon2.put().vertex(new Vector2f(offsetX + (offset / 3) * 2, offsetY)).color(Color.BLACK);
-        glPolygon2.put().vertex(new Vector2f(offsetX + offset, offsetY + offset)).color(Color.BLACK);
+        glPolygon2.put().position(new Vector2f(offsetX, offsetY)).color(Color.BLACK);
+        glPolygon2.put().position(new Vector2f(offsetX + offset / 3, offsetY + offset)).color(Color.BLACK);
+        glPolygon2.put().position(new Vector2f(offsetX + (offset / 3) * 2, offsetY)).color(Color.BLACK);
+        glPolygon2.put().position(new Vector2f(offsetX + offset, offsetY + offset)).color(Color.BLACK);
         glPolygon2.setDrawType(DrawType.LINE_STRIP).setLineWidth(4);
         glPolygon2.rendering();
         offsetX += offset + step;
         glPolygon3 = new GLPolygon("GLPolygon3");
-        glPolygon3.put().vertex(new Vector2f(offsetX, offsetY)).color(Color.BLACK);
-        glPolygon3.put().vertex(new Vector2f(offsetX + offset / 3, offsetY + offset)).color(Color.BLACK);
-        glPolygon3.put().vertex(new Vector2f(offsetX + (offset / 3) * 2, offsetY)).color(Color.BLACK);
-        glPolygon3.put().vertex(new Vector2f(offsetX + offset, offsetY + offset)).color(Color.BLACK);
+        glPolygon3.put().position(new Vector2f(offsetX, offsetY)).color(Color.BLACK);
+        glPolygon3.put().position(new Vector2f(offsetX + offset / 3, offsetY + offset)).color(Color.BLACK);
+        glPolygon3.put().position(new Vector2f(offsetX + (offset / 3) * 2, offsetY)).color(Color.BLACK);
+        glPolygon3.put().position(new Vector2f(offsetX + offset, offsetY + offset)).color(Color.BLACK);
         glPolygon3.setDrawType(DrawType.LINE_STRIP).setLineWidth(6);
         glPolygon3.rendering();
         offsetX += offset + step;
@@ -410,7 +410,7 @@ public class Demo1 implements IScene {
             float angle = (float) (Math.PI / 3 * i);
             float x = centerX + radius * (float) Math.cos(angle);
             float y = centerY + radius * (float) Math.sin(angle);
-            glPolygon4.put().vertex(new Vector2f(x, y)).color(Color.SILVER);
+            glPolygon4.put().position(new Vector2f(x, y)).color(Color.SILVER);
         }
         glPolygon4.setDrawType(DrawType.POLYGON);
         glPolygon4.rendering();
@@ -423,7 +423,7 @@ public class Demo1 implements IScene {
             float angle = (float) (Math.PI / 3 * i);
             float x = centerX + radius * (float) Math.cos(angle);
             float y = centerY + radius * (float) Math.sin(angle);
-            glPolygon5.put().vertex(new Vector2f(x, y)).color(Color.SILVER);
+            glPolygon5.put().position(new Vector2f(x, y)).color(Color.SILVER);
         }
         glPolygon5.setDrawType(DrawType.LINE_LOOP).setLineWidth(6);
         glPolygon5.rendering();
@@ -436,7 +436,7 @@ public class Demo1 implements IScene {
             float angle = (float) (Math.PI / 3 * i);
             float x = centerX + radius * (float) Math.cos(angle);
             float y = centerY + radius * (float) Math.sin(angle);
-            glPolygon6.put().vertex(new Vector2f(x, y)).color(Color.SILVER);
+            glPolygon6.put().position(new Vector2f(x, y)).color(Color.SILVER);
         }
         glPolygon6.setDrawType(DrawType.LINE_LOOP).setLineWidth(2);
         glPolygon6.rendering();
@@ -449,7 +449,7 @@ public class Demo1 implements IScene {
             float angle = MathHelper.toRadians(72 * i - 90);
             float x = centerX + radius * (float) Math.cos(angle);
             float y = centerY + radius * (float) Math.sin(angle);
-            glPolygon7.put().vertex(new Vector2f(x, y)).color(Color.SILVER);
+            glPolygon7.put().position(new Vector2f(x, y)).color(Color.SILVER);
         }
         glPolygon7.setDrawType(DrawType.POLYGON);
         glPolygon7.rendering();
@@ -462,7 +462,7 @@ public class Demo1 implements IScene {
             float angle = MathHelper.toRadians(72 * i - 90);
             float x = centerX + radius * (float) Math.cos(angle);
             float y = centerY + radius * (float) Math.sin(angle);
-            glPolygon8.put().vertex(new Vector2f(x, y)).color(Color.SILVER);
+            glPolygon8.put().position(new Vector2f(x, y)).color(Color.SILVER);
         }
         glPolygon8.setDrawType(DrawType.LINE_LOOP).setLineWidth(6);
         glPolygon8.rendering();
@@ -475,7 +475,7 @@ public class Demo1 implements IScene {
             float angle = MathHelper.toRadians(72 * i - 90);
             float x = centerX + radius * (float) Math.cos(angle);
             float y = centerY + radius * (float) Math.sin(angle);
-            glPolygon9.put().vertex(new Vector2f(x, y)).color(Color.SILVER);
+            glPolygon9.put().position(new Vector2f(x, y)).color(Color.SILVER);
         }
         glPolygon9.setDrawType(DrawType.LINE_LOOP).setLineWidth(2);
         glPolygon9.rendering();

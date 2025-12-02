@@ -30,7 +30,7 @@ public class EffectLensBlur implements LFJGFrame {
                 .x1_y1_color1_2p(0, 0, Color.of(0, 0, 0, 0))
                 .x3_y3_color3_2p(frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
         effectCache1 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Test1"))

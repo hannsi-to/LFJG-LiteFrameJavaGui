@@ -347,4 +347,8 @@ public class TestMesh {
         currentIndex = (currentIndex + 1) % MeshConstants.DEFAULT_BUFFER_COUNT;
         return this;
     }
+
+    public void cleanup() {
+
+    }
 }

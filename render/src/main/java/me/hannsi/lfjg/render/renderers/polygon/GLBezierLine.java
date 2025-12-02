@@ -37,8 +37,8 @@ public class GLBezierLine extends GLPolygon<GLBezierLine> {
             float t = (float) i / builder.segment;
             BezierPoint current = computeBezierPoint(t, bezierPoints);
 
-            put().vertex(prev.pos).color(prev.color).end();
-            put().vertex(current.pos).color(current.color).end();
+            put().position(prev.pos).color(prev.color).end();
+            put().position(current.pos).color(current.color).end();
 
             prev = current;
         }

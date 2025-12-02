@@ -77,7 +77,7 @@ public class Demo3 implements IScene {
                 .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
                 .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
         effectCache1 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
@@ -87,9 +87,9 @@ public class Demo3 implements IScene {
                 .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
                 .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
-        glRect2.uv(0, 1, 1, 0);
+        glRect2.rectUV(0, 1, 1, 0);
         effectCache2 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(BoxBlur.createBoxBlur("BoxBlusr1"))
@@ -99,9 +99,9 @@ public class Demo3 implements IScene {
                 .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
                 .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
-        glRect3.uv(0, 1, 1, 0);
+        glRect3.rectUV(0, 1, 1, 0);
         effectCache3 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(ChromaKey.createChromaKey("ChromaKey1").chromaKeyColor(Color.of(205, 107, 23, 255)))
@@ -111,9 +111,9 @@ public class Demo3 implements IScene {
                 .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
                 .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
-        glRect4.uv(0, 1, 1, 0);
+        glRect4.rectUV(0, 1, 1, 0);
         effectCache4 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(ChromaticAberration.createChromaticAberration("ChromaticAberration1"))
@@ -123,9 +123,9 @@ public class Demo3 implements IScene {
                 .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
                 .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
-        glRect5.uv(0, 1, 1, 0);
+        glRect5.rectUV(0, 1, 1, 0);
         effectCache5 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(Bloom.createBloom("Bloom"))
@@ -135,9 +135,9 @@ public class Demo3 implements IScene {
                 .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
                 .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
-        glRect6.uv(0, 1, 1, 0);
+        glRect6.rectUV(0, 1, 1, 0);
         effectCache6 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(ColorChanger.createColorChanger("ColorChanger1").targetColor(Color.of(17, 40, 133, 255)).newColor(Color.of(255, 0, 0, 255)))
@@ -147,9 +147,9 @@ public class Demo3 implements IScene {
                 .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
                 .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
-        glRect7.uv(0, 1, 1, 0);
+        glRect7.rectUV(0, 1, 1, 0);
         effectCache7 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(ColorCorrection.createColorCorrection("ColorCorrection1"))
@@ -160,9 +160,9 @@ public class Demo3 implements IScene {
                 .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
                 .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
-        glRect8.uv(0, 1, 1, 0);
+        glRect8.rectUV(0, 1, 1, 0);
         effectCache8 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(DiagonalClipping.createDiagonalClipping("DiagonalClipping").centerX(offsetX + (1920 / 8f) / 2f).centerY(offsetY + (1440 / 8f) / 2f))
@@ -172,9 +172,9 @@ public class Demo3 implements IScene {
                 .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
                 .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
-        glRect9.uv(0, 1, 1, 0);
+        glRect9.rectUV(0, 1, 1, 0);
         effectCache9 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(DirectionalBlur.createDirectionBlur("DirectionalBlur1"))
@@ -184,9 +184,9 @@ public class Demo3 implements IScene {
                 .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
                 .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
-        glRect10.uv(0, 1, 1, 0);
+        glRect10.rectUV(0, 1, 1, 0);
         effectCache10 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(EdgeExtraction.createEdgeExtraction("EdgeExtraction1"))
@@ -196,9 +196,9 @@ public class Demo3 implements IScene {
                 .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
                 .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
-        glRect11.uv(0, 1, 1, 0);
+        glRect11.rectUV(0, 1, 1, 0);
         effectCache11 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(FXAA.createFXAA("FXAA1").useAlpha(true))
@@ -208,9 +208,9 @@ public class Demo3 implements IScene {
                 .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
                 .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
-        glRect12.uv(0, 1, 1, 0);
+        glRect12.rectUV(0, 1, 1, 0);
         effectCache12 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(Flash.createFlash("Flash1"))
@@ -220,9 +220,9 @@ public class Demo3 implements IScene {
                 .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
                 .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
-        glRect13.uv(0, 1, 1, 0);
+        glRect13.rectUV(0, 1, 1, 0);
         effectCache13 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(GaussianBlurHorizontal.createGaussianBlurHorizontal("GaussianBlurHorizontal1"))
@@ -232,9 +232,9 @@ public class Demo3 implements IScene {
                 .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
                 .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
-        glRect14.uv(0, 1, 1, 0);
+        glRect14.rectUV(0, 1, 1, 0);
         effectCache14 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(GaussianBlurVertical.createGaussianBlurVertical("GaussianBlurVertical1"))
@@ -245,9 +245,9 @@ public class Demo3 implements IScene {
                 .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
                 .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
-        glRect15.uv(0, 1, 1, 0);
+        glRect15.rectUV(0, 1, 1, 0);
         effectCache15 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(Glow.createGlow("Glow1"))
@@ -257,9 +257,9 @@ public class Demo3 implements IScene {
                 .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
                 .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
-        glRect16.uv(0, 1, 1, 0);
+        glRect16.rectUV(0, 1, 1, 0);
         effectCache16 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(Gradation.createGradation("Gradation1"))
@@ -269,9 +269,9 @@ public class Demo3 implements IScene {
                 .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
                 .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
-        glRect17.uv(0, 1, 1, 0);
+        glRect17.rectUV(0, 1, 1, 0);
         effectCache17 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(Inversion.createInversion("Inversion1"))
@@ -282,9 +282,9 @@ public class Demo3 implements IScene {
                 .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
                 .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
-        glRect18.uv(0, 1, 1, 0);
+        glRect18.rectUV(0, 1, 1, 0);
         effectCache18 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(LensBlur.createLensBlur("LensBlur1"))
@@ -294,9 +294,9 @@ public class Demo3 implements IScene {
                 .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
                 .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
-        glRect19.uv(0, 1, 1, 0);
+        glRect19.rectUV(0, 1, 1, 0);
         effectCache19 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(LuminanceKey.createLuminanceKey("LuminanceKey1"))
@@ -306,9 +306,9 @@ public class Demo3 implements IScene {
                 .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
                 .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
-        glRect20.uv(0, 1, 1, 0);
+        glRect20.rectUV(0, 1, 1, 0);
         effectCache20 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(Monochrome.createMonochrome("Monochrome"))
@@ -318,9 +318,9 @@ public class Demo3 implements IScene {
                 .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
                 .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
-        glRect21.uv(0, 1, 1, 0);
+        glRect21.rectUV(0, 1, 1, 0);
         effectCache21 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(Pixelate.createPixelate("Pixelate1"))
@@ -331,9 +331,9 @@ public class Demo3 implements IScene {
                 .x1_y1_color1_2p(offsetX, offsetY, Color.of(0, 0, 0, 0))
                 .width3_height3_color3_2p(1920 / 8f, 1440 / 8f, Color.of(0, 0, 0, 0))
                 .fill()
-                .uv(0, 1, 1, 0)
+                .rectUV(0, 1, 1, 0)
                 .update();
-        glRect22.uv(0, 1, 1, 0);
+        glRect22.rectUV(0, 1, 1, 0);
         effectCache22 = EffectCache.createEffectCache()
                 .createCache(Texture.createTexture("Texture1").textureName("Demo3"))
                 .createCache(RadialBlur.createRadialBlur("RadialBlur1").centerX(offsetX + (1920 / 8f) / 2f).centerY(offsetY + (1440 / 8f) / 2f))

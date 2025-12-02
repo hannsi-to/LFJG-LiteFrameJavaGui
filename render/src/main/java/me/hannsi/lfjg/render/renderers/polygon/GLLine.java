@@ -21,8 +21,8 @@ public class GLLine extends GLPolygon<GLLine> {
     }
 
     public GLLine update() {
-        put().vertex(new Vector2f(builder.x1, builder.y1)).color(builder.color1).end();
-        put().vertex(new Vector2f(builder.x2, builder.y2)).color(builder.color2).end();
+        put().position(new Vector2f(builder.x1, builder.y1)).color(builder.color1).end();
+        put().position(new Vector2f(builder.x2, builder.y2)).color(builder.color2).end();
 
         setDrawType(DrawType.LINES).setLineWidth(builder.lineWidth);
         rendering();

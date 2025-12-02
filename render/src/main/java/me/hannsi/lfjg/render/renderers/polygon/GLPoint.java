@@ -20,7 +20,7 @@ public class GLPoint extends GLPolygon<GLPoint> {
     }
 
     public GLPoint update() {
-        put().vertex(new Vector2f(builder.x, builder.y)).color(builder.color).end();
+        put().position(new Vector2f(builder.x, builder.y)).color(builder.color).end();
 
         setDrawType(DrawType.POINTS).setPointSize(builder.pointSize);
         rendering();

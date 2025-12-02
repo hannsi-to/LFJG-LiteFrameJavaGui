@@ -42,11 +42,11 @@ public class GLCircle extends GLPolygon<GLCircle> {
                 setDrawType(DrawType.TRIANGLE_FAN);
 
                 Color centerColor = getCenterColor();
-                put().vertex(new Vector2f(builder.cx, builder.cy)).color(centerColor).end();
+                put().position(new Vector2f(builder.cx, builder.cy)).color(centerColor).end();
 
                 for (float[] v : vertices) {
                     Color useColor = getCornerBlend(v[0], v[1]);
-                    put().vertex(new Vector2f(v[0], v[1])).color(useColor).end();
+                    put().position(new Vector2f(v[0], v[1])).color(useColor).end();
                 }
 
                 break;
@@ -55,7 +55,7 @@ public class GLCircle extends GLPolygon<GLCircle> {
 
                 for (float[] v : vertices) {
                     Color useColor = getCornerBlend(v[0], v[1]);
-                    put().vertex(new Vector2f(v[0], v[1])).color(useColor).end();
+                    put().position(new Vector2f(v[0], v[1])).color(useColor).end();
                 }
 
                 break;

@@ -21,10 +21,10 @@ public class GLRect extends GLPolygon<GLRect> {
     }
 
     public GLRect update() {
-        put().vertex(new Vector2f(builder.x1, builder.y1)).color(builder.color1).end();
-        put().vertex(new Vector2f(builder.x2, builder.y2)).color(builder.color2).end();
-        put().vertex(new Vector2f(builder.x3, builder.y3)).color(builder.color3).end();
-        put().vertex(new Vector2f(builder.x4, builder.y4)).color(builder.color4).end();
+        put().position(new Vector2f(builder.x1, builder.y1)).color(builder.color1).end();
+        put().position(new Vector2f(builder.x2, builder.y2)).color(builder.color2).end();
+        put().position(new Vector2f(builder.x3, builder.y3)).color(builder.color3).end();
+        put().position(new Vector2f(builder.x4, builder.y4)).color(builder.color4).end();
 
         switch (builder.paintType) {
             case FILL:

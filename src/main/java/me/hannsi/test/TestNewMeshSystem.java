@@ -76,7 +76,7 @@ public class TestNewMeshSystem implements LFJGFrame {
             MESH.addObject(
                     id,
                     ProjectionType.ORTHOGRAPHIC_PROJECTION,
-                    DrawType.POLYGON,
+                    DrawType.POINTS,
                     30,
                     JointType.MITER,
                     10f,
@@ -210,7 +210,7 @@ public class TestNewMeshSystem implements LFJGFrame {
 
         SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.OBJECT.getId());
         SHADER_PROGRAM.setUniform("resolution", UploadUniformType.ON_CHANGE, frameBufferSize);
-        SHADER_PROGRAM.updateMatrixUniformBlock(projection2D.getProjMatrix(), viewMatrix, modelMatrix.translate(0.1f, 0, 0));
+        SHADER_PROGRAM.updateMatrixUniformBlock(projection2D.getProjMatrix(), viewMatrix, modelMatrix);
 
         MESH.debugDraw(DrawType.TRIANGLES.getId(), false);
 

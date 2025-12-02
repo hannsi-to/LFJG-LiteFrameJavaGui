@@ -41,10 +41,10 @@ public class GLText extends GLPolygon<GLText> {
         float height = getTextHeight(text);
         Color color = Color.of(0, 0, 0, 0);
 
-        put().vertex(new Vector2f(x, y)).color(color).end();
-        put().vertex(new Vector2f(x + width, y)).color(color).end();
-        put().vertex(new Vector2f(x + width, y + height)).color(color).end();
-        put().vertex(new Vector2f(x, y + height)).color(color).end();
+        put().position(new Vector2f(x, y)).color(color).end();
+        put().position(new Vector2f(x + width, y)).color(color).end();
+        put().position(new Vector2f(x + width, y + height)).color(color).end();
+        put().position(new Vector2f(x, y + height)).color(color).end();
 
         setDrawType(DrawType.QUADS);
         rendering();

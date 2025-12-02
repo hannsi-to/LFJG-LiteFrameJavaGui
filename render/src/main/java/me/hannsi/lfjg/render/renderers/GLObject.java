@@ -6,9 +6,6 @@ import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.render.Id;
 import me.hannsi.lfjg.render.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
-import me.hannsi.lfjg.render.system.mesh.BufferObjectType;
-import me.hannsi.lfjg.render.system.mesh.Mesh;
-import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
@@ -20,14 +17,14 @@ import static me.hannsi.lfjg.core.Core.frameBufferSize;
 import static me.hannsi.lfjg.core.Core.projection2D;
 import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
 import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 
 public class GLObject implements Cloneable {
     private String name;
     private long objectId;
 
     private VAORendering vaoRendering;
-    private Mesh mesh;
     private FrameBuffer frameBuffer;
 
     private Transform transform;
@@ -36,25 +33,17 @@ public class GLObject implements Cloneable {
     private EffectCache effectCache;
     private AnimationCache animationCache;
     private BlendType blendType;
-    private DrawType drawType;
-    private float lineWidth;
-    private float pointSize;
-
 
     public GLObject(String name) {
         this.name = name;
 
         this.vaoRendering = null;
-        this.mesh = null;
         this.frameBuffer = null;
 
         this.viewMatrix = null;
         this.transform = new Transform(this);
 
-        this.lineWidth = -1f;
-        this.pointSize = -1f;
         this.blendType = null;
-        this.drawType = null;
         this.objectId = ++Id.latestGLObjectId;
     }
 
@@ -67,9 +56,6 @@ public class GLObject implements Cloneable {
         }
         if (frameBuffer != null) {
             frameBuffer.cleanup();
-        }
-        if (mesh != null) {
-            mesh.cleanup();
         }
         if (vaoRendering != null) {
             vaoRendering.cleanup();
@@ -151,13 +137,6 @@ public class GLObject implements Cloneable {
     }
 
     private void setupRenderState() {
-        if (lineWidth != -1f) {
-            glLineWidth(lineWidth);
-        }
-        if (pointSize != -1f) {
-            glPointSize(pointSize);
-        }
-
         GL_STATE_CACHE.blendFunc(blendType.getSfactor(), blendType.getDfactor());
         GL_STATE_CACHE.setBlendEquation(blendType.getEquation());
         GL_STATE_CACHE.enable(GL_BLEND);
@@ -170,9 +149,7 @@ public class GLObject implements Cloneable {
         SHADER_PROGRAM.setUniform("modelMatrix", UploadUniformType.PER_FRAME, transform.getModelMatrix());
         SHADER_PROGRAM.setUniform("viewMatrix", UploadUniformType.PER_FRAME, viewMatrix);
         SHADER_PROGRAM.setUniform("resolution", UploadUniformType.ON_CHANGE, frameBufferSize);
-        if (mesh.getVboIds().get(BufferObjectType.TEXTURE_BUFFER) != null) {
-            SHADER_PROGRAM.setUniform("textureSampler", UploadUniformType.ONCE, 0);
-        }
+        SHADER_PROGRAM.setUniform("textureSampler", UploadUniformType.ONCE, 0);
     }
 
     private void bindResources() {
@@ -243,16 +220,6 @@ public class GLObject implements Cloneable {
         return this;
     }
 
-    public Mesh getMesh() {
-        return mesh;
-    }
-
-    public GLObject setMesh(Mesh mesh) {
-        this.mesh = mesh;
-
-        return this;
-    }
-
     public FrameBuffer getFrameBuffer() {
         return frameBuffer;
     }
@@ -295,36 +262,6 @@ public class GLObject implements Cloneable {
 
     public GLObject setBlendType(BlendType blendType) {
         this.blendType = blendType;
-
-        return this;
-    }
-
-    public DrawType getDrawType() {
-        return drawType;
-    }
-
-    public GLObject setDrawType(DrawType drawType) {
-        this.drawType = drawType;
-
-        return this;
-    }
-
-    public float getLineWidth() {
-        return lineWidth;
-    }
-
-    public GLObject setLineWidth(float lineWidth) {
-        this.lineWidth = lineWidth;
-
-        return this;
-    }
-
-    public float getPointSize() {
-        return pointSize;
-    }
-
-    public GLObject setPointSize(float pointSize) {
-        this.pointSize = pointSize;
 
         return this;
     }

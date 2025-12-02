@@ -33,11 +33,11 @@ public class GLVideo extends GLPolygon<GLVideo> {
     }
 
     public GLVideo update() {
-        uv(0, 0, 1, 1);
-        put().vertex(new Vector2f(builder.x1, builder.y1)).color(Color.of(0, 0, 0, 0)).end();
-        put().vertex(new Vector2f(builder.x2, builder.y2)).color(Color.of(0, 0, 0, 0)).end();
-        put().vertex(new Vector2f(builder.x3, builder.y3)).color(Color.of(0, 0, 0, 0)).end();
-        put().vertex(new Vector2f(builder.x4, builder.y4)).color(Color.of(0, 0, 0, 0)).end();
+        rectUV(0, 0, 1, 1);
+        put().position(new Vector2f(builder.x1, builder.y1)).color(Color.of(0, 0, 0, 0)).end();
+        put().position(new Vector2f(builder.x2, builder.y2)).color(Color.of(0, 0, 0, 0)).end();
+        put().position(new Vector2f(builder.x3, builder.y3)).color(Color.of(0, 0, 0, 0)).end();
+        put().position(new Vector2f(builder.x4, builder.y4)).color(Color.of(0, 0, 0, 0)).end();
 
         setDrawType(DrawType.QUADS);
         rendering();

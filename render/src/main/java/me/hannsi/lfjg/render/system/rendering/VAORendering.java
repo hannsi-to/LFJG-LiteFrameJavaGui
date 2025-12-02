@@ -15,7 +15,7 @@ import static org.lwjgl.opengl.GL43.glMultiDrawElementsIndirect;
 
 public class VAORendering {
     public void draw(GLObject glObject) {
-        draw(glObject.getMesh(), glObject.getDrawType().getId());
+//        draw(glObject.getMesh(), glObject.getDrawType().getId());
     }
 
     public void draw(Mesh mesh) {
