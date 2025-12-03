@@ -16,29 +16,27 @@ import static me.hannsi.lfjg.core.SystemSetting.GL_INTERCEPTOR_DEBUG;
 public class GLInterceptor {
     @RuntimeType
     public static Object intercept(@Origin Method method, @AllArguments Object[] args, @SuperCall Callable<?> zuper) throws Exception {
-        if (Class.forName("org.lwjgl.opengl.GL") != method.getClass()) {
-            StringBuilder stringBuilder;
-            if (args != null) {
-                if (args.length == 0) {
-                    stringBuilder = new StringBuilder("[]");
-                } else {
-                    stringBuilder = new StringBuilder("[");
-                    for (int i = 0; i < args.length; i++) {
-                        stringBuilder.append(args[i]);
-
-                        if (i != args.length - 1) {
-                            stringBuilder.append(", ");
-                        }
-                    }
-                    stringBuilder.append(']');
-                }
+        StringBuilder stringBuilder;
+        if (args != null) {
+            if (args.length == 0) {
+                stringBuilder = new StringBuilder("[]");
             } else {
-                stringBuilder = new StringBuilder("null");
-            }
+                stringBuilder = new StringBuilder("[");
+                for (int i = 0; i < args.length; i++) {
+                    stringBuilder.append(args[i]);
 
-            if (GL_INTERCEPTOR_DEBUG) {
-                DebugLog.debug(GLInterceptor.class, "Hook: " + method.getDeclaringClass().getName() + "." + method.getName() + "(); args=" + stringBuilder);
+                    if (i != args.length - 1) {
+                        stringBuilder.append(", ");
+                    }
+                }
+                stringBuilder.append(']');
             }
+        } else {
+            stringBuilder = new StringBuilder("null");
+        }
+
+        if (GL_INTERCEPTOR_DEBUG) {
+            DebugLog.debug(GLInterceptor.class, "Hook: " + method.getDeclaringClass().getName() + "." + method.getName() + "(); args=" + stringBuilder);
         }
 
         OpenGLStaticMethodHookEvent openGLStaticMethodHookEvent = new OpenGLStaticMethodHookEvent(method, args, zuper);
