@@ -30,7 +30,8 @@ import java.util.concurrent.locks.LockSupport;
 
 import static me.hannsi.lfjg.core.Core.*;
 import static me.hannsi.lfjg.core.Core.GL.createCapabilities;
-import static me.hannsi.lfjg.core.Core.GL11.*;
+import static me.hannsi.lfjg.core.Core.GL11.glClear;
+import static me.hannsi.lfjg.core.Core.GL11.glClearColor;
 import static me.hannsi.lfjg.core.Core.LFJGRenderContext.disable;
 import static me.hannsi.lfjg.core.Core.LFJGRenderContext.enable;
 import static me.hannsi.lfjg.frame.LFJGFrameContext.windowSize;
@@ -78,7 +79,6 @@ public class Frame implements IFrame {
         initFrameSettingValue();
         initGLFW();
         initRendering();
-        updateViewport();
 
         frameSettingManager.updateFrameSettings(false);
 
@@ -151,6 +151,9 @@ public class Frame implements IFrame {
     }
 
     private void glfwWindowHints() {
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE);
         glfwWindowHint(GLFW_CENTER_CURSOR, GLFW_FALSE);
         glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_TRUE);
@@ -215,7 +218,6 @@ public class Frame implements IFrame {
     @EventHandler
     public void framebufferSizeEvent(FramebufferSizeEvent event) {
         updateLFJGLContext();
-        updateViewport();
     }
 
     private void finished() {
@@ -305,17 +307,6 @@ public class Frame implements IFrame {
         if (callback != null) {
             callback.free();
         }
-    }
-
-    public void updateViewport() {
-        glViewport(0, 0, frameBufferWidth, frameBufferHeight);
-
-        glMatrixMode(OPEN_GL_PARAMETER_NAME_MAP.get("GL_PROJECTION"));
-        glLoadIdentity();
-        glOrtho(0, frameBufferWidth / contentScaleX, 0, frameBufferHeight / contentScaleY, -1, 1);
-
-        glMatrixMode(OPEN_GL_PARAMETER_NAME_MAP.get("GL_MODELVIEW"));
-        glLoadIdentity();
     }
 
     public long getWin32Window() {
