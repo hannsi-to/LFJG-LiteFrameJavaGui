@@ -4,7 +4,7 @@ import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
+import me.hannsi.lfjg.render.system.rendering.frameBuffer.FrameBuffer;
 import org.joml.Matrix4f;
 
 public class EffectBase {

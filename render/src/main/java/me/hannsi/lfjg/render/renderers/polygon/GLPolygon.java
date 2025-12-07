@@ -2,14 +2,16 @@ package me.hannsi.lfjg.render.renderers.polygon;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
+import me.hannsi.lfjg.core.utils.reflection.reference.LongRef;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
+import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.renderers.JointType;
 import me.hannsi.lfjg.render.renderers.PointType;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
+import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import org.joml.Vector2f;
-import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,28 +24,27 @@ import static me.hannsi.lfjg.render.LFJGRenderContext.MESH;
 public class GLPolygon<T extends GLPolygon<T>> extends GLObject {
     public static final JointType DEFAULT_JOINT_TYPE = JointType.NONE;
     public static final PointType DEFAULT_POINT_TYPE = PointType.ROUND;
+    public static final BlendType DEFAULT_BLEND_TYPE = BlendType.NORMAL;
     private final List<Vertex> vertices;
     protected Vertex currentVertex;
     protected float[] rectUV;
-    private List<Vertex> lastVertices;
     private DrawType drawType;
     private JointType jointType;
     private PointType pointType;
     private float lineWidth;
     private float pointSize;
-    private boolean isUpdate;
+    private BlendType blendType;
 
     public GLPolygon(String name) {
         super(name);
 
-        this.lastVertices = new ArrayList<>();
         this.vertices = new ArrayList<>();
         this.drawType = null;
         this.jointType = DEFAULT_JOINT_TYPE;
         this.pointType = DEFAULT_POINT_TYPE;
         this.lineWidth = -1;
         this.pointSize = -1;
-        this.isUpdate = false;
+        this.blendType = DEFAULT_BLEND_TYPE;
         this.currentVertex = null;
         this.rectUV = new float[4];
     }
@@ -124,33 +125,19 @@ public class GLPolygon<T extends GLPolygon<T>> extends GLObject {
         return (T) this;
     }
 
+    @SuppressWarnings("unchecked")
+    public T setBlendType(BlendType blendType) {
+        this.blendType = blendType;
+
+        return (T) this;
+    }
+
     public void end() {
         vertices.add(currentVertex.copy());
     }
 
     public void rendering(boolean isFragmentShaderPath, Location location) {
         rendering();
-    }
-
-    public void updateData() {
-//        setGLObjectParameter();
-//
-//        if (!Arrays.equals(vertex, latestVertex)) {
-//            mesh.updateVBOData(drawType, BufferObjectType.POSITION_BUFFER, vertex);
-//        }
-//        if (!Arrays.equals(color, latestColor)) {
-//            mesh.updateVBOData(drawType, BufferObjectType.COLOR_BUFFER, color);
-//        }
-//        if (!Arrays.equals(texture, latestTexture)) {
-//            mesh.updateVBOData(drawType, BufferObjectType.TEXTURE_BUFFER, texture);
-//        }
-//
-//        latestVertex = vertex;
-//        latestColor = color;
-//        latestTexture = texture;
-//        vertex = new float[0];
-//        color = new float[0];
-//        texture = new float[0];
     }
 
     public void rendering() {
@@ -163,28 +150,31 @@ public class GLPolygon<T extends GLPolygon<T>> extends GLObject {
         vertices.get(3).u = rectUV[0];
         vertices.get(3).v = rectUV[3];
 
-        if (isUpdate) {
-            updateData();
-        } else {
-            isUpdate = true;
+        Vertex[] vertices = this.vertices.toArray(new Vertex[0]);
+        LongRef id = new LongRef();
+        MESH.addObject(
+                id,
+                ProjectionType.ORTHOGRAPHIC_PROJECTION,
+                drawType,
+                FragmentShaderType.OBJECT,
+                blendType,
+                lineWidth,
+                jointType,
+                pointSize,
+                pointType,
+                vertices
+        );
 
-            Vertex[] vertices = this.vertices.toArray(new Vertex[0]);
-            MESH.addObject(ProjectionType.ORTHOGRAPHIC_PROJECTION, drawType, lineWidth, jointType, pointSize, pointType, vertices);
-
-            setGLObjectParameter();
-            create();
-            lastVertices = this.vertices;
-        }
+        setGLObjectParameter();
+        create(id.getValue());
 
         rectUV = new float[4];
     }
 
     private void setGLObjectParameter() {
-        getTransform().setBound(getBounds());
-
-        Vector2f center = new Vector2f(getTransform().getX() + getTransform().getWidth() / 2f, getTransform().getY() + getTransform().getHeight() / 2f);
-        getTransform().setCenterX(center.x());
-        getTransform().setCenterY(center.y());
+        getTransform().setX(vertices.get(0).x);
+        getTransform().setY(vertices.get(0).y);
+        getTransform().setZ(vertices.get(0).z);
 
         getTransform().setAngleX(0);
         getTransform().setAngleY(0);
@@ -193,48 +183,5 @@ public class GLPolygon<T extends GLPolygon<T>> extends GLObject {
         getTransform().setScaleX(1);
         getTransform().setScaleY(1);
         getTransform().setScaleZ(1);
-    }
-
-    private Vector4f getBounds() {
-//        if (vertex == null || vertex.length == 0) {
-//            return new Vector4f(0, 0, 0, 0);
-//        }
-//
-//        float minX = vertex[0];
-//        float minY = vertex[1];
-//        float maxX = vertex[0];
-//        float maxY = vertex[1];
-//
-//
-//        for (int v = 0; v < vertex.length; v += 2) {
-//            minX = Math.min(minX, vertex[v]);
-//            minY = Math.min(minY, vertex[v + 1]);
-//            maxX = Math.max(maxX, vertex[v]);
-//            maxY = Math.max(maxY, vertex[v + 1]);
-//        }
-//
-//        if (getLineWidth() != -1 || getPointSize() != -1) {
-//            float expandLine = getLineWidth() / 2.0f;
-//            float expandPoint = getPointSize() / 2.0f;
-//
-//            float expand = Math.max(expandLine, expandPoint);
-//
-//            minX -= expand;
-//            minY -= expand;
-//            maxX += expand;
-//            maxY += expand;
-//        }
-//
-//        return new Vector4f(minX, minY, maxX, maxY);
-
-        return null;
-    }
-
-    public boolean isUpdate() {
-        return isUpdate;
-    }
-
-    public void setUpdate(boolean update) {
-        isUpdate = update;
     }
 }

@@ -3,11 +3,9 @@ package me.hannsi.lfjg.render.renderers;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
-import me.hannsi.lfjg.render.Id;
+import me.hannsi.lfjg.core.utils.reflection.reference.LongRef;
 import me.hannsi.lfjg.render.animation.system.AnimationCache;
-import me.hannsi.lfjg.render.effect.system.EffectCache;
-import me.hannsi.lfjg.render.system.rendering.FrameBuffer;
-import me.hannsi.lfjg.render.system.rendering.VAORendering;
+import me.hannsi.lfjg.render.system.rendering.frameBuffer.FrameBuffer;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
@@ -15,66 +13,56 @@ import org.joml.Matrix4f;
 
 import static me.hannsi.lfjg.core.Core.frameBufferSize;
 import static me.hannsi.lfjg.core.Core.projection2D;
-import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static me.hannsi.lfjg.render.LFJGRenderContext.MESH;
 import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 
 public class GLObject implements Cloneable {
+    private final LongRef objectId;
     private String name;
-    private long objectId;
 
-    private VAORendering vaoRendering;
     private FrameBuffer frameBuffer;
 
     private Transform transform;
     private Matrix4f viewMatrix;
 
-    private EffectCache effectCache;
+    //    private EffectCache effectCache;
     private AnimationCache animationCache;
-    private BlendType blendType;
 
     public GLObject(String name) {
         this.name = name;
+        this.objectId = new LongRef();
 
-        this.vaoRendering = null;
         this.frameBuffer = null;
 
         this.viewMatrix = null;
         this.transform = new Transform(this);
-
-        this.blendType = null;
-        this.objectId = ++Id.latestGLObjectId;
     }
 
     public void cleanup() {
         if (animationCache != null) {
             animationCache.cleanup();
         }
-        if (effectCache != null) {
-            effectCache.cleanup();
-        }
+//        if (effectCache != null) {
+//            effectCache.cleanup();
+//        }
         if (frameBuffer != null) {
             frameBuffer.cleanup();
         }
-        if (vaoRendering != null) {
-            vaoRendering.cleanup();
-        }
+
+        MESH.deleteObject(objectId.getValue());
 
         new LogGenerator(
                 LogGenerateType.CLEANUP,
                 getClass(),
-                String.valueOf(objectId),
+                String.valueOf(objectId.getValue()),
                 ""
         ).logging(getClass(), DebugLevel.DEBUG);
     }
 
-    public void create() {
-        vaoRendering = new VAORendering();
-
+    public void create(long id) {
         viewMatrix = new Matrix4f();
 
-        blendType = BlendType.NORMAL;
+        objectId.setValue(id);
     }
 
     public void draw() {
@@ -83,40 +71,7 @@ public class GLObject implements Cloneable {
 
     public void draw(boolean autoDraw) {
         bindResources();
-        setupRenderState();
         uploadUniforms();
-
-        if (effectCache != null) {
-            if (!effectCache.isNeedFrameBuffer()) {
-                effectCache.push(this);
-            } else {
-                bindFrameBuffer();
-            }
-        }
-
-        drawVAORendering();
-
-        if (effectCache != null) {
-            if (!effectCache.isNeedFrameBuffer()) {
-                effectCache.pop(this);
-            }
-        }
-
-        if (autoDraw) {
-            drawFrameBuffer();
-        }
-    }
-
-    public void drawVAORendering() {
-        vaoRendering.draw(this);
-    }
-
-    public void drawFrameBuffer() {
-        if (effectCache != null && effectCache.isNeedFrameBuffer()) {
-            effectCache.setBaseFrameBuffer(frameBuffer);
-            effectCache.drawFrameBuffer(this);
-        }
-
         updateAnimation();
     }
 
@@ -136,33 +91,22 @@ public class GLObject implements Cloneable {
         }
     }
 
-    private void setupRenderState() {
-        GL_STATE_CACHE.blendFunc(blendType.getSfactor(), blendType.getDfactor());
-        GL_STATE_CACHE.setBlendEquation(blendType.getEquation());
-        GL_STATE_CACHE.enable(GL_BLEND);
-        GL_STATE_CACHE.disable(GL_DEPTH_TEST);
-    }
-
     private void uploadUniforms() {
         SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.OBJECT.getId());
-        SHADER_PROGRAM.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, projection2D.getProjMatrix());
-        SHADER_PROGRAM.setUniform("modelMatrix", UploadUniformType.PER_FRAME, transform.getModelMatrix());
-        SHADER_PROGRAM.setUniform("viewMatrix", UploadUniformType.PER_FRAME, viewMatrix);
+        SHADER_PROGRAM.updateMatrixUniformBlock(projection2D.getProjMatrix(), viewMatrix, transform.getModelMatrix());
         SHADER_PROGRAM.setUniform("resolution", UploadUniformType.ON_CHANGE, frameBufferSize);
         SHADER_PROGRAM.setUniform("textureSampler", UploadUniformType.ONCE, 0);
     }
 
     private void bindResources() {
         SHADER_PROGRAM.bind();
-//        LFJGRenderContext.shaderProgram.getMatrix().bind();
     }
 
     public GLObject copy(String objectName) {
         GLObject glObject;
         try {
             glObject = (GLObject) clone();
-            glObject.setName(objectName);
-            glObject.setObjectId(++Id.latestGLObjectId);
+            glObject.name = objectName;
 
             new LogGenerator(
                     getClass().getSimpleName() + " Debug Message",
@@ -196,28 +140,8 @@ public class GLObject implements Cloneable {
         return name;
     }
 
-    @Deprecated
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public long getObjectId() {
-        return objectId;
-    }
-
-    @Deprecated
-    public void setObjectId(long objectId) {
-        this.objectId = objectId;
-    }
-
-    public VAORendering getVaoRendering() {
-        return vaoRendering;
-    }
-
-    public GLObject setVaoRendering(VAORendering vaoRendering) {
-        this.vaoRendering = vaoRendering;
-
-        return this;
+        return objectId.getValue();
     }
 
     public FrameBuffer getFrameBuffer() {
@@ -240,13 +164,13 @@ public class GLObject implements Cloneable {
         this.viewMatrix = viewMatrix;
     }
 
-    public EffectCache getEffectCache() {
-        return effectCache;
-    }
-
-    public void setEffectCache(EffectCache effectCache) {
-        this.effectCache = effectCache;
-    }
+//    public EffectCache getEffectCache() {
+//        return effectCache;
+//    }
+//
+//    public void setEffectCache(EffectCache effectCache) {
+//        this.effectCache = effectCache;
+//    }
 
     public AnimationCache getAnimationCache() {
         return animationCache;
@@ -254,16 +178,6 @@ public class GLObject implements Cloneable {
 
     public void setAnimationCache(AnimationCache animationCache) {
         this.animationCache = animationCache;
-    }
-
-    public BlendType getBlendType() {
-        return blendType;
-    }
-
-    public GLObject setBlendType(BlendType blendType) {
-        this.blendType = blendType;
-
-        return this;
     }
 
     public Transform getTransform() {

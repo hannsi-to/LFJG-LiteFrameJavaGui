@@ -45,7 +45,6 @@ public class GLVideo extends GLPolygon<GLVideo> {
         return this;
     }
 
-    @Override
     public void drawVAORendering() {
         videoFrameSystem.drawFrame();
 
@@ -56,7 +55,6 @@ public class GLVideo extends GLPolygon<GLVideo> {
             GL_STATE_CACHE.enable(GL_TEXTURE_2D);
             GL_STATE_CACHE.activeTexture(GL_TEXTURE0);
             GL_STATE_CACHE.bindTexture(GL_TEXTURE_2D, videoFrameSystem.getTextureId());
-            super.drawVAORendering();
         }
     }
 

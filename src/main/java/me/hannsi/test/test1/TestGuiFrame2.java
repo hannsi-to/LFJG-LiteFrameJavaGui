@@ -36,7 +36,7 @@ public class TestGuiFrame2 implements LFJGFrame {
 
         glRect1EffectCache = EffectCache.createEffectCache();
 
-        glRect1.setEffectCache(glRect1EffectCache);
+//        glRect1.setEffectCache(glRect1EffectCache);
 
         glObjectCache = new GLObjectCache();
         glObjectCache.createCache(glRect1);

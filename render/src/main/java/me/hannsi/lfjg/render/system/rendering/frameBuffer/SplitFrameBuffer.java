@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.system.rendering;
+package me.hannsi.lfjg.render.system.rendering.frameBuffer;
 
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;

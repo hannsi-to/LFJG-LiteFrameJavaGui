@@ -60,7 +60,6 @@ public class GLText extends GLPolygon<GLText> {
         return textRenderer.getTextHeight(text);
     }
 
-    @Override
     public void drawVAORendering() {
         textRenderer.draw(text);
     }

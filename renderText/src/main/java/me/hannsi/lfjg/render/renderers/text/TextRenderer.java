@@ -6,9 +6,11 @@ import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.toolkit.StringUtil;
+import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.debug.exceptions.UnknownAlignType;
-import me.hannsi.lfjg.render.system.mesh.BufferObjectType;
-import me.hannsi.lfjg.render.system.mesh.Mesh;
+import me.hannsi.lfjg.render.renderers.BlendType;
+import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
+import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
@@ -23,14 +25,12 @@ import org.joml.Vector4f;
 import java.util.ArrayList;
 import java.util.List;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
-import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
+import static me.hannsi.lfjg.render.LFJGRenderContext.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 
 public class TextRenderer {
     protected List<LineData> lineDatum;
-    protected Mesh lineMesh;
     protected VAORendering vaoRendering;
 
     private Matrix4f viewMatrix = new Matrix4f();
@@ -49,11 +49,6 @@ public class TextRenderer {
 
     TextRenderer() {
         this.lineDatum = new ArrayList<>();
-
-        float[] positions = new float[]{0, 0, 0, 1, 1, 1, 1, 0};
-        float[] colors = defaultFontColor.getFloatArray(4);
-        this.lineMesh = Mesh.createMesh()
-                .createBufferObject2D(DrawType.QUADS, positions, colors, null);
 
         this.vaoRendering = new VAORendering();
     }
@@ -84,7 +79,6 @@ public class TextRenderer {
 
     public TextRenderer defaultFontColor(Color defaultFontColor) {
         this.defaultFontColor = defaultFontColor;
-        this.lineMesh.updateVBOData(DrawType.QUADS, BufferObjectType.COLOR_BUFFER, defaultFontColor.getFloatArray(4));
         return this;
     }
 
@@ -104,7 +98,22 @@ public class TextRenderer {
         return this;
     }
 
-    public TextRenderer init() {
+    public TextRenderer createMesh() {
+        MESH.addObject(
+                ProjectionType.ORTHOGRAPHIC_PROJECTION,
+                DrawType.QUADS,
+                FragmentShaderType.OBJECT,
+                BlendType.NORMAL,
+                -1f,
+                GLPolygon.DEFAULT_JOINT_TYPE,
+                -1f,
+                GLPolygon.DEFAULT_POINT_TYPE,
+                new Vertex(0, 0, 0, defaultFontColor.getRedF(), defaultFontColor.getGreen(), defaultFontColor.getBlueF(), defaultFontColor.getAlphaF(), 0, 0, 0, 0, 0),
+                new Vertex(0, 1, 0, defaultFontColor.getRedF(), defaultFontColor.getGreen(), defaultFontColor.getBlueF(), defaultFontColor.getAlphaF(), 0, 0, 0, 0, 0),
+                new Vertex(1, 1, 0, defaultFontColor.getRedF(), defaultFontColor.getGreen(), defaultFontColor.getBlueF(), defaultFontColor.getAlphaF(), 0, 0, 0, 0, 0),
+                new Vertex(1, 0, 0, defaultFontColor.getRedF(), defaultFontColor.getGreen(), defaultFontColor.getBlueF(), defaultFontColor.getAlphaF(), 0, 0, 0, 0, 0)
+        );
+
         return this;
     }
 
@@ -332,8 +341,7 @@ public class TextRenderer {
                 modelMatrix.translate(cursorX + (charState.shadow ? size * 0.02f : 0), cursorY - bearingY + (charState.shadow ? size * 0.02f : 0) + glyphYOffset, 0).scale(size, size, 1);
                 SHADER_PROGRAM.setUniform("msdfFontColor", UploadUniformType.ON_CHANGE, charState.color);
                 SHADER_PROGRAM.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix);
-                assert textMesh != null;
-                vaoRendering.draw(textMesh.mesh, GL_TRIANGLES);
+                vaoRendering.draw();
             }
 
             float prevCursorX = cursorX;
@@ -413,7 +421,7 @@ public class TextRenderer {
             SHADER_PROGRAM.setUniform("objectColor", UploadUniformType.PER_FRAME, data.color);
             SHADER_PROGRAM.setUniform("objectReplaceColor", UploadUniformType.PER_FRAME, true);
 
-            vaoRendering.draw(lineMesh);
+            vaoRendering.draw();
 
             SHADER_PROGRAM.setUniform("objectReplaceColor", UploadUniformType.PER_FRAME, false);
 

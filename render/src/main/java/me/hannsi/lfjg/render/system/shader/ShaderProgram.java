@@ -12,15 +12,17 @@ import me.hannsi.lfjg.render.debug.exceptions.shader.CreatingShaderProgramExcept
 import me.hannsi.lfjg.render.debug.exceptions.shader.LinkingShaderException;
 import me.hannsi.lfjg.render.system.mesh.MeshConstants;
 import org.joml.*;
+import org.lwjgl.opengl.GL44;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
+import static me.hannsi.lfjg.core.Core.UNSAFE;
 import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
-import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindBufferRange;
 import static org.lwjgl.opengl.GL30.glMapBufferRange;
@@ -31,9 +33,7 @@ public class ShaderProgram {
     private final int programId;
     private final Map<String, UniformValue> uniformValues;
     private final Map<String, Integer> uniformCache;
-    private final Map<String, UniformBlockValue> matrixUniformBlocksValues;
-    private final Map<String, Integer> matrixUniformBlocksCache;
-    private final FloatBuffer matrixUniformBlockMappedBuffer;
+    private long matricesUniformBlockMappedAddress;
 
     private int vertexShaderId;
     private int fragmentShaderId;
@@ -41,32 +41,13 @@ public class ShaderProgram {
     public ShaderProgram() {
         uniformCache = new HashMap<>();
         uniformValues = new HashMap<>();
-        matrixUniformBlocksCache = new HashMap<>();
-        matrixUniformBlocksValues = new HashMap<>();
 
         programId = glCreateProgram();
         if (programId == 0) {
             throw new CreatingShaderProgramException("Could not create Shader");
         }
 
-        int matrixUniformBlockId = glGenBuffers();
-        GL_STATE_CACHE.bindUniformBuffer(matrixUniformBlockId);
-        glBufferStorage(GL_UNIFORM_BUFFER, STD140UniformBlockType.MAT4.getByteSize() * 3L, MeshConstants.DEFAULT_FLAGS_HINT);
-
-        ByteBuffer byteBuffer = glMapBufferRange(
-                GL_UNIFORM_BUFFER,
-                0,
-                STD140UniformBlockType.MAT4.getByteSize() * 3L,
-                MeshConstants.DEFAULT_FLAGS_HINT
-        );
-        if (byteBuffer == null) {
-            throw new RuntimeException("glMapBufferRange failed");
-        }
-        matrixUniformBlockMappedBuffer = byteBuffer.asFloatBuffer();
-
-        int blockIndex = glGetUniformBlockIndex(programId, "Matrices");
-        glUniformBlockBinding(programId, blockIndex, 0);
-        glBindBufferRange(GL_UNIFORM_BUFFER, 0, matrixUniformBlockId, 0, STD140UniformBlockType.MAT4.getByteSize() * 3L);
+        initMatricesUniformBlock();
     }
 
     private static float[] toFloatArray(Object[] values) {
@@ -95,11 +76,30 @@ public class ShaderProgram {
         return result;
     }
 
+    private void initMatricesUniformBlock() {
+        int id = glGenBuffers();
+        GL_STATE_CACHE.bindUniformBuffer(id);
+        glBufferStorage(GL_UNIFORM_BUFFER, STD140UniformBlockType.MAT4.getByteSize() * 3L, MeshConstants.DEFAULT_FLAGS_HINT);
+
+        ByteBuffer byteBuffer = glMapBufferRange(
+                GL_UNIFORM_BUFFER,
+                0,
+                STD140UniformBlockType.MAT4.getByteSize() * 3L,
+                MeshConstants.DEFAULT_FLAGS_HINT
+        );
+        if (byteBuffer == null) {
+            throw new RuntimeException("glMapBufferRange failed");
+        }
+        matricesUniformBlockMappedAddress = MemoryUtil.memAddress(byteBuffer);
+
+        int blockIndex = glGetUniformBlockIndex(programId, "Matrices");
+        glUniformBlockBinding(programId, blockIndex, 0);
+        glBindBufferRange(GL_UNIFORM_BUFFER, 0, id, 0, STD140UniformBlockType.MAT4.getByteSize() * 3L);
+    }
+
     public void cleanup() {
         uniformValues.clear();
         uniformCache.clear();
-        matrixUniformBlocksCache.clear();
-        matrixUniformBlocksValues.clear();
 
         if (vertexShaderId != 0) {
             glDeleteShader(vertexShaderId);
@@ -162,10 +162,6 @@ public class ShaderProgram {
         }
     }
 
-    private int getUniformBlockLocation(String name) {
-        return matrixUniformBlocksCache.computeIfAbsent(name, n -> glGetUniformBlockIndex(SHADER_PROGRAM.getProgramId(), name));
-    }
-
     private int getUniformLocation(String name) {
         return uniformCache.computeIfAbsent(name, n -> glGetUniformLocation(programId, n));
     }
@@ -175,9 +171,21 @@ public class ShaderProgram {
     }
 
     public void updateMatrixUniformBlock(Matrix4f projection, Matrix4f view, Matrix4f model) {
-        projection.get(0, matrixUniformBlockMappedBuffer);
-        view.get(16, matrixUniformBlockMappedBuffer);
-        model.get(32, matrixUniformBlockMappedBuffer);
+        Matrix4f[] matrices = new Matrix4f[]{projection, view, model};
+
+        for (int i = 0; i < 48; i++) {
+            int matrixIndex = i / 16;
+            int elementIndex = i % 16;
+            int col = elementIndex / 4;
+            int row = elementIndex % 4;
+            float value = matrices[matrixIndex].get(col, row);
+            UNSAFE.putFloat(matricesUniformBlockMappedAddress + i * Float.BYTES, value);
+        }
+
+        final int GL_MAP_COHERENT_BIT = GL44.GL_MAP_COHERENT_BIT;
+        if ((MeshConstants.DEFAULT_FLAGS_HINT & GL_MAP_COHERENT_BIT) != GL_MAP_COHERENT_BIT) {
+            glFlushMappedBufferRange(GL_UNIFORM_BUFFER, 0, 48 * Float.BYTES);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -232,8 +240,7 @@ public class ShaderProgram {
                 default:
                     throw new IllegalArgumentException("Unsupported int uniform size: " + intValues.length);
             }
-        } else if (first instanceof FloatBuffer) {
-            FloatBuffer floatBuffer = (FloatBuffer) first;
+        } else if (first instanceof FloatBuffer floatBuffer) {
             int size = floatBuffer.remaining();
             switch (size) {
                 case 1:
@@ -258,31 +265,23 @@ public class ShaderProgram {
                     }
                     throw new IllegalArgumentException("Unsupported FloatBuffer size: " + floatBuffer.remaining());
             }
-        } else if (first instanceof Matrix4f) {
-            Matrix4f mat = (Matrix4f) first;
+        } else if (first instanceof Matrix4f mat) {
             try (MemoryStack stack = MemoryStack.stackPush()) {
                 glUniformMatrix4fv(location, false, mat.get(stack.mallocFloat(16)));
             }
-        } else if (first instanceof Vector2f) {
-            Vector2f vec = (Vector2f) first;
+        } else if (first instanceof Vector2f vec) {
             glUniform2f(location, vec.x, vec.y);
-        } else if (first instanceof Vector3f) {
-            Vector3f vec = (Vector3f) first;
+        } else if (first instanceof Vector3f vec) {
             glUniform3f(location, vec.x, vec.y, vec.z);
-        } else if (first instanceof Vector4f) {
-            Vector4f vec = (Vector4f) first;
+        } else if (first instanceof Vector4f vec) {
             glUniform4f(location, vec.x, vec.y, vec.z, vec.w);
-        } else if (first instanceof Vector2i) {
-            Vector2i vec = (Vector2i) first;
+        } else if (first instanceof Vector2i vec) {
             glUniform2i(location, vec.x, vec.y);
-        } else if (first instanceof Vector3i) {
-            Vector3i vec = (Vector3i) first;
+        } else if (first instanceof Vector3i vec) {
             glUniform3i(location, vec.x, vec.y, vec.z);
-        } else if (first instanceof Vector4i) {
-            Vector4i vec = (Vector4i) first;
+        } else if (first instanceof Vector4i vec) {
             glUniform4i(location, vec.x, vec.y, vec.z, vec.w);
-        } else if (first instanceof Color) {
-            Color color = (Color) first;
+        } else if (first instanceof Color color) {
             glUniform4f(location, color.getRedF(), color.getGreenF(), color.getBlueF(), color.getAlphaF());
         } else {
             throw new IllegalArgumentException("Unsupported uniform value type: " + first.getClass());

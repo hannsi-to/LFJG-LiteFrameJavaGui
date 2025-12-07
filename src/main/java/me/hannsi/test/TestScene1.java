@@ -161,8 +161,8 @@ public class TestScene1 implements IScene {
 
 //        gl1SplitObjectEffectCache.create(gl1);
 
-        gl1.setEffectCache(gl1EffectCache);
-        glTriangle.setEffectCache(glTriangleEffectCache);
+//        gl1.setEffectCache(gl1EffectCache);
+//        glTriangle.setEffectCache(glTriangleEffectCache);
     }
 
     public void animationCacheInit() {

@@ -5,6 +5,7 @@ import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.toolkit.Camera;
 import me.hannsi.lfjg.render.system.mesh.TestMesh;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
+import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 
 import static me.hannsi.lfjg.core.SystemSetting.*;
@@ -15,6 +16,7 @@ public class LFJGRenderContext {
     public static final Camera MAIN_CAMERA;
     public static final ShaderProgram SHADER_PROGRAM;
     public static final TestMesh MESH;
+    public static final VAORendering VAO_RENDERING;
     public static final GLStateCache GL_STATE_CACHE;
     public static final TextureCache TEXTURE_CACHE;
 
@@ -36,6 +38,8 @@ public class LFJGRenderContext {
                 LFJG_RENDER_CONTEXT_INITIAL_EBO_CAPACITY,
                 LFJG_RENDER_CONTEXT_INITIAL_IBO_CAPACITY
         );
+
+        VAO_RENDERING = new VAORendering();
 
         TEXTURE_CACHE = TextureCache.createTextureCache();
     }
