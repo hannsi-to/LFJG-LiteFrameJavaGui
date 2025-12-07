@@ -1,82 +1,58 @@
 package me.hannsi.lfjg.render.system.rendering;
 
-import me.hannsi.lfjg.core.debug.DebugLevel;
-import me.hannsi.lfjg.core.debug.LogGenerateType;
-import me.hannsi.lfjg.core.debug.LogGenerator;
-import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.render.system.mesh.Mesh;
+import me.hannsi.lfjg.render.system.mesh.GLObjectData;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import java.util.Map;
+
+import static me.hannsi.lfjg.core.SystemSetting.VAO_RENDERING_FRONT_AND_BACK;
+import static me.hannsi.lfjg.core.SystemSetting.VAO_RENDERING_FRONT_AND_BACK_LINE_WIDTH;
+import static me.hannsi.lfjg.render.LFJGRenderContext.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL40.glDrawArraysIndirect;
-import static org.lwjgl.opengl.GL40.glDrawElementsIndirect;
-import static org.lwjgl.opengl.GL43.glMultiDrawArraysIndirect;
 import static org.lwjgl.opengl.GL43.glMultiDrawElementsIndirect;
 
 public class VAORendering {
-    public void draw(GLObject glObject) {
-//        draw(glObject.getMesh(), glObject.getDrawType().getId());
+    public void push() {
+
     }
 
-    public void draw(Mesh mesh) {
-        draw(mesh, GL_POLYGON);
-    }
-
-    public void draw(Mesh mesh, int drawType) {
-        int vaoId = mesh.getVaoId();
-
-//        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-//        GL11.glLineWidth(0.1f);
-
-        GL_STATE_CACHE.bindVertexArray(vaoId);
-
-        mesh.startFrame();
-
-        if (mesh.isUseIndirect()) {
-            drawIndirect(mesh, drawType);
+    public void draw() {
+        if (VAO_RENDERING_FRONT_AND_BACK) {
+            GL_STATE_CACHE.polygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            GL_STATE_CACHE.lineWidth(VAO_RENDERING_FRONT_AND_BACK_LINE_WIDTH);
         } else {
-            drawDirect(mesh, drawType);
+            GL_STATE_CACHE.polygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            GL_STATE_CACHE.lineWidth(1.0f);
         }
 
-        mesh.endFrame();
-    }
+        for (Map.Entry<Long, GLObjectData> entry : GL_OBJECT_POOL.getObjects().entrySet()) {
+            GLObjectData glObjectData = entry.getValue();
 
-    private void drawIndirect(Mesh mesh, int drawType) {
-        int indirectBufferId = mesh.getIboId().getBufferId();
-        GL_STATE_CACHE.bindIndirectBuffer(indirectBufferId);
-
-        if (mesh.isUseElementBufferObject()) {
-            int eboId = mesh.getEboId().getBufferId();
-            GL_STATE_CACHE.bindElementArrayBuffer(eboId);
-
-            int commandCount = mesh.getDrawCommandCount();
-            if (commandCount > 1) {
-                glMultiDrawElementsIndirect(drawType, GL_UNSIGNED_INT, 0, commandCount, 0);
+            long base = MESH.getPersistentMappedIBO().getCommandsSizeByte(glObjectData.baseCommand);
+            if (glObjectData.draw) {
+                MESH.getPersistentMappedIBO().directWriteCommand(base, 0, glObjectData.elementPair.indices.length);
             } else {
-                glDrawElementsIndirect(drawType, GL_UNSIGNED_INT, 0);
-            }
-        } else {
-            int commandCount = mesh.getDrawCommandCount();
-            if (commandCount > 1) {
-                glMultiDrawArraysIndirect(drawType, 0, commandCount, 0);
-            } else {
-                glDrawArraysIndirect(drawType, 0);
+                MESH.getPersistentMappedIBO().directWriteCommand(base, 0, 0);
             }
         }
+
+        MESH.getPersistentMappedVBO().syncToGPU();
+        MESH.getPersistentMappedEBO().syncToGPU();
+        MESH.getPersistentMappedIBO().syncToGPU();
+
+        GL_STATE_CACHE.bindVertexArray(MESH.getVaoId());
+        GL_STATE_CACHE.bindElementArrayBuffer(MESH.getPersistentMappedEBO().getBufferId());
+        GL_STATE_CACHE.bindIndirectBuffer(MESH.getPersistentMappedIBO().getBufferId());
+
+        glMultiDrawElementsIndirect(
+                DrawType.TRIANGLES.getId(),
+                GL_UNSIGNED_INT,
+                0,
+                MESH.getPersistentMappedIBO().getCommandCount(),
+                0
+        );
     }
 
-    private void drawDirect(Mesh mesh, int drawType) {
-        if (mesh.isUseElementBufferObject()) {
-            int eboId = mesh.getEboId().getBufferId();
-            GL_STATE_CACHE.bindElementArrayBuffer(eboId);
-            glDrawElements(drawType, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
-        } else {
-            glDrawArrays(drawType, 0, mesh.getCount());
-        }
-    }
+    public void pop() {
 
-    public void cleanup() {
-        new LogGenerator(LogGenerateType.CLEANUP, getClass(), hashCode(), "")
-                .logging(getClass(), DebugLevel.DEBUG);
     }
 }

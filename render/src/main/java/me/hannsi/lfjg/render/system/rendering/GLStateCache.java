@@ -19,6 +19,7 @@ import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL31.GL_UNIFORM_BUFFER;
 import static org.lwjgl.opengl.GL32.glSampleMaski;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
+import static org.lwjgl.opengl.GL43.GL_SHADER_STORAGE_BUFFER;
 
 public class GLStateCache {
     private final Map<Integer, Boolean> STATE_CACHE = new HashMap<>();
@@ -46,6 +47,7 @@ public class GLStateCache {
     private int lastElementArrayBuffer = -1;
     private int lastArrayBuffer = -1;
     private int lastUniformBuffer = -1;
+    private int lastShaderStorageBuffer = -1;
     private double lastClearDepth = -1.0;
     private int lastClearStencil = -1;
     private boolean lastDepthMask = true;
@@ -271,6 +273,20 @@ public class GLStateCache {
             lastUniformBuffer = -1;
         }
         glDeleteBuffers(buffer);
+    }
+
+    public void bindShaderStorageBuffer(int buffer) {
+        if (lastShaderStorageBuffer != buffer) {
+            glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
+            lastShaderStorageBuffer = buffer;
+        }
+    }
+
+    public void deleteShaderStorageBuffer(int buffer) {
+        if (lastShaderStorageBuffer == buffer) {
+            bindShaderStorageBuffer(0);
+            lastShaderStorageBuffer = -1;
+        }
     }
 
     public void clearColor(float red, float green, float blue, float alpha) {
@@ -541,6 +557,8 @@ public class GLStateCache {
                     lastArrayBuffer = (int) args[1];
                 } else if ((int) args[0] == GL_UNIFORM_BUFFER) {
                     lastUniformBuffer = (int) args[1];
+                } else if ((int) args[0] == GL_SHADER_STORAGE_BUFFER) {
+                    lastShaderStorageBuffer = (int) args[1];
                 }
                 break;
             case "glClearDepth":

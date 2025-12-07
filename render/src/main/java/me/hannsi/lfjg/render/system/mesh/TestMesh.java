@@ -5,12 +5,14 @@ import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.reflection.reference.LongRef;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.debug.exceptions.render.mesh.MeshException;
+import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.JointType;
 import me.hannsi.lfjg.render.renderers.PointType;
 import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedEBO;
 import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedIBO;
 import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedVBO;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
+import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 
 import java.util.*;
 
@@ -22,6 +24,7 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import static org.lwjgl.opengl.GL43.glMultiDrawElementsIndirect;
 
 public class TestMesh {
+    private static int layer = 0;
     private final int vaoId;
     private int initialVBOCapacity;
     private int initialEBOCapacity;
@@ -31,6 +34,8 @@ public class TestMesh {
     private TestPersistentMappedIBO persistentMappedIBO;
     private int currentIndex;
     private int vertexCount;
+    private FragmentShaderType fragmentShaderType;
+    private BlendType blendType;
 
     TestMesh(int initialVBOCapacity, int initialEBOCapacity, int initialIBOCapacity) {
         this.persistentMappedVBO = new TestPersistentMappedVBO(MeshConstants.DEFAULT_FLAGS_HINT, initialVBOCapacity);
@@ -63,15 +68,19 @@ public class TestMesh {
         return this;
     }
 
-    public TestMesh addObject(ProjectionType projectionType, DrawType drawType, float lineWidth, JointType jointType, float pointSize, PointType pointType, Vertex... vertices) {
-        return addObject(null, projectionType, drawType, lineWidth, jointType, pointSize, pointType, vertices);
+    public TestMesh addObject(ProjectionType projectionType, DrawType drawType, FragmentShaderType fragmentShaderType, BlendType blendType, float lineWidth, JointType jointType, float pointSize, PointType pointType, Vertex... vertices) {
+        return addObject(null, projectionType, drawType, fragmentShaderType, blendType, lineWidth, jointType, pointSize, pointType, vertices);
     }
 
-    public TestMesh addObject(LongRef objectIdPointer, ProjectionType projectionType, DrawType drawType, float lineWidth, JointType jointType, float pointSize, PointType pointType, Vertex... vertices) {
+    public TestMesh addObject(LongRef objectIdPointer, ProjectionType projectionType, DrawType drawType, FragmentShaderType fragmentShaderType, BlendType blendType, float lineWidth, JointType jointType, float pointSize, PointType pointType, Vertex... vertices) {
+        this.fragmentShaderType = fragmentShaderType;
+        this.blendType = blendType;
+
         TestElementPair elementPair = setupElementBufferObject(projectionType, drawType, lineWidth, jointType, pointSize, pointType, vertices);
         int baseVertex = vertexCount;
 
         for (Vertex vertex : elementPair.vertices) {
+            vertex.layer = layer;
             persistentMappedVBO.add(vertex);
         }
 
@@ -88,7 +97,7 @@ public class TestMesh {
                         1,
                         startOffset,
                         baseVertex,
-                        0
+                        layer
                 )
         );
 
@@ -96,6 +105,8 @@ public class TestMesh {
         if (objectIdPointer != null) {
             objectIdPointer.setValue(id);
         }
+
+        layer++;
 
         return this;
     }
@@ -341,6 +352,26 @@ public class TestMesh {
 
     public TestPersistentMappedVBO getPersistentMappedVBO() {
         return persistentMappedVBO;
+    }
+
+    public int getInitialVBOCapacity() {
+        return initialVBOCapacity;
+    }
+
+    public int getInitialEBOCapacity() {
+        return initialEBOCapacity;
+    }
+
+    public int getInitialIBOCapacity() {
+        return initialIBOCapacity;
+    }
+
+    public TestPersistentMappedEBO getPersistentMappedEBO() {
+        return persistentMappedEBO;
+    }
+
+    public TestPersistentMappedIBO getPersistentMappedIBO() {
+        return persistentMappedIBO;
     }
 
     public TestMesh rotate() {

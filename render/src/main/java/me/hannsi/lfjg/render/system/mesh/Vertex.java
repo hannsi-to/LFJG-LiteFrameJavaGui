@@ -17,8 +17,9 @@ public class Vertex {
     public float normalsX;
     public float normalsY;
     public float normalsZ;
+    public int layer;
 
-    public Vertex(float x, float y, float z, float red, float green, float blue, float alpha, float u, float v, float normalsX, float normalsY, float normalsZ) {
+    public Vertex(float x, float y, float z, float red, float green, float blue, float alpha, float u, float v, float normalsX, float normalsY, float normalsZ, int layer) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -31,6 +32,11 @@ public class Vertex {
         this.normalsX = normalsX;
         this.normalsY = normalsY;
         this.normalsZ = normalsZ;
+        this.layer = layer;
+    }
+
+    public Vertex(float x, float y, float z, float red, float green, float blue, float alpha, float u, float v, float normalsX, float normalsY, float normalsZ) {
+        this(x, y, z, red, green, blue, alpha, u, v, normalsX, normalsY, normalsZ, -1);
     }
 
     public Vertex replaceXYZ(float x, float y, float z) {
@@ -58,14 +64,14 @@ public class Vertex {
     }
 
     public float[] toArray() {
-        return new float[]{x, y, z, red, green, blue, alpha, u, v, normalsX, normalsY, normalsZ};
+        return new float[]{x, y, z, red, green, blue, alpha, u, v, normalsX, normalsY, normalsZ, layer};
     }
 
     public FloatBuffer toBuffer() {
-        return (FloatBuffer) BufferUtils.createFloatBuffer(12).put(toArray()).flip();
+        return BufferUtils.createFloatBuffer(12).put(toArray()).flip();
     }
 
     public Vertex copy() {
-        return new Vertex(x, y, z, red, green, blue, alpha, u, v, normalsX, normalsY, normalsZ);
+        return new Vertex(x, y, z, red, green, blue, alpha, u, v, normalsX, normalsY, normalsZ, layer);
     }
 }

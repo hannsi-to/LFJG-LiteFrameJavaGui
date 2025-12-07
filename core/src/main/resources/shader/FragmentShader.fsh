@@ -1,14 +1,26 @@
-#version 430 core
+#version 460 core
 
 in vec4 outPosition;
 in vec4 outColor;
 in vec2 outTexture;
 
+flat in int instanceLayer;
+flat in int fragmentShaderType;
+
 out vec4 fragColor;
 
 uniform sampler2D textureSampler;
-uniform int fragmentShaderType;
+uniform sampler2DArray uTexArray;
 uniform ivec2 resolution;
+
+layout(std430, binding = 1) buffer SpriteData {
+    ivec4 spriteDataSize;
+    vec4 spriteUVs[];
+} spriteData;
+
+layout(std430, binding = 2) buffer SpriteLayer {
+    int layer[];
+} spriteLayer;
 
 #include "shader/frameBuffer/util/Luminance.glsl"
 #include "shader/frameBuffer/util/Blend.glsl"
@@ -42,33 +54,41 @@ uniform ivec2 resolution;
 #include "shader/frameBuffer/filter/RadialBlur.fsh"
 
 void main() {
-    switch (fragmentShaderType){
-        case 0: objectMain(); break;
-        case 1: modelMain(); break;
-        case 2: frameBufferMain(); break;
-        case 3: msdfMain(); break;
-        case 4: bloomMain(); break;
-        case 5: boxBlurMain(); break;
-        case 6: chromaKeyMain(); break;
-        case 7: chromaticAberrationMain(); break;
-        case 8: clippingRectMain(); break;
-        case 9: colorChangerMain(); break;
-        case 10: colorCorrectionMain(); break;
-        case 11: diagonalClippingMain(); break;
-        case 12: directionalBlurMain(); break;
-        case 13: edgeExtractionMain(); break;
-        case 14: fxaaMain(); break;
-        case 15: flashMain(); break;
-        case 16: gaussianBlurMain(); break;
-        case 17: gaussianBlurMain(); break;
-        case 18: glowMain(); break;
-        case 19: gradationMain(); break;
-        case 20: inversionMain(); break;
-        case 21: lensBlurMain(); break;
-        case 22: luminanceKeyMain(); break;
-        case 23: monochromeMain(); break;
-        case 24: objectClippingMain(); break;
-        case 25: pixelateMain(); break;
-        case 26: radialBlurMain(); break;
+    if (instanceLayer < spriteData.spriteDataSize.x) {
+        vec4 uvRect = spriteData.spriteUVs[spriteLayer.layer[instanceLayer]];
+        vec2 uv = uvRect.xy + outTexture * uvRect.zw;
+        fragColor = texture(uTexArray, vec3(uv, 0));
+    } else {
+        fragColor = outColor;
     }
+
+    //    switch (fragmentShaderType){
+    //        case 0: objectMain(); break;
+    //        case 1: modelMain(); break;
+    //        case 2: frameBufferMain(); break;
+    //        case 3: msdfMain(); break;
+    //        case 4: bloomMain(); break;
+    //        case 5: boxBlurMain(); break;
+    //        case 6: chromaKeyMain(); break;
+    //        case 7: chromaticAberrationMain(); break;
+    //        case 8: clippingRectMain(); break;
+    //        case 9: colorChangerMain(); break;
+    //        case 10: colorCorrectionMain(); break;
+    //        case 11: diagonalClippingMain(); break;
+    //        case 12: directionalBlurMain(); break;
+    //        case 13: edgeExtractionMain(); break;
+    //        case 14: fxaaMain(); break;
+    //        case 15: flashMain(); break;
+    //        case 16: gaussianBlurMain(); break;
+    //        case 17: gaussianBlurMain(); break;
+    //        case 18: glowMain(); break;
+    //        case 19: gradationMain(); break;
+    //        case 20: inversionMain(); break;
+    //        case 21: lensBlurMain(); break;
+    //        case 22: luminanceKeyMain(); break;
+    //        case 23: monochromeMain(); break;
+    //        case 24: objectClippingMain(); break;
+    //        case 25: pixelateMain(); break;
+    //        case 26: radialBlurMain(); break;
+    //    }
 }
