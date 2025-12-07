@@ -114,7 +114,7 @@ public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
             newCapacity = requiredBytes;
         }
 
-        growBuffer((int) newCapacity);
+        growBuffer(newCapacity);
     }
 
     @Override
