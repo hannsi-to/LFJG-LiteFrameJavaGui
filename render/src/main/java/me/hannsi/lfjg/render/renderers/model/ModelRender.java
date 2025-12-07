@@ -17,7 +17,8 @@ import java.util.List;
 
 import static me.hannsi.lfjg.core.Core.projection3D;
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 
 public class ModelRender {
@@ -86,7 +87,7 @@ public class ModelRender {
                 for (Mesh mesh : material.getMeshes()) {
                     for (Entity entity : entities) {
                         SHADER_PROGRAM.setUniform("modelMatrix", UploadUniformType.PER_FRAME, entity.getModelMatrix());
-                        vaoRendering.draw(mesh, GL_TRIANGLES);
+//                        vaoRendering.draw(mesh, GL_TRIANGLES);
                     }
                 }
             }

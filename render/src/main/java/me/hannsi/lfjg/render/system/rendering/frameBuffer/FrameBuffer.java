@@ -1,15 +1,19 @@
-package me.hannsi.lfjg.render.system.rendering;
+package me.hannsi.lfjg.render.system.rendering.frameBuffer;
 
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
+import me.hannsi.lfjg.core.utils.reflection.reference.LongRef;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.debug.exceptions.frameBuffer.CompleteFrameBufferException;
 import me.hannsi.lfjg.render.debug.exceptions.frameBuffer.CreatingFrameBufferException;
 import me.hannsi.lfjg.render.debug.exceptions.render.scene.CreatingRenderBufferException;
 import me.hannsi.lfjg.render.debug.exceptions.texture.CreatingTextureException;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.render.system.mesh.Mesh;
+import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
+import me.hannsi.lfjg.render.system.mesh.Vertex;
+import me.hannsi.lfjg.render.system.rendering.DrawType;
+import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
@@ -18,14 +22,14 @@ import org.joml.Matrix4f;
 import java.nio.ByteBuffer;
 
 import static me.hannsi.lfjg.core.Core.frameBufferSize;
-import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
-import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
+import static me.hannsi.lfjg.render.LFJGRenderContext.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE3;
 import static org.lwjgl.opengl.GL30.*;
 
 public class FrameBuffer {
+    public final LongRef id;
     private final int frameBufferId;
     private final int textureId;
     private final int renderBufferId;
@@ -34,7 +38,6 @@ public class FrameBuffer {
     private float y;
     private float width;
     private float height;
-    private Mesh mesh;
     private Matrix4f modelMatrix;
     private Matrix4f viewMatrix;
 
@@ -53,6 +56,7 @@ public class FrameBuffer {
     }
 
     public FrameBuffer(GLObject glObject, float x, float y, float width, float height) {
+        this.id = new LongRef();
         this.x = x;
         this.y = y;
         this.width = width;
@@ -75,13 +79,21 @@ public class FrameBuffer {
 
         vaoRendering = new VAORendering();
 
-        float[] positions = new float[]{x, y, x + width, y, x + width, y + height, x, y + height};
-        float[] uvs = new float[]{0, 0, 1, 0, 1, 1, 0, 1};
-
-        mesh = Mesh.createMesh()
-                .projectionType(ProjectionType.ORTHOGRAPHIC_PROJECTION)
-                .createBufferObject2D(DrawType.QUADS, positions, null, uvs)
-                .builderClose();
+        MESH.addObject(
+                id,
+                ProjectionType.ORTHOGRAPHIC_PROJECTION,
+                DrawType.QUADS,
+                FragmentShaderType.FRAME_BUFFER,
+                GLPolygon.DEFAULT_BLEND_TYPE,
+                -1f,
+                GLPolygon.DEFAULT_JOINT_TYPE,
+                -1f,
+                GLPolygon.DEFAULT_POINT_TYPE,
+                new Vertex(x, y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                new Vertex(x + width, y, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+                new Vertex(x + width, y + height, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
+                new Vertex(x, y + height, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
+        );
 
         this.glObject = glObject;
     }
@@ -91,9 +103,7 @@ public class FrameBuffer {
         GL_STATE_CACHE.deleteTexture(GL_TEXTURE_2D, textureId);
         GL_STATE_CACHE.deleteRenderBuffer(renderBufferId);
 
-        vaoRendering.cleanup();
-        mesh.cleanup();
-        vaoRendering.cleanup();
+        MESH.deleteObject(id.getValue());
 
         new LogGenerator(
                 LogGenerateType.CLEANUP,
@@ -157,7 +167,7 @@ public class FrameBuffer {
     }
 
     public void drawVAORendering() {
-        vaoRendering.draw(mesh);
+//        vaoRendering.draw();
     }
 
     public void bindTexture(int unit) {
@@ -243,14 +253,6 @@ public class FrameBuffer {
 
     public void setHeight(float height) {
         this.height = height;
-    }
-
-    public Mesh getMesh() {
-        return mesh;
-    }
-
-    public void setMesh(Mesh mesh) {
-        this.mesh = mesh;
     }
 
     public ShaderProgram getShaderProgramFBO() {

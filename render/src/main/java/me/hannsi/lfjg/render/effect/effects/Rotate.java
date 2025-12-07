@@ -108,8 +108,8 @@ public class Rotate extends EffectBase {
     @Override
     public void push(GLObject baseGLObject) {
         if (autoCenter) {
-            cx = baseGLObject.getTransform().getCenterX();
-            cy = baseGLObject.getTransform().getCenterY();
+            cx = baseGLObject.getTransform().getX();
+            cy = baseGLObject.getTransform().getY();
         }
 
         baseGLObject.getTransform().translate(cx, cy, cz).rotateXYZ(-latestX, -latestY, -latestZ).rotateXYZ(x, y, z).translate(-cx, -cy, -cz);

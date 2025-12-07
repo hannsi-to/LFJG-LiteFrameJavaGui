@@ -1,7 +1,6 @@
 package me.hannsi.lfjg.render.renderers;
 
 import org.joml.Matrix4f;
-import org.joml.Vector4f;
 
 public class Transform {
     private final GLObject glObject;
@@ -9,12 +8,7 @@ public class Transform {
 
     private float x;
     private float y;
-    private float width;
-    private float height;
-
-    private float centerX;
-    private float centerY;
-    private float centerZ;
+    private float z;
 
     private float angleX;
     private float angleY;
@@ -33,16 +27,12 @@ public class Transform {
         this.modelMatrix = modelMatrix;
     }
 
-    public Transform(GLObject glObject, Matrix4f modelMatrix, float x, float y, float width, float height, float centerX, float centerY, float centerZ, float angleX, float angleY, float angleZ, float scaleX, float scaleY, float scaleZ) {
+    public Transform(GLObject glObject, Matrix4f modelMatrix, float x, float y, float z, float angleX, float angleY, float angleZ, float scaleX, float scaleY, float scaleZ) {
         this.glObject = glObject;
         this.modelMatrix = modelMatrix;
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
-        this.centerX = centerX;
-        this.centerY = centerY;
-        this.centerZ = centerZ;
+        this.z = z;
         this.angleX = angleX;
         this.angleY = angleY;
         this.angleZ = angleZ;
@@ -52,25 +42,10 @@ public class Transform {
     }
 
     public Transform newInstance() {
-        return new Transform(glObject, modelMatrix, x, y, width, height, centerX, centerY, centerZ, angleX, angleY, angleZ, scaleX, scaleY, scaleZ);
-    }
-
-    public Transform setBound(Vector4f vector4f) {
-        return setBound(vector4f.x(), vector4f.y(), vector4f.z(), vector4f.w());
-    }
-
-    public Transform setBound(float x, float y, float width, float height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        return this;
+        return new Transform(glObject, modelMatrix, x, y, z, angleX, angleY, angleZ, scaleX, scaleY, scaleZ);
     }
 
     public Transform reset() {
-        this.centerX = x + (width / 2f);
-        this.centerY = y + (height / 2f);
-        this.centerZ = 0;
         this.angleX = 0;
         this.angleY = 0;
         this.angleZ = 0;
@@ -84,9 +59,9 @@ public class Transform {
     }
 
     public Transform translate(float x, float y, float z) {
-        this.centerX += x;
-        this.centerY += y;
-        this.centerZ += z;
+        this.x += x;
+        this.y += y;
+        this.z += z;
         modelMatrix.translate(x, y, z);
 
         return this;
@@ -134,44 +109,12 @@ public class Transform {
         this.y = y;
     }
 
-    public float getWidth() {
-        return width;
+    public float getZ() {
+        return z;
     }
 
-    public void setWidth(float width) {
-        this.width = width;
-    }
-
-    public float getHeight() {
-        return height;
-    }
-
-    public void setHeight(float height) {
-        this.height = height;
-    }
-
-    public float getCenterX() {
-        return centerX;
-    }
-
-    public void setCenterX(float centerX) {
-        this.centerX = centerX;
-    }
-
-    public float getCenterY() {
-        return centerY;
-    }
-
-    public void setCenterY(float centerY) {
-        this.centerY = centerY;
-    }
-
-    public float getCenterZ() {
-        return centerZ;
-    }
-
-    public void setCenterZ(float centerZ) {
-        this.centerZ = centerZ;
+    public void setZ(float z) {
+        this.z = z;
     }
 
     public float getAngleX() {

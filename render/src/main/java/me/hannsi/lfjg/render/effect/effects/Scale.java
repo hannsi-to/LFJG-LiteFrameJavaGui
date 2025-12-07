@@ -92,8 +92,8 @@ public class Scale extends EffectBase {
     @Override
     public void push(GLObject baseGLObject) {
         if (autoCenter) {
-            cx = baseGLObject.getTransform().getCenterX();
-            cy = baseGLObject.getTransform().getCenterY();
+            cx = baseGLObject.getTransform().getX();
+            cy = baseGLObject.getTransform().getY();
         }
 
         baseGLObject.getTransform()
