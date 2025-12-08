@@ -255,5 +255,6 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
             bufferId = 0;
         }
         mappedBuffer = null;
+        vertexCount = 0;
     }
 }

@@ -216,5 +216,6 @@ public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
             bufferId = 0;
         }
         mappedBuffer = null;
+        indexCount = 0;
     }
 }

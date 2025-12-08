@@ -27,27 +27,27 @@ public class VAORendering {
         for (Map.Entry<Long, GLObjectData> entry : GL_OBJECT_POOL.getObjects().entrySet()) {
             GLObjectData glObjectData = entry.getValue();
 
-            long base = MESH.getPersistentMappedIBO().getCommandsSizeByte(glObjectData.baseCommand);
+            long base = PERSISTENT_MAPPED_IBO.getCommandsSizeByte(glObjectData.baseCommand);
             if (glObjectData.draw) {
-                MESH.getPersistentMappedIBO().directWriteCommand(base, 0, glObjectData.elementPair.indices.length);
+                PERSISTENT_MAPPED_IBO.directWriteCommand(base, 0, glObjectData.elementPair.indices.length);
             } else {
-                MESH.getPersistentMappedIBO().directWriteCommand(base, 0, 0);
+                PERSISTENT_MAPPED_IBO.directWriteCommand(base, 0, 0);
             }
         }
 
-        MESH.getPersistentMappedVBO().syncToGPU();
-        MESH.getPersistentMappedEBO().syncToGPU();
-        MESH.getPersistentMappedIBO().syncToGPU();
+        PERSISTENT_MAPPED_VBO.syncToGPU();
+        PERSISTENT_MAPPED_EBO.syncToGPU();
+        PERSISTENT_MAPPED_IBO.syncToGPU();
 
         GL_STATE_CACHE.bindVertexArray(MESH.getVaoId());
-        GL_STATE_CACHE.bindElementArrayBuffer(MESH.getPersistentMappedEBO().getBufferId());
-        GL_STATE_CACHE.bindIndirectBuffer(MESH.getPersistentMappedIBO().getBufferId());
+        GL_STATE_CACHE.bindElementArrayBuffer(PERSISTENT_MAPPED_EBO.getBufferId());
+        GL_STATE_CACHE.bindIndirectBuffer(PERSISTENT_MAPPED_IBO.getBufferId());
 
         glMultiDrawElementsIndirect(
                 DrawType.TRIANGLES.getId(),
                 GL_UNSIGNED_INT,
                 0,
-                MESH.getPersistentMappedIBO().getCommandCount(),
+                PERSISTENT_MAPPED_IBO.getCommandCount(),
                 0
         );
     }

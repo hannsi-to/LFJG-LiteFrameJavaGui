@@ -11,7 +11,7 @@ public class SystemSetting {
     public static String STRING_UTIL_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     public static String UNICODE_BLOCKS_URL = "https://www.unicode.org/Public/UNIDATA/Blocks.txt";
     public static boolean UNICODE_BLOCKS_DEBUG_UNICODE = true;
-
+    public static boolean MESH_DEBUG_DIRECT_DELETE_OBJECT_REINSERTION = false;
     public static ProjectionType MESH_CONSTANTS_DEFAULT_PROJECTION_TYPE = ProjectionType.ORTHOGRAPHIC_PROJECTION;
     public static int MESH_CONSTANTS_BUFFER_COUNT = 3;
     public static boolean POLYGON_TRIANGULATOR_DEBUG = false;
@@ -22,6 +22,7 @@ public class SystemSetting {
     public static int LFJG_RENDER_CONTEXT_INITIAL_VBO_CAPACITY = 10000;
     public static int LFJG_RENDER_CONTEXT_INITIAL_EBO_CAPACITY = 8000;
     public static int LFJG_RENDER_CONTEXT_INITIAL_IBO_CAPACITY = 2500;
+    public static int LFJG_RENDER_CONTEXT_INITIAL_SSBO_CAPACITY = 500;
     public static boolean GL_INTERCEPTOR_DEBUG = false;
     public static boolean VAO_RENDERING_FRONT_AND_BACK = false;
     public static float VAO_RENDERING_FRONT_AND_BACK_LINE_WIDTH = 0.1f;

@@ -245,6 +245,7 @@ public class TestPersistentMappedIBO implements TestPersistentMappedBuffer {
             bufferId = 0;
         }
         mappedBuffer = null;
+        commandCount = 0;
     }
 
     public long getGpuMemorySize() {
