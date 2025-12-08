@@ -145,27 +145,6 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
         }
     }
 
-    public TestPersistentMappedSSBO bindSSBODataAll() {
-        for (Map.Entry<Integer, SSBOBindingData> bindingDataEntry : bindingDatum.entrySet()) {
-            SSBOBindingData ssboBindingData = bindingDataEntry.getValue();
-
-            glBindBufferRange(GL_SHADER_STORAGE_BUFFER, bindingDataEntry.getKey(), bufferId, ssboBindingData.offset, ssboBindingData.size);
-        }
-
-        return this;
-    }
-
-    public TestPersistentMappedSSBO bindSSBOData(int bidingPoint) {
-        SSBOBindingData ssboBindingData = bindingDatum.get(bidingPoint);
-        if (ssboBindingData == null) {
-            throw new NullPointerException("This bindingPoint not found. bindingPoint: " + bidingPoint);
-        }
-
-        glBindBufferRange(GL_SHADER_STORAGE_BUFFER, bidingPoint, bufferId, ssboBindingData.offset, ssboBindingData.size);
-
-        return this;
-    }
-
     @Override
     public TestPersistentMappedBuffer syncToGPU() {
         flushMappedRange(0, lastAddress);
@@ -290,6 +269,22 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
     @Override
     public long getGPUMemorySize() {
         return gpuMemorySize;
+    }
+
+    public int getInitialCapacity() {
+        return initialCapacity;
+    }
+
+    public int getSsboOffsetAlignment() {
+        return ssboOffsetAlignment;
+    }
+
+    public Map<Integer, SSBOBindingData> getBindingDatum() {
+        return bindingDatum;
+    }
+
+    public long getLastAddress() {
+        return lastAddress;
     }
 
     public static class SSBOBindingData {

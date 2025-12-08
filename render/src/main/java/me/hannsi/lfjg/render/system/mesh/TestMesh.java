@@ -198,7 +198,7 @@ public class TestMesh {
                 .kvBytes("New EBO Size", PERSISTENT_MAPPED_EBO.getGPUMemorySize())
                 .kvBytes("Old IBO Size", oldIBOCapacity)
                 .kvBytes("New IBO Size", PERSISTENT_MAPPED_IBO.getGPUMemorySize())
-                .kvHex("New VBO Address", PERSISTENT_MAPPED_VBO.getMappedAddress()) // 新しいアドレスを確認
+                .kvHex("New VBO Address", PERSISTENT_MAPPED_VBO.getMappedAddress())
                 .logging(getClass(), DebugLevel.INFO);
 
         vertexCount = 0;
@@ -416,6 +416,10 @@ public class TestMesh {
     }
 
     public void cleanup() {
+
+    }
+
+    public static class MeshData {
 
     }
 }

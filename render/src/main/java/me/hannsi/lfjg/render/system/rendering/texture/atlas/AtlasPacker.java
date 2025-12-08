@@ -6,25 +6,28 @@ import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedSSBO;
 import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.GL_MAX_TEXTURE_SIZE;
 import static org.lwjgl.opengl.GL11.glGetInteger;
+import static org.lwjgl.opengl.GL30.glBindBufferRange;
+import static org.lwjgl.opengl.GL43.GL_SHADER_STORAGE_BUFFER;
 
 public class AtlasPacker {
+    public static final int NO_ATTACH_TEXTURE = -1;
+
     private final int atlasWidth;
     private final int atlasHeight;
     private final ByteBuffer atlasBuffer;
-    private final List<Sprite> sprites;
+    private final Map<String, Sprite> sprites;
     protected TestPersistentMappedSSBO persistentMappedSSBO;
     private int currentX;
     private int currentY;
     private int rowHeight;
 
     public AtlasPacker(int atlasWidth, int atlasHeight, int currentX, int currentY, int rowHeight) {
-        this.sprites = new ArrayList<>();
+        this.sprites = new HashMap<>();
 
         int maxAtlasSize = glGetInteger(GL_MAX_TEXTURE_SIZE);
         int oldW = atlasWidth;
@@ -49,8 +52,8 @@ public class AtlasPacker {
         persistentMappedSSBO = new TestPersistentMappedSSBO(MeshConstants.DEFAULT_FLAGS_HINT, 1000);
     }
 
-    public AtlasPacker addSprite(Sprite sprite) {
-        sprites.add(sprite);
+    public AtlasPacker addSprite(String name, Sprite sprite) {
+        sprites.put(name, sprite);
 
         return this;
     }
@@ -58,7 +61,8 @@ public class AtlasPacker {
     public ByteBuffer generate() {
         final int PADDING = 1;
 
-        for (Sprite sprite : sprites) {
+        for (Map.Entry<String, Sprite> spriteEntry : sprites.entrySet()) {
+            Sprite sprite = spriteEntry.getValue();
             if (currentX + sprite.width + PADDING > atlasWidth) {
                 currentX = 0;
                 currentY += rowHeight;
@@ -75,7 +79,8 @@ public class AtlasPacker {
             rowHeight = Math.max(rowHeight, sprite.height + PADDING);
         }
 
-        for (Sprite sprite : sprites) {
+        for (Map.Entry<String, Sprite> spriteEntry : sprites.entrySet()) {
+            Sprite sprite = spriteEntry.getValue();
             for (int y = 0; y < sprite.height; y++) {
                 for (int x = 0; x < sprite.width; x++) {
                     int spriteIndex = (y * sprite.width + x) * 4;
@@ -89,10 +94,9 @@ public class AtlasPacker {
         }
 
         persistentMappedSSBO.addInt(1, sprites.size()).addInt(1, 0).addInt(1, 0).addInt(1, 0);
-        sprites.sort(Comparator.comparingInt(sprite -> sprite.instanceLayer));
         final float INSET = 0.5f;
-
-        for (Sprite sprite : sprites) {
+        for (Map.Entry<String, Sprite> spriteEntry : sprites.entrySet()) {
+            Sprite sprite = spriteEntry.getValue();
             float pixel_width = 1.0f / atlasWidth;
             float pixel_height = 1.0f / atlasHeight;
 
@@ -102,16 +106,21 @@ public class AtlasPacker {
             float uv_width_inset = (sprite.width - (2 * INSET)) / atlasWidth;
             float uv_height_inset = (sprite.height - (2 * INSET)) / atlasHeight;
 
-
             persistentMappedSSBO.addVec4(1, uvX, uvY, uv_width_inset, uv_height_inset);
         }
-        persistentMappedSSBO.addInt(2, 0);
+
         persistentMappedSSBO.addInt(2, 2);
+        persistentMappedSSBO.addInt(2, 0);
         persistentMappedSSBO.addInt(2, 2);
         persistentMappedSSBO.addInt(2, 3);
 
+        for (Map.Entry<Integer, TestPersistentMappedSSBO.SSBOBindingData> bindingDataEntry : persistentMappedSSBO.getBindingDatum().entrySet()) {
+            TestPersistentMappedSSBO.SSBOBindingData ssboBindingData = bindingDataEntry.getValue();
+
+            glBindBufferRange(GL_SHADER_STORAGE_BUFFER, bindingDataEntry.getKey(), persistentMappedSSBO.getBufferId(), ssboBindingData.offset, ssboBindingData.size);
+        }
+
         persistentMappedSSBO.syncToGPU();
-        persistentMappedSSBO.bindSSBODataAll();
 
         return atlasBuffer;
     }
@@ -128,7 +137,7 @@ public class AtlasPacker {
         return atlasBuffer;
     }
 
-    public List<Sprite> getSprites() {
+    public Map<String, Sprite> getSprites() {
         return sprites;
     }
 

@@ -13,13 +13,14 @@ import me.hannsi.lfjg.render.renderers.PointType;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.rendering.texture.SparseTexture2DArray;
+import me.hannsi.lfjg.render.system.rendering.texture.atlas.AtlasPacker;
+import me.hannsi.lfjg.render.system.rendering.texture.atlas.Sprite;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static me.hannsi.lfjg.core.Core.frameBufferSize;
 import static me.hannsi.lfjg.core.Core.projection2D;
@@ -52,119 +53,119 @@ public class TestNewMeshSystem implements LFJGFrame {
 //                .fill()
 //                .update();
 
-//        AtlasPacker atlas = new AtlasPacker(2048, 2048, 0, 0, 0);
-//        for (int i = 0; i < 4; i++) {
-//            int w = 16 + (int) (MathHelper.random() * 50);
-//            int h = 16 + (int) (MathHelper.random() * 50);
-//            atlas.addSprite(Sprite.createRandomColor(i, w, h));
-//        }
-//        atlas.generate();
-//
-//        sparseTexture2DArray = new SparseTexture2DArray(atlas.getAtlasWidth(), atlas.getAtlasHeight(), atlas.getAtlasBuffer());
-//
-//        MESH.addObject(
-//                ProjectionType.ORTHOGRAPHIC_PROJECTION,
-//                DrawType.QUADS,
-//                FragmentShaderType.OBJECT,
-//                BlendType.NORMAL,
-//                30,
-//                JointType.ROUND,
-//                10f,
-//                PointType.ROUND,
-//                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-//                new Vertex(400, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-//                new Vertex(400, 400, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-//                new Vertex(0, 400, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
-//        );
-//        MESH.addObject(
-//                ProjectionType.ORTHOGRAPHIC_PROJECTION,
-//                DrawType.QUADS,
-//                FragmentShaderType.OBJECT,
-//                BlendType.NORMAL,
-//                30,
-//                JointType.ROUND,
-//                10f,
-//                PointType.ROUND,
-//                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-//                new Vertex(300, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-//                new Vertex(300, 300, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-//                new Vertex(0, 300, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
-//        );
-//        MESH.addObject(
-//                ProjectionType.ORTHOGRAPHIC_PROJECTION,
-//                DrawType.QUADS,
-//                FragmentShaderType.OBJECT,
-//                BlendType.NORMAL,
-//                30,
-//                JointType.ROUND,
-//                10f,
-//                PointType.ROUND,
-//                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-//                new Vertex(200, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-//                new Vertex(200, 200, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-//                new Vertex(0, 200, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
-//        );
-//        MESH.addObject(
-//                ProjectionType.ORTHOGRAPHIC_PROJECTION,
-//                DrawType.QUADS,
-//                FragmentShaderType.OBJECT,
-//                BlendType.NORMAL,
-//                30,
-//                JointType.ROUND,
-//                10f,
-//                PointType.ROUND,
-//                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-//                new Vertex(100, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-//                new Vertex(100, 100, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-//                new Vertex(0, 100, 0, 0, 0, 255, 255, 0, 1, 0, 0, 0)
-//        );
-
-        int numObjects = 100;
-        int numVerticesPerStrip = 100;
-        float minX = 0;
-        float maxX = 1920;
-        float minY = 0;
-        float maxY = 1080;
-        float minSize = 100.0f;
-        float maxSize = 500.0f;
-        Random random = new Random();
-
-        for (int i = 0; i < numObjects; i++) {
-            float x = minX + random.nextFloat() * (maxX - minX);
-            float y = minY + random.nextFloat() * (maxY - minY);
-
-            List<Vertex> vertices = new ArrayList<>();
-
-            for (int j = 0; j < numVerticesPerStrip; j++) {
-                float r = random.nextFloat();
-                float g = random.nextFloat();
-                float b = random.nextFloat();
-
-                Vertex v = new Vertex(x, y, 0, r, g, b, 0.5f, 0, 0, 0, 0, 1);
-                vertices.add(v);
-
-                float angle = (float) (random.nextFloat() * Math.PI * 2.0);
-                float step = minSize + random.nextFloat() * (maxSize - minSize);
-                x += (float) (Math.cos(angle) * step);
-                y += (float) (Math.sin(angle) * step);
-            }
-
-            LongRef id = new LongRef();
-            MESH.addObject(
-                    id,
-                    ProjectionType.ORTHOGRAPHIC_PROJECTION,
-                    DrawType.POINTS,
-                    FragmentShaderType.OBJECT,
-                    BlendType.NORMAL,
-                    30,
-                    JointType.MITER,
-                    10f,
-                    PointType.ROUND,
-                    vertices.toArray(new Vertex[0])
-            );
-
-            objectIds.add(id);
+        AtlasPacker atlas = new AtlasPacker(2048, 2048, 0, 0, 0);
+        for (int i = 0; i < 4; i++) {
+            int w = 16 + (int) (MathHelper.random() * 50);
+            int h = 16 + (int) (MathHelper.random() * 50);
+            atlas.addSprite("Code: " + i, Sprite.createRandomColor(i, w, h));
         }
+        atlas.generate();
+
+        sparseTexture2DArray = new SparseTexture2DArray(atlas.getAtlasWidth(), atlas.getAtlasHeight(), atlas.getAtlasBuffer());
+
+        MESH.addObject(
+                ProjectionType.ORTHOGRAPHIC_PROJECTION,
+                DrawType.QUADS,
+                FragmentShaderType.OBJECT,
+                BlendType.NORMAL,
+                30,
+                JointType.ROUND,
+                10f,
+                PointType.ROUND,
+                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                new Vertex(400, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+                new Vertex(400, 400, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
+                new Vertex(0, 400, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
+        );
+        MESH.addObject(
+                ProjectionType.ORTHOGRAPHIC_PROJECTION,
+                DrawType.QUADS,
+                FragmentShaderType.OBJECT,
+                BlendType.NORMAL,
+                30,
+                JointType.ROUND,
+                10f,
+                PointType.ROUND,
+                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                new Vertex(300, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+                new Vertex(300, 300, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
+                new Vertex(0, 300, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
+        );
+        MESH.addObject(
+                ProjectionType.ORTHOGRAPHIC_PROJECTION,
+                DrawType.QUADS,
+                FragmentShaderType.OBJECT,
+                BlendType.NORMAL,
+                30,
+                JointType.ROUND,
+                10f,
+                PointType.ROUND,
+                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                new Vertex(200, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+                new Vertex(200, 200, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
+                new Vertex(0, 200, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
+        );
+        MESH.addObject(
+                ProjectionType.ORTHOGRAPHIC_PROJECTION,
+                DrawType.QUADS,
+                FragmentShaderType.OBJECT,
+                BlendType.NORMAL,
+                30,
+                JointType.ROUND,
+                10f,
+                PointType.ROUND,
+                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                new Vertex(100, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+                new Vertex(100, 100, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
+                new Vertex(0, 100, 0, 0, 0, 255, 255, 0, 1, 0, 0, 0)
+        );
+
+//        int numObjects = 100;
+//        int numVerticesPerStrip = 100;
+//        float minX = 0;
+//        float maxX = 1920;
+//        float minY = 0;
+//        float maxY = 1080;
+//        float minSize = 100.0f;
+//        float maxSize = 500.0f;
+//        Random random = new Random();
+//
+//        for (int i = 0; i < numObjects; i++) {
+//            float x = minX + random.nextFloat() * (maxX - minX);
+//            float y = minY + random.nextFloat() * (maxY - minY);
+//
+//            List<Vertex> vertices = new ArrayList<>();
+//
+//            for (int j = 0; j < numVerticesPerStrip; j++) {
+//                float r = random.nextFloat();
+//                float g = random.nextFloat();
+//                float b = random.nextFloat();
+//
+//                Vertex v = new Vertex(x, y, 0, r, g, b, 0.5f, 0, 0, 0, 0, 1);
+//                vertices.add(v);
+//
+//                float angle = (float) (random.nextFloat() * Math.PI * 2.0);
+//                float step = minSize + random.nextFloat() * (maxSize - minSize);
+//                x += (float) (Math.cos(angle) * step);
+//                y += (float) (Math.sin(angle) * step);
+//            }
+//
+//            LongRef id = new LongRef();
+//            MESH.addObject(
+//                    id,
+//                    ProjectionType.ORTHOGRAPHIC_PROJECTION,
+//                    DrawType.POINTS,
+//                    FragmentShaderType.OBJECT,
+//                    BlendType.NORMAL,
+//                    30,
+//                    JointType.MITER,
+//                    10f,
+//                    PointType.ROUND,
+//                    vertices.toArray(new Vertex[0])
+//            );
+//
+//            objectIds.add(id);
+//        }
 
 //        for (int i = 0; i < numObjects; i++) {
 //            float x = minX + random.nextFloat() * (maxX - minX);
@@ -298,8 +299,8 @@ public class TestNewMeshSystem implements LFJGFrame {
             System.out.println("FPS: " + frame.getFps());
             timer.reset();
 
-            long id = objectIds.get((int) (MathHelper.random() * objectIds.size())).getValue();
-            MESH.deleteObject(objectIds, id);
+//            long id = objectIds.get((int) (MathHelper.random() * objectIds.size())).getValue();
+//            MESH.deleteObject(objectIds, id);
         }
     }
 

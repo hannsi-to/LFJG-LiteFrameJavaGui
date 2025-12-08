@@ -54,8 +54,9 @@ layout(std430, binding = 2) buffer SpriteLayer {
 #include "shader/frameBuffer/filter/RadialBlur.fsh"
 
 void main() {
-    if (instanceLayer < spriteData.spriteDataSize.x) {
-        vec4 uvRect = spriteData.spriteUVs[spriteLayer.layer[instanceLayer]];
+    int index = spriteLayer.layer[instanceLayer];
+    if (instanceLayer < spriteData.spriteDataSize.x || index < 0) {
+        vec4 uvRect = spriteData.spriteUVs[index];
         vec2 uv = uvRect.xy + outTexture * uvRect.zw;
         fragColor = texture(uTexArray, vec3(uv, 0));
     } else {
