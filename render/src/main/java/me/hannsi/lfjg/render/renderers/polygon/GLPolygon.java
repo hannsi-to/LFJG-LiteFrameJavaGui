@@ -2,7 +2,7 @@ package me.hannsi.lfjg.render.renderers.polygon;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
-import me.hannsi.lfjg.core.utils.reflection.reference.LongRef;
+import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.GLObject;
@@ -151,7 +151,7 @@ public class GLPolygon<T extends GLPolygon<T>> extends GLObject {
         vertices.get(3).v = rectUV[3];
 
         Vertex[] vertices = this.vertices.toArray(new Vertex[0]);
-        LongRef id = new LongRef();
+        IntRef id = new IntRef();
         MESH.addObject(
                 id,
                 ProjectionType.ORTHOGRAPHIC_PROJECTION,

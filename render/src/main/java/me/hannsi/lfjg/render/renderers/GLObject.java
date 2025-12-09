@@ -3,7 +3,7 @@ package me.hannsi.lfjg.render.renderers;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
-import me.hannsi.lfjg.core.utils.reflection.reference.LongRef;
+import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.render.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.system.rendering.frameBuffer.FrameBuffer;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
@@ -17,7 +17,7 @@ import static me.hannsi.lfjg.render.LFJGRenderContext.MESH;
 import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
 
 public class GLObject implements Cloneable {
-    private final LongRef objectId;
+    private final IntRef objectId;
     private String name;
 
     private FrameBuffer frameBuffer;
@@ -30,7 +30,7 @@ public class GLObject implements Cloneable {
 
     public GLObject(String name) {
         this.name = name;
-        this.objectId = new LongRef();
+        this.objectId = new IntRef();
 
         this.frameBuffer = null;
 
@@ -59,7 +59,7 @@ public class GLObject implements Cloneable {
         ).logging(getClass(), DebugLevel.DEBUG);
     }
 
-    public void create(long id) {
+    public void create(int id) {
         viewMatrix = new Matrix4f();
 
         objectId.setValue(id);
@@ -140,7 +140,7 @@ public class GLObject implements Cloneable {
         return name;
     }
 
-    public long getObjectId() {
+    public int getObjectId() {
         return objectId.getValue();
     }
 

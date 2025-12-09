@@ -28,7 +28,7 @@ public class EffectCache {
 
 
     public EffectCache attachGLObjectCache(GLObjectCache glObjectCache) {
-        for (Map.Entry<Long, GLObject> glObjectEntry : glObjectCache.getGlObjects().entrySet()) {
+        for (Map.Entry<Integer, GLObject> glObjectEntry : glObjectCache.getGlObjects().entrySet()) {
             GLObject glObject = glObjectEntry.getValue();
 //            glObject.setEffectCache(this);
 
@@ -162,7 +162,7 @@ public class EffectCache {
         new LogGenerator(
                 LogGenerateType.CLEANUP,
                 getClass(),
-                ids.length() == 0 ? "" : ids.substring(0, ids.length() - 2),
+                ids.isEmpty() ? "" : ids.substring(0, ids.length() - 2),
                 ""
         ).logging(getClass(), DebugLevel.DEBUG);
     }

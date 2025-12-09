@@ -3,18 +3,18 @@ package me.hannsi.lfjg.render;
 import java.util.ArrayDeque;
 
 public class IdPool {
-    private final ArrayDeque<Long> pool = new ArrayDeque<>();
-    private long next = Id.initialGLObjectId;
+    private final ArrayDeque<Integer> pool = new ArrayDeque<>();
+    private int next = Id.initialGLObjectId;
 
-    public long acquire() {
+    public int acquire() {
         return pool.isEmpty() ? next++ : pool.pop();
     }
 
-    public void release(long id) {
+    public void release(int id) {
         pool.push(id);
     }
 
-    public long acquire(long requestedId) {
+    public int acquire(int requestedId) {
         if (pool.remove(requestedId)) {
             return requestedId;
         }

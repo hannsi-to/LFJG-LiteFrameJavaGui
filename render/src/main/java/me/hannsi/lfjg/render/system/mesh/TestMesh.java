@@ -2,7 +2,7 @@ package me.hannsi.lfjg.render.system.mesh;
 
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerator;
-import me.hannsi.lfjg.core.utils.reflection.reference.LongRef;
+import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.debug.exceptions.render.mesh.MeshException;
 import me.hannsi.lfjg.render.renderers.BlendType;
@@ -21,7 +21,6 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import static org.lwjgl.opengl.GL43.glMultiDrawElementsIndirect;
 
 public class TestMesh {
-    private static int layer = 0;
     private final int vaoId;
     private int initialVBOCapacity;
     private int initialEBOCapacity;
@@ -63,7 +62,7 @@ public class TestMesh {
         return addObject(null, projectionType, drawType, fragmentShaderType, blendType, lineWidth, jointType, pointSize, pointType, vertices);
     }
 
-    public TestMesh addObject(LongRef objectIdPointer, ProjectionType projectionType, DrawType drawType, FragmentShaderType fragmentShaderType, BlendType blendType, float lineWidth, JointType jointType, float pointSize, PointType pointType, Vertex... vertices) {
+    public TestMesh addObject(IntRef objectIdPointer, ProjectionType projectionType, DrawType drawType, FragmentShaderType fragmentShaderType, BlendType blendType, float lineWidth, JointType jointType, float pointSize, PointType pointType, Vertex... vertices) {
         this.fragmentShaderType = fragmentShaderType;
         this.blendType = blendType;
 
@@ -71,7 +70,6 @@ public class TestMesh {
         int baseVertex = vertexCount;
 
         for (Vertex vertex : elementPair.vertices) {
-            vertex.layer = layer;
             PERSISTENT_MAPPED_VBO.add(vertex);
         }
 
@@ -82,31 +80,30 @@ public class TestMesh {
 
         vertexCount += elementPair.vertices.length;
 
+        int commandIndex = PERSISTENT_MAPPED_IBO.getCommandCount();
         PERSISTENT_MAPPED_IBO.add(
                 new DrawElementsIndirectCommand(
                         elementPair.indices.length,
                         1,
                         startOffset,
                         baseVertex,
-                        layer
+                        commandIndex
                 )
         );
 
-        long id = GL_OBJECT_POOL.createObject(new GLObjectData(baseVertex, elementPair.vertices.length, startOffset, elementPair.indices.length, PERSISTENT_MAPPED_IBO.getCommandCount() - 1, elementPair));
+        int id = GL_OBJECT_POOL.createObject(new GLObjectData(baseVertex, elementPair.vertices.length, startOffset, elementPair.indices.length, PERSISTENT_MAPPED_IBO.getCommandCount() - 1, elementPair));
         if (objectIdPointer != null) {
             objectIdPointer.setValue(id);
         }
 
-        layer++;
-
         return this;
     }
 
-    public TestMesh deleteObject(long objectId) {
+    public TestMesh deleteObject(int objectId) {
         return deleteObject(null, objectId);
     }
 
-    public TestMesh deleteObject(List<LongRef> ids, long objectId) {
+    public TestMesh deleteObject(List<IntRef> ids, int objectId) {
         if (GL_OBJECT_POOL.getDeletedObjects().get(objectId) != null) {
             new LogGenerator(
                     "DeleteObject Info",
@@ -126,10 +123,10 @@ public class TestMesh {
         glObjectData.draw = false;
 
         if (ids != null) {
-            Set<Map.Entry<Long, GLObjectData>> set = GL_OBJECT_POOL.getObjects().entrySet();
+            Set<Map.Entry<Integer, GLObjectData>> set = GL_OBJECT_POOL.getObjects().entrySet();
             ids.clear();
-            for (Map.Entry<Long, GLObjectData> entry : set) {
-                ids.add(new LongRef(entry.getKey()));
+            for (Map.Entry<Integer, GLObjectData> entry : set) {
+                ids.add(new IntRef(entry.getKey()));
             }
         }
 
@@ -144,8 +141,8 @@ public class TestMesh {
                 .kvBytes("EBO Size Before", PERSISTENT_MAPPED_EBO.getGPUMemorySize())
                 .logging(getClass(), DebugLevel.INFO);
 
-        Map<Long, GLObjectData> entryObject = new HashMap<>();
-        for (Map.Entry<Long, GLObjectData> objectEntry : GL_OBJECT_POOL.getObjects().entrySet()) {
+        Map<Integer, GLObjectData> entryObject = new HashMap<>();
+        for (Map.Entry<Integer, GLObjectData> objectEntry : GL_OBJECT_POOL.getObjects().entrySet()) {
             if (GL_OBJECT_POOL.getDeletedObjects().containsKey(objectEntry.getKey())) {
                 continue;
             }
@@ -159,7 +156,7 @@ public class TestMesh {
         int newVBOCapacity = 0;
         int newEBOCapacity = 0;
         int newIBOCapacity = 0;
-        for (Map.Entry<Long, GLObjectData> entry : entryObject.entrySet()) {
+        for (Map.Entry<Integer, GLObjectData> entry : entryObject.entrySet()) {
             GLObjectData glObjectData = entry.getValue();
 
             newVBOCapacity += glObjectData.elementPair.vertices.length;
@@ -203,7 +200,7 @@ public class TestMesh {
 
         vertexCount = 0;
 
-        for (Map.Entry<Long, GLObjectData> entry : entryObject.entrySet()) {
+        for (Map.Entry<Integer, GLObjectData> entry : entryObject.entrySet()) {
             GLObjectData oldGlObjectData = entry.getValue();
             TestElementPair elementPair = entry.getValue().elementPair;
 
@@ -263,7 +260,7 @@ public class TestMesh {
         return this;
     }
 
-    public TestMesh restoreDeleteObject(long objectId) {
+    public TestMesh restoreDeleteObject(int objectId) {
         GLObjectData glObjectData = GL_OBJECT_POOL.getObjectData(objectId);
         if (glObjectData == null) {
             throw new MeshException("This object ID does not exist. objectId: " + objectId);
@@ -307,7 +304,7 @@ public class TestMesh {
             GL_STATE_CACHE.lineWidth(1.0f);
         }
 
-        for (Map.Entry<Long, GLObjectData> entry : GL_OBJECT_POOL.getObjects().entrySet()) {
+        for (Map.Entry<Integer, GLObjectData> entry : GL_OBJECT_POOL.getObjects().entrySet()) {
             GLObjectData glObjectData = entry.getValue();
 
             long base = PERSISTENT_MAPPED_IBO.getCommandsSizeByte(glObjectData.baseCommand);

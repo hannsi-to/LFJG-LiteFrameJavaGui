@@ -3,7 +3,7 @@ package me.hannsi.lfjg.render.system.rendering.frameBuffer;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
-import me.hannsi.lfjg.core.utils.reflection.reference.LongRef;
+import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.debug.exceptions.frameBuffer.CompleteFrameBufferException;
 import me.hannsi.lfjg.render.debug.exceptions.frameBuffer.CreatingFrameBufferException;
@@ -29,7 +29,7 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE3;
 import static org.lwjgl.opengl.GL30.*;
 
 public class FrameBuffer {
-    public final LongRef id;
+    public final IntRef id;
     private final int frameBufferId;
     private final int textureId;
     private final int renderBufferId;
@@ -56,7 +56,7 @@ public class FrameBuffer {
     }
 
     public FrameBuffer(GLObject glObject, float x, float y, float width, float height) {
-        this.id = new LongRef();
+        this.id = new IntRef();
         this.x = x;
         this.y = y;
         this.width = width;

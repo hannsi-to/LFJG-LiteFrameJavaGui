@@ -17,9 +17,8 @@ public class Vertex {
     public float normalsX;
     public float normalsY;
     public float normalsZ;
-    public int layer;
 
-    public Vertex(float x, float y, float z, float red, float green, float blue, float alpha, float u, float v, float normalsX, float normalsY, float normalsZ, int layer) {
+    public Vertex(float x, float y, float z, float red, float green, float blue, float alpha, float u, float v, float normalsX, float normalsY, float normalsZ) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -32,11 +31,6 @@ public class Vertex {
         this.normalsX = normalsX;
         this.normalsY = normalsY;
         this.normalsZ = normalsZ;
-        this.layer = layer;
-    }
-
-    public Vertex(float x, float y, float z, float red, float green, float blue, float alpha, float u, float v, float normalsX, float normalsY, float normalsZ) {
-        this(x, y, z, red, green, blue, alpha, u, v, normalsX, normalsY, normalsZ, -1);
     }
 
     public Vertex replaceXYZ(float x, float y, float z) {
@@ -64,7 +58,7 @@ public class Vertex {
     }
 
     public float[] toArray() {
-        return new float[]{x, y, z, red, green, blue, alpha, u, v, normalsX, normalsY, normalsZ, layer};
+        return new float[]{x, y, z, red, green, blue, alpha, u, v, normalsX, normalsY, normalsZ};
     }
 
     public FloatBuffer toBuffer() {
@@ -72,6 +66,6 @@ public class Vertex {
     }
 
     public Vertex copy() {
-        return new Vertex(x, y, z, red, green, blue, alpha, u, v, normalsX, normalsY, normalsZ, layer);
+        return new Vertex(x, y, z, red, green, blue, alpha, u, v, normalsX, normalsY, normalsZ);
     }
 }

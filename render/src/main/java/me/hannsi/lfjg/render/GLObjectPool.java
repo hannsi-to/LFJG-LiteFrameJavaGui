@@ -12,8 +12,8 @@ import static me.hannsi.lfjg.render.LFJGRenderContext.ID_POOL;
 import static me.hannsi.lfjg.render.LFJGRenderContext.MESH;
 
 public class GLObjectPool {
-    private final Map<Long, GLObjectData> objects;
-    private final Map<Long, GLObjectData> deletedObjects;
+    private final Map<Integer, GLObjectData> objects;
+    private final Map<Integer, GLObjectData> deletedObjects;
     private long totalPoolBytes = 0;
     private long deletedBytes = 0;
 
@@ -22,8 +22,8 @@ public class GLObjectPool {
         this.deletedObjects = new HashMap<>();
     }
 
-    public long createObject(GLObjectData glObjectData) {
-        long id = ID_POOL.acquire();
+    public int createObject(GLObjectData glObjectData) {
+        int id = ID_POOL.acquire();
         objects.put(id, glObjectData);
 
         totalPoolBytes += calculateBytes(glObjectData);
@@ -31,8 +31,8 @@ public class GLObjectPool {
         return id;
     }
 
-    public long createObject(long requestedId, GLObjectData glObjectData) {
-        long id = ID_POOL.acquire(requestedId);
+    public int createObject(int requestedId, GLObjectData glObjectData) {
+        int id = ID_POOL.acquire(requestedId);
         objects.put(id, glObjectData);
 
         totalPoolBytes += calculateBytes(glObjectData);
@@ -40,7 +40,7 @@ public class GLObjectPool {
         return id;
     }
 
-    public void destroyObject(long id) {
+    public void destroyObject(int id) {
         GLObjectData glObjectData = objects.get(id);
 
         objects.remove(id);
@@ -49,7 +49,7 @@ public class GLObjectPool {
         totalPoolBytes -= calculateBytes(glObjectData);
     }
 
-    public void createDeletedObject(long id, GLObjectData glObjectData) {
+    public void createDeletedObject(int id, GLObjectData glObjectData) {
         deletedObjects.put(id, glObjectData);
         deletedBytes += calculateBytes(glObjectData);
 
@@ -58,7 +58,7 @@ public class GLObjectPool {
         }
     }
 
-    public void destroyDeletedObject(long id) {
+    public void destroyDeletedObject(int id) {
         GLObjectData glObjectData = deletedObjects.get(id);
         deletedObjects.remove(id);
 
@@ -66,7 +66,7 @@ public class GLObjectPool {
     }
 
     public void clearObjects() {
-        for (Map.Entry<Long, GLObjectData> entry : objects.entrySet()) {
+        for (Map.Entry<Integer, GLObjectData> entry : objects.entrySet()) {
             ID_POOL.release(entry.getKey());
         }
 
@@ -85,19 +85,19 @@ public class GLObjectPool {
                 DrawElementsIndirectCommand.BYTES;
     }
 
-    public Map<Long, GLObjectData> getObjects() {
+    public Map<Integer, GLObjectData> getObjects() {
         return objects;
     }
 
-    public Map<Long, GLObjectData> getDeletedObjects() {
+    public Map<Integer, GLObjectData> getDeletedObjects() {
         return deletedObjects;
     }
 
-    public GLObjectData getObjectData(long id) {
+    public GLObjectData getObjectData(int id) {
         return getObjects().get(id);
     }
 
-    public GLObjectData getDeletedObjectData(long id) {
+    public GLObjectData getDeletedObjectData(int id) {
         return getDeletedObjects().get(id);
     }
 
@@ -105,7 +105,7 @@ public class GLObjectPool {
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         int count = 0;
-        for (Map.Entry<Long, GLObjectData> entry : objects.entrySet()) {
+        for (Map.Entry<Integer, GLObjectData> entry : objects.entrySet()) {
             if (count != 0) {
                 stringBuilder.append("\n");
             }
@@ -115,7 +115,7 @@ public class GLObjectPool {
             count++;
         }
 
-        for (Map.Entry<Long, GLObjectData> entry : deletedObjects.entrySet()) {
+        for (Map.Entry<Integer, GLObjectData> entry : deletedObjects.entrySet()) {
             stringBuilder.append("\n").append("deletedObjects{id: ").append(entry.getKey()).append(", ").append(entry.getValue()).append("}");
 
             count++;

@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.render.system.text;
 
-import me.hannsi.lfjg.core.utils.reflection.reference.LongRef;
+import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
@@ -121,8 +121,8 @@ public class TextMeshBuilder {
     }
 
     public static class TextMesh {
-        private static final LongRef pointer = new LongRef();
-        protected static List<Long> ids = new ArrayList<>();
+        private static final IntRef pointer = new IntRef();
+        protected static List<Integer> ids = new ArrayList<>();
         public float[] positions;
         public float[] uvs;
 
@@ -156,7 +156,7 @@ public class TextMeshBuilder {
         }
 
         public void cleanup() {
-            for (long id : ids) {
+            for (int id : ids) {
                 MESH.deleteObject(id);
             }
         }

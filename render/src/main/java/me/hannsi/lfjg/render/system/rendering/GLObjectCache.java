@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public class GLObjectCache {
-    private final Map<Long, GLObject> glObjects;
+    private final Map<Integer, GLObject> glObjects;
 
     public GLObjectCache() {
         glObjects = new HashMap<>();
@@ -79,7 +79,7 @@ public class GLObjectCache {
         ).logging(getClass(), DebugLevel.DEBUG);
     }
 
-    public GLObject getGLObject(long objectId) {
+    public GLObject getGLObject(int objectId) {
         return glObjects.get(objectId);
     }
 
@@ -92,7 +92,7 @@ public class GLObjectCache {
         return null;
     }
 
-    public Map<Long, GLObject> getGlObjects() {
+    public Map<Integer, GLObject> getGlObjects() {
         return glObjects;
     }
 }

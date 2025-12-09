@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GLObjectCacheCommand {
-    private final List<Long> ignoreEffectGLObjectId;
+    private final List<Integer> ignoreEffectGLObjectId;
     private GLObjectCache glObjectCache;
 
     GLObjectCacheCommand() {
@@ -41,10 +41,10 @@ public class GLObjectCacheCommand {
         return this;
     }
 
-    public GLObjectCacheCommand ignoreEffectGLObject(long... objectIds) {
+    public GLObjectCacheCommand ignoreEffectGLObject(int... objectIds) {
         checkThrowAttachedGLObjectCache();
 
-        for (long objectId : objectIds) {
+        for (int objectId : objectIds) {
             GLObject ignoreGLObject = glObjectCache.getGLObject(objectId);
             if (ignoreGLObject == null) {
                 throwNotFoundIgnoreGLObjectWithId(objectId);
@@ -58,7 +58,7 @@ public class GLObjectCacheCommand {
         return this;
     }
 
-    public boolean shouldIgnore(Long objectId) {
+    public boolean shouldIgnore(int objectId) {
         return ignoreEffectGLObjectId.contains(objectId);
     }
 
@@ -72,7 +72,7 @@ public class GLObjectCacheCommand {
         }
     }
 
-    public void throwNotFoundIgnoreGLObjectWithId(long id) {
+    public void throwNotFoundIgnoreGLObjectWithId(int id) {
         throw new GLObjectCacheCommandException("GLObject was not found. Id: " + id);
     }
 

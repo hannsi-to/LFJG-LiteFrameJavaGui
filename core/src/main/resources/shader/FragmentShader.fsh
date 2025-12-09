@@ -19,7 +19,7 @@ layout(std430, binding = 1) buffer SpriteData {
 } spriteData;
 
 layout(std430, binding = 2) buffer SpriteLayer {
-    int layer[];
+    uint layer[];
 } spriteLayer;
 
 #include "shader/frameBuffer/util/Luminance.glsl"
@@ -54,7 +54,7 @@ layout(std430, binding = 2) buffer SpriteLayer {
 #include "shader/frameBuffer/filter/RadialBlur.fsh"
 
 void main() {
-    int index = spriteLayer.layer[instanceLayer];
+    uint index = spriteLayer.layer[instanceLayer];
     if (instanceLayer < spriteData.spriteDataSize.x || index < 0) {
         vec4 uvRect = spriteData.spriteUVs[index];
         vec2 uv = uvRect.xy + outTexture * uvRect.zw;

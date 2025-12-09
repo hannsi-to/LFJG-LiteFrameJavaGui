@@ -5,8 +5,8 @@ package me.hannsi.lfjg.render;
  */
 public class Id {
     public static final int initialSceneId = Integer.MIN_VALUE;
-    public static final long initialGLObjectId = Long.MIN_VALUE;
+    public static final int initialGLObjectId = Integer.MIN_VALUE;
 
     public static int latestSceneId = initialSceneId;
-    public static long latestGLObjectId = initialGLObjectId;
+    public static int latestGLObjectId = initialGLObjectId;
 }
