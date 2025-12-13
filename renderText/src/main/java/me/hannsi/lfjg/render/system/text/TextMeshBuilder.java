@@ -4,6 +4,7 @@ import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
+import me.hannsi.lfjg.render.system.mesh.TestMesh;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
@@ -133,21 +134,22 @@ public class TextMeshBuilder {
 
         public TextMesh createMesh() {
             MESH.addObject(
-                    pointer,
-                    ProjectionType.ORTHOGRAPHIC_PROJECTION,
-                    DrawType.TRIANGLES,
-                    FragmentShaderType.MSDF,
-                    BlendType.NORMAL,
-                    -1f,
-                    GLPolygon.DEFAULT_JOINT_TYPE,
-                    -1f,
-                    GLPolygon.DEFAULT_POINT_TYPE,
-                    new Vertex(positions[0], positions[1], 0, 0, 0, 0, 0, uvs[0], uvs[1], 0, 0, 0),
-                    new Vertex(positions[2], positions[3], 0, 0, 0, 0, 0, uvs[2], uvs[3], 0, 0, 0),
-                    new Vertex(positions[4], positions[5], 0, 0, 0, 0, 0, uvs[4], uvs[5], 0, 0, 0),
-                    new Vertex(positions[6], positions[7], 0, 0, 0, 0, 0, uvs[6], uvs[7], 0, 0, 0),
-                    new Vertex(positions[8], positions[9], 0, 0, 0, 0, 0, uvs[8], uvs[9], 0, 0, 0),
-                    new Vertex(positions[10], positions[11], 0, 0, 0, 0, 0, uvs[10], uvs[11], 0, 0, 0)
+                    TestMesh.Builder.createBuilder()
+                            .objectIdPointer(pointer)
+                            .drawType(DrawType.TRIANGLES)
+                            .blendType(BlendType.NORMAL)
+                            .pointSize(-1f)
+                            .lineWidth(-1f)
+                            .jointType(GLPolygon.DEFAULT_JOINT_TYPE)
+                            .pointType(GLPolygon.DEFAULT_POINT_TYPE)
+                            .vertices(
+                                    new Vertex(positions[0], positions[1], 0, 0, 0, 0, 0, uvs[0], uvs[1], 0, 0, 0),
+                                    new Vertex(positions[2], positions[3], 0, 0, 0, 0, 0, uvs[2], uvs[3], 0, 0, 0),
+                                    new Vertex(positions[4], positions[5], 0, 0, 0, 0, 0, uvs[4], uvs[5], 0, 0, 0),
+                                    new Vertex(positions[6], positions[7], 0, 0, 0, 0, 0, uvs[6], uvs[7], 0, 0, 0),
+                                    new Vertex(positions[8], positions[9], 0, 0, 0, 0, 0, uvs[8], uvs[9], 0, 0, 0),
+                                    new Vertex(positions[10], positions[11], 0, 0, 0, 0, 0, uvs[10], uvs[11], 0, 0, 0)
+                            )
             );
 
             ids.add(pointer.getValue());

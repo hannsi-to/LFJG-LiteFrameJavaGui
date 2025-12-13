@@ -8,6 +8,7 @@ import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.renderers.JointType;
 import me.hannsi.lfjg.render.renderers.PointType;
+import me.hannsi.lfjg.render.system.mesh.TestMesh;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
@@ -152,17 +153,17 @@ public class GLPolygon<T extends GLPolygon<T>> extends GLObject {
 
         Vertex[] vertices = this.vertices.toArray(new Vertex[0]);
         IntRef id = new IntRef();
+
         MESH.addObject(
-                id,
-                ProjectionType.ORTHOGRAPHIC_PROJECTION,
-                drawType,
-                FragmentShaderType.OBJECT,
-                blendType,
-                lineWidth,
-                jointType,
-                pointSize,
-                pointType,
-                vertices
+                TestMesh.Builder.createBuilder()
+                        .objectIdPointer(id)
+                        .drawType(drawType)
+                        .blendType(blendType)
+                        .lineWidth(lineWidth)
+                        .jointType(jointType)
+                        .pointSize(pointSize)
+                        .pointType(pointType)
+                        .vertices(vertices)
         );
 
         setGLObjectParameter();

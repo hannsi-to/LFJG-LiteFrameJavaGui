@@ -9,7 +9,9 @@ import me.hannsi.lfjg.core.utils.toolkit.StringUtil;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.debug.exceptions.UnknownAlignType;
 import me.hannsi.lfjg.render.renderers.BlendType;
+import me.hannsi.lfjg.render.renderers.JointType;
 import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
+import me.hannsi.lfjg.render.system.mesh.TestMesh;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
@@ -100,18 +102,19 @@ public class TextRenderer {
 
     public TextRenderer createMesh() {
         MESH.addObject(
-                ProjectionType.ORTHOGRAPHIC_PROJECTION,
-                DrawType.QUADS,
-                FragmentShaderType.OBJECT,
-                BlendType.NORMAL,
-                -1f,
-                GLPolygon.DEFAULT_JOINT_TYPE,
-                -1f,
-                GLPolygon.DEFAULT_POINT_TYPE,
-                new Vertex(0, 0, 0, defaultFontColor.getRedF(), defaultFontColor.getGreen(), defaultFontColor.getBlueF(), defaultFontColor.getAlphaF(), 0, 0, 0, 0, 0),
-                new Vertex(0, 1, 0, defaultFontColor.getRedF(), defaultFontColor.getGreen(), defaultFontColor.getBlueF(), defaultFontColor.getAlphaF(), 0, 0, 0, 0, 0),
-                new Vertex(1, 1, 0, defaultFontColor.getRedF(), defaultFontColor.getGreen(), defaultFontColor.getBlueF(), defaultFontColor.getAlphaF(), 0, 0, 0, 0, 0),
-                new Vertex(1, 0, 0, defaultFontColor.getRedF(), defaultFontColor.getGreen(), defaultFontColor.getBlueF(), defaultFontColor.getAlphaF(), 0, 0, 0, 0, 0)
+                TestMesh.Builder.createBuilder()
+                        .drawType(DrawType.QUADS)
+                        .blendType(BlendType.NORMAL)
+                        .pointSize(-1f)
+                        .lineWidth(-1f)
+                        .jointType(GLPolygon.DEFAULT_JOINT_TYPE)
+                        .pointType(GLPolygon.DEFAULT_POINT_TYPE)
+                        .vertices(
+                                new Vertex(0, 0, 0, defaultFontColor.getRedF(), defaultFontColor.getGreen(), defaultFontColor.getBlueF(), defaultFontColor.getAlphaF(), 0, 0, 0, 0, 0),
+                                new Vertex(0, 1, 0, defaultFontColor.getRedF(), defaultFontColor.getGreen(), defaultFontColor.getBlueF(), defaultFontColor.getAlphaF(), 0, 0, 0, 0, 0),
+                                new Vertex(1, 1, 0, defaultFontColor.getRedF(), defaultFontColor.getGreen(), defaultFontColor.getBlueF(), defaultFontColor.getAlphaF(), 0, 0, 0, 0, 0),
+                                new Vertex(1, 0, 0, defaultFontColor.getRedF(), defaultFontColor.getGreen(), defaultFontColor.getBlueF(), defaultFontColor.getAlphaF(), 0, 0, 0, 0, 0)
+                        )
         );
 
         return this;

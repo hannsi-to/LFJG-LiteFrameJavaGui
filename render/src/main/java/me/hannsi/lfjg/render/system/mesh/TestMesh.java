@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.render.system.mesh;
 
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
@@ -56,12 +57,120 @@ public class TestMesh {
         return this;
     }
 
-    public TestMesh addObject(ProjectionType projectionType, DrawType drawType, FragmentShaderType fragmentShaderType, BlendType blendType, float lineWidth, JointType jointType, float pointSize, PointType pointType, Vertex... vertices) {
-        return addObject(null, projectionType, drawType, fragmentShaderType, blendType, lineWidth, jointType, pointSize, pointType, vertices);
+    public static class Builder {
+        protected IntRef objectIdPointer = null;
+        protected Vertex[] vertices = null;
+        protected DrawType drawType = DrawType.TRIANGLES;
+        protected BlendType blendType = BlendType.NORMAL;
+        protected float lineWidth = -1f;
+        protected float pointSize = -1f;
+        protected JointType jointType = JointType.NONE;
+        protected PointType pointType = PointType.SQUARE;
+        protected ProjectionType projectionType = ProjectionType.PERSPECTIVE_PROJECTION;
+
+        Builder() {
+        }
+
+        public static Builder createBuilder(){
+            return new Builder();
+        }
+
+        public Builder objectIdPointer (IntRef objectIdPointer){
+            this.objectIdPointer = objectIdPointer;
+
+            return this;
+        }
+
+        public Builder blendType (BlendType blendType){
+            this.blendType = blendType;
+
+            return this;
+        }
+
+        public Builder drawType (DrawType drawType){
+            this.drawType = drawType;
+
+            return this;
+        }
+
+        public Builder jointType (JointType jointType){
+            this.jointType = jointType;
+
+            return this;
+        }
+
+        public Builder lineWidth ( float lineWidth){
+            this.lineWidth = lineWidth;
+
+            return this;
+        }
+
+        public Builder pointType (PointType pointType){
+            this.pointType = pointType;
+
+            return this;
+        }
+
+        public Builder projectionType (ProjectionType projectionType){
+            this.projectionType = projectionType;
+
+            return this;
+        }
+
+        public Builder vertices (Vertex...vertices){
+            this.vertices = vertices;
+
+            return this;
+        }
+
+        public Builder pointSize ( float pointSize){
+            this.pointSize = pointSize;
+
+            return this;
+        }
     }
 
-    public TestMesh addObject(IntRef objectIdPointer, ProjectionType projectionType, DrawType drawType, FragmentShaderType fragmentShaderType, BlendType blendType, float lineWidth, JointType jointType, float pointSize, PointType pointType, Vertex... vertices) {
+    public TestMesh addObject(Builder builder) {
+        TestElementPair elementPair = TestPolygonTriangulator.createPolygonTriangulator()
+                .drawType(builder.drawType)
+                .lineWidth(builder.lineWidth)
+                .lineJointType(builder.jointType)
+                .pointSize(builder.pointSize)
+                .pointType(builder.pointType)
+                .projectionType(builder.projectionType)
+                .vertices(builder.vertices)
+                .process()
+                .getResult();
+        int baseVertex = vertexCount;
 
+        for (Vertex vertex : elementPair.vertices) {
+            PERSISTENT_MAPPED_VBO.add(vertex);
+        }
+
+        int startOffset = PERSISTENT_MAPPED_EBO.getIndexCount();
+        for (int index : elementPair.indices) {
+            PERSISTENT_MAPPED_EBO.add(index);
+        }
+
+        vertexCount += elementPair.vertices.length;
+
+        int commandIndex = PERSISTENT_MAPPED_IBO.getCommandCount();
+        PERSISTENT_MAPPED_IBO.add(
+                new DrawElementsIndirectCommand(
+                        elementPair.indices.length,
+                        1,
+                        startOffset,
+                        baseVertex,
+                        commandIndex
+                )
+        );
+
+        int id = GL_OBJECT_POOL.createObject(new GLObjectData(baseVertex, elementPair.vertices.length, startOffset, elementPair.indices.length, PERSISTENT_MAPPED_IBO.getCommandCount() - 1, elementPair));
+        if (builder.objectIdPointer != null) {
+            builder.objectIdPointer.setValue(id);
+        }
+
+        return this;
     }
 
     public TestMesh deleteObject(int objectId) {
@@ -366,148 +475,5 @@ public class TestMesh {
 
     public void cleanup() {
 
-    }
-
-    public interface VerticesStep {
-        DrawTypeStep vertices(Vertex... vertices);
-    }
-
-    public interface DrawTypeStep {
-        BlendTypeStep drawType(DrawType drawType);
-    }
-
-    public interface BlendTypeStep {
-        LineWidthStep blendType(BlendType blendType);
-    }
-
-    public interface LineWidthStep {
-        PointSizeStep lineWidth(float lineWidth);
-    }
-
-    public interface PointSizeStep {
-        JointTypeStep pointSize(float pointSize);
-    }
-
-    public interface JointTypeStep {
-        PointTypeStep jointType(JointType jointType);
-    }
-
-    public interface PointTypeStep {
-        ProjectionTypeStep pointType(PointType pointType);
-    }
-
-    public interface ProjectionTypeStep {
-        TestMesh projectionType(ProjectionType projectionType);
-    }
-
-    public static class ObjectBuilder {
-        protected final IntRef objectIdPointer;
-        protected Vertex[] vertices;
-        protected DrawType drawType;
-        protected BlendType blendType;
-        protected float lineWidth;
-        protected float pointSize;
-        protected JointType jointType;
-        protected PointType pointType;
-        protected ProjectionType projectionType;
-
-        ObjectBuilder(IntRef objectIdPointer) {
-            this.objectIdPointer = objectIdPointer;
-        }
-
-        public static ObjectBuilder createObjectBuilder(IntRef objectIdPointer) {
-            return new ObjectBuilder(objectIdPointer);
-        }
-
-        public ObjectBuilder blendType(BlendType blendType) {
-            this.blendType = blendType;
-
-            return this;
-        }
-
-        public ObjectBuilder drawType(DrawType drawType) {
-            this.drawType = drawType;
-
-            return this;
-        }
-
-        public ObjectBuilder jointType(JointType jointType) {
-            this.jointType = jointType;
-
-            return this;
-        }
-
-        public ObjectBuilder lineWidth(float lineWidth) {
-            this.lineWidth = lineWidth;
-
-            return this;
-        }
-
-        public ObjectBuilder pointType(PointType pointType) {
-            this.pointType = pointType;
-
-            return this;
-        }
-
-        public ObjectBuilder projectionType(ProjectionType projectionType) {
-            this.projectionType = projectionType;
-
-            return this;
-        }
-
-        public ObjectBuilder vertices(Vertex... vertices) {
-            this.vertices = vertices;
-
-            return this;
-        }
-
-        public ObjectBuilder pointSize(float pointSize) {
-            this.pointSize = pointSize;
-
-            return this;
-        }
-
-        public TestMesh addObject() {
-            TestElementPair elementPair = TestPolygonTriangulator.createPolygonTriangulator()
-                    .drawType(drawType)
-                    .lineWidth(lineWidth)
-                    .lineJointType(jointType)
-                    .pointSize(pointSize)
-                    .pointType(pointType)
-                    .projectionType(projectionType)
-                    .vertices(vertices)
-                    .process()
-                    .getResult();
-            int baseVertex = vertexCount;
-
-            for (Vertex vertex : elementPair.vertices) {
-                PERSISTENT_MAPPED_VBO.add(vertex);
-            }
-
-            int startOffset = PERSISTENT_MAPPED_EBO.getIndexCount();
-            for (int index : elementPair.indices) {
-                PERSISTENT_MAPPED_EBO.add(index);
-            }
-
-            vertexCount += elementPair.vertices.length;
-
-            int commandIndex = PERSISTENT_MAPPED_IBO.getCommandCount();
-            PERSISTENT_MAPPED_IBO.add(
-                    new DrawElementsIndirectCommand(
-                            elementPair.indices.length,
-                            1,
-                            startOffset,
-                            baseVertex,
-                            commandIndex
-                    )
-            );
-
-            int id = GL_OBJECT_POOL.createObject(new GLObjectData(baseVertex, elementPair.vertices.length, startOffset, elementPair.indices.length, PERSISTENT_MAPPED_IBO.getCommandCount() - 1, elementPair));
-            if (objectIdPointer != null) {
-                objectIdPointer.setValue(id);
-            }
-
-            return this.addObject();
-        }
     }
 }

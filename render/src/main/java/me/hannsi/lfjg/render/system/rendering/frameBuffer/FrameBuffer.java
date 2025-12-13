@@ -10,7 +10,9 @@ import me.hannsi.lfjg.render.debug.exceptions.frameBuffer.CreatingFrameBufferExc
 import me.hannsi.lfjg.render.debug.exceptions.render.scene.CreatingRenderBufferException;
 import me.hannsi.lfjg.render.debug.exceptions.texture.CreatingTextureException;
 import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.renderers.JointType;
 import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
+import me.hannsi.lfjg.render.system.mesh.TestMesh;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
@@ -80,19 +82,20 @@ public class FrameBuffer {
         vaoRendering = new VAORendering();
 
         MESH.addObject(
-                id,
-                ProjectionType.ORTHOGRAPHIC_PROJECTION,
-                DrawType.QUADS,
-                FragmentShaderType.FRAME_BUFFER,
-                GLPolygon.DEFAULT_BLEND_TYPE,
-                -1f,
-                GLPolygon.DEFAULT_JOINT_TYPE,
-                -1f,
-                GLPolygon.DEFAULT_POINT_TYPE,
-                new Vertex(x, y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                new Vertex(x + width, y, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-                new Vertex(x + width, y + height, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-                new Vertex(x, y + height, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
+                TestMesh.Builder.createBuilder()
+                        .objectIdPointer(id)
+                        .drawType(DrawType.QUADS)
+                        .blendType(GLPolygon.DEFAULT_BLEND_TYPE)
+                        .pointSize(-1f)
+                        .lineWidth(-1f)
+                        .jointType(GLPolygon.DEFAULT_JOINT_TYPE)
+                        .pointType(GLPolygon.DEFAULT_POINT_TYPE)
+                        .vertices(
+                                new Vertex(x, y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                                new Vertex(x + width, y, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+                                new Vertex(x + width, y + height, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
+                                new Vertex(x, y + height, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
+                        )
         );
 
         this.glObject = glObject;

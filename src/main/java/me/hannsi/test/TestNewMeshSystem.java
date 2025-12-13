@@ -10,6 +10,7 @@ import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.JointType;
 import me.hannsi.lfjg.render.renderers.PointType;
+import me.hannsi.lfjg.render.system.mesh.TestMesh;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.rendering.texture.SparseTexture2DArray;
@@ -64,60 +65,55 @@ public class TestNewMeshSystem implements LFJGFrame {
         sparseTexture2DArray = new SparseTexture2DArray(atlas.getAtlasWidth(), atlas.getAtlasHeight(), atlas.getAtlasBuffer());
 
         MESH.addObject(
-                ProjectionType.ORTHOGRAPHIC_PROJECTION,
-                DrawType.QUADS,
-                FragmentShaderType.OBJECT,
-                BlendType.NORMAL,
-                30,
-                JointType.ROUND,
-                10f,
-                PointType.ROUND,
-                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                new Vertex(400, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-                new Vertex(400, 400, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-                new Vertex(0, 400, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
+                TestMesh.Builder.createBuilder()
+                        .drawType(DrawType.QUADS)
+                        .pointSize(30)
+                        .lineWidth(10f)
+                        .vertices(
+                                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                                new Vertex(400, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+                                new Vertex(400, 400, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
+                                new Vertex(0, 400, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
+                        )
         );
+
         MESH.addObject(
-                ProjectionType.ORTHOGRAPHIC_PROJECTION,
-                DrawType.QUADS,
-                FragmentShaderType.OBJECT,
-                BlendType.NORMAL,
-                30,
-                JointType.ROUND,
-                10f,
-                PointType.ROUND,
-                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                new Vertex(300, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-                new Vertex(300, 300, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-                new Vertex(0, 300, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
+                TestMesh.Builder.createBuilder()
+                        .drawType(DrawType.QUADS)
+                        .pointSize(30)
+                        .lineWidth(10f)
+                        .vertices(
+                                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                                new Vertex(300, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+                                new Vertex(300, 300, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
+                                new Vertex(0, 300, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
+                        )
         );
+
         MESH.addObject(
-                ProjectionType.ORTHOGRAPHIC_PROJECTION,
-                DrawType.QUADS,
-                FragmentShaderType.OBJECT,
-                BlendType.NORMAL,
-                30,
-                JointType.ROUND,
-                10f,
-                PointType.ROUND,
-                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                new Vertex(200, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-                new Vertex(200, 200, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-                new Vertex(0, 200, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
+                TestMesh.Builder.createBuilder()
+                        .drawType(DrawType.QUADS)
+                        .pointSize(30)
+                        .lineWidth(10f)
+                        .vertices(
+                                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                                new Vertex(200, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+                                new Vertex(200, 200, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
+                                new Vertex(0, 200, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
+                        )
         );
+
         MESH.addObject(
-                ProjectionType.ORTHOGRAPHIC_PROJECTION,
-                DrawType.QUADS,
-                FragmentShaderType.OBJECT,
-                BlendType.NORMAL,
-                30,
-                JointType.ROUND,
-                10f,
-                PointType.ROUND,
-                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                new Vertex(100, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-                new Vertex(100, 100, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-                new Vertex(0, 100, 0, 0, 0, 255, 255, 0, 1, 0, 0, 0)
+                TestMesh.Builder.createBuilder()
+                        .drawType(DrawType.QUADS)
+                        .pointSize(30)
+                        .lineWidth(10f)
+                        .vertices(
+                                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                                new Vertex(200, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+                                new Vertex(200, 200, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
+                                new Vertex(0, 200, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
+                        )
         );
 
 //        int numObjects = 100;
