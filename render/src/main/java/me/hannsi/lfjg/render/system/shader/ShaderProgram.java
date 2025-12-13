@@ -79,12 +79,12 @@ public class ShaderProgram {
     private void initMatricesUniformBlock() {
         int id = glGenBuffers();
         GL_STATE_CACHE.bindUniformBuffer(id);
-        glBufferStorage(GL_UNIFORM_BUFFER, STD140UniformBlockType.MAT4.getByteSize() * 3L, MeshConstants.DEFAULT_FLAGS_HINT);
+        glBufferStorage(GL_UNIFORM_BUFFER, STD140UniformBlockType.MAT4.getByteSize() * 2L, MeshConstants.DEFAULT_FLAGS_HINT);
 
         ByteBuffer byteBuffer = glMapBufferRange(
                 GL_UNIFORM_BUFFER,
                 0,
-                STD140UniformBlockType.MAT4.getByteSize() * 3L,
+                STD140UniformBlockType.MAT4.getByteSize() * 2L,
                 MeshConstants.DEFAULT_FLAGS_HINT
         );
         if (byteBuffer == null) {
@@ -94,7 +94,7 @@ public class ShaderProgram {
 
         int blockIndex = glGetUniformBlockIndex(programId, "Matrices");
         glUniformBlockBinding(programId, blockIndex, 0);
-        glBindBufferRange(GL_UNIFORM_BUFFER, 0, id, 0, STD140UniformBlockType.MAT4.getByteSize() * 3L);
+        glBindBufferRange(GL_UNIFORM_BUFFER, 0, id, 0, STD140UniformBlockType.MAT4.getByteSize() * 2L);
     }
 
     public void cleanup() {
@@ -170,8 +170,8 @@ public class ShaderProgram {
         GL_STATE_CACHE.useProgram(programId);
     }
 
-    public void updateMatrixUniformBlock(Matrix4f projection, Matrix4f view, Matrix4f model) {
-        Matrix4f[] matrices = new Matrix4f[]{projection, view, model};
+    public void updateMatrixUniformBlock(Matrix4f projection, Matrix4f view) {
+        Matrix4f[] matrices = new Matrix4f[]{projection, view};
 
         for (int i = 0; i < 48; i++) {
             int matrixIndex = i / 16;

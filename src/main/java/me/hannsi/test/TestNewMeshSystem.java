@@ -1,6 +1,7 @@
 package me.hannsi.test;
 
 import me.hannsi.lfjg.core.utils.math.MathHelper;
+import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.core.utils.reflection.reference.LongRef;
 import me.hannsi.lfjg.core.utils.time.Timer;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
@@ -22,6 +23,7 @@ import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static me.hannsi.lfjg.core.Core.frameBufferSize;
 import static me.hannsi.lfjg.core.Core.projection2D;
@@ -34,7 +36,7 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 public class TestNewMeshSystem implements LFJGFrame {
     Timer timer = new Timer();
-    List<LongRef> objectIds = new ArrayList<>();
+    List<IntRef> objectIds = new ArrayList<>();
     SparseTexture2DArray sparseTexture2DArray;
     private Matrix4f modelMatrix;
     private Matrix4f viewMatrix;
@@ -54,114 +56,112 @@ public class TestNewMeshSystem implements LFJGFrame {
 //                .fill()
 //                .update();
 
-        AtlasPacker atlas = new AtlasPacker(2048, 2048, 0, 0, 0);
-        for (int i = 0; i < 4; i++) {
-            int w = 16 + (int) (MathHelper.random() * 50);
-            int h = 16 + (int) (MathHelper.random() * 50);
-            atlas.addSprite("Code: " + i, Sprite.createRandomColor(i, w, h));
-        }
-        atlas.generate();
-
-        sparseTexture2DArray = new SparseTexture2DArray(atlas.getAtlasWidth(), atlas.getAtlasHeight(), atlas.getAtlasBuffer());
-
-        MESH.addObject(
-                TestMesh.Builder.createBuilder()
-                        .drawType(DrawType.QUADS)
-                        .pointSize(30)
-                        .lineWidth(10f)
-                        .vertices(
-                                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                                new Vertex(400, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-                                new Vertex(400, 400, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-                                new Vertex(0, 400, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
-                        )
-        );
-
-        MESH.addObject(
-                TestMesh.Builder.createBuilder()
-                        .drawType(DrawType.QUADS)
-                        .pointSize(30)
-                        .lineWidth(10f)
-                        .vertices(
-                                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                                new Vertex(300, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-                                new Vertex(300, 300, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-                                new Vertex(0, 300, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
-                        )
-        );
-
-        MESH.addObject(
-                TestMesh.Builder.createBuilder()
-                        .drawType(DrawType.QUADS)
-                        .pointSize(30)
-                        .lineWidth(10f)
-                        .vertices(
-                                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                                new Vertex(200, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-                                new Vertex(200, 200, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-                                new Vertex(0, 200, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
-                        )
-        );
-
-        MESH.addObject(
-                TestMesh.Builder.createBuilder()
-                        .drawType(DrawType.QUADS)
-                        .pointSize(30)
-                        .lineWidth(10f)
-                        .vertices(
-                                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-                                new Vertex(200, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-                                new Vertex(200, 200, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-                                new Vertex(0, 200, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
-                        )
-        );
-
-//        int numObjects = 100;
-//        int numVerticesPerStrip = 100;
-//        float minX = 0;
-//        float maxX = 1920;
-//        float minY = 0;
-//        float maxY = 1080;
-//        float minSize = 100.0f;
-//        float maxSize = 500.0f;
-//        Random random = new Random();
-//
-//        for (int i = 0; i < numObjects; i++) {
-//            float x = minX + random.nextFloat() * (maxX - minX);
-//            float y = minY + random.nextFloat() * (maxY - minY);
-//
-//            List<Vertex> vertices = new ArrayList<>();
-//
-//            for (int j = 0; j < numVerticesPerStrip; j++) {
-//                float r = random.nextFloat();
-//                float g = random.nextFloat();
-//                float b = random.nextFloat();
-//
-//                Vertex v = new Vertex(x, y, 0, r, g, b, 0.5f, 0, 0, 0, 0, 1);
-//                vertices.add(v);
-//
-//                float angle = (float) (random.nextFloat() * Math.PI * 2.0);
-//                float step = minSize + random.nextFloat() * (maxSize - minSize);
-//                x += (float) (Math.cos(angle) * step);
-//                y += (float) (Math.sin(angle) * step);
-//            }
-//
-//            LongRef id = new LongRef();
-//            MESH.addObject(
-//                    id,
-//                    ProjectionType.ORTHOGRAPHIC_PROJECTION,
-//                    DrawType.POINTS,
-//                    FragmentShaderType.OBJECT,
-//                    BlendType.NORMAL,
-//                    30,
-//                    JointType.MITER,
-//                    10f,
-//                    PointType.ROUND,
-//                    vertices.toArray(new Vertex[0])
-//            );
-//
-//            objectIds.add(id);
+//        AtlasPacker atlas = new AtlasPacker(2048, 2048, 0, 0, 0);
+//        for (int i = 0; i < 4; i++) {
+//            int w = 16 + (int) (MathHelper.random() * 50);
+//            int h = 16 + (int) (MathHelper.random() * 50);
+//            atlas.addSprite("Code: " + i, Sprite.createRandomColor(i, w, h));
 //        }
+//        atlas.generate();
+//
+//        sparseTexture2DArray = new SparseTexture2DArray(atlas.getAtlasWidth(), atlas.getAtlasHeight(), atlas.getAtlasBuffer());
+//
+//        MESH.addObject(
+//                TestMesh.Builder.createBuilder()
+//                        .drawType(DrawType.QUADS)
+//                        .pointSize(30)
+//                        .lineWidth(10f)
+//                        .vertices(
+//                                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+//                                new Vertex(400, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+//                                new Vertex(400, 400, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
+//                                new Vertex(0, 400, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
+//                        )
+//        );
+//
+//        MESH.addObject(
+//                TestMesh.Builder.createBuilder()
+//                        .drawType(DrawType.QUADS)
+//                        .pointSize(30)
+//                        .lineWidth(10f)
+//                        .vertices(
+//                                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+//                                new Vertex(300, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+//                                new Vertex(300, 300, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
+//                                new Vertex(0, 300, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
+//                        )
+//        );
+//
+//        MESH.addObject(
+//                TestMesh.Builder.createBuilder()
+//                        .drawType(DrawType.QUADS)
+//                        .pointSize(30)
+//                        .lineWidth(10f)
+//                        .vertices(
+//                                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+//                                new Vertex(200, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+//                                new Vertex(200, 200, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
+//                                new Vertex(0, 200, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
+//                        )
+//        );
+//
+//        MESH.addObject(
+//                TestMesh.Builder.createBuilder()
+//                        .drawType(DrawType.QUADS)
+//                        .pointSize(30)
+//                        .lineWidth(10f)
+//                        .vertices(
+//                                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+//                                new Vertex(200, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+//                                new Vertex(200, 200, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
+//                                new Vertex(0, 200, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
+//                        )
+//        );
+
+        int numObjects = 100;
+        int numVerticesPerStrip = 100;
+        float minX = 0;
+        float maxX = 1920;
+        float minY = 0;
+        float maxY = 1080;
+        float minSize = 100.0f;
+        float maxSize = 500.0f;
+        Random random = new Random();
+
+        for (int i = 0; i < numObjects; i++) {
+            float x = minX + random.nextFloat() * (maxX - minX);
+            float y = minY + random.nextFloat() * (maxY - minY);
+
+            List<Vertex> vertices = new ArrayList<>();
+
+            for (int j = 0; j < numVerticesPerStrip; j++) {
+                float r = random.nextFloat();
+                float g = random.nextFloat();
+                float b = random.nextFloat();
+
+                Vertex v = new Vertex(x, y, 0, r, g, b, 0.5f, 0, 0, 0, 0, 1);
+                vertices.add(v);
+
+                float angle = (float) (random.nextFloat() * Math.PI * 2.0);
+                float step = minSize + random.nextFloat() * (maxSize - minSize);
+                x += (float) (Math.cos(angle) * step);
+                y += (float) (Math.sin(angle) * step);
+            }
+
+            IntRef id = new IntRef();
+            MESH.addObject(
+                    TestMesh.Builder.createBuilder()
+                            .objectIdPointer(id)
+                            .drawType(DrawType.POINTS)
+                            .pointSize(30f)
+                            .lineWidth(-1f)
+                            .pointType(PointType.ROUND)
+                            .jointType(JointType.NONE)
+                            .vertices(vertices.toArray(new Vertex[0]))
+            );
+
+            objectIds.add(id);
+        }
 
 //        for (int i = 0; i < numObjects; i++) {
 //            float x = minX + random.nextFloat() * (maxX - minX);
@@ -287,7 +287,7 @@ public class TestNewMeshSystem implements LFJGFrame {
         glActiveTexture(GL_TEXTURE0);
         SHADER_PROGRAM.setUniform("resolution", UploadUniformType.ON_CHANGE, frameBufferSize);
         SHADER_PROGRAM.setUniform("uTextArray", UploadUniformType.ONCE, 0);
-        SHADER_PROGRAM.updateMatrixUniformBlock(projection2D.getProjMatrix(), viewMatrix, modelMatrix.translate(0.1f, 0, 0));
+        SHADER_PROGRAM.updateMatrixUniformBlock(projection2D.getProjMatrix(), viewMatrix);
 
         VAO_RENDERING.draw();
 

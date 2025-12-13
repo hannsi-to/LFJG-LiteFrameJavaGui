@@ -13,8 +13,11 @@ flat out int instanceLayer;
 layout(std140, binding = 0) uniform Matrices{
     mat4 projectionMatrix;
     mat4 viewMatrix;
-    mat4 modelMatrix;
 } matrices;
+
+layout(std430,binding = 3) buffer InstanceModels{
+    mat4[] models;
+} instanceModels;
 
 uniform float italicSkew = 0;
 
@@ -22,11 +25,9 @@ void main(){
     vec4 pos = vec4(position, 1.0);
     pos.x += italicSkew * pos.y;
 
-    gl_Position = matrices.projectionMatrix * matrices.viewMatrix * matrices.modelMatrix * pos;
-
-    outPosition = gl_Position;
+    instanceLayer = gl_InstanceID + gl_BaseInstance;
+    outPosition = gl_Position = matrices.projectionMatrix * matrices.viewMatrix * instanceModels[instanceLayer] * pos;
     outColor = color;
     outTexture = texture;
 
-    instanceLayer = gl_InstanceID + gl_BaseInstance;
 }

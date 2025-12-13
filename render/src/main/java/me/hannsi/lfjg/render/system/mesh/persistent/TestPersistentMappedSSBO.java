@@ -103,6 +103,32 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
         return this;
     }
 
+    public TestPersistentMappedSSBO addMatrix4f(int bindingPoint, float[] matrixElements) {
+        if (matrixElements.length != 16) {
+            throw new IllegalArgumentException("Matrix4f requires exactly 16 float elements.");
+        }
+
+        final int ELEMENT_COUNT = 16;
+        final int MATRIX_BYTES = ELEMENT_COUNT * Float.BYTES;
+
+        SSBOBindingData ssboData = getOrCreateSSBOData(bindingPoint);
+
+        ensureSpaceAndShift(
+                ssboData,
+                (long) ssboData.dataCount * Float.BYTES + MATRIX_BYTES
+        );
+
+        long dst = mappedAddress + ssboData.offset + (long) ssboData.dataCount * Float.BYTES;
+
+        for (int i = 0; i < ELEMENT_COUNT; i++) {
+            UNSAFE.putFloat(dst + (long) i * Float.BYTES, matrixElements[i]);
+        }
+
+        ssboData.dataCount += ELEMENT_COUNT;
+
+        return this;
+    }
+
     private SSBOBindingData getOrCreateSSBOData(int bindingPoint) {
         SSBOBindingData ssboData = bindingDatum.get(bindingPoint);
 

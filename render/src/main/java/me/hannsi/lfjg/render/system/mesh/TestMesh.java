@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.system.mesh;
 
-import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
@@ -10,7 +9,7 @@ import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.JointType;
 import me.hannsi.lfjg.render.renderers.PointType;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
-import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
+import org.joml.Matrix4f;
 
 import java.util.*;
 
@@ -66,6 +65,7 @@ public class TestMesh {
         protected float pointSize = -1f;
         protected JointType jointType = JointType.NONE;
         protected PointType pointType = PointType.SQUARE;
+        protected InstanceData instanceData = new InstanceData(1);
         protected ProjectionType projectionType = ProjectionType.PERSPECTIVE_PROJECTION;
 
         Builder() {
@@ -99,7 +99,7 @@ public class TestMesh {
             return this;
         }
 
-        public Builder lineWidth ( float lineWidth){
+        public Builder lineWidth (float lineWidth){
             this.lineWidth = lineWidth;
 
             return this;
@@ -123,8 +123,14 @@ public class TestMesh {
             return this;
         }
 
-        public Builder pointSize ( float pointSize){
+        public Builder pointSize (float pointSize){
             this.pointSize = pointSize;
+
+            return this;
+        }
+
+        public Builder instanceData(InstanceData instanceData){
+            this.instanceData = instanceData;
 
             return this;
         }
@@ -158,12 +164,16 @@ public class TestMesh {
         PERSISTENT_MAPPED_IBO.add(
                 new DrawElementsIndirectCommand(
                         elementPair.indices.length,
-                        1,
+                        builder.instanceData.instanceCount,
                         startOffset,
                         baseVertex,
                         commandIndex
                 )
         );
+
+        for (Matrix4f model : builder.instanceData.instanceModels) {
+            PERSISTENT_MAPPED_SSBO.addMatrix4f(3,model.get(new float[0]));
+        }
 
         int id = GL_OBJECT_POOL.createObject(new GLObjectData(baseVertex, elementPair.vertices.length, startOffset, elementPair.indices.length, PERSISTENT_MAPPED_IBO.getCommandCount() - 1, elementPair));
         if (builder.objectIdPointer != null) {

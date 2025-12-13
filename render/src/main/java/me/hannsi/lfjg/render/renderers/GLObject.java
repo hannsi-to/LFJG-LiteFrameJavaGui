@@ -93,7 +93,7 @@ public class GLObject implements Cloneable {
 
     private void uploadUniforms() {
         SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.OBJECT.getId());
-        SHADER_PROGRAM.updateMatrixUniformBlock(projection2D.getProjMatrix(), viewMatrix, transform.getModelMatrix());
+        SHADER_PROGRAM.updateMatrixUniformBlock(projection2D.getProjMatrix(), viewMatrix);
         SHADER_PROGRAM.setUniform("resolution", UploadUniformType.ON_CHANGE, frameBufferSize);
         SHADER_PROGRAM.setUniform("textureSampler", UploadUniformType.ONCE, 0);
     }
