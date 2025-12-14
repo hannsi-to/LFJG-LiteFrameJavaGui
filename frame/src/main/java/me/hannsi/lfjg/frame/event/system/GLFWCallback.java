@@ -14,7 +14,6 @@ import java.util.Arrays;
 
 import static me.hannsi.lfjg.core.Core.EVENT_MANAGER;
 import static me.hannsi.lfjg.core.Core.OpenGLDebug.getOpenGLDebug;
-import static me.hannsi.lfjg.frame.LFJGFrameContext.windowSize;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class GLFWCallback implements IFrame {
@@ -149,7 +148,7 @@ public class GLFWCallback implements IFrame {
         GLFWCursorPosCallback cursorPosCallback = new GLFWCursorPosCallback() {
             @Override
             public void invoke(long window, double xpos, double ypos) {
-                EVENT_MANAGER.call(new CursorPosEvent(xpos, windowSize.y() - ypos, window));
+                EVENT_MANAGER.call(new CursorPosEvent(xpos, frame.getWindowHeight() - ypos, window));
             }
         };
         glfwSetCursorPosCallback(frame.getWindowID(), cursorPosCallback);

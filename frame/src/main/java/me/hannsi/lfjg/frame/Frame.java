@@ -2,13 +2,10 @@ package me.hannsi.lfjg.frame;
 
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.event.EventHandler;
-import me.hannsi.lfjg.core.utils.math.MathHelper;
-import me.hannsi.lfjg.core.utils.math.Projection;
 import me.hannsi.lfjg.core.utils.time.TimeCalculator;
 import me.hannsi.lfjg.core.utils.time.TimeSourceUtil;
 import me.hannsi.lfjg.core.utils.toolkit.ANSIFormat;
 import me.hannsi.lfjg.core.utils.toolkit.RuntimeUtil;
-import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.core.utils.type.types.TimeSourceType;
 import me.hannsi.lfjg.frame.event.events.monitor.window.FramebufferSizeEvent;
 import me.hannsi.lfjg.frame.event.events.render.DrawFrameWithOpenGLEvent;
@@ -34,7 +31,6 @@ import static me.hannsi.lfjg.core.Core.GL11.glClear;
 import static me.hannsi.lfjg.core.Core.GL11.glClearColor;
 import static me.hannsi.lfjg.core.Core.LFJGRenderContext.disable;
 import static me.hannsi.lfjg.core.Core.LFJGRenderContext.enable;
-import static me.hannsi.lfjg.frame.LFJGFrameContext.windowSize;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Frame implements IFrame {
@@ -217,7 +213,7 @@ public class Frame implements IFrame {
 
     @EventHandler
     public void framebufferSizeEvent(FramebufferSizeEvent event) {
-        updateLFJGLContext();
+        updateLFJGLContext(frameBufferWidth, frameBufferHeight, windowWidth, windowHeight);
     }
 
     private void finished() {
@@ -230,26 +226,6 @@ public class Frame implements IFrame {
 
     private void cleanupManager() {
         frameSettingManager.cleanup();
-    }
-
-    public void updateLFJGLContext() {
-        frameBufferSize = new Vector2i(getFrameBufferWidth(), getFrameBufferHeight());
-        windowSize = new Vector2i(getWindowWidth(), getWindowHeight());
-        float devicePixelRatioX = (float) frameBufferWidth / windowWidth;
-        float devicePixelRatioY = (float) frameBufferHeight / windowHeight;
-        devicePixelRatio = MathHelper.max(devicePixelRatioX, devicePixelRatioY);
-
-        if (projection2D == null) {
-            projection2D = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, getFrameBufferWidth(), getFrameBufferHeight());
-        } else {
-            projection2D.updateProjMatrix(Projection.DEFAULT_FOV, getFrameBufferWidth(), getFrameBufferHeight(), Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
-        }
-
-        if (projection3D == null) {
-            projection3D = new Projection(ProjectionType.PERSPECTIVE_PROJECTION, getFrameBufferWidth(), getFrameBufferHeight());
-        } else {
-            projection3D.updateProjMatrix(Projection.DEFAULT_FOV, getFrameBufferWidth(), getFrameBufferHeight(), Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
-        }
     }
 
     private void draw() {
