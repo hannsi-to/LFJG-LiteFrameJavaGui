@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static me.hannsi.lfjg.core.Core.OPEN_GL_PARAMETER_NAME_MAP;
-import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
 import static org.lwjgl.opengl.GL43.*;
 
 public class OpenGLDebug {
@@ -25,8 +24,8 @@ public class OpenGLDebug {
 
     public static void getOpenGLDebug(String mainThreadName, int[] severityTypes) {
         if (GL.getCapabilities().OpenGL43) {
-            GL_STATE_CACHE.enable(GL_DEBUG_OUTPUT);
-            GL_STATE_CACHE.enable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+            glEnable(GL_DEBUG_OUTPUT);
+            glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
             glDebugMessageCallback(new GLDebugMessageCallback() {
                 @Override
                 public void invoke(int source, int type, int id, int severity, int length, long message, long userParam) {

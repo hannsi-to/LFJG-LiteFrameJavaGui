@@ -14,9 +14,7 @@ repositories {
 dependencies {
     implementation project(":core")
 
-    if (lwjglVersion == 2) {
-
-    } else if (lwjglVersion == 3) {
+    if (lwjglVersion == 3) {
         // OpenAL
         api "org.lwjgl:lwjgl-openal"
         runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"

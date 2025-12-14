@@ -1,5 +1,6 @@
 package me.hannsi.example.wikiPage9;
 
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.toolkit.UnicodeBlocks;
@@ -21,7 +22,7 @@ public class MainFrame implements LFJGFrame {
 
     @Override
     public void init() {
-        frame.updateLFJGLContext();
+        Core.init(frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), frame.getWindowWidth(), frame.getWindowHeight());
 
         FONT_CACHE.createCache(
                 "Font1",

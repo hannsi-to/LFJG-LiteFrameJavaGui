@@ -30,7 +30,7 @@ repositories {
 dependencies {
     implementation project(":core")
     implementation project(":audio")
-    implementation project(":frame3")
+    implementation project(":frame")
     implementation project(":jcef")
     implementation project(":physic")
     implementation project(":render")

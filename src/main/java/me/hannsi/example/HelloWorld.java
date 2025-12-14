@@ -1,5 +1,6 @@
 package me.hannsi.example;
 
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
@@ -15,7 +16,7 @@ public class HelloWorld implements LFJGFrame {
 
     @Override
     public void init() {
-        frame.updateLFJGLContext();
+        Core.init(frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), frame.getWindowWidth(), frame.getWindowHeight());
 
         glRect1 = GLRect.createGLRect("Rect1")
                 .x1_y1_color1_2p(200, 200, Color.of(255, 0, 255, 255))

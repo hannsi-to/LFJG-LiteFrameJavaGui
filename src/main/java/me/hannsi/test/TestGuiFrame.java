@@ -6,7 +6,6 @@ import me.hannsi.lfjg.core.utils.toolkit.Camera;
 import me.hannsi.lfjg.core.utils.toolkit.KeyboardInfo;
 import me.hannsi.lfjg.core.utils.toolkit.MouseInfo;
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.frame.LFJGFrameContext;
 import me.hannsi.lfjg.frame.event.events.user.*;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
@@ -49,7 +48,6 @@ public class TestGuiFrame implements LFJGFrame {
     private float height;
 
     public static void main(String[] args) {
-        LFJGFrameContext.args = args;
         new TestGuiFrame().setFrame();
     }
 
@@ -60,8 +58,6 @@ public class TestGuiFrame implements LFJGFrame {
     @Override
     public void init() {
         EVENT_MANAGER.register(this);
-
-        frame.updateLFJGLContext();
         mouseInfo = new MouseInfo();
         keyboardInfo = new KeyboardInfo();
         camera = new Camera();

@@ -17,9 +17,7 @@ dependencies {
     implementation "org.apache.logging.log4j:log4j-core:2.23.1"
     annotationProcessor "org.apache.logging.log4j:log4j-core:2.23.1"
 
-    if (lwjglVersion == 2) {
-
-    } else if (lwjglVersion == 3) {
+    if (lwjglVersion == 3) {
         // LWJGL BOM
         api platform("org.lwjgl:lwjgl-bom:$lwjgl3Version")
 

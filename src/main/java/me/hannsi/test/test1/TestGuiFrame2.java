@@ -1,5 +1,6 @@
 package me.hannsi.test.test1;
 
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.math.Projection;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.frame.Frame;
@@ -28,7 +29,7 @@ public class TestGuiFrame2 implements LFJGFrame {
 
     @Override
     public void init() {
-        frame.updateLFJGLContext();
+        Core.init(frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), frame.getWindowWidth(), frame.getWindowHeight());
         projection2D = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, frame.getFrameBufferWidth(), frame.getFrameBufferHeight());
 
 //        glRect1 = new GLRect("Rect1");

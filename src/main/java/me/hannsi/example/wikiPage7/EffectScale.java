@@ -1,5 +1,6 @@
 package me.hannsi.example.wikiPage7;
 
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
@@ -22,7 +23,7 @@ public class EffectScale implements LFJGFrame {
 
     @Override
     public void init() {
-        frame.updateLFJGLContext();
+        Core.init(frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), frame.getWindowWidth(), frame.getWindowHeight());
 
         TEXTURE_CACHE.createCache("Test1", Location.fromResource("texture/test/test1.jpg"));
 

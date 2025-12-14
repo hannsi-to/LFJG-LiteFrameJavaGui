@@ -1,7 +1,6 @@
 package me.hannsi.example.demo;
 
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.frame.LFJGFrameContext;
 import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.setting.settings.SeverityType;
@@ -14,7 +13,6 @@ public class MainFrame implements LFJGFrame {
     SceneSystem sceneSystem;
 
     public static void main(String[] args) {
-        LFJGFrameContext.args = args;
         new MainFrame().setFrame();
     }
 
@@ -24,8 +22,6 @@ public class MainFrame implements LFJGFrame {
 
     @Override
     public void init() {
-        frame.updateLFJGLContext();
-
         sceneSystem = SceneSystem.initSceneSystem()
                 .addScene(new Demo1(frame).getScene())
                 .addScene(new Demo2(frame).getScene())

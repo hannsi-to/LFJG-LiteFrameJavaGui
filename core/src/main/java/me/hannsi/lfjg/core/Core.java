@@ -3,11 +3,13 @@ package me.hannsi.lfjg.core;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.manager.EventManager;
 import me.hannsi.lfjg.core.manager.WorkspaceManager;
+import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.math.Projection;
 import me.hannsi.lfjg.core.utils.reflection.ClassUtil;
 import me.hannsi.lfjg.core.utils.toolkit.FastStringBuilder;
 import me.hannsi.lfjg.core.utils.toolkit.KeyboardInfo;
 import me.hannsi.lfjg.core.utils.toolkit.MouseInfo;
+import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 import sun.misc.Unsafe;
@@ -30,20 +32,26 @@ public class Core {
     public static final String DEFAULT_LFJG_RENDER_SYSTEM_PATH = ".render";
 
     public static final String DEFAULT_LFJG_AUDIO_CORE_CLASS_NAME = ".AudioCore";
-    public static final String DEFAULT_LFJG_FRAME2_CORE_CLASS_NAME = ".Frame2Core";
-    public static final String DEFAULT_LFJG_FRAME3_CORE_CLASS_NAME = ".Frame3Core";
+    public static final String DEFAULT_LFJG_FRAME_CORE_CLASS_NAME = ".FrameCore";
     public static final String DEFAULT_LFJG_JCEF_CORE_CLASS_NAME = ".JCefCore";
     public static final String DEFAULT_LFJG_PHYSIC_CORE_CLASS_NAME = ".PhysicCore";
     public static final String DEFAULT_LFJG_RENDER_CORE_CLASS_NAME = ".RenderCore";
     public static final String DEFAULT_LFJG_RENDER_TEXT_CORE_CLASS_NAME = ".RenderTextCore";
     public static final String DEFAULT_LFJG_RENDER_VIDEO_CORE_CLASS_NAME = ".RenderVideoCore";
 
+    public static final String DEFAULT_LFJG_AUDIO_CONTEXT_CLASS_NAME = ".LFJGAudioContext";
+    public static final String DEFAULT_LFJG_FRAME_CONTEXT_CLASS_NAME = ".LFJGFrameContext";
+    public static final String DEFAULT_LFJG_JCEF_CONTEXT_CLASS_NAME = ".LFJGJCefContext";
+    public static final String DEFAULT_LFJG_PHYSIC_CONTEXT_CLASS_NAME = ".LFJGPhysicContext";
+    public static final String DEFAULT_LFJG_RENDER_CONTEXT_CLASS_NAME = ".LFJGRenderContext";
+    public static final String DEFAULT_LFJG_RENDER_TEXT_CONTEXT_CLASS_NAME = ".LFJGRenderTextContext";
+    public static final String DEFAULT_LFJG_RENDER_VIDEO_CONTEXT_CLASS_NAME = ".LFJGRenderVideoContext";
+
     public static final int LWJGL_VERSION;
 
     public static final boolean ENABLE_LFJG_AUDIO_SYSTEM;
-    public static final boolean ENABLE_LFJG_FRAME_2_SYSTEM;
-    public static final boolean ENABLE_LFJG_FRAME_3_SYSTEM;
-    public static final boolean ENABLE_LFJGJ_CEF_SYSTEM;
+    public static final boolean ENABLE_LFJG_FRAME_SYSTEM;
+    public static final boolean ENABLE_LFJG_JCEF_SYSTEM;
     public static final boolean ENABLE_LFJG_PHYSIC_SYSTEM;
     public static final boolean ENABLE_LFJG_RENDER_SYSTEM;
     public static final boolean ENABLE_LFJG_RENDER_TEXT_SYSTEM;
@@ -80,9 +88,8 @@ public class Core {
         }
 
         ENABLE_LFJG_AUDIO_SYSTEM = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_AUDIO_SYSTEM_PATH + DEFAULT_LFJG_AUDIO_CORE_CLASS_NAME);
-        ENABLE_LFJG_FRAME_2_SYSTEM = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME2_CORE_CLASS_NAME);
-        ENABLE_LFJG_FRAME_3_SYSTEM = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME3_CORE_CLASS_NAME);
-        ENABLE_LFJGJ_CEF_SYSTEM = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_JCEF_SYSTEM_PATH + DEFAULT_LFJG_JCEF_CORE_CLASS_NAME);
+        ENABLE_LFJG_FRAME_SYSTEM = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME_CORE_CLASS_NAME);
+        ENABLE_LFJG_JCEF_SYSTEM = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_JCEF_SYSTEM_PATH + DEFAULT_LFJG_JCEF_CORE_CLASS_NAME);
         ENABLE_LFJG_PHYSIC_SYSTEM = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_PHYSIC_SYSTEM_PATH + DEFAULT_LFJG_PHYSIC_CORE_CLASS_NAME);
         ENABLE_LFJG_RENDER_SYSTEM = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_CORE_CLASS_NAME);
         ENABLE_LFJG_RENDER_TEXT_SYSTEM = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_TEXT_CORE_CLASS_NAME);
@@ -93,17 +100,12 @@ public class Core {
             lfjgAudioServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
             DebugLog.info(instance.getClass(), lfjgAudioServiceData.toString());
         }
-        if (ENABLE_LFJG_FRAME_2_SYSTEM) {
-            Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME2_CORE_CLASS_NAME);
+        if (ENABLE_LFJG_FRAME_SYSTEM) {
+            Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME_CORE_CLASS_NAME);
             lfjgFrameServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
             DebugLog.info(instance.getClass(), lfjgFrameServiceData.toString());
         }
-        if (ENABLE_LFJG_FRAME_3_SYSTEM) {
-            Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME3_CORE_CLASS_NAME);
-            lfjgFrameServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
-            DebugLog.info(instance.getClass(), lfjgFrameServiceData.toString());
-        }
-        if (ENABLE_LFJGJ_CEF_SYSTEM) {
+        if (ENABLE_LFJG_JCEF_SYSTEM) {
             Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_JCEF_SYSTEM_PATH + DEFAULT_LFJG_JCEF_CORE_CLASS_NAME);
             lfjgJCefServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
             DebugLog.info(instance.getClass(), lfjgJCefServiceData.toString());
@@ -180,6 +182,55 @@ public class Core {
                     }
                 }
             }
+        }
+    }
+
+    private static void initLFJGContext() {
+        final String METHOD = "init";
+        if (ENABLE_LFJG_FRAME_SYSTEM) {
+            invokeStaticMethod(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME_CONTEXT_CLASS_NAME, METHOD);
+        }
+        if (ENABLE_LFJG_RENDER_SYSTEM) {
+            invokeStaticMethod(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_CONTEXT_CLASS_NAME, METHOD);
+        }
+        if (ENABLE_LFJG_RENDER_TEXT_SYSTEM) {
+            invokeStaticMethod(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_TEXT_CONTEXT_CLASS_NAME, METHOD);
+        }
+        if (ENABLE_LFJG_RENDER_VIDEO_SYSTEM) {
+            invokeStaticMethod(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_VIDEO_CONTEXT_CLASS_NAME, METHOD);
+        }
+        if (ENABLE_LFJG_AUDIO_SYSTEM) {
+            invokeStaticMethod(DEFAULT_LFJG_PATH + DEFAULT_LFJG_AUDIO_SYSTEM_PATH + DEFAULT_LFJG_AUDIO_CONTEXT_CLASS_NAME, METHOD);
+        }
+        if (ENABLE_LFJG_JCEF_SYSTEM) {
+            invokeStaticMethod(DEFAULT_LFJG_PATH + DEFAULT_LFJG_JCEF_SYSTEM_PATH + DEFAULT_LFJG_JCEF_CONTEXT_CLASS_NAME, METHOD);
+        }
+        if (ENABLE_LFJG_PHYSIC_SYSTEM) {
+            invokeStaticMethod(DEFAULT_LFJG_PATH + DEFAULT_LFJG_PHYSIC_SYSTEM_PATH + DEFAULT_LFJG_PHYSIC_CONTEXT_CLASS_NAME, METHOD);
+        }
+    }
+
+    public static void init(int frameBufferWidth, int frameBufferHeight, int windowWidth, int windowHeight) {
+        updateLFJGLContext(frameBufferWidth, frameBufferHeight, windowWidth, windowHeight);
+        initLFJGContext();
+    }
+
+    public static void updateLFJGLContext(int frameBufferWidth, int frameBufferHeight, int windowWidth, int windowHeight) {
+        float devicePixelRatioX = (float) frameBufferWidth / windowWidth;
+        float devicePixelRatioY = (float) frameBufferHeight / windowHeight;
+
+        frameBufferSize = new Vector2i(frameBufferWidth, frameBufferHeight);
+        devicePixelRatio = MathHelper.max(devicePixelRatioX, devicePixelRatioY);
+        if (projection2D == null) {
+            projection2D = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, frameBufferWidth, frameBufferHeight);
+        } else {
+            projection2D.updateProjMatrix(Projection.DEFAULT_FOV, frameBufferWidth, frameBufferHeight, Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
+        }
+
+        if (projection3D == null) {
+            projection3D = new Projection(ProjectionType.PERSPECTIVE_PROJECTION, frameBufferWidth, frameBufferHeight);
+        } else {
+            projection3D.updateProjMatrix(Projection.DEFAULT_FOV, frameBufferWidth, frameBufferHeight, Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
         }
     }
 
@@ -602,7 +653,7 @@ public class Core {
         public static final int GLFW_KEY_WORLD_2 = getStaticIntField(PACKAGE, "GLFW_KEY_WORLD_2");
 
         public static double glfwGetTime() {
-            if (!ENABLE_LFJG_FRAME_3_SYSTEM) {
+            if (!ENABLE_LFJG_FRAME_SYSTEM) {
                 return -1d;
             }
 

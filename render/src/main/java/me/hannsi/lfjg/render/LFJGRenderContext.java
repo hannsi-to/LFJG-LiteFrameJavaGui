@@ -16,20 +16,20 @@ import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import static me.hannsi.lfjg.core.SystemSetting.*;
 
 public class LFJGRenderContext {
-    public static final IdPool ID_POOL;
-    public static final GLObjectPool GL_OBJECT_POOL;
-    public static final Camera MAIN_CAMERA;
-    public static final ShaderProgram SHADER_PROGRAM;
-    public static final TestPersistentMappedVBO PERSISTENT_MAPPED_VBO;
-    public static final TestPersistentMappedEBO PERSISTENT_MAPPED_EBO;
-    public static final TestPersistentMappedIBO PERSISTENT_MAPPED_IBO;
-    public static final TestPersistentMappedSSBO PERSISTENT_MAPPED_SSBO;
-    public static final TestMesh MESH;
-    public static final VAORendering VAO_RENDERING;
-    public static final GLStateCache GL_STATE_CACHE;
-    public static final TextureCache TEXTURE_CACHE;
+    public static IdPool ID_POOL;
+    public static GLObjectPool GL_OBJECT_POOL;
+    public static Camera MAIN_CAMERA;
+    public static ShaderProgram SHADER_PROGRAM;
+    public static TestPersistentMappedVBO PERSISTENT_MAPPED_VBO;
+    public static TestPersistentMappedEBO PERSISTENT_MAPPED_EBO;
+    public static TestPersistentMappedIBO PERSISTENT_MAPPED_IBO;
+    public static TestPersistentMappedSSBO PERSISTENT_MAPPED_SSBO;
+    public static TestMesh MESH;
+    public static VAORendering VAO_RENDERING;
+    public static GLStateCache GL_STATE_CACHE;
+    public static TextureCache TEXTURE_CACHE;
 
-    static {
+    public static void init() {
         ID_POOL = new IdPool();
         GL_OBJECT_POOL = new GLObjectPool();
 

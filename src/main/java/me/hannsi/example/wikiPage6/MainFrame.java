@@ -1,5 +1,6 @@
 package me.hannsi.example.wikiPage6;
 
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.frame.Frame;
@@ -19,7 +20,7 @@ public class MainFrame implements LFJGFrame {
 
     @Override
     public void init() {
-        frame.updateLFJGLContext();
+        Core.init(frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), frame.getWindowWidth(), frame.getWindowHeight());
 
         glRect1 = GLRect.createGLRect("Rect1")
                 .x1_y1_color1_2p(500, 500, Color.RED)

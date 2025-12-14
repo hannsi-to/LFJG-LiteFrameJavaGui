@@ -1,5 +1,6 @@
 package me.hannsi.example.wikiPage11;
 
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
@@ -16,7 +17,7 @@ public class MainFrame implements LFJGFrame {
 
     @Override
     public void init() {
-        frame.updateLFJGLContext();
+        Core.init(frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), frame.getWindowWidth(), frame.getWindowHeight());
 
         glBezierLine = GLBezierLine.createGLBezierLine("GLBezierLine1")
                 .addControlPoint(new GLBezierLine.BezierPoint(new Vector2f(500, 500), Color.WHITE))

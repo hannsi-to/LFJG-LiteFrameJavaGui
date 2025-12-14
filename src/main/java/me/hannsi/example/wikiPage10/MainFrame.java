@@ -1,5 +1,6 @@
 package me.hannsi.example.wikiPage10;
 
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
@@ -15,7 +16,7 @@ public class MainFrame implements LFJGFrame {
 
     @Override
     public void init() {
-        frame.updateLFJGLContext();
+        Core.init(frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), frame.getWindowWidth(), frame.getWindowHeight());
 
         glVideo = GLVideo.createGLVideo("TestVideo1")
                 .location(Location.fromResource("video/sample.mp4"))

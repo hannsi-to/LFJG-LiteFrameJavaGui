@@ -1,10 +1,8 @@
 package me.hannsi.test;
 
-import me.hannsi.lfjg.core.utils.math.MathHelper;
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
-import me.hannsi.lfjg.core.utils.reflection.reference.LongRef;
 import me.hannsi.lfjg.core.utils.time.Timer;
-import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
@@ -15,9 +13,6 @@ import me.hannsi.lfjg.render.system.mesh.TestMesh;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.rendering.texture.SparseTexture2DArray;
-import me.hannsi.lfjg.render.system.rendering.texture.atlas.AtlasPacker;
-import me.hannsi.lfjg.render.system.rendering.texture.atlas.Sprite;
-import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
 
@@ -26,7 +21,6 @@ import java.util.List;
 import java.util.Random;
 
 import static me.hannsi.lfjg.core.Core.frameBufferSize;
-import static me.hannsi.lfjg.core.Core.projection2D;
 import static me.hannsi.lfjg.frame.LFJGFrameContext.frame;
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
@@ -48,7 +42,7 @@ public class TestNewMeshSystem implements LFJGFrame {
 
     @Override
     public void init() {
-        frame.updateLFJGLContext();
+        Core.init(frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), frame.getWindowWidth(), frame.getWindowHeight());
 
 //        glRect = GLRect.createGLRect("GLRect1")
 //                .x1_y1_color1_2p(0, 0, Color.RED)
@@ -287,7 +281,6 @@ public class TestNewMeshSystem implements LFJGFrame {
         glActiveTexture(GL_TEXTURE0);
         SHADER_PROGRAM.setUniform("resolution", UploadUniformType.ON_CHANGE, frameBufferSize);
         SHADER_PROGRAM.setUniform("uTextArray", UploadUniformType.ONCE, 0);
-        SHADER_PROGRAM.updateMatrixUniformBlock(projection2D.getProjMatrix(), viewMatrix);
 
         VAO_RENDERING.draw();
 

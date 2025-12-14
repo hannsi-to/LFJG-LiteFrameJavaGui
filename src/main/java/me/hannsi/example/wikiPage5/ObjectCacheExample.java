@@ -1,5 +1,6 @@
 package me.hannsi.example.wikiPage5;
 
+import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
@@ -20,7 +21,7 @@ public class ObjectCacheExample implements LFJGFrame {
 
     @Override
     public void init() {
-        frame.updateLFJGLContext();
+        Core.init(frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), frame.getWindowWidth(), frame.getWindowHeight());
 
         glRect1 = GLRect.createGLRect("Rect1")
                 .x1_y1_color1_2p(0, 0, Color.RED)
