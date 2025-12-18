@@ -57,6 +57,11 @@ public class GLStateCache {
     private float lastLineWidth = -1f;
     private float lastPointSize = -1f;
     private int lastSampleMaskValue = -1;
+    private int lastBufferRangeTarget = -1;
+    private int lastBufferRangeIndex = -1;
+    private int lastBufferRangeBuffer = -1;
+    private long lastBufferRangeOffset = -1;
+    private long lastBufferRangeSize = -1;
 
     public GLStateCache() {
         EVENT_MANAGER.register(this);
@@ -64,51 +69,57 @@ public class GLStateCache {
 
     public void enable(int cap) {
         Boolean enabled = STATE_CACHE.get(cap);
-        if (enabled == null || !enabled) {
-            glEnable(cap);
-            STATE_CACHE.put(cap, true);
+        if (enabled != null && enabled) {
+            return;
         }
+        glEnable(cap);
+        STATE_CACHE.put(cap, true);
     }
 
     public void disable(int cap) {
         Boolean enabled = STATE_CACHE.get(cap);
-        if (enabled == null || enabled) {
-            glDisable(cap);
-            STATE_CACHE.put(cap, false);
+        if (enabled != null && !enabled) {
+            return;
         }
+        glDisable(cap);
+        STATE_CACHE.put(cap, false);
     }
 
     public void blendFunc(int sFactor, int dFactor) {
-        if (lastBlendSrc != sFactor || lastBlendDst != dFactor) {
-            glBlendFunc(sFactor, dFactor);
-            lastBlendSrc = sFactor;
-            lastBlendDst = dFactor;
+        if (lastBlendSrc == sFactor && lastBlendDst == dFactor) {
+            return;
         }
+        glBlendFunc(sFactor, dFactor);
+        lastBlendSrc = sFactor;
+        lastBlendDst = dFactor;
     }
 
     public void setBlendEquation(int equation) {
-        if (lastBlendEquation != equation) {
-            glBlendEquation(equation);
-            lastBlendEquation = equation;
+        if (lastBlendEquation == equation) {
+            return;
         }
+        glBlendEquation(equation);
+        lastBlendEquation = equation;
     }
 
     public void activeTexture(int texture) {
-        if (lastActiveTexture != texture) {
-            glActiveTexture(texture);
-            lastActiveTexture = texture;
+        if (lastActiveTexture == texture) {
+            return;
         }
+        glActiveTexture(texture);
+        lastActiveTexture = texture;
     }
 
     public void bindTexture(int target, int texture) {
         int lastTarget = lastTexture[0];
         int lastTextureId = lastTexture[1];
-        if (lastTarget != target || lastTextureId != texture) {
-            glBindTexture(target, texture);
-
-            lastTexture[0] = target;
-            lastTexture[1] = texture;
+        if (lastTarget == target && lastTextureId == texture) {
+            return;
         }
+        glBindTexture(target, texture);
+
+        lastTexture[0] = target;
+        lastTexture[1] = texture;
     }
 
     public void deleteTexture(int target, int texture) {
@@ -122,10 +133,11 @@ public class GLStateCache {
     }
 
     public void useProgram(int program) {
-        if (lastShaderProgram != program) {
-            glUseProgram(program);
-            lastShaderProgram = program;
+        if (lastShaderProgram == program) {
+            return;
         }
+        glUseProgram(program);
+        lastShaderProgram = program;
     }
 
     public void deleteProgram(int program) {
@@ -138,10 +150,11 @@ public class GLStateCache {
     }
 
     public void bindFrameBuffer(int frameBuffer) {
-        if (lastFrameBuffer != frameBuffer) {
-            glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-            lastFrameBuffer = frameBuffer;
+        if (lastFrameBuffer == frameBuffer) {
+            return;
         }
+        glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+        lastFrameBuffer = frameBuffer;
     }
 
     public void deleteFrameBuffer(int frameBuffer) {
@@ -154,10 +167,11 @@ public class GLStateCache {
     }
 
     public void bindRenderBuffer(int renderBuffer) {
-        if (lastRenderBuffer != renderBuffer) {
-            glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
-            lastRenderBuffer = renderBuffer;
+        if (lastRenderBuffer == renderBuffer) {
+            return;
         }
+        glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
+        lastRenderBuffer = renderBuffer;
     }
 
     public void deleteRenderBuffer(int renderBuffer) {
@@ -170,24 +184,27 @@ public class GLStateCache {
     }
 
     public void bindDrawFrameBuffer(int frameBuffer) {
-        if (lastDrawFrameBuffer != frameBuffer) {
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBuffer);
-            lastDrawFrameBuffer = frameBuffer;
+        if (lastDrawFrameBuffer == frameBuffer) {
+            return;
         }
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBuffer);
+        lastDrawFrameBuffer = frameBuffer;
     }
 
     public void bindReadFrameBuffer(int frameBuffer) {
-        if (lastReadFrameBuffer != frameBuffer) {
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer);
-            lastReadFrameBuffer = frameBuffer;
+        if (lastReadFrameBuffer == frameBuffer) {
+            return;
         }
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer);
+        lastReadFrameBuffer = frameBuffer;
     }
 
     public void bindVertexArray(int array) {
-        if (lastVertexArray != array) {
-            glBindVertexArray(array);
-            lastVertexArray = array;
+        if (lastVertexArray == array) {
+            return;
         }
+        glBindVertexArray(array);
+        lastVertexArray = array;
     }
 
     public void bindVertexArrayForce(int array) {
@@ -205,10 +222,11 @@ public class GLStateCache {
     }
 
     public void bindIndirectBuffer(int buffer) {
-        if (lastDrawIndirectBuffer != buffer) {
-            glBindBuffer(GL_DRAW_INDIRECT_BUFFER, buffer);
-            lastDrawIndirectBuffer = buffer;
+        if (lastDrawIndirectBuffer == buffer) {
+            return;
         }
+        glBindBuffer(GL_DRAW_INDIRECT_BUFFER, buffer);
+        lastDrawIndirectBuffer = buffer;
     }
 
     public void bindIndirectBufferForce(int buffer) {
@@ -226,10 +244,11 @@ public class GLStateCache {
     }
 
     public void bindElementArrayBuffer(int buffer) {
-        if (lastElementArrayBuffer != buffer) {
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
-            lastElementArrayBuffer = buffer;
+        if (lastElementArrayBuffer == buffer) {
+            return;
         }
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+        lastElementArrayBuffer = buffer;
     }
 
     public void bindElementArrayBufferForce(int buffer) {
@@ -246,10 +265,11 @@ public class GLStateCache {
     }
 
     public void bindArrayBuffer(int buffer) {
-        if (lastArrayBuffer != buffer) {
-            glBindBuffer(GL_ARRAY_BUFFER, buffer);
-            lastArrayBuffer = buffer;
+        if (lastArrayBuffer == buffer) {
+            return;
         }
+        glBindBuffer(GL_ARRAY_BUFFER, buffer);
+        lastArrayBuffer = buffer;
     }
 
     public void deleteArrayBuffer(int buffer) {
@@ -261,10 +281,11 @@ public class GLStateCache {
     }
 
     public void bindUniformBuffer(int buffer) {
-        if (lastUniformBuffer != buffer) {
-            glBindBuffer(GL_UNIFORM_BUFFER, buffer);
-            lastUniformBuffer = buffer;
+        if (lastUniformBuffer == buffer) {
+            return;
         }
+        glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+        lastUniformBuffer = buffer;
     }
 
     public void deleteUniformBuffer(int buffer) {
@@ -272,14 +293,22 @@ public class GLStateCache {
             bindUniformBuffer(0);
             lastUniformBuffer = -1;
         }
+
+        if (lastBufferRangeBuffer == buffer) {
+            lastBufferRangeBuffer = -1;
+            lastBufferRangeOffset = -1;
+            lastBufferRangeSize = -1;
+        }
+
         glDeleteBuffers(buffer);
     }
 
     public void bindShaderStorageBuffer(int buffer) {
-        if (lastShaderStorageBuffer != buffer) {
-            glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
-            lastShaderStorageBuffer = buffer;
+        if (lastShaderStorageBuffer == buffer) {
+            return;
         }
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
+        lastShaderStorageBuffer = buffer;
     }
 
     public void deleteShaderStorageBuffer(int buffer) {
@@ -287,6 +316,14 @@ public class GLStateCache {
             bindShaderStorageBuffer(0);
             lastShaderStorageBuffer = -1;
         }
+
+        if (lastBufferRangeBuffer == buffer) {
+            lastBufferRangeBuffer = -1;
+            lastBufferRangeOffset = -1;
+            lastBufferRangeSize = -1;
+        }
+
+        glDeleteBuffers(buffer);
     }
 
     public void clearColor(float red, float green, float blue, float alpha) {
@@ -295,14 +332,15 @@ public class GLStateCache {
         float lastBlue = lastClearColor[2];
         float lastAlpha = lastClearColor[3];
 
-        if (lastRed != red || lastGreen != green || lastBlue != blue || lastAlpha != alpha) {
-            glClearColor(red, green, blue, alpha);
-
-            lastClearColor[0] = red;
-            lastClearColor[1] = green;
-            lastClearColor[2] = blue;
-            lastClearColor[3] = alpha;
+        if (lastRed == red && lastGreen == green && lastBlue == blue && lastAlpha == alpha) {
+            return;
         }
+        glClearColor(red, green, blue, alpha);
+
+        lastClearColor[0] = red;
+        lastClearColor[1] = green;
+        lastClearColor[2] = blue;
+        lastClearColor[3] = alpha;
     }
 
     public void colorMask(boolean red, boolean green, boolean blue, boolean alpha) {
@@ -311,14 +349,15 @@ public class GLStateCache {
         boolean lastBlue = lastColorMask[2];
         boolean lastAlpha = lastColorMask[3];
 
-        if (lastRed != red || lastGreen != green || lastBlue != blue || lastAlpha != alpha) {
-            glColorMask(red, green, blue, alpha);
-
-            lastColorMask[0] = red;
-            lastColorMask[1] = green;
-            lastColorMask[2] = blue;
-            lastColorMask[3] = alpha;
+        if (lastRed == red && lastGreen == green && lastBlue == blue && lastAlpha == alpha) {
+            return;
         }
+        glColorMask(red, green, blue, alpha);
+
+        lastColorMask[0] = red;
+        lastColorMask[1] = green;
+        lastColorMask[2] = blue;
+        lastColorMask[3] = alpha;
     }
 
     public void stencilFunc(int func, int ref, int mask) {
@@ -326,13 +365,14 @@ public class GLStateCache {
         int lastRef = lastStencilFunc[1];
         int lastMask = lastStencilFunc[2];
 
-        if (lastFunc != func || lastRef != ref || lastMask != mask) {
-            glStencilFunc(func, ref, mask);
-
-            lastStencilFunc[0] = func;
-            lastStencilFunc[1] = ref;
-            lastStencilFunc[2] = mask;
+        if (lastFunc == func && lastRef == ref && lastMask == mask) {
+            return;
         }
+        glStencilFunc(func, ref, mask);
+
+        lastStencilFunc[0] = func;
+        lastStencilFunc[1] = ref;
+        lastStencilFunc[2] = mask;
     }
 
     public void stencilOp(int sfail, int dpfail, int dppass) {
@@ -340,120 +380,149 @@ public class GLStateCache {
         int lastDPFail = lastStencilOp[1];
         int lastDPPass = lastStencilOp[2];
 
-        if (lastSFail != sfail || lastDPFail != dpfail || lastDPPass != dppass) {
-            glStencilOp(sfail, dpfail, dppass);
-
-            lastStencilOp[0] = sfail;
-            lastStencilOp[1] = dpfail;
-            lastStencilOp[2] = dppass;
+        if (lastSFail == sfail && lastDPFail == dpfail && lastDPPass == dppass) {
+            return;
         }
+        glStencilOp(sfail, dpfail, dppass);
+
+        lastStencilOp[0] = sfail;
+        lastStencilOp[1] = dpfail;
+        lastStencilOp[2] = dppass;
     }
 
     public void clearDepth(double depth) {
-        if (lastClearDepth != depth) {
-            glClearDepth(depth);
-            lastClearDepth = depth;
+        if (lastClearDepth == depth) {
+            return;
         }
+        glClearDepth(depth);
+        lastClearDepth = depth;
     }
 
     public void clearStencil(int s) {
-        if (lastClearStencil != s) {
-            glClearStencil(s);
-            lastClearStencil = s;
+        if (lastClearStencil == s) {
+            return;
         }
+        glClearStencil(s);
+        lastClearStencil = s;
     }
 
     public void depthMask(boolean flag) {
-        if (lastDepthMask != flag) {
-            glDepthMask(flag);
-            lastDepthMask = flag;
+        if (lastDepthMask == flag) {
+            return;
         }
+        glDepthMask(flag);
+        lastDepthMask = flag;
     }
 
     public void depthFunc(int func) {
-        if (lastDepthFunc != func) {
-            glDepthFunc(func);
-            lastDepthFunc = func;
+        if (lastDepthFunc == func) {
+            return;
         }
+        glDepthFunc(func);
+        lastDepthFunc = func;
     }
 
     public void cullFace(int mode) {
-        if (lastCullFace != mode) {
-            glCullFace(mode);
-            lastCullFace = mode;
+        if (lastCullFace == mode) {
+            return;
         }
+        glCullFace(mode);
+        lastCullFace = mode;
     }
 
     public void frontFace(int dir) {
-        if (lastFrontFace != dir) {
-            glFrontFace(dir);
-            lastFrontFace = dir;
+        if (lastFrontFace == dir) {
+            return;
         }
+        glFrontFace(dir);
+        lastFrontFace = dir;
     }
 
     public void polygonMode(int face, int mode) {
-        if (lastPolygonMode[0] != face || lastPolygonMode[1] != mode) {
-            glPolygonMode(face, mode);
-            lastPolygonMode[0] = face;
-            lastPolygonMode[1] = mode;
+        if (lastPolygonMode[0] == face && lastPolygonMode[1] == mode) {
+            return;
         }
+        glPolygonMode(face, mode);
+        lastPolygonMode[0] = face;
+        lastPolygonMode[1] = mode;
     }
 
     public void polygonOffset(float factor, float units) {
-        if (lastPolygonOffset[0] != factor || lastPolygonOffset[1] != units) {
-            glPolygonOffset(factor, units);
-            lastPolygonOffset[0] = factor;
-            lastPolygonOffset[1] = units;
+        if (lastPolygonOffset[0] == factor && lastPolygonOffset[1] == units) {
+            return;
         }
+        glPolygonOffset(factor, units);
+        lastPolygonOffset[0] = factor;
+        lastPolygonOffset[1] = units;
     }
 
     public void lineWidth(float width) {
-        if (lastLineWidth != width) {
-            glLineWidth(width);
-            lastLineWidth = width;
+        if (lastLineWidth == width) {
+            return;
         }
+        glLineWidth(width);
+        lastLineWidth = width;
     }
 
     public void pointSize(float size) {
-        if (lastPointSize != size) {
-            glPointSize(size);
-            lastPointSize = size;
+        if (lastPointSize == size) {
+            return;
         }
+        glPointSize(size);
+        lastPointSize = size;
     }
 
     public void scissor(int x, int y, int width, int height) {
-        if (lastScissorBox[0] != x || lastScissorBox[1] != y || lastScissorBox[2] != width || lastScissorBox[3] != height) {
-            glScissor(x, y, width, height);
-            lastScissorBox[0] = x;
-            lastScissorBox[1] = y;
-            lastScissorBox[2] = width;
-            lastScissorBox[3] = height;
+        if (lastScissorBox[0] == x && lastScissorBox[1] == y && lastScissorBox[2] == width && lastScissorBox[3] == height) {
+            return;
         }
+        glScissor(x, y, width, height);
+        lastScissorBox[0] = x;
+        lastScissorBox[1] = y;
+        lastScissorBox[2] = width;
+        lastScissorBox[3] = height;
     }
 
     public void viewport(int x, int y, int width, int height) {
-        if (lastViewport[0] != x || lastViewport[1] != y || lastViewport[2] != width || lastViewport[3] != height) {
-            glViewport(x, y, width, height);
-            lastViewport[0] = x;
-            lastViewport[1] = y;
-            lastViewport[2] = width;
-            lastViewport[3] = height;
+        if (lastViewport[0] == x && lastViewport[1] == y && lastViewport[2] == width && lastViewport[3] == height) {
+            return;
         }
+        glViewport(x, y, width, height);
+        lastViewport[0] = x;
+        lastViewport[1] = y;
+        lastViewport[2] = width;
+        lastViewport[3] = height;
     }
 
     public void depthRange(float near, float far) {
-        if (lastDepthRange[0] != near || lastDepthRange[1] != far) {
-            glDepthRange(near, far);
-            lastDepthRange[0] = near;
-            lastDepthRange[1] = far;
+        if (lastDepthRange[0] == near && lastDepthRange[1] == far) {
+            return;
         }
+        glDepthRange(near, far);
+        lastDepthRange[0] = near;
+        lastDepthRange[1] = far;
     }
 
     public void sampleMaski(int maskNumber, int mask) {
-        if (lastSampleMaskValue != mask) {
-            glSampleMaski(maskNumber, mask);
-            lastSampleMaskValue = mask;
+        if (lastSampleMaskValue == mask) {
+            return;
         }
+        glSampleMaski(maskNumber, mask);
+        lastSampleMaskValue = mask;
+    }
+
+    public void bindBufferRange(int target, int index, int buffer, long offset, long size) {
+        if (lastBufferRangeTarget == target && lastBufferRangeIndex == index && lastBufferRangeBuffer == buffer && lastBufferRangeOffset == offset && lastBufferRangeSize == size) {
+            return;
+        }
+
+        glBindBufferRange(target, index, buffer, offset, size);
+
+        lastBufferRangeTarget = target;
+        lastBufferRangeIndex = index;
+        lastBufferRangeBuffer = buffer;
+        lastBufferRangeOffset = offset;
+        lastBufferRangeSize = size;
     }
 
     @EventHandler
@@ -587,6 +656,13 @@ public class GLStateCache {
                 break;
             case "glSampleMaski":
                 lastSampleMaskValue = (int) args[1];
+                break;
+            case "glBindBufferRange":
+                lastBufferRangeTarget = (int) args[0];
+                lastBufferRangeIndex = (int) args[1];
+                lastBufferRangeBuffer = (int) args[2];
+                lastBufferRangeOffset = (long) args[3];
+                lastBufferRangeSize = (long) args[4];
                 break;
         }
     }
