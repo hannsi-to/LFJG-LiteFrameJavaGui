@@ -8,6 +8,7 @@ import me.hannsi.lfjg.core.utils.toolkit.ANSIFormat;
 import me.hannsi.lfjg.core.utils.toolkit.RuntimeUtil;
 import me.hannsi.lfjg.core.utils.type.types.TimeSourceType;
 import me.hannsi.lfjg.frame.event.events.monitor.window.FramebufferSizeEvent;
+import me.hannsi.lfjg.frame.event.events.monitor.window.WindowSizeEvent;
 import me.hannsi.lfjg.frame.event.events.render.DrawFrameWithOpenGLEvent;
 import me.hannsi.lfjg.frame.event.system.GLFWCallback;
 import me.hannsi.lfjg.frame.setting.settings.*;
@@ -209,6 +210,11 @@ public class Frame implements IFrame {
         finishTime = TimeSourceUtil.getTimeMills(timeSourceType);
 
         finished();
+    }
+
+    @EventHandler
+    public void windowSizeEvent(WindowSizeEvent event) {
+        updateLFJGLContext(frameBufferWidth, frameBufferHeight, windowWidth, windowHeight);
     }
 
     @EventHandler
