@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 import sun.misc.Unsafe;
 
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
@@ -221,16 +222,17 @@ public class Core {
 
         frameBufferSize = new Vector2i(frameBufferWidth, frameBufferHeight);
         devicePixelRatio = MathHelper.max(devicePixelRatioX, devicePixelRatioY);
+
         if (projection2D == null) {
-            projection2D = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, frameBufferWidth, frameBufferHeight);
+            projection2D = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, Projection.DEFAULT_FOV, frameBufferWidth, frameBufferHeight, Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
         } else {
-            projection2D.updateProjMatrix(Projection.DEFAULT_FOV, frameBufferWidth, frameBufferHeight, Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
+            projection2D.updateProjMatrix(ProjectionType.ORTHOGRAPHIC_PROJECTION, Projection.DEFAULT_FOV, frameBufferWidth, frameBufferHeight, Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
         }
 
         if (projection3D == null) {
-            projection3D = new Projection(ProjectionType.PERSPECTIVE_PROJECTION, frameBufferWidth, frameBufferHeight);
+            projection3D = new Projection(ProjectionType.PERSPECTIVE_PROJECTION, Projection.DEFAULT_FOV, frameBufferWidth, frameBufferHeight, Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
         } else {
-            projection3D.updateProjMatrix(Projection.DEFAULT_FOV, frameBufferWidth, frameBufferHeight, Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
+            projection3D.updateProjMatrix(ProjectionType.PERSPECTIVE_PROJECTION, Projection.DEFAULT_FOV, frameBufferWidth, frameBufferHeight, Projection.DEFAULT_Z_FAR, Projection.DEFAULT_Z_NEAR);
         }
     }
 
@@ -369,6 +371,7 @@ public class Core {
 
     public static class GL11 {
         public static final String PACKAGE = "org.lwjgl.opengl.GL11";
+        public static final GLClearCall glClear = ClassUtil.bindStatic(PACKAGE, "glClear", GLClearCall.class, MethodType.methodType(void.class, int.class));
 
         public static void glClearColor(float red, float green, float blue, float alpha) {
             if (!ENABLE_LFJG_RENDER_SYSTEM) {
@@ -383,55 +386,7 @@ public class Core {
                 return;
             }
 
-            Object ignore = invokeStaticMethod(PACKAGE, "glClear", mask);
-        }
-
-        public static void glViewport(int x, int y, int w, int h) {
-            if (!ENABLE_LFJG_RENDER_SYSTEM) {
-                return;
-            }
-
-            Object ignore = invokeStaticMethod(PACKAGE, "glViewport", x, y, w, h);
-        }
-
-        public static void glMatrixMode(int mode) {
-            if (!ENABLE_LFJG_RENDER_SYSTEM) {
-                return;
-            }
-
-            Object ignore = invokeStaticMethod(PACKAGE, "glMatrixMode", mode);
-        }
-
-        public static void glLoadIdentity() {
-            if (!ENABLE_LFJG_RENDER_SYSTEM) {
-                return;
-            }
-
-            Object ignore = invokeStaticMethod(PACKAGE, "glLoadIdentity");
-        }
-
-        public static void glOrtho(double l, double r, double b, double t, double n, double f) {
-            if (!ENABLE_LFJG_RENDER_SYSTEM) {
-                return;
-            }
-
-            Object ignore = invokeStaticMethod(PACKAGE, "glOrtho", l, r, b, t, n, f);
-        }
-
-        public static void glPushAttrib(int mask) {
-            if (!ENABLE_LFJG_RENDER_SYSTEM) {
-                return;
-            }
-
-            Object ignore = invokeStaticMethod(PACKAGE, "glPushAttrib", mask);
-        }
-
-        public static void glPopAttrib() {
-            if (!ENABLE_LFJG_RENDER_SYSTEM) {
-                return;
-            }
-
-            Object ignore = invokeStaticMethod(PACKAGE, "glPopAttrib");
+            glClear.call(mask);
         }
 
         public static void glDeleteTextures(int texture) {
@@ -453,14 +408,6 @@ public class Core {
             }
 
             return (int) result;
-        }
-
-        public static void glBindTexture(int target, int texture) {
-            if (!ENABLE_LFJG_RENDER_SYSTEM) {
-                return;
-            }
-
-            Object ignore = invokeStaticMethod(PACKAGE, "glBindTexture", target, texture);
         }
 
         public static void glPixelStorei(int pname, int param) {
@@ -485,6 +432,11 @@ public class Core {
             }
 
             Object ignore = invokeStaticMethod(PACKAGE, "glTexParameteri", target, pname, param);
+        }
+
+        @FunctionalInterface
+        public interface GLClearCall {
+            void call(int mask);
         }
     }
 
