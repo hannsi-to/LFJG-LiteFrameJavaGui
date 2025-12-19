@@ -28,6 +28,13 @@ public class GLFWCallback implements IFrame {
         GLFWWindowSizeCallback windowSizeCallback = new GLFWWindowSizeCallback() {
             @Override
             public void invoke(long window, int width, int height) {
+                if (width == 0 || height == 0) {
+                    return;
+                }
+
+                frame.setWindowWidth(width);
+                frame.setWindowHeight(height);
+
                 EVENT_MANAGER.call(new WindowSizeEvent(window, width, height));
             }
         };
@@ -52,14 +59,14 @@ public class GLFWCallback implements IFrame {
         GLFWFramebufferSizeCallback framebufferSizeCallback = new GLFWFramebufferSizeCallback() {
             @Override
             public void invoke(long window, int width, int height) {
-                EVENT_MANAGER.call(new FramebufferSizeEvent(window, width, height));
-
                 if (width == 0 || height == 0) {
                     return;
                 }
 
                 frame.setFrameBufferWidth(width);
                 frame.setFrameBufferHeight(height);
+
+                EVENT_MANAGER.call(new FramebufferSizeEvent(window, width, height));
             }
         };
         glfwSetFramebufferSizeCallback(frame.getWindowID(), framebufferSizeCallback);

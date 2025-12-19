@@ -65,6 +65,8 @@ public class GLStateCache {
 
     public GLStateCache() {
         EVENT_MANAGER.register(this);
+
+        lastFrameBuffer = glGetInteger(GL_DRAW_FRAMEBUFFER_BINDING);
     }
 
     public void enable(int cap) {
@@ -665,5 +667,165 @@ public class GLStateCache {
                 lastBufferRangeSize = (long) args[4];
                 break;
         }
+    }
+
+    public Map<Integer, Boolean> getSTATE_CACHE() {
+        return STATE_CACHE;
+    }
+
+    public float[] getLastClearColor() {
+        return lastClearColor;
+    }
+
+    public boolean[] getLastColorMask() {
+        return lastColorMask;
+    }
+
+    public int[] getLastStencilFunc() {
+        return lastStencilFunc;
+    }
+
+    public int[] getLastStencilOp() {
+        return lastStencilOp;
+    }
+
+    public int[] getLastTexture() {
+        return lastTexture;
+    }
+
+    public int[] getLastPolygonMode() {
+        return lastPolygonMode;
+    }
+
+    public float[] getLastPolygonOffset() {
+        return lastPolygonOffset;
+    }
+
+    public int[] getLastScissorBox() {
+        return lastScissorBox;
+    }
+
+    public int[] getLastViewport() {
+        return lastViewport;
+    }
+
+    public float[] getLastDepthRange() {
+        return lastDepthRange;
+    }
+
+    public int getLastBlendSrc() {
+        return lastBlendSrc;
+    }
+
+    public int getLastBlendDst() {
+        return lastBlendDst;
+    }
+
+    public int getLastBlendEquation() {
+        return lastBlendEquation;
+    }
+
+    public int getLastActiveTexture() {
+        return lastActiveTexture;
+    }
+
+    public int getLastShaderProgram() {
+        return lastShaderProgram;
+    }
+
+    public int getLastFrameBuffer() {
+        return lastFrameBuffer;
+    }
+
+    public int getLastRenderBuffer() {
+        return lastRenderBuffer;
+    }
+
+    public int getLastDrawFrameBuffer() {
+        return lastDrawFrameBuffer;
+    }
+
+    public int getLastReadFrameBuffer() {
+        return lastReadFrameBuffer;
+    }
+
+    public int getLastVertexArray() {
+        return lastVertexArray;
+    }
+
+    public int getLastDrawIndirectBuffer() {
+        return lastDrawIndirectBuffer;
+    }
+
+    public int getLastElementArrayBuffer() {
+        return lastElementArrayBuffer;
+    }
+
+    public int getLastArrayBuffer() {
+        return lastArrayBuffer;
+    }
+
+    public int getLastUniformBuffer() {
+        return lastUniformBuffer;
+    }
+
+    public int getLastShaderStorageBuffer() {
+        return lastShaderStorageBuffer;
+    }
+
+    public double getLastClearDepth() {
+        return lastClearDepth;
+    }
+
+    public int getLastClearStencil() {
+        return lastClearStencil;
+    }
+
+    public boolean isLastDepthMask() {
+        return lastDepthMask;
+    }
+
+    public int getLastDepthFunc() {
+        return lastDepthFunc;
+    }
+
+    public int getLastCullFace() {
+        return lastCullFace;
+    }
+
+    public int getLastFrontFace() {
+        return lastFrontFace;
+    }
+
+    public float getLastLineWidth() {
+        return lastLineWidth;
+    }
+
+    public float getLastPointSize() {
+        return lastPointSize;
+    }
+
+    public int getLastSampleMaskValue() {
+        return lastSampleMaskValue;
+    }
+
+    public int getLastBufferRangeTarget() {
+        return lastBufferRangeTarget;
+    }
+
+    public int getLastBufferRangeIndex() {
+        return lastBufferRangeIndex;
+    }
+
+    public int getLastBufferRangeBuffer() {
+        return lastBufferRangeBuffer;
+    }
+
+    public long getLastBufferRangeOffset() {
+        return lastBufferRangeOffset;
+    }
+
+    public long getLastBufferRangeSize() {
+        return lastBufferRangeSize;
     }
 }

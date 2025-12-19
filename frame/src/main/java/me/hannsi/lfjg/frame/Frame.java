@@ -2,6 +2,7 @@ package me.hannsi.lfjg.frame;
 
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.event.EventHandler;
+import me.hannsi.lfjg.core.utils.math.IntArrayList;
 import me.hannsi.lfjg.core.utils.time.TimeCalculator;
 import me.hannsi.lfjg.core.utils.time.TimeSourceUtil;
 import me.hannsi.lfjg.core.utils.toolkit.ANSIFormat;
@@ -13,10 +14,7 @@ import me.hannsi.lfjg.frame.event.events.render.DrawFrameWithOpenGLEvent;
 import me.hannsi.lfjg.frame.event.system.GLFWCallback;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
-import me.hannsi.lfjg.frame.system.GLFWDebug;
-import me.hannsi.lfjg.frame.system.GLFWUtil;
-import me.hannsi.lfjg.frame.system.IFrame;
-import me.hannsi.lfjg.frame.system.LFJGFrame;
+import me.hannsi.lfjg.frame.system.*;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.Callbacks;
@@ -28,13 +26,15 @@ import java.util.concurrent.locks.LockSupport;
 
 import static me.hannsi.lfjg.core.Core.*;
 import static me.hannsi.lfjg.core.Core.GL.createCapabilities;
-import static me.hannsi.lfjg.core.Core.GL11.glClear;
 import static me.hannsi.lfjg.core.Core.GL11.glClearColor;
-import static me.hannsi.lfjg.core.Core.LFJGRenderContext.disable;
-import static me.hannsi.lfjg.core.Core.LFJGRenderContext.enable;
+import static me.hannsi.lfjg.core.Core.GL30.glClearBufferfv;
+import static me.hannsi.lfjg.core.Core.GL43.glInvalidateFramebuffer;
+import static me.hannsi.lfjg.core.Core.LFJGRenderContext.*;
+import static me.hannsi.lfjg.frame.LFJGFrameContext.renderPass;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Frame implements IFrame {
+    private static final IntArrayList DISCARD_ATTACHMENTS = new IntArrayList(4);
     private final LFJGFrame lfjgFrame;
     private final String threadName;
     protected RenderingType renderingType;
@@ -63,6 +63,38 @@ public class Frame implements IFrame {
 
         this.threadName = threadName;
         new Thread(this::createFrame, threadName).start();
+    }
+
+    private static void begin(RenderPass pass) {
+        bindFrameBuffer(pass.fbo);
+
+        for (Attachment a : pass.attachments) {
+            if (a.loadOp == Attachment.LoadOp.CLEAR) {
+                if (a.attachment == OPEN_GL_PARAMETER_NAME_MAP.get("GL_DEPTH_ATTACHMENT")) {
+                    glClearBufferfv(OPEN_GL_PARAMETER_NAME_MAP.get("GL_DEPTH"), 0, a.clearValue);
+                } else {
+                    glClearBufferfv(OPEN_GL_PARAMETER_NAME_MAP.get("GL_COLOR"), a.attachment - OPEN_GL_PARAMETER_NAME_MAP.get("GL_COLOR_ATTACHMENT0"), a.clearValue);
+                }
+            }
+        }
+    }
+
+    private static void end(RenderPass pass) {
+        if (pass.fbo == 0) {
+            return;
+        }
+
+        DISCARD_ATTACHMENTS.clear();
+
+        for (Attachment a : pass.attachments) {
+            if (a.storeOp == Attachment.StoreOp.DONT_CARE) {
+                DISCARD_ATTACHMENTS.add(a.attachment);
+            }
+        }
+
+        if (!DISCARD_ATTACHMENTS.isEmpty()) {
+            glInvalidateFramebuffer(OPEN_GL_PARAMETER_NAME_MAP.get("GL_FRAMEBUFFER"), DISCARD_ATTACHMENTS.toIntArray());
+        }
     }
 
     public void createFrame() {
@@ -177,8 +209,11 @@ public class Frame implements IFrame {
             lastTime2 = currentTime2;
 
             if (deltaTime2 >= targetTime) {
-                glClear(OPEN_GL_PARAMETER_NAME_MAP.get("GL_COLOR_BUFFER_BIT") | OPEN_GL_PARAMETER_NAME_MAP.get("GL_DEPTH_BUFFER_BIT"));
+                begin(renderPass);
+
                 draw();
+
+                end(renderPass);
 
                 glfwSwapBuffers(windowID);
                 glfwPollEvents();

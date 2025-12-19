@@ -18,6 +18,7 @@ import java.lang.invoke.MethodType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -188,11 +189,11 @@ public class Core {
 
     private static void initLFJGContext() {
         final String METHOD = "init";
-        if (ENABLE_LFJG_FRAME_SYSTEM) {
-            invokeStaticMethod(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME_CONTEXT_CLASS_NAME, METHOD);
-        }
         if (ENABLE_LFJG_RENDER_SYSTEM) {
             invokeStaticMethod(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_CONTEXT_CLASS_NAME, METHOD);
+        }
+        if (ENABLE_LFJG_FRAME_SYSTEM) {
+            invokeStaticMethod(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME_CONTEXT_CLASS_NAME, METHOD);
         }
         if (ENABLE_LFJG_RENDER_TEXT_SYSTEM) {
             invokeStaticMethod(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_TEXT_CONTEXT_CLASS_NAME, METHOD);
@@ -307,6 +308,14 @@ public class Core {
 
     public static class GL43 {
         public static final String PACKAGE = "org.lwjgl.opengl.GL43";
+
+        public static void glInvalidateFramebuffer(int target, int[] attachments) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
+                return;
+            }
+
+            Object ignore = invokeStaticMethod(PACKAGE, "glInvalidateFramebuffer", target, attachments);
+        }
     }
 
     public static class GL42 {
@@ -343,6 +352,22 @@ public class Core {
 
             Object ignore = invokeStaticMethod(PACKAGE, "glGenerateMipmap", target);
         }
+
+        public static void glClearBufferfv(int buffer, int drawbuffer, float[] value) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
+                return;
+            }
+
+            Object ignore = invokeStaticMethod(PACKAGE, "glClearBufferfv", buffer, drawbuffer, value);
+        }
+
+        public static void glClearBufferfv(int buffer, int drawbuffer, FloatBuffer value) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
+                return;
+            }
+
+            Object ignore = invokeStaticMethod(PACKAGE, "glClearBufferfv", buffer, drawbuffer, value);
+        }
     }
 
     public static class GL21 {
@@ -371,7 +396,11 @@ public class Core {
 
     public static class GL11 {
         public static final String PACKAGE = "org.lwjgl.opengl.GL11";
-        public static final GLClearCall glClear = ClassUtil.bindStatic(PACKAGE, "glClear", GLClearCall.class, MethodType.methodType(void.class, int.class));
+        public static final GLClearCall glClear;
+
+        static {
+            glClear = ClassUtil.bindStatic(PACKAGE, "glClear", GLClearCall.class, MethodType.methodType(void.class, int.class));
+        }
 
         public static void glClearColor(float red, float green, float blue, float alpha) {
             if (!ENABLE_LFJG_RENDER_SYSTEM) {
@@ -630,9 +659,26 @@ public class Core {
         }
     }
 
+    public static class GLStateCache {
+        public static final String PACKAGE = DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + ".system.rendering.GLStateCache";
+        public static final GetLastFrameBufferCall GET_LAST_FRAME_BUFFER;
+
+        static {
+            GET_LAST_FRAME_BUFFER = ClassUtil.bindInstance(PACKAGE, "getLastFrameBuffer", GetLastFrameBufferCall.class, MethodType.methodType(int.class));
+        }
+
+        public static int getLastFrameBuffer() {
+            return GET_LAST_FRAME_BUFFER.call(LFJGRenderContext.GL_STATE_CACHE);
+        }
+
+        @FunctionalInterface
+        public interface GetLastFrameBufferCall {
+            int call(Object o);
+        }
+    }
+
     public static class LFJGRenderContext {
         public static final String PACKAGE = DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + ".LFJGRenderContext";
-
         public static final Object GL_STATE_CACHE;
 
         static {
@@ -665,6 +711,14 @@ public class Core {
             }
 
             ClassUtil.invokeMethodExact(GL_STATE_CACHE, "bindTexture", target, texture);
+        }
+
+        public static void bindFrameBuffer(int frameBuffer) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM || GL_STATE_CACHE == null) {
+                return;
+            }
+
+            ClassUtil.invokeMethodExact(GL_STATE_CACHE, "bindFrameBuffer", frameBuffer);
         }
     }
 
