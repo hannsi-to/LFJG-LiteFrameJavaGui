@@ -42,5 +42,5 @@ void gradationMain() {
     }
 
     gradientColor *= gradationIntensity;
-    fragColor = blend(texture(frameBufferSampler, uv), gradientColor, gradationBlendMode);
+    //    fragColor = blend(texture(frameBufferSampler, uv), gradientColor, gradationBlendMode);
 }
