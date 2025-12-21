@@ -12,13 +12,18 @@ import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedVBO;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
+import org.joml.Matrix4f;
 
+import static me.hannsi.lfjg.core.Core.projection2D;
+import static me.hannsi.lfjg.core.Core.projection3D;
 import static me.hannsi.lfjg.core.SystemSetting.*;
 
 public class LFJGRenderContext {
     public static IdPool ID_POOL;
     public static GLObjectPool GL_OBJECT_POOL;
     public static Camera MAIN_CAMERA;
+    public static Matrix4f precomputedViewProjection2D;
+    public static Matrix4f precomputedViewProjection3D;
     public static ShaderProgram SHADER_PROGRAM;
     public static TestPersistentMappedVBO PERSISTENT_MAPPED_VBO;
     public static TestPersistentMappedEBO PERSISTENT_MAPPED_EBO;
@@ -34,6 +39,9 @@ public class LFJGRenderContext {
         GL_OBJECT_POOL = new GLObjectPool();
 
         MAIN_CAMERA = new Camera();
+
+        precomputedViewProjection2D = projection2D.getMatrix4f().mul(MAIN_CAMERA.getViewMatrix());
+        precomputedViewProjection3D = projection3D.getMatrix4f().mul(MAIN_CAMERA.getViewMatrix());
 
         GL_STATE_CACHE = new GLStateCache();
 
