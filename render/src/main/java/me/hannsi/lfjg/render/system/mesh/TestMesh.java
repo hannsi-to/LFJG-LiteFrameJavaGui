@@ -2,6 +2,7 @@ package me.hannsi.lfjg.render.system.mesh;
 
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerator;
+import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.debug.exceptions.render.mesh.MeshException;
@@ -9,16 +10,13 @@ import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.JointType;
 import me.hannsi.lfjg.render.renderers.PointType;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
-import org.joml.Matrix4f;
 
 import java.util.*;
 
 import static me.hannsi.lfjg.core.SystemSetting.MESH_DEBUG_DIRECT_DELETE_OBJECT_REINSERTION;
 import static me.hannsi.lfjg.core.utils.math.MathHelper.max;
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
-import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
-import static org.lwjgl.opengl.GL43.glMultiDrawElementsIndirect;
 
 public class TestMesh {
     private final int vaoId;
@@ -27,6 +25,7 @@ public class TestMesh {
     private int initialIBOCapacity;
     private int currentIndex;
     private int vertexCount;
+    private int instanceCount;
 
     TestMesh(int initialVBOCapacity, int initialEBOCapacity, int initialIBOCapacity) {
         this.initialVBOCapacity = initialVBOCapacity;
@@ -36,6 +35,7 @@ public class TestMesh {
         this.vaoId = glGenVertexArrays();
         this.currentIndex = 0;
         this.vertexCount = 0;
+        this.instanceCount = 0;
     }
 
     public static TestMesh createMesh(int initialVBOCapacity, int initialEBOCapacity, int initialIBOCapacity) {
@@ -56,86 +56,6 @@ public class TestMesh {
         return this;
     }
 
-    public static class Builder {
-        protected IntRef objectIdPointer = null;
-        protected Vertex[] vertices = null;
-        protected DrawType drawType = DrawType.TRIANGLES;
-        protected BlendType blendType = BlendType.NORMAL;
-        protected float lineWidth = -1f;
-        protected float pointSize = -1f;
-        protected JointType jointType = JointType.NONE;
-        protected PointType pointType = PointType.SQUARE;
-        protected InstanceData instanceData = new InstanceData(1);
-        protected ProjectionType projectionType = ProjectionType.PERSPECTIVE_PROJECTION;
-
-        Builder() {
-        }
-
-        public static Builder createBuilder(){
-            return new Builder();
-        }
-
-        public Builder objectIdPointer (IntRef objectIdPointer){
-            this.objectIdPointer = objectIdPointer;
-
-            return this;
-        }
-
-        public Builder blendType (BlendType blendType){
-            this.blendType = blendType;
-
-            return this;
-        }
-
-        public Builder drawType (DrawType drawType){
-            this.drawType = drawType;
-
-            return this;
-        }
-
-        public Builder jointType (JointType jointType){
-            this.jointType = jointType;
-
-            return this;
-        }
-
-        public Builder lineWidth (float lineWidth){
-            this.lineWidth = lineWidth;
-
-            return this;
-        }
-
-        public Builder pointType (PointType pointType){
-            this.pointType = pointType;
-
-            return this;
-        }
-
-        public Builder projectionType (ProjectionType projectionType){
-            this.projectionType = projectionType;
-
-            return this;
-        }
-
-        public Builder vertices (Vertex...vertices){
-            this.vertices = vertices;
-
-            return this;
-        }
-
-        public Builder pointSize (float pointSize){
-            this.pointSize = pointSize;
-
-            return this;
-        }
-
-        public Builder instanceData(InstanceData instanceData){
-            this.instanceData = instanceData;
-
-            return this;
-        }
-    }
-
     public TestMesh addObject(Builder builder) {
         TestElementPair elementPair = TestPolygonTriangulator.createPolygonTriangulator()
                 .drawType(builder.drawType)
@@ -147,35 +67,22 @@ public class TestMesh {
                 .vertices(builder.vertices)
                 .process()
                 .getResult();
+
         int baseVertex = vertexCount;
+        int startOffset = writeGeometry(elementPair);
+        writeInstanceData(builder.instanceData);
 
-        for (Vertex vertex : elementPair.vertices) {
-            PERSISTENT_MAPPED_VBO.add(vertex);
-        }
-
-        int startOffset = PERSISTENT_MAPPED_EBO.getIndexCount();
-        for (int index : elementPair.indices) {
-            PERSISTENT_MAPPED_EBO.add(index);
-        }
-
-        vertexCount += elementPair.vertices.length;
-
-        int commandIndex = PERSISTENT_MAPPED_IBO.getCommandCount();
-        PERSISTENT_MAPPED_IBO.add(
-                new DrawElementsIndirectCommand(
-                        elementPair.indices.length,
-                        builder.instanceData.instanceCount,
-                        startOffset,
-                        baseVertex,
-                        commandIndex
-                )
+        DrawElementsIndirectCommand command = writeIndirectCommand(
+                elementPair.indices.length,
+                builder.instanceData.instanceCount,
+                startOffset,
+                baseVertex
         );
 
-        for (Matrix4f model : builder.instanceData.instanceModels) {
-            PERSISTENT_MAPPED_SSBO.addMatrix4f(3,model.get(new float[0]));
-        }
+        int id = GL_OBJECT_POOL.createObject(new GLObjectData(
+                command, builder, PERSISTENT_MAPPED_IBO.getCommandCount() - 1, elementPair
+        ));
 
-        int id = GL_OBJECT_POOL.createObject(new GLObjectData(baseVertex, elementPair.vertices.length, startOffset, elementPair.indices.length, PERSISTENT_MAPPED_IBO.getCommandCount() - 1, elementPair));
         if (builder.objectIdPointer != null) {
             builder.objectIdPointer.setValue(id);
         }
@@ -267,6 +174,8 @@ public class TestMesh {
         PERSISTENT_MAPPED_VBO.cleanup();
         PERSISTENT_MAPPED_EBO.cleanup();
         PERSISTENT_MAPPED_IBO.cleanup();
+        PERSISTENT_MAPPED_SSBO.resetBindingPoint(2);
+        PERSISTENT_MAPPED_SSBO.resetBindingPoint(3);
 
         PERSISTENT_MAPPED_VBO.allocationBufferStorage(PERSISTENT_MAPPED_VBO.getVerticesSizeByte(initialVBOCapacity));
         PERSISTENT_MAPPED_EBO.allocationBufferStorage(PERSISTENT_MAPPED_EBO.getIndicesSizeByte(initialEBOCapacity));
@@ -283,51 +192,34 @@ public class TestMesh {
                 .logging(getClass(), DebugLevel.INFO);
 
         vertexCount = 0;
+        instanceCount = 0;
 
         for (Map.Entry<Integer, GLObjectData> entry : entryObject.entrySet()) {
             GLObjectData oldGlObjectData = entry.getValue();
-            TestElementPair elementPair = entry.getValue().elementPair;
 
             int baseVertex = vertexCount;
-            for (Vertex vertex : elementPair.vertices) {
-                PERSISTENT_MAPPED_VBO.add(vertex);
-            }
+            int startOffset = writeGeometry(oldGlObjectData.elementPair);
+            writeInstanceData(oldGlObjectData.builder.instanceData);
 
-            int startOffset = PERSISTENT_MAPPED_EBO.getIndexCount();
-            for (int index : elementPair.indices) {
-                PERSISTENT_MAPPED_EBO.add(index);
-            }
-
-            vertexCount += elementPair.vertices.length;
-
-            PERSISTENT_MAPPED_IBO.add(
-                    new DrawElementsIndirectCommand(
-                            elementPair.indices.length,
-                            1,
-                            startOffset,
-                            baseVertex,
-                            0
-                    )
+            DrawElementsIndirectCommand newCommand = writeIndirectCommand(
+                    oldGlObjectData.elementPair.indices.length,
+                    oldGlObjectData.builder.instanceData.instanceCount,
+                    startOffset,
+                    baseVertex
             );
 
-            GL_OBJECT_POOL.createObject(
-                    entry.getKey(),
-                    new GLObjectData(
-                            baseVertex,
-                            elementPair.vertices.length,
-                            startOffset,
-                            elementPair.indices.length,
-                            PERSISTENT_MAPPED_IBO.getCommandCount() - 1,
-                            elementPair
-                    )
-            );
+            GL_OBJECT_POOL.createObject(entry.getKey(), new GLObjectData(newCommand, oldGlObjectData.builder, PERSISTENT_MAPPED_IBO.getCommandCount() - 1, oldGlObjectData.elementPair));
+
+            if (oldGlObjectData.builder.objectIdPointer != null) {
+                oldGlObjectData.builder.objectIdPointer.setValue(entry.getKey());
+            }
 
             if (MESH_DEBUG_DIRECT_DELETE_OBJECT_REINSERTION) {
                 new LogGenerator("Object Reinsertion")
                         .kv("ObjectId", entry.getKey())
-                        .kv("Old BaseVertex", oldGlObjectData.baseVertex)
+                        .kv("Old BaseVertex", oldGlObjectData.drawElementsIndirectCommand.baseVertex)
                         .kv("New BaseVertex", baseVertex)
-                        .kv("Old IndexOffset", oldGlObjectData.baseIndex)
+                        .kv("Old IndexOffset", oldGlObjectData.drawElementsIndirectCommand.firstIndex)
                         .kv("New IndexOffset", startOffset)
                         .logging(getClass(), DebugLevel.DEBUG);
             }
@@ -366,41 +258,55 @@ public class TestMesh {
         return this;
     }
 
-    public void debugDraw(int mode, boolean frontAndBack) {
-        if (frontAndBack) {
-            GL_STATE_CACHE.polygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            GL_STATE_CACHE.lineWidth(0.1f);
-        } else {
-            GL_STATE_CACHE.polygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            GL_STATE_CACHE.lineWidth(1.0f);
+    private void writeInstanceData(InstanceData instanceData) {
+        for (int i = 0; i < instanceData.instanceCount; i++) {
+            PERSISTENT_MAPPED_SSBO.addTransform(2, instanceData.getTransforms()[i]);
+        }
+    }
+
+    public TestMesh updateInstanceData(int objectId, InstanceData newInstanceData) {
+        GLObjectData glObjectData = GL_OBJECT_POOL.getObjectData(objectId);
+        if (glObjectData == null) {
+            throw new MeshException("Object ID not found: " + objectId);
         }
 
-        for (Map.Entry<Integer, GLObjectData> entry : GL_OBJECT_POOL.getObjects().entrySet()) {
-            GLObjectData glObjectData = entry.getValue();
+        int baseInstanceIndex = glObjectData.drawElementsIndirectCommand.baseInstance;
 
-            long base = PERSISTENT_MAPPED_IBO.getCommandsSizeByte(glObjectData.baseCommand);
-            if (glObjectData.draw) {
-                PERSISTENT_MAPPED_IBO.directWriteCommand(base, 0, glObjectData.elementPair.indices.length);
-            } else {
-                PERSISTENT_MAPPED_IBO.directWriteCommand(base, 0, 0);
-            }
+        int count = Math.min(glObjectData.builder.instanceData.instanceCount, newInstanceData.instanceCount);
+
+        for (int i = 0; i < count; i++) {
+            PERSISTENT_MAPPED_SSBO.updateTransform(2, baseInstanceIndex + i, newInstanceData.getTransforms()[i]);
         }
 
-        PERSISTENT_MAPPED_VBO.syncToGPU();
-        PERSISTENT_MAPPED_EBO.syncToGPU();
-        PERSISTENT_MAPPED_IBO.syncToGPU();
+        return this;
+    }
 
-        GL_STATE_CACHE.bindVertexArray(vaoId);
-        GL_STATE_CACHE.bindElementArrayBuffer(PERSISTENT_MAPPED_EBO.getBufferId());
-        GL_STATE_CACHE.bindIndirectBuffer(PERSISTENT_MAPPED_IBO.getBufferId());
-
-        glMultiDrawElementsIndirect(
-                mode,
-                GL_UNSIGNED_INT,
-                0,
-                PERSISTENT_MAPPED_IBO.getCommandCount(),
-                0
+    private DrawElementsIndirectCommand writeIndirectCommand(int indexCount, int instanceCountPerObj, int firstIndex, int baseVertex) {
+        DrawElementsIndirectCommand command = new DrawElementsIndirectCommand(
+                indexCount,
+                instanceCountPerObj,
+                firstIndex,
+                baseVertex,
+                this.instanceCount
         );
+
+        PERSISTENT_MAPPED_IBO.add(command);
+        this.instanceCount += instanceCountPerObj;
+        return command;
+    }
+
+    private int writeGeometry(TestElementPair elementPair) {
+        for (Vertex vertex : elementPair.vertices) {
+            PERSISTENT_MAPPED_VBO.add(vertex);
+        }
+
+        int startOffset = PERSISTENT_MAPPED_EBO.getIndexCount();
+        for (int index : elementPair.indices) {
+            PERSISTENT_MAPPED_EBO.add(index);
+        }
+
+        vertexCount += elementPair.vertices.length;
+        return startOffset;
     }
 
     public void debugLogging(boolean vaoID, boolean currentIndex, boolean totalVertexCount, boolean vbo, boolean ebo, boolean ibo) {
@@ -485,5 +391,129 @@ public class TestMesh {
 
     public void cleanup() {
 
+    }
+
+    public void update() {
+
+    }
+
+    public static class Builder {
+        private IntRef objectIdPointer = null;
+        private Vertex[] vertices = null;
+        private DrawType drawType = DrawType.TRIANGLES;
+        private BlendType blendType = BlendType.NORMAL;
+        private float lineWidth = -1f;
+        private float pointSize = -1f;
+        private JointType jointType = JointType.NONE;
+        private PointType pointType = PointType.SQUARE;
+        private InstanceData instanceData = new InstanceData(1, Color.RED);
+        private ProjectionType projectionType = ProjectionType.ORTHOGRAPHIC_PROJECTION;
+
+        Builder() {
+        }
+
+        public static Builder createBuilder() {
+            return new Builder();
+        }
+
+        public Builder objectIdPointer(IntRef objectIdPointer) {
+            this.objectIdPointer = objectIdPointer;
+
+            return this;
+        }
+
+        public Builder blendType(BlendType blendType) {
+            this.blendType = blendType;
+
+            return this;
+        }
+
+        public Builder drawType(DrawType drawType) {
+            this.drawType = drawType;
+
+            return this;
+        }
+
+        public Builder jointType(JointType jointType) {
+            this.jointType = jointType;
+
+            return this;
+        }
+
+        public Builder lineWidth(float lineWidth) {
+            this.lineWidth = lineWidth;
+
+            return this;
+        }
+
+        public Builder pointType(PointType pointType) {
+            this.pointType = pointType;
+
+            return this;
+        }
+
+        public Builder projectionType(ProjectionType projectionType) {
+            this.projectionType = projectionType;
+
+            return this;
+        }
+
+        public Builder vertices(Vertex... vertices) {
+            this.vertices = vertices;
+
+            return this;
+        }
+
+        public Builder pointSize(float pointSize) {
+            this.pointSize = pointSize;
+
+            return this;
+        }
+
+        public Builder instanceData(InstanceData instanceData) {
+            this.instanceData = instanceData;
+
+            return this;
+        }
+
+        public IntRef getObjectIdPointer() {
+            return objectIdPointer;
+        }
+
+        public Vertex[] getVertices() {
+            return vertices;
+        }
+
+        public DrawType getDrawType() {
+            return drawType;
+        }
+
+        public BlendType getBlendType() {
+            return blendType;
+        }
+
+        public float getLineWidth() {
+            return lineWidth;
+        }
+
+        public float getPointSize() {
+            return pointSize;
+        }
+
+        public JointType getJointType() {
+            return jointType;
+        }
+
+        public PointType getPointType() {
+            return pointType;
+        }
+
+        public InstanceData getInstanceData() {
+            return instanceData;
+        }
+
+        public ProjectionType getProjectionType() {
+            return projectionType;
+        }
     }
 }
