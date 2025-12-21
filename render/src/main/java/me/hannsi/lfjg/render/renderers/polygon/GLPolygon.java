@@ -3,7 +3,6 @@ package me.hannsi.lfjg.render.renderers.polygon;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
-import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.renderers.JointType;
@@ -11,7 +10,6 @@ import me.hannsi.lfjg.render.renderers.PointType;
 import me.hannsi.lfjg.render.system.mesh.TestMesh;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
-import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import org.joml.Vector2f;
 
 import java.util.ArrayList;
@@ -177,9 +175,9 @@ public class GLPolygon<T extends GLPolygon<T>> extends GLObject {
         getTransform().setY(vertices.get(0).y);
         getTransform().setZ(vertices.get(0).z);
 
-        getTransform().setAngleX(0);
-        getTransform().setAngleY(0);
-        getTransform().setAngleZ(0);
+//        getTransform().setAngleX(0);
+//        getTransform().setAngleY(0);
+//        getTransform().setAngleZ(0);
 
         getTransform().setScaleX(1);
         getTransform().setScaleY(1);
