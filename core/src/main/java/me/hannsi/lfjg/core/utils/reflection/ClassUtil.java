@@ -22,6 +22,15 @@ public class ClassUtil extends Util {
         PRIMITIVE_MAP = Map.of(Boolean.class, boolean.class, Byte.class, byte.class, Character.class, char.class, Double.class, double.class, Float.class, float.class, Integer.class, int.class, Long.class, long.class, Short.class, short.class);
     }
 
+    public static <T> T bindInstance(String className, String methodName, Class<T> functionalInterface, MethodType methodType) {
+        try {
+            Class<?> owner = Class.forName(className);
+            return bindInstance(owner, methodName, functionalInterface, methodType);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static <T> T bindStatic(String className, String methodName, Class<T> functionalInterface, MethodType methodType) {
         try {
             Class<?> owner = Class.forName(className);
@@ -31,7 +40,36 @@ public class ClassUtil extends Util {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    public static <T> T bindInstance(Class<?> owner, String methodName, Class<T> functionalInterface, MethodType methodType) {
+        try {
+            MethodHandles.Lookup lookup = MethodHandles.lookup();
+
+            MethodHandle target = lookup.findVirtual(
+                    owner,
+                    methodName,
+                    methodType
+            );
+
+            CallSite site = LambdaMetafactory.metafactory(
+                    lookup,
+                    "call",
+                    MethodType.methodType(functionalInterface),
+                    methodType.insertParameterTypes(0, Object.class).erase(),
+                    target,
+                    target.type()
+            );
+
+            MethodHandle factory = site.getTarget().asType(MethodType.methodType(Object.class));
+
+            @SuppressWarnings("unchecked")
+            T lambda = (T) factory.invokeExact();
+
+            return lambda;
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
+    }
+
     public static <T> T bindStatic(Class<?> owner, String methodName, Class<T> functionalInterface, MethodType methodType) {
         try {
             MethodHandles.Lookup lookup = MethodHandles.lookup();
@@ -42,11 +80,18 @@ public class ClassUtil extends Util {
                     methodType
             );
 
+            Method samMethod = Arrays.stream(functionalInterface.getMethods())
+                    .filter(m -> m.getName().equals("call"))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("Method 'call' not found in " + functionalInterface.getName()));
+
+            MethodType samMethodType = MethodType.methodType(samMethod.getReturnType(), samMethod.getParameterTypes());
+
             CallSite site = LambdaMetafactory.metafactory(
                     lookup,
                     "call",
                     MethodType.methodType(functionalInterface),
-                    methodType.erase(),
+                    samMethodType,
                     target,
                     methodType
             );
