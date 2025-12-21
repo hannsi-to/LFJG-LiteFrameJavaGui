@@ -5,6 +5,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class Camera {
+    protected boolean dirtyFlag = true;
     private Matrix4f viewMatrix;
     private Matrix4f invViewMatrix;
     private Vector3f direction;
@@ -77,6 +78,7 @@ public class Camera {
     private void recalculate() {
         viewMatrix.identity().rotateX(rotation.x).rotateY(rotation.y).translate(-position.x, -position.y, -position.z);
         invViewMatrix.set(viewMatrix).invert();
+        dirtyFlag = true;
     }
 
     public void setPosition(float x, float y, float z) {
@@ -93,55 +95,35 @@ public class Camera {
         return viewMatrix;
     }
 
-    public void setViewMatrix(Matrix4f viewMatrix) {
-        this.viewMatrix = viewMatrix;
+    public boolean isDirtyFlag() {
+        return dirtyFlag;
+    }
+
+    public void setDirtyFlag(boolean dirtyFlag) {
+        this.dirtyFlag = dirtyFlag;
     }
 
     public Matrix4f getInvViewMatrix() {
         return invViewMatrix;
     }
 
-    public void setInvViewMatrix(Matrix4f invViewMatrix) {
-        this.invViewMatrix = invViewMatrix;
-    }
-
     public Vector3f getDirection() {
         return direction;
-    }
-
-    public void setDirection(Vector3f direction) {
-        this.direction = direction;
     }
 
     public Vector3f getPosition() {
         return position;
     }
 
-    public void setPosition(Vector3f position) {
-        this.position = position;
-    }
-
     public Vector3f getRight() {
         return right;
-    }
-
-    public void setRight(Vector3f right) {
-        this.right = right;
     }
 
     public Vector2f getRotation() {
         return rotation;
     }
 
-    public void setRotation(Vector2f rotation) {
-        this.rotation = rotation;
-    }
-
     public Vector3f getUp() {
         return up;
-    }
-
-    public void setUp(Vector3f up) {
-        this.up = up;
     }
 }
