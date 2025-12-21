@@ -3,15 +3,18 @@ package me.hannsi.lfjg.render.system.mesh.persistent;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerator;
+import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
+import me.hannsi.lfjg.render.renderers.Transform;
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL44;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import static me.hannsi.lfjg.core.Core.UNSAFE;
-import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static me.hannsi.lfjg.render.LFJGRenderContext.*;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL15.glUnmapBuffer;
 import static org.lwjgl.opengl.GL30.*;
@@ -34,7 +37,7 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
         this.flags = flags;
         this.initialCapacity = initialCapacity;
         this.ssboOffsetAlignment = glGetInteger(GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT);
-        this.bindingDatum = new TreeMap<>();
+        this.bindingDatum = new HashMap<>();
 
         allocationBufferStorage((long) initialCapacity * Float.BYTES);
     }
@@ -79,6 +82,17 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
         return this;
     }
 
+    public TestPersistentMappedSSBO updateInt(int bindingPoint, int index, int data) {
+        SSBOBindingData ssboData = bindingDatum.get(bindingPoint);
+        if (ssboData == null || index >= ssboData.dataCount) {
+            throw new IndexOutOfBoundsException("Invalid binding point or index");
+        }
+
+        long dst = mappedAddress + ssboData.offset + (long) index * Integer.BYTES;
+        UNSAFE.putInt(dst, data);
+        return this;
+    }
+
     public TestPersistentMappedSSBO addFloat(int bindingPoint, float data) {
         SSBOBindingData ssboData = getOrCreateSSBOData(bindingPoint);
 
@@ -94,6 +108,17 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
         return this;
     }
 
+    public TestPersistentMappedSSBO updateFloat(int bindingPoint, int index, float data) {
+        SSBOBindingData ssboData = bindingDatum.get(bindingPoint);
+        if (ssboData == null || index >= ssboData.dataCount) {
+            throw new IndexOutOfBoundsException("Invalid binding point or index");
+        }
+
+        long dst = mappedAddress + ssboData.offset + (long) index * Float.BYTES;
+        UNSAFE.putFloat(dst, data);
+        return this;
+    }
+
     public TestPersistentMappedSSBO addVec4(int bindingPoint, float x, float y, float z, float w) {
         float[] values = new float[]{x, y, z, w};
         for (float value : values) {
@@ -103,28 +128,73 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
         return this;
     }
 
-    public TestPersistentMappedSSBO addMatrix4f(int bindingPoint, float[] matrixElements) {
-        if (matrixElements.length != 16) {
-            throw new IllegalArgumentException("Matrix4f requires exactly 16 float elements.");
+    public TestPersistentMappedSSBO updateVec4(int bindingPoint, int index, float x, float y, float z, float w) {
+        SSBOBindingData ssboData = bindingDatum.get(bindingPoint);
+        final int VEC4_FLOATS = 4;
+
+        if (ssboData == null || (index * VEC4_FLOATS) + VEC4_FLOATS > ssboData.dataCount) {
+            throw new IndexOutOfBoundsException("Invalid binding point or index");
         }
 
-        final int ELEMENT_COUNT = 16;
-        final int MATRIX_BYTES = ELEMENT_COUNT * Float.BYTES;
+        long dst = mappedAddress + ssboData.offset + (long) index * VEC4_FLOATS * Float.BYTES;
+        UNSAFE.putFloat(dst, x);
+        UNSAFE.putFloat(dst + Float.BYTES, y);
+        UNSAFE.putFloat(dst + (2L * Float.BYTES), z);
+        UNSAFE.putFloat(dst + (3L * Float.BYTES), w);
+        return this;
+    }
+
+    public TestPersistentMappedSSBO addMatrix4f(int bindingPoint, Matrix4f matrix4f) {
+        final int MATRIX_FLOATS = 16;
+        final int MATRIX_BYTES = MATRIX_FLOATS * Float.BYTES;
 
         SSBOBindingData ssboData = getOrCreateSSBOData(bindingPoint);
 
-        ensureSpaceAndShift(
-                ssboData,
-                (long) ssboData.dataCount * Float.BYTES + MATRIX_BYTES
-        );
+        ensureSpaceAndShift(ssboData, (long) ssboData.dataCount * Float.BYTES + MATRIX_BYTES);
 
         long dst = mappedAddress + ssboData.offset + (long) ssboData.dataCount * Float.BYTES;
+        matrix4f.getToAddress(dst);
 
-        for (int i = 0; i < ELEMENT_COUNT; i++) {
-            UNSAFE.putFloat(dst + (long) i * Float.BYTES, matrixElements[i]);
+        ssboData.dataCount += MATRIX_FLOATS;
+        return this;
+    }
+
+    public TestPersistentMappedSSBO updateMatrix4f(int bindingPoint, int index, Matrix4f matrix4f) {
+        SSBOBindingData ssboData = bindingDatum.get(bindingPoint);
+        final int MATRIX_FLOATS = 16;
+
+        if (ssboData == null || (index * MATRIX_FLOATS) + MATRIX_FLOATS > ssboData.dataCount) {
+            throw new IndexOutOfBoundsException("Invalid binding point or index");
         }
 
-        ssboData.dataCount += ELEMENT_COUNT;
+        long dst = mappedAddress + ssboData.offset + (long) index * MATRIX_FLOATS * Float.BYTES;
+        matrix4f.getToAddress(dst);
+
+        return this;
+    }
+
+    public TestPersistentMappedSSBO addTransform(int bindingPoint, Transform transform) {
+        SSBOBindingData ssboData = getOrCreateSSBOData(bindingPoint);
+
+        ensureSpaceAndShift(ssboData, (long) (ssboData.dataCount + 1) * Transform.BYTES);
+
+        Matrix4f currentVP = (transform.getProjectionType() == ProjectionType.PERSPECTIVE_PROJECTION) ? precomputedViewProjection3D : precomputedViewProjection2D;
+        long dst = mappedAddress + ssboData.offset + (long) ssboData.dataCount * Transform.BYTES;
+        transform.getToAddress(dst, currentVP);
+
+        ssboData.dataCount++;
+        return this;
+    }
+
+    public TestPersistentMappedSSBO updateTransform(int bindingPoint, int index, Transform transform) {
+        SSBOBindingData ssboData = bindingDatum.get(bindingPoint);
+        if (ssboData == null) {
+            throw new IndexOutOfBoundsException("Invalid binding point");
+        }
+
+        Matrix4f currentVP = (transform.getProjectionType() == ProjectionType.PERSPECTIVE_PROJECTION) ? precomputedViewProjection3D : precomputedViewProjection2D;
+        long dst = mappedAddress + ssboData.offset + (long) index * Transform.BYTES;
+        transform.getToAddress(dst, currentVP);
 
         return this;
     }
@@ -164,10 +234,15 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
                     long bytesToCopy = otherData.size;
 
                     UNSAFE.copyMemory(src, dst, bytesToCopy);
+
                     otherData.offset += delta;
+
+                    otherData.offset = alignValue(otherData.offset, this.ssboOffsetAlignment);
                 }
             }
-            lastAddress += delta;
+
+            this.lastAddress += delta;
+            this.lastAddress = alignValue(this.lastAddress, this.ssboOffsetAlignment);
         }
     }
 
@@ -201,6 +276,15 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
         }
 
         growBuffer(newCapacity);
+    }
+
+    public TestPersistentMappedSSBO bindBufferRange() {
+        for (Map.Entry<Integer, TestPersistentMappedSSBO.SSBOBindingData> bindingDataEntry : bindingDatum.entrySet()) {
+            TestPersistentMappedSSBO.SSBOBindingData ssboBindingData = bindingDataEntry.getValue();
+
+            GL_STATE_CACHE.bindBufferRange(GL_SHADER_STORAGE_BUFFER, bindingDataEntry.getKey(), bufferId, ssboBindingData.offset, ssboBindingData.size);
+        }
+        return this;
     }
 
     @Override
@@ -264,6 +348,21 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
                 .kvBytes("copiedBytes", bytesToCopy)
                 .kv("ssboDataCount", bindingDatum.size())
                 .logging(getClass(), DebugLevel.INFO);
+    }
+
+    public TestPersistentMappedSSBO resetBindingPoint(int bindingPoint) {
+        SSBOBindingData ssboData = bindingDatum.get(bindingPoint);
+
+        if (ssboData != null) {
+            ssboData.dataCount = 0;
+        } else {
+            new LogGenerator("SSBO Reset Info")
+                    .kv("Binding Point", bindingPoint)
+                    .kv("Message", "Binding point does not exist. No reset performed.")
+                    .logging(getClass(), DebugLevel.INFO);
+        }
+
+        return this;
     }
 
     @Override
