@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class AudioDevices {
     public static final String DEFAULT = null;
 
-    private Map<Mixer.Info, Boolean> deviceMap;
+    private Map<Mixer.Info, String> deviceMap;
 
     public AudioDevices() {
         this.deviceMap = new HashMap<>();
@@ -24,8 +24,7 @@ public class AudioDevices {
             Line.Info[] sourceLineInfo = mixer.getSourceLineInfo();
             boolean supportsOutput = false;
             for (Line.Info info : sourceLineInfo) {
-                if (info instanceof DataLine.Info) {
-                    DataLine.Info dataLineInfo = (DataLine.Info) info;
+                if (info instanceof DataLine.Info dataLineInfo) {
                     if (SourceDataLine.class.isAssignableFrom(dataLineInfo.getLineClass())) {
                         supportsOutput = true;
                         break;
@@ -33,7 +32,7 @@ public class AudioDevices {
                 }
             }
 
-            deviceMap.put(mixerInfo, supportsOutput);
+            deviceMap.put(mixerInfo, supportsOutput ? mixerInfo.getName() : "");
         }
 
         int maxNameLength = deviceMap.keySet().stream()
@@ -44,17 +43,21 @@ public class AudioDevices {
         String[] devices = new String[deviceMap.size()];
         AtomicInteger atomicIndex = new AtomicInteger(0);
 
-        deviceMap.forEach((mixerInfo, supportsOutput) -> {
+        deviceMap.forEach((mixerInfo, deviceName) -> {
             int index = atomicIndex.getAndIncrement();
             String name = mixerInfo.getName();
             String version = mixerInfo.getVersion();
-            String output = supportsOutput ? "Yes" : "No";
+            String output = !deviceName.isEmpty() ? "Yes" : "No";
 
             String paddedName = String.format("%-" + maxNameLength + "s", name);
             devices[index] = String.format("[%2d] %s | Version: %-15s | Output: %s", index + 1, paddedName, version, output);
         });
 
         new LogGenerator("Audio Output Devices", devices).logging(getClass(), DebugLevel.DEBUG);
+    }
+
+    public Map<Mixer.Info, String> getDeviceMap() {
+        return deviceMap;
     }
 
     public void cleanup() {
