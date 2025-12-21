@@ -1,13 +1,11 @@
 package me.hannsi.lfjg.render.system.text;
 
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
-import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
 import me.hannsi.lfjg.render.system.mesh.TestMesh;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
-import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.text.msdf.MSDFFont;
 
 import java.util.ArrayList;
