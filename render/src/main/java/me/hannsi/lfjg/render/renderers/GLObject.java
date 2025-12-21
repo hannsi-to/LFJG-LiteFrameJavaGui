@@ -12,9 +12,9 @@ import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
 
 import static me.hannsi.lfjg.core.Core.frameBufferSize;
-import static me.hannsi.lfjg.core.Core.projection2D;
 import static me.hannsi.lfjg.render.LFJGRenderContext.MESH;
 import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
+import static me.hannsi.lfjg.render.system.mesh.InstanceData.NO_ATTACH_TEXTURE;
 
 public class GLObject implements Cloneable {
     private final IntRef objectId;
@@ -35,7 +35,7 @@ public class GLObject implements Cloneable {
         this.frameBuffer = null;
 
         this.viewMatrix = null;
-        this.transform = new Transform(this);
+        this.transform = new Transform(NO_ATTACH_TEXTURE);
     }
 
     public void cleanup() {
@@ -93,7 +93,6 @@ public class GLObject implements Cloneable {
 
     private void uploadUniforms() {
         SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.OBJECT.getId());
-        SHADER_PROGRAM.updateMatrixUniformBlock(projection2D.getProjMatrix(), viewMatrix);
         SHADER_PROGRAM.setUniform("resolution", UploadUniformType.ON_CHANGE, frameBufferSize);
         SHADER_PROGRAM.setUniform("textureSampler", UploadUniformType.ONCE, 0);
     }
