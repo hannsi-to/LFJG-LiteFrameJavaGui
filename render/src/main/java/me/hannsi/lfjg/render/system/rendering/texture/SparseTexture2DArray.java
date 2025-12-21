@@ -1,6 +1,5 @@
 package me.hannsi.lfjg.render.system.rendering.texture;
 
-import me.hannsi.lfjg.core.debug.DebugLog;
 import org.lwjgl.opengl.GL;
 
 import java.nio.ByteBuffer;
@@ -24,22 +23,24 @@ public class SparseTexture2DArray {
     }
 
     public SparseTexture2DArray(int width, int height, int layers, int mipLevels, ByteBuffer buffer) {
+        boolean sparseSupported = GL.getCapabilities().GL_ARB_sparse_texture;
+
         textureId = glGenTextures();
-        GL_STATE_CACHE.bindTexture(GL_TEXTURE_2D_ARRAY,textureId);
+        GL_STATE_CACHE.bindTexture(GL_TEXTURE_2D_ARRAY, textureId);
 
         glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        glTexStorage3D(GL_TEXTURE_2D_ARRAY, mipLevels, GL_RGBA8, width, height, layers);
-        if (GL.getCapabilities().GL_ARB_sparse_texture) {
+        if (sparseSupported) {
             glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_SPARSE_ARB, GL_TRUE);
-            glTexPageCommitmentARB(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, width, height, 1, true);
-            glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, width, height, 1, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-        }else{
-            DebugLog.warning(getClass(),new RuntimeException("Sparse textures not supported on this GPU"));
-
-            glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, width, height, 1, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
         }
 
+        glTexStorage3D(GL_TEXTURE_2D_ARRAY, mipLevels, GL_RGBA8, width, height, layers);
+
+        if (sparseSupported) {
+            glTexPageCommitmentARB(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, width, height, 1, true);
+        }
+
+        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, width, height, 1, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
     }
 }
