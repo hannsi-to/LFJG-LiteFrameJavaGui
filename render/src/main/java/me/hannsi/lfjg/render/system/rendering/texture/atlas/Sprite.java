@@ -19,14 +19,14 @@ public class Sprite {
         this.data = data;
     }
 
-    public static Sprite createRandomColor(int instanceLayer, int width, int height) {
+    public static Sprite createRandomColor(int instanceLayer, int width, int height, boolean fixedColor) {
         ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
 
         byte[][] fixedColors = {
-                {(byte) 255, 0, 0, (byte) 255},     // 0: 赤
-                {0, (byte) 255, 0, (byte) 255},     // 1: 緑
-                {0, 0, (byte) 255, (byte) 255},     // 2: 青
-                {(byte) 255, (byte) 255, 0, (byte) 255} // 3: 黄
+                {(byte) 255, 0, 0, (byte) 255},
+                {0, (byte) 255, 0, (byte) 255},
+                {0, 0, (byte) 255, (byte) 255},
+                {(byte) 255, (byte) 255, 0, (byte) 255}
         };
 
         byte r;
@@ -34,7 +34,7 @@ public class Sprite {
         byte b;
         byte a = (byte) 255;
 
-        if (instanceLayer >= 0 && instanceLayer <= 3) {
+        if (instanceLayer >= 0 && instanceLayer <= 3 && fixedColor) {
             r = fixedColors[instanceLayer][0];
             g = fixedColors[instanceLayer][1];
             b = fixedColors[instanceLayer][2];
