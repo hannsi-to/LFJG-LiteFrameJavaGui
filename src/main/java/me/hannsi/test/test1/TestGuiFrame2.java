@@ -1,15 +1,12 @@
 package me.hannsi.test.test1;
 
 import me.hannsi.lfjg.core.Core;
-import me.hannsi.lfjg.core.utils.math.Projection;
-import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
 
-import static me.hannsi.lfjg.core.Core.projection2D;
 
 public class TestGuiFrame2 implements LFJGFrame {
     GLObjectCache glObjectCache;
@@ -30,7 +27,6 @@ public class TestGuiFrame2 implements LFJGFrame {
     @Override
     public void init() {
         Core.init(frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), frame.getWindowWidth(), frame.getWindowHeight());
-        projection2D = new Projection(ProjectionType.ORTHOGRAPHIC_PROJECTION, frame.getFrameBufferWidth(), frame.getFrameBufferHeight());
 
 //        glRect1 = new GLRect("Rect1");
 //        glRect1.rect(500, 500, 1000, 1000, Color.RED);
