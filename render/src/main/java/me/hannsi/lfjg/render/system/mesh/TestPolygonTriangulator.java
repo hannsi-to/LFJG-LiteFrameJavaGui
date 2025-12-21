@@ -76,8 +76,8 @@ public class TestPolygonTriangulator {
     }
 
     private TestElementPair processTriangulator() {
-        if (vertices == null || vertices.length < projectionType.getStride()) {
-            DebugLog.warning(getClass(), "Positions are null or too short");
+        if (vertices == null) {
+            DebugLog.warning(getClass(), "Positions are null");
             return new TestElementPair(new Vertex[0], new int[0]);
         }
 
