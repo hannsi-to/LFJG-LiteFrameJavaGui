@@ -29,7 +29,9 @@ import static me.hannsi.lfjg.core.Core.GL.createCapabilities;
 import static me.hannsi.lfjg.core.Core.GL11.glClearColor;
 import static me.hannsi.lfjg.core.Core.GL30.glClearBufferfv;
 import static me.hannsi.lfjg.core.Core.GL43.glInvalidateFramebuffer;
-import static me.hannsi.lfjg.core.Core.LFJGRenderContext.*;
+import static me.hannsi.lfjg.core.Core.GLStateCache.bindFrameBuffer;
+import static me.hannsi.lfjg.core.Core.LFJGRenderContext.disable;
+import static me.hannsi.lfjg.core.Core.LFJGRenderContext.enable;
 import static me.hannsi.lfjg.frame.LFJGFrameContext.renderPass;
 import static org.lwjgl.glfw.GLFW.*;
 
