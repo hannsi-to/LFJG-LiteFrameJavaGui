@@ -12,7 +12,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Objects;
 
 public final class Location {
@@ -36,6 +39,25 @@ public final class Location {
 
     public static Location fromURL(String url) {
         return new Location(url, LocationType.URL);
+    }
+
+    private static String normalizeResourcePath(String path) {
+        Deque<String> stack = new ArrayDeque<>();
+
+        for (String part : path.split("/")) {
+            if (part.isEmpty() || ".".equals(part)) {
+                continue;
+            }
+            if ("..".equals(part)) {
+                if (!stack.isEmpty()) {
+                    stack.removeLast();
+                }
+            } else {
+                stack.addLast(part);
+            }
+        }
+
+        return String.join("/", stack);
     }
 
     public InputStream openStream() throws IOException {
@@ -135,6 +157,43 @@ public final class Location {
             }
             default:
                 throw new IllegalArgumentException();
+        }
+    }
+
+    public Location resolve(String relativePath) {
+        if (relativePath == null || relativePath.isEmpty()) {
+            return this;
+        }
+
+        switch (locationType) {
+            case FILE: {
+                Path base = Paths.get(path);
+                Path resolved = base.resolve(relativePath).normalize();
+                return new Location(resolved.toString(), LocationType.FILE);
+            }
+
+            case RESOURCE: {
+                String base = path.startsWith("/") ? path.substring(1) : path;
+
+                int lastSlash = base.lastIndexOf('/');
+                String dir = (lastSlash >= 0) ? base.substring(0, lastSlash + 1) : "";
+
+                String combined = dir + relativePath;
+                return new Location(normalizeResourcePath(combined), LocationType.RESOURCE);
+            }
+
+            case URL: {
+                try {
+                    URL base = new URL(path);
+                    URL resolved = new URL(base, relativePath);
+                    return new Location(resolved.toString(), LocationType.URL);
+                } catch (MalformedURLException e) {
+                    throw new IllegalArgumentException("Invalid URL resolve: " + relativePath, e);
+                }
+            }
+
+            default:
+                throw new IllegalStateException("Unknown LocationType: " + locationType);
         }
     }
 
