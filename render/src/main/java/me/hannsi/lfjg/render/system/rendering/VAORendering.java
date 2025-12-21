@@ -33,15 +33,22 @@ public class VAORendering {
             } else {
                 PERSISTENT_MAPPED_IBO.directWriteCommand(base, 0, 0);
             }
-        }
 
-        PERSISTENT_MAPPED_VBO.syncToGPU();
-        PERSISTENT_MAPPED_EBO.syncToGPU();
-        PERSISTENT_MAPPED_IBO.syncToGPU();
+            if (glObjectData.builder.getInstanceData().isDirtyFrag()) {
+                MESH.updateInstanceData(entry.getKey(), glObjectData.builder.getInstanceData());
+
+                glObjectData.builder.getInstanceData().resetDirtyFlag();
+            }
+        }
 
         GL_STATE_CACHE.bindVertexArray(MESH.getVaoId());
         GL_STATE_CACHE.bindElementArrayBuffer(PERSISTENT_MAPPED_EBO.getBufferId());
         GL_STATE_CACHE.bindIndirectBuffer(PERSISTENT_MAPPED_IBO.getBufferId());
+
+        PERSISTENT_MAPPED_VBO.syncToGPU();
+        PERSISTENT_MAPPED_EBO.syncToGPU();
+        PERSISTENT_MAPPED_IBO.syncToGPU();
+        PERSISTENT_MAPPED_SSBO.syncToGPU();
 
         glMultiDrawElementsIndirect(
                 DrawType.TRIANGLES.getId(),
