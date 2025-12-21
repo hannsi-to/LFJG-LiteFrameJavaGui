@@ -11,5 +11,5 @@ void objectMain() {
         newColor = outColor;
     }
 
-    fragColor = blend(texColor, newColor, objectBlendMode);
+    //    fragColor = blend(texColor, newColor, objectBlendMode);
 }

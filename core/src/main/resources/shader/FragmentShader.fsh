@@ -1,95 +1,27 @@
 #version 460 core
 
-in vec4 outPosition;
-in vec4 outColor;
-in vec2 outTexture;
-
-flat in int instanceLayer;
-flat in int fragmentShaderType;
+flat in uint vSpriteIndex;
+in vec4 vColor;
+in vec2 vUV;
 
 out vec4 fragColor;
 
-uniform sampler2D textureSampler;
 uniform sampler2DArray uTexArray;
-uniform ivec2 resolution;
 
 layout(std430, binding = 1) buffer SpriteData {
     ivec4 spriteDataSize;
     vec4 spriteUVs[];
 } spriteData;
 
-layout(std430, binding = 2) buffer SpriteLayer {
-    uint layer[];
-} spriteLayer;
-
-#include "shader/frameBuffer/util/Luminance.glsl"
-#include "shader/frameBuffer/util/Blend.glsl"
-#include "shader/frameBuffer/util/MathUtil.glsl"
-
-#include "shader/scene/object/FragmentShader.fsh"
-#include "shader/scene/model/FragmentShader.fsh"
-#include "shader/frameBuffer/FragmentShader.fsh"
-#include "shader/msdf/FragmentShader.fsh"
-#include "shader/frameBuffer/filter/Bloom.fsh"
-#include "shader/frameBuffer/filter/BoxBlur.fsh"
-#include "shader/frameBuffer/filter/ChromaKey.fsh"
-#include "shader/frameBuffer/filter/ChromaticAberration.fsh"
-#include "shader/frameBuffer/filter/ClippingRect.fsh"
-#include "shader/frameBuffer/filter/ColorChanger.fsh"
-#include "shader/frameBuffer/filter/ColorCorrection.fsh"
-#include "shader/frameBuffer/filter/DiagonalClipping.fsh"
-#include "shader/frameBuffer/filter/DirectionalBlur.fsh"
-#include "shader/frameBuffer/filter/EdgeExtraction.fsh"
-#include "shader/frameBuffer/filter/FXAA.fsh"
-#include "shader/frameBuffer/filter/Flash.fsh"
-#include "shader/frameBuffer/filter/GaussianBlur.fsh"
-#include "shader/frameBuffer/filter/Glow.fsh"
-#include "shader/frameBuffer/filter/Gradation.fsh"
-#include "shader/frameBuffer/filter/Inversion.fsh"
-#include "shader/frameBuffer/filter/LensBlur.fsh"
-#include "shader/frameBuffer/filter/LuminanceKey.fsh"
-#include "shader/frameBuffer/filter/Monochrome.fsh"
-#include "shader/frameBuffer/filter/ObjectClipping.fsh"
-#include "shader/frameBuffer/filter/Pixelate.fsh"
-#include "shader/frameBuffer/filter/RadialBlur.fsh"
+#define NO_ATTACH_TEXTURE 0xFFFFFFFF
 
 void main() {
-    uint index = spriteLayer.layer[instanceLayer];
-    if (instanceLayer < spriteData.spriteDataSize.x || index < 0) {
-        vec4 uvRect = spriteData.spriteUVs[index];
-        vec2 uv = uvRect.xy + outTexture * uvRect.zw;
-        fragColor = texture(uTexArray, vec3(uv, 0));
-    } else {
-        fragColor = outColor;
+    if (vSpriteIndex == NO_ATTACH_TEXTURE) {
+        fragColor = vColor;
+        return;
     }
 
-    //    switch (fragmentShaderType){
-    //        case 0: objectMain(); break;
-    //        case 1: modelMain(); break;
-    //        case 2: frameBufferMain(); break;
-    //        case 3: msdfMain(); break;
-    //        case 4: bloomMain(); break;
-    //        case 5: boxBlurMain(); break;
-    //        case 6: chromaKeyMain(); break;
-    //        case 7: chromaticAberrationMain(); break;
-    //        case 8: clippingRectMain(); break;
-    //        case 9: colorChangerMain(); break;
-    //        case 10: colorCorrectionMain(); break;
-    //        case 11: diagonalClippingMain(); break;
-    //        case 12: directionalBlurMain(); break;
-    //        case 13: edgeExtractionMain(); break;
-    //        case 14: fxaaMain(); break;
-    //        case 15: flashMain(); break;
-    //        case 16: gaussianBlurMain(); break;
-    //        case 17: gaussianBlurMain(); break;
-    //        case 18: glowMain(); break;
-    //        case 19: gradationMain(); break;
-    //        case 20: inversionMain(); break;
-    //        case 21: lensBlurMain(); break;
-    //        case 22: luminanceKeyMain(); break;
-    //        case 23: monochromeMain(); break;
-    //        case 24: objectClippingMain(); break;
-    //        case 25: pixelateMain(); break;
-    //        case 26: radialBlurMain(); break;
-    //    }
+    vec4 uvRect = spriteData.spriteUVs[vSpriteIndex];
+    vec2 uv = uvRect.xy + vUV * uvRect.zw;
+    fragColor = texture(uTexArray, vec3(uv, 0));
 }
