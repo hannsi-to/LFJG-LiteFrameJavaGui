@@ -66,8 +66,8 @@ public class GLStateCache {
     }
 
     public void enable(int cap) {
-        boolean enabled = STATE_CACHE.get(cap);
-        if (enabled) {
+        Boolean enabled = STATE_CACHE.get(cap);
+        if (enabled != null && enabled) {
             return;
         }
         glEnable(cap);
@@ -75,8 +75,8 @@ public class GLStateCache {
     }
 
     public void disable(int cap) {
-        boolean enabled = STATE_CACHE.get(cap);
-        if (!enabled) {
+        Boolean enabled = STATE_CACHE.get(cap);
+        if (enabled != null && !enabled) {
             return;
         }
         glDisable(cap);
