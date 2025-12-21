@@ -2,25 +2,21 @@ package me.hannsi.lfjg.render.system.mesh;
 
 public class GLObjectData {
     public boolean draw;
-    public int baseVertex;
-    public int vertexCount;
-    public int baseIndex;
-    public int indexCount;
+    public DrawElementsIndirectCommand drawElementsIndirectCommand;
+    public TestMesh.Builder builder;
     public int baseCommand;
     public TestElementPair elementPair;
 
-    public GLObjectData(int baseVertex, int vertexCount, int baseIndex, int indexCount, int baseCommand, TestElementPair elementPair) {
+    public GLObjectData(DrawElementsIndirectCommand drawElementsIndirectCommand, TestMesh.Builder builder, int baseCommand, TestElementPair elementPair) {
         this.draw = true;
-        this.baseVertex = baseVertex;
-        this.vertexCount = vertexCount;
-        this.baseIndex = baseIndex;
-        this.indexCount = indexCount;
+        this.drawElementsIndirectCommand = drawElementsIndirectCommand;
+        this.builder = builder;
         this.baseCommand = baseCommand;
         this.elementPair = elementPair;
     }
 
     @Override
     public String toString() {
-        return "GLObjectData{draw: " + draw + ", baseVertex: " + baseVertex + ", vertexCount: " + vertexCount + ", baseIndex: " + baseIndex + ", indexCount: " + indexCount + ", baseCommand: " + baseCommand + ", " + elementPair.toString() + "}";
+        return "GLObjectData{drawElementIndirectCommand: " + drawElementsIndirectCommand + ", baseCommand: " + baseCommand + ", " + elementPair.toString() + "}";
     }
 }
