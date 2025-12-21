@@ -33,6 +33,7 @@ public class GLStateCache {
     private final int[] lastScissorBox = new int[]{-1, -1, -1, -1};
     private final int[] lastViewport = new int[]{-1, -1, -1, -1};
     private final float[] lastDepthRange = new float[]{-1f, -1f};
+    private final Map<Integer, BufferRangeState> lastBufferRanges = new HashMap<>();
     private int lastBlendSrc = -1;
     private int lastBlendDst = -1;
     private int lastBlendEquation = -1;
@@ -57,11 +58,6 @@ public class GLStateCache {
     private float lastLineWidth = -1f;
     private float lastPointSize = -1f;
     private int lastSampleMaskValue = -1;
-    private int lastBufferRangeTarget = -1;
-    private int lastBufferRangeIndex = -1;
-    private int lastBufferRangeBuffer = -1;
-    private long lastBufferRangeOffset = -1;
-    private long lastBufferRangeSize = -1;
 
     public GLStateCache() {
         EVENT_MANAGER.register(this);
@@ -70,8 +66,8 @@ public class GLStateCache {
     }
 
     public void enable(int cap) {
-        Boolean enabled = STATE_CACHE.get(cap);
-        if (enabled != null && enabled) {
+        boolean enabled = STATE_CACHE.get(cap);
+        if (enabled) {
             return;
         }
         glEnable(cap);
@@ -79,8 +75,8 @@ public class GLStateCache {
     }
 
     public void disable(int cap) {
-        Boolean enabled = STATE_CACHE.get(cap);
-        if (enabled != null && !enabled) {
+        boolean enabled = STATE_CACHE.get(cap);
+        if (!enabled) {
             return;
         }
         glDisable(cap);
@@ -296,11 +292,7 @@ public class GLStateCache {
             lastUniformBuffer = -1;
         }
 
-        if (lastBufferRangeBuffer == buffer) {
-            lastBufferRangeBuffer = -1;
-            lastBufferRangeOffset = -1;
-            lastBufferRangeSize = -1;
-        }
+        lastBufferRanges.entrySet().removeIf(entry -> entry.getValue().buffer == buffer);
 
         glDeleteBuffers(buffer);
     }
@@ -319,11 +311,7 @@ public class GLStateCache {
             lastShaderStorageBuffer = -1;
         }
 
-        if (lastBufferRangeBuffer == buffer) {
-            lastBufferRangeBuffer = -1;
-            lastBufferRangeOffset = -1;
-            lastBufferRangeSize = -1;
-        }
+        lastBufferRanges.entrySet().removeIf(entry -> entry.getValue().buffer == buffer);
 
         glDeleteBuffers(buffer);
     }
@@ -514,17 +502,15 @@ public class GLStateCache {
     }
 
     public void bindBufferRange(int target, int index, int buffer, long offset, long size) {
-        if (lastBufferRangeTarget == target && lastBufferRangeIndex == index && lastBufferRangeBuffer == buffer && lastBufferRangeOffset == offset && lastBufferRangeSize == size) {
+        BufferRangeState currentState = lastBufferRanges.get(index);
+
+        if (currentState != null && currentState.target == target && currentState.buffer == buffer && currentState.offset == offset && currentState.size == size) {
             return;
         }
 
         glBindBufferRange(target, index, buffer, offset, size);
 
-        lastBufferRangeTarget = target;
-        lastBufferRangeIndex = index;
-        lastBufferRangeBuffer = buffer;
-        lastBufferRangeOffset = offset;
-        lastBufferRangeSize = size;
+        lastBufferRanges.put(index, new BufferRangeState(target, buffer, offset, size));
     }
 
     @EventHandler
@@ -660,11 +646,13 @@ public class GLStateCache {
                 lastSampleMaskValue = (int) args[1];
                 break;
             case "glBindBufferRange":
-                lastBufferRangeTarget = (int) args[0];
-                lastBufferRangeIndex = (int) args[1];
-                lastBufferRangeBuffer = (int) args[2];
-                lastBufferRangeOffset = (long) args[3];
-                lastBufferRangeSize = (long) args[4];
+                int target = (int) args[0];
+                int index = (int) args[1];
+                int buffer = (int) args[2];
+                long offset = (long) args[3];
+                long size = (long) args[4];
+                lastBufferRanges.put(index, new BufferRangeState(target, buffer, offset, size));
+
                 break;
         }
     }
@@ -809,23 +797,7 @@ public class GLStateCache {
         return lastSampleMaskValue;
     }
 
-    public int getLastBufferRangeTarget() {
-        return lastBufferRangeTarget;
-    }
+    private record BufferRangeState(int target, int buffer, long offset, long size) {
 
-    public int getLastBufferRangeIndex() {
-        return lastBufferRangeIndex;
-    }
-
-    public int getLastBufferRangeBuffer() {
-        return lastBufferRangeBuffer;
-    }
-
-    public long getLastBufferRangeOffset() {
-        return lastBufferRangeOffset;
-    }
-
-    public long getLastBufferRangeSize() {
-        return lastBufferRangeSize;
     }
 }
