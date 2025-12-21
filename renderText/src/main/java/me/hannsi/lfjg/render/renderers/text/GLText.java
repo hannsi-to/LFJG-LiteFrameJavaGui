@@ -49,7 +49,7 @@ public class GLText extends GLPolygon<GLText> {
         setDrawType(DrawType.QUADS);
         rendering();
 
-        textRenderer.setBaseMatrix(getTransform().getModelMatrix());
+//        textRenderer.setBaseMatrix(getTransform().getModelMatrix());
     }
 
     public float getTextWidth(String text) {
