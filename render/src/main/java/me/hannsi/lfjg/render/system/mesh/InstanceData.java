@@ -1,35 +1,55 @@
 package me.hannsi.lfjg.render.system.mesh;
 
-import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
-import org.joml.Matrix4d;
-import org.joml.Matrix4f;
+import me.hannsi.lfjg.render.renderers.Transform;
 
 import java.util.Arrays;
 
 public class InstanceData {
+    public static final int NO_ATTACH_TEXTURE = -1;
     public final int instanceCount;
-    public Matrix4f[] instanceModels;
-    public Color[] instanceColors;
+    private final Transform[] transforms;
+    private final Color[] instanceColors;
+    private boolean dirtyFrag = false;
 
-    public InstanceData(int instanceCount,Color defaultColor){
+    public InstanceData(int instanceCount, Color defaultColor) {
         this.instanceCount = instanceCount;
+        this.transforms = new Transform[instanceCount];
         this.instanceColors = new Color[instanceCount];
 
+        Arrays.fill(transforms, new Transform(NO_ATTACH_TEXTURE));
         Arrays.fill(instanceColors, defaultColor);
     }
 
-    public InstanceData(int instanceCount, Matrix4f[] instanceModels, Color[] instanceColors) {
+    public InstanceData(int instanceCount, Transform[] transforms, Color[] instanceColors) {
         this.instanceCount = instanceCount;
-        this.instanceModels = instanceModels;
+        this.transforms = transforms;
         this.instanceColors = instanceColors;
 
-        if(instanceModels.length != instanceCount){
-            throw new RuntimeException("The sizes of InstanceCount and InstanceModels do not match. InstanceCount: " + instanceCount + " != InstanceModels: " + instanceModels.length);
+        if (transforms.length != instanceCount) {
+            throw new RuntimeException("The sizes of InstanceCount and InstanceModels do not match. InstanceCount: " + instanceCount + " != Transforms: " + transforms.length);
         }
 
-        if(instanceColors.length != instanceCount){
-            throw new RuntimeException("The sizes of InstanceCount and InstanceColors do not match. InstanceCount: " +instanceCount + " != InstanceColors: " + instanceColors.length);
+        if (instanceColors.length != instanceCount) {
+            throw new RuntimeException("The sizes of InstanceCount and InstanceColors do not match. InstanceCount: " + instanceCount + " != InstanceColors: " + instanceColors.length);
         }
+    }
+
+    public void resetDirtyFlag() {
+        dirtyFrag = false;
+    }
+
+    public boolean isDirtyFrag() {
+        return dirtyFrag;
+    }
+
+    public Transform[] getTransforms() {
+        dirtyFrag = true;
+        return transforms;
+    }
+
+    public Color[] getInstanceColors() {
+        dirtyFrag = true;
+        return instanceColors;
     }
 }
