@@ -1,39 +1,42 @@
 package me.hannsi.test;
 
 import me.hannsi.lfjg.core.Core;
+import me.hannsi.lfjg.core.utils.graphics.ResolutionType;
+import me.hannsi.lfjg.core.utils.graphics.color.Color;
+import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.core.utils.time.Timer;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.renderers.BlendType;
-import me.hannsi.lfjg.render.renderers.JointType;
-import me.hannsi.lfjg.render.renderers.PointType;
+import me.hannsi.lfjg.render.renderers.Transform;
+import me.hannsi.lfjg.render.renderers.polygon.GLRect;
+import me.hannsi.lfjg.render.system.mesh.InstanceData;
 import me.hannsi.lfjg.render.system.mesh.TestMesh;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.rendering.texture.SparseTexture2DArray;
+import me.hannsi.lfjg.render.system.rendering.texture.atlas.AtlasPacker;
+import me.hannsi.lfjg.render.system.rendering.texture.atlas.Sprite;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
-import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-import static me.hannsi.lfjg.core.Core.frameBufferSize;
+import static me.hannsi.lfjg.core.Core.projection2D;
+import static me.hannsi.lfjg.core.Core.projection3D;
 import static me.hannsi.lfjg.frame.LFJGFrameContext.frame;
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 public class TestNewMeshSystem implements LFJGFrame {
     Timer timer = new Timer();
     List<IntRef> objectIds = new ArrayList<>();
     SparseTexture2DArray sparseTexture2DArray;
-    private Matrix4f modelMatrix;
-    private Matrix4f viewMatrix;
+    GLRect glRect;
+    InstanceData instanceData;
     private BlendType blendType;
 
     public static void main(String[] args) {
@@ -46,116 +49,125 @@ public class TestNewMeshSystem implements LFJGFrame {
 
 //        glRect = GLRect.createGLRect("GLRect1")
 //                .x1_y1_color1_2p(0, 0, Color.RED)
-//                .width3_height3_color3_2p(1000, 1000, Color.PERIWINKLE)
+//                .width3_height3_color3_2p(frameBufferSize.x, frameBufferSize.y, Color.GREEN)
 //                .fill()
 //                .update();
 
-//        AtlasPacker atlas = new AtlasPacker(2048, 2048, 0, 0, 0);
-//        for (int i = 0; i < 4; i++) {
-//            int w = 16 + (int) (MathHelper.random() * 50);
-//            int h = 16 + (int) (MathHelper.random() * 50);
-//            atlas.addSprite("Code: " + i, Sprite.createRandomColor(i, w, h));
-//        }
-//        atlas.generate();
-//
-//        sparseTexture2DArray = new SparseTexture2DArray(atlas.getAtlasWidth(), atlas.getAtlasHeight(), atlas.getAtlasBuffer());
-//
-//        MESH.addObject(
-//                TestMesh.Builder.createBuilder()
-//                        .drawType(DrawType.QUADS)
-//                        .pointSize(30)
-//                        .lineWidth(10f)
-//                        .vertices(
-//                                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-//                                new Vertex(400, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-//                                new Vertex(400, 400, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-//                                new Vertex(0, 400, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
-//                        )
-//        );
-//
-//        MESH.addObject(
-//                TestMesh.Builder.createBuilder()
-//                        .drawType(DrawType.QUADS)
-//                        .pointSize(30)
-//                        .lineWidth(10f)
-//                        .vertices(
-//                                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-//                                new Vertex(300, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-//                                new Vertex(300, 300, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-//                                new Vertex(0, 300, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
-//                        )
-//        );
-//
-//        MESH.addObject(
-//                TestMesh.Builder.createBuilder()
-//                        .drawType(DrawType.QUADS)
-//                        .pointSize(30)
-//                        .lineWidth(10f)
-//                        .vertices(
-//                                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-//                                new Vertex(200, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-//                                new Vertex(200, 200, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-//                                new Vertex(0, 200, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
-//                        )
-//        );
-//
-//        MESH.addObject(
-//                TestMesh.Builder.createBuilder()
-//                        .drawType(DrawType.QUADS)
-//                        .pointSize(30)
-//                        .lineWidth(10f)
-//                        .vertices(
-//                                new Vertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-//                                new Vertex(200, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-//                                new Vertex(200, 200, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-//                                new Vertex(0, 200, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0)
-//                        )
-//        );
-
-        int numObjects = 100;
-        int numVerticesPerStrip = 100;
-        float minX = 0;
-        float maxX = 1920;
-        float minY = 0;
-        float maxY = 1080;
-        float minSize = 100.0f;
-        float maxSize = 500.0f;
-        Random random = new Random();
-
-        for (int i = 0; i < numObjects; i++) {
-            float x = minX + random.nextFloat() * (maxX - minX);
-            float y = minY + random.nextFloat() * (maxY - minY);
-
-            List<Vertex> vertices = new ArrayList<>();
-
-            for (int j = 0; j < numVerticesPerStrip; j++) {
-                float r = random.nextFloat();
-                float g = random.nextFloat();
-                float b = random.nextFloat();
-
-                Vertex v = new Vertex(x, y, 0, r, g, b, 0.5f, 0, 0, 0, 0, 1);
-                vertices.add(v);
-
-                float angle = (float) (random.nextFloat() * Math.PI * 2.0);
-                float step = minSize + random.nextFloat() * (maxSize - minSize);
-                x += (float) (Math.cos(angle) * step);
-                y += (float) (Math.sin(angle) * step);
-            }
-
-            IntRef id = new IntRef();
-            MESH.addObject(
-                    TestMesh.Builder.createBuilder()
-                            .objectIdPointer(id)
-                            .drawType(DrawType.POINTS)
-                            .pointSize(30f)
-                            .lineWidth(-1f)
-                            .pointType(PointType.ROUND)
-                            .jointType(JointType.NONE)
-                            .vertices(vertices.toArray(new Vertex[0]))
-            );
-
-            objectIds.add(id);
+        AtlasPacker atlas = new AtlasPacker(1024, 1024, 1, 0, 0, 0);
+        for (int i = 0; i < 4; i++) {
+            int w = 16 + (int) (MathHelper.random() * 100);
+            int h = 16 + (int) (MathHelper.random() * 100);
+            atlas.addSprite("Code: " + i, Sprite.createRandomColor(i, w, h, false));
         }
+        atlas.generate();
+
+        sparseTexture2DArray = new SparseTexture2DArray(atlas)
+                .updateFromAtlas(atlas.getAtlasLayers());
+
+        int instanceCount = 4;
+        float objectSize = ResolutionType.WQHD.getHeight();
+        Transform[] matrix4fs = new Transform[instanceCount];
+        Color[] colors = new Color[instanceCount];
+        for (int i = 0; i < instanceCount; i++) {
+            float scale = ((objectSize / instanceCount) * (instanceCount - i)) / objectSize;
+            matrix4fs[i] = new Transform(i).scale(scale, scale, 1);
+            colors[i] = new Color(0, 0, 0, 0);
+        }
+
+        MESH.addObject(
+                TestMesh.Builder.createBuilder()
+                        .drawType(DrawType.QUADS)
+                        .pointSize(30)
+                        .lineWidth(10f)
+                        .vertices(
+                                new Vertex(0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0),
+                                new Vertex(objectSize, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0),
+                                new Vertex(objectSize, objectSize, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0),
+                                new Vertex(0, objectSize, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0)
+                        )
+                        .instanceData(instanceData = new InstanceData(instanceCount, matrix4fs, colors))
+        );
+
+//        MESH.addObject(
+//                TestMesh.Builder.createBuilder()
+//                        .drawType(DrawType.QUADS)
+//                        .pointSize(30)
+//                        .lineWidth(10f)
+//                        .vertices(
+//                                new Vertex(0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0),
+//                                new Vertex(300, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0),
+//                                new Vertex(300, 300, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0),
+//                                new Vertex(0, 300, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0)
+//                        )
+//        );
+//
+//        MESH.addObject(
+//                TestMesh.Builder.createBuilder()
+//                        .drawType(DrawType.QUADS)
+//                        .pointSize(30)
+//                        .lineWidth(10f)
+//                        .vertices(
+//                                new Vertex(0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0),
+//                                new Vertex(200, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0),
+//                                new Vertex(200, 200, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0),
+//                                new Vertex(0, 200, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0)
+//                        )
+//        );
+//
+//        MESH.addObject(
+//                TestMesh.Builder.createBuilder()
+//                        .drawType(DrawType.QUADS)
+//                        .pointSize(30)
+//                        .lineWidth(10f)
+//                        .vertices(
+//                                new Vertex(0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0),
+//                                new Vertex(100, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0),
+//                                new Vertex(100, 100, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0),
+//                                new Vertex(0, 100, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0)
+//                        )
+//        );
+
+//        int numObjects = 100;
+//        int numVerticesPerObject = 100;
+//        float minX = 0;
+//        float maxX = ResolutionType.WQHD.getWidth();
+//        float minY = 0;
+//        float maxY = ResolutionType.WQHD.getHeight();
+//        Random random = new Random();
+//
+//        for (int i = 0; i < numObjects; i++) {
+//            IntRef id = new IntRef();
+//            ProjectionType[] projectionTypes = new ProjectionType[numVerticesPerObject];
+//            Matrix4f[] instanceModels = new Matrix4f[numVerticesPerObject];
+//            Color[] instanceColors = new Color[numVerticesPerObject];
+//
+//            for (int j = 0; j < numVerticesPerObject; j++) {
+//                float x = minX + random.nextFloat() * (maxX - minX);
+//                float y = minY + random.nextFloat() * (maxY - minY);
+//
+//                float r = random.nextFloat();
+//                float g = random.nextFloat();
+//                float b = random.nextFloat();
+//
+//                projectionTypes[j] = ProjectionType.ORTHOGRAPHIC_PROJECTION;
+//                instanceModels[j] = new Matrix4f().translate(x, y, 0);
+//                instanceColors[j] = new Color(r, g, b, 0.5f);
+//            }
+//
+//            MESH.addObject(
+//                    TestMesh.Builder.createBuilder()
+//                            .objectIdPointer(id)
+//                            .drawType(DrawType.POINTS)
+//                            .pointSize(30f)
+//                            .lineWidth(-1f)
+//                            .pointType(PointType.ROUND)
+//                            .jointType(JointType.NONE)
+//                            .vertices(new Vertex(0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0))
+//                            .instanceData(new InstanceData(numVerticesPerObject, projectionTypes, instanceModels, instanceColors))
+//            );
+//
+//            objectIds.add(id);
+//        }
 
 //        for (int i = 0; i < numObjects; i++) {
 //            float x = minX + random.nextFloat() * (maxX - minX);
@@ -264,23 +276,30 @@ public class TestNewMeshSystem implements LFJGFrame {
 
         MESH.initBufferObject();
 
-        modelMatrix = new Matrix4f();
-        viewMatrix = new Matrix4f();
         blendType = BlendType.NORMAL;
+
+        PERSISTENT_MAPPED_SSBO.bindBufferRange();
     }
 
     @Override
     public void drawFrame() {
+        precomputedViewProjection2D = projection2D.getMatrix4f().mul(MAIN_CAMERA.getViewMatrix());
+        precomputedViewProjection3D = projection3D.getMatrix4f().mul(MAIN_CAMERA.getViewMatrix());
+
         SHADER_PROGRAM.bind();
 
         GL_STATE_CACHE.blendFunc(blendType.getSfactor(), blendType.getDfactor());
         GL_STATE_CACHE.setBlendEquation(blendType.getEquation());
         GL_STATE_CACHE.enable(GL_BLEND);
         GL_STATE_CACHE.disable(GL_DEPTH_TEST);
+        GL_STATE_CACHE.depthMask(false);
 
-        glActiveTexture(GL_TEXTURE0);
-        SHADER_PROGRAM.setUniform("resolution", UploadUniformType.ON_CHANGE, frameBufferSize);
         SHADER_PROGRAM.setUniform("uTextArray", UploadUniformType.ONCE, 0);
+
+        for (Transform instanceModel : instanceData.getTransforms()) {
+//            instanceModel.translate(1, 0, 0);
+        }
+
 
         VAO_RENDERING.draw();
 
@@ -288,7 +307,7 @@ public class TestNewMeshSystem implements LFJGFrame {
             System.out.println("FPS: " + frame.getFps());
             timer.reset();
 
-//            long id = objectIds.get((int) (MathHelper.random() * objectIds.size())).getValue();
+//            int id = objectIds.get((int) (MathHelper.random() * objectIds.size())).getValue();
 //            MESH.deleteObject(objectIds, id);
         }
     }

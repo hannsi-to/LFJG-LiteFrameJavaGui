@@ -11,6 +11,7 @@ public class Sprite {
     public final ByteBuffer data;
     public int offsetX;
     public int offsetY;
+    public int offsetZ;
 
     public Sprite(int instanceLayer, int width, int height, ByteBuffer data) {
         this.instanceLayer = instanceLayer;

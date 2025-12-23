@@ -17,8 +17,15 @@ import org.joml.Matrix4f;
 import static me.hannsi.lfjg.core.Core.projection2D;
 import static me.hannsi.lfjg.core.Core.projection3D;
 import static me.hannsi.lfjg.core.SystemSetting.*;
+import static org.lwjgl.opengl.ARBSparseTexture.GL_VIRTUAL_PAGE_SIZE_X_ARB;
+import static org.lwjgl.opengl.ARBSparseTexture.GL_VIRTUAL_PAGE_SIZE_Y_ARB;
+import static org.lwjgl.opengl.GL11.GL_RGBA8;
+import static org.lwjgl.opengl.GL30.GL_TEXTURE_2D_ARRAY;
+import static org.lwjgl.opengl.GL42.glGetInternalformativ;
 
 public class LFJGRenderContext {
+    public static final int PAGE_SIZE_X;
+    public static final int PAGE_SIZE_Y;
     public static IdPool ID_POOL;
     public static GLObjectPool GL_OBJECT_POOL;
     public static Camera MAIN_CAMERA;
@@ -33,6 +40,15 @@ public class LFJGRenderContext {
     public static VAORendering VAO_RENDERING;
     public static GLStateCache GL_STATE_CACHE;
     public static TextureCache TEXTURE_CACHE;
+
+    static {
+        int[] x = new int[1];
+        int[] y = new int[1];
+        glGetInternalformativ(GL_TEXTURE_2D_ARRAY, GL_RGBA8, GL_VIRTUAL_PAGE_SIZE_X_ARB, x);
+        glGetInternalformativ(GL_TEXTURE_2D_ARRAY, GL_RGBA8, GL_VIRTUAL_PAGE_SIZE_Y_ARB, y);
+        PAGE_SIZE_X = x[0];
+        PAGE_SIZE_Y = y[0];
+    }
 
     public static void init() {
         ID_POOL = new IdPool();
