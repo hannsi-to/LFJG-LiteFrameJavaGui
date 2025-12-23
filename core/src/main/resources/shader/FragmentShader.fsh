@@ -8,9 +8,14 @@ out vec4 fragColor;
 
 uniform sampler2DArray uTexArray;
 
-layout(std430, binding = 1) buffer SpriteData {
-    ivec4 spriteDataSize;
-    vec4 spriteUVs[];
+struct UV{
+    vec4 rect;
+    float layer;
+    float _pad[3];
+};
+
+layout(std430, binding = 1) readonly buffer SpriteData {
+    UV data[];
 } spriteData;
 
 #define NO_ATTACH_TEXTURE 0xFFFFFFFF
@@ -21,7 +26,8 @@ void main() {
         return;
     }
 
-    vec4 uvRect = spriteData.spriteUVs[vSpriteIndex];
+    vec4 uvRect = spriteData.data[vSpriteIndex].rect;
+    float layer = spriteData.data[vSpriteIndex].layer;
     vec2 uv = uvRect.xy + vUV * uvRect.zw;
-    fragColor = texture(uTexArray, vec3(uv, 0));
+    fragColor = texture(uTexArray, vec3(uv, layer));
 }
