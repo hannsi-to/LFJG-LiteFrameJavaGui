@@ -16,6 +16,10 @@ public class Ref<T> {
         return String.valueOf(value);
     }
 
+    public boolean isNullptr() {
+        return value == null;
+    }
+
     public T getValue() {
         return value;
     }
