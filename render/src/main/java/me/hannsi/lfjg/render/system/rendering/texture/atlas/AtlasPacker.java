@@ -11,7 +11,6 @@ import java.util.Map;
 import static me.hannsi.lfjg.core.utils.math.MathHelper.max;
 import static me.hannsi.lfjg.core.utils.math.MathHelper.min;
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
-import static me.hannsi.lfjg.render.system.mesh.InstanceData.NO_ATTACH_TEXTURE;
 import static org.lwjgl.opengl.GL11.GL_MAX_TEXTURE_SIZE;
 import static org.lwjgl.opengl.GL11.glGetInteger;
 import static org.lwjgl.opengl.GL30.GL_MAX_ARRAY_TEXTURE_LAYERS;
@@ -166,16 +165,6 @@ public class AtlasPacker {
         }
 
         return atlasLayers;
-    }
-
-    public int getLayer(String name) {
-        if (!sprites.containsKey(name)) {
-            DebugLog.error(getClass(), "The sprite registered under " + name + " does not exist.");
-
-            return NO_ATTACH_TEXTURE;
-        }
-
-        return sprites.get(name).instanceLayer;
     }
 
     public int getAtlasWidth() {
