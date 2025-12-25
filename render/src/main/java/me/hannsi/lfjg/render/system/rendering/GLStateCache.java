@@ -49,6 +49,8 @@ public class GLStateCache {
     private int lastArrayBuffer = -1;
     private int lastUniformBuffer = -1;
     private int lastShaderStorageBuffer = -1;
+    private int lastPixelUnpackBuffer = -1;
+    private int lastPixelPackBuffer = -1;
     private double lastClearDepth = -1.0;
     private int lastClearStencil = -1;
     private boolean lastDepthMask = true;
@@ -312,6 +314,40 @@ public class GLStateCache {
         }
 
         lastBufferRanges.entrySet().removeIf(entry -> entry.getValue().buffer == buffer);
+
+        glDeleteBuffers(buffer);
+    }
+
+    public void bindPixelUnpackBuffer(int buffer) {
+        if (lastPixelUnpackBuffer == buffer) {
+            return;
+        }
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer);
+        lastPixelUnpackBuffer = buffer;
+    }
+
+    public void deletePixelUnpackBuffer(int buffer) {
+        if (lastPixelUnpackBuffer == buffer) {
+            bindPixelUnpackBuffer(0);
+            lastPixelUnpackBuffer = -1;
+        }
+
+        glDeleteBuffers(buffer);
+    }
+
+    public void bindPixelPackBuffer(int buffer) {
+        if (lastPixelPackBuffer == buffer) {
+            return;
+        }
+        glBindBuffer(GL_PIXEL_PACK_BUFFER, buffer);
+        lastPixelPackBuffer = buffer;
+    }
+
+    public void deletePixelPackBuffer(int buffer) {
+        if (lastPixelPackBuffer == buffer) {
+            bindPixelPackBuffer(0);
+            lastPixelPackBuffer = -1;
+        }
 
         glDeleteBuffers(buffer);
     }
