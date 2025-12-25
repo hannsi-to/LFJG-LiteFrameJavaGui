@@ -25,7 +25,6 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
     private static final float[] TEMP_BUFFER = new float[MeshConstants.FLOATS_PER_VERTEX];
     private static final long FLOAT_BASE = UNSAFE.arrayBaseOffset(float[].class);
     private final int flags;
-    private ByteBuffer mappedBuffer;
     private long mappedAddress;
     private int bufferId;
     private long gpuMemorySize;
@@ -63,7 +62,6 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
         if (byteBuffer == null) {
             throw new RuntimeException("glMapBufferRange failed");
         }
-        mappedBuffer = byteBuffer;
         mappedAddress = MemoryUtil.memAddress(byteBuffer);
     }
 
@@ -146,7 +144,7 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
             bytesToCopy = oldSize;
         }
 
-        if (oldAddr == 0 || mappedBuffer == null) {
+        if (oldAddr == 0) {
             DebugLog.warning(getClass(), "No existing mapped buffer to backup from.");
         } else if (bytesToCopy > 0) {
             long tmp = MemoryUtil.nmemAllocChecked(bytesToCopy);
@@ -159,7 +157,6 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
                 }
                 GL_STATE_CACHE.deleteArrayBuffer(bufferId);
                 bufferId = 0;
-                mappedBuffer = null;
                 mappedAddress = 0;
 
                 allocationBufferStorage(newGPUMemorySizeBytes);
@@ -175,7 +172,6 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
             glUnmapBuffer(GL_ARRAY_BUFFER);
             GL_STATE_CACHE.deleteArrayBuffer(bufferId);
             bufferId = 0;
-            mappedBuffer = null;
             mappedAddress = 0;
 
             allocationBufferStorage(newGPUMemorySizeBytes);
@@ -234,11 +230,6 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
     }
 
     @Override
-    public ByteBuffer getMappedBuffer() {
-        return mappedBuffer;
-    }
-
-    @Override
     public long getMappedAddress() {
         return mappedAddress;
     }
@@ -254,7 +245,6 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
             GL_STATE_CACHE.deleteArrayBuffer(bufferId);
             bufferId = 0;
         }
-        mappedBuffer = null;
         vertexCount = 0;
     }
 }

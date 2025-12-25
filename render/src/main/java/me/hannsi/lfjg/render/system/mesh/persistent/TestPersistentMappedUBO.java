@@ -25,7 +25,6 @@ public class TestPersistentMappedUBO implements TestPersistentMappedBuffer {
     public static long DEFAULT_UBO_CAPACITY = STD140UniformBlockType.MAT4.getByteSize() * 3L;
     private final int flags;
     private final Map<Integer, UBOData> uboDatum;
-    private ByteBuffer mappedBuffer;
     private long mappedAddress;
     private int bufferId;
     private long gpuMemorySize;
@@ -62,7 +61,6 @@ public class TestPersistentMappedUBO implements TestPersistentMappedBuffer {
         if (byteBuffer == null) {
             throw new RuntimeException("glMapBufferRange failed");
         }
-        mappedBuffer = byteBuffer;
         mappedAddress = MemoryUtil.memAddress(byteBuffer);
     }
 
@@ -142,7 +140,7 @@ public class TestPersistentMappedUBO implements TestPersistentMappedBuffer {
             bytesToCopy = oldSize;
         }
 
-        if (oldAddr == 0 || mappedBuffer == null) {
+        if (oldAddr == 0) {
             DebugLog.warning(getClass(), "No existing mapped buffer to backup from.");
         } else if (bytesToCopy > 0) {
             long tmp = MemoryUtil.nmemAllocChecked(bytesToCopy);
@@ -155,7 +153,6 @@ public class TestPersistentMappedUBO implements TestPersistentMappedBuffer {
                 }
                 GL_STATE_CACHE.deleteUniformBuffer(bufferId);
                 bufferId = 0;
-                mappedBuffer = null;
                 mappedAddress = 0;
 
                 allocationBufferStorage(newGPUMemorySizeBytes);
@@ -171,7 +168,6 @@ public class TestPersistentMappedUBO implements TestPersistentMappedBuffer {
             glUnmapBuffer(GL_UNIFORM_BUFFER);
             GL_STATE_CACHE.deleteUniformBuffer(bufferId);
             bufferId = 0;
-            mappedBuffer = null;
             mappedAddress = 0;
 
             allocationBufferStorage(newGPUMemorySizeBytes);
@@ -305,18 +301,12 @@ public class TestPersistentMappedUBO implements TestPersistentMappedBuffer {
             GL_STATE_CACHE.deleteUniformBuffer(bufferId);
             bufferId = 0;
         }
-        mappedBuffer = null;
         uboDatum.clear();
     }
 
     @Override
     public int getBufferId() {
         return bufferId;
-    }
-
-    @Override
-    public ByteBuffer getMappedBuffer() {
-        return mappedBuffer;
     }
 
     @Override

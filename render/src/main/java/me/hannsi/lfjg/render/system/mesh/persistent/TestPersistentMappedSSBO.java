@@ -27,7 +27,6 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
     private final int initialCapacity;
     private final int ssboOffsetAlignment;
     private Map<Integer, SSBOBindingData> bindingDatum;
-    private ByteBuffer mappedBuffer;
     private long mappedAddress;
     private long lastAddress;
     private int bufferId;
@@ -63,7 +62,6 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
         if (byteBuffer == null) {
             throw new RuntimeException("glMapBufferRange failed!");
         }
-        mappedBuffer = byteBuffer;
         mappedAddress = MemoryUtil.memAddress(byteBuffer);
     }
 
@@ -301,7 +299,7 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
             bytesToCopy = oldSize;
         }
 
-        if (oldAddr == 0 || mappedBuffer == null) {
+        if (oldAddr == 0) {
             DebugLog.warning(getClass(), "No existing mapped buffer to backup from.");
         } else if (bytesToCopy > 0) {
             long tmp = MemoryUtil.nmemAllocChecked(bytesToCopy);
@@ -314,7 +312,6 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
                 }
                 GL_STATE_CACHE.deleteShaderStorageBuffer(bufferId);
                 bufferId = 0;
-                mappedBuffer = null;
                 mappedAddress = 0;
 
                 allocationBufferStorage(newGPUMemorySizeBytes);
@@ -330,7 +327,6 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
             glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
             GL_STATE_CACHE.deleteShaderStorageBuffer(bufferId);
             bufferId = 0;
-            mappedBuffer = null;
             mappedAddress = 0;
 
             allocationBufferStorage(newGPUMemorySizeBytes);
@@ -373,17 +369,11 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
         }
         bindingDatum.clear();
         bindingDatum = null;
-        mappedBuffer = null;
     }
 
     @Override
     public int getBufferId() {
         return bufferId;
-    }
-
-    @Override
-    public ByteBuffer getMappedBuffer() {
-        return mappedBuffer;
     }
 
     @Override

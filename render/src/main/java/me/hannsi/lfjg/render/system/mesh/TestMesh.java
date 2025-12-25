@@ -325,7 +325,7 @@ public class TestMesh {
                     new LogGenerator(
                             "VBO",
                             "BufferID: " + PERSISTENT_MAPPED_VBO.getBufferId(),
-                            "Capacity: " + PERSISTENT_MAPPED_VBO.getMappedBuffer().capacity(),
+                            "Capacity: " + PERSISTENT_MAPPED_VBO.getGPUMemorySize(),
                             "Used: " + PERSISTENT_MAPPED_VBO.getVertexCount()
                     ).createLog()
             );
@@ -335,7 +335,7 @@ public class TestMesh {
                     new LogGenerator(
                             "EBO",
                             "BufferID: " + PERSISTENT_MAPPED_EBO.getBufferId(),
-                            "Capacity: " + PERSISTENT_MAPPED_EBO.getMappedBuffer().capacity(),
+                            "Capacity: " + PERSISTENT_MAPPED_EBO.getGPUMemorySize(),
                             "Used: " + PERSISTENT_MAPPED_EBO.getIndexCount()
                     ).createLog()
             );
@@ -345,7 +345,7 @@ public class TestMesh {
                     new LogGenerator(
                             "IBO",
                             "BufferID: " + PERSISTENT_MAPPED_IBO.getBufferId(),
-                            "Capacity: " + PERSISTENT_MAPPED_IBO.getMappedBuffer().capacity(),
+                            "Capacity: " + PERSISTENT_MAPPED_IBO.getGPUMemorySize(),
                             "Command Count: " + PERSISTENT_MAPPED_IBO.getCommandCount()
                     ).createLog()
             );

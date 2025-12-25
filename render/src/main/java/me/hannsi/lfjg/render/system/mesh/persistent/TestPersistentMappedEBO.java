@@ -17,7 +17,6 @@ import static org.lwjgl.opengl.GL44.glBufferStorage;
 
 public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
     private final int flags;
-    private ByteBuffer mappedBuffer;
     private long mappedAddress;
     private int bufferId;
     private long gpuMemorySize;
@@ -55,7 +54,6 @@ public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
         if (byteBuffer == null) {
             throw new RuntimeException("glMapBufferRange failed");
         }
-        mappedBuffer = byteBuffer;
         mappedAddress = MemoryUtil.memAddress(byteBuffer);
     }
 
@@ -132,7 +130,7 @@ public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
             bytesToCopy = oldSize;
         }
 
-        if (oldAddr == 0 || mappedBuffer == null) {
+        if (oldAddr == 0) {
             DebugLog.warning(getClass(), "No existing mapped buffer to backup from.");
         } else if (bytesToCopy > 0) {
             long tmp = MemoryUtil.nmemAllocChecked(bytesToCopy);
@@ -145,7 +143,6 @@ public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
                 }
                 GL_STATE_CACHE.deleteElementArrayBuffer(bufferId);
                 bufferId = 0;
-                mappedBuffer = null;
                 mappedAddress = 0;
 
                 allocationBufferStorage(newGPUMemorySizeBytes);
@@ -161,7 +158,6 @@ public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
             glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
             GL_STATE_CACHE.deleteElementArrayBuffer(bufferId);
             bufferId = 0;
-            mappedBuffer = null;
             mappedAddress = 0;
 
             allocationBufferStorage(newGPUMemorySizeBytes);
@@ -195,11 +191,6 @@ public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
     }
 
     @Override
-    public ByteBuffer getMappedBuffer() {
-        return mappedBuffer;
-    }
-
-    @Override
     public long getGPUMemorySize() {
         return gpuMemorySize;
     }
@@ -215,7 +206,6 @@ public class TestPersistentMappedEBO implements TestPersistentMappedBuffer {
             GL_STATE_CACHE.deleteElementArrayBuffer(bufferId);
             bufferId = 0;
         }
-        mappedBuffer = null;
         indexCount = 0;
     }
 }

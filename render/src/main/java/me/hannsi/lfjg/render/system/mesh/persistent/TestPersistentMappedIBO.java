@@ -22,7 +22,6 @@ public class TestPersistentMappedIBO implements TestPersistentMappedBuffer {
     private static final int[] TEMP_BUFFER = new int[DrawElementsIndirectCommand.COMMAND_COUNT];
     private static final long INT_BASE = UNSAFE.arrayBaseOffset(int[].class);
     private final int flags;
-    private ByteBuffer mappedBuffer;
     private long mappedAddress;
     private int bufferId;
     private long gpuMemorySize;
@@ -60,7 +59,6 @@ public class TestPersistentMappedIBO implements TestPersistentMappedBuffer {
         if (byteBuffer == null) {
             throw new RuntimeException("glMapBufferRange failed");
         }
-        mappedBuffer = byteBuffer;
         mappedAddress = MemoryUtil.memAddress(byteBuffer);
     }
 
@@ -127,7 +125,7 @@ public class TestPersistentMappedIBO implements TestPersistentMappedBuffer {
     }
 
     public void directWriteCommand(long baseByteOffset, int offset, int value) {
-        if (mappedAddress == 0 || mappedBuffer == null) {
+        if (mappedAddress == 0) {
             DebugLog.error(getClass(), "directWriteCommand: buffer not mapped (base=" + baseByteOffset + ", off=" + offset + ")");
             return;
         }
@@ -161,7 +159,7 @@ public class TestPersistentMappedIBO implements TestPersistentMappedBuffer {
             bytesToCopy = oldSize;
         }
 
-        if (oldAddr == 0 || mappedBuffer == null) {
+        if (oldAddr == 0) {
             DebugLog.warning(getClass(), "No existing mapped buffer to backup from.");
         } else if (bytesToCopy > 0) {
             long tmp = MemoryUtil.nmemAllocChecked(bytesToCopy);
@@ -174,7 +172,6 @@ public class TestPersistentMappedIBO implements TestPersistentMappedBuffer {
                 }
                 GL_STATE_CACHE.deleteIndirectBuffer(bufferId);
                 bufferId = 0;
-                mappedBuffer = null;
                 mappedAddress = 0;
 
                 allocationBufferStorage(newGPUMemorySizeBytes);
@@ -190,7 +187,6 @@ public class TestPersistentMappedIBO implements TestPersistentMappedBuffer {
             glUnmapBuffer(GL_DRAW_INDIRECT_BUFFER);
             GL_STATE_CACHE.deleteIndirectBuffer(bufferId);
             bufferId = 0;
-            mappedBuffer = null;
             mappedAddress = 0;
 
             allocationBufferStorage(newGPUMemorySizeBytes);
@@ -224,11 +220,6 @@ public class TestPersistentMappedIBO implements TestPersistentMappedBuffer {
     }
 
     @Override
-    public ByteBuffer getMappedBuffer() {
-        return mappedBuffer;
-    }
-
-    @Override
     public long getMappedAddress() {
         return mappedAddress;
     }
@@ -244,7 +235,6 @@ public class TestPersistentMappedIBO implements TestPersistentMappedBuffer {
             GL_STATE_CACHE.deleteIndirectBuffer(bufferId);
             bufferId = 0;
         }
-        mappedBuffer = null;
         commandCount = 0;
     }
 

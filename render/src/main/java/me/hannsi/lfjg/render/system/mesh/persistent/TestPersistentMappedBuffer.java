@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.render.system.mesh.persistent;
 
-import java.nio.ByteBuffer;
-
 public interface TestPersistentMappedBuffer {
     void allocationBufferStorage(long capacity);
 
@@ -14,8 +12,6 @@ public interface TestPersistentMappedBuffer {
     void cleanup();
 
     int getBufferId();
-
-    ByteBuffer getMappedBuffer();
 
     long getMappedAddress();
 
