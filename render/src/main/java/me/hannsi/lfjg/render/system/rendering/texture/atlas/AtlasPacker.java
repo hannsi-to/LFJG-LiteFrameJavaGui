@@ -2,9 +2,7 @@ package me.hannsi.lfjg.render.system.rendering.texture.atlas;
 
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.render.debug.exceptions.texture.AtlasPackerException;
-import org.lwjgl.BufferUtils;
 
-import java.nio.ByteBuffer;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -20,7 +18,7 @@ public class AtlasPacker {
     public static final int PADDING = 1;
     private final int atlasWidth;
     private final int atlasHeight;
-    private final ByteBuffer[] atlasLayers;
+    private final int atlasLayer;
     private final Map<String, Sprite> sprites;
     private int currentX;
     private int currentY;
@@ -59,23 +57,14 @@ public class AtlasPacker {
         int maxTextureLayers = glGetInteger(GL_MAX_ARRAY_TEXTURE_LAYERS);
         if (atlasLayer > maxTextureLayers) {
             DebugLog.warning(getClass(), "Requested layers: " + atlasLayer + " exceeds GPU limit: " + maxTextureLayers + " Setting layer: " + maxTextureLayers);
-            atlasLayer = maxTextureLayers;
+            this.atlasLayer = maxTextureLayers;
         } else {
-            atlasLayer = max(1, atlasLayer);
+            this.atlasLayer = max(1, atlasLayer);
         }
 
         this.currentX = currentX;
         this.currentY = currentY;
         this.rowHeight = rowHeight;
-        this.atlasLayers = new ByteBuffer[atlasLayer];
-        for (int i = 0; i < atlasLayers.length; i++) {
-            try {
-                this.atlasLayers[i] = BufferUtils.createByteBuffer((int) totalBytes);
-            } catch (
-                    OutOfMemoryError e) {
-                throw new AtlasPackerException("Out of RAM! Failed to allocate " + (totalBytes / 1024 / 1024) + " MB for layer " + i);
-            }
-        }
     }
 
     public AtlasPacker addSprite(String name, Sprite sprite) {
@@ -90,15 +79,11 @@ public class AtlasPacker {
         return this;
     }
 
-    public ByteBuffer[] generate() {
+    public void generate() {
         this.currentX = 0;
         this.currentY = 0;
         this.currentLayer = 0;
         this.rowHeight = 0;
-
-        for (ByteBuffer buffer : atlasLayers) {
-            buffer.clear();
-        }
 
         PERSISTENT_MAPPED_SSBO.resetBindingPoint(1);
 
@@ -120,27 +105,18 @@ public class AtlasPacker {
                 currentY = 0;
                 rowHeight = 0;
                 currentLayer++;
-
-                if (currentLayer >= atlasLayers.length) {
-                    throw new RuntimeException("Atlas layer overflow! Pre-allocated " + atlasLayers.length + " layers are not enough for the added sprites.");
-                }
             }
 
             sprite.offsetX = currentX;
             sprite.offsetY = currentY;
             sprite.offsetZ = currentLayer;
 
-            ByteBuffer targetBuffer = atlasLayers[currentLayer];
             int rowSize = sprite.width * BYTES_PER_PIXEL;
             for (int y = 0; y < sprite.height; y++) {
                 int spriteRowOffset = y * rowSize;
-                int atlasRowOffset = ((sprite.offsetY + y) * atlasWidth + sprite.offsetX) * BYTES_PER_PIXEL;
 
                 sprite.data.position(spriteRowOffset);
                 sprite.data.limit(spriteRowOffset + rowSize);
-
-                targetBuffer.position(atlasRowOffset);
-                targetBuffer.put(sprite.data);
 
                 sprite.data.clear();
             }
@@ -159,12 +135,6 @@ public class AtlasPacker {
             currentX += sprite.width + PADDING;
             rowHeight = Math.max(rowHeight, sprite.height + PADDING);
         }
-
-        for (ByteBuffer buffer : atlasLayers) {
-            buffer.flip();
-        }
-
-        return atlasLayers;
     }
 
     public int getAtlasWidth() {
@@ -175,8 +145,8 @@ public class AtlasPacker {
         return atlasHeight;
     }
 
-    public ByteBuffer[] getAtlasLayers() {
-        return atlasLayers;
+    public int getAtlasLayer() {
+        return atlasLayer;
     }
 
     public Map<String, Sprite> getSprites() {
