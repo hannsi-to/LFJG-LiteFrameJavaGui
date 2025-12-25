@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render;
+package me.hannsi.lfjg.render.uitl.id;
 
 /**
  * Represents unique identifiers for OpenGL objects and effect caches.

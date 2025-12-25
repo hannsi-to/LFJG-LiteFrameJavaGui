@@ -9,6 +9,8 @@ import me.hannsi.lfjg.render.system.mesh.persistent.*;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
+import me.hannsi.lfjg.render.uitl.id.GLObjectPool;
+import me.hannsi.lfjg.render.uitl.id.IdPool;
 import org.joml.Matrix4f;
 
 import static me.hannsi.lfjg.core.Core.projection2D;
