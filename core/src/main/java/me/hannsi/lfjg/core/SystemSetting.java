@@ -23,6 +23,7 @@ public class SystemSetting {
     public static int LFJG_RENDER_CONTEXT_INITIAL_EBO_CAPACITY = 8000;
     public static int LFJG_RENDER_CONTEXT_INITIAL_IBO_CAPACITY = 2500;
     public static int LFJG_RENDER_CONTEXT_INITIAL_SSBO_CAPACITY = 500;
+    public static int LFJG_RENDER_CONTEXT_INITIAL_PBO_CAPACITY = 10000;
     public static boolean GL_INTERCEPTOR_DEBUG = false;
     public static boolean GL_INTERCEPTOR_CALL_OPENGL_STATIC_METHOD_HOOK_EVENT = false;
     public static boolean VAO_RENDERING_FRONT_AND_BACK = false;

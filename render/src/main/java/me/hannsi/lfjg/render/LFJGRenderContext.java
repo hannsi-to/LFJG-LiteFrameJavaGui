@@ -5,10 +5,7 @@ import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.toolkit.Camera;
 import me.hannsi.lfjg.render.system.mesh.MeshConstants;
 import me.hannsi.lfjg.render.system.mesh.TestMesh;
-import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedEBO;
-import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedIBO;
-import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedSSBO;
-import me.hannsi.lfjg.render.system.mesh.persistent.TestPersistentMappedVBO;
+import me.hannsi.lfjg.render.system.mesh.persistent.*;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
@@ -36,6 +33,7 @@ public class LFJGRenderContext {
     public static TestPersistentMappedEBO PERSISTENT_MAPPED_EBO;
     public static TestPersistentMappedIBO PERSISTENT_MAPPED_IBO;
     public static TestPersistentMappedSSBO PERSISTENT_MAPPED_SSBO;
+    public static TestPersistentMappedPBO PERSISTENT_MAPPED_PBO;
     public static TestMesh MESH;
     public static VAORendering VAO_RENDERING;
     public static GLStateCache GL_STATE_CACHE;
@@ -70,6 +68,7 @@ public class LFJGRenderContext {
         PERSISTENT_MAPPED_EBO = new TestPersistentMappedEBO(MeshConstants.DEFAULT_FLAGS_HINT, LFJG_RENDER_CONTEXT_INITIAL_EBO_CAPACITY);
         PERSISTENT_MAPPED_IBO = new TestPersistentMappedIBO(MeshConstants.DEFAULT_FLAGS_HINT, LFJG_RENDER_CONTEXT_INITIAL_IBO_CAPACITY);
         PERSISTENT_MAPPED_SSBO = new TestPersistentMappedSSBO(MeshConstants.DEFAULT_FLAGS_HINT, LFJG_RENDER_CONTEXT_INITIAL_SSBO_CAPACITY);
+        PERSISTENT_MAPPED_PBO = new TestPersistentMappedPBO(MeshConstants.DEFAULT_FLAGS_HINT, LFJG_RENDER_CONTEXT_INITIAL_PBO_CAPACITY);
 
         MESH = TestMesh.createMesh(
                 LFJG_RENDER_CONTEXT_INITIAL_VBO_CAPACITY,

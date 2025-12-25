@@ -49,6 +49,7 @@ public class VAORendering {
         PERSISTENT_MAPPED_EBO.syncToGPU();
         PERSISTENT_MAPPED_IBO.syncToGPU();
         PERSISTENT_MAPPED_SSBO.syncToGPU();
+        PERSISTENT_MAPPED_PBO.syncToGPU();
 
         glMultiDrawElementsIndirect(
                 DrawType.TRIANGLES.getId(),
