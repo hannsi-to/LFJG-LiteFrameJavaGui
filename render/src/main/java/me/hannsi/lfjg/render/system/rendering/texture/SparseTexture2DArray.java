@@ -6,7 +6,6 @@ import me.hannsi.lfjg.render.system.rendering.texture.atlas.AtlasPacker;
 import me.hannsi.lfjg.render.system.rendering.texture.atlas.Sprite;
 import org.lwjgl.opengl.GL;
 
-import java.nio.ByteBuffer;
 import java.util.Map;
 
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
@@ -30,7 +29,7 @@ public class SparseTexture2DArray {
         this.atlasPacker = atlasPacker;
         this.width = Math.max(1, ((atlasPacker.getAtlasWidth() + PAGE_SIZE_X - 1) / PAGE_SIZE_X) * PAGE_SIZE_X);
         this.height = Math.max(1, ((atlasPacker.getAtlasHeight() + PAGE_SIZE_Y - 1) / PAGE_SIZE_Y) * PAGE_SIZE_Y);
-        this.maxLayers = Math.max(1, atlasPacker.getAtlasLayers().length);
+        this.maxLayers = Math.max(1, atlasPacker.getAtlasLayer());
 
         this.textureId = glGenTextures();
         GL_STATE_CACHE.bindTexture(GL_TEXTURE_2D_ARRAY, textureId);
@@ -49,28 +48,43 @@ public class SparseTexture2DArray {
     }
 
     public SparseTexture2DArray updateFromAtlas() {
-        ByteBuffer[] layers = atlasPacker.getAtlasLayers();
-        if (layers == null || layers.length == 0) {
-            return this;
-        }
-
         GL_STATE_CACHE.bindTexture(GL_TEXTURE_2D_ARRAY, textureId);
 
-        glPixelStorei(GL_UNPACK_ROW_LENGTH, atlasPacker.getAtlasWidth());
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
-        for (int z = 0; z < layers.length; z++) {
-            if (z >= maxLayers) {
-                DebugLog.warning(getClass(), "Reached maxLayers limit: " + maxLayers);
-                break;
-            }
+        for (Map.Entry<String, Sprite> entry : atlasPacker.getSprites().entrySet()) {
+            Sprite sprite = entry.getValue();
 
-            ByteBuffer buffer = layers[z];
-            if (buffer != null) {
-                glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, z, width, height, 1, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+            if (sprite.commited && sprite.data != null) {
+                sprite.data.rewind();
+
+                glTexSubImage3D(
+                        GL_TEXTURE_2D_ARRAY,
+                        0,
+                        sprite.offsetX,
+                        sprite.offsetY,
+                        sprite.offsetZ,
+                        sprite.width,
+                        sprite.height,
+                        1,
+                        GL_RGBA,
+                        GL_UNSIGNED_BYTE,
+                        sprite.data
+                );
+
+                switch (sprite.memoryPolicy) {
+                    case KEEP -> {
+                    }
+                    case RELEASE ->
+                            sprite.data = null;
+                    case STREAMING -> {
+                    }
+                    default ->
+                            throw new IllegalStateException("Unexpected value: " + sprite.memoryPolicy);
+                }
             }
         }
-
-        glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
         return this;
     }
@@ -105,8 +119,6 @@ public class SparseTexture2DArray {
 
                     if (overlap) {
                         DebugLog.warning(getClass(), String.format("Decommit skipped: Sprite (" + getSpriteName(sprite) + ") shares the same Virtual Pages with already committed Sprite (" + otherName + ") (Layer: " + sprite.offsetZ + "). " + "Physical memory will remain allocated."));
-
-                        sprite.commited = false;
                         return;
                     }
                 }
