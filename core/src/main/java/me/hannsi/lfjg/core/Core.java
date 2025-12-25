@@ -63,6 +63,10 @@ public class Core {
     public static final Map<String, Integer> OPEN_GL_PARAMETER_NAME_MAP = new HashMap<>();
     public static final EventManager EVENT_MANAGER;
     public static final WorkspaceManager WORKSPACE_MANAGER;
+    public static String VENDOR = "unknown";
+    public static String RENDERER = "unknown";
+    public static String VERSION = "unknown";
+    public static String SHADING_LANGUAGE_VERSION = "unknown";
     public static FastStringBuilder stringBuilder;
     public static ServiceData lfjgAudioServiceData = null;
     public static ServiceData lfjgFrameServiceData = null;
@@ -81,10 +85,10 @@ public class Core {
     static {
         if (isLWJGL3()) {
             LWJGL_VERSION = 3;
-            DebugLog.info(Core.class, "LWJGL3 is loaded");
+            DebugLog.debug(Core.class, "LWJGL3 founded");
         } else if (isLWJGL2()) {
             LWJGL_VERSION = 2;
-            DebugLog.info(Core.class, "LWJGL2 is loaded");
+            DebugLog.debug(Core.class, "LWJGL2 founded");
         } else {
             LWJGL_VERSION = -1;
             DebugLog.error(Core.class, "LWJGL not found");
@@ -101,37 +105,37 @@ public class Core {
         if (ENABLE_LFJG_AUDIO_SYSTEM) {
             Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_AUDIO_SYSTEM_PATH + DEFAULT_LFJG_AUDIO_CORE_CLASS_NAME);
             lfjgAudioServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
-            DebugLog.info(instance.getClass(), lfjgAudioServiceData.toString());
+            DebugLog.debug(instance.getClass(), lfjgAudioServiceData.toString());
         }
         if (ENABLE_LFJG_FRAME_SYSTEM) {
             Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME_CORE_CLASS_NAME);
             lfjgFrameServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
-            DebugLog.info(instance.getClass(), lfjgFrameServiceData.toString());
+            DebugLog.debug(instance.getClass(), lfjgFrameServiceData.toString());
         }
         if (ENABLE_LFJG_JCEF_SYSTEM) {
             Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_JCEF_SYSTEM_PATH + DEFAULT_LFJG_JCEF_CORE_CLASS_NAME);
             lfjgJCefServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
-            DebugLog.info(instance.getClass(), lfjgJCefServiceData.toString());
+            DebugLog.debug(instance.getClass(), lfjgJCefServiceData.toString());
         }
         if (ENABLE_LFJG_PHYSIC_SYSTEM) {
             Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_PHYSIC_SYSTEM_PATH + DEFAULT_LFJG_PHYSIC_CORE_CLASS_NAME);
             lfjgPhysicServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
-            DebugLog.info(instance.getClass(), lfjgPhysicServiceData.toString());
+            DebugLog.debug(instance.getClass(), lfjgPhysicServiceData.toString());
         }
         if (ENABLE_LFJG_RENDER_SYSTEM) {
             Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_CORE_CLASS_NAME);
             lfjgRenderServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
-            DebugLog.info(instance.getClass(), lfjgRenderServiceData.toString());
+            DebugLog.debug(instance.getClass(), lfjgRenderServiceData.toString());
         }
         if (ENABLE_LFJG_RENDER_TEXT_SYSTEM) {
             Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_TEXT_CORE_CLASS_NAME);
             lfjgRenderTextServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
-            DebugLog.info(instance.getClass(), lfjgRenderTextServiceData.toString());
+            DebugLog.debug(instance.getClass(), lfjgRenderTextServiceData.toString());
         }
         if (ENABLE_LFJG_RENDER_VIDEO_SYSTEM) {
             Object instance = ClassUtil.createInstanceWithoutArgs(DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + DEFAULT_LFJG_RENDER_VIDEO_CORE_CLASS_NAME);
             lfjgRenderVideoServiceData = (ServiceData) ClassUtil.invokeMethodExact(instance, "execute");
-            DebugLog.info(instance.getClass(), lfjgRenderVideoServiceData.toString());
+            DebugLog.debug(instance.getClass(), lfjgRenderVideoServiceData.toString());
         }
 
         EVENT_MANAGER = new EventManager();
@@ -141,7 +145,8 @@ public class Core {
             Field f = Unsafe.class.getDeclaredField("theUnsafe");
             f.setAccessible(true);
             UNSAFE = (Unsafe) f.get(null);
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             throw new RuntimeException(e);
         }
 
@@ -169,7 +174,8 @@ public class Core {
                     Class.forName(GL45.PACKAGE),
                     Class.forName(GL46.PACKAGE)
             };
-        } catch (ClassNotFoundException e) {
+        } catch (
+                ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
         for (Class<?> glClass : glClasses) {
@@ -180,7 +186,8 @@ public class Core {
                         int fieldInt = field.getInt(null);
                         String name = field.getName();
                         OPEN_GL_PARAMETER_NAME_MAP.put(name, fieldInt);
-                    } catch (IllegalAccessException e) {
+                    } catch (
+                            IllegalAccessException e) {
                         DebugLog.warning(Core.class, e);
                     }
                 }
@@ -214,6 +221,18 @@ public class Core {
     }
 
     public static void init(int frameBufferWidth, int frameBufferHeight, int windowWidth, int windowHeight) {
+        if (ENABLE_LFJG_RENDER_SYSTEM) {
+            VENDOR = GPUUtil.getVendor();
+            RENDERER = GPUUtil.getRenderer();
+            VERSION = GPUUtil.getVersion();
+            SHADING_LANGUAGE_VERSION = GPUUtil.getShadingLanguageVersion();
+
+            DebugLog.debug(Core.class, "Vendor: " + VENDOR);
+            DebugLog.debug(Core.class, "GPU: " + RENDERER);
+            DebugLog.debug(Core.class, "OpenGL: " + VERSION);
+            DebugLog.debug(Core.class, "ShadingLanguageVersion: " + SHADING_LANGUAGE_VERSION);
+        }
+
         updateLFJGLContext(frameBufferWidth, frameBufferHeight, windowWidth, windowHeight);
         initLFJGContext();
     }
@@ -242,7 +261,8 @@ public class Core {
         try {
             Class.forName("org.lwjgl.system.MemoryUtil");
             return true;
-        } catch (ClassNotFoundException e) {
+        } catch (
+                ClassNotFoundException e) {
             return false;
         }
     }
@@ -251,7 +271,8 @@ public class Core {
         try {
             Class.forName("org.lwjgl.BufferUtils");
             return true;
-        } catch (ClassNotFoundException e) {
+        } catch (
+                ClassNotFoundException e) {
             return false;
         }
     }
@@ -260,7 +281,8 @@ public class Core {
         Object result = null;
         try {
             result = ClassUtil.invokeStaticMethod(className, methodName, args);
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             if (!CORE_SYSTEM_DEBUG) {
                 return null;
             }
@@ -275,7 +297,8 @@ public class Core {
         Object result = null;
         try {
             result = ClassUtil.getStaticFieldValue(className, fieldName);
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             if (!CORE_SYSTEM_DEBUG) {
                 return null;
             }
@@ -666,6 +689,50 @@ public class Core {
         }
     }
 
+    public static class GPUUtil {
+        public static final String PACKAGE = DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + ".uitl.GPUUtil";
+
+        public static String getVendor() {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
+                return "unknown";
+            }
+
+            return (String) invokeStaticMethod(PACKAGE, "getVendor");
+        }
+
+        public static String getRenderer() {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
+                return "unknown";
+            }
+
+            return (String) invokeStaticMethod(PACKAGE, "getRenderer");
+        }
+
+        public static String getVersion() {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
+                return "unknown";
+            }
+
+            return (String) invokeStaticMethod(PACKAGE, "getVersion");
+        }
+
+        public static String getShadingLanguageVersion() {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
+                return "unknown";
+            }
+
+            return (String) invokeStaticMethod(PACKAGE, "getShadingLanguageVersion");
+        }
+
+        public static String[] getExtensions() {
+            if (!ENABLE_LFJG_RENDER_SYSTEM) {
+                return new String[0];
+            }
+
+            return (String[]) invokeStaticMethod(PACKAGE, "getExtensions");
+        }
+    }
+
     public static class OpenGLDebug {
         public static final String PACKAGE = DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + ".debug.OpenGLDebug";
 
@@ -760,7 +827,8 @@ public class Core {
                 Class<?> clazz = Class.forName(PACKAGE);
                 Constructor<?> constructor = clazz.getConstructor(String.class);
                 return (RuntimeException) constructor.newInstance(message);
-            } catch (Exception e) {
+            } catch (
+                    Exception e) {
                 throw new RuntimeException("Failed to create CreatingTextureException via reflection", e);
             }
         }
