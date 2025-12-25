@@ -15,7 +15,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ClassUtil extends Util {
     private static final Map<Class<?>, Class<?>> PRIMITIVE_MAP;
-    private static final ConcurrentHashMap<LambdaKey, Object> LAMBDA_CACHE = new ConcurrentHashMap<>();
     private static final Map<MethodSignature, MethodHandle> METHOD_HANDLE_CACHE = new ConcurrentHashMap<>();
 
     static {
@@ -153,8 +152,7 @@ public class ClassUtil extends Util {
             Constructor<T> constructor = clazz.getDeclaredConstructor();
             constructor.setAccessible(true);
             return constructor.newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                 NoSuchMethodException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new RuntimeException("Could not instantiate class: " + clazz.getName(), e);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -252,11 +250,5 @@ public class ClassUtil extends Util {
         }
     }
 
-    private record LambdaKey(
-            Class<?> owner,
-            String name,
-            MethodType methodType,
-            Class<?> fi
-    ) {
-    }
+    private record LambdaKey(Class<?> owner, String name, MethodType methodType, Class<?> fi) {}
 }
