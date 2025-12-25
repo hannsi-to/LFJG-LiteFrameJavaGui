@@ -4,8 +4,10 @@ import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.utils.reflection.reference.Ref;
 import me.hannsi.lfjg.render.system.rendering.texture.atlas.AtlasPacker;
 import me.hannsi.lfjg.render.system.rendering.texture.atlas.Sprite;
+import me.hannsi.lfjg.render.system.rendering.texture.atlas.SpriteMemoryPolicy;
 import org.lwjgl.opengl.GL;
 
+import java.nio.ByteBuffer;
 import java.util.Map;
 
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
@@ -18,6 +20,7 @@ import static org.lwjgl.opengl.GL42.glTexStorage3D;
 
 public class SparseTexture2DArray {
     public static final int DEFAULT_MIP_LEVELS = 1;
+    public static final int PBO_SEGMENT_ID = 1;
 
     private final AtlasPacker atlasPacker;
     private final int width;
@@ -47,8 +50,46 @@ public class SparseTexture2DArray {
         glTexStorage3D(GL_TEXTURE_2D_ARRAY, DEFAULT_MIP_LEVELS, GL_RGBA8, width, height, maxLayers);
     }
 
+    public SparseTexture2DArray updateSprite(String name, ByteBuffer byteBuffer) {
+        Sprite sprite = getSpriteFormName(name);
+
+        GL_STATE_CACHE.bindTexture(GL_TEXTURE_2D_ARRAY, textureId);
+        GL_STATE_CACHE.bindPixelUnpackBuffer(PERSISTENT_MAPPED_PBO.getBufferId());
+
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+        glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+
+        if (sprite.memoryPolicy == SpriteMemoryPolicy.STREAMING) {
+            PERSISTENT_MAPPED_PBO.updateSegment(PBO_SEGMENT_ID, sprite.address, byteBuffer);
+
+            long absoluteOffset = PERSISTENT_MAPPED_PBO.getSegmentOffset(PBO_SEGMENT_ID) + sprite.address;
+            glTexSubImage3D(
+                    GL_TEXTURE_2D_ARRAY,
+                    0,
+                    sprite.offsetX,
+                    sprite.offsetY,
+                    sprite.offsetZ,
+                    sprite.width,
+                    sprite.height,
+                    1,
+                    GL_RGBA,
+                    GL_UNSIGNED_BYTE,
+                    absoluteOffset
+            );
+        } else {
+            DebugLog.warning(getClass(), "When updating information using the updateSprite method, the " + SpriteMemoryPolicy.class.getSimpleName() + " within the Sprite(" + name + ") must be set to " + SpriteMemoryPolicy.STREAMING.getName() + ".");
+        }
+
+        GL_STATE_CACHE.bindPixelUnpackBuffer(0);
+
+        return this;
+    }
+
     public SparseTexture2DArray updateFromAtlas() {
         GL_STATE_CACHE.bindTexture(GL_TEXTURE_2D_ARRAY, textureId);
+
+        PERSISTENT_MAPPED_PBO.resetSegment(PBO_SEGMENT_ID);
+        GL_STATE_CACHE.bindPixelUnpackBuffer(PERSISTENT_MAPPED_PBO.getBufferId());
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
@@ -58,6 +99,8 @@ public class SparseTexture2DArray {
 
             if (sprite.commited && sprite.data != null) {
                 sprite.data.rewind();
+
+                long offset = PERSISTENT_MAPPED_PBO.uploadToSegment(PBO_SEGMENT_ID, sprite.data);
 
                 glTexSubImage3D(
                         GL_TEXTURE_2D_ARRAY,
@@ -70,7 +113,7 @@ public class SparseTexture2DArray {
                         1,
                         GL_RGBA,
                         GL_UNSIGNED_BYTE,
-                        sprite.data
+                        offset
                 );
 
                 switch (sprite.memoryPolicy) {
@@ -79,12 +122,16 @@ public class SparseTexture2DArray {
                     case RELEASE ->
                             sprite.data = null;
                     case STREAMING -> {
+                        sprite.data = null;
+                        sprite.address = offset;
                     }
                     default ->
                             throw new IllegalStateException("Unexpected value: " + sprite.memoryPolicy);
                 }
             }
         }
+
+        GL_STATE_CACHE.bindPixelUnpackBuffer(0);
 
         return this;
     }
@@ -119,6 +166,8 @@ public class SparseTexture2DArray {
 
                     if (overlap) {
                         DebugLog.warning(getClass(), String.format("Decommit skipped: Sprite (" + getSpriteName(sprite) + ") shares the same Virtual Pages with already committed Sprite (" + otherName + ") (Layer: " + sprite.offsetZ + "). " + "Physical memory will remain allocated."));
+
+                        sprite.commited = false;
                         return;
                     }
                 }
@@ -141,12 +190,7 @@ public class SparseTexture2DArray {
     }
 
     public SparseTexture2DArray commitTexture(String name, boolean state) {
-        Sprite sprite = atlasPacker.getSprites().get(name);
-        if (sprite == null) {
-            DebugLog.error(getClass(), "The sprite registered under " + name + " does not exist.");
-            return this;
-        }
-
+        Sprite sprite = getSpriteFormName(name);
         commitTexture(sprite, state);
 
         return this;
@@ -157,17 +201,23 @@ public class SparseTexture2DArray {
     }
 
     public boolean commitedTexture(String name, Ref<Sprite> pointerSprite) {
-        Sprite sprite = atlasPacker.getSprites().get(name);
-        if (sprite == null) {
-            DebugLog.error(getClass(), "The sprite registered under " + name + " does not exist.");
-            return false;
-        }
+        Sprite sprite = getSpriteFormName(name);
 
         if (pointerSprite != null) {
             pointerSprite.setValue(sprite);
         }
 
         return sprite.commited;
+    }
+
+    public Sprite getSpriteFormName(String name) {
+        Sprite sprite = atlasPacker.getSprites().get(name);
+        if (sprite == null) {
+            DebugLog.error(getClass(), "The sprite registered under " + name + " does not exist.");
+            return null;
+        }
+
+        return sprite;
     }
 
     private String getSpriteName(Sprite sprite) {
