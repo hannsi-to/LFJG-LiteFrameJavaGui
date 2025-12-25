@@ -15,6 +15,7 @@ public class Sprite {
     public int offsetX;
     public int offsetY;
     public int offsetZ;
+    public long address = -1;
 
     public Sprite(int width, int height, ByteBuffer data, SpriteMemoryPolicy memoryPolicy) {
         this.width = width;
