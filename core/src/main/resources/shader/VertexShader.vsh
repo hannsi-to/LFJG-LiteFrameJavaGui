@@ -10,7 +10,10 @@ out vec2 vUV;
 
 struct Transform {
     mat4 transform;
-    uvec4 meta;
+    uint spriteIndex;
+    uint _pading1;
+    uint _pading2;
+    uint _pading3;
 };
 
 layout(std430, binding = 2) buffer Transforms {
@@ -22,7 +25,7 @@ void main() {
     Transform t = transforms[index];
 
     gl_Position = t.transform * vec4(position, 1.0);
-    vSpriteIndex = t.meta.x;
+    vSpriteIndex = t.spriteIndex;
     vColor = color;
     vUV = uv;
 }
