@@ -83,4 +83,9 @@ public class LFJGRenderContext {
 
         TEXTURE_CACHE = TextureCache.createTextureCache();
     }
+
+    public static void update() {
+        precomputedViewProjection2D = projection2D.getMatrix4f().mul(MAIN_CAMERA.getViewMatrix());
+        precomputedViewProjection3D = projection3D.getMatrix4f().mul(MAIN_CAMERA.getViewMatrix());
+    }
 }
