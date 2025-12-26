@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.core.utils.math;
+package me.hannsi.lfjg.core.utils.math.list;
 
 import java.util.Arrays;
 
