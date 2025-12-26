@@ -13,7 +13,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -92,39 +91,7 @@ public class EventManager {
         return handlers;
     }
 
-    private static final class HandlerMethod {
-        private final Object target;
-        private final MethodHandle handle;
-
-        private HandlerMethod(Object target, MethodHandle handle) {
-            this.target = target;
-            this.handle = handle;
-        }
-
-        public Object target() {
-            return target;
-        }
-
-        public MethodHandle handle() {
-            return handle;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
-            }
-            if (obj == null || obj.getClass() != this.getClass()) {
-                return false;
-            }
-            HandlerMethod that = (HandlerMethod) obj;
-            return Objects.equals(this.target, that.target) && Objects.equals(this.handle, that.handle);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(target, handle);
-        }
+    private record HandlerMethod(Object target, MethodHandle handle) {
 
         @Override
         public String toString() {

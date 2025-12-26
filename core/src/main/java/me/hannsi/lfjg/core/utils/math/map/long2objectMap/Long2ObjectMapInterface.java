@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.core.utils.math.map.long2Object;
+package me.hannsi.lfjg.core.utils.math.map.long2objectMap;
 
 public interface Long2ObjectMapInterface<V> {
     void put(long key, V value);
@@ -15,7 +15,7 @@ public interface Long2ObjectMapInterface<V> {
 
     void clear();
 
-    void forEach(LongObjectConsumer<V> action);
+    void forEach(Long2ObjectConsumer<V> action);
 
     Iterable<java.util.Map.Entry<Long, V>> entrySet();
 }

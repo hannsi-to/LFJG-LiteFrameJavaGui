@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.core.utils.math.map.string2Object;
+package me.hannsi.lfjg.core.utils.math.map.string2objectMap;
 
 import me.hannsi.lfjg.core.utils.math.AssetPath;
 

@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.system.rendering.texture.atlas;
 
 import me.hannsi.lfjg.core.debug.DebugLog;
-import me.hannsi.lfjg.core.utils.math.map.string2Object.LinkedString2ObjectMap;
+import me.hannsi.lfjg.core.utils.math.map.string2objectMap.LinkedString2ObjectMap;
 import me.hannsi.lfjg.render.debug.exceptions.texture.AtlasPackerException;
 
 import static me.hannsi.lfjg.core.utils.math.MathHelper.max;

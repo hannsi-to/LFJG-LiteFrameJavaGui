@@ -1,29 +1,26 @@
-package me.hannsi.lfjg.core.utils.math.map.string2Object;
+package me.hannsi.lfjg.core.utils.math.map.long2objectMap;
 
-import me.hannsi.lfjg.core.utils.math.AssetPath;
-import me.hannsi.lfjg.core.utils.math.StringHash;
+import java.util.Arrays;
 
-import java.util.*;
-
-public class LinkedString2ObjectMap<V> extends String2ObjectMap<V> {
+public class LinkedLong2ObjectMap<V> extends Long2ObjectMap<V> implements Long2ObjectMapInterface<V> {
     protected long[] links;
     protected int first = -1;
     protected int last = -1;
     protected int nullKeyIdx;
 
-    public LinkedString2ObjectMap() {
+    public LinkedLong2ObjectMap() {
         this(16);
     }
 
-    public LinkedString2ObjectMap(int initialCapacity) {
+    public LinkedLong2ObjectMap(int initialCapacity) {
         this(initialCapacity, 0.75f);
     }
 
-    public LinkedString2ObjectMap(int initialCapacity, float loadFactor) {
+    public LinkedLong2ObjectMap(int initialCapacity, float loadFactor) {
         super(initialCapacity, loadFactor);
-        this.nullKeyIdx = capacity;
-        this.links = new long[capacity + 1];
-        Arrays.fill(this.links, -1L);
+
+        this.nullKeyIdx = keys.length;
+        this.links = new long[keys.length + 1];
     }
 
     protected static long pack(int prev, int next) {
@@ -39,9 +36,9 @@ public class LinkedString2ObjectMap<V> extends String2ObjectMap<V> {
     }
 
     @Override
-    public void put(String key, V value) {
+    public void put(long key, V value) {
         int index;
-        if (key == null) {
+        if (key == EMPTY) {
             if (hasSpecialKey) {
                 nullValue = value;
                 return;
@@ -54,19 +51,20 @@ public class LinkedString2ObjectMap<V> extends String2ObjectMap<V> {
                 rehash(keys.length << 1);
             }
 
-            long h64 = (key.length() <= 16) ? (key.hashCode() & 0xFFFFFFFFL) : StringHash.hash64(key);
-            index = mix(h64, mask);
+            final long[] keys = this.keys;
+            final int mask = this.mask;
 
-            while (keys[index] != null) {
-                if (hashes[index] == h64 && Objects.equals(keys[index], key)) {
+            index = mix(key, mask);
+            while (keys[index] != EMPTY) {
+                if (keys[index] == key) {
                     values[index] = value;
                     return;
                 }
                 index = (index + 1) & mask;
             }
+
             keys[index] = key;
             values[index] = value;
-            hashes[index] = h64;
         }
 
         if (size == 0) {
@@ -77,65 +75,28 @@ public class LinkedString2ObjectMap<V> extends String2ObjectMap<V> {
             links[index] = pack(last, -1);
             last = index;
         }
-        size++;
-    }
 
-    @Override
-    public void put(AssetPath assetPath, V value) {
-        if (assetPath == null) {
-            put((String) null, value);
-            return;
-        }
-        if (size >= maxFill) {
-            rehash(keys.length << 1);
-        }
-
-        final String key = assetPath.path();
-        final long h64 = assetPath.hash();
-        int index = mix(h64, mask);
-
-        while (keys[index] != null) {
-            if (hashes[index] == h64 && Objects.equals(keys[index], key)) {
-                values[index] = value;
-                return;
-            }
-            index = (index + 1) & mask;
-        }
-
-        keys[index] = key;
-        values[index] = value;
-        hashes[index] = h64;
-
-        if (size == 0) {
-            first = last = index;
-            links[index] = pack(-1, -1);
-        } else {
-            links[last] = pack(getPrev(links[last]), index);
-            links[index] = pack(last, -1);
-            last = index;
-        }
         size++;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     protected void rehash(int newCapacity) {
-        String[] oldKeys = this.keys;
+        long[] oldKeys = this.keys;
         V[] oldValues = this.values;
         int oldFirst = this.first;
         long[] oldLinks = this.links;
         int oldNullIdx = this.nullKeyIdx;
         V oldNullValue = this.nullValue;
 
-        this.capacity = newCapacity;
         this.mask = newCapacity - 1;
         this.maxFill = (int) (newCapacity * loadFactor);
-        this.keys = new String[newCapacity];
-        this.hashes = new long[newCapacity];
+        this.keys = new long[newCapacity];
+        Arrays.fill(this.keys, EMPTY);
         this.values = (V[]) new Object[newCapacity];
+
         this.nullKeyIdx = newCapacity;
         this.links = new long[newCapacity + 1];
-        Arrays.fill(this.links, -1L);
 
         this.first = -1;
         this.last = -1;
@@ -145,7 +106,7 @@ public class LinkedString2ObjectMap<V> extends String2ObjectMap<V> {
         int curr = oldFirst;
         while (curr != -1) {
             if (curr == oldNullIdx) {
-                put((String) null, oldNullValue);
+                put(EMPTY, oldNullValue);
             } else {
                 put(oldKeys[curr], oldValues[curr]);
             }
@@ -154,22 +115,22 @@ public class LinkedString2ObjectMap<V> extends String2ObjectMap<V> {
     }
 
     @Override
-    public V remove(String key) {
+    public V remove(long key) {
         int pos;
-        if (key == null) {
+        if (key == EMPTY) {
             if (!hasSpecialKey) {
                 return null;
             }
             pos = nullKeyIdx;
         } else {
-            long h64 = (key.length() <= 16) ? (key.hashCode() & 0xFFFFFFFFL) : StringHash.hash64(key);
-            pos = mix(h64, mask);
+            final int mask = this.mask;
+            pos = mix(key, mask);
             while (true) {
-                String curr = keys[pos];
-                if (curr == null) {
+                long curr = keys[pos];
+                if (curr == EMPTY) {
                     return null;
                 }
-                if (hashes[pos] == h64 && Objects.equals(curr, key)) {
+                if (curr == key) {
                     break;
                 }
                 pos = (pos + 1) & mask;
@@ -197,33 +158,31 @@ public class LinkedString2ObjectMap<V> extends String2ObjectMap<V> {
         } else {
             removeAndFixLinks(pos);
         }
+
         size--;
         return old;
     }
 
     protected void removeAndFixLinks(int pos) {
-        final String[] keys = this.keys;
+        final long[] keys = this.keys;
         final V[] values = this.values;
-        final long[] hashes = this.hashes;
         final long[] links = this.links;
         final int mask = this.mask;
 
-        keys[pos] = null;
+        keys[pos] = EMPTY;
         values[pos] = null;
-        hashes[pos] = 0;
 
         int i = pos;
         while (true) {
             i = (i + 1) & mask;
-            if (keys[i] == null) {
+            if (keys[i] == EMPTY) {
                 break;
             }
 
-            int slot = mix(hashes[i], mask);
+            int slot = mix(keys[i], mask);
             if (i <= pos ? (i < slot && slot <= pos) : (i < slot || slot <= pos)) {
                 keys[pos] = keys[i];
                 values[pos] = values[i];
-                hashes[pos] = hashes[i];
                 links[pos] = links[i];
 
                 int p = getPrev(links[pos]);
@@ -239,7 +198,7 @@ public class LinkedString2ObjectMap<V> extends String2ObjectMap<V> {
                     last = pos;
                 }
 
-                keys[i] = null;
+                keys[i] = EMPTY;
                 values[i] = null;
                 pos = i;
             }
@@ -247,52 +206,79 @@ public class LinkedString2ObjectMap<V> extends String2ObjectMap<V> {
     }
 
     @Override
-    public V get(String key) {
-        return super.get(key);
-    }
-
-    @Override
-    public V get(AssetPath assetPath) {
-        return super.get(assetPath);
-    }
-
-    @Override
-    public V remove(AssetPath assetPath) {
-        if (assetPath == null) {
-            return remove((String) null);
+    public V get(long key) {
+        if (key == EMPTY) {
+            return hasSpecialKey ? nullValue : null;
         }
-        return remove(assetPath.path());
-    }
 
-    @Override
-    public String getKeyByValue(V value) {
-        int curr = first;
-        while (curr != -1) {
-            V v = (curr == nullKeyIdx) ? nullValue : values[curr];
-            if (Objects.equals(v, value)) {
-                return (curr == nullKeyIdx) ? null : keys[curr];
+        final long[] keys = this.keys;
+        final int mask = this.mask;
+
+        int index = mix(key, mask);
+        long k;
+        while ((k = keys[index]) != EMPTY) {
+            if (k == key) {
+                return values[index];
             }
-            curr = getNext(links[curr]);
+            index = (index + 1) & mask;
         }
         return null;
     }
 
     @Override
-    public boolean containsKey(String key) {
-        return super.containsKey(key);
+    public long getKeyByValue(V value) {
+        if (hasSpecialKey && java.util.Objects.equals(nullValue, value)) {
+            return EMPTY;
+        }
+
+        int curr = first;
+        while (curr != -1) {
+            if (java.util.Objects.equals(values[curr], value)) {
+                return keys[curr];
+            }
+            curr = getNext(links[curr]);
+        }
+        return EMPTY;
+    }
+
+    @Override
+    public boolean containsKey(long key) {
+        if (key == EMPTY) {
+            return hasSpecialKey;
+        }
+
+        final long[] keys = this.keys;
+        final int mask = this.mask;
+
+        int index = mix(key, mask);
+        long k;
+        while ((k = keys[index]) != EMPTY) {
+            if (k == key) {
+                return true;
+            }
+            index = (index + 1) & mask;
+        }
+        return false;
     }
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
-    public void forEach(String2ObjectConsumer<V> action) {
+    public void clear() {
+        super.clear();
+        first = -1;
+        last = -1;
+    }
+
+    @Override
+    public void forEach(Long2ObjectConsumer<V> action) {
         int curr = first;
         while (curr != -1) {
             if (curr == nullKeyIdx) {
-                action.accept(null, nullValue);
+                action.accept(EMPTY, nullValue);
             } else {
                 action.accept(keys[curr], values[curr]);
             }
@@ -302,8 +288,8 @@ public class LinkedString2ObjectMap<V> extends String2ObjectMap<V> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public Iterable<Map.Entry<String, V>> entrySet() {
-        return () -> new Iterator<>() {
+    public Iterable<java.util.Map.Entry<Long, V>> entrySet() {
+        return () -> new java.util.Iterator<>() {
             final Entry entry = new Entry();
             int curr = first;
 
@@ -313,13 +299,13 @@ public class LinkedString2ObjectMap<V> extends String2ObjectMap<V> {
             }
 
             @Override
-            public Map.Entry<String, V> next() {
+            public java.util.Map.Entry<Long, V> next() {
                 if (curr == -1) {
-                    throw new NoSuchElementException();
+                    throw new java.util.NoSuchElementException();
                 }
 
                 if (curr == nullKeyIdx) {
-                    entry.key = null;
+                    entry.key = EMPTY;
                     entry.value = nullValue;
                 } else {
                     entry.key = keys[curr];
@@ -327,16 +313,8 @@ public class LinkedString2ObjectMap<V> extends String2ObjectMap<V> {
                 }
 
                 curr = getNext(links[curr]);
-                return (Map.Entry<String, V>) entry;
+                return (java.util.Map.Entry<Long, V>) entry;
             }
         };
-    }
-
-    @Override
-    public void clear() {
-        super.clear();
-        Arrays.fill(links, -1L);
-        first = -1;
-        last = -1;
     }
 }

@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.core.utils.math.map.string2Object;
+package me.hannsi.lfjg.core.utils.math.map.string2objectMap;
 
 import me.hannsi.lfjg.core.utils.math.AssetPath;
 import me.hannsi.lfjg.core.utils.math.StringHash;
@@ -13,7 +13,6 @@ public class String2ObjectMap<V> implements String2ObjectMapInterface<V> {
     protected volatile String[] keys;
     protected volatile V[] values;
     protected volatile long[] hashes;
-    protected int capacity;
     protected int size;
     protected boolean hasSpecialKey;
     protected V nullValue;
@@ -29,8 +28,8 @@ public class String2ObjectMap<V> implements String2ObjectMapInterface<V> {
     @SuppressWarnings("unchecked")
     public String2ObjectMap(int initialCapacity, float loadFactor) {
         this.loadFactor = loadFactor;
-        this.capacity = nextPowerOfTwo(initialCapacity);
-        this.mask = this.capacity - 1;
+        int capacity = nextPowerOfTwo(initialCapacity);
+        this.mask = capacity - 1;
         this.keys = new String[capacity];
         this.hashes = new long[capacity];
         Arrays.fill(this.keys, EMPTY);

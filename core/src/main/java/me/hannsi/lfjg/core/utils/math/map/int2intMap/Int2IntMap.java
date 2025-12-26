@@ -1,43 +1,39 @@
-package me.hannsi.lfjg.core.utils.math.map.long2Object;
+package me.hannsi.lfjg.core.utils.math.map.int2intMap;
 
 import java.util.Arrays;
-import java.util.Objects;
 
-public class Long2ObjectMap<V> implements Long2ObjectMapInterface<V> {
-    protected static final long EMPTY = Long.MIN_VALUE;
+public class Int2IntMap implements Int2IntMapInterface {
+    protected static final int EMPTY = Integer.MIN_VALUE;
     protected final float loadFactor;
     protected int maxFill;
     protected volatile int mask;
-    protected volatile long[] keys;
-    protected volatile V[] values;
-    protected int capacity;
+    protected volatile int[] keys;
+    protected volatile int[] values;
     protected int size;
     protected boolean hasSpecialKey;
-    protected V nullValue;
+    protected int nullValue;
 
-    public Long2ObjectMap() {
+    public Int2IntMap() {
         this(16);
     }
 
-    public Long2ObjectMap(int initialCapacity) {
+    public Int2IntMap(int initialCapacity) {
         this(initialCapacity, 0.75f);
     }
 
-    @SuppressWarnings("unchecked")
-    public Long2ObjectMap(int initialCapacity, float loadFactor) {
+    public Int2IntMap(int initialCapacity, float loadFactor) {
         this.loadFactor = loadFactor;
-        this.capacity = nextPowerOfTwo(initialCapacity);
-        this.mask = this.capacity - 1;
-        this.keys = new long[capacity];
+        int capacity = nextPowerOfTwo(initialCapacity);
+        this.mask = capacity - 1;
+        this.keys = new int[capacity];
         Arrays.fill(this.keys, EMPTY);
-        this.values = (V[]) new Object[capacity];
+        this.values = new int[capacity];
         this.maxFill = (int) (capacity * loadFactor);
     }
 
-    protected static int mix(long key, int mask) {
-        long h = key ^ (key >>> 32);
-        h ^= (h >>> 16);
-        return (int) h & mask;
+    protected static int mix(int key, int mask) {
+        key ^= (key >>> 16);
+        return key & mask;
     }
 
     protected int nextPowerOfTwo(int n) {
@@ -48,21 +44,20 @@ public class Long2ObjectMap<V> implements Long2ObjectMapInterface<V> {
         return 1 << (32 - Integer.numberOfLeadingZeros(n - 1));
     }
 
-    @SuppressWarnings("unchecked")
     protected void rehash(int newCapacity) {
-        final long[] oldKeys = keys;
-        final V[] oldValues = values;
+        final int[] oldKeys = keys;
+        final int[] oldValues = values;
 
         this.mask = newCapacity - 1;
         this.maxFill = (int) (newCapacity * loadFactor);
-        this.keys = new long[newCapacity];
+        this.keys = new int[newCapacity];
         Arrays.fill(this.keys, EMPTY);
-        this.values = (V[]) new Object[newCapacity];
+        this.values = new int[newCapacity];
 
         int currentSize = hasSpecialKey ? 1 : 0;
 
         for (int i = 0; i < oldKeys.length; i++) {
-            long k = oldKeys[i];
+            int k = oldKeys[i];
             if (k != EMPTY) {
                 int idx = mix(k, mask);
                 while (keys[idx] != EMPTY) {
@@ -77,11 +72,11 @@ public class Long2ObjectMap<V> implements Long2ObjectMapInterface<V> {
     }
 
     protected void shiftKeys(int pos) {
-        final long[] keys = this.keys;
-        final V[] values = this.values;
+        final int[] keys = this.keys;
+        final int[] values = this.values;
         final int mask = this.mask;
         int last;
-        long curr;
+        int curr;
 
         while (true) {
             last = pos;
@@ -95,7 +90,7 @@ public class Long2ObjectMap<V> implements Long2ObjectMapInterface<V> {
             }
             if (curr == EMPTY) {
                 keys[last] = EMPTY;
-                values[last] = null;
+                values[last] = 0;
                 return;
             }
             keys[last] = curr;
@@ -104,7 +99,7 @@ public class Long2ObjectMap<V> implements Long2ObjectMapInterface<V> {
     }
 
     @Override
-    public void put(long key, V value) {
+    public void put(int key, int value) {
         if (key == EMPTY) {
             if (!hasSpecialKey) {
                 hasSpecialKey = true;
@@ -118,7 +113,7 @@ public class Long2ObjectMap<V> implements Long2ObjectMapInterface<V> {
             rehash(keys.length << 1);
         }
 
-        final long[] keys = this.keys;
+        final int[] keys = this.keys;
         final int mask = this.mask;
 
         int idx = mix(key, mask);
@@ -136,49 +131,49 @@ public class Long2ObjectMap<V> implements Long2ObjectMapInterface<V> {
     }
 
     @Override
-    public V get(long key) {
+    public int get(int key) {
         if (key == EMPTY) {
-            return hasSpecialKey ? nullValue : null;
+            return hasSpecialKey ? nullValue : EMPTY;
         }
 
-        final long[] keys = this.keys;
+        final int[] keys = this.keys;
         final int mask = this.mask;
 
         int index = mix(key, mask);
-        long k;
+        int k;
         while ((k = keys[index]) != EMPTY) {
             if (k == key) {
                 return values[index];
             }
             index = (index + 1) & mask;
         }
-        return null;
+        return EMPTY;
     }
 
     @Override
-    public V remove(long key) {
+    public int remove(int key) {
         if (key == EMPTY) {
             if (!hasSpecialKey) {
-                return null;
+                return EMPTY;
             }
             hasSpecialKey = false;
-            V old = nullValue;
-            nullValue = null;
+            int old = nullValue;
+            nullValue = EMPTY;
             size--;
             return old;
         }
 
-        final long[] keys = this.keys;
+        final int[] keys = this.keys;
         final int mask = this.mask;
 
         int pos = mix(key, mask);
         while (true) {
-            long curr = keys[pos];
+            int curr = keys[pos];
             if (curr == EMPTY) {
-                return null;
+                return EMPTY;
             }
             if (curr == key) {
-                V old = values[pos];
+                int old = values[pos];
                 shiftKeys(pos);
                 size--;
                 return old;
@@ -188,16 +183,16 @@ public class Long2ObjectMap<V> implements Long2ObjectMapInterface<V> {
     }
 
     @Override
-    public long getKeyByValue(V value) {
-        final long[] keys = this.keys;
+    public int getKeyByValue(int value) {
+        final int[] keys = this.keys;
 
-        if (hasSpecialKey && Objects.equals(nullValue, value)) {
+        if (hasSpecialKey && nullValue == value) {
             return EMPTY;
         }
 
-        for (int i = 0; i < capacity; i++) {
-            long k = keys[i];
-            if (k != EMPTY && Objects.equals(values[i], value)) {
+        for (int i = 0; i < values.length; i++) {
+            int k = keys[i];
+            if (k != EMPTY && values[i] == value) {
                 return k;
             }
         }
@@ -206,12 +201,12 @@ public class Long2ObjectMap<V> implements Long2ObjectMapInterface<V> {
 
 
     @Override
-    public boolean containsKey(long key) {
+    public boolean containsKey(int key) {
         if (key == EMPTY) {
             return hasSpecialKey;
         }
 
-        final long[] keys = this.keys;
+        final int[] keys = this.keys;
         final int mask = this.mask;
 
         int index = mix(key, mask);
@@ -233,30 +228,28 @@ public class Long2ObjectMap<V> implements Long2ObjectMapInterface<V> {
     public void clear() {
         size = 0;
         hasSpecialKey = false;
-        nullValue = null;
+        nullValue = EMPTY;
         Arrays.fill(keys, EMPTY);
-        Arrays.fill(values, null);
     }
 
     @Override
-    public void forEach(LongObjectConsumer<V> action) {
-        final long[] keys = this.keys;
+    public void forEach(Int2IntConsumer action) {
+        final int[] keys = this.keys;
 
         if (hasSpecialKey) {
             action.accept(EMPTY, nullValue);
         }
 
-        for (int i = 0; i < capacity; i++) {
-            long k = keys[i];
+        for (int i = 0; i < values.length; i++) {
+            int k = keys[i];
             if (k != EMPTY) {
                 action.accept(k, values[i]);
             }
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public Iterable<java.util.Map.Entry<Long, V>> entrySet() {
+    public Iterable<java.util.Map.Entry<Integer, Integer>> entrySet() {
         return () -> new java.util.Iterator<>() {
             final Entry entry = new Entry();
             int index = -1;
@@ -272,12 +265,12 @@ public class Long2ObjectMap<V> implements Long2ObjectMapInterface<V> {
             }
 
             @Override
-            public java.util.Map.Entry<Long, V> next() {
+            public java.util.Map.Entry<Integer, Integer> next() {
                 while (++index < keys.length) {
                     if (keys[index] != EMPTY) {
                         entry.key = keys[index];
                         entry.value = values[index];
-                        return (java.util.Map.Entry<Long, V>) entry;
+                        return entry;
                     }
                 }
                 throw new java.util.NoSuchElementException();
@@ -285,22 +278,22 @@ public class Long2ObjectMap<V> implements Long2ObjectMapInterface<V> {
         };
     }
 
-    static class Entry implements java.util.Map.Entry<Long, Object> {
-        long key;
-        Object value;
+    static class Entry implements java.util.Map.Entry<Integer, Integer> {
+        int key;
+        int value;
 
         @Override
-        public Long getKey() {
+        public Integer getKey() {
             return key;
         }
 
         @Override
-        public Object getValue() {
+        public Integer getValue() {
             return value;
         }
 
         @Override
-        public Object setValue(Object value) {
+        public Integer setValue(Integer value) {
             throw new UnsupportedOperationException();
         }
     }

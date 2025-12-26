@@ -3,19 +3,17 @@ package me.hannsi.lfjg.render.debug;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerator;
+import me.hannsi.lfjg.core.utils.math.map.int2intMap.Int2IntMap;
 import me.hannsi.lfjg.core.utils.reflection.StackTraceUtil;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLDebugMessageCallback;
 import org.lwjgl.system.MemoryUtil;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static me.hannsi.lfjg.core.Core.OPEN_GL_PARAMETER_NAME_MAP;
 import static org.lwjgl.opengl.GL43.*;
 
 public class OpenGLDebug {
-    public static final Map<Integer, Integer> OPEN_GL_DEBUG_SEVERITY_MAP = new HashMap<>() {{
+    public static final Int2IntMap OPEN_GL_DEBUG_SEVERITY_MAP = new Int2IntMap() {{
         put(0, OPEN_GL_PARAMETER_NAME_MAP.get("GL_DEBUG_SEVERITY_NOTIFICATION"));
         put(1, OPEN_GL_PARAMETER_NAME_MAP.get("GL_DEBUG_SEVERITY_LOW"));
         put(2, OPEN_GL_PARAMETER_NAME_MAP.get("GL_DEBUG_SEVERITY_MEDIUM"));

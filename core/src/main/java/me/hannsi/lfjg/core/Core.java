@@ -5,6 +5,7 @@ import me.hannsi.lfjg.core.manager.EventManager;
 import me.hannsi.lfjg.core.manager.WorkspaceManager;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.math.Projection;
+import me.hannsi.lfjg.core.utils.math.map.string2intMap.String2IntMap;
 import me.hannsi.lfjg.core.utils.reflection.ClassUtil;
 import me.hannsi.lfjg.core.utils.toolkit.FastStringBuilder;
 import me.hannsi.lfjg.core.utils.toolkit.KeyboardInfo;
@@ -19,8 +20,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.util.HashMap;
-import java.util.Map;
 
 import static me.hannsi.lfjg.core.Core.LFJGRenderContext.GL_STATE_CACHE;
 import static me.hannsi.lfjg.core.SystemSetting.CORE_SYSTEM_DEBUG;
@@ -60,7 +59,7 @@ public class Core {
     public static final boolean ENABLE_LFJG_RENDER_TEXT_SYSTEM;
     public static final boolean ENABLE_LFJG_RENDER_VIDEO_SYSTEM;
     public static final Unsafe UNSAFE;
-    public static final Map<String, Integer> OPEN_GL_PARAMETER_NAME_MAP = new HashMap<>();
+    public static final String2IntMap OPEN_GL_PARAMETER_NAME_MAP = new String2IntMap();
     public static final EventManager EVENT_MANAGER;
     public static final WorkspaceManager WORKSPACE_MANAGER;
     public static String VENDOR = "unknown";

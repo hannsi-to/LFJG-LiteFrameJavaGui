@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.core.utils.math.map.long2Object;
+package me.hannsi.lfjg.core.utils.math.map.long2objectMap;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
@@ -269,7 +269,7 @@ public class ConcurrentLong2ObjectMap<V> extends Long2ObjectMap<V> implements Lo
 
     @Override
     @SuppressWarnings("unchecked")
-    public void forEach(LongObjectConsumer<V> action) {
+    public void forEach(Long2ObjectConsumer<V> action) {
         long[] ksd = this.keys;
         Object[] vsd = this.values;
 

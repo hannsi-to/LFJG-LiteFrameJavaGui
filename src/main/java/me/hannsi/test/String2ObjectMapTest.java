@@ -1,8 +1,8 @@
 package me.hannsi.test;
 
 import me.hannsi.lfjg.core.utils.math.AssetPath;
-import me.hannsi.lfjg.core.utils.math.map.string2Object.LinkedString2ObjectMap;
-import me.hannsi.lfjg.core.utils.math.map.string2Object.String2ObjectMap;
+import me.hannsi.lfjg.core.utils.math.map.string2objectMap.LinkedString2ObjectMap;
+import me.hannsi.lfjg.core.utils.math.map.string2objectMap.String2ObjectMap;
 
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;

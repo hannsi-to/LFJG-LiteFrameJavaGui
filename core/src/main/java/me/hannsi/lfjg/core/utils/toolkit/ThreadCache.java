@@ -2,7 +2,7 @@ package me.hannsi.lfjg.core.utils.toolkit;
 
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerator;
-import me.hannsi.lfjg.core.utils.math.map.long2Object.Long2ObjectMap;
+import me.hannsi.lfjg.core.utils.math.map.long2objectMap.Long2ObjectMap;
 
 public class ThreadCache {
     private final Long2ObjectMap<Thread> threadCache;

@@ -1,8 +1,8 @@
 package me.hannsi.test;
 
-import me.hannsi.lfjg.core.utils.math.map.long2Object.ConcurrentLong2ObjectMap;
-import me.hannsi.lfjg.core.utils.math.map.long2Object.LinkedLong2ObjectMap;
-import me.hannsi.lfjg.core.utils.math.map.long2Object.Long2ObjectMap;
+import me.hannsi.lfjg.core.utils.math.map.long2objectMap.ConcurrentLong2ObjectMap;
+import me.hannsi.lfjg.core.utils.math.map.long2objectMap.LinkedLong2ObjectMap;
+import me.hannsi.lfjg.core.utils.math.map.long2objectMap.Long2ObjectMap;
 
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
