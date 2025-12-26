@@ -27,12 +27,19 @@ public final class MethodSignature {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof MethodSignature)) {
+        if (!(o instanceof MethodSignature methodSignature)) {
             return false;
         }
 
-        MethodSignature methodSignature = (MethodSignature) o;
         return className.equals(methodSignature.className) && methodName.equals(methodSignature.methodName) && Arrays.equals(paramTypes, methodSignature.paramTypes);
+    }
+
+    public long computeLongHash() {
+        long h = (long) className.hashCode() << 32 | (methodName.hashCode() & 0xFFFFFFFFL);
+        for (Class<?> pt : paramTypes) {
+            h = h * 31 + pt.hashCode();
+        }
+        return h;
     }
 
     @Override

@@ -3,6 +3,7 @@ package me.hannsi.lfjg.core.utils.reflection;
 import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.utils.Util;
+import me.hannsi.lfjg.core.utils.math.ConcurrentLong2ObjectMap;
 import org.reflections.Reflections;
 
 import java.lang.invoke.*;
@@ -11,11 +12,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ClassUtil extends Util {
     private static final Map<Class<?>, Class<?>> PRIMITIVE_MAP;
-    private static final Map<MethodSignature, MethodHandle> METHOD_HANDLE_CACHE = new ConcurrentHashMap<>();
+    private static final ConcurrentLong2ObjectMap<MethodHandle> METHOD_HANDLE_CACHE = new ConcurrentLong2ObjectMap<>();
 
     static {
         PRIMITIVE_MAP = Map.of(Boolean.class, boolean.class, Byte.class, byte.class, Character.class, char.class, Double.class, double.class, Float.class, float.class, Integer.class, int.class, Long.class, long.class, Short.class, short.class);
@@ -162,8 +162,9 @@ public class ClassUtil extends Util {
     public static Object invokeStaticMethod(String className, String methodName, Object... args) {
         try {
             Class<?>[] paramTypes = getParameterTypes(args);
-            MethodSignature key = new MethodSignature(className, methodName, paramTypes);
+            MethodSignature signature = new MethodSignature(className, methodName, paramTypes);
 
+            long key = signature.computeLongHash();
             MethodHandle handle = METHOD_HANDLE_CACHE.get(key);
             if (handle == null) {
                 Class<?> clazz = Class.forName(className);
@@ -249,6 +250,4 @@ public class ClassUtil extends Util {
             throw new RuntimeException("Could not access static field: " + fieldName + " on class: " + className, e);
         }
     }
-
-    private record LambdaKey(Class<?> owner, String name, MethodType methodType, Class<?> fi) {}
 }
