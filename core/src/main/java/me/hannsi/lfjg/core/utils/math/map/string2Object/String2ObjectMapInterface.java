@@ -1,4 +1,6 @@
-package me.hannsi.lfjg.core.utils.math.list;
+package me.hannsi.lfjg.core.utils.math.map.string2Object;
+
+import me.hannsi.lfjg.core.utils.math.AssetPath;
 
 import java.util.Map;
 

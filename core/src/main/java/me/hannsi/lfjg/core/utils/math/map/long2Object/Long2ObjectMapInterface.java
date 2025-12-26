@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.core.utils.math.list;
+package me.hannsi.lfjg.core.utils.math.map.long2Object;
 
 public interface Long2ObjectMapInterface<V> {
     void put(long key, V value);

@@ -3,7 +3,7 @@ package me.hannsi.lfjg.core.utils.reflection;
 import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.utils.Util;
-import me.hannsi.lfjg.core.utils.math.list.ConcurrentLong2ObjectMap;
+import me.hannsi.lfjg.core.utils.math.map.long2Object.ConcurrentLong2ObjectMap;
 import org.reflections.Reflections;
 
 import java.lang.invoke.*;

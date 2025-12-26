@@ -2,24 +2,23 @@ package me.hannsi.lfjg.core.utils.toolkit;
 
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerator;
-
-import java.util.HashMap;
+import me.hannsi.lfjg.core.utils.math.map.long2Object.Long2ObjectMap;
 
 public class ThreadCache {
-    private HashMap<String, Thread> threadCache;
+    private final Long2ObjectMap<Thread> threadCache;
 
     public ThreadCache() {
-        threadCache = new HashMap<>();
+        threadCache = new Long2ObjectMap<>();
     }
 
     public void createCache(Thread thread) {
-        threadCache.put(thread.getName(), thread);
+        threadCache.put(thread.threadId(), thread);
 
         LogGenerator logGenerator = new LogGenerator(
                 "ThreadCache Debug Message",
                 "Source: ThreadCache",
                 "Type: Cache Creation",
-                "ID: " + thread.getName(),
+                "ID: " + thread.threadId(),
                 "Severity: Info",
                 "Message: Create thread cache: " + thread.getName()
         );
@@ -41,7 +40,7 @@ public class ThreadCache {
     public void run(long... threadId) {
         threadCache.forEach((key, value) -> {
             for (long l : threadId) {
-                if (key.equals(l)) {
+                if (key == l) {
                     threadRun(value);
                 }
             }
@@ -51,7 +50,7 @@ public class ThreadCache {
     public void stop(long... threadId) {
         threadCache.forEach((key, value) -> {
             for (long l : threadId) {
-                if (key.equals(l)) {
+                if (key == l) {
                     threadStop(value);
                 }
             }
@@ -61,14 +60,14 @@ public class ThreadCache {
     private void threadStop(Thread thread) {
         thread.interrupt();
 
-        LogGenerator logGenerator = new LogGenerator("Thread Stop", "Thread Name: " + thread.getName(), "Thread ID: " + thread.getName(), "State Before: " + thread.getState(), "Action: Interrupting thread");
+        LogGenerator logGenerator = new LogGenerator("Thread Stop", "Thread Name: " + thread.getName(), "Thread ID: " + thread.threadId(), "State Before: " + thread.getState(), "Action: Interrupting thread");
         logGenerator.logging(getClass(), DebugLevel.DEBUG);
     }
 
     private void threadRun(Thread thread) {
         thread.start();
 
-        LogGenerator logGenerator = new LogGenerator("Thread Start", "Thread Name: " + thread.getName(), "Thread ID: " + thread.getName(), "State Before: " + thread.getState(), "Action: Starting thread");
+        LogGenerator logGenerator = new LogGenerator("Thread Start", "Thread Name: " + thread.getName(), "Thread ID: " + thread.threadId(), "State Before: " + thread.getState(), "Action: Starting thread");
         logGenerator.logging(getClass(), DebugLevel.DEBUG);
     }
 
@@ -76,13 +75,5 @@ public class ThreadCache {
         stop();
 
         threadCache.clear();
-    }
-
-    public HashMap<String, Thread> getThreadCache() {
-        return threadCache;
-    }
-
-    public void setThreadCache(HashMap<String, Thread> threadCache) {
-        this.threadCache = threadCache;
     }
 }

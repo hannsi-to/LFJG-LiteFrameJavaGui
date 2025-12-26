@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.core.utils.math.list;
+package me.hannsi.lfjg.core.utils.math.map.long2Object;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;

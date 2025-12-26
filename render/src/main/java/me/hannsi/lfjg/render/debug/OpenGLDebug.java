@@ -15,7 +15,7 @@ import static me.hannsi.lfjg.core.Core.OPEN_GL_PARAMETER_NAME_MAP;
 import static org.lwjgl.opengl.GL43.*;
 
 public class OpenGLDebug {
-    public static final Map<Integer, Integer> OPEN_GL_DEBUG_SEVERITY_MAP = new HashMap<Integer, Integer>() {{
+    public static final Map<Integer, Integer> OPEN_GL_DEBUG_SEVERITY_MAP = new HashMap<>() {{
         put(0, OPEN_GL_PARAMETER_NAME_MAP.get("GL_DEBUG_SEVERITY_NOTIFICATION"));
         put(1, OPEN_GL_PARAMETER_NAME_MAP.get("GL_DEBUG_SEVERITY_LOW"));
         put(2, OPEN_GL_PARAMETER_NAME_MAP.get("GL_DEBUG_SEVERITY_MEDIUM"));

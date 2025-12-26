@@ -3,7 +3,6 @@ package me.hannsi.test;
 import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.graphics.ResolutionType;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
-import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.core.utils.time.Timer;
 import me.hannsi.lfjg.frame.Frame;
@@ -19,15 +18,15 @@ import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.rendering.texture.SparseTexture2DArray;
 import me.hannsi.lfjg.render.system.rendering.texture.atlas.AtlasPacker;
 import me.hannsi.lfjg.render.system.rendering.texture.atlas.Sprite;
+import me.hannsi.lfjg.render.system.rendering.texture.atlas.SpriteMemoryPolicy;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static me.hannsi.lfjg.core.Core.projection2D;
-import static me.hannsi.lfjg.core.Core.projection3D;
 import static me.hannsi.lfjg.frame.LFJGFrameContext.frame;
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
+import static me.hannsi.lfjg.render.system.mesh.InstanceData.NO_ATTACH_TEXTURE;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 
@@ -54,15 +53,21 @@ public class TestNewMeshSystem implements LFJGFrame {
 //                .update();
 
         AtlasPacker atlas = new AtlasPacker(1024, 1024, 1, 0, 0, 0);
-        for (int i = 0; i < 4; i++) {
-            int w = 16 + (int) (MathHelper.random() * 100);
-            int h = 16 + (int) (MathHelper.random() * 100);
-            atlas.addSprite("Code: " + i, Sprite.createRandomColor(i, w, h, false));
+        for (int i = 0; i < 100; i++) {
+//            int w = 16 + (int) (MathHelper.random() * 100);
+//            int h = 16 + (int) (MathHelper.random() * 100);
+            int w = 64;
+            int h = 64;
+            atlas.addSprite("Code: " + i, Sprite.createRandomColor(w, h, false, SpriteMemoryPolicy.STREAMING).setCommited(false));
         }
         atlas.generate();
 
         sparseTexture2DArray = new SparseTexture2DArray(atlas)
-                .updateFromAtlas(atlas.getAtlasLayers());
+                .commitTexture("Code: 0", true)
+                .commitTexture("Code: 1", false)
+                .commitTexture("Code: 2", true)
+                .commitTexture("Code: 3", true)
+                .updateFromAtlas();
 
         int instanceCount = 4;
         float objectSize = ResolutionType.WQHD.getHeight();
@@ -70,7 +75,11 @@ public class TestNewMeshSystem implements LFJGFrame {
         Color[] colors = new Color[instanceCount];
         for (int i = 0; i < instanceCount; i++) {
             float scale = ((objectSize / instanceCount) * (instanceCount - i)) / objectSize;
-            matrix4fs[i] = new Transform(i).scale(scale, scale, 1);
+            int layer = NO_ATTACH_TEXTURE;
+            if (sparseTexture2DArray.commitedTexture("Code: " + i)) {
+                layer = i;
+            }
+            matrix4fs[i] = new Transform(layer).scale(scale, scale, 1);
             colors[i] = new Color(0, 0, 0, 0);
         }
 
@@ -283,8 +292,7 @@ public class TestNewMeshSystem implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-        precomputedViewProjection2D = projection2D.getMatrix4f().mul(MAIN_CAMERA.getViewMatrix());
-        precomputedViewProjection3D = projection3D.getMatrix4f().mul(MAIN_CAMERA.getViewMatrix());
+        update();
 
         SHADER_PROGRAM.bind();
 
@@ -300,7 +308,20 @@ public class TestNewMeshSystem implements LFJGFrame {
 //            instanceModel.translate(1, 0, 0);
         }
 
-
+//        int w = 64;
+//        int h = 64;
+//        ByteBuffer newData = BufferUtils.createByteBuffer(w * h * 4);
+//
+//        byte r = (byte) (Math.random() * 255);
+//        byte g = (byte) (Math.random() * 255);
+//        byte b = (byte) (Math.random() * 255);
+//
+//        for (int i = 0; i < w * h; i++) {
+//            newData.put(r).put(g).put(b).put((byte) 255);
+//        }
+//        newData.flip();
+//
+//        sparseTexture2DArray.updateSprite("Code: 0", newData);
         VAO_RENDERING.draw();
 
         if (timer.passed(2000)) {

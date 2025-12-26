@@ -1,6 +1,4 @@
-package me.hannsi.lfjg.core.utils.math.list;
-
-import me.hannsi.lfjg.core.utils.math.StringHash;
+package me.hannsi.lfjg.core.utils.math;
 
 public record AssetPath(String path, long hash) {
     public AssetPath(String path) {
