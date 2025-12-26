@@ -2,7 +2,7 @@ package me.hannsi.lfjg.frame;
 
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.event.EventHandler;
-import me.hannsi.lfjg.core.utils.math.IntArrayList;
+import me.hannsi.lfjg.core.utils.math.list.IntArrayList;
 import me.hannsi.lfjg.core.utils.time.TimeCalculator;
 import me.hannsi.lfjg.core.utils.time.TimeSourceUtil;
 import me.hannsi.lfjg.core.utils.toolkit.ANSIFormat;
