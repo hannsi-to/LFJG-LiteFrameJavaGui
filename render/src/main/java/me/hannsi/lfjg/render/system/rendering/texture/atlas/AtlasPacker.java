@@ -1,10 +1,8 @@
 package me.hannsi.lfjg.render.system.rendering.texture.atlas;
 
 import me.hannsi.lfjg.core.debug.DebugLog;
+import me.hannsi.lfjg.core.utils.math.list.LinkedString2ObjectMap;
 import me.hannsi.lfjg.render.debug.exceptions.texture.AtlasPackerException;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import static me.hannsi.lfjg.core.utils.math.MathHelper.max;
 import static me.hannsi.lfjg.core.utils.math.MathHelper.min;
@@ -19,14 +17,14 @@ public class AtlasPacker {
     private final int atlasWidth;
     private final int atlasHeight;
     private final int atlasLayer;
-    private final Map<String, Sprite> sprites;
+    private final LinkedString2ObjectMap<Sprite> sprites;
     private int currentX;
     private int currentY;
     private int currentLayer;
     private int rowHeight;
 
     public AtlasPacker(int atlasWidth, int atlasHeight, int atlasLayer, int currentX, int currentY, int rowHeight) {
-        this.sprites = new LinkedHashMap<>();
+        this.sprites = new LinkedString2ObjectMap<>();
 
         int maxAtlasSize = glGetInteger(GL_MAX_TEXTURE_SIZE);
         atlasWidth = (atlasWidth == USE_MAX_TEXTURE_SIZE) ? maxAtlasSize : atlasWidth;
@@ -93,7 +91,7 @@ public class AtlasPacker {
         float invW = 1.0f / atlasWidth;
         float invH = 1.0f / atlasHeight;
 
-        for (Sprite sprite : sprites.values()) {
+        sprites.forEach((key, sprite) -> {
             if (currentX + sprite.width + PADDING > atlasWidth) {
                 currentX = 0;
                 currentY += rowHeight;
@@ -134,7 +132,7 @@ public class AtlasPacker {
 
             currentX += sprite.width + PADDING;
             rowHeight = Math.max(rowHeight, sprite.height + PADDING);
-        }
+        });
     }
 
     public int getAtlasWidth() {
@@ -149,7 +147,7 @@ public class AtlasPacker {
         return atlasLayer;
     }
 
-    public Map<String, Sprite> getSprites() {
+    public LinkedString2ObjectMap<Sprite> getSprites() {
         return sprites;
     }
 

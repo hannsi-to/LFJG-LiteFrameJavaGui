@@ -94,9 +94,7 @@ public class SparseTexture2DArray {
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
-        for (Map.Entry<String, Sprite> entry : atlasPacker.getSprites().entrySet()) {
-            Sprite sprite = entry.getValue();
-
+        atlasPacker.getSprites().forEach((name, sprite) -> {
             if (sprite.commited && sprite.data != null) {
                 sprite.data.rewind();
 
@@ -129,7 +127,7 @@ public class SparseTexture2DArray {
                             throw new IllegalStateException("Unexpected value: " + sprite.memoryPolicy);
                 }
             }
-        }
+        });
 
         GL_STATE_CACHE.bindPixelUnpackBuffer(0);
 
@@ -153,7 +151,7 @@ public class SparseTexture2DArray {
                 String otherName = entry.getKey();
                 Sprite other = entry.getValue();
                 if (other == sprite) {
-                    continue;
+                    return;
                 }
 
                 if (other.commited && other.offsetZ == sprite.offsetZ) {
@@ -168,7 +166,6 @@ public class SparseTexture2DArray {
                         DebugLog.warning(getClass(), String.format("Decommit skipped: Sprite (" + getSpriteName(sprite) + ") shares the same Virtual Pages with already committed Sprite (" + otherName + ") (Layer: " + sprite.offsetZ + "). " + "Physical memory will remain allocated."));
 
                         sprite.commited = false;
-                        return;
                     }
                 }
             }
@@ -221,11 +218,7 @@ public class SparseTexture2DArray {
     }
 
     private String getSpriteName(Sprite sprite) {
-        return atlasPacker.getSprites().entrySet().stream()
-                .filter(e -> e.getValue() == sprite)
-                .map(Map.Entry::getKey)
-                .findFirst()
-                .orElse("Unknown");
+        return atlasPacker.getSprites().getKeyByValue(sprite);
     }
 
     public int getWidth() {
