@@ -16,16 +16,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Objects;
 
-public final class Location {
-    private final String path;
-    private final LocationType locationType;
-
-    public Location(String path, LocationType locationType) {
-        this.path = path;
-        this.locationType = locationType;
-    }
+public record Location(String path, LocationType locationType) {
 
     public static Location fromFile(String absolutePath) {
         return new Location(absolutePath, LocationType.FILE);
@@ -61,16 +53,14 @@ public final class Location {
     }
 
     public InputStream openStream() throws IOException {
-        switch (locationType) {
-            case FILE:
-                return Files.newInputStream(Paths.get(path));
-            case RESOURCE:
-                return Location.class.getClassLoader().getResourceAsStream(path);
-            case URL:
-                return new URL(path).openStream();
-            default:
-                throw new IllegalArgumentException();
-        }
+        return switch (locationType) {
+            case FILE ->
+                    Files.newInputStream(Paths.get(path));
+            case RESOURCE ->
+                    Location.class.getClassLoader().getResourceAsStream(path);
+            case URL ->
+                    new URL(path).openStream();
+        };
     }
 
     public boolean exists() throws IOException {
@@ -86,7 +76,7 @@ public final class Location {
                     HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(path).openConnection();
                     httpURLConnection.setRequestMethod("HEAD");
                     httpURLConnection.connect();
-                    return httpURLConnection.getResponseCode() == 200;
+                    return httpURLConnection.getResponseCode() < 400;
                 } catch (Exception e) {
                     return false;
                 }
@@ -195,32 +185,6 @@ public final class Location {
             default:
                 throw new IllegalStateException("Unknown LocationType: " + locationType);
         }
-    }
-
-    public String path() {
-        return path;
-    }
-
-    public LocationType locationType() {
-        return locationType;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (obj == null || obj.getClass() != this.getClass()) {
-            return false;
-        }
-        Location that = (Location) obj;
-        return Objects.equals(this.path, that.path) &&
-                Objects.equals(this.locationType, that.locationType);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(path, locationType);
     }
 
     @Override
