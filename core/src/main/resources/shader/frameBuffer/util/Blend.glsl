@@ -4,20 +4,45 @@
 #define LFJG_MIN                   0x8007
 #define LFJG_MAX                   0x8008
 
-#define LFJG_ZERO                       0
-#define LFJG_ONE                        1
-#define LFJG_SRC_COLOR                  2
-#define LFJG_ONE_MINUS_SRC_COLOR        3
-#define LFJG_DST_COLOR                  4
-#define LFJG_ONE_MINUS_DST_COLOR        5
-#define LFJG_SRC_ALPHA                  6
-#define LFJG_ONE_MINUS_SRC_ALPHA        7
-#define LFJG_DST_ALPHA                  8
-#define LFJG_ONE_MINUS_DST_ALPHA        9
-#define LFJG_CONSTANT_COLOR            10
-#define LFJG_ONE_MINUS_CONSTANT_COLOR  11
-#define LFJG_CONSTANT_ALPHA            12
-#define LFJG_ONE_MINUS_CONSTANT_ALPHA  13
+#define LFJG_ZERO                      0x0000
+#define LFJG_ONE                       0x0001
+#define LFJG_SRC_COLOR                 0x0300
+#define LFJG_ONE_MINUS_SRC_COLOR       0x0301
+#define LFJG_DST_COLOR                 0x0306
+#define LFJG_ONE_MINUS_DST_COLOR       0x0307
+#define LFJG_SRC_ALPHA                 0x0302
+#define LFJG_ONE_MINUS_SRC_ALPHA       0x0303
+#define LFJG_DST_ALPHA                 0x0304
+#define LFJG_ONE_MINUS_DST_ALPHA       0x0305
+#define LFJG_CONSTANT_COLOR            0x8001
+#define LFJG_ONE_MINUS_CONSTANT_COLOR  0x8002
+#define LFJG_CONSTANT_ALPHA            0x8003
+#define LFJG_ONE_MINUS_CONSTANT_ALPHA  0x8004
+
+const int factors[] = int[](
+LFJG_ZERO,
+LFJG_ONE,
+LFJG_SRC_COLOR,
+LFJG_ONE_MINUS_SRC_COLOR,
+LFJG_DST_COLOR,
+LFJG_ONE_MINUS_DST_COLOR,
+LFJG_SRC_ALPHA,
+LFJG_ONE_MINUS_SRC_ALPHA,
+LFJG_DST_ALPHA,
+LFJG_ONE_MINUS_DST_ALPHA,
+LFJG_CONSTANT_COLOR,
+LFJG_ONE_MINUS_CONSTANT_COLOR,
+LFJG_CONSTANT_ALPHA,
+LFJG_ONE_MINUS_CONSTANT_ALPHA
+);
+
+const int equations[] = int[](
+LFJG_FUNC_ADD,
+LFJG_FUNC_SUBTRACT,
+LFJG_FUNC_REVERSE_SUBTRACT,
+LFJG_MIN,
+LFJG_MAX
+);
 
 vec3 blendEqRGB(vec3 s, vec3 d, int eq)
 {
