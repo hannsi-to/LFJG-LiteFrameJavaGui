@@ -22,13 +22,16 @@ layout(std430, binding = 1) readonly buffer SpriteData {
 #define NO_ATTACH_TEXTURE 0xFFFFFFFF
 
 void main() {
+    vec4 baseColor;
+
     if (vSpriteIndex == NO_ATTACH_TEXTURE) {
-        fragColor = vSpriteColor;
-        return;
+        baseColor = vColor * vSpriteColor;
+    } else {
+        vec4 uvRect = spriteData.data[vSpriteIndex].rect;
+        float layer = spriteData.data[vSpriteIndex].layer;
+        vec2 uv = uvRect.xy + vUV * uvRect.zw;
+        baseColor = texture(uTexArray, vec3(uv, layer));
     }
 
-    vec4 uvRect = spriteData.data[vSpriteIndex].rect;
-    float layer = spriteData.data[vSpriteIndex].layer;
-    vec2 uv = uvRect.xy + vUV * uvRect.zw;
-    fragColor = texture(uTexArray, vec3(uv, layer));
+    fragColor = baseColor;
 }
