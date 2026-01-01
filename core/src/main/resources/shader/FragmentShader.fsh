@@ -1,6 +1,7 @@
 #version 460 core
 
 flat in uint vSpriteIndex;
+flat in vec4 vSpriteColor;
 in vec4 vColor;
 in vec2 vUV;
 
@@ -22,7 +23,7 @@ layout(std430, binding = 1) readonly buffer SpriteData {
 
 void main() {
     if (vSpriteIndex == NO_ATTACH_TEXTURE) {
-        fragColor = vColor;
+        fragColor = vSpriteColor;
         return;
     }
 

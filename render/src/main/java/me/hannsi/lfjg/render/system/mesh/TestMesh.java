@@ -2,7 +2,6 @@ package me.hannsi.lfjg.render.system.mesh;
 
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerator;
-import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.debug.exceptions.render.mesh.MeshException;
@@ -260,7 +259,7 @@ public class TestMesh {
 
     private void writeInstanceData(InstanceData instanceData) {
         for (int i = 0; i < instanceData.instanceCount; i++) {
-            persistentMappedSSBO.addTransform(2, instanceData.getTransforms()[i]);
+            persistentMappedSSBO.addObjectParameter(2, instanceData.getTransforms()[i]);
         }
     }
 
@@ -275,7 +274,7 @@ public class TestMesh {
         int count = Math.min(glObjectData.builder.instanceData.instanceCount, newInstanceData.instanceCount);
 
         for (int i = 0; i < count; i++) {
-            persistentMappedSSBO.updateTransform(2, baseInstanceIndex + i, newInstanceData.getTransforms()[i]);
+            persistentMappedSSBO.updateObjectParameter(2, baseInstanceIndex + i, newInstanceData.getTransforms()[i]);
         }
 
         return this;
@@ -406,7 +405,7 @@ public class TestMesh {
         private float pointSize = -1f;
         private JointType jointType = JointType.NONE;
         private PointType pointType = PointType.SQUARE;
-        private InstanceData instanceData = new InstanceData(1, Color.RED);
+        private InstanceData instanceData = new InstanceData(1);
         private ProjectionType projectionType = ProjectionType.ORTHOGRAPHIC_PROJECTION;
 
         Builder() {

@@ -8,6 +8,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ColorModel;
 
+import static me.hannsi.lfjg.core.Core.UNSAFE;
+
 public class Color {
     public static final Color WHITE = new Color(255, 255, 255);
     public static final Color LIGHT_GRAY = new Color(192, 192, 192);
@@ -466,5 +468,12 @@ public class Color {
         }
 
         return colors;
+    }
+
+    public void getToAddress(long address) {
+        UNSAFE.putFloat(address, getRedF());
+        UNSAFE.putFloat(address + Float.BYTES, getRedF());
+        UNSAFE.putFloat(address + Float.BYTES * 2, getRedF());
+        UNSAFE.putFloat(address + Float.BYTES * 3, getRedF());
     }
 }

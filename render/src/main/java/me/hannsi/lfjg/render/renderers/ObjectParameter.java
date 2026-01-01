@@ -1,19 +1,20 @@
 package me.hannsi.lfjg.render.renderers;
 
+import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
 import static me.hannsi.lfjg.core.Core.UNSAFE;
+import static me.hannsi.lfjg.render.LFJGRenderContext.NO_ATTACH_TEXTURE;
 import static me.hannsi.lfjg.render.LFJGRenderContext.mainCamera;
-import static me.hannsi.lfjg.render.system.mesh.InstanceData.NO_ATTACH_TEXTURE;
 
-public class Transform {
-    public static final int BYTES = 80;
+public class ObjectParameter {
+    public static final int BYTES = 16 * Float.BYTES + 4 * Float.BYTES + Float.BYTES + 3 * Float.BYTES;
     protected final Matrix4f TEMP_MATRIX = new Matrix4f();
     protected final Matrix4f MODEL_MATRIX = new Matrix4f();
-    private final Quaternionf rotation;
     protected boolean dirtyFlag = true;
+    private final Quaternionf rotation;
     private ProjectionType projectionType;
     private int spriteIndex;
     private long address;
@@ -23,8 +24,9 @@ public class Transform {
     private float scaleX;
     private float scaleY;
     private float scaleZ;
+    private Color color;
 
-    Transform() {
+    ObjectParameter() {
         this.projectionType = ProjectionType.ORTHOGRAPHIC_PROJECTION;
         this.x = 0;
         this.y = 0;
@@ -34,9 +36,10 @@ public class Transform {
         this.scaleY = 1;
         this.scaleZ = 1;
         this.spriteIndex = NO_ATTACH_TEXTURE;
+        this.color = new Color(0, 1, 0, 1);
     }
 
-    public Transform(ProjectionType projectionType, int spriteIndex, float x, float y, float z, Quaternionf rotation, float scaleY, float scaleX, float scaleZ) {
+    public ObjectParameter(ProjectionType projectionType, int spriteIndex, float x, float y, float z, Quaternionf rotation, float scaleY, float scaleX, float scaleZ, Color color) {
         this.rotation = rotation;
         this.projectionType = projectionType;
         this.spriteIndex = spriteIndex;
@@ -46,79 +49,86 @@ public class Transform {
         this.scaleY = scaleY;
         this.scaleX = scaleX;
         this.scaleZ = scaleZ;
+        this.color = color;
     }
 
-    public static Transform createBuilder() {
-        return new Transform();
+    public static ObjectParameter createBuilder() {
+        return new ObjectParameter();
     }
 
-    public Transform projectionType(ProjectionType projectionType) {
+    public ObjectParameter projectionType(ProjectionType projectionType) {
         this.projectionType = projectionType;
 
         return this;
     }
 
-    public Transform x(float x) {
+    public ObjectParameter x(float x) {
         this.x = x;
 
         return this;
     }
 
-    public Transform y(float y) {
+    public ObjectParameter y(float y) {
         this.y = y;
 
         return this;
     }
 
-    public Transform z(float z) {
+    public ObjectParameter z(float z) {
         this.z = z;
 
         return this;
     }
 
-    public Transform angleX(float angleX) {
+    public ObjectParameter angleX(float angleX) {
         this.rotation.rotateX(angleX);
 
         return this;
     }
 
-    public Transform angleY(float angleY) {
+    public ObjectParameter angleY(float angleY) {
         this.rotation.rotateY(angleY);
 
         return this;
     }
 
-    public Transform angleZ(float angleZ) {
+    public ObjectParameter angleZ(float angleZ) {
         this.rotation.rotateZ(angleZ);
 
         return this;
     }
 
-    public Transform scaleX(float scaleX) {
+    public ObjectParameter scaleX(float scaleX) {
         this.scaleX = scaleX;
 
         return this;
     }
 
-    public Transform scaleY(float scaleY) {
+    public ObjectParameter scaleY(float scaleY) {
         this.scaleY = scaleY;
 
         return this;
     }
 
-    public Transform scaleZ(float scaleZ) {
+    public ObjectParameter scaleZ(float scaleZ) {
         this.scaleZ = scaleZ;
 
         return this;
     }
 
-    public Transform spriteIndex(int spriteIndex) {
+    public ObjectParameter spriteIndex(int spriteIndex) {
         this.spriteIndex = spriteIndex;
 
         return this;
     }
 
-    public Transform getToAddress(long address, Matrix4f vpMatrix) {
+    public ObjectParameter color(Color color) {
+        this.color = color;
+
+        return this;
+    }
+
+    public ObjectParameter getToAddress(long address, Matrix4f vpMatrix) {
         if (!dirtyFlag && !mainCamera.isDirtyFlag()) {
             return this;
         }
@@ -132,18 +142,21 @@ public class Transform {
         vpMatrix.mul(MODEL_MATRIX, TEMP_MATRIX);
 
         TEMP_MATRIX.getToAddress(address);
-        UNSAFE.putInt(address + 64, spriteIndex);
+        address += 64;
+        color.getToAddress(address);
+        address += 4 * Float.BYTES;
+        UNSAFE.putInt(address, spriteIndex);
 
         mainCamera.setDirtyFlag(false);
 
         return this;
     }
 
-    public Transform newInstance() {
-        return new Transform(projectionType, spriteIndex, x, y, z, rotation, scaleX, scaleY, scaleZ);
+    public ObjectParameter newInstance() {
+        return new ObjectParameter(projectionType, spriteIndex, x, y, z, rotation, scaleX, scaleY, scaleZ, color);
     }
 
-    public Transform reset() {
+    public ObjectParameter reset() {
         this.x = 0;
         this.y = 0;
         this.z = 0;
@@ -157,7 +170,7 @@ public class Transform {
         return this;
     }
 
-    public Transform translate(float x, float y, float z) {
+    public ObjectParameter translate(float x, float y, float z) {
         this.x += x;
         this.y += y;
         this.z += z;
@@ -167,7 +180,7 @@ public class Transform {
         return this;
     }
 
-    public Transform rotateXYZ(float angleX, float angleY, float angleZ) {
+    public ObjectParameter rotateXYZ(float angleX, float angleY, float angleZ) {
         rotation
                 .rotateX(angleX)
                 .rotateY(angleY)
@@ -178,7 +191,7 @@ public class Transform {
         return this;
     }
 
-    public Transform scale(float scaleX, float scaleY, float scaleZ) {
+    public ObjectParameter scale(float scaleX, float scaleY, float scaleZ) {
         this.scaleX *= scaleX;
         this.scaleY *= scaleY;
         this.scaleZ *= scaleZ;

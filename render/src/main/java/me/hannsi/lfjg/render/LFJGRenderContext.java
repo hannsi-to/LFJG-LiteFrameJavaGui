@@ -25,6 +25,7 @@ import static org.lwjgl.opengl.GL30.GL_TEXTURE_2D_ARRAY;
 import static org.lwjgl.opengl.GL42.glGetInternalformativ;
 
 public class LFJGRenderContext {
+    public static final int NO_ATTACH_TEXTURE = -1;
     public static final int VIRTUAL_PAGE_SIZE_X;
     public static final int VIRTUAL_PAGE_SIZE_Y;
     public static final int MAX_ARRAY_TEXTURE_LAYERS;

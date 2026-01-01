@@ -4,7 +4,7 @@ import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
-import me.hannsi.lfjg.render.renderers.Transform;
+import me.hannsi.lfjg.render.renderers.ObjectParameter;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL44;
 import org.lwjgl.system.MemoryUtil;
@@ -171,28 +171,28 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
         return this;
     }
 
-    public TestPersistentMappedSSBO addTransform(int bindingPoint, Transform transform) {
+    public TestPersistentMappedSSBO addObjectParameter(int bindingPoint, ObjectParameter objectParameter) {
         SSBOBindingData ssboData = getOrCreateSSBOData(bindingPoint);
 
-        ensureSpaceAndShift(ssboData, (long) (ssboData.dataCount + 1) * Transform.BYTES);
+        ensureSpaceAndShift(ssboData, (long) (ssboData.dataCount + 1) * ObjectParameter.BYTES);
 
-        Matrix4f currentVP = (transform.getProjectionType() == ProjectionType.PERSPECTIVE_PROJECTION) ? precomputedViewProjection3D : precomputedViewProjection2D;
-        long dst = mappedAddress + ssboData.offset + (long) ssboData.dataCount * Transform.BYTES;
-        transform.getToAddress(dst, currentVP);
+        Matrix4f currentVP = (objectParameter.getProjectionType() == ProjectionType.PERSPECTIVE_PROJECTION) ? precomputedViewProjection3D : precomputedViewProjection2D;
+        long dst = mappedAddress + ssboData.offset + (long) ssboData.dataCount * ObjectParameter.BYTES;
+        objectParameter.getToAddress(dst, currentVP);
 
         ssboData.dataCount++;
         return this;
     }
 
-    public TestPersistentMappedSSBO updateTransform(int bindingPoint, int index, Transform transform) {
+    public TestPersistentMappedSSBO updateObjectParameter(int bindingPoint, int index, ObjectParameter objectParameter) {
         SSBOBindingData ssboData = bindingDatum.get(bindingPoint);
         if (ssboData == null) {
             throw new IndexOutOfBoundsException("Invalid binding point");
         }
 
-        Matrix4f currentVP = (transform.getProjectionType() == ProjectionType.PERSPECTIVE_PROJECTION) ? precomputedViewProjection3D : precomputedViewProjection2D;
-        long dst = mappedAddress + ssboData.offset + (long) index * Transform.BYTES;
-        transform.getToAddress(dst, currentVP);
+        Matrix4f currentVP = (objectParameter.getProjectionType() == ProjectionType.PERSPECTIVE_PROJECTION) ? precomputedViewProjection3D : precomputedViewProjection2D;
+        long dst = mappedAddress + ssboData.offset + (long) index * ObjectParameter.BYTES;
+        objectParameter.getToAddress(dst, currentVP);
 
         return this;
     }

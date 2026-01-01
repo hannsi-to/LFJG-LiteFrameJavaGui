@@ -5,7 +5,7 @@ import org.lwjgl.BufferUtils;
 import java.nio.ByteBuffer;
 
 import static me.hannsi.lfjg.core.utils.math.MathHelper.random;
-import static me.hannsi.lfjg.render.system.mesh.InstanceData.NO_ATTACH_TEXTURE;
+import static me.hannsi.lfjg.render.LFJGRenderContext.NO_ATTACH_TEXTURE;
 
 public class Sprite {
     public final int width;

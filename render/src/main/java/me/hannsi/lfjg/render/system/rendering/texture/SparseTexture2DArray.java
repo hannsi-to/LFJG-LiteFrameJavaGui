@@ -11,7 +11,6 @@ import java.nio.ByteBuffer;
 import java.util.Map;
 
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
-import static me.hannsi.lfjg.render.system.mesh.InstanceData.NO_ATTACH_TEXTURE;
 import static org.lwjgl.opengl.ARBSparseTexture.GL_TEXTURE_SPARSE_ARB;
 import static org.lwjgl.opengl.ARBSparseTexture.glTexPageCommitmentARB;
 import static org.lwjgl.opengl.GL11.*;
