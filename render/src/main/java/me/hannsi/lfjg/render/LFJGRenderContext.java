@@ -28,8 +28,8 @@ public class LFJGRenderContext {
     public static final int VIRTUAL_PAGE_SIZE_Y;
     public static final int MAX_ARRAY_TEXTURE_LAYERS;
     public static final int MAX_TEXTURE_SIZE;
-    public static GLObjectPool GL_OBJECT_POOL;
-    public static Camera MAIN_CAMERA;
+    public static GLObjectPool glObjectPool;
+    public static Camera mainCamera;
     public static Matrix4f precomputedViewProjection2D;
     public static Matrix4f precomputedViewProjection3D;
     public static GLStateCache glStateCache;
@@ -56,12 +56,12 @@ public class LFJGRenderContext {
     }
 
     public static void init() {
-        GL_OBJECT_POOL = new GLObjectPool();
+        glObjectPool = new GLObjectPool();
 
-        MAIN_CAMERA = new Camera();
+        mainCamera = new Camera();
 
-        precomputedViewProjection2D = projection2D.getMatrix4f().mul(MAIN_CAMERA.getViewMatrix());
-        precomputedViewProjection3D = projection3D.getMatrix4f().mul(MAIN_CAMERA.getViewMatrix());
+        precomputedViewProjection2D = projection2D.getMatrix4f().mul(mainCamera.getViewMatrix());
+        precomputedViewProjection3D = projection3D.getMatrix4f().mul(mainCamera.getViewMatrix());
 
         glStateCache = new GLStateCache();
 
@@ -89,7 +89,7 @@ public class LFJGRenderContext {
     }
 
     public static void update() {
-        precomputedViewProjection2D = projection2D.getMatrix4f().mul(MAIN_CAMERA.getViewMatrix());
-        precomputedViewProjection3D = projection3D.getMatrix4f().mul(MAIN_CAMERA.getViewMatrix());
+        precomputedViewProjection2D = projection2D.getMatrix4f().mul(mainCamera.getViewMatrix());
+        precomputedViewProjection3D = projection3D.getMatrix4f().mul(mainCamera.getViewMatrix());
     }
 }

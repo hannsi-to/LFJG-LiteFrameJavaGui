@@ -53,7 +53,7 @@ public class ModelRender {
         shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.MODEL.getId());
         shaderProgram.setUniform("textureSampler", UploadUniformType.ONCE, 0);
         shaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, projection3D.getMatrix4f());
-        shaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, MAIN_CAMERA.getViewMatrix());
+        shaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, mainCamera.getViewMatrix());
 
         Collection<Model> models = modelCache.getModels().values();
         for (Model model : models) {

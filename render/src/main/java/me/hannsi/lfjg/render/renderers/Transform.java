@@ -5,7 +5,7 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
 import static me.hannsi.lfjg.core.Core.UNSAFE;
-import static me.hannsi.lfjg.render.LFJGRenderContext.MAIN_CAMERA;
+import static me.hannsi.lfjg.render.LFJGRenderContext.mainCamera;
 import static me.hannsi.lfjg.render.system.mesh.InstanceData.NO_ATTACH_TEXTURE;
 
 public class Transform {
@@ -119,7 +119,7 @@ public class Transform {
     }
 
     public Transform getToAddress(long address, Matrix4f vpMatrix) {
-        if (!dirtyFlag && !MAIN_CAMERA.isDirtyFlag()) {
+        if (!dirtyFlag && !mainCamera.isDirtyFlag()) {
             return this;
         }
 
@@ -134,7 +134,7 @@ public class Transform {
         TEMP_MATRIX.getToAddress(address);
         UNSAFE.putInt(address + 64, spriteIndex);
 
-        MAIN_CAMERA.setDirtyFlag(false);
+        mainCamera.setDirtyFlag(false);
 
         return this;
     }

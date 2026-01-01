@@ -24,7 +24,7 @@ public class VAORendering {
             glStateCache.lineWidth(1.0f);
         }
 
-        for (Map.Entry<Integer, GLObjectData> entry : GL_OBJECT_POOL.getObjects().entrySet()) {
+        for (Map.Entry<Integer, GLObjectData> entry : glObjectPool.getObjects().entrySet()) {
             GLObjectData glObjectData = entry.getValue();
 
             long base = persistentMappedIBO.getCommandsSizeByte(glObjectData.baseCommand);

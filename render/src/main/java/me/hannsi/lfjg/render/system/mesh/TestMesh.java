@@ -79,7 +79,7 @@ public class TestMesh {
                 baseVertex
         );
 
-        int id = GL_OBJECT_POOL.createId(new GLObjectData(
+        int id = glObjectPool.createId(new GLObjectData(
                 command, builder, persistentMappedIBO.getCommandCount() - 1, elementPair
         ));
 
@@ -95,7 +95,7 @@ public class TestMesh {
     }
 
     public TestMesh deleteObject(List<IntRef> ids, int objectId) {
-        if (GL_OBJECT_POOL.getDeletedObjects().get(objectId) != null) {
+        if (glObjectPool.getDeletedObjects().get(objectId) != null) {
             new LogGenerator(
                     "DeleteObject Info",
                     "ObjectId: " + objectId,
@@ -105,16 +105,16 @@ public class TestMesh {
             return this;
         }
 
-        GLObjectData glObjectData = GL_OBJECT_POOL.getObjectData(objectId);
+        GLObjectData glObjectData = glObjectPool.getObjectData(objectId);
         if (glObjectData == null) {
             throw new MeshException("This object ID does not exist. objectId: " + objectId);
         }
 
-        GL_OBJECT_POOL.createDeletedObject(objectId, glObjectData);
+        glObjectPool.createDeletedObject(objectId, glObjectData);
         glObjectData.draw = false;
 
         if (ids != null) {
-            Set<Map.Entry<Integer, GLObjectData>> set = GL_OBJECT_POOL.getObjects().entrySet();
+            Set<Map.Entry<Integer, GLObjectData>> set = glObjectPool.getObjects().entrySet();
             ids.clear();
             for (Map.Entry<Integer, GLObjectData> entry : set) {
                 ids.add(new IntRef(entry.getKey()));
@@ -126,23 +126,23 @@ public class TestMesh {
 
     public TestMesh directDeleteObjects() {
         new LogGenerator("Direct Delete Objects Start")
-                .kv("Total Objects", GL_OBJECT_POOL.getObjects().size())
-                .kv("Deleted Objects", GL_OBJECT_POOL.getDeletedObjects().size())
+                .kv("Total Objects", glObjectPool.getObjects().size())
+                .kv("Deleted Objects", glObjectPool.getDeletedObjects().size())
                 .kvBytes("VBO Size Before", persistentMappedVBO.getGPUMemorySize())
                 .kvBytes("EBO Size Before", persistentMappedEBO.getGPUMemorySize())
                 .logging(getClass(), DebugLevel.INFO);
 
         Map<Integer, GLObjectData> entryObject = new HashMap<>();
-        for (Map.Entry<Integer, GLObjectData> objectEntry : GL_OBJECT_POOL.getObjects().entrySet()) {
-            if (GL_OBJECT_POOL.getDeletedObjects().containsKey(objectEntry.getKey())) {
+        for (Map.Entry<Integer, GLObjectData> objectEntry : glObjectPool.getObjects().entrySet()) {
+            if (glObjectPool.getDeletedObjects().containsKey(objectEntry.getKey())) {
                 continue;
             }
 
             entryObject.put(objectEntry.getKey(), objectEntry.getValue());
         }
 
-        GL_OBJECT_POOL.clearObjects();
-        GL_OBJECT_POOL.clearDeletedObjects();
+        glObjectPool.clearObjects();
+        glObjectPool.clearDeletedObjects();
 
         int newVBOCapacity = 0;
         int newEBOCapacity = 0;
@@ -208,7 +208,7 @@ public class TestMesh {
                     baseVertex
             );
 
-            GL_OBJECT_POOL.createObject(entry.getKey(), new GLObjectData(newCommand, oldGlObjectData.builder, persistentMappedIBO.getCommandCount() - 1, oldGlObjectData.elementPair));
+            glObjectPool.createObject(entry.getKey(), new GLObjectData(newCommand, oldGlObjectData.builder, persistentMappedIBO.getCommandCount() - 1, oldGlObjectData.elementPair));
 
             if (oldGlObjectData.builder.objectIdPointer != null) {
                 oldGlObjectData.builder.objectIdPointer.setValue(entry.getKey());
@@ -228,7 +228,7 @@ public class TestMesh {
         initBufferObject();
 
         new LogGenerator("Direct Delete Objects End")
-                .kv("Final Active Objects", GL_OBJECT_POOL.getObjects().size())
+                .kv("Final Active Objects", glObjectPool.getObjects().size())
                 .kv("Total Vertices", vertexCount)
                 .kv("Total Commands (IBO)", persistentMappedIBO.getCommandCount())
                 .logging(getClass(), DebugLevel.INFO);
@@ -237,7 +237,7 @@ public class TestMesh {
     }
 
     public TestMesh restoreDeleteObject(int objectId) {
-        GLObjectData glObjectData = GL_OBJECT_POOL.getObjectData(objectId);
+        GLObjectData glObjectData = glObjectPool.getObjectData(objectId);
         if (glObjectData == null) {
             throw new MeshException("This object ID does not exist. objectId: " + objectId);
         }
@@ -252,7 +252,7 @@ public class TestMesh {
             return this;
         }
 
-        GL_OBJECT_POOL.destroyDeletedObject(objectId);
+        glObjectPool.destroyDeletedObject(objectId);
         glObjectData.draw = true;
 
         return this;
@@ -265,7 +265,7 @@ public class TestMesh {
     }
 
     public TestMesh updateInstanceData(int objectId, InstanceData newInstanceData) {
-        GLObjectData glObjectData = GL_OBJECT_POOL.getObjectData(objectId);
+        GLObjectData glObjectData = glObjectPool.getObjectData(objectId);
         if (glObjectData == null) {
             throw new MeshException("Object ID not found: " + objectId);
         }
@@ -357,7 +357,7 @@ public class TestMesh {
         ).bar("=").logging(getClass(), DebugLevel.DEBUG);
 
 
-        new LogGenerator("GLObjectPool", GL_OBJECT_POOL.toString()).logging(getClass(), DebugLevel.DEBUG);
+        new LogGenerator("GLObjectPool", glObjectPool.toString()).logging(getClass(), DebugLevel.DEBUG);
     }
 
     public int getVaoId() {

@@ -3,11 +3,14 @@ package me.hannsi.test;
 import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.graphics.ResolutionType;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
+import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.core.utils.time.Timer;
+import me.hannsi.lfjg.core.utils.type.types.LocationType;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
+import me.hannsi.lfjg.render.manager.AssetManager;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.Transform;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
@@ -26,7 +29,6 @@ import java.util.List;
 
 import static me.hannsi.lfjg.frame.LFJGFrameContext.frame;
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
-import static me.hannsi.lfjg.render.system.mesh.InstanceData.NO_ATTACH_TEXTURE;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 
@@ -52,7 +54,7 @@ public class TestNewMeshSystem implements LFJGFrame {
 //                .fill()
 //                .update();
 
-        AtlasPacker atlas = new AtlasPacker(1024, 1024, 1, 0, 0, 0);
+        AtlasPacker atlas = new AtlasPacker(MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, 1, 0, 0, 0);
         for (int i = 0; i < 100; i++) {
 //            int w = 16 + (int) (MathHelper.random() * 100);
 //            int h = 16 + (int) (MathHelper.random() * 100);
@@ -60,39 +62,39 @@ public class TestNewMeshSystem implements LFJGFrame {
             int h = 64;
             atlas.addSprite("Code: " + i, Sprite.createRandomColor(w, h, false, SpriteMemoryPolicy.STREAMING).setCommited(false));
         }
+        atlas.addSprite("Test1", AssetManager.getTextureAsset(new Location("texture/test/test1.jpg", LocationType.RESOURCE)));
+
         atlas.generate();
 
         sparseTexture2DArray = new SparseTexture2DArray(atlas)
                 .commitTexture("Code: 0", true)
-                .commitTexture("Code: 1", false)
+                .commitTexture("Code: 1", true)
                 .commitTexture("Code: 2", true)
-                .commitTexture("Code: 3", true)
+                .commitTexture("Test1", true)
                 .updateFromAtlas();
 
         int instanceCount = 4;
         float objectSize = ResolutionType.WQHD.getHeight();
         Transform[] matrix4fs = new Transform[instanceCount];
         Color[] colors = new Color[instanceCount];
+        int[] spriteIndices = sparseTexture2DArray.getSpriteIndiesFromName("Code: 0", "Code: 1", "Code: 2", "Test1");
         for (int i = 0; i < instanceCount; i++) {
             float scale = ((objectSize / instanceCount) * (instanceCount - i)) / objectSize;
-            int layer = NO_ATTACH_TEXTURE;
-            if (sparseTexture2DArray.commitedTexture("Code: " + i)) {
-                layer = i;
-            }
-            matrix4fs[i] = new Transform(layer).scale(scale, scale, 1);
+            int layer = spriteIndices[i];
+            matrix4fs[i] = Transform.createBuilder().spriteIndex(layer).scale(scale, scale, 1);
             colors[i] = new Color(0, 0, 0, 0);
         }
 
-        MESH.addObject(
+        mesh.addObject(
                 TestMesh.Builder.createBuilder()
                         .drawType(DrawType.QUADS)
                         .pointSize(30)
                         .lineWidth(10f)
                         .vertices(
-                                new Vertex(0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0),
-                                new Vertex(objectSize, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0),
-                                new Vertex(objectSize, objectSize, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0),
-                                new Vertex(0, objectSize, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0)
+                                new Vertex(0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0),
+                                new Vertex(objectSize, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0),
+                                new Vertex(objectSize, objectSize, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0),
+                                new Vertex(0, objectSize, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0)
                         )
                         .instanceData(instanceData = new InstanceData(instanceCount, matrix4fs, colors))
         );
@@ -283,26 +285,26 @@ public class TestNewMeshSystem implements LFJGFrame {
 //            );
 //        }
 
-        MESH.initBufferObject();
+        mesh.initBufferObject();
 
         blendType = BlendType.NORMAL;
 
-        PERSISTENT_MAPPED_SSBO.bindBufferRange();
+        persistentMappedSSBO.bindBufferRange();
     }
 
     @Override
     public void drawFrame() {
         update();
 
-        SHADER_PROGRAM.bind();
+        shaderProgram.bind();
 
-        GL_STATE_CACHE.blendFunc(blendType.getSfactor(), blendType.getDfactor());
-        GL_STATE_CACHE.setBlendEquation(blendType.getEquation());
-        GL_STATE_CACHE.enable(GL_BLEND);
-        GL_STATE_CACHE.disable(GL_DEPTH_TEST);
-        GL_STATE_CACHE.depthMask(false);
+        glStateCache.blendFunc(blendType.getSfactor(), blendType.getDfactor());
+        glStateCache.setBlendEquation(blendType.getEquation());
+        glStateCache.enable(GL_BLEND);
+        glStateCache.disable(GL_DEPTH_TEST);
+        glStateCache.depthMask(false);
 
-        SHADER_PROGRAM.setUniform("uTextArray", UploadUniformType.ONCE, 0);
+        shaderProgram.setUniform("uTextArray", UploadUniformType.ONCE, 0);
 
         for (Transform instanceModel : instanceData.getTransforms()) {
 //            instanceModel.translate(1, 0, 0);
@@ -322,7 +324,7 @@ public class TestNewMeshSystem implements LFJGFrame {
 //        newData.flip();
 //
 //        sparseTexture2DArray.updateSprite("Code: 0", newData);
-        VAO_RENDERING.draw();
+        vaoRendering.draw();
 
         if (timer.passed(2000)) {
             System.out.println("FPS: " + frame.getFps());
