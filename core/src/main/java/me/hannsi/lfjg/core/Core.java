@@ -21,7 +21,7 @@ import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
-import static me.hannsi.lfjg.core.Core.LFJGRenderContext.GL_STATE_CACHE;
+import static me.hannsi.lfjg.core.Core.LFJGRenderContext.glStateCache;
 import static me.hannsi.lfjg.core.CoreSystemSetting.CORE_SYSTEM_DEBUG;
 
 public class Core {
@@ -755,19 +755,19 @@ public class Core {
         }
 
         public static int getLastFrameBuffer() {
-            if (!ENABLE_LFJG_RENDER_SYSTEM || GL_STATE_CACHE == null) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM || glStateCache == null) {
                 return -1;
             }
 
-            return GET_LAST_FRAME_BUFFER.call(GL_STATE_CACHE);
+            return GET_LAST_FRAME_BUFFER.call(glStateCache);
         }
 
         public static void bindFrameBuffer(int frameBuffer) {
-            if (!ENABLE_LFJG_RENDER_SYSTEM || GL_STATE_CACHE == null) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM || glStateCache == null) {
                 return;
             }
 
-            BIND_FRAME_BUFFER_CALL.call(GL_STATE_CACHE, frameBuffer);
+            BIND_FRAME_BUFFER_CALL.call(glStateCache, frameBuffer);
         }
 
         @FunctionalInterface
@@ -783,38 +783,38 @@ public class Core {
 
     public static class LFJGRenderContext {
         public static final String PACKAGE = DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + ".LFJGRenderContext";
-        public static final Object GL_STATE_CACHE;
+        public static final Object glStateCache;
 
         static {
             if (ENABLE_LFJG_RENDER_SYSTEM) {
-                GL_STATE_CACHE = getStaticFieldValue(PACKAGE, "GL_STATE_CACHE");
+                glStateCache = getStaticFieldValue(PACKAGE, "glStateCache");
             } else {
-                GL_STATE_CACHE = null;
+                glStateCache = null;
             }
         }
 
         public static void enable(int target) {
-            if (!ENABLE_LFJG_RENDER_SYSTEM || GL_STATE_CACHE == null) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM || glStateCache == null) {
                 return;
             }
 
-            ClassUtil.invokeMethodExact(GL_STATE_CACHE, "enable", target);
+            ClassUtil.invokeMethodExact(glStateCache, "enable", target);
         }
 
         public static void disable(int target) {
-            if (!ENABLE_LFJG_RENDER_SYSTEM || GL_STATE_CACHE == null) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM || glStateCache == null) {
                 return;
             }
 
-            ClassUtil.invokeMethodExact(GL_STATE_CACHE, "disable", target);
+            ClassUtil.invokeMethodExact(glStateCache, "disable", target);
         }
 
         public static void bindTexture(int target, int texture) {
-            if (!ENABLE_LFJG_RENDER_SYSTEM || GL_STATE_CACHE == null) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM || glStateCache == null) {
                 return;
             }
 
-            ClassUtil.invokeMethodExact(GL_STATE_CACHE, "bindTexture", target, texture);
+            ClassUtil.invokeMethodExact(glStateCache, "bindTexture", target, texture);
         }
     }
 
