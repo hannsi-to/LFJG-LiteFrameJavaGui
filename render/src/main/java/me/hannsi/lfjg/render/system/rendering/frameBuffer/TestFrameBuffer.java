@@ -3,7 +3,7 @@ package me.hannsi.lfjg.render.system.rendering.frameBuffer;
 import me.hannsi.lfjg.render.debug.exceptions.frameBuffer.CreatingFrameBufferException;
 import me.hannsi.lfjg.render.debug.exceptions.texture.CreatingTextureException;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL30.glGenFramebuffers;
@@ -20,7 +20,7 @@ public class TestFrameBuffer {
         if (frameBufferId == 0) {
             throw new CreatingFrameBufferException("Failed to create frame buffer");
         }
-        GL_STATE_CACHE.bindFrameBuffer(frameBufferId);
+        glStateCache.bindFrameBuffer(frameBufferId);
 
         if (color) {
             colorId = glGenTextures();
@@ -28,7 +28,7 @@ public class TestFrameBuffer {
                 throw new CreatingTextureException("Failed to create color texture");
             }
 
-            GL_STATE_CACHE.bindTexture(GL_TEXTURE_2D, colorId);
+            glStateCache.bindTexture(GL_TEXTURE_2D, colorId);
         } else {
             colorId = -1;
         }
@@ -39,7 +39,7 @@ public class TestFrameBuffer {
                 throw new CreatingTextureException("Failed to create depth texture");
             }
 
-            GL_STATE_CACHE.bindTexture(GL_TEXTURE_2D, depthId);
+            glStateCache.bindTexture(GL_TEXTURE_2D, depthId);
         } else {
             depthId = -1;
         }
@@ -50,7 +50,7 @@ public class TestFrameBuffer {
                 throw new CreatingTextureException("Failed to create stencil texture");
             }
 
-            GL_STATE_CACHE.bindTexture(GL_TEXTURE_2D, stencilId);
+            glStateCache.bindTexture(GL_TEXTURE_2D, stencilId);
         } else {
             stencilId = -1;
         }
