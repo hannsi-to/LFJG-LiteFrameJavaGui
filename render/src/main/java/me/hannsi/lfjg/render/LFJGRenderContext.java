@@ -96,7 +96,10 @@ public class LFJGRenderContext {
     }
 
     public static void update() {
-        precomputedViewProjection2D = projection2D.getMatrix4f().mul(mainCamera.getViewMatrix());
-        precomputedViewProjection3D = projection3D.getMatrix4f().mul(mainCamera.getViewMatrix());
+        if (mainCamera.isDirtyFlag()) {
+            precomputedViewProjection2D = projection2D.getMatrix4f().mul(mainCamera.getViewMatrix());
+            precomputedViewProjection3D = projection3D.getMatrix4f().mul(mainCamera.getViewMatrix());
+            mainCamera.setDirtyFlag(false);
+        }
     }
 }
