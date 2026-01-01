@@ -6,8 +6,8 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
 import static me.hannsi.lfjg.core.Core.UNSAFE;
-import static me.hannsi.lfjg.render.LFJGRenderContext.NO_ATTACH_TEXTURE;
 import static me.hannsi.lfjg.render.LFJGRenderContext.mainCamera;
+import static me.hannsi.lfjg.render.RenderSystemSetting.*;
 
 public class ObjectParameter {
     public static final int BYTES = 16 * Float.BYTES + 4 * Float.BYTES + Float.BYTES + 3 * Float.BYTES;
@@ -27,7 +27,7 @@ public class ObjectParameter {
     private Color color;
 
     ObjectParameter() {
-        this.projectionType = ProjectionType.ORTHOGRAPHIC_PROJECTION;
+        this.projectionType = OBJECT_PARAMETER_DEFAULT_PROJECTION_TYPE;
         this.x = 0;
         this.y = 0;
         this.z = 0;
@@ -35,8 +35,8 @@ public class ObjectParameter {
         this.scaleX = 1;
         this.scaleY = 1;
         this.scaleZ = 1;
-        this.spriteIndex = NO_ATTACH_TEXTURE;
-        this.color = new Color(0, 1, 0, 1);
+        this.spriteIndex = OBJECT_PARAMETER_DEFAULT_SPRITE_INDEX;
+        this.color = OBJECT_PARAMETER_DEFAULT_COLOR;
     }
 
     public ObjectParameter(ProjectionType projectionType, int spriteIndex, float x, float y, float z, Quaternionf rotation, float scaleY, float scaleX, float scaleZ, Color color) {

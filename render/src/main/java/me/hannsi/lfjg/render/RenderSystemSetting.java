@@ -1,9 +1,11 @@
 package me.hannsi.lfjg.render;
 
+import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import org.joml.Vector4f;
 
 import static me.hannsi.lfjg.render.LFJGRenderContext.MAX_TEXTURE_SIZE;
+import static me.hannsi.lfjg.render.LFJGRenderContext.NO_ATTACH_TEXTURE;
 
 public class RenderSystemSetting {
     public static boolean MESH_DEBUG_DIRECT_DELETE_OBJECT_REINSERTION = false;
@@ -31,4 +33,8 @@ public class RenderSystemSetting {
     public static int ATLAS_PACKER_ATLAS_WIDTH = MAX_TEXTURE_SIZE;
     public static int ATLAS_PACKER_ATLAS_HEIGHT = MAX_TEXTURE_SIZE;
     public static int ATLAS_PACKER_ATLAS_LAYER = 1;
+
+    public static ProjectionType OBJECT_PARAMETER_DEFAULT_PROJECTION_TYPE = ProjectionType.ORTHOGRAPHIC_PROJECTION;
+    public static int OBJECT_PARAMETER_DEFAULT_SPRITE_INDEX = NO_ATTACH_TEXTURE;
+    public static Color OBJECT_PARAMETER_DEFAULT_COLOR = new Color(0, 1, 0, 1);
 }
