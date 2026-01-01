@@ -9,7 +9,7 @@ import me.hannsi.lfjg.render.system.rendering.DrawType;
 
 import java.util.*;
 
-import static me.hannsi.lfjg.core.SystemSetting.POLYGON_TRIANGULATOR_DEBUG;
+import static me.hannsi.lfjg.render.RenderSystemSetting.POLYGON_TRIANGULATOR_DEBUG;
 
 public class PolygonTriangulator {
     private ProjectionType projectionType;

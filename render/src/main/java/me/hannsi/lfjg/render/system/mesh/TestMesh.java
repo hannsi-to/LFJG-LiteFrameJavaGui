@@ -13,9 +13,9 @@ import me.hannsi.lfjg.render.system.rendering.DrawType;
 
 import java.util.*;
 
-import static me.hannsi.lfjg.core.SystemSetting.MESH_DEBUG_DIRECT_DELETE_OBJECT_REINSERTION;
 import static me.hannsi.lfjg.core.utils.math.MathHelper.max;
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
+import static me.hannsi.lfjg.render.RenderSystemSetting.MESH_DEBUG_DIRECT_DELETE_OBJECT_REINSERTION;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class TestMesh {

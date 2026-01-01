@@ -11,8 +11,8 @@ import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 
 import static me.hannsi.lfjg.core.Core.EVENT_MANAGER;
-import static me.hannsi.lfjg.core.SystemSetting.GL_INTERCEPTOR_CALL_OPENGL_STATIC_METHOD_HOOK_EVENT;
-import static me.hannsi.lfjg.core.SystemSetting.GL_INTERCEPTOR_DEBUG;
+import static me.hannsi.lfjg.core.CoreSystemSetting.GL_INTERCEPTOR_CALL_OPENGL_STATIC_METHOD_HOOK_EVENT;
+import static me.hannsi.lfjg.core.CoreSystemSetting.GL_INTERCEPTOR_DEBUG;
 
 public class GLInterceptor {
     @RuntimeType

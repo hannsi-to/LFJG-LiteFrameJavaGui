@@ -15,7 +15,7 @@ import org.joml.Matrix4f;
 
 import static me.hannsi.lfjg.core.Core.projection2D;
 import static me.hannsi.lfjg.core.Core.projection3D;
-import static me.hannsi.lfjg.core.SystemSetting.*;
+import static me.hannsi.lfjg.render.RenderSystemSetting.*;
 import static org.lwjgl.opengl.ARBSparseTexture.GL_VIRTUAL_PAGE_SIZE_X_ARB;
 import static org.lwjgl.opengl.ARBSparseTexture.GL_VIRTUAL_PAGE_SIZE_Y_ARB;
 import static org.lwjgl.opengl.GL11.*;

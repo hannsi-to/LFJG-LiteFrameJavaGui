@@ -22,7 +22,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 import static me.hannsi.lfjg.core.Core.LFJGRenderContext.GL_STATE_CACHE;
-import static me.hannsi.lfjg.core.SystemSetting.CORE_SYSTEM_DEBUG;
+import static me.hannsi.lfjg.core.CoreSystemSetting.CORE_SYSTEM_DEBUG;
 
 public class Core {
     public static final String DEFAULT_LFJG_PATH = "me.hannsi.lfjg";

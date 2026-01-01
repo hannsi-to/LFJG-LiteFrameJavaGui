@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.core.utils.toolkit;
 
+import me.hannsi.lfjg.core.CoreSystemSetting;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerator;
@@ -15,16 +16,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import static me.hannsi.lfjg.core.SystemSetting.UNICODE_BLOCKS_DEBUG_UNICODE;
-import static me.hannsi.lfjg.core.SystemSetting.UNICODE_BLOCKS_URL;
-
 public class UnicodeBlocks {
     public static final List<UnicodeBlock> BLOCKS = new ArrayList<>();
 
     static {
         boolean success = false;
         try {
-            URL url = new URL(UNICODE_BLOCKS_URL);
+            URL url = new URL(CoreSystemSetting.UNICODE_BLOCKS_URL);
             URLConnection connection = url.openConnection();
             connection.setConnectTimeout(3000);
             connection.setReadTimeout(3000);
@@ -45,7 +43,7 @@ public class UnicodeBlocks {
             }
         }
 
-        if (UNICODE_BLOCKS_DEBUG_UNICODE) {
+        if (CoreSystemSetting.UNICODE_BLOCKS_DEBUG_UNICODE) {
             StringBuilder unicodeDebug = new StringBuilder();
             for (UnicodeBlock block : BLOCKS) {
                 String name = String.format("%-35s", block.name() + ":");

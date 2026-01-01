@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static me.hannsi.lfjg.core.SystemSetting.DEBUG_LOG_FABRIC_DEBUG;
+import static me.hannsi.lfjg.core.CoreSystemSetting.DEBUG_LOG_FABRIC_DEBUG;
 
 public class DebugLog {
     private static final Logger LOGGER = LogManager.getLogger(DebugLog.class);

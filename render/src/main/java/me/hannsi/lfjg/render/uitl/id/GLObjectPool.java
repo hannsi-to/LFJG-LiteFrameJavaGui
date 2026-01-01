@@ -7,8 +7,8 @@ import me.hannsi.lfjg.render.system.mesh.MeshConstants;
 import java.util.HashMap;
 import java.util.Map;
 
-import static me.hannsi.lfjg.core.SystemSetting.GL_OBJECT_POOL_REMOVE_RATIO_THRESHOLD;
 import static me.hannsi.lfjg.render.LFJGRenderContext.mesh;
+import static me.hannsi.lfjg.render.RenderSystemSetting.GL_OBJECT_POOL_REMOVE_RATIO_THRESHOLD;
 
 public class GLObjectPool {
     private final Map<Integer, GLObjectData> objects;

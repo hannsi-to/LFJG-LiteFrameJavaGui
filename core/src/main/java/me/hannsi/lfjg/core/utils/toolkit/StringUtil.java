@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
 
-import static me.hannsi.lfjg.core.SystemSetting.STRING_UTIL_CHARACTERS;
+import static me.hannsi.lfjg.core.CoreSystemSetting.STRING_UTIL_CHARACTERS;
 
 public class StringUtil extends Util {
     public static String repeat(String str, int count) {

@@ -4,9 +4,9 @@ import me.hannsi.lfjg.render.system.mesh.GLObjectData;
 
 import java.util.Map;
 
-import static me.hannsi.lfjg.core.SystemSetting.VAO_RENDERING_FRONT_AND_BACK;
-import static me.hannsi.lfjg.core.SystemSetting.VAO_RENDERING_FRONT_AND_BACK_LINE_WIDTH;
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
+import static me.hannsi.lfjg.render.RenderSystemSetting.VAO_RENDERING_FRONT_AND_BACK;
+import static me.hannsi.lfjg.render.RenderSystemSetting.VAO_RENDERING_FRONT_AND_BACK_LINE_WIDTH;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL43.glMultiDrawElementsIndirect;
 

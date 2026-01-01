@@ -10,8 +10,8 @@ import org.joml.Vector2f;
 
 import java.util.*;
 
-import static me.hannsi.lfjg.core.SystemSetting.*;
 import static me.hannsi.lfjg.core.utils.math.MathHelper.*;
+import static me.hannsi.lfjg.render.RenderSystemSetting.*;
 
 public class TestPolygonTriangulator {
     private ProjectionType projectionType;

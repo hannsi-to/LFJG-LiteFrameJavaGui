@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static me.hannsi.lfjg.core.SystemSetting.MATERIAL_DEFAULT_COLOR;
+import static me.hannsi.lfjg.render.RenderSystemSetting.MATERIAL_DEFAULT_COLOR;
 
 public class ModelLoader {
     private final String modelId;

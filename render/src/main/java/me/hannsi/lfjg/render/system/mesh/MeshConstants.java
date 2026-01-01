@@ -2,8 +2,8 @@ package me.hannsi.lfjg.render.system.mesh;
 
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 
-import static me.hannsi.lfjg.core.SystemSetting.MESH_CONSTANTS_BUFFER_COUNT;
-import static me.hannsi.lfjg.core.SystemSetting.MESH_CONSTANTS_DEFAULT_PROJECTION_TYPE;
+import static me.hannsi.lfjg.render.RenderSystemSetting.MESH_CONSTANTS_BUFFER_COUNT;
+import static me.hannsi.lfjg.render.RenderSystemSetting.MESH_CONSTANTS_DEFAULT_PROJECTION_TYPE;
 import static org.lwjgl.opengl.GL30.GL_MAP_WRITE_BIT;
 import static org.lwjgl.opengl.GL44.GL_MAP_COHERENT_BIT;
 import static org.lwjgl.opengl.GL44.GL_MAP_PERSISTENT_BIT;

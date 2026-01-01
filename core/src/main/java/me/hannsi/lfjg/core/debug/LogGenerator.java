@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static me.hannsi.lfjg.core.Core.stringBuilder;
-import static me.hannsi.lfjg.core.SystemSetting.LOG_GENERATOR_BAR_COUNT;
+import static me.hannsi.lfjg.core.CoreSystemSetting.LOG_GENERATOR_BAR_COUNT;
 
 public class LogGenerator {
     private final List<String> texts;

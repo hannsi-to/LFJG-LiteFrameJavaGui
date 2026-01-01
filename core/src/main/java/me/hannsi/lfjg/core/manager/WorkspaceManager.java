@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import static me.hannsi.lfjg.core.SystemSetting.WORKSPACE_MANAGER_DEFAULT_WORKSPACE_NAME;
+import static me.hannsi.lfjg.core.CoreSystemSetting.WORKSPACE_MANAGER_DEFAULT_WORKSPACE_NAME;
 
 public class WorkspaceManager {
     public static String currentWorkspace;

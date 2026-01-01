@@ -16,7 +16,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
-import static me.hannsi.lfjg.core.SystemSetting.LOG_GENERATOR_BAR_COUNT;
+import static me.hannsi.lfjg.core.CoreSystemSetting.LOG_GENERATOR_BAR_COUNT;
 
 public class MSDFGenerator {
     protected final File executable;
