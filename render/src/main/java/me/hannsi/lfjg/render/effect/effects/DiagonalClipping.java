@@ -7,7 +7,7 @@ import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector2f;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
+import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class DiagonalClipping extends EffectBase {
     private float centerX = 500;
@@ -76,11 +76,11 @@ public class DiagonalClipping extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.DIAGONAL_CLIPPING.getId());
-        SHADER_PROGRAM.setUniform("diagonalClippingClipCenter", UploadUniformType.ON_CHANGE, new Vector2f(centerX, centerY));
-        SHADER_PROGRAM.setUniform("diagonalClippingClipAngle", UploadUniformType.ON_CHANGE, clipAngle);
-        SHADER_PROGRAM.setUniform("diagonalClippingBlurWidth", UploadUniformType.ON_CHANGE, blurWidth);
-        SHADER_PROGRAM.setUniform("diagonalClippingInvertClip", UploadUniformType.ON_CHANGE, invertClip);
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.DIAGONAL_CLIPPING.getId());
+        shaderProgram.setUniform("diagonalClippingClipCenter", UploadUniformType.ON_CHANGE, new Vector2f(centerX, centerY));
+        shaderProgram.setUniform("diagonalClippingClipAngle", UploadUniformType.ON_CHANGE, clipAngle);
+        shaderProgram.setUniform("diagonalClippingBlurWidth", UploadUniformType.ON_CHANGE, blurWidth);
+        shaderProgram.setUniform("diagonalClippingInvertClip", UploadUniformType.ON_CHANGE, invertClip);
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

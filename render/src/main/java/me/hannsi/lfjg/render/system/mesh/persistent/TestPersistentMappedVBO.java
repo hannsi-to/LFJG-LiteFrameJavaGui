@@ -12,7 +12,7 @@ import org.lwjgl.system.MemoryUtil;
 import java.nio.ByteBuffer;
 
 import static me.hannsi.lfjg.core.Core.UNSAFE;
-import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
@@ -45,12 +45,12 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
     public void allocationBufferStorage(long capacity) {
         gpuMemorySize = capacity;
         if (bufferId != 0) {
-            GL_STATE_CACHE.deleteArrayBuffer(bufferId);
+            glStateCache.deleteArrayBuffer(bufferId);
             bufferId = 0;
         }
 
         bufferId = glGenBuffers();
-        GL_STATE_CACHE.bindArrayBuffer(bufferId);
+        glStateCache.bindArrayBuffer(bufferId);
         glBufferStorage(GL_ARRAY_BUFFER, gpuMemorySize, flags);
 
         ByteBuffer byteBuffer = glMapBufferRange(
@@ -66,7 +66,7 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
     }
 
     public TestPersistentMappedVBO createVertexAttribute(int vaoId, BufferObjectType... bufferObjectType) {
-        GL_STATE_CACHE.bindArrayBuffer(bufferId);
+        glStateCache.bindArrayBuffer(bufferId);
 
         long stride = getVerticesSizeByte(1);
         int pointer = 0;
@@ -155,7 +155,7 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
                 if (!unmapped) {
                     DebugLog.error(getClass(), "glUnmapBuffer returned false (may indicate corruption).");
                 }
-                GL_STATE_CACHE.deleteArrayBuffer(bufferId);
+                glStateCache.deleteArrayBuffer(bufferId);
                 bufferId = 0;
                 mappedAddress = 0;
 
@@ -170,7 +170,7 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
             }
         } else {
             glUnmapBuffer(GL_ARRAY_BUFFER);
-            GL_STATE_CACHE.deleteArrayBuffer(bufferId);
+            glStateCache.deleteArrayBuffer(bufferId);
             bufferId = 0;
             mappedAddress = 0;
 
@@ -242,7 +242,7 @@ public class TestPersistentMappedVBO implements TestPersistentMappedBuffer {
     @Override
     public void cleanup() {
         if (bufferId != 0) {
-            GL_STATE_CACHE.deleteArrayBuffer(bufferId);
+            glStateCache.deleteArrayBuffer(bufferId);
             bufferId = 0;
         }
         vertexCount = 0;

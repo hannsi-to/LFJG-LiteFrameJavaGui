@@ -9,7 +9,7 @@ import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
+import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class Flash extends EffectBase {
     private float intensity = 0.08f;
@@ -68,11 +68,11 @@ public class Flash extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.FLASH.getId());
-        SHADER_PROGRAM.setUniform("flashIntensity", UploadUniformType.ON_CHANGE, intensity);
-        SHADER_PROGRAM.setUniform("flashScreenPosition", UploadUniformType.ON_CHANGE, new Vector2f(x, y));
-        SHADER_PROGRAM.setUniform("flashBlendMode", UploadUniformType.ON_CHANGE, flashBlendMode.getId());
-        SHADER_PROGRAM.setUniform("flashLightColor", UploadUniformType.ON_CHANGE, new Vector3f(lightColor.getRedF(), lightColor.getGreenF(), lightColor.getBlueF()));
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.FLASH.getId());
+        shaderProgram.setUniform("flashIntensity", UploadUniformType.ON_CHANGE, intensity);
+        shaderProgram.setUniform("flashScreenPosition", UploadUniformType.ON_CHANGE, new Vector2f(x, y));
+        shaderProgram.setUniform("flashBlendMode", UploadUniformType.ON_CHANGE, flashBlendMode.getId());
+        shaderProgram.setUniform("flashLightColor", UploadUniformType.ON_CHANGE, new Vector3f(lightColor.getRedF(), lightColor.getGreenF(), lightColor.getBlueF()));
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

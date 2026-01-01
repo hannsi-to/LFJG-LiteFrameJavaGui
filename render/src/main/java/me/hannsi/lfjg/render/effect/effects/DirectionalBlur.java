@@ -6,7 +6,7 @@ import me.hannsi.lfjg.render.system.rendering.frameBuffer.FrameBuffer;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
+import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class DirectionalBlur extends EffectBase {
     private float radius = 10f;
@@ -47,9 +47,9 @@ public class DirectionalBlur extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.DIRECTION_BLUR.getId());
-        SHADER_PROGRAM.setUniform("directionalBlurRadius", UploadUniformType.ON_CHANGE, radius * 10);
-        SHADER_PROGRAM.setUniform("directionalBlurAngle", UploadUniformType.ON_CHANGE, angle);
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.DIRECTION_BLUR.getId());
+        shaderProgram.setUniform("directionalBlurRadius", UploadUniformType.ON_CHANGE, radius * 10);
+        shaderProgram.setUniform("directionalBlurAngle", UploadUniformType.ON_CHANGE, angle);
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

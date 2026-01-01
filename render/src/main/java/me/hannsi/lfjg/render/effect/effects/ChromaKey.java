@@ -7,7 +7,7 @@ import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector3f;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
+import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class ChromaKey extends EffectBase {
     private Color chromaKeyColor = Color.GREEN;
@@ -76,12 +76,12 @@ public class ChromaKey extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.CHROMA_KEY.getId());
-        SHADER_PROGRAM.setUniform("chromaKeyColor", UploadUniformType.ON_CHANGE, new Vector3f(chromaKeyColor.getRedF(), chromaKeyColor.getGreenF(), chromaKeyColor.getBlueF()));
-        SHADER_PROGRAM.setUniform("chromaKeyHueRange", UploadUniformType.ON_CHANGE, hueRange);
-        SHADER_PROGRAM.setUniform("chromaKeySaturationRange", UploadUniformType.ON_CHANGE, saturationRange);
-        SHADER_PROGRAM.setUniform("chromaKeyBoundarySmoothness", UploadUniformType.ON_CHANGE, boundarySmoothness);
-        SHADER_PROGRAM.setUniform("chromaKeyColorAdjustment", UploadUniformType.ON_CHANGE, new Vector3f(colorAdjustment.getRedF(), colorAdjustment.getGreenF(), colorAdjustment.getBlueF()));
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.CHROMA_KEY.getId());
+        shaderProgram.setUniform("chromaKeyColor", UploadUniformType.ON_CHANGE, new Vector3f(chromaKeyColor.getRedF(), chromaKeyColor.getGreenF(), chromaKeyColor.getBlueF()));
+        shaderProgram.setUniform("chromaKeyHueRange", UploadUniformType.ON_CHANGE, hueRange);
+        shaderProgram.setUniform("chromaKeySaturationRange", UploadUniformType.ON_CHANGE, saturationRange);
+        shaderProgram.setUniform("chromaKeyBoundarySmoothness", UploadUniformType.ON_CHANGE, boundarySmoothness);
+        shaderProgram.setUniform("chromaKeyColorAdjustment", UploadUniformType.ON_CHANGE, new Vector3f(colorAdjustment.getRedF(), colorAdjustment.getGreenF(), colorAdjustment.getBlueF()));
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

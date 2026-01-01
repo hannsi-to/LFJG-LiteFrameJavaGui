@@ -4,7 +4,7 @@ package me.hannsi.lfjg.render.system.mesh.persistent;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL30.glMapBufferRange;
@@ -24,7 +24,7 @@ public class PersistentMappedEBO implements PersistentMappedBuffer {
 
         bufferId = glGenBuffers();
 
-        GL_STATE_CACHE.bindArrayBuffer(bufferId);
+        glStateCache.bindArrayBuffer(bufferId);
         glBufferStorage(
                 GL_ARRAY_BUFFER,
                 sizeInBytes,
@@ -65,7 +65,7 @@ public class PersistentMappedEBO implements PersistentMappedBuffer {
 
     @Override
     public void cleanup() {
-        GL_STATE_CACHE.deleteElementArrayBuffer(bufferId);
+        glStateCache.deleteElementArrayBuffer(bufferId);
     }
 
     public int getFlags() {

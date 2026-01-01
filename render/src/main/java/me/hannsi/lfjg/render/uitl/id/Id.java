@@ -6,7 +6,7 @@ package me.hannsi.lfjg.render.uitl.id;
 public class Id {
     public static final int initialSceneId = Integer.MIN_VALUE;
     public static final int initialGLObjectId = Integer.MIN_VALUE;
+    public static final int initialSpriteIndexId = 0;
 
     public static int latestSceneId = initialSceneId;
-    public static int latestGLObjectId = initialGLObjectId;
 }

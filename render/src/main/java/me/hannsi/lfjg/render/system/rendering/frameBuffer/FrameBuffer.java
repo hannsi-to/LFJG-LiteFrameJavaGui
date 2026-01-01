@@ -79,7 +79,7 @@ public class FrameBuffer {
 
         vaoRendering = new VAORendering();
 
-        MESH.addObject(
+        mesh.addObject(
                 TestMesh.Builder.createBuilder()
                         .objectIdPointer(id)
                         .drawType(DrawType.QUADS)
@@ -100,11 +100,11 @@ public class FrameBuffer {
     }
 
     public void cleanup() {
-        GL_STATE_CACHE.deleteFrameBuffer(frameBufferId);
-        GL_STATE_CACHE.deleteTexture(GL_TEXTURE_2D, textureId);
-        GL_STATE_CACHE.deleteRenderBuffer(renderBufferId);
+        glStateCache.deleteFrameBuffer(frameBufferId);
+        glStateCache.deleteTexture(GL_TEXTURE_2D, textureId);
+        glStateCache.deleteRenderBuffer(renderBufferId);
 
-        MESH.deleteObject(id.getValue());
+        mesh.deleteObject(id.getValue());
 
         new LogGenerator(
                 LogGenerateType.CLEANUP,
@@ -124,8 +124,8 @@ public class FrameBuffer {
             throw new IllegalArgumentException("Framebuffer size must be > 0: width=" + width + ", height=" + height);
         }
 
-        GL_STATE_CACHE.bindFrameBuffer(frameBufferId);
-        GL_STATE_CACHE.bindTexture(GL_TEXTURE_2D, textureId);
+        glStateCache.bindFrameBuffer(frameBufferId);
+        glStateCache.bindTexture(GL_TEXTURE_2D, textureId);
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (int) width, (int) height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -141,9 +141,9 @@ public class FrameBuffer {
             throw new CompleteFrameBufferException("Frame Buffer not complete: 0x" + Integer.toHexString(status));
         }
 
-        GL_STATE_CACHE.bindRenderBuffer(0);
-        GL_STATE_CACHE.bindTexture(GL_TEXTURE_2D, 0);
-        GL_STATE_CACHE.bindFrameBuffer(0);
+        glStateCache.bindRenderBuffer(0);
+        glStateCache.bindTexture(GL_TEXTURE_2D, 0);
+        glStateCache.bindFrameBuffer(0);
     }
 
     public void drawFrameBuffer() {
@@ -151,15 +151,15 @@ public class FrameBuffer {
     }
 
     public void drawFrameBuffer(boolean drawVAORendering) {
-        SHADER_PROGRAM.bind();
+        shaderProgram.bind();
 
-        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.FRAME_BUFFER.getId());
-        SHADER_PROGRAM.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix);
-        SHADER_PROGRAM.setUniform("frameBufferSampler", UploadUniformType.ONCE, 3);
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.FRAME_BUFFER.getId());
+        shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix);
+        shaderProgram.setUniform("frameBufferSampler", UploadUniformType.ONCE, 3);
 
-        GL_STATE_CACHE.enable(GL_BLEND);
-        GL_STATE_CACHE.disable(GL_DEPTH_TEST);
-        GL_STATE_CACHE.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glStateCache.enable(GL_BLEND);
+        glStateCache.disable(GL_DEPTH_TEST);
+        glStateCache.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         bindTexture();
         if (drawVAORendering) {
@@ -172,40 +172,40 @@ public class FrameBuffer {
     }
 
     public void bindTexture(int unit) {
-        GL_STATE_CACHE.activeTexture(GL_TEXTURE0 + unit);
-        GL_STATE_CACHE.bindTexture(GL_TEXTURE_2D, textureId);
+        glStateCache.activeTexture(GL_TEXTURE0 + unit);
+        glStateCache.bindTexture(GL_TEXTURE_2D, textureId);
     }
 
     public void bindTexture() {
-        GL_STATE_CACHE.activeTexture(GL_TEXTURE3);
-        GL_STATE_CACHE.bindTexture(GL_TEXTURE_2D, textureId);
+        glStateCache.activeTexture(GL_TEXTURE3);
+        glStateCache.bindTexture(GL_TEXTURE_2D, textureId);
     }
 
     public void bindRenderBuffer() {
-        GL_STATE_CACHE.bindRenderBuffer(renderBufferId);
+        glStateCache.bindRenderBuffer(renderBufferId);
     }
 
     public void bindDrawFrameBuffer() {
-        GL_STATE_CACHE.bindDrawFrameBuffer(frameBufferId);
+        glStateCache.bindDrawFrameBuffer(frameBufferId);
     }
 
     public void bindReadFrameBuffer() {
-        GL_STATE_CACHE.bindReadFrameBuffer(frameBufferId);
+        glStateCache.bindReadFrameBuffer(frameBufferId);
     }
 
     public void bindFrameBuffer() {
         bindFrameBufferNoClear();
 
-        GL_STATE_CACHE.clearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glStateCache.clearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     }
 
     public void bindFrameBufferNoClear() {
-        GL_STATE_CACHE.bindFrameBuffer(frameBufferId);
+        glStateCache.bindFrameBuffer(frameBufferId);
     }
 
     public void unbindFrameBuffer() {
-        GL_STATE_CACHE.bindFrameBuffer(0);
+        glStateCache.bindFrameBuffer(0);
     }
 
     public int getFrameBufferId() {

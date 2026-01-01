@@ -43,15 +43,15 @@ public class TestMesh {
     }
 
     public TestMesh initBufferObject() {
-        GL_STATE_CACHE.bindVertexArrayForce(vaoId);
+        glStateCache.bindVertexArrayForce(vaoId);
 
-        PERSISTENT_MAPPED_VBO.createVertexAttribute(vaoId, BufferObjectType.POSITION_BUFFER, BufferObjectType.COLOR_BUFFER, BufferObjectType.TEXTURE_BUFFER, BufferObjectType.NORMAL_BUFFER)
+        persistentMappedVBO.createVertexAttribute(vaoId, BufferObjectType.POSITION_BUFFER, BufferObjectType.COLOR_BUFFER, BufferObjectType.TEXTURE_BUFFER, BufferObjectType.NORMAL_BUFFER)
                 .syncToGPU();
 
-        PERSISTENT_MAPPED_EBO.linkVertexArrayObject(vaoId)
+        persistentMappedEBO.linkVertexArrayObject(vaoId)
                 .syncToGPU();
 
-        PERSISTENT_MAPPED_IBO.syncToGPU();
+        persistentMappedIBO.syncToGPU();
 
         return this;
     }
@@ -79,8 +79,8 @@ public class TestMesh {
                 baseVertex
         );
 
-        int id = GL_OBJECT_POOL.createObject(new GLObjectData(
-                command, builder, PERSISTENT_MAPPED_IBO.getCommandCount() - 1, elementPair
+        int id = GL_OBJECT_POOL.createId(new GLObjectData(
+                command, builder, persistentMappedIBO.getCommandCount() - 1, elementPair
         ));
 
         if (builder.objectIdPointer != null) {
@@ -128,8 +128,8 @@ public class TestMesh {
         new LogGenerator("Direct Delete Objects Start")
                 .kv("Total Objects", GL_OBJECT_POOL.getObjects().size())
                 .kv("Deleted Objects", GL_OBJECT_POOL.getDeletedObjects().size())
-                .kvBytes("VBO Size Before", PERSISTENT_MAPPED_VBO.getGPUMemorySize())
-                .kvBytes("EBO Size Before", PERSISTENT_MAPPED_EBO.getGPUMemorySize())
+                .kvBytes("VBO Size Before", persistentMappedVBO.getGPUMemorySize())
+                .kvBytes("EBO Size Before", persistentMappedEBO.getGPUMemorySize())
                 .logging(getClass(), DebugLevel.INFO);
 
         Map<Integer, GLObjectData> entryObject = new HashMap<>();
@@ -155,9 +155,9 @@ public class TestMesh {
             newIBOCapacity += 1;
         }
 
-        long oldVBOCapacity = PERSISTENT_MAPPED_VBO.getGPUMemorySize();
-        long oldEBOCapacity = PERSISTENT_MAPPED_EBO.getGPUMemorySize();
-        long oldIBOCapacity = PERSISTENT_MAPPED_IBO.getGPUMemorySize();
+        long oldVBOCapacity = persistentMappedVBO.getGPUMemorySize();
+        long oldEBOCapacity = persistentMappedEBO.getGPUMemorySize();
+        long oldIBOCapacity = persistentMappedIBO.getGPUMemorySize();
         initialVBOCapacity = max(newVBOCapacity, initialVBOCapacity);
         initialEBOCapacity = max(newEBOCapacity, initialEBOCapacity);
         initialIBOCapacity = max(newIBOCapacity, initialIBOCapacity);
@@ -166,29 +166,29 @@ public class TestMesh {
                 .kv("Retained Objects", entryObject.size())
                 .kv("Required VBO Vertices", newVBOCapacity)
                 .kv("Required EBO Indices", newEBOCapacity)
-                .kv("New VBO Bytes", PERSISTENT_MAPPED_VBO.getVerticesSizeByte(initialVBOCapacity))
-                .kv("New EBO Bytes", PERSISTENT_MAPPED_EBO.getIndicesSizeByte(initialEBOCapacity))
-                .kv("New IBO Bytes", PERSISTENT_MAPPED_IBO.getCommandsSizeByte(initialIBOCapacity))
+                .kv("New VBO Bytes", persistentMappedVBO.getVerticesSizeByte(initialVBOCapacity))
+                .kv("New EBO Bytes", persistentMappedEBO.getIndicesSizeByte(initialEBOCapacity))
+                .kv("New IBO Bytes", persistentMappedIBO.getCommandsSizeByte(initialIBOCapacity))
                 .logging(getClass(), DebugLevel.INFO);
 
-        PERSISTENT_MAPPED_VBO.cleanup();
-        PERSISTENT_MAPPED_EBO.cleanup();
-        PERSISTENT_MAPPED_IBO.cleanup();
-        PERSISTENT_MAPPED_SSBO.resetBindingPoint(2);
-        PERSISTENT_MAPPED_SSBO.resetBindingPoint(3);
+        persistentMappedVBO.cleanup();
+        persistentMappedEBO.cleanup();
+        persistentMappedIBO.cleanup();
+        persistentMappedSSBO.resetBindingPoint(2);
+        persistentMappedSSBO.resetBindingPoint(3);
 
-        PERSISTENT_MAPPED_VBO.allocationBufferStorage(PERSISTENT_MAPPED_VBO.getVerticesSizeByte(initialVBOCapacity));
-        PERSISTENT_MAPPED_EBO.allocationBufferStorage(PERSISTENT_MAPPED_EBO.getIndicesSizeByte(initialEBOCapacity));
-        PERSISTENT_MAPPED_IBO.allocationBufferStorage(PERSISTENT_MAPPED_IBO.getCommandsSizeByte(initialIBOCapacity));
+        persistentMappedVBO.allocationBufferStorage(persistentMappedVBO.getVerticesSizeByte(initialVBOCapacity));
+        persistentMappedEBO.allocationBufferStorage(persistentMappedEBO.getIndicesSizeByte(initialEBOCapacity));
+        persistentMappedIBO.allocationBufferStorage(persistentMappedIBO.getCommandsSizeByte(initialIBOCapacity));
 
         new LogGenerator("Buffer Reallocation Complete")
                 .kvBytes("Old VBO Size", oldVBOCapacity)
-                .kvBytes("New VBO Size", PERSISTENT_MAPPED_VBO.getGPUMemorySize())
+                .kvBytes("New VBO Size", persistentMappedVBO.getGPUMemorySize())
                 .kvBytes("Old EBO Size", oldEBOCapacity)
-                .kvBytes("New EBO Size", PERSISTENT_MAPPED_EBO.getGPUMemorySize())
+                .kvBytes("New EBO Size", persistentMappedEBO.getGPUMemorySize())
                 .kvBytes("Old IBO Size", oldIBOCapacity)
-                .kvBytes("New IBO Size", PERSISTENT_MAPPED_IBO.getGPUMemorySize())
-                .kvHex("New VBO Address", PERSISTENT_MAPPED_VBO.getMappedAddress())
+                .kvBytes("New IBO Size", persistentMappedIBO.getGPUMemorySize())
+                .kvHex("New VBO Address", persistentMappedVBO.getMappedAddress())
                 .logging(getClass(), DebugLevel.INFO);
 
         vertexCount = 0;
@@ -208,7 +208,7 @@ public class TestMesh {
                     baseVertex
             );
 
-            GL_OBJECT_POOL.createObject(entry.getKey(), new GLObjectData(newCommand, oldGlObjectData.builder, PERSISTENT_MAPPED_IBO.getCommandCount() - 1, oldGlObjectData.elementPair));
+            GL_OBJECT_POOL.createObject(entry.getKey(), new GLObjectData(newCommand, oldGlObjectData.builder, persistentMappedIBO.getCommandCount() - 1, oldGlObjectData.elementPair));
 
             if (oldGlObjectData.builder.objectIdPointer != null) {
                 oldGlObjectData.builder.objectIdPointer.setValue(entry.getKey());
@@ -230,7 +230,7 @@ public class TestMesh {
         new LogGenerator("Direct Delete Objects End")
                 .kv("Final Active Objects", GL_OBJECT_POOL.getObjects().size())
                 .kv("Total Vertices", vertexCount)
-                .kv("Total Commands (IBO)", PERSISTENT_MAPPED_IBO.getCommandCount())
+                .kv("Total Commands (IBO)", persistentMappedIBO.getCommandCount())
                 .logging(getClass(), DebugLevel.INFO);
 
         return this;
@@ -260,7 +260,7 @@ public class TestMesh {
 
     private void writeInstanceData(InstanceData instanceData) {
         for (int i = 0; i < instanceData.instanceCount; i++) {
-            PERSISTENT_MAPPED_SSBO.addTransform(2, instanceData.getTransforms()[i]);
+            persistentMappedSSBO.addTransform(2, instanceData.getTransforms()[i]);
         }
     }
 
@@ -275,7 +275,7 @@ public class TestMesh {
         int count = Math.min(glObjectData.builder.instanceData.instanceCount, newInstanceData.instanceCount);
 
         for (int i = 0; i < count; i++) {
-            PERSISTENT_MAPPED_SSBO.updateTransform(2, baseInstanceIndex + i, newInstanceData.getTransforms()[i]);
+            persistentMappedSSBO.updateTransform(2, baseInstanceIndex + i, newInstanceData.getTransforms()[i]);
         }
 
         return this;
@@ -290,19 +290,19 @@ public class TestMesh {
                 this.instanceCount
         );
 
-        PERSISTENT_MAPPED_IBO.add(command);
+        persistentMappedIBO.add(command);
         this.instanceCount += instanceCountPerObj;
         return command;
     }
 
     private int writeGeometry(TestElementPair elementPair) {
         for (Vertex vertex : elementPair.vertices) {
-            PERSISTENT_MAPPED_VBO.add(vertex);
+            persistentMappedVBO.add(vertex);
         }
 
-        int startOffset = PERSISTENT_MAPPED_EBO.getIndexCount();
+        int startOffset = persistentMappedEBO.getIndexCount();
         for (int index : elementPair.indices) {
-            PERSISTENT_MAPPED_EBO.add(index);
+            persistentMappedEBO.add(index);
         }
 
         vertexCount += elementPair.vertices.length;
@@ -324,9 +324,9 @@ public class TestMesh {
             log.add(
                     new LogGenerator(
                             "VBO",
-                            "BufferID: " + PERSISTENT_MAPPED_VBO.getBufferId(),
-                            "Capacity: " + PERSISTENT_MAPPED_VBO.getGPUMemorySize(),
-                            "Used: " + PERSISTENT_MAPPED_VBO.getVertexCount()
+                            "BufferID: " + persistentMappedVBO.getBufferId(),
+                            "Capacity: " + persistentMappedVBO.getGPUMemorySize(),
+                            "Used: " + persistentMappedVBO.getVertexCount()
                     ).createLog()
             );
         }
@@ -334,9 +334,9 @@ public class TestMesh {
             log.add(
                     new LogGenerator(
                             "EBO",
-                            "BufferID: " + PERSISTENT_MAPPED_EBO.getBufferId(),
-                            "Capacity: " + PERSISTENT_MAPPED_EBO.getGPUMemorySize(),
-                            "Used: " + PERSISTENT_MAPPED_EBO.getIndexCount()
+                            "BufferID: " + persistentMappedEBO.getBufferId(),
+                            "Capacity: " + persistentMappedEBO.getGPUMemorySize(),
+                            "Used: " + persistentMappedEBO.getIndexCount()
                     ).createLog()
             );
         }
@@ -344,9 +344,9 @@ public class TestMesh {
             log.add(
                     new LogGenerator(
                             "IBO",
-                            "BufferID: " + PERSISTENT_MAPPED_IBO.getBufferId(),
-                            "Capacity: " + PERSISTENT_MAPPED_IBO.getGPUMemorySize(),
-                            "Command Count: " + PERSISTENT_MAPPED_IBO.getCommandCount()
+                            "BufferID: " + persistentMappedIBO.getBufferId(),
+                            "Capacity: " + persistentMappedIBO.getGPUMemorySize(),
+                            "Command Count: " + persistentMappedIBO.getCommandCount()
                     ).createLog()
             );
         }

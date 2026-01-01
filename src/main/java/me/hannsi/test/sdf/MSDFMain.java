@@ -19,7 +19,7 @@ import me.hannsi.lfjg.render.system.text.AlignType;
 import me.hannsi.lfjg.render.system.text.TextFormatType;
 import me.hannsi.lfjg.render.system.text.font.Font;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.TEXTURE_CACHE;
+import static me.hannsi.lfjg.render.LFJGRenderContext.textureCache;
 import static me.hannsi.lfjg.render.LFJGRenderTextContext.FONT_CACHE;
 
 public class MSDFMain implements LFJGFrame {
@@ -59,7 +59,7 @@ public class MSDFMain implements LFJGFrame {
 //        glRect.uv(0, 1, 1, 0);
 //        glRect.rectWH(0, 0, 1920, 1080, Color.of(0, 0, 0, 0));
 
-        TEXTURE_CACHE.createCache("Test1", Location.fromResource("texture/test/test1.jpg"));
+        textureCache.createCache("Test1", Location.fromResource("texture/test/test1.jpg"));
 
         effectCache = EffectCache.createEffectCache()
 //                .createCache(Translate.createTranslate("Translate1").x(100))

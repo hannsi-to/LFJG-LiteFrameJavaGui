@@ -15,7 +15,7 @@ import org.joml.Vector2f;
 import java.util.ArrayList;
 import java.util.List;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.MESH;
+import static me.hannsi.lfjg.render.LFJGRenderContext.mesh;
 
 /**
  * Class representing a polygon renderer in OpenGL.
@@ -152,7 +152,7 @@ public class GLPolygon<T extends GLPolygon<T>> extends GLObject {
         Vertex[] vertices = this.vertices.toArray(new Vertex[0]);
         IntRef id = new IntRef();
 
-        MESH.addObject(
+        mesh.addObject(
                 TestMesh.Builder.createBuilder()
                         .objectIdPointer(id)
                         .drawType(drawType)

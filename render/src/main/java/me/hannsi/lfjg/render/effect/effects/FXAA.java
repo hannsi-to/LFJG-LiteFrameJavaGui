@@ -5,7 +5,7 @@ import me.hannsi.lfjg.render.system.rendering.frameBuffer.FrameBuffer;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
+import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class FXAA extends EffectBase {
     private boolean useAlpha = true;
@@ -25,8 +25,8 @@ public class FXAA extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.FXAA.getId());
-        SHADER_PROGRAM.setUniform("fxaaUseAlpha", UploadUniformType.ON_CHANGE, useAlpha);
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.FXAA.getId());
+        shaderProgram.setUniform("fxaaUseAlpha", UploadUniformType.ON_CHANGE, useAlpha);
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

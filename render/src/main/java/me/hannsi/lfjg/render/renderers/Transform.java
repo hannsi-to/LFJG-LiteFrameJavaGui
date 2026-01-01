@@ -6,15 +6,16 @@ import org.joml.Quaternionf;
 
 import static me.hannsi.lfjg.core.Core.UNSAFE;
 import static me.hannsi.lfjg.render.LFJGRenderContext.MAIN_CAMERA;
+import static me.hannsi.lfjg.render.system.mesh.InstanceData.NO_ATTACH_TEXTURE;
 
 public class Transform {
     public static final int BYTES = 80;
     protected final Matrix4f TEMP_MATRIX = new Matrix4f();
     protected final Matrix4f MODEL_MATRIX = new Matrix4f();
     private final Quaternionf rotation;
-    private final ProjectionType projectionType;
     protected boolean dirtyFlag = true;
-    private int layer;
+    private ProjectionType projectionType;
+    private int spriteIndex;
     private long address;
     private float x;
     private float y;
@@ -23,24 +24,98 @@ public class Transform {
     private float scaleY;
     private float scaleZ;
 
-    public Transform(int layer) {
-        this(0, 0, 0, 0, 0, 0, 1, 1, 1, ProjectionType.ORTHOGRAPHIC_PROJECTION, layer);
+    Transform() {
+        this.projectionType = ProjectionType.ORTHOGRAPHIC_PROJECTION;
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+        this.rotation = new Quaternionf();
+        this.scaleX = 1;
+        this.scaleY = 1;
+        this.scaleZ = 1;
+        this.spriteIndex = NO_ATTACH_TEXTURE;
     }
 
-    public Transform(float x, float y, float z, float angleX, float angleY, float angleZ, float scaleX, float scaleY, float scaleZ, ProjectionType projectionType, int layer) {
-        this(x, y, z, new Quaternionf().rotateX(angleX).rotateY(angleY).rotateZ(angleZ), scaleX, scaleY, scaleZ, projectionType, layer);
-    }
-
-    public Transform(float x, float y, float z, Quaternionf rotation, float scaleX, float scaleY, float scaleZ, ProjectionType projectionType, int layer) {
+    public Transform(ProjectionType projectionType, int spriteIndex, float x, float y, float z, Quaternionf rotation, float scaleY, float scaleX, float scaleZ) {
+        this.rotation = rotation;
+        this.projectionType = projectionType;
+        this.spriteIndex = spriteIndex;
         this.x = x;
         this.y = y;
         this.z = z;
-        this.rotation = rotation;
-        this.scaleX = scaleX;
         this.scaleY = scaleY;
+        this.scaleX = scaleX;
         this.scaleZ = scaleZ;
+    }
+
+    public static Transform createBuilder() {
+        return new Transform();
+    }
+
+    public Transform projectionType(ProjectionType projectionType) {
         this.projectionType = projectionType;
-        this.layer = layer;
+
+        return this;
+    }
+
+    public Transform x(float x) {
+        this.x = x;
+
+        return this;
+    }
+
+    public Transform y(float y) {
+        this.y = y;
+
+        return this;
+    }
+
+    public Transform z(float z) {
+        this.z = z;
+
+        return this;
+    }
+
+    public Transform angleX(float angleX) {
+        this.rotation.rotateX(angleX);
+
+        return this;
+    }
+
+    public Transform angleY(float angleY) {
+        this.rotation.rotateY(angleY);
+
+        return this;
+    }
+
+    public Transform angleZ(float angleZ) {
+        this.rotation.rotateZ(angleZ);
+
+        return this;
+    }
+
+    public Transform scaleX(float scaleX) {
+        this.scaleX = scaleX;
+
+        return this;
+    }
+
+    public Transform scaleY(float scaleY) {
+        this.scaleY = scaleY;
+
+        return this;
+    }
+
+    public Transform scaleZ(float scaleZ) {
+        this.scaleZ = scaleZ;
+
+        return this;
+    }
+
+    public Transform spriteIndex(int spriteIndex) {
+        this.spriteIndex = spriteIndex;
+
+        return this;
     }
 
     public Transform getToAddress(long address, Matrix4f vpMatrix) {
@@ -57,7 +132,7 @@ public class Transform {
         vpMatrix.mul(MODEL_MATRIX, TEMP_MATRIX);
 
         TEMP_MATRIX.getToAddress(address);
-        UNSAFE.putInt(address + 64, layer);
+        UNSAFE.putInt(address + 64, spriteIndex);
 
         MAIN_CAMERA.setDirtyFlag(false);
 
@@ -65,7 +140,7 @@ public class Transform {
     }
 
     public Transform newInstance() {
-        return new Transform(x, y, z, new Quaternionf(rotation), scaleX, scaleY, scaleZ, projectionType, layer);
+        return new Transform(projectionType, spriteIndex, x, y, z, rotation, scaleX, scaleY, scaleZ);
     }
 
     public Transform reset() {
@@ -185,11 +260,11 @@ public class Transform {
         return projectionType;
     }
 
-    public int getLayer() {
-        return layer;
+    public int getSpriteIndex() {
+        return spriteIndex;
     }
 
-    public void setLayer(int layer) {
-        this.layer = layer;
+    public void setSpriteIndex(int spriteIndex) {
+        this.spriteIndex = spriteIndex;
     }
 }

@@ -5,7 +5,7 @@ import me.hannsi.lfjg.render.system.rendering.frameBuffer.FrameBuffer;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
+import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class ColorCorrection extends EffectBase {
     private float brightness = 0.5f;
@@ -83,11 +83,11 @@ public class ColorCorrection extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.COLOR_CORRECTION.getId());
-        SHADER_PROGRAM.setUniform("colorCorrectionBrightness", UploadUniformType.ON_CHANGE, brightness);
-        SHADER_PROGRAM.setUniform("colorCorrectionContrast", UploadUniformType.ON_CHANGE, contrast);
-        SHADER_PROGRAM.setUniform("colorCorrectionSaturation", UploadUniformType.ON_CHANGE, saturation);
-        SHADER_PROGRAM.setUniform("colorCorrectionHue", UploadUniformType.ON_CHANGE, hue);
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.COLOR_CORRECTION.getId());
+        shaderProgram.setUniform("colorCorrectionBrightness", UploadUniformType.ON_CHANGE, brightness);
+        shaderProgram.setUniform("colorCorrectionContrast", UploadUniformType.ON_CHANGE, contrast);
+        shaderProgram.setUniform("colorCorrectionSaturation", UploadUniformType.ON_CHANGE, saturation);
+        shaderProgram.setUniform("colorCorrectionHue", UploadUniformType.ON_CHANGE, hue);
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

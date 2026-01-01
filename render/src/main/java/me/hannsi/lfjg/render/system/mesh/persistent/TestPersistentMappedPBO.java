@@ -12,7 +12,7 @@ import java.util.Map;
 
 import static me.hannsi.lfjg.core.Core.UNSAFE;
 import static me.hannsi.lfjg.core.utils.math.MathHelper.max;
-import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL15.glUnmapBuffer;
 import static org.lwjgl.opengl.GL21.GL_PIXEL_UNPACK_BUFFER;
@@ -39,12 +39,12 @@ public class TestPersistentMappedPBO implements TestPersistentMappedBuffer {
     public void allocationBufferStorage(long capacity) {
         this.gpuMemorySize = capacity;
         if (bufferId != 0) {
-            GL_STATE_CACHE.bindPixelUnpackBuffer(bufferId);
+            glStateCache.bindPixelUnpackBuffer(bufferId);
             bufferId = 0;
         }
 
         bufferId = glGenBuffers();
-        GL_STATE_CACHE.bindPixelUnpackBuffer(bufferId);
+        glStateCache.bindPixelUnpackBuffer(bufferId);
         glBufferStorage(GL_PIXEL_UNPACK_BUFFER, gpuMemorySize, flags);
 
         ByteBuffer byteBuffer = glMapBufferRange(
@@ -198,7 +198,7 @@ public class TestPersistentMappedPBO implements TestPersistentMappedBuffer {
                 if (!unmapped) {
                     DebugLog.error(getClass(), "glUnmapBuffer returned false (my indicate corruption).");
                 }
-                GL_STATE_CACHE.deletePixelUnpackBuffer(bufferId);
+                glStateCache.deletePixelUnpackBuffer(bufferId);
                 bufferId = 0;
                 mappedAddress = 0;
 
@@ -213,7 +213,7 @@ public class TestPersistentMappedPBO implements TestPersistentMappedBuffer {
             }
         } else {
             glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
-            GL_STATE_CACHE.deletePixelUnpackBuffer(bufferId);
+            glStateCache.deletePixelUnpackBuffer(bufferId);
             bufferId = 0;
             mappedAddress = 0;
 
@@ -237,7 +237,7 @@ public class TestPersistentMappedPBO implements TestPersistentMappedBuffer {
     @Override
     public void cleanup() {
         if (bufferId != 0) {
-            GL_STATE_CACHE.deletePixelUnpackBuffer(bufferId);
+            glStateCache.deletePixelUnpackBuffer(bufferId);
             bufferId = 0;
         }
         segments.clear();

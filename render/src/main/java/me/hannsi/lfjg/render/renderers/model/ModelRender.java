@@ -46,21 +46,21 @@ public class ModelRender {
     }
 
     public void render() {
-        GL_STATE_CACHE.enable(GL_DEPTH_TEST);
+        glStateCache.enable(GL_DEPTH_TEST);
 
-        SHADER_PROGRAM.bind();
+        shaderProgram.bind();
 
-        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.MODEL.getId());
-        SHADER_PROGRAM.setUniform("textureSampler", UploadUniformType.ONCE, 0);
-        SHADER_PROGRAM.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, projection3D.getMatrix4f());
-        SHADER_PROGRAM.setUniform("viewMatrix", UploadUniformType.PER_FRAME, MAIN_CAMERA.getViewMatrix());
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.MODEL.getId());
+        shaderProgram.setUniform("textureSampler", UploadUniformType.ONCE, 0);
+        shaderProgram.setUniform("projectionMatrix", UploadUniformType.ON_CHANGE, projection3D.getMatrix4f());
+        shaderProgram.setUniform("viewMatrix", UploadUniformType.PER_FRAME, MAIN_CAMERA.getViewMatrix());
 
         Collection<Model> models = modelCache.getModels().values();
         for (Model model : models) {
             List<Entity> entities = model.getEntities();
 
             for (Material material : model.getMaterials()) {
-                SHADER_PROGRAM.setUniform("modelMaterialType", UploadUniformType.PER_FRAME, material.getMaterialType().getId());
+                shaderProgram.setUniform("modelMaterialType", UploadUniformType.PER_FRAME, material.getMaterialType().getId());
 
                 switch (material.getMaterialType()) {
                     case NO_MATERIAL:
@@ -71,8 +71,8 @@ public class ModelRender {
                             throw new ModelException("To use a texture material, TextureCache must be set.");
                         }
 
-                        GL_STATE_CACHE.activeTexture(GL_TEXTURE0);
-                        GL_STATE_CACHE.enable(GL_TEXTURE_2D);
+                        glStateCache.activeTexture(GL_TEXTURE0);
+                        glStateCache.enable(GL_TEXTURE_2D);
 
                         TextureLoader textureLoader = textureCache.getTexture(material.getTextureLocation().path());
                         if (textureLoader == null) {
@@ -86,7 +86,7 @@ public class ModelRender {
 
                 for (Mesh mesh : material.getMeshes()) {
                     for (Entity entity : entities) {
-                        SHADER_PROGRAM.setUniform("modelMatrix", UploadUniformType.PER_FRAME, entity.getModelMatrix());
+                        shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, entity.getModelMatrix());
 //                        vaoRendering.draw(mesh, GL_TRIANGLES);
                     }
                 }

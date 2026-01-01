@@ -5,7 +5,7 @@ import me.hannsi.lfjg.render.system.rendering.frameBuffer.FrameBuffer;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
+import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class Inversion extends EffectBase {
     private boolean flipVertical = true;
@@ -49,12 +49,12 @@ public class Inversion extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.INVERSION.getId());
-        SHADER_PROGRAM.setUniform("inversionFlipVertical", UploadUniformType.ON_CHANGE, flipVertical);
-        SHADER_PROGRAM.setUniform("inversionFlipHorizontal", UploadUniformType.ON_CHANGE, flipHorizontal);
-        SHADER_PROGRAM.setUniform("inversionInvertBrightness", UploadUniformType.ON_CHANGE, invertBrightness);
-        SHADER_PROGRAM.setUniform("inversionInvertHue", UploadUniformType.ON_CHANGE, invertHue);
-        SHADER_PROGRAM.setUniform("inversionInvertAlpha", UploadUniformType.ON_CHANGE, invertAlpha);
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.INVERSION.getId());
+        shaderProgram.setUniform("inversionFlipVertical", UploadUniformType.ON_CHANGE, flipVertical);
+        shaderProgram.setUniform("inversionFlipHorizontal", UploadUniformType.ON_CHANGE, flipHorizontal);
+        shaderProgram.setUniform("inversionInvertBrightness", UploadUniformType.ON_CHANGE, invertBrightness);
+        shaderProgram.setUniform("inversionInvertHue", UploadUniformType.ON_CHANGE, invertHue);
+        shaderProgram.setUniform("inversionInvertAlpha", UploadUniformType.ON_CHANGE, invertAlpha);
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

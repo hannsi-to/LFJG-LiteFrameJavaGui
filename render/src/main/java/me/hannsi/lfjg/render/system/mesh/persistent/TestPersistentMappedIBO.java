@@ -10,7 +10,7 @@ import org.lwjgl.system.MemoryUtil;
 import java.nio.ByteBuffer;
 
 import static me.hannsi.lfjg.core.Core.UNSAFE;
-import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL15.glUnmapBuffer;
 import static org.lwjgl.opengl.GL30.glMapBufferRange;
@@ -42,12 +42,12 @@ public class TestPersistentMappedIBO implements TestPersistentMappedBuffer {
     public void allocationBufferStorage(long capacity) {
         gpuMemorySize = capacity;
         if (bufferId != 0) {
-            GL_STATE_CACHE.deleteIndirectBuffer(bufferId);
+            glStateCache.deleteIndirectBuffer(bufferId);
             bufferId = 0;
         }
 
         bufferId = glGenBuffers();
-        GL_STATE_CACHE.bindIndirectBuffer(bufferId);
+        glStateCache.bindIndirectBuffer(bufferId);
         glBufferStorage(GL_DRAW_INDIRECT_BUFFER, gpuMemorySize, flags);
 
         ByteBuffer byteBuffer = glMapBufferRange(
@@ -170,7 +170,7 @@ public class TestPersistentMappedIBO implements TestPersistentMappedBuffer {
                 if (!unmapped) {
                     DebugLog.error(getClass(), "glUnmapBuffer returned false (may indicate corruption).");
                 }
-                GL_STATE_CACHE.deleteIndirectBuffer(bufferId);
+                glStateCache.deleteIndirectBuffer(bufferId);
                 bufferId = 0;
                 mappedAddress = 0;
 
@@ -185,7 +185,7 @@ public class TestPersistentMappedIBO implements TestPersistentMappedBuffer {
             }
         } else {
             glUnmapBuffer(GL_DRAW_INDIRECT_BUFFER);
-            GL_STATE_CACHE.deleteIndirectBuffer(bufferId);
+            glStateCache.deleteIndirectBuffer(bufferId);
             bufferId = 0;
             mappedAddress = 0;
 
@@ -232,7 +232,7 @@ public class TestPersistentMappedIBO implements TestPersistentMappedBuffer {
     @Override
     public void cleanup() {
         if (bufferId != 0) {
-            GL_STATE_CACHE.deleteIndirectBuffer(bufferId);
+            glStateCache.deleteIndirectBuffer(bufferId);
             bufferId = 0;
         }
         commandCount = 0;

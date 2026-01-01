@@ -5,7 +5,7 @@ import me.hannsi.lfjg.render.system.rendering.frameBuffer.FrameBuffer;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
+import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class RadialBlur extends EffectBase {
     private float range = 1f;
@@ -53,10 +53,10 @@ public class RadialBlur extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.RADIAL_BLUR.getId());
-        SHADER_PROGRAM.setUniform("radialBlurRange", UploadUniformType.ON_CHANGE, range);
-        SHADER_PROGRAM.setUniform("radialBlurCenterX", UploadUniformType.ON_CHANGE, centerX);
-        SHADER_PROGRAM.setUniform("radialBlurCenterY", UploadUniformType.ON_CHANGE, centerY);
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.RADIAL_BLUR.getId());
+        shaderProgram.setUniform("radialBlurRange", UploadUniformType.ON_CHANGE, range);
+        shaderProgram.setUniform("radialBlurCenterX", UploadUniformType.ON_CHANGE, centerX);
+        shaderProgram.setUniform("radialBlurCenterY", UploadUniformType.ON_CHANGE, centerY);
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

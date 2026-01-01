@@ -7,7 +7,7 @@ import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector4f;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
+import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class EdgeExtraction extends EffectBase {
     private float edgeStrength = 0.5f;
@@ -61,12 +61,12 @@ public class EdgeExtraction extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.EDGE_EXTRACTION.getId());
-        SHADER_PROGRAM.setUniform("edgeExtractionEdgeStrength", UploadUniformType.ON_CHANGE, edgeStrength);
-        SHADER_PROGRAM.setUniform("edgeExtractionThreshold", UploadUniformType.ON_CHANGE, threshold);
-        SHADER_PROGRAM.setUniform("edgeExtractionEnableLuminanceEdge", UploadUniformType.ON_CHANGE, enableLuminanceEdge);
-        SHADER_PROGRAM.setUniform("edgeExtractionEnableAlphaEdge", UploadUniformType.ON_CHANGE, enableAlphaEdge);
-        SHADER_PROGRAM.setUniform("edgeExtractionEdgeColor", UploadUniformType.ON_CHANGE, new Vector4f(edgeColor.getRedF(), edgeColor.getGreenF(), edgeColor.getBlueF(), edgeColor.getAlphaF()));
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.EDGE_EXTRACTION.getId());
+        shaderProgram.setUniform("edgeExtractionEdgeStrength", UploadUniformType.ON_CHANGE, edgeStrength);
+        shaderProgram.setUniform("edgeExtractionThreshold", UploadUniformType.ON_CHANGE, threshold);
+        shaderProgram.setUniform("edgeExtractionEnableLuminanceEdge", UploadUniformType.ON_CHANGE, enableLuminanceEdge);
+        shaderProgram.setUniform("edgeExtractionEnableAlphaEdge", UploadUniformType.ON_CHANGE, enableAlphaEdge);
+        shaderProgram.setUniform("edgeExtractionEdgeColor", UploadUniformType.ON_CHANGE, new Vector4f(edgeColor.getRedF(), edgeColor.getGreenF(), edgeColor.getBlueF(), edgeColor.getAlphaF()));
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

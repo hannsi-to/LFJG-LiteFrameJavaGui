@@ -8,22 +8,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static me.hannsi.lfjg.core.SystemSetting.GL_OBJECT_POOL_REMOVE_RATIO_THRESHOLD;
-import static me.hannsi.lfjg.render.LFJGRenderContext.ID_POOL;
-import static me.hannsi.lfjg.render.LFJGRenderContext.MESH;
+import static me.hannsi.lfjg.render.LFJGRenderContext.mesh;
 
 public class GLObjectPool {
     private final Map<Integer, GLObjectData> objects;
     private final Map<Integer, GLObjectData> deletedObjects;
+    private final IdPool idPool;
     private long totalPoolBytes = 0;
     private long deletedBytes = 0;
 
     public GLObjectPool() {
         this.objects = new HashMap<>();
         this.deletedObjects = new HashMap<>();
+        this.idPool = new IdPool();
     }
 
-    public int createObject(GLObjectData glObjectData) {
-        int id = ID_POOL.acquire();
+    public int createId(GLObjectData glObjectData) {
+        int id = idPool.acquire();
         objects.put(id, glObjectData);
 
         totalPoolBytes += calculateBytes(glObjectData);
@@ -32,7 +33,7 @@ public class GLObjectPool {
     }
 
     public int createObject(int requestedId, GLObjectData glObjectData) {
-        int id = ID_POOL.acquire(requestedId);
+        int id = idPool.acquire(requestedId);
         objects.put(id, glObjectData);
 
         totalPoolBytes += calculateBytes(glObjectData);
@@ -44,7 +45,7 @@ public class GLObjectPool {
         GLObjectData glObjectData = objects.get(id);
 
         objects.remove(id);
-        ID_POOL.release(id);
+        idPool.release(id);
 
         totalPoolBytes -= calculateBytes(glObjectData);
     }
@@ -54,7 +55,7 @@ public class GLObjectPool {
         deletedBytes += calculateBytes(glObjectData);
 
         if (totalPoolBytes > 0 && (float) deletedBytes / totalPoolBytes > GL_OBJECT_POOL_REMOVE_RATIO_THRESHOLD) {
-            MESH.directDeleteObjects();
+            mesh.directDeleteObjects();
         }
     }
 
@@ -67,7 +68,7 @@ public class GLObjectPool {
 
     public void clearObjects() {
         for (Map.Entry<Integer, GLObjectData> entry : objects.entrySet()) {
-            ID_POOL.release(entry.getKey());
+            idPool.release(entry.getKey());
         }
 
         objects.clear();

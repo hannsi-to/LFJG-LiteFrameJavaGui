@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.List;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL30.glMapBufferRange;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
@@ -29,7 +29,7 @@ public class PersistentMappedIBO implements PersistentMappedBuffer {
 
         bufferId = glGenBuffers();
 
-        GL_STATE_CACHE.bindIndirectBuffer(bufferId);
+        glStateCache.bindIndirectBuffer(bufferId);
         glBufferStorage(GL_DRAW_INDIRECT_BUFFER, sizeInBytes, flags);
 
         ByteBuffer byteBuffer = glMapBufferRange(
@@ -65,7 +65,7 @@ public class PersistentMappedIBO implements PersistentMappedBuffer {
 
     @Override
     public void cleanup() {
-        GL_STATE_CACHE.deleteIndirectBuffer(bufferId);
+        glStateCache.deleteIndirectBuffer(bufferId);
     }
 
     public int getFlags() {

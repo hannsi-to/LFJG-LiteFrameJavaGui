@@ -10,7 +10,7 @@ import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
+import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class GaussianBlurVertical extends EffectBase {
     private float radiusX = 30f;
@@ -35,16 +35,16 @@ public class GaussianBlurVertical extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.GAUSSIAN_BLUR_VERTICAL.getId());
-        SHADER_PROGRAM.setUniform("gaussianBlurDirection", UploadUniformType.ON_CHANGE, new Vector2f(0, 1));
-        SHADER_PROGRAM.setUniform("gaussianBlurRadius", UploadUniformType.ON_CHANGE, radiusX);
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.GAUSSIAN_BLUR_VERTICAL.getId());
+        shaderProgram.setUniform("gaussianBlurDirection", UploadUniformType.ON_CHANGE, new Vector2f(0, 1));
+        shaderProgram.setUniform("gaussianBlurRadius", UploadUniformType.ON_CHANGE, radiusX);
 
         final FloatBuffer weightBuffer = BufferUtils.createFloatBuffer(256);
         for (int i = 0; i < radiusX; i++) {
             weightBuffer.put(MathHelper.calculateGaussianValue(i, radiusX / 2));
         }
         weightBuffer.rewind();
-        SHADER_PROGRAM.setUniform("gaussianBlurValues", UploadUniformType.PER_FRAME, weightBuffer);
+        shaderProgram.setUniform("gaussianBlurValues", UploadUniformType.PER_FRAME, weightBuffer);
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

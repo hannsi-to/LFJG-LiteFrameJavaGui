@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.MESH;
+import static me.hannsi.lfjg.render.LFJGRenderContext.mesh;
 
 public class TextMeshBuilder {
     protected Map<Integer, TextMesh> textMeshMap;
@@ -131,7 +131,7 @@ public class TextMeshBuilder {
         }
 
         public TextMesh createMesh() {
-            MESH.addObject(
+            mesh.addObject(
                     TestMesh.Builder.createBuilder()
                             .objectIdPointer(pointer)
                             .drawType(DrawType.TRIANGLES)
@@ -157,7 +157,7 @@ public class TextMeshBuilder {
 
         public void cleanup() {
             for (int id : ids) {
-                MESH.deleteObject(id);
+                mesh.deleteObject(id);
             }
         }
     }

@@ -17,45 +17,45 @@ public class VAORendering {
 
     public void draw() {
         if (VAO_RENDERING_FRONT_AND_BACK) {
-            GL_STATE_CACHE.polygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            GL_STATE_CACHE.lineWidth(VAO_RENDERING_FRONT_AND_BACK_LINE_WIDTH);
+            glStateCache.polygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            glStateCache.lineWidth(VAO_RENDERING_FRONT_AND_BACK_LINE_WIDTH);
         } else {
-            GL_STATE_CACHE.polygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            GL_STATE_CACHE.lineWidth(1.0f);
+            glStateCache.polygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            glStateCache.lineWidth(1.0f);
         }
 
         for (Map.Entry<Integer, GLObjectData> entry : GL_OBJECT_POOL.getObjects().entrySet()) {
             GLObjectData glObjectData = entry.getValue();
 
-            long base = PERSISTENT_MAPPED_IBO.getCommandsSizeByte(glObjectData.baseCommand);
+            long base = persistentMappedIBO.getCommandsSizeByte(glObjectData.baseCommand);
             if (glObjectData.draw) {
-                PERSISTENT_MAPPED_IBO.directWriteCommand(base, 0, glObjectData.elementPair.indices.length);
+                persistentMappedIBO.directWriteCommand(base, 0, glObjectData.elementPair.indices.length);
             } else {
-                PERSISTENT_MAPPED_IBO.directWriteCommand(base, 0, 0);
+                persistentMappedIBO.directWriteCommand(base, 0, 0);
             }
 
             if (glObjectData.builder.getInstanceData().isDirtyFrag()) {
-                MESH.updateInstanceData(entry.getKey(), glObjectData.builder.getInstanceData());
+                mesh.updateInstanceData(entry.getKey(), glObjectData.builder.getInstanceData());
 
                 glObjectData.builder.getInstanceData().resetDirtyFlag();
             }
         }
 
-        GL_STATE_CACHE.bindVertexArray(MESH.getVaoId());
-        GL_STATE_CACHE.bindElementArrayBuffer(PERSISTENT_MAPPED_EBO.getBufferId());
-        GL_STATE_CACHE.bindIndirectBuffer(PERSISTENT_MAPPED_IBO.getBufferId());
+        glStateCache.bindVertexArray(mesh.getVaoId());
+        glStateCache.bindElementArrayBuffer(persistentMappedEBO.getBufferId());
+        glStateCache.bindIndirectBuffer(persistentMappedIBO.getBufferId());
 
-        PERSISTENT_MAPPED_VBO.syncToGPU();
-        PERSISTENT_MAPPED_EBO.syncToGPU();
-        PERSISTENT_MAPPED_IBO.syncToGPU();
-        PERSISTENT_MAPPED_SSBO.syncToGPU();
-        PERSISTENT_MAPPED_PBO.syncToGPU();
+        persistentMappedVBO.syncToGPU();
+        persistentMappedEBO.syncToGPU();
+        persistentMappedIBO.syncToGPU();
+        persistentMappedSSBO.syncToGPU();
+        persistentMappedPBO.syncToGPU();
 
         glMultiDrawElementsIndirect(
                 DrawType.TRIANGLES.getId(),
                 GL_UNSIGNED_INT,
                 0,
-                PERSISTENT_MAPPED_IBO.getCommandCount(),
+                persistentMappedIBO.getCommandCount(),
                 0
         );
     }

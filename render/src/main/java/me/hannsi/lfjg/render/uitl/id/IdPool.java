@@ -10,10 +10,6 @@ public class IdPool {
         return pool.isEmpty() ? next++ : pool.pop();
     }
 
-    public void release(int id) {
-        pool.push(id);
-    }
-
     public int acquire(int requestedId) {
         if (pool.remove(requestedId)) {
             return requestedId;
@@ -25,5 +21,9 @@ public class IdPool {
 
         next = requestedId + 1;
         return requestedId;
+    }
+
+    public void release(int id) {
+        pool.push(id);
     }
 }

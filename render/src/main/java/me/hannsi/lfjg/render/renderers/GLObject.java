@@ -12,9 +12,8 @@ import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
 
 import static me.hannsi.lfjg.core.Core.frameBufferSize;
-import static me.hannsi.lfjg.render.LFJGRenderContext.MESH;
-import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
-import static me.hannsi.lfjg.render.system.mesh.InstanceData.NO_ATTACH_TEXTURE;
+import static me.hannsi.lfjg.render.LFJGRenderContext.mesh;
+import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class GLObject implements Cloneable {
     private final IntRef objectId;
@@ -35,7 +34,7 @@ public class GLObject implements Cloneable {
         this.frameBuffer = null;
 
         this.viewMatrix = null;
-        this.transform = new Transform(NO_ATTACH_TEXTURE);
+        this.transform = new Transform();
     }
 
     public void cleanup() {
@@ -49,7 +48,7 @@ public class GLObject implements Cloneable {
             frameBuffer.cleanup();
         }
 
-        MESH.deleteObject(objectId.getValue());
+        mesh.deleteObject(objectId.getValue());
 
         new LogGenerator(
                 LogGenerateType.CLEANUP,
@@ -92,13 +91,13 @@ public class GLObject implements Cloneable {
     }
 
     private void uploadUniforms() {
-        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.OBJECT.getId());
-        SHADER_PROGRAM.setUniform("resolution", UploadUniformType.ON_CHANGE, frameBufferSize);
-        SHADER_PROGRAM.setUniform("textureSampler", UploadUniformType.ONCE, 0);
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.OBJECT.getId());
+        shaderProgram.setUniform("resolution", UploadUniformType.ON_CHANGE, frameBufferSize);
+        shaderProgram.setUniform("textureSampler", UploadUniformType.ONCE, 0);
     }
 
     private void bindResources() {
-        SHADER_PROGRAM.bind();
+        shaderProgram.bind();
     }
 
     public GLObject copy(String objectName) {
@@ -152,7 +151,7 @@ public class GLObject implements Cloneable {
     }
 
     public ShaderProgram getShaderProgram() {
-        return SHADER_PROGRAM;
+        return shaderProgram;
     }
 
     public Matrix4f getViewMatrix() {

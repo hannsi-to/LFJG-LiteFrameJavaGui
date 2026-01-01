@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static me.hannsi.lfjg.core.Core.UNSAFE;
-import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL15.glUnmapBuffer;
 import static org.lwjgl.opengl.GL30.*;
@@ -44,12 +44,12 @@ public class TestPersistentMappedUBO implements TestPersistentMappedBuffer {
     public void allocationBufferStorage(long capacity) {
         gpuMemorySize = capacity;
         if (bufferId != 0) {
-            GL_STATE_CACHE.deleteUniformBuffer(bufferId);
+            glStateCache.deleteUniformBuffer(bufferId);
             bufferId = 0;
         }
 
         bufferId = glGenBuffers();
-        GL_STATE_CACHE.bindUniformBuffer(bufferId);
+        glStateCache.bindUniformBuffer(bufferId);
         glBufferStorage(GL_UNIFORM_BUFFER, gpuMemorySize, flags);
 
         ByteBuffer byteBuffer = glMapBufferRange(
@@ -151,7 +151,7 @@ public class TestPersistentMappedUBO implements TestPersistentMappedBuffer {
                 if (!unmapped) {
                     DebugLog.error(getClass(), "glUnmapBuffer returned false (may indicate corruption).");
                 }
-                GL_STATE_CACHE.deleteUniformBuffer(bufferId);
+                glStateCache.deleteUniformBuffer(bufferId);
                 bufferId = 0;
                 mappedAddress = 0;
 
@@ -166,7 +166,7 @@ public class TestPersistentMappedUBO implements TestPersistentMappedBuffer {
             }
         } else {
             glUnmapBuffer(GL_UNIFORM_BUFFER);
-            GL_STATE_CACHE.deleteUniformBuffer(bufferId);
+            glStateCache.deleteUniformBuffer(bufferId);
             bufferId = 0;
             mappedAddress = 0;
 
@@ -298,7 +298,7 @@ public class TestPersistentMappedUBO implements TestPersistentMappedBuffer {
     @Override
     public void cleanup() {
         if (bufferId != 0) {
-            GL_STATE_CACHE.deleteUniformBuffer(bufferId);
+            glStateCache.deleteUniformBuffer(bufferId);
             bufferId = 0;
         }
         uboDatum.clear();

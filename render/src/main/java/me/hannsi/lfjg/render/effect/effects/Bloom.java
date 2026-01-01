@@ -5,7 +5,7 @@ import me.hannsi.lfjg.render.system.rendering.frameBuffer.FrameBuffer;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
+import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class Bloom extends EffectBase {
     private float intensity = 1f;
@@ -52,10 +52,10 @@ public class Bloom extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.BLOOM.getId());
-        SHADER_PROGRAM.setUniform("bloomSpread", UploadUniformType.ON_CHANGE, spread);
-        SHADER_PROGRAM.setUniform("bloomIntensity", UploadUniformType.ON_CHANGE, intensity);
-        SHADER_PROGRAM.setUniform("bloomThreshold", UploadUniformType.ON_CHANGE, threshold);
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.BLOOM.getId());
+        shaderProgram.setUniform("bloomSpread", UploadUniformType.ON_CHANGE, spread);
+        shaderProgram.setUniform("bloomIntensity", UploadUniformType.ON_CHANGE, intensity);
+        shaderProgram.setUniform("bloomThreshold", UploadUniformType.ON_CHANGE, threshold);
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

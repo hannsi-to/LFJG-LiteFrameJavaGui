@@ -5,7 +5,7 @@ import me.hannsi.lfjg.render.system.rendering.frameBuffer.FrameBuffer;
 import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
+import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class LensBlur extends EffectBase {
     private float range = 20f;
@@ -64,12 +64,12 @@ public class LensBlur extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.LENS_BLUR.getId());
-        SHADER_PROGRAM.setUniform("lensBlurRange", UploadUniformType.ON_CHANGE, range);
-        SHADER_PROGRAM.setUniform("lensBlurIntensity", UploadUniformType.ON_CHANGE, intensity);
-        SHADER_PROGRAM.setUniform("lensBlurSigma", UploadUniformType.ON_CHANGE, sigma);
-        SHADER_PROGRAM.setUniform("lensBlurRadialSteps", UploadUniformType.ON_CHANGE, radialSteps);
-        SHADER_PROGRAM.setUniform("lensBlurAngularSamples", UploadUniformType.ON_CHANGE, angularSamples);
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.LENS_BLUR.getId());
+        shaderProgram.setUniform("lensBlurRange", UploadUniformType.ON_CHANGE, range);
+        shaderProgram.setUniform("lensBlurIntensity", UploadUniformType.ON_CHANGE, intensity);
+        shaderProgram.setUniform("lensBlurSigma", UploadUniformType.ON_CHANGE, sigma);
+        shaderProgram.setUniform("lensBlurRadialSteps", UploadUniformType.ON_CHANGE, radialSteps);
+        shaderProgram.setUniform("lensBlurAngularSamples", UploadUniformType.ON_CHANGE, angularSamples);
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

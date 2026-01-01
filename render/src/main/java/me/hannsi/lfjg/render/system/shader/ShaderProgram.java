@@ -17,7 +17,7 @@ import org.lwjgl.system.MemoryStack;
 import java.nio.FloatBuffer;
 import java.util.Objects;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.GL_STATE_CACHE;
+import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
 import static org.lwjgl.opengl.GL20.*;
 
 public class ShaderProgram {
@@ -75,7 +75,7 @@ public class ShaderProgram {
             glDeleteShader(fragmentShaderId);
         }
         if (programId != 0) {
-            GL_STATE_CACHE.deleteProgram(programId);
+            glStateCache.deleteProgram(programId);
         }
 
         new LogGenerator(
@@ -138,7 +138,7 @@ public class ShaderProgram {
     }
 
     public void bind() {
-        GL_STATE_CACHE.useProgram(programId);
+        glStateCache.useProgram(programId);
     }
 
     @SuppressWarnings("unchecked")

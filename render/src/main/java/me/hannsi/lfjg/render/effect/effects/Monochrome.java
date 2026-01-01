@@ -7,7 +7,7 @@ import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector3f;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
+import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class Monochrome extends EffectBase {
     private float intensity = 1f;
@@ -44,10 +44,10 @@ public class Monochrome extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.MONOCHROME.getId());
-        SHADER_PROGRAM.setUniform("monochromeIntensity", UploadUniformType.ON_CHANGE, intensity);
-        SHADER_PROGRAM.setUniform("monochromeColor", UploadUniformType.ON_CHANGE, new Vector3f(color.getRedF(), color.getGreenF(), color.getBlueF()));
-        SHADER_PROGRAM.setUniform("monochromePreserveBrightness", UploadUniformType.ON_CHANGE, preserveBrightness);
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.MONOCHROME.getId());
+        shaderProgram.setUniform("monochromeIntensity", UploadUniformType.ON_CHANGE, intensity);
+        shaderProgram.setUniform("monochromeColor", UploadUniformType.ON_CHANGE, new Vector3f(color.getRedF(), color.getGreenF(), color.getBlueF()));
+        shaderProgram.setUniform("monochromePreserveBrightness", UploadUniformType.ON_CHANGE, preserveBrightness);
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

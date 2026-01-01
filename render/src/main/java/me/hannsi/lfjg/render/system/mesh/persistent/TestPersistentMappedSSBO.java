@@ -45,12 +45,12 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
     public void allocationBufferStorage(long capacity) {
         gpuMemorySize = capacity;
         if (bufferId != 0) {
-            GL_STATE_CACHE.deleteShaderStorageBuffer(bufferId);
+            glStateCache.deleteShaderStorageBuffer(bufferId);
             bufferId = 0;
         }
 
         bufferId = glGenBuffers();
-        GL_STATE_CACHE.bindShaderStorageBuffer(bufferId);
+        glStateCache.bindShaderStorageBuffer(bufferId);
         glBufferStorage(GL_SHADER_STORAGE_BUFFER, gpuMemorySize, flags);
 
         ByteBuffer byteBuffer = glMapBufferRange(
@@ -280,7 +280,7 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
         for (Map.Entry<Integer, TestPersistentMappedSSBO.SSBOBindingData> bindingDataEntry : bindingDatum.entrySet()) {
             TestPersistentMappedSSBO.SSBOBindingData ssboBindingData = bindingDataEntry.getValue();
 
-            GL_STATE_CACHE.bindBufferRange(GL_SHADER_STORAGE_BUFFER, bindingDataEntry.getKey(), bufferId, ssboBindingData.offset, ssboBindingData.size);
+            glStateCache.bindBufferRange(GL_SHADER_STORAGE_BUFFER, bindingDataEntry.getKey(), bufferId, ssboBindingData.offset, ssboBindingData.size);
         }
         return this;
     }
@@ -310,7 +310,7 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
                 if (!unmapped) {
                     DebugLog.error(getClass(), "glUnmapBuffer returned false (may indicate corruption).");
                 }
-                GL_STATE_CACHE.deleteShaderStorageBuffer(bufferId);
+                glStateCache.deleteShaderStorageBuffer(bufferId);
                 bufferId = 0;
                 mappedAddress = 0;
 
@@ -325,7 +325,7 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
             }
         } else {
             glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-            GL_STATE_CACHE.deleteShaderStorageBuffer(bufferId);
+            glStateCache.deleteShaderStorageBuffer(bufferId);
             bufferId = 0;
             mappedAddress = 0;
 
@@ -364,7 +364,7 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
     @Override
     public void cleanup() {
         if (bufferId != 0) {
-            GL_STATE_CACHE.deleteShaderStorageBuffer(bufferId);
+            glStateCache.deleteShaderStorageBuffer(bufferId);
             bufferId = 0;
         }
         bindingDatum.clear();

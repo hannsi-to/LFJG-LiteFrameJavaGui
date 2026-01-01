@@ -7,7 +7,7 @@ import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Vector3f;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.SHADER_PROGRAM;
+import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class Glow extends EffectBase {
     private float intensity = 1.0f;
@@ -72,13 +72,13 @@ public class Glow extends EffectBase {
 
     @Override
     public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.GLOW.getId());
-        SHADER_PROGRAM.setUniform("glowIntensity", UploadUniformType.ON_CHANGE, intensity);
-        SHADER_PROGRAM.setUniform("glowThreshold", UploadUniformType.ON_CHANGE, threshold);
-        SHADER_PROGRAM.setUniform("glowSpread", UploadUniformType.ON_CHANGE, spread);
-        SHADER_PROGRAM.setUniform("glowColor", UploadUniformType.ON_CHANGE, new Vector3f(glowColor.getRedF(), glowColor.getGreenF(), glowColor.getBlueF()));
-        SHADER_PROGRAM.setUniform("glowUseOriginalColor", UploadUniformType.ON_CHANGE, useOriginalColor);
-        SHADER_PROGRAM.setUniform("glowOnly", UploadUniformType.ON_CHANGE, glowOnly);
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.GLOW.getId());
+        shaderProgram.setUniform("glowIntensity", UploadUniformType.ON_CHANGE, intensity);
+        shaderProgram.setUniform("glowThreshold", UploadUniformType.ON_CHANGE, threshold);
+        shaderProgram.setUniform("glowSpread", UploadUniformType.ON_CHANGE, spread);
+        shaderProgram.setUniform("glowColor", UploadUniformType.ON_CHANGE, new Vector3f(glowColor.getRedF(), glowColor.getGreenF(), glowColor.getBlueF()));
+        shaderProgram.setUniform("glowUseOriginalColor", UploadUniformType.ON_CHANGE, useOriginalColor);
+        shaderProgram.setUniform("glowOnly", UploadUniformType.ON_CHANGE, glowOnly);
 
         super.drawFrameBuffer(latestFrameBuffer);
     }

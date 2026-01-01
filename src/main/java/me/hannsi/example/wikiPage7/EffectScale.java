@@ -10,7 +10,7 @@ import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.TEXTURE_CACHE;
+import static me.hannsi.lfjg.render.LFJGRenderContext.textureCache;
 
 public class EffectScale implements LFJGFrame {
     Frame frame;
@@ -25,7 +25,7 @@ public class EffectScale implements LFJGFrame {
     public void init() {
         Core.init(frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), frame.getWindowWidth(), frame.getWindowHeight());
 
-        TEXTURE_CACHE.createCache("Test1", Location.fromResource("texture/test/test1.jpg"));
+        textureCache.createCache("Test1", Location.fromResource("texture/test/test1.jpg"));
 
         glRect1 = GLRect.createGLRect("GLRect1")
                 .x1_y1_color1_2p(0, 0, Color.of(0, 0, 0, 0))

@@ -99,7 +99,7 @@ public class TextRenderer {
     }
 
     public TextRenderer createMesh() {
-        MESH.addObject(
+        mesh.addObject(
                 TestMesh.Builder.createBuilder()
                         .drawType(DrawType.QUADS)
                         .blendType(BlendType.NORMAL)
@@ -189,14 +189,14 @@ public class TextRenderer {
     }
 
     public TextRenderer draw(String text) {
-        GL_STATE_CACHE.enable(GL_BLEND);
-        GL_STATE_CACHE.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        GL_STATE_CACHE.enable(GL_TEXTURE_2D);
-        GL_STATE_CACHE.activeTexture(GL_TEXTURE1);
-        GL_STATE_CACHE.bindTexture(GL_TEXTURE_2D, msdfTextureLoader.textureId);
+        glStateCache.enable(GL_BLEND);
+        glStateCache.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glStateCache.enable(GL_TEXTURE_2D);
+        glStateCache.activeTexture(GL_TEXTURE1);
+        glStateCache.bindTexture(GL_TEXTURE_2D, msdfTextureLoader.textureId);
 
-        SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.MSDF.getId());
-        SHADER_PROGRAM.setUniform("fontAtlas", UploadUniformType.ONCE, 1);
+        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.MSDF.getId());
+        shaderProgram.setUniform("fontAtlas", UploadUniformType.ONCE, 1);
 
         boolean code = false;
         TextFormatType textFormatType;
@@ -307,41 +307,41 @@ public class TextRenderer {
 
             if (!charState.skip) {
                 if (charState.italic) {
-                    SHADER_PROGRAM.setUniform("italicSkew", UploadUniformType.ON_CHANGE, 0.4f);
+                    shaderProgram.setUniform("italicSkew", UploadUniformType.ON_CHANGE, 0.4f);
                 } else {
-                    SHADER_PROGRAM.setUniform("italicSkew", UploadUniformType.ON_CHANGE, 0f);
+                    shaderProgram.setUniform("italicSkew", UploadUniformType.ON_CHANGE, 0f);
                 }
 
                 if (charState.bold) {
-                    SHADER_PROGRAM.setUniform("msdfBoldness", UploadUniformType.ON_CHANGE, -0.2f);
+                    shaderProgram.setUniform("msdfBoldness", UploadUniformType.ON_CHANGE, -0.2f);
                 } else {
-                    SHADER_PROGRAM.setUniform("msdfBoldness", UploadUniformType.ON_CHANGE, 0f);
+                    shaderProgram.setUniform("msdfBoldness", UploadUniformType.ON_CHANGE, 0f);
                 }
 
                 if (charState.ghost) {
-                    SHADER_PROGRAM.setUniform("msdfGhost", UploadUniformType.ON_CHANGE, -0.5f);
+                    shaderProgram.setUniform("msdfGhost", UploadUniformType.ON_CHANGE, -0.5f);
                 } else {
-                    SHADER_PROGRAM.setUniform("msdfGhost", UploadUniformType.ON_CHANGE, 0f);
+                    shaderProgram.setUniform("msdfGhost", UploadUniformType.ON_CHANGE, 0f);
                 }
 
                 if (charState.box) {
-                    SHADER_PROGRAM.setUniform("msdfBox", UploadUniformType.PER_FRAME, true);
-                    SHADER_PROGRAM.setUniform("msdfUVSize", UploadUniformType.PER_FRAME, new Vector4f(textMesh.uvs[0], textMesh.uvs[1], textMesh.uvs[2], textMesh.uvs[5]));
+                    shaderProgram.setUniform("msdfBox", UploadUniformType.PER_FRAME, true);
+                    shaderProgram.setUniform("msdfUVSize", UploadUniformType.PER_FRAME, new Vector4f(textMesh.uvs[0], textMesh.uvs[1], textMesh.uvs[2], textMesh.uvs[5]));
                 } else {
-                    SHADER_PROGRAM.setUniform("msdfBox", UploadUniformType.ON_CHANGE, false);
+                    shaderProgram.setUniform("msdfBox", UploadUniformType.ON_CHANGE, false);
                 }
 
                 if (charState.outLine) {
-                    SHADER_PROGRAM.setUniform("msdfOutline", UploadUniformType.ON_CHANGE, true);
-                    SHADER_PROGRAM.setUniform("msdfOutlineWidth", UploadUniformType.ONCE, 0f);
+                    shaderProgram.setUniform("msdfOutline", UploadUniformType.ON_CHANGE, true);
+                    shaderProgram.setUniform("msdfOutlineWidth", UploadUniformType.ONCE, 0f);
                 } else {
-                    SHADER_PROGRAM.setUniform("msdfOutline", UploadUniformType.ON_CHANGE, false);
+                    shaderProgram.setUniform("msdfOutline", UploadUniformType.ON_CHANGE, false);
                 }
 
                 float glyphYOffset = -glyph.getPlaneBounds().getBottom() * size;
                 modelMatrix.translate(cursorX + (charState.shadow ? size * 0.02f : 0), cursorY - bearingY + (charState.shadow ? size * 0.02f : 0) + glyphYOffset, 0).scale(size, size, 1);
-                SHADER_PROGRAM.setUniform("msdfFontColor", UploadUniformType.ON_CHANGE, charState.color);
-                SHADER_PROGRAM.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix);
+                shaderProgram.setUniform("msdfFontColor", UploadUniformType.ON_CHANGE, charState.color);
+                shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, modelMatrix);
                 vaoRendering.draw();
             }
 
@@ -417,14 +417,14 @@ public class TextRenderer {
                     throw new IllegalStateException("Unexpected value: " + data.lineType);
             }
 
-            SHADER_PROGRAM.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.OBJECT.getId());
-            SHADER_PROGRAM.setUniform("modelMatrix", UploadUniformType.PER_FRAME, lineMatrix.translate(x, y, 0).scale(width, thickness, 1));
-            SHADER_PROGRAM.setUniform("objectColor", UploadUniformType.PER_FRAME, data.color);
-            SHADER_PROGRAM.setUniform("objectReplaceColor", UploadUniformType.PER_FRAME, true);
+            shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.OBJECT.getId());
+            shaderProgram.setUniform("modelMatrix", UploadUniformType.PER_FRAME, lineMatrix.translate(x, y, 0).scale(width, thickness, 1));
+            shaderProgram.setUniform("objectColor", UploadUniformType.PER_FRAME, data.color);
+            shaderProgram.setUniform("objectReplaceColor", UploadUniformType.PER_FRAME, true);
 
             vaoRendering.draw();
 
-            SHADER_PROGRAM.setUniform("objectReplaceColor", UploadUniformType.PER_FRAME, false);
+            shaderProgram.setUniform("objectReplaceColor", UploadUniformType.PER_FRAME, false);
 
             lineMatrix = new Matrix4f(baseMatrix);
         }

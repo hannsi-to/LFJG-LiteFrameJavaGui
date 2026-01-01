@@ -9,7 +9,7 @@ import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.TEXTURE_CACHE;
+import static me.hannsi.lfjg.render.LFJGRenderContext.textureCache;
 
 public class TestScene5 implements IScene {
     public Scene scene;
@@ -48,7 +48,7 @@ public class TestScene5 implements IScene {
                 .createCache(glRect4);
 
 
-        TEXTURE_CACHE.createCache("Texture1", Location.fromResource("texture/test/test1.jpg"));
+        textureCache.createCache("Texture1", Location.fromResource("texture/test/test1.jpg"));
 
         effectCache = EffectCache.createEffectCache()
                 .createCache(
