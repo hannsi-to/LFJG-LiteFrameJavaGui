@@ -3,6 +3,8 @@ package me.hannsi.lfjg.render;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import org.joml.Vector4f;
 
+import static me.hannsi.lfjg.render.LFJGRenderContext.MAX_TEXTURE_SIZE;
+
 public class RenderSystemSetting {
     public static boolean MESH_DEBUG_DIRECT_DELETE_OBJECT_REINSERTION = false;
 
@@ -25,4 +27,8 @@ public class RenderSystemSetting {
 
     public static boolean VAO_RENDERING_FRONT_AND_BACK = false;
     public static float VAO_RENDERING_FRONT_AND_BACK_LINE_WIDTH = 0.1f;
+
+    public static int ATLAS_PACKER_ATLAS_WIDTH = MAX_TEXTURE_SIZE;
+    public static int ATLAS_PACKER_ATLAS_HEIGHT = MAX_TEXTURE_SIZE;
+    public static int ATLAS_PACKER_ATLAS_LAYER = 1;
 }

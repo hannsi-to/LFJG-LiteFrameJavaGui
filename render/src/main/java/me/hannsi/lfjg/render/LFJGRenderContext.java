@@ -8,6 +8,7 @@ import me.hannsi.lfjg.render.system.mesh.TestMesh;
 import me.hannsi.lfjg.render.system.mesh.persistent.*;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
+import me.hannsi.lfjg.render.system.rendering.texture.SparseTexture2DArray;
 import me.hannsi.lfjg.render.system.rendering.texture.atlas.AtlasPacker;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import me.hannsi.lfjg.render.uitl.id.GLObjectPool;
@@ -34,6 +35,7 @@ public class LFJGRenderContext {
     public static Matrix4f precomputedViewProjection3D;
     public static GLStateCache glStateCache;
     public static AtlasPacker atlasPacker;
+    public static SparseTexture2DArray sparseTexture2DArray;
     public static ShaderProgram shaderProgram;
     public static TestPersistentMappedVBO persistentMappedVBO;
     public static TestPersistentMappedEBO persistentMappedEBO;
@@ -65,6 +67,10 @@ public class LFJGRenderContext {
 
         glStateCache = new GLStateCache();
 
+        atlasPacker = new AtlasPacker(ATLAS_PACKER_ATLAS_WIDTH, ATLAS_PACKER_ATLAS_HEIGHT, ATLAS_PACKER_ATLAS_LAYER, 0, 0, 0);
+
+        sparseTexture2DArray = new SparseTexture2DArray(atlasPacker);
+
         shaderProgram = new ShaderProgram();
         shaderProgram.createVertexShader(Location.fromResource("shader/VertexShader.vsh"));
         shaderProgram.createFragmentShader(Location.fromResource("shader/FragmentShader.fsh"));
@@ -84,6 +90,7 @@ public class LFJGRenderContext {
 
 
         vaoRendering = new VAORendering();
+
 
         textureCache = TextureCache.createTextureCache();
     }
