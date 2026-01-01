@@ -3,21 +3,19 @@ package me.hannsi.lfjg.render.system.rendering.texture.atlas;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.utils.math.map.string2objectMap.LinkedString2ObjectMap;
 import me.hannsi.lfjg.render.debug.exceptions.texture.AtlasPackerException;
+import me.hannsi.lfjg.render.uitl.id.Id;
 
 import static me.hannsi.lfjg.core.utils.math.MathHelper.max;
 import static me.hannsi.lfjg.core.utils.math.MathHelper.min;
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
-import static org.lwjgl.opengl.GL11.GL_MAX_TEXTURE_SIZE;
-import static org.lwjgl.opengl.GL11.glGetInteger;
-import static org.lwjgl.opengl.GL30.GL_MAX_ARRAY_TEXTURE_LAYERS;
 
 public class AtlasPacker {
-    public static final int USE_MAX_TEXTURE_SIZE = -1;
     public static final int PADDING = 1;
     private final int atlasWidth;
     private final int atlasHeight;
     private final int atlasLayer;
     private final LinkedString2ObjectMap<Sprite> sprites;
+    private int currentSpriteIndex;
     private int currentX;
     private int currentY;
     private int currentLayer;
@@ -26,20 +24,17 @@ public class AtlasPacker {
     public AtlasPacker(int atlasWidth, int atlasHeight, int atlasLayer, int currentX, int currentY, int rowHeight) {
         this.sprites = new LinkedString2ObjectMap<>();
 
-        int maxAtlasSize = glGetInteger(GL_MAX_TEXTURE_SIZE);
-        atlasWidth = (atlasWidth == USE_MAX_TEXTURE_SIZE) ? maxAtlasSize : atlasWidth;
-        atlasHeight = (atlasHeight == USE_MAX_TEXTURE_SIZE) ? maxAtlasSize : atlasHeight;
         int oldW = atlasWidth;
         int oldH = atlasHeight;
-        atlasWidth = min(atlasWidth, maxAtlasSize);
-        atlasHeight = min(atlasHeight, maxAtlasSize);
+        atlasWidth = min(atlasWidth, MAX_TEXTURE_SIZE);
+        atlasHeight = min(atlasHeight, MAX_TEXTURE_SIZE);
         if (oldW != atlasWidth || oldH != atlasHeight) {
             DebugLog.warning(getClass(), "Atlas resized due to GPU limit. " + oldW + "x" + oldH + " -> " + atlasWidth + "x" + atlasHeight);
         }
         oldW = atlasWidth;
         oldH = atlasHeight;
-        atlasWidth = ((atlasWidth + PAGE_SIZE_X - 1) / PAGE_SIZE_X) * PAGE_SIZE_X;
-        atlasHeight = ((atlasHeight + PAGE_SIZE_Y - 1) / PAGE_SIZE_Y) * PAGE_SIZE_Y;
+        atlasWidth = ((atlasWidth + VIRTUAL_PAGE_SIZE_X - 1) / VIRTUAL_PAGE_SIZE_X) * VIRTUAL_PAGE_SIZE_X;
+        atlasHeight = ((atlasHeight + VIRTUAL_PAGE_SIZE_Y - 1) / VIRTUAL_PAGE_SIZE_Y) * VIRTUAL_PAGE_SIZE_Y;
         if (oldW != atlasWidth || oldH != atlasHeight) {
             DebugLog.info(getClass(), "Atlas size aligned for Sparse Texture: " + oldW + "x" + oldH + " -> " + atlasWidth + "x" + atlasHeight);
         }
@@ -47,19 +42,14 @@ public class AtlasPacker {
         this.atlasWidth = atlasWidth;
         this.atlasHeight = atlasHeight;
 
-        long totalBytes = (long) atlasWidth * atlasHeight * 4;
-        if (totalBytes > Integer.MAX_VALUE) {
-            throw new AtlasPackerException("The requested atlas size is too large for Java ByteBuffer! " + "Requested: " + totalBytes + " bytes, Max: " + Integer.MAX_VALUE);
-        }
-
-        int maxTextureLayers = glGetInteger(GL_MAX_ARRAY_TEXTURE_LAYERS);
-        if (atlasLayer > maxTextureLayers) {
-            DebugLog.warning(getClass(), "Requested layers: " + atlasLayer + " exceeds GPU limit: " + maxTextureLayers + " Setting layer: " + maxTextureLayers);
-            this.atlasLayer = maxTextureLayers;
+        if (atlasLayer > MAX_ARRAY_TEXTURE_LAYERS) {
+            DebugLog.warning(getClass(), "Requested layers: " + atlasLayer + " exceeds GPU limit: " + MAX_ARRAY_TEXTURE_LAYERS + " Setting layer: " + MAX_ARRAY_TEXTURE_LAYERS);
+            this.atlasLayer = MAX_ARRAY_TEXTURE_LAYERS;
         } else {
             this.atlasLayer = max(1, atlasLayer);
         }
 
+        this.currentSpriteIndex = Id.initialSpriteIndexId;
         this.currentX = currentX;
         this.currentY = currentY;
         this.rowHeight = rowHeight;
@@ -68,6 +58,8 @@ public class AtlasPacker {
     public AtlasPacker addSprite(String name, Sprite sprite) {
         int textureWidth = sprite.width;
         int textureHeight = sprite.height;
+        sprite.setSpriteIndex(currentSpriteIndex);
+        currentSpriteIndex++;
         if (textureWidth + PADDING <= atlasWidth && textureHeight + PADDING <= atlasHeight) {
             sprites.put(name, sprite);
         } else {
@@ -83,7 +75,7 @@ public class AtlasPacker {
         this.currentLayer = 0;
         this.rowHeight = 0;
 
-        PERSISTENT_MAPPED_SSBO.resetBindingPoint(1);
+        persistentMappedSSBO.resetBindingPoint(1);
 
         final float INSET = 0.5f;
         final int BYTES_PER_PIXEL = 4;
@@ -124,11 +116,11 @@ public class AtlasPacker {
             float uvW = (sprite.width - (2 * INSET)) * invW;
             float uvH = (sprite.height - (2 * INSET)) * invH;
 
-            PERSISTENT_MAPPED_SSBO.addVec4(1, uvX, uvY, uvW, uvH);
-            PERSISTENT_MAPPED_SSBO.addFloat(1, currentLayer);
-            PERSISTENT_MAPPED_SSBO.addFloat(1, 0);
-            PERSISTENT_MAPPED_SSBO.addFloat(1, 0);
-            PERSISTENT_MAPPED_SSBO.addFloat(1, 0);
+            persistentMappedSSBO.addVec4(1, uvX, uvY, uvW, uvH);
+            persistentMappedSSBO.addFloat(1, currentLayer);
+            persistentMappedSSBO.addFloat(1, 0);
+            persistentMappedSSBO.addFloat(1, 0);
+            persistentMappedSSBO.addFloat(1, 0);
 
             currentX += sprite.width + PADDING;
             rowHeight = Math.max(rowHeight, sprite.height + PADDING);
@@ -149,21 +141,5 @@ public class AtlasPacker {
 
     public LinkedString2ObjectMap<Sprite> getSprites() {
         return sprites;
-    }
-
-    public int getCurrentX() {
-        return currentX;
-    }
-
-    public int getCurrentY() {
-        return currentY;
-    }
-
-    public int getCurrentLayer() {
-        return currentLayer;
-    }
-
-    public int getRowHeight() {
-        return rowHeight;
     }
 }
