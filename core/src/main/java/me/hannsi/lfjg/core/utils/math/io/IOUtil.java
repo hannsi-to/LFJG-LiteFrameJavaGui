@@ -21,6 +21,17 @@ import java.nio.file.Paths;
 import java.util.zip.GZIPInputStream;
 
 public class IOUtil extends Util {
+    public static ByteBuffer copyByteBuffer(ByteBuffer src, ByteBuffer dst) {
+        if (dst.remaining() < src.remaining()) {
+            throw new IllegalArgumentException("Destination buffer too small");
+        }
+
+        ByteBuffer srcCopy = src.duplicate();
+        dst.put(srcCopy);
+        dst.flip();
+        return dst;
+    }
+
     public static ByteBuffer convertBufferedImageToByteBuffer(BufferedImage image, boolean flipVertically) {
         int width = image.getWidth();
         int height = image.getHeight();
