@@ -5,19 +5,22 @@ import org.lwjgl.BufferUtils;
 import java.nio.ByteBuffer;
 
 import static me.hannsi.lfjg.core.utils.math.MathHelper.random;
+import static me.hannsi.lfjg.render.system.mesh.InstanceData.NO_ATTACH_TEXTURE;
 
 public class Sprite {
     public final int width;
     public final int height;
-    public final SpriteMemoryPolicy memoryPolicy;
+    public SpriteMemoryPolicy memoryPolicy;
     public ByteBuffer data;
     public boolean commited;
     public int offsetX;
     public int offsetY;
     public int offsetZ;
     public long address = -1;
+    private int spriteIndex;
 
     public Sprite(int width, int height, ByteBuffer data, SpriteMemoryPolicy memoryPolicy) {
+        this.spriteIndex = NO_ATTACH_TEXTURE;
         this.width = width;
         this.height = height;
         this.data = data;
@@ -52,5 +55,19 @@ public class Sprite {
         this.commited = commited;
 
         return this;
+    }
+
+    public Sprite setMemoryPolicy(SpriteMemoryPolicy memoryPolicy) {
+        this.memoryPolicy = memoryPolicy;
+
+        return this;
+    }
+
+    public int getSpriteIndex() {
+        return spriteIndex;
+    }
+
+    void setSpriteIndex(int spriteIndex) {
+        this.spriteIndex = spriteIndex;
     }
 }
