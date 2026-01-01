@@ -11,6 +11,7 @@ import java.nio.ByteBuffer;
 import java.util.Map;
 
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
+import static me.hannsi.lfjg.render.system.mesh.InstanceData.NO_ATTACH_TEXTURE;
 import static org.lwjgl.opengl.ARBSparseTexture.GL_TEXTURE_SPARSE_ARB;
 import static org.lwjgl.opengl.ARBSparseTexture.glTexPageCommitmentARB;
 import static org.lwjgl.opengl.GL11.*;
@@ -30,12 +31,12 @@ public class SparseTexture2DArray {
 
     public SparseTexture2DArray(AtlasPacker atlasPacker) {
         this.atlasPacker = atlasPacker;
-        this.width = Math.max(1, ((atlasPacker.getAtlasWidth() + PAGE_SIZE_X - 1) / PAGE_SIZE_X) * PAGE_SIZE_X);
-        this.height = Math.max(1, ((atlasPacker.getAtlasHeight() + PAGE_SIZE_Y - 1) / PAGE_SIZE_Y) * PAGE_SIZE_Y);
+        this.width = Math.max(1, ((atlasPacker.getAtlasWidth() + VIRTUAL_PAGE_SIZE_X - 1) / VIRTUAL_PAGE_SIZE_X) * VIRTUAL_PAGE_SIZE_X);
+        this.height = Math.max(1, ((atlasPacker.getAtlasHeight() + VIRTUAL_PAGE_SIZE_Y - 1) / VIRTUAL_PAGE_SIZE_Y) * VIRTUAL_PAGE_SIZE_Y);
         this.maxLayers = Math.max(1, atlasPacker.getAtlasLayer());
 
         this.textureId = glGenTextures();
-        GL_STATE_CACHE.bindTexture(GL_TEXTURE_2D_ARRAY, textureId);
+        glStateCache.bindTexture(GL_TEXTURE_2D_ARRAY, textureId);
 
         glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -51,18 +52,18 @@ public class SparseTexture2DArray {
     }
 
     public SparseTexture2DArray updateSprite(String name, ByteBuffer byteBuffer) {
-        Sprite sprite = getSpriteFormName(name);
+        Sprite sprite = getSpriteFromName(name);
 
-        GL_STATE_CACHE.bindTexture(GL_TEXTURE_2D_ARRAY, textureId);
-        GL_STATE_CACHE.bindPixelUnpackBuffer(PERSISTENT_MAPPED_PBO.getBufferId());
+        glStateCache.bindTexture(GL_TEXTURE_2D_ARRAY, textureId);
+        glStateCache.bindPixelUnpackBuffer(persistentMappedPBO.getBufferId());
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
         glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
         if (sprite.memoryPolicy == SpriteMemoryPolicy.STREAMING) {
-            PERSISTENT_MAPPED_PBO.updateSegment(PBO_SEGMENT_ID, sprite.address, byteBuffer);
+            persistentMappedPBO.updateSegment(PBO_SEGMENT_ID, sprite.address, byteBuffer);
 
-            long absoluteOffset = PERSISTENT_MAPPED_PBO.getSegmentOffset(PBO_SEGMENT_ID) + sprite.address;
+            long absoluteOffset = persistentMappedPBO.getSegmentOffset(PBO_SEGMENT_ID) + sprite.address;
             glTexSubImage3D(
                     GL_TEXTURE_2D_ARRAY,
                     0,
@@ -80,16 +81,16 @@ public class SparseTexture2DArray {
             DebugLog.warning(getClass(), "When updating information using the updateSprite method, the " + SpriteMemoryPolicy.class.getSimpleName() + " within the Sprite(" + name + ") must be set to " + SpriteMemoryPolicy.STREAMING.getName() + ".");
         }
 
-        GL_STATE_CACHE.bindPixelUnpackBuffer(0);
+        glStateCache.bindPixelUnpackBuffer(0);
 
         return this;
     }
 
     public SparseTexture2DArray updateFromAtlas() {
-        GL_STATE_CACHE.bindTexture(GL_TEXTURE_2D_ARRAY, textureId);
+        glStateCache.bindTexture(GL_TEXTURE_2D_ARRAY, textureId);
 
-        PERSISTENT_MAPPED_PBO.resetSegment(PBO_SEGMENT_ID);
-        GL_STATE_CACHE.bindPixelUnpackBuffer(PERSISTENT_MAPPED_PBO.getBufferId());
+        persistentMappedPBO.resetSegment(PBO_SEGMENT_ID);
+        glStateCache.bindPixelUnpackBuffer(persistentMappedPBO.getBufferId());
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
@@ -98,7 +99,7 @@ public class SparseTexture2DArray {
             if (sprite.commited && sprite.data != null) {
                 sprite.data.rewind();
 
-                long offset = PERSISTENT_MAPPED_PBO.uploadToSegment(PBO_SEGMENT_ID, sprite.data);
+                long offset = persistentMappedPBO.uploadToSegment(PBO_SEGMENT_ID, sprite.data);
 
                 glTexSubImage3D(
                         GL_TEXTURE_2D_ARRAY,
@@ -129,19 +130,19 @@ public class SparseTexture2DArray {
             }
         });
 
-        GL_STATE_CACHE.bindPixelUnpackBuffer(0);
+        glStateCache.bindPixelUnpackBuffer(0);
 
         return this;
     }
 
     private void commitTexture(Sprite sprite, boolean state) {
-        GL_STATE_CACHE.bindTexture(GL_TEXTURE_2D_ARRAY, textureId);
+        glStateCache.bindTexture(GL_TEXTURE_2D_ARRAY, textureId);
 
-        int alignedX = (sprite.offsetX / PAGE_SIZE_X) * PAGE_SIZE_X;
-        int alignedY = (sprite.offsetY / PAGE_SIZE_Y) * PAGE_SIZE_Y;
+        int alignedX = (sprite.offsetX / VIRTUAL_PAGE_SIZE_X) * VIRTUAL_PAGE_SIZE_X;
+        int alignedY = (sprite.offsetY / VIRTUAL_PAGE_SIZE_Y) * VIRTUAL_PAGE_SIZE_Y;
 
-        int endX = ((sprite.offsetX + sprite.width + PAGE_SIZE_X - 1) / PAGE_SIZE_X) * PAGE_SIZE_X;
-        int endY = ((sprite.offsetY + sprite.height + PAGE_SIZE_Y - 1) / PAGE_SIZE_Y) * PAGE_SIZE_Y;
+        int endX = ((sprite.offsetX + sprite.width + VIRTUAL_PAGE_SIZE_X - 1) / VIRTUAL_PAGE_SIZE_X) * VIRTUAL_PAGE_SIZE_X;
+        int endY = ((sprite.offsetY + sprite.height + VIRTUAL_PAGE_SIZE_Y - 1) / VIRTUAL_PAGE_SIZE_Y) * VIRTUAL_PAGE_SIZE_Y;
 
         int alignedWidth = endX - alignedX;
         int alignedHeight = endY - alignedY;
@@ -155,10 +156,10 @@ public class SparseTexture2DArray {
                 }
 
                 if (other.commited && other.offsetZ == sprite.offsetZ) {
-                    int oAlignedX = (other.offsetX / PAGE_SIZE_X) * PAGE_SIZE_X;
-                    int oAlignedY = (other.offsetY / PAGE_SIZE_Y) * PAGE_SIZE_Y;
-                    int oEndX = ((other.offsetX + other.width + PAGE_SIZE_X - 1) / PAGE_SIZE_X) * PAGE_SIZE_X;
-                    int oEndY = ((other.offsetY + other.height + PAGE_SIZE_Y - 1) / PAGE_SIZE_Y) * PAGE_SIZE_Y;
+                    int oAlignedX = (other.offsetX / VIRTUAL_PAGE_SIZE_X) * VIRTUAL_PAGE_SIZE_X;
+                    int oAlignedY = (other.offsetY / VIRTUAL_PAGE_SIZE_Y) * VIRTUAL_PAGE_SIZE_Y;
+                    int oEndX = ((other.offsetX + other.width + VIRTUAL_PAGE_SIZE_X - 1) / VIRTUAL_PAGE_SIZE_X) * VIRTUAL_PAGE_SIZE_X;
+                    int oEndY = ((other.offsetY + other.height + VIRTUAL_PAGE_SIZE_Y - 1) / VIRTUAL_PAGE_SIZE_Y) * VIRTUAL_PAGE_SIZE_Y;
 
                     boolean overlap = (alignedX < oEndX && endX > oAlignedX) && (alignedY < oEndY && endY > oAlignedY);
 
@@ -187,7 +188,7 @@ public class SparseTexture2DArray {
     }
 
     public SparseTexture2DArray commitTexture(String name, boolean state) {
-        Sprite sprite = getSpriteFormName(name);
+        Sprite sprite = getSpriteFromName(name);
         commitTexture(sprite, state);
 
         return this;
@@ -198,7 +199,7 @@ public class SparseTexture2DArray {
     }
 
     public boolean commitedTexture(String name, Ref<Sprite> pointerSprite) {
-        Sprite sprite = getSpriteFormName(name);
+        Sprite sprite = getSpriteFromName(name);
 
         if (pointerSprite != null) {
             pointerSprite.setValue(sprite);
@@ -207,7 +208,29 @@ public class SparseTexture2DArray {
         return sprite.commited;
     }
 
-    public Sprite getSpriteFormName(String name) {
+    public int[] getSpriteIndiesFromName(String... names) {
+        int[] indies = new int[names.length];
+        for (int i = 0; i < names.length; i++) {
+            indies[i] = getSpriteIndexFromName(names[i]);
+        }
+
+        return indies;
+    }
+
+    public int getSpriteIndexFromName(String name) {
+        Sprite sprite = getSpriteFromName(name);
+        if (sprite == null) {
+            return NO_ATTACH_TEXTURE;
+        }
+
+        if (!sprite.commited) {
+            return NO_ATTACH_TEXTURE;
+        }
+
+        return sprite.getSpriteIndex();
+    }
+
+    public Sprite getSpriteFromName(String name) {
         Sprite sprite = atlasPacker.getSprites().get(name);
         if (sprite == null) {
             DebugLog.error(getClass(), "The sprite registered under " + name + " does not exist.");
