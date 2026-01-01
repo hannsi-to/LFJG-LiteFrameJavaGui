@@ -17,7 +17,7 @@ public class InstanceData {
         this.transforms = new Transform[instanceCount];
         this.instanceColors = new Color[instanceCount];
 
-        Arrays.fill(transforms, new Transform(NO_ATTACH_TEXTURE));
+        Arrays.fill(transforms, Transform.createBuilder());
         Arrays.fill(instanceColors, defaultColor);
     }
 
