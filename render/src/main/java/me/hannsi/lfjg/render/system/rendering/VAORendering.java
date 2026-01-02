@@ -1,13 +1,13 @@
 package me.hannsi.lfjg.render.system.rendering;
 
 import me.hannsi.lfjg.render.renderers.BlendType;
+import me.hannsi.lfjg.render.system.mesh.BlendGroup;
 import me.hannsi.lfjg.render.system.mesh.GLObjectData;
 
 import java.util.Map;
 
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
-import static me.hannsi.lfjg.render.RenderSystemSetting.VAO_RENDERING_FRONT_AND_BACK;
-import static me.hannsi.lfjg.render.RenderSystemSetting.VAO_RENDERING_FRONT_AND_BACK_LINE_WIDTH;
+import static me.hannsi.lfjg.render.RenderSystemSetting.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL43.glMultiDrawElementsIndirect;
 
@@ -23,6 +23,11 @@ public class VAORendering {
         } else {
             glStateCache.polygonMode(GL_FRONT_AND_BACK, GL_FILL);
             glStateCache.lineWidth(1.0f);
+        }
+
+        if (mesh.isNeedRepack()) {
+            mesh.directDeleteObjects();
+            mesh.setNeedRepack(false);
         }
 
         for (Map.Entry<Integer, GLObjectData> entry : glObjectPool.getObjects().entrySet()) {
@@ -54,13 +59,25 @@ public class VAORendering {
         persistentMappedSSBO.syncToGPU();
         persistentMappedPBO.syncToGPU();
 
-        glMultiDrawElementsIndirect(
-                DrawType.TRIANGLES.getId(),
-                GL_UNSIGNED_INT,
-                0,
-                persistentMappedIBO.getCommandCount(),
-                0
-        );
+        for (BlendType type : MESH_RENDER_BLEND_ORDER) {
+            BlendGroup group = mesh.getBlendGroups().get(type);
+
+            if (group == null || group.commandCount() == 0) {
+                continue;
+            }
+
+            applyBlendState(type);
+
+            long offset = group.startCommandIndex() * 20L;
+
+            glMultiDrawElementsIndirect(
+                    DrawType.TRIANGLES.getId(),
+                    GL_UNSIGNED_INT,
+                    offset,
+                    group.commandCount(),
+                    0
+            );
+        }
     }
 
     public void pop() {

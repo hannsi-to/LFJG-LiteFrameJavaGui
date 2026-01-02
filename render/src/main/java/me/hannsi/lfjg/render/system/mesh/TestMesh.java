@@ -15,10 +15,13 @@ import java.util.*;
 import static me.hannsi.lfjg.core.utils.math.MathHelper.max;
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
 import static me.hannsi.lfjg.render.RenderSystemSetting.MESH_DEBUG_DIRECT_DELETE_OBJECT_REINSERTION;
+import static me.hannsi.lfjg.render.RenderSystemSetting.MESH_RENDER_BLEND_ORDER;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class TestMesh {
     private final int vaoId;
+    private final Map<BlendType, BlendGroup> blendGroups;
+    private boolean needRepack;
     private int initialVBOCapacity;
     private int initialEBOCapacity;
     private int initialIBOCapacity;
@@ -27,6 +30,8 @@ public class TestMesh {
 
     TestMesh(int initialVBOCapacity, int initialEBOCapacity, int initialIBOCapacity) {
         this.vaoId = glGenVertexArrays();
+        this.blendGroups = new HashMap<>();
+        this.needRepack = false;
 
         this.initialVBOCapacity = initialVBOCapacity;
         this.initialEBOCapacity = initialEBOCapacity;
@@ -87,6 +92,8 @@ public class TestMesh {
             builder.objectIdPointer.setValue(id);
         }
 
+        needRepack = true;
+
         return this;
     }
 
@@ -141,6 +148,12 @@ public class TestMesh {
             entryObject.put(objectEntry.getKey(), objectEntry.getValue());
         }
 
+        Map<BlendType, List<Map.Entry<Integer, GLObjectData>>> groupedObjects = new EnumMap<>(BlendType.class);
+        for (Map.Entry<Integer, GLObjectData> entry : entryObject.entrySet()) {
+            BlendType type = entry.getValue().builder.getBlendType();
+            groupedObjects.computeIfAbsent(type, k -> new ArrayList<>()).add(entry);
+        }
+
         glObjectPool.clearObjects();
         glObjectPool.clearDeletedObjects();
 
@@ -190,39 +203,61 @@ public class TestMesh {
                 .kvHex("New VBO Address", persistentMappedVBO.getMappedAddress())
                 .logging(getClass(), DebugLevel.INFO);
 
+        blendGroups.clear();
+
         vertexCount = 0;
 
-        for (Map.Entry<Integer, GLObjectData> entry : entryObject.entrySet()) {
-            GLObjectData oldGlObjectData = entry.getValue();
-
-            int baseInstance = persistentMappedSSBO.getDataCount(2);
-            int baseVertex = vertexCount;
-            int startOffset = writeGeometry(oldGlObjectData.elementPair);
-            writeInstanceData(oldGlObjectData.builder);
-
-            DrawElementsIndirectCommand newCommand = writeIndirectCommand(
-                    oldGlObjectData.elementPair.indices.length,
-                    oldGlObjectData.builder.instanceData.instanceCount,
-                    startOffset,
-                    baseVertex,
-                    baseInstance
-            );
-
-            glObjectPool.createObject(entry.getKey(), new GLObjectData(newCommand, oldGlObjectData.builder, persistentMappedIBO.getCommandCount() - 1, oldGlObjectData.elementPair));
-
-            if (oldGlObjectData.builder.objectIdPointer != null) {
-                oldGlObjectData.builder.objectIdPointer.setValue(entry.getKey());
+        for (BlendType type : MESH_RENDER_BLEND_ORDER) {
+            List<Map.Entry<Integer, GLObjectData>> list = groupedObjects.get(type);
+            if (list == null || list.isEmpty()) {
+                continue;
             }
 
-            if (MESH_DEBUG_DIRECT_DELETE_OBJECT_REINSERTION) {
-                new LogGenerator("Object Reinsertion")
-                        .kv("ObjectId", entry.getKey())
-                        .kv("Old BaseVertex", oldGlObjectData.drawElementsIndirectCommand.baseVertex)
-                        .kv("New BaseVertex", baseVertex)
-                        .kv("Old IndexOffset", oldGlObjectData.drawElementsIndirectCommand.firstIndex)
-                        .kv("New IndexOffset", startOffset)
-                        .logging(getClass(), DebugLevel.DEBUG);
+            int startCommandIndex = persistentMappedIBO.getCommandCount();
+            list.sort(Comparator.comparingInt(e -> e.getValue().builder.getRenderOrder()));
+            for (Map.Entry<Integer, GLObjectData> entry : list) {
+                GLObjectData oldGlObjectData = entry.getValue();
+                oldGlObjectData.builder.instanceData.getTransforms()[0].setZ(oldGlObjectData.builder.getRenderOrder() * 0.0000001f);
+
+                int baseInstance = persistentMappedSSBO.getDataCount(2);
+                int baseVertex = vertexCount;
+                int startOffset = writeGeometry(oldGlObjectData.elementPair);
+
+                writeInstanceData(oldGlObjectData.builder);
+
+                DrawElementsIndirectCommand newCommand = writeIndirectCommand(
+                        oldGlObjectData.elementPair.indices.length,
+                        oldGlObjectData.builder.instanceData.instanceCount,
+                        startOffset,
+                        baseVertex,
+                        baseInstance
+                );
+
+                int newIBOIndex = persistentMappedIBO.getCommandCount() - 1;
+                glObjectPool.createObject(entry.getKey(), new GLObjectData(
+                        newCommand,
+                        oldGlObjectData.builder,
+                        newIBOIndex,
+                        oldGlObjectData.elementPair
+                ));
+
+                if (oldGlObjectData.builder.objectIdPointer != null) {
+                    oldGlObjectData.builder.objectIdPointer.setValue(entry.getKey());
+                }
+
+                if (MESH_DEBUG_DIRECT_DELETE_OBJECT_REINSERTION) {
+                    new LogGenerator("Object Reinsertion")
+                            .kv("ObjectId", entry.getKey())
+                            .kv("Old BaseVertex", oldGlObjectData.drawElementsIndirectCommand.baseVertex)
+                            .kv("New BaseVertex", baseVertex)
+                            .kv("Old IndexOffset", oldGlObjectData.drawElementsIndirectCommand.firstIndex)
+                            .kv("New IndexOffset", startOffset)
+                            .logging(getClass(), DebugLevel.DEBUG);
+                }
             }
+
+            int count = persistentMappedIBO.getCommandCount() - startCommandIndex;
+            blendGroups.put(type, new BlendGroup(startCommandIndex, count));
         }
 
         initBufferObject();
@@ -385,6 +420,18 @@ public class TestMesh {
 
     public int getInitialIBOCapacity() {
         return initialIBOCapacity;
+    }
+
+    public boolean isNeedRepack() {
+        return needRepack;
+    }
+
+    public void setNeedRepack(boolean needRepack) {
+        this.needRepack = needRepack;
+    }
+
+    public Map<BlendType, BlendGroup> getBlendGroups() {
+        return blendGroups;
     }
 
     public TestMesh rotate() {
