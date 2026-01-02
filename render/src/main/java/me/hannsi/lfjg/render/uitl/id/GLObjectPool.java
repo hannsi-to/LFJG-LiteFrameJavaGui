@@ -81,9 +81,7 @@ public class GLObjectPool {
     }
 
     private long calculateBytes(GLObjectData data) {
-        return (long) data.elementPair.vertices.length * MeshConstants.FLOATS_PER_VERTEX * Float.BYTES +
-                (long) data.elementPair.indices.length * Float.BYTES +
-                DrawElementsIndirectCommand.BYTES;
+        return (long) data.elementPair.vertices.length * MeshConstants.FLOATS_PER_VERTEX * Float.BYTES + (long) data.elementPair.indices.length * Float.BYTES + DrawElementsIndirectCommand.BYTES;
     }
 
     public Map<Integer, GLObjectData> getObjects() {
