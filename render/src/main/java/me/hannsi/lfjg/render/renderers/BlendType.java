@@ -9,9 +9,8 @@ import static org.lwjgl.opengl.GL14.*;
  * Enumeration representing different types of blend modes.
  */
 public enum BlendType implements IEnumTypeBase {
-    NORMAL(0, "Normal", false, GL_ONE, GL_ZERO, GL_ONE, GL_ZERO, GL_FUNC_ADD, GL_FUNC_ADD, false, false),
-    ALPHA(1, "Alpha", true, GL_ONE, GL_ZERO, GL_ONE, GL_ZERO, GL_FUNC_ADD, GL_FUNC_ADD, false, false),
-    //    ALPHA(1, "Alpha", true, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD, GL_FUNC_ADD, true, true),
+    NORMAL(0, "Normal", false, GL_ONE, GL_ZERO, GL_ONE, GL_ZERO, GL_FUNC_ADD, GL_FUNC_ADD, true, true),
+    ALPHA(1, "Alpha", true, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD, GL_FUNC_ADD, true, true),
     ADD(2, "Add", true, GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE, GL_FUNC_ADD, GL_FUNC_ADD, true, true),
     MULTIPLY(3, "Multiply", true, GL_DST_COLOR, GL_ZERO, GL_DST_ALPHA, GL_ZERO, GL_FUNC_ADD, GL_FUNC_ADD, true, true),
     SCREEN(4, "Screen", true, GL_ONE, GL_ONE_MINUS_SRC_COLOR, GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD, GL_FUNC_ADD, true, true),
