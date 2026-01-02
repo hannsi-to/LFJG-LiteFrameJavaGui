@@ -25,7 +25,7 @@ void main() {
     vec4 baseColor;
 
     if (vSpriteIndex == NO_ATTACH_TEXTURE) {
-        baseColor = vColor * vSpriteColor;
+        baseColor = vColor;
     } else {
         vec4 uvRect = spriteData.data[vSpriteIndex].rect;
         float layer = spriteData.data[vSpriteIndex].layer;
@@ -33,5 +33,5 @@ void main() {
         baseColor = texture(uTexArray, vec3(uv, layer));
     }
 
-    fragColor = baseColor;
+    fragColor = baseColor * vSpriteColor;
 }
