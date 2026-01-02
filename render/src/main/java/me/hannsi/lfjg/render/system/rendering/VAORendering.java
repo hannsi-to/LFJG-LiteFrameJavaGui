@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.render.system.rendering;
 
+import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.system.mesh.GLObjectData;
 
 import java.util.Map;
@@ -44,6 +45,8 @@ public class VAORendering {
         glStateCache.bindVertexArray(mesh.getVaoId());
         glStateCache.bindElementArrayBuffer(persistentMappedEBO.getBufferId());
         glStateCache.bindIndirectBuffer(persistentMappedIBO.getBufferId());
+        glStateCache.enable(GL_DEPTH_TEST);
+        glStateCache.depthFunc(GL_LESS);
 
         persistentMappedVBO.syncToGPU();
         persistentMappedEBO.syncToGPU();
@@ -62,5 +65,23 @@ public class VAORendering {
 
     public void pop() {
 
+    }
+
+    private void applyBlendState(BlendType type) {
+        if (type.isBlend()) {
+            glStateCache.enable(GL_BLEND);
+            glStateCache.blendFuncSeparate(type.getSrcRGB(), type.getDstRGB(), type.getSrcA(), type.getDstA());
+            glStateCache.blendEquationSeparate(type.getEqRGB(), type.getEqA());
+        } else {
+            glStateCache.disable(GL_BLEND);
+        }
+
+        if (type.isDepthTest()) {
+            glStateCache.enable(GL_DEPTH_TEST);
+        } else {
+            glStateCache.disable(GL_DEPTH_TEST);
+        }
+
+        glStateCache.depthMask(type.isDepthWrite());
     }
 }

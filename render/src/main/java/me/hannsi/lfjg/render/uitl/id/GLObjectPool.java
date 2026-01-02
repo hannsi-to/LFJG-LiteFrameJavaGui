@@ -4,7 +4,7 @@ import me.hannsi.lfjg.render.system.mesh.DrawElementsIndirectCommand;
 import me.hannsi.lfjg.render.system.mesh.GLObjectData;
 import me.hannsi.lfjg.render.system.mesh.MeshConstants;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static me.hannsi.lfjg.render.LFJGRenderContext.mesh;
@@ -18,8 +18,8 @@ public class GLObjectPool {
     private long deletedBytes = 0;
 
     public GLObjectPool() {
-        this.objects = new HashMap<>();
-        this.deletedObjects = new HashMap<>();
+        this.objects = new LinkedHashMap<>();
+        this.deletedObjects = new LinkedHashMap<>();
         this.idPool = new IdPool();
     }
 

@@ -24,17 +24,16 @@ public class TestMesh {
     private int initialIBOCapacity;
     private int currentIndex;
     private int vertexCount;
-    private int instanceCount;
 
     TestMesh(int initialVBOCapacity, int initialEBOCapacity, int initialIBOCapacity) {
+        this.vaoId = glGenVertexArrays();
+
         this.initialVBOCapacity = initialVBOCapacity;
         this.initialEBOCapacity = initialEBOCapacity;
         this.initialIBOCapacity = initialIBOCapacity;
 
-        this.vaoId = glGenVertexArrays();
         this.currentIndex = 0;
         this.vertexCount = 0;
-        this.instanceCount = 0;
     }
 
     public static TestMesh createMesh(int initialVBOCapacity, int initialEBOCapacity, int initialIBOCapacity) {
@@ -67,15 +66,17 @@ public class TestMesh {
                 .process()
                 .getResult();
 
+        int baseInstance = persistentMappedSSBO.getDataCount(2);
         int baseVertex = vertexCount;
         int startOffset = writeGeometry(elementPair);
-        writeInstanceData(builder.instanceData);
+        writeInstanceData(builder);
 
         DrawElementsIndirectCommand command = writeIndirectCommand(
                 elementPair.indices.length,
                 builder.instanceData.instanceCount,
                 startOffset,
-                baseVertex
+                baseVertex,
+                baseInstance
         );
 
         int id = glObjectPool.createId(new GLObjectData(
@@ -174,7 +175,6 @@ public class TestMesh {
         persistentMappedEBO.cleanup();
         persistentMappedIBO.cleanup();
         persistentMappedSSBO.resetBindingPoint(2);
-        persistentMappedSSBO.resetBindingPoint(3);
 
         persistentMappedVBO.allocationBufferStorage(persistentMappedVBO.getVerticesSizeByte(initialVBOCapacity));
         persistentMappedEBO.allocationBufferStorage(persistentMappedEBO.getIndicesSizeByte(initialEBOCapacity));
@@ -191,20 +191,21 @@ public class TestMesh {
                 .logging(getClass(), DebugLevel.INFO);
 
         vertexCount = 0;
-        instanceCount = 0;
 
         for (Map.Entry<Integer, GLObjectData> entry : entryObject.entrySet()) {
             GLObjectData oldGlObjectData = entry.getValue();
 
+            int baseInstance = persistentMappedSSBO.getDataCount(2);
             int baseVertex = vertexCount;
             int startOffset = writeGeometry(oldGlObjectData.elementPair);
-            writeInstanceData(oldGlObjectData.builder.instanceData);
+            writeInstanceData(oldGlObjectData.builder);
 
             DrawElementsIndirectCommand newCommand = writeIndirectCommand(
                     oldGlObjectData.elementPair.indices.length,
                     oldGlObjectData.builder.instanceData.instanceCount,
                     startOffset,
-                    baseVertex
+                    baseVertex,
+                    baseInstance
             );
 
             glObjectPool.createObject(entry.getKey(), new GLObjectData(newCommand, oldGlObjectData.builder, persistentMappedIBO.getCommandCount() - 1, oldGlObjectData.elementPair));
@@ -257,8 +258,10 @@ public class TestMesh {
         return this;
     }
 
-    private void writeInstanceData(InstanceData instanceData) {
+    private void writeInstanceData(Builder builder) {
+        InstanceData instanceData = builder.instanceData;
         for (int i = 0; i < instanceData.instanceCount; i++) {
+            instanceData.getTransforms()[i].setZ(builder.renderOrder * 0.0000001f);
             persistentMappedSSBO.addObjectParameter(2, instanceData.getTransforms()[i]);
         }
     }
@@ -277,20 +280,21 @@ public class TestMesh {
             persistentMappedSSBO.updateObjectParameter(2, baseInstanceIndex + i, newInstanceData.getTransforms()[i]);
         }
 
+        glObjectData.builder.instanceData = newInstanceData;
+
         return this;
     }
 
-    private DrawElementsIndirectCommand writeIndirectCommand(int indexCount, int instanceCountPerObj, int firstIndex, int baseVertex) {
+    private DrawElementsIndirectCommand writeIndirectCommand(int indexCount, int instanceCountPerObj, int firstIndex, int baseVertex, int instanceCount) {
         DrawElementsIndirectCommand command = new DrawElementsIndirectCommand(
                 indexCount,
                 instanceCountPerObj,
                 firstIndex,
                 baseVertex,
-                this.instanceCount
+                instanceCount
         );
 
         persistentMappedIBO.add(command);
-        this.instanceCount += instanceCountPerObj;
         return command;
     }
 
@@ -407,6 +411,7 @@ public class TestMesh {
         private PointType pointType = PointType.SQUARE;
         private InstanceData instanceData = new InstanceData(1);
         private ProjectionType projectionType = ProjectionType.ORTHOGRAPHIC_PROJECTION;
+        private int renderOrder = 0;
 
         Builder() {
         }
@@ -475,6 +480,12 @@ public class TestMesh {
             return this;
         }
 
+        public Builder renderOrder(int renderOrder) {
+            this.renderOrder = renderOrder;
+
+            return this;
+        }
+
         public IntRef getObjectIdPointer() {
             return objectIdPointer;
         }
@@ -513,6 +524,10 @@ public class TestMesh {
 
         public ProjectionType getProjectionType() {
             return projectionType;
+        }
+
+        public int getRenderOrder() {
+            return renderOrder;
         }
     }
 }

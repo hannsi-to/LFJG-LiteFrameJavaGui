@@ -350,6 +350,7 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
         SSBOBindingData ssboData = bindingDatum.get(bindingPoint);
 
         if (ssboData != null) {
+            ssboData.offset = 0;
             ssboData.dataCount = 0;
         } else {
             new LogGenerator("SSBO Reset Info")
@@ -359,6 +360,11 @@ public class TestPersistentMappedSSBO implements TestPersistentMappedBuffer {
         }
 
         return this;
+    }
+
+    public int getDataCount(int bindingPoint) {
+        SSBOBindingData data = bindingDatum.get(bindingPoint);
+        return (data != null) ? data.dataCount : 0;
     }
 
     @Override
