@@ -2,14 +2,33 @@ package me.hannsi.lfjg.render;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
+import me.hannsi.lfjg.render.renderers.BlendType;
 import org.joml.Vector4f;
 
 import static me.hannsi.lfjg.render.LFJGRenderContext.MAX_TEXTURE_SIZE;
 import static me.hannsi.lfjg.render.LFJGRenderContext.NO_ATTACH_TEXTURE;
 
 public class RenderSystemSetting {
+    public static final BlendType[] MESH_RENDER_BLEND_ORDER = {
+            BlendType.NORMAL,
+            BlendType.COLOR_ONLY,
+            BlendType.DARKEN,
+            BlendType.MIN,
+            BlendType.SUBTRACT,
+            BlendType.SUBTRACT_NORMAL,
+            BlendType.INVERT,
+            BlendType.ALPHA,
+            BlendType.PREMULTIPLIED_ALPHA,
+            BlendType.MULTIPLY,
+            BlendType.MULTIPLY_ALPHA,
+            BlendType.LIGHTEN,
+            BlendType.MAX,
+            BlendType.ADD,
+            BlendType.ADD_NO_ALPHA,
+            BlendType.SCREEN,
+            BlendType.ALPHA_ONLY
+    };
     public static boolean MESH_DEBUG_DIRECT_DELETE_OBJECT_REINSERTION = false;
-
     public static ProjectionType MESH_CONSTANTS_DEFAULT_PROJECTION_TYPE = ProjectionType.ORTHOGRAPHIC_PROJECTION;
     public static int MESH_CONSTANTS_BUFFER_COUNT = 3;
 
