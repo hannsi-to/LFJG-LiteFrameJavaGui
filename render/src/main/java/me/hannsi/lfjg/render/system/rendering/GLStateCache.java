@@ -37,6 +37,12 @@ public class GLStateCache {
     private int lastBlendSrc = -1;
     private int lastBlendDst = -1;
     private int lastBlendEquation = -1;
+    private int lastBlendFuncSeparateSFactorRGB = -1;
+    private int lastBlendFuncSeparateDFactorRGB = -1;
+    private int lastBlendFuncSeparateSFactorAlpha = -1;
+    private int lastBlendFuncSeparateDFactorAlpha = -1;
+    private int lastBlendEquationSeparateModeRGB;
+    private int lastBlendEquationSeparateModeAlpha;
     private int lastActiveTexture = -1;
     private int lastShaderProgram = -1;
     private int lastFrameBuffer = -1;
@@ -94,12 +100,32 @@ public class GLStateCache {
         lastBlendDst = dFactor;
     }
 
-    public void setBlendEquation(int equation) {
+    public void blendEquation(int equation) {
         if (lastBlendEquation == equation) {
             return;
         }
         glBlendEquation(equation);
         lastBlendEquation = equation;
+    }
+
+    public void blendFuncSeparate(int sfactorRGB, int dfactorRGB, int sfactorAlpha, int dfactorAlpha) {
+        if (lastBlendFuncSeparateSFactorRGB == sfactorRGB && lastBlendFuncSeparateDFactorRGB == dfactorRGB && lastBlendFuncSeparateSFactorAlpha == sfactorAlpha && lastBlendFuncSeparateDFactorAlpha == dfactorAlpha) {
+            return;
+        }
+        glBlendFuncSeparate(sfactorRGB, dfactorRGB, sfactorAlpha, dfactorAlpha);
+        lastBlendFuncSeparateSFactorRGB = sfactorRGB;
+        lastBlendFuncSeparateDFactorRGB = dfactorRGB;
+        lastBlendFuncSeparateSFactorAlpha = sfactorAlpha;
+        lastBlendFuncSeparateDFactorAlpha = dfactorAlpha;
+    }
+
+    public void blendEquationSeparate(int modeRGB, int modeAlpha) {
+        if (lastBlendEquationSeparateModeRGB == modeRGB && lastBlendEquationSeparateModeAlpha == modeAlpha) {
+            return;
+        }
+        glBlendEquationSeparate(modeRGB, modeAlpha);
+        lastBlendEquationSeparateModeRGB = modeRGB;
+        lastBlendEquationSeparateModeAlpha = modeAlpha;
     }
 
     public void activeTexture(int texture) {
@@ -620,6 +646,14 @@ public class GLStateCache {
             case "glBlendEquation":
                 lastBlendEquation = (int) args[0];
                 break;
+            case "glBlendFuncSeparate":
+                lastBlendFuncSeparateSFactorRGB = (int) args[0];
+                lastBlendFuncSeparateDFactorRGB = (int) args[1];
+                lastBlendFuncSeparateSFactorAlpha = (int) args[2];
+                lastBlendFuncSeparateDFactorAlpha = (int) args[3];
+            case "glBlendEquationSeparate":
+                lastBlendEquationSeparateModeRGB = (int) args[0];
+                lastBlendEquationSeparateModeAlpha = (int) args[1];
             case "glActiveTexture":
                 lastActiveTexture = (int) args[0];
                 break;
