@@ -472,8 +472,8 @@ public class Color {
 
     public void getToAddress(long address) {
         UNSAFE.putFloat(address, getRedF());
-        UNSAFE.putFloat(address + Float.BYTES, getRedF());
-        UNSAFE.putFloat(address + Float.BYTES * 2, getRedF());
-        UNSAFE.putFloat(address + Float.BYTES * 3, getRedF());
+        UNSAFE.putFloat(address + Float.BYTES, getGreenF());
+        UNSAFE.putFloat(address + Float.BYTES * 2, getBlueF());
+        UNSAFE.putFloat(address + Float.BYTES * 3, getAlphaF());
     }
 }
