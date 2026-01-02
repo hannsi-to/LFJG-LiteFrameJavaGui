@@ -1,70 +1,103 @@
 package me.hannsi.lfjg.render.renderers;
 
+import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
+
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL14.*;
 
 /**
  * Enumeration representing different types of blend modes.
  */
-public enum BlendType {
-    NORMAL("Normal", 0, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD),
-    ADD("Add", 1, GL_ONE, GL_ONE, GL_FUNC_ADD),
-    ALPHA_ADD("AlphaAdd", 2, GL_SRC_ALPHA, GL_ONE, GL_FUNC_ADD),
-    SUBTRACT("Subtract", 3, GL_ONE, GL_ONE, GL_FUNC_REVERSE_SUBTRACT),
-    REVERSE_SUBTRACT("ReverseSubtract", 4, GL_ONE, GL_ONE, GL_FUNC_SUBTRACT),
-    MULTIPLY("Multiply", 5, GL_DST_COLOR, GL_ZERO, GL_FUNC_ADD),
-    SCREEN("Screen", 6, GL_ONE, GL_ONE_MINUS_DST_COLOR, GL_FUNC_ADD),
-    LIGHTEN("Lighten", 7, GL_ONE, GL_ONE, GL_MAX),
-    DARKEN("Darken", 8, GL_ONE, GL_ONE, GL_MIN),
-    SHADE("Shade", 9, GL_DST_COLOR, GL_ZERO, GL_FUNC_ADD),
-    DIFFERENCE("Difference", 10, GL_ONE, GL_ONE, GL_FUNC_REVERSE_SUBTRACT),
-    EXCLUSION("Exclusion", 11, GL_ONE, GL_ONE, GL_FUNC_REVERSE_SUBTRACT),
-    DODGE("Dodge", 12, GL_ONE, GL_ONE_MINUS_SRC_COLOR, GL_FUNC_ADD),
-    BURN("Burn", 13, GL_ONE_MINUS_DST_COLOR, GL_ONE, GL_FUNC_ADD),
-    INVERT("Invert", 14, GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR, GL_FUNC_ADD),
-    PREMULTIPLIED_ALPHA("PremultipliedAlpha", 15, GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD),
-    HARD_MIX("HardMix", 16, GL_ONE, GL_ONE, GL_FUNC_ADD),
-    LINEAR_LIGHT("LinearLight", 17, GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD),
-    VIVID_LIGHT("VividLight", 18, GL_ONE, GL_ONE_MINUS_SRC_COLOR, GL_FUNC_ADD),
-    PIN_LIGHT("PinLight", 19, GL_ONE, GL_ONE_MINUS_SRC_COLOR, GL_FUNC_ADD),
-    HARD_LIGHT("HardLight", 20, GL_SRC_ALPHA, GL_DST_COLOR, GL_FUNC_ADD),
-    SOFT_LIGHT("SoftLight", 21, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD),
-    OVERLAY("Overlay", 22, GL_SRC_ALPHA, GL_ONE, GL_FUNC_ADD),
-    LUMINANCE("Luminance", 23, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD),
-    COLOR("Color", 24, GL_ONE, GL_ONE_MINUS_SRC_COLOR, GL_FUNC_ADD),
-    SATURATION("Saturation", 25, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD);
+public enum BlendType implements IEnumTypeBase {
+    NORMAL(0, "Normal", false, GL_ONE, GL_ZERO, GL_ONE, GL_ZERO, GL_FUNC_ADD, GL_FUNC_ADD, false, false),
+    ALPHA(1, "Alpha", true, GL_ONE, GL_ZERO, GL_ONE, GL_ZERO, GL_FUNC_ADD, GL_FUNC_ADD, false, false),
+    //    ALPHA(1, "Alpha", true, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD, GL_FUNC_ADD, true, true),
+    ADD(2, "Add", true, GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE, GL_FUNC_ADD, GL_FUNC_ADD, true, true),
+    MULTIPLY(3, "Multiply", true, GL_DST_COLOR, GL_ZERO, GL_DST_ALPHA, GL_ZERO, GL_FUNC_ADD, GL_FUNC_ADD, true, true),
+    SCREEN(4, "Screen", true, GL_ONE, GL_ONE_MINUS_SRC_COLOR, GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD, GL_FUNC_ADD, true, true),
+    SUBTRACT(5, "Subtract", true, GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE, GL_FUNC_REVERSE_SUBTRACT, GL_FUNC_ADD, true, true),
+    MAX(6, "Max", true, GL_ONE, GL_ONE, GL_ONE, GL_ONE, GL_MAX, GL_MAX, false, false),
+    MIN(7, "Min", true, GL_ONE, GL_ONE, GL_ONE, GL_ONE, GL_MIN, GL_MIN, false, false),
+    INVERT(8, "Invert", true, GL_ONE_MINUS_DST_COLOR, GL_ZERO, GL_ONE, GL_ZERO, GL_FUNC_ADD, GL_FUNC_ADD, true, true),
+    PREMULTIPLIED_ALPHA(9, "PremultipliedAlpha", true, GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD, GL_FUNC_ADD, true, true),
+    ADD_NO_ALPHA(10, "AddNoAlpha", true, GL_ONE, GL_ONE, GL_ONE, GL_ONE, GL_FUNC_ADD, GL_FUNC_ADD, true, true),
+    SUBTRACT_NORMAL(11, "SubtractNormal", true, GL_ONE, GL_ONE, GL_ONE, GL_ONE, GL_FUNC_SUBTRACT, GL_FUNC_SUBTRACT, true, true),
+    DARKEN(12, "Darken", true, GL_ONE, GL_ONE, GL_ONE, GL_ONE, GL_MIN, GL_MIN, true, true),
+    LIGHTEN(13, "Lighten", true, GL_ONE, GL_ONE, GL_ONE, GL_ONE, GL_MAX, GL_MAX, true, true),
+    COLOR_ONLY(14, "ColorOnly", true, GL_ONE, GL_ZERO, GL_ZERO, GL_ONE, GL_FUNC_ADD, GL_FUNC_ADD, true, true),
+    ALPHA_ONLY(15, "AlphaOnly", true, GL_ZERO, GL_ONE, GL_ONE, GL_ZERO, GL_FUNC_ADD, GL_FUNC_ADD, true, true),
+    MULTIPLY_ALPHA(16, "MultiplyAlpha", true, GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA, GL_DST_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD, GL_FUNC_ADD, true, true),
+    ;
 
     final int id;
     final String name;
-    final int sfactor;
-    final int dfactor;
-    final int equation;
+    final boolean blend;
+    final int srcRGB;
+    final int dstRGB;
+    final int srcA;
+    final int dstA;
+    final int eqRGB;
+    final int eqA;
+    final boolean depthWrite;
+    final boolean depthTest;
 
-    BlendType(String name, int id, int sfactor, int dfactor, int equation) {
+    BlendType(int id, String name, boolean blend, int srcRGB, int dstRGB, int srcA, int dstA, int eqRGB, int eqA, boolean depthWrite, boolean depthTest) {
         this.id = id;
         this.name = name;
-        this.sfactor = sfactor;
-        this.dfactor = dfactor;
-        this.equation = equation;
+        this.blend = blend;
+        this.srcRGB = srcRGB;
+        this.dstRGB = dstRGB;
+        this.srcA = srcA;
+        this.dstA = dstA;
+        this.eqRGB = eqRGB;
+        this.eqA = eqA;
+        this.depthWrite = depthWrite;
+        this.depthTest = depthTest;
     }
 
+    @Override
     public int getId() {
         return id;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
-    public int getSfactor() {
-        return sfactor;
+    public boolean isBlend() {
+        return blend;
     }
 
-    public int getDfactor() {
-        return dfactor;
+    public int getSrcRGB() {
+        return srcRGB;
     }
 
-    public int getEquation() {
-        return equation;
+    public int getDstRGB() {
+        return dstRGB;
+    }
+
+    public int getSrcA() {
+        return srcA;
+    }
+
+    public int getDstA() {
+        return dstA;
+    }
+
+    public int getEqRGB() {
+        return eqRGB;
+    }
+
+    public int getEqA() {
+        return eqA;
+    }
+
+    public boolean isDepthWrite() {
+        return depthWrite;
+    }
+
+    public boolean isDepthTest() {
+        return depthTest;
     }
 }
