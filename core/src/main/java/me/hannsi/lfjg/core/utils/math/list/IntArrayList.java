@@ -23,6 +23,10 @@ public final class IntArrayList {
         size = i + 1;
     }
 
+    public int get(int index) {
+        return data[index];
+    }
+
     public int size() {
         return size;
     }
