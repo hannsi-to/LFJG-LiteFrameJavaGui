@@ -139,17 +139,17 @@ public class TestMesh {
                 .kvBytes("EBO Size Before", persistentMappedEBO.getGPUMemorySize())
                 .logging(getClass(), DebugLevel.INFO);
 
-        Map<Integer, GLObjectData> entryObject = new HashMap<>();
+        Map<Integer, GLObjectData> aliveObjects = new HashMap<>();
         for (Map.Entry<Integer, GLObjectData> objectEntry : glObjectPool.getObjects().entrySet()) {
             if (glObjectPool.getDeletedObjects().containsKey(objectEntry.getKey())) {
                 continue;
             }
 
-            entryObject.put(objectEntry.getKey(), objectEntry.getValue());
+            aliveObjects.put(objectEntry.getKey(), objectEntry.getValue());
         }
 
         Map<BlendType, List<Map.Entry<Integer, GLObjectData>>> groupedObjects = new EnumMap<>(BlendType.class);
-        for (Map.Entry<Integer, GLObjectData> entry : entryObject.entrySet()) {
+        for (Map.Entry<Integer, GLObjectData> entry : aliveObjects.entrySet()) {
             BlendType type = entry.getValue().builder.getBlendType();
             groupedObjects.computeIfAbsent(type, k -> new ArrayList<>()).add(entry);
         }
@@ -160,7 +160,7 @@ public class TestMesh {
         int newVBOCapacity = 0;
         int newEBOCapacity = 0;
         int newIBOCapacity = 0;
-        for (Map.Entry<Integer, GLObjectData> entry : entryObject.entrySet()) {
+        for (Map.Entry<Integer, GLObjectData> entry : aliveObjects.entrySet()) {
             GLObjectData glObjectData = entry.getValue();
 
             newVBOCapacity += glObjectData.elementPair.vertices.length;
@@ -176,7 +176,7 @@ public class TestMesh {
         initialIBOCapacity = max(newIBOCapacity, initialIBOCapacity);
 
         new LogGenerator("Capacity Recalculation")
-                .kv("Retained Objects", entryObject.size())
+                .kv("Retained Objects", aliveObjects.size())
                 .kv("Required VBO Vertices", newVBOCapacity)
                 .kv("Required EBO Indices", newEBOCapacity)
                 .kv("New VBO Bytes", persistentMappedVBO.getVerticesSizeByte(initialVBOCapacity))
@@ -206,7 +206,6 @@ public class TestMesh {
         blendGroups.clear();
 
         vertexCount = 0;
-
         for (BlendType type : MESH_RENDER_BLEND_ORDER) {
             List<Map.Entry<Integer, GLObjectData>> list = groupedObjects.get(type);
             if (list == null || list.isEmpty()) {
