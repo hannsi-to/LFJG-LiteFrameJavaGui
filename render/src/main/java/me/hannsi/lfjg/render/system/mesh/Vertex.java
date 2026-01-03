@@ -5,6 +5,7 @@ import org.lwjgl.BufferUtils;
 import java.nio.FloatBuffer;
 
 public class Vertex {
+    public static final long BYTES = 3 * Float.BYTES + 4 * Float.BYTES + 2 * Float.BYTES + 3 * Float.BYTES;
     public float x;
     public float y;
     public float z;

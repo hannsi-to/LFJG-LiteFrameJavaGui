@@ -38,7 +38,7 @@ public class LFJGRenderContext {
     public static AtlasPacker atlasPacker;
     public static SparseTexture2DArray sparseTexture2DArray;
     public static ShaderProgram shaderProgram;
-    public static TestPersistentMappedVBO persistentMappedVBO;
+    public static Test2PersistentMappedVBO persistentMappedVBO;
     public static TestPersistentMappedEBO persistentMappedEBO;
     public static TestPersistentMappedIBO persistentMappedIBO;
     public static TestPersistentMappedSSBO persistentMappedSSBO;
@@ -77,7 +77,7 @@ public class LFJGRenderContext {
         shaderProgram.createFragmentShader(Location.fromResource("shader/FragmentShader.fsh"));
         shaderProgram.link();
 
-        persistentMappedVBO = new TestPersistentMappedVBO(MeshConstants.DEFAULT_FLAGS_HINT, LFJG_RENDER_CONTEXT_INITIAL_VBO_CAPACITY);
+        persistentMappedVBO = new Test2PersistentMappedVBO(MeshConstants.DEFAULT_FLAGS_HINT, LFJG_RENDER_CONTEXT_INITIAL_VBO_CAPACITY);
         persistentMappedEBO = new TestPersistentMappedEBO(MeshConstants.DEFAULT_FLAGS_HINT, LFJG_RENDER_CONTEXT_INITIAL_EBO_CAPACITY);
         persistentMappedIBO = new TestPersistentMappedIBO(MeshConstants.DEFAULT_FLAGS_HINT, LFJG_RENDER_CONTEXT_INITIAL_IBO_CAPACITY);
         persistentMappedSSBO = new TestPersistentMappedSSBO(MeshConstants.DEFAULT_FLAGS_HINT, LFJG_RENDER_CONTEXT_INITIAL_SSBO_CAPACITY);
