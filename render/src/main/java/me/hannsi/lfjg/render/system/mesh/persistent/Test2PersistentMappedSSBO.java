@@ -29,6 +29,7 @@ public class Test2PersistentMappedSSBO {
     private int bufferId;
     private long mappedAddress;
     private long memorySize;
+    private boolean needFlush;
 
     public Test2PersistentMappedSSBO(int flags, long initialCapacity, long initialSSBOCapacity) {
         this.flags = flags;
@@ -141,6 +142,12 @@ public class Test2PersistentMappedSSBO {
 
 
     public Test2PersistentMappedSSBO syncToGPU() {
+        if (!needFlush) {
+            return this;
+        }
+
+        needFlush = false;
+
         long lastPointer = 0L;
         for (Map.Entry<Integer, ShaderStorageBufferData> entry : ssboDatum.entrySet()) {
             if (lastPointer < entry.getValue().getLastAddress()) {
@@ -195,6 +202,8 @@ public class Test2PersistentMappedSSBO {
 
         MemoryUtil.memPutFloat(mappedAddress + pointer, value);
 
+        needFlush = true;
+
         return this;
     }
 
@@ -204,6 +213,8 @@ public class Test2PersistentMappedSSBO {
         }
 
         objectParameter.getToAddress(mappedAddress + pointer, vp);
+
+        needFlush = true;
 
         return this;
     }

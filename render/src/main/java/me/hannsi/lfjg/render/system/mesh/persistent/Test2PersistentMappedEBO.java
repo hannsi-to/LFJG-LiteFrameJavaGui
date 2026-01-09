@@ -21,6 +21,7 @@ public class Test2PersistentMappedEBO {
     private long mappedAddress;
     private long memorySize;
     private long pointer;
+    private boolean needFlush;
 
     public Test2PersistentMappedEBO(int flags, long initialCapacity) {
         this.flags = flags;
@@ -93,6 +94,12 @@ public class Test2PersistentMappedEBO {
     }
 
     public Test2PersistentMappedEBO syncToGPU() {
+        if (!needFlush) {
+            return this;
+        }
+
+        needFlush = false;
+
         final int GL_MAP_COHERENT_BIT = GL44.GL_MAP_COHERENT_BIT;
         if ((flags & GL_MAP_COHERENT_BIT) == 0) {
             glFlushMappedBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, pointer);
@@ -119,6 +126,8 @@ public class Test2PersistentMappedEBO {
         pointer += Integer.BYTES;
 
         debug("Wrote int: " + value + ", new pointer: " + pointer);
+
+        needFlush = true;
 
         return this;
     }
