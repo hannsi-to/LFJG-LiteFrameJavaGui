@@ -4,54 +4,49 @@ import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.render.debug.exceptions.render.mesh.persistent.PersistentMappedException;
-import me.hannsi.lfjg.render.system.mesh.BufferObjectType;
-import me.hannsi.lfjg.render.system.mesh.Vertex;
 import org.lwjgl.opengl.GL44;
 import org.lwjgl.system.MemoryUtil;
 
 import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
-import static me.hannsi.lfjg.render.RenderSystemSetting.PERSISTENT_MAPPED_VBO_ALIGNMENT;
-import static me.hannsi.lfjg.render.RenderSystemSetting.PERSISTENT_MAPPED_VBO_DEBUG;
+import static me.hannsi.lfjg.render.RenderSystemSetting.PERSISTENT_MAPPED_EBO_ALIGNMENT;
+import static me.hannsi.lfjg.render.RenderSystemSetting.PERSISTENT_MAPPED_EBO_DEBUG;
 import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.glFlushMappedBufferRange;
 import static org.lwjgl.opengl.GL30.nglMapBufferRange;
 import static org.lwjgl.opengl.GL44.glBufferStorage;
 
-public class Test2PersistentMappedVBO {
+public class Test2PersistentMappedEBO {
     private final int flags;
     private int bufferId;
     private long mappedAddress;
     private long memorySize;
     private long pointer;
 
-    public Test2PersistentMappedVBO(int flags, long initialCapacity) {
+    public Test2PersistentMappedEBO(int flags, long initialCapacity) {
         this.flags = flags;
 
         allocationBufferStorage(initialCapacity);
     }
 
     public void allocationBufferStorage(long capacity) {
-        if (capacity % PERSISTENT_MAPPED_VBO_ALIGNMENT != 0) {
-            throw new IllegalArgumentException("capacity must be multiple of " + PERSISTENT_MAPPED_VBO_ALIGNMENT);
+        if (capacity % PERSISTENT_MAPPED_EBO_ALIGNMENT != 0) {
+            throw new PersistentMappedException("capacity must be multiple of " + PERSISTENT_MAPPED_EBO_ALIGNMENT);
         }
 
         memorySize = capacity;
 
         if (bufferId != 0) {
-            glStateCache.deleteArrayBuffer(bufferId);
-            debug("Deleted array buffer. BufferId: " + bufferId);
+            glStateCache.deleteElementArrayBuffer(bufferId);
+            debug("Delete element array buffer. BufferId: " + bufferId);
             bufferId = 0;
-
         }
         bufferId = glGenBuffers();
-        debug("Generate array buffer. BufferId: " + bufferId);
-        glStateCache.bindArrayBufferForce(bufferId);
+        debug("Generate element array buffer. BufferId: " + bufferId);
+        glStateCache.bindElementArrayBufferForce(bufferId);
 
-        glBufferStorage(GL_ARRAY_BUFFER, memorySize, flags);
+        glBufferStorage(GL_ELEMENT_ARRAY_BUFFER, memorySize, flags);
         long newMappedAddress = nglMapBufferRange(
-                GL_ARRAY_BUFFER,
+                GL_ELEMENT_ARRAY_BUFFER,
                 0,
                 memorySize,
                 flags
@@ -60,69 +55,47 @@ public class Test2PersistentMappedVBO {
             throw new PersistentMappedException("glMapBufferRange failed");
         }
         mappedAddress = newMappedAddress;
-        debug("glMapBufferRange complete. Target: GL_ARRAY_BUFFER | offset: 0 | length: " + memorySize + " | access: " + flags);
+        debug("glMapBufferRange complete. Target: GL_ELEMENT_ARRAY_BUFFER | offset: 0 | length: " + memorySize + " | access: " + flags);
 
-        pointer = 0L;
+        pointer = 0;
         debug("Set pointer: " + pointer);
 
         new LogGenerator(
-                Test2PersistentMappedVBO.class.getSimpleName() + ": AllocationBufferStorage",
+                Test2PersistentMappedEBO.class.getSimpleName() + ": AllocationBufferStorage",
                 "BufferId: " + bufferId,
                 "MappedAddress: " + mappedAddress,
                 "MemorySize: " + memorySize
         ).logging(getClass(), DebugLevel.INFO);
     }
 
-    public Test2PersistentMappedVBO reset() {
+    public Test2PersistentMappedEBO reset() {
         pointer = 0;
 
         return this;
     }
 
-    public Test2PersistentMappedVBO add(Vertex... vertices) {
-        ensure(Vertex.BYTES * vertices.length);
+    public Test2PersistentMappedEBO add(int... indices) {
+        ensure((long) Integer.BYTES * indices.length);
 
-        for (Vertex vertex : vertices) {
-            memPutFloat(vertex.x)
-                    .memPutFloat(vertex.y)
-                    .memPutFloat(vertex.z)
-                    .memPutFloat(vertex.red)
-                    .memPutFloat(vertex.green)
-                    .memPutFloat(vertex.blue)
-                    .memPutFloat(vertex.alpha)
-                    .memPutFloat(vertex.u)
-                    .memPutFloat(vertex.v)
-                    .memPutFloat(vertex.normalsX)
-                    .memPutFloat(vertex.normalsY)
-                    .memPutFloat(vertex.normalsZ);
+        for (int index : indices) {
+            memPutInt(index);
         }
 
         return this;
     }
 
-    public Test2PersistentMappedVBO add(Vertex vertex) {
-        ensure(Vertex.BYTES);
+    public Test2PersistentMappedEBO add(int index) {
+        ensure(Integer.BYTES);
 
-        memPutFloat(vertex.x)
-                .memPutFloat(vertex.y)
-                .memPutFloat(vertex.z)
-                .memPutFloat(vertex.red)
-                .memPutFloat(vertex.green)
-                .memPutFloat(vertex.blue)
-                .memPutFloat(vertex.alpha)
-                .memPutFloat(vertex.u)
-                .memPutFloat(vertex.v)
-                .memPutFloat(vertex.normalsX)
-                .memPutFloat(vertex.normalsY)
-                .memPutFloat(vertex.normalsZ);
+        memPutInt(index);
 
         return this;
     }
 
-    public Test2PersistentMappedVBO syncToGPU() {
+    public Test2PersistentMappedEBO syncToGPU() {
         final int GL_MAP_COHERENT_BIT = GL44.GL_MAP_COHERENT_BIT;
         if ((flags & GL_MAP_COHERENT_BIT) == 0) {
-            glFlushMappedBufferRange(GL_ARRAY_BUFFER, 0, pointer);
+            glFlushMappedBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, pointer);
             debug("Flushed " + pointer + " bytes to GPU");
         } else {
             debug("Coherent mapping - no flush needed");
@@ -131,36 +104,21 @@ public class Test2PersistentMappedVBO {
         return this;
     }
 
-    public Test2PersistentMappedVBO link() {
-        glStateCache.bindArrayBufferForce(bufferId);
-
-        long stride = Vertex.BYTES;
-        int pointer = 0;
-        for (BufferObjectType objectType : new BufferObjectType[]{BufferObjectType.POSITION_BUFFER, BufferObjectType.COLOR_BUFFER, BufferObjectType.TEXTURE_BUFFER, BufferObjectType.NORMAL_BUFFER}) {
-            glEnableVertexAttribArray(objectType.getAttributeIndex());
-            glVertexAttribPointer(
-                    objectType.getAttributeIndex(),
-                    objectType.getAttributeSize(),
-                    GL_FLOAT,
-                    false,
-                    (int) stride,
-                    (long) pointer * Float.BYTES
-            );
-            pointer += objectType.getAttributeSize();
-        }
+    public Test2PersistentMappedEBO link() {
+        glStateCache.bindElementArrayBufferForce(bufferId);
 
         return this;
     }
 
-    private Test2PersistentMappedVBO memPutFloat(float value) {
-        if (pointer + Float.BYTES > memorySize) {
+    private Test2PersistentMappedEBO memPutInt(int value) {
+        if (pointer + Integer.BYTES > memorySize) {
             throw new PersistentMappedException("Write would exceed mapped memory");
         }
 
-        MemoryUtil.memPutFloat(mappedAddress + pointer, value);
-        pointer += Float.BYTES;
+        MemoryUtil.memPutInt(mappedAddress + pointer, value);
+        pointer += Integer.BYTES;
 
-        debug("Wrote float: " + value + ", new pointer: " + pointer);
+        debug("Wrote int: " + value + ", new pointer: " + pointer);
 
         return this;
     }
@@ -177,7 +135,7 @@ public class Test2PersistentMappedVBO {
         while (newCapacity < requiredSize) {
             newCapacity += newCapacity >> 1;
         }
-        newCapacity = (newCapacity + (PERSISTENT_MAPPED_VBO_ALIGNMENT - 1)) & -PERSISTENT_MAPPED_VBO_ALIGNMENT;
+        newCapacity = (newCapacity + (PERSISTENT_MAPPED_EBO_ALIGNMENT - 1)) & -PERSISTENT_MAPPED_EBO_ALIGNMENT;
 
         debug("New capacity: " + newCapacity + " bytes");
 
@@ -191,7 +149,7 @@ public class Test2PersistentMappedVBO {
             debug("Copying " + copySize + " bytes to temporary buffer");
             MemoryUtil.memCopy(mappedAddress, temp, copySize);
 
-            boolean unmapped = glUnmapBuffer(GL_ARRAY_BUFFER);
+            boolean unmapped = glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
             if (!unmapped) {
                 throw new PersistentMappedException("glUnmapBuffer returned false (may indicate corruption).");
             } else {
@@ -205,7 +163,7 @@ public class Test2PersistentMappedVBO {
             pointer = oldPointer;
             debug("Set pointer: " + pointer);
 
-            debug("Pointer after adding Vertex: " + pointer + " / MemorySize: " + memorySize);
+            debug("Pointer after adding Index: " + pointer + " / MemorySize: " + memorySize);
             if (temp != 0L) {
                 MemoryUtil.nmemFree(temp);
             }
@@ -224,14 +182,14 @@ public class Test2PersistentMappedVBO {
     }
 
     private void debug(String text) {
-        if (PERSISTENT_MAPPED_VBO_DEBUG) {
+        if (PERSISTENT_MAPPED_EBO_DEBUG) {
             DebugLog.debug(getClass(), text);
         }
     }
 
     public void cleanup() {
         if (bufferId != 0) {
-            glStateCache.deleteArrayBuffer(bufferId);
+            glStateCache.deleteElementArrayBuffer(bufferId);
             bufferId = 0;
         }
         mappedAddress = 0L;
