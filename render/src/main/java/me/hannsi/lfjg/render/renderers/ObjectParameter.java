@@ -280,4 +280,8 @@ public class ObjectParameter {
     public void setSpriteIndex(int spriteIndex) {
         this.spriteIndex = spriteIndex;
     }
+
+    public void setDirtyFlag(boolean dirtyFlag) {
+        this.dirtyFlag = dirtyFlag;
+    }
 }
