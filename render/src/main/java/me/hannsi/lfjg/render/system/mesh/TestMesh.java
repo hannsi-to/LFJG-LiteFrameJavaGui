@@ -7,55 +7,50 @@ import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.debug.exceptions.render.mesh.MeshException;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.JointType;
+import me.hannsi.lfjg.render.renderers.ObjectParameter;
 import me.hannsi.lfjg.render.renderers.PointType;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-import static me.hannsi.lfjg.core.utils.math.MathHelper.max;
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class TestMesh {
-    private final int vaoId;
     private final List<Builder> pendingBuilders;
-    private final List<IntRef> objectIdCache;
+    private final int vaoId;
     private boolean needRepack;
-    private int initialVBOCapacity;
-    private int initialEBOCapacity;
-    private int initialIBOCapacity;
     private int currentIndex;
     private int vertexCount;
+    private int indexCount;
+    private int commandCount;
 
-    TestMesh(int initialVBOCapacity, int initialEBOCapacity, int initialIBOCapacity) {
+    private boolean direct = false;
+
+    TestMesh() {
         this.vaoId = glGenVertexArrays();
         this.pendingBuilders = new ArrayList<>();
-        this.objectIdCache = new ArrayList<>();
         this.needRepack = false;
-
-        this.initialVBOCapacity = initialVBOCapacity;
-        this.initialEBOCapacity = initialEBOCapacity;
-        this.initialIBOCapacity = initialIBOCapacity;
 
         this.currentIndex = 0;
         this.vertexCount = 0;
+        this.indexCount = 0;
+        this.commandCount = 0;
     }
 
-    public static TestMesh createMesh(int initialVBOCapacity, int initialEBOCapacity, int initialIBOCapacity) {
-        return new TestMesh(initialVBOCapacity, initialEBOCapacity, initialIBOCapacity);
+    public static TestMesh createMesh() {
+        return new TestMesh();
     }
 
     public TestMesh initBufferObject() {
         glStateCache.bindVertexArrayForce(vaoId);
 
-        persistentMappedVBO.createVertexAttribute(BufferObjectType.POSITION_BUFFER, BufferObjectType.COLOR_BUFFER, BufferObjectType.TEXTURE_BUFFER, BufferObjectType.NORMAL_BUFFER)
-                .syncToGPU();
-
-        persistentMappedEBO.linkVertexArrayObject(vaoId)
-                .syncToGPU();
-
-        persistentMappedIBO.syncToGPU();
+        persistentMappedVBO.link();
+        persistentMappedEBO.link();
+        persistentMappedIBO.link();
+        persistentMappedSSBO.link();
 
         return this;
     }
@@ -69,64 +64,56 @@ public class TestMesh {
     }
 
     public TestMesh build() {
-        if (needRepack) {
-            pendingBuilders.sort(
-                    Comparator.comparingInt(Builder::getRenderOrder)
-            );
-        } else {
-            pendingBuilders.sort(
-                    Comparator.comparingInt(Builder::getRenderOrder)
-                            .thenComparingInt(b -> b.getObjectIdPointer().getValue()) // ID順を第2条件にする
-            );
-        }
-
+        currentIndex = 0;
         vertexCount = 0;
-        for (Builder builder : pendingBuilders) {
-            TestElementPair elementPair =
-                    TestPolygonTriangulator.createPolygonTriangulator()
-                            .drawType(builder.drawType)
-                            .lineWidth(builder.lineWidth)
-                            .lineJointType(builder.jointType)
-                            .pointSize(builder.pointSize)
-                            .pointType(builder.pointType)
-                            .projectionType(builder.projectionType)
-                            .vertices(builder.vertices)
-                            .process()
-                            .getResult();
+        indexCount = 0;
+        commandCount = 0;
+        int baseInstance = 0;
 
-            int baseInstance = persistentMappedSSBO.getDataCount(2);
+        persistentMappedVBO.reset();
+        persistentMappedEBO.reset();
+        persistentMappedIBO.reset();
+        persistentMappedSSBO.resetBindingPoint(2);
+
+        for (Builder builder : pendingBuilders) {
+            TestElementPair elementPair = TestPolygonTriangulator.createPolygonTriangulator()
+                    .drawType(builder.drawType)
+                    .lineWidth(builder.lineWidth)
+                    .lineJointType(builder.jointType)
+                    .pointSize(builder.pointSize)
+                    .pointType(builder.pointType)
+                    .projectionType(builder.projectionType)
+                    .vertices(builder.vertices)
+                    .process()
+                    .getResult();
+
+            builder.setBytes(elementPair.vertices.length * Vertex.BYTES + (long) elementPair.indices.length * Float.BYTES + DrawElementsIndirectCommand.BYTES);
+            builder.setBaseCommand(commandCount);
+
             int baseVertex = vertexCount;
 
             int startOffset = writeGeometry(elementPair);
-            writeInstanceData(builder);
+            InstanceData instanceData = builder.instanceData;
+            for (int i = 0; i < instanceData.drawElementsIndirectCommand.instanceCount; i++) {
+                persistentMappedSSBO.addObjectParameter(2, instanceData.getObjectParameters()[i]);
+            }
 
-            DrawElementsIndirectCommand command =
-                    writeIndirectCommand(
-                            elementPair.indices.length,
-                            builder.instanceData.instanceCount,
-                            startOffset,
-                            baseVertex,
-                            baseInstance
-                    );
-
-            GLObjectData data = new GLObjectData(
-                    command,
-                    builder,
-                    persistentMappedIBO.getCommandCount() - 1,
-                    elementPair
-            );
+            builder.instanceData.drawElementsIndirectCommand.count = elementPair.indices.length;
+            builder.instanceData.drawElementsIndirectCommand.firstIndex = startOffset;
+            builder.instanceData.drawElementsIndirectCommand.baseVertex = baseVertex;
+            builder.instanceData.drawElementsIndirectCommand.baseInstance = baseInstance;
+            writeIndirectCommand(builder.instanceData.drawElementsIndirectCommand);
 
             if (builder.objectIdPointer.isNullptr()) {
-                int id = glObjectPool.createId(data);
-                if (builder.objectIdPointer != null) {
-                    builder.objectIdPointer.setValue(id);
-                }
+                int id = glObjectPool.createId(builder);
+                builder.objectIdPointer.setValue(id);
             } else {
-                glObjectPool.createObject(builder.objectIdPointer.getValue(), data);
+                glObjectPool.createObject(builder.objectIdPointer.getValue(), builder);
             }
+
+            baseInstance += builder.instanceData.drawElementsIndirectCommand.instanceCount;
         }
 
-        pendingBuilders.clear();
 
         return this;
     }
@@ -146,19 +133,22 @@ public class TestMesh {
             return this;
         }
 
-        GLObjectData glObjectData = glObjectPool.getObjectData(objectId);
-        if (glObjectData == null) {
+        TestMesh.Builder builder = glObjectPool.getBuilder(objectId);
+        if (builder == null) {
             throw new MeshException("This object ID does not exist. objectId: " + objectId);
         }
 
-        glObjectPool.createDeletedObject(objectId, glObjectData);
-        glObjectData.draw = false;
+        glObjectPool.createDeletedObject(objectId);
+        builder.draw = false;
 
-        if (ids != null) {
-            Set<Map.Entry<Integer, GLObjectData>> set = glObjectPool.getObjects().entrySet();
-            ids.clear();
-            for (Map.Entry<Integer, GLObjectData> entry : set) {
-                ids.add(new IntRef(entry.getKey()));
+        if (ids == null) {
+            return this;
+        }
+
+        for (int i = 0; i < ids.size(); i++) {
+            if (ids.get(i).getValue() == objectId) {
+                ids.remove(ids.get(i));
+                break;
             }
         }
 
@@ -166,95 +156,45 @@ public class TestMesh {
     }
 
     public TestMesh directDeleteObjects() {
+        direct = true;
+
         new LogGenerator("Direct Delete Objects Start")
                 .kv("Total Objects", glObjectPool.getObjects().size())
                 .kv("Deleted Objects", glObjectPool.getDeletedObjects().size())
                 .kvBytes("VBO Size Before", persistentMappedVBO.getMemorySize())
-                .kvBytes("EBO Size Before", persistentMappedEBO.getGPUMemorySize())
+                .kvBytes("EBO Size Before", persistentMappedEBO.getMemorySize())
                 .logging(getClass(), DebugLevel.INFO);
 
-        Map<Integer, GLObjectData> entryObject = new ConcurrentHashMap<>();
-        for (Map.Entry<Integer, GLObjectData> objectEntry : glObjectPool.getObjects().entrySet()) {
-            if (glObjectPool.getDeletedObjects().containsKey(objectEntry.getKey())) {
+        pendingBuilders.clear();
+        for (Map.Entry<Integer, Builder> entry : glObjectPool.getObjects().entrySet()) {
+            if (glObjectPool.getDeletedObjects().containsKey(entry.getKey())) {
                 continue;
             }
 
-            entryObject.put(objectEntry.getKey(), objectEntry.getValue());
+            for (ObjectParameter objectParameter : entry.getValue().getInstanceData().getObjectParameters()) {
+                objectParameter.setDirtyFlag(true);
+            }
+            pendingBuilders.add(entry.getValue());
         }
 
-        glObjectPool.clearObjects();
-        glObjectPool.clearDeletedObjects();
-
-        int newVBOCapacity = 0;
-        int newEBOCapacity = 0;
-        int newIBOCapacity = 0;
-        for (Map.Entry<Integer, GLObjectData> entry : entryObject.entrySet()) {
-            GLObjectData glObjectData = entry.getValue();
-
-            newVBOCapacity += glObjectData.elementPair.vertices.length;
-            newEBOCapacity += glObjectData.elementPair.indices.length;
-            newIBOCapacity += 1;
-        }
-
-        long oldVBOCapacity = persistentMappedVBO.getMemorySize();
-        long oldEBOCapacity = persistentMappedEBO.getGPUMemorySize();
-        long oldIBOCapacity = persistentMappedIBO.getGPUMemorySize();
-        initialVBOCapacity = max(newVBOCapacity, initialVBOCapacity);
-        initialEBOCapacity = max(newEBOCapacity, initialEBOCapacity);
-        initialIBOCapacity = max(newIBOCapacity, initialIBOCapacity);
-
-        new LogGenerator("Capacity Recalculation")
-                .kv("Retained Objects", entryObject.size())
-                .kv("Required VBO Vertices", newVBOCapacity)
-                .kv("Required EBO Indices", newEBOCapacity)
-                .kv("New VBO Bytes", initialVBOCapacity)
-                .kv("New EBO Bytes", persistentMappedEBO.getIndicesSizeByte(initialEBOCapacity))
-                .kv("New IBO Bytes", persistentMappedIBO.getCommandsSizeByte(initialIBOCapacity))
-                .logging(getClass(), DebugLevel.INFO);
-
-        persistentMappedVBO.cleanup();
-        persistentMappedEBO.cleanup();
-        persistentMappedIBO.cleanup();
-        persistentMappedSSBO.resetBindingPoint(2);
-
-        persistentMappedVBO.allocationBufferStorage(initialVBOCapacity);
-        persistentMappedEBO.allocationBufferStorage(persistentMappedEBO.getIndicesSizeByte(initialEBOCapacity));
-        persistentMappedIBO.allocationBufferStorage(persistentMappedIBO.getCommandsSizeByte(initialIBOCapacity));
-
-        new LogGenerator("Buffer Reallocation Complete")
-                .kvBytes("Old VBO Size", oldVBOCapacity)
-                .kvBytes("New VBO Size", persistentMappedVBO.getMemorySize())
-                .kvBytes("Old EBO Size", oldEBOCapacity)
-                .kvBytes("New EBO Size", persistentMappedEBO.getGPUMemorySize())
-                .kvBytes("Old IBO Size", oldIBOCapacity)
-                .kvBytes("New IBO Size", persistentMappedIBO.getGPUMemorySize())
-                .kvHex("New VBO Address", persistentMappedVBO.getMappedAddress())
-                .logging(getClass(), DebugLevel.INFO);
-
-        for (Map.Entry<Integer, GLObjectData> entry : entryObject.entrySet()) {
-            pendingBuilders.add(entry.getValue().builder);
-        }
-
-        build();
-        initBufferObject();
-        persistentMappedSSBO.bindBufferRange();
+        needRepack = true;
 
         new LogGenerator("Direct Delete Objects End")
                 .kv("Final Active Objects", glObjectPool.getObjects().size())
                 .kv("Total Vertices", vertexCount)
-                .kv("Total Commands (IBO)", persistentMappedIBO.getCommandCount())
+                .kv("Total Commands (IBO)", commandCount)
                 .logging(getClass(), DebugLevel.INFO);
 
         return this;
     }
 
     public TestMesh restoreDeleteObject(int objectId) {
-        GLObjectData glObjectData = glObjectPool.getObjectData(objectId);
-        if (glObjectData == null) {
+        TestMesh.Builder builder = glObjectPool.getBuilder(objectId);
+        if (builder == null) {
             throw new MeshException("This object ID does not exist. objectId: " + objectId);
         }
 
-        if (glObjectData.draw) {
+        if (builder.draw) {
             new LogGenerator(
                     "RestoreDeleteObject Info",
                     "ObjectId: " + objectId,
@@ -264,49 +204,38 @@ public class TestMesh {
             return this;
         }
 
-        glObjectPool.destroyDeletedObject(objectId);
-        glObjectData.draw = true;
+        glObjectPool.restoreDeletedObject(objectId);
+        builder.draw = true;
 
         return this;
     }
 
     private void writeInstanceData(Builder builder) {
-        InstanceData instanceData = builder.instanceData;
-        for (int i = 0; i < instanceData.instanceCount; i++) {
-            persistentMappedSSBO.addObjectParameter(2, instanceData.getTransforms()[i]);
-        }
+
     }
 
     public TestMesh updateInstanceData(int objectId, InstanceData newInstanceData) {
-        GLObjectData glObjectData = glObjectPool.getObjectData(objectId);
-        if (glObjectData == null) {
+        TestMesh.Builder builder = glObjectPool.getBuilder(objectId);
+        if (builder == null) {
             throw new MeshException("Object ID not found: " + objectId);
         }
 
-        int baseInstanceIndex = glObjectData.drawElementsIndirectCommand.baseInstance;
+        int baseInstanceIndex = builder.getInstanceData().drawElementsIndirectCommand.baseInstance;
 
-        int count = Math.min(glObjectData.builder.instanceData.instanceCount, newInstanceData.instanceCount);
+        int count = Math.min(builder.instanceData.drawElementsIndirectCommand.instanceCount, newInstanceData.drawElementsIndirectCommand.instanceCount);
 
         for (int i = 0; i < count; i++) {
-            persistentMappedSSBO.updateObjectParameter(2, baseInstanceIndex + i, newInstanceData.getTransforms()[i]);
+            persistentMappedSSBO.updateObjectParameter(2, baseInstanceIndex + i, newInstanceData.getObjectParameters()[i]);
         }
 
-        glObjectData.builder.instanceData = newInstanceData;
+        builder.instanceData = newInstanceData;
 
         return this;
     }
 
-    private DrawElementsIndirectCommand writeIndirectCommand(int indexCount, int instanceCountPerObj, int firstIndex, int baseVertex, int instanceCount) {
-        DrawElementsIndirectCommand command = new DrawElementsIndirectCommand(
-                indexCount,
-                instanceCountPerObj,
-                firstIndex,
-                baseVertex,
-                instanceCount
-        );
-
-        persistentMappedIBO.add(command);
-        return command;
+    private void writeIndirectCommand(DrawElementsIndirectCommand drawElementsIndirectCommand) {
+        persistentMappedIBO.add(drawElementsIndirectCommand);
+        commandCount++;
     }
 
     private int writeGeometry(TestElementPair elementPair) {
@@ -314,12 +243,13 @@ public class TestMesh {
             persistentMappedVBO.add(vertex);
         }
 
-        int startOffset = persistentMappedEBO.getIndexCount();
+        int startOffset = indexCount;
         for (int index : elementPair.indices) {
             persistentMappedEBO.add(index);
         }
 
         vertexCount += elementPair.vertices.length;
+        indexCount += elementPair.indices.length;
         return startOffset;
     }
 
@@ -349,8 +279,8 @@ public class TestMesh {
                     new LogGenerator(
                             "EBO",
                             "BufferID: " + persistentMappedEBO.getBufferId(),
-                            "Capacity: " + persistentMappedEBO.getGPUMemorySize(),
-                            "Used: " + persistentMappedEBO.getIndexCount()
+                            "Capacity: " + persistentMappedEBO.getMemorySize(),
+                            "Pointer: " + persistentMappedEBO.getPointer()
                     ).createLog()
             );
         }
@@ -359,8 +289,8 @@ public class TestMesh {
                     new LogGenerator(
                             "IBO",
                             "BufferID: " + persistentMappedIBO.getBufferId(),
-                            "Capacity: " + persistentMappedIBO.getGPUMemorySize(),
-                            "Command Count: " + persistentMappedIBO.getCommandCount()
+                            "Capacity: " + persistentMappedIBO.getMemorySize(),
+                            "Pointer: " + persistentMappedIBO.getPointer()
                     ).createLog()
             );
         }
@@ -386,16 +316,12 @@ public class TestMesh {
         return vertexCount;
     }
 
-    public int getInitialVBOCapacity() {
-        return initialVBOCapacity;
+    public int getIndexCount() {
+        return indexCount;
     }
 
-    public int getInitialEBOCapacity() {
-        return initialEBOCapacity;
-    }
-
-    public int getInitialIBOCapacity() {
-        return initialIBOCapacity;
+    public int getCommandCount() {
+        return commandCount;
     }
 
     public boolean isNeedRepack() {
@@ -420,7 +346,8 @@ public class TestMesh {
     }
 
     public static class Builder {
-        private IntRef objectIdPointer = null;
+        private final IntRef objectIdPointer = new IntRef();
+        private final int baseInstance = 0;
         private Vertex[] vertices = null;
         private DrawType drawType = DrawType.TRIANGLES;
         private BlendType blendType = BlendType.NORMAL;
@@ -431,18 +358,15 @@ public class TestMesh {
         private InstanceData instanceData = new InstanceData(1);
         private ProjectionType projectionType = ProjectionType.ORTHOGRAPHIC_PROJECTION;
         private int renderOrder = 0;
+        private boolean draw = true;
+        private long bytes = 0L;
+        private int baseCommand = 0;
 
         Builder() {
         }
 
         public static Builder createBuilder() {
             return new Builder();
-        }
-
-        public Builder objectIdPointer(IntRef objectIdPointer) {
-            this.objectIdPointer = objectIdPointer;
-
-            return this;
         }
 
         public Builder blendType(BlendType blendType) {
@@ -505,6 +429,12 @@ public class TestMesh {
             return this;
         }
 
+        public Builder draw(boolean draw) {
+            this.draw = draw;
+
+            return this;
+        }
+
         public IntRef getObjectIdPointer() {
             return objectIdPointer;
         }
@@ -547,6 +477,30 @@ public class TestMesh {
 
         public int getRenderOrder() {
             return renderOrder;
+        }
+
+        public boolean isDraw() {
+            return draw;
+        }
+
+        public long getBytes() {
+            return bytes;
+        }
+
+        void setBytes(long bytes) {
+            this.bytes = bytes;
+        }
+
+        public int getBaseInstance() {
+            return baseInstance;
+        }
+
+        public int getBaseCommand() {
+            return baseCommand;
+        }
+
+        void setBaseCommand(int baseCommand) {
+            this.baseCommand = baseCommand;
         }
     }
 }
