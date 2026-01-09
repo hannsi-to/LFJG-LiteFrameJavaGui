@@ -5,19 +5,19 @@ import me.hannsi.lfjg.render.renderers.ObjectParameter;
 import java.util.Arrays;
 
 public class InstanceData {
-    public final int instanceCount;
+    public DrawElementsIndirectCommand drawElementsIndirectCommand;
     private final ObjectParameter[] objectParameters;
     private boolean dirtyFrag = false;
 
     public InstanceData(int instanceCount) {
-        this.instanceCount = instanceCount;
+        this.drawElementsIndirectCommand = new DrawElementsIndirectCommand(0, instanceCount, 0, 0, 0);
         this.objectParameters = new ObjectParameter[instanceCount];
 
         Arrays.fill(objectParameters, ObjectParameter.createBuilder());
     }
 
     public InstanceData(int instanceCount, ObjectParameter[] objectParameters) {
-        this.instanceCount = instanceCount;
+        this.drawElementsIndirectCommand = new DrawElementsIndirectCommand(0, instanceCount, 0, 0, 0);
         this.objectParameters = objectParameters;
 
         if (objectParameters.length != instanceCount) {
@@ -33,7 +33,7 @@ public class InstanceData {
         return dirtyFrag;
     }
 
-    public ObjectParameter[] getTransforms() {
+    public ObjectParameter[] getObjectParameters() {
         dirtyFrag = true;
         return objectParameters;
     }
