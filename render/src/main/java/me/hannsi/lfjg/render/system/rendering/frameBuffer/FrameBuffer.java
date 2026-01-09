@@ -81,7 +81,6 @@ public class FrameBuffer {
 
         mesh.addObject(
                 TestMesh.Builder.createBuilder()
-                        .objectIdPointer(id)
                         .drawType(DrawType.QUADS)
                         .blendType(GLPolygon.DEFAULT_BLEND_TYPE)
                         .pointSize(-1f)

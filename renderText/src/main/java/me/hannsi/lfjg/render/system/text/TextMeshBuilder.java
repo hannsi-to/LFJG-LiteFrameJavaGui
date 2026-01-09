@@ -120,8 +120,8 @@ public class TextMeshBuilder {
     }
 
     public static class TextMesh {
-        private static final IntRef pointer = new IntRef();
         protected static List<Integer> ids = new ArrayList<>();
+        private static final IntRef pointer = new IntRef();
         public float[] positions;
         public float[] uvs;
 
@@ -133,7 +133,6 @@ public class TextMeshBuilder {
         public TextMesh createMesh() {
             mesh.addObject(
                     TestMesh.Builder.createBuilder()
-                            .objectIdPointer(pointer)
                             .drawType(DrawType.TRIANGLES)
                             .blendType(BlendType.NORMAL)
                             .pointSize(-1f)

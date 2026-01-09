@@ -24,9 +24,9 @@ public class GLPolygon<T extends GLPolygon<T>> extends GLObject {
     public static final JointType DEFAULT_JOINT_TYPE = JointType.NONE;
     public static final PointType DEFAULT_POINT_TYPE = PointType.ROUND;
     public static final BlendType DEFAULT_BLEND_TYPE = BlendType.NORMAL;
-    private final List<Vertex> vertices;
     protected Vertex currentVertex;
     protected float[] rectUV;
+    private final List<Vertex> vertices;
     private DrawType drawType;
     private JointType jointType;
     private PointType pointType;
@@ -154,7 +154,6 @@ public class GLPolygon<T extends GLPolygon<T>> extends GLObject {
 
         mesh.addObject(
                 TestMesh.Builder.createBuilder()
-                        .objectIdPointer(id)
                         .drawType(drawType)
                         .blendType(blendType)
                         .lineWidth(lineWidth)

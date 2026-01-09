@@ -40,10 +40,11 @@ public class RenderSystemSetting {
 
     public static float GL_OBJECT_POOL_REMOVE_RATIO_THRESHOLD = 0.3f;
 
-    public static int LFJG_RENDER_CONTEXT_INITIAL_VBO_CAPACITY = 10000;
-    public static int LFJG_RENDER_CONTEXT_INITIAL_EBO_CAPACITY = 8000;
-    public static int LFJG_RENDER_CONTEXT_INITIAL_IBO_CAPACITY = 2500;
-    public static int LFJG_RENDER_CONTEXT_INITIAL_SSBO_CAPACITY = 500;
+    public static int LFJG_RENDER_CONTEXT_INITIAL_VBO_CAPACITY = 40960;
+    public static int LFJG_RENDER_CONTEXT_INITIAL_EBO_CAPACITY = 32000;
+    public static int LFJG_RENDER_CONTEXT_INITIAL_IBO_CAPACITY = 4096;
+    public static int LFJG_RENDER_CONTEXT_INITIAL_SSBO_CAPACITY = 4096;
+    public static int LFJG_RENDER_CONTEXT_INITIAL_SSBO_DATA_CAPACITY = 1024;
     public static int LFJG_RENDER_CONTEXT_INITIAL_PBO_CAPACITY = 10000;
 
     public static boolean VAO_RENDERING_FRONT_AND_BACK = false;
@@ -56,4 +57,16 @@ public class RenderSystemSetting {
     public static ProjectionType OBJECT_PARAMETER_DEFAULT_PROJECTION_TYPE = ProjectionType.ORTHOGRAPHIC_PROJECTION;
     public static int OBJECT_PARAMETER_DEFAULT_SPRITE_INDEX = NO_ATTACH_TEXTURE;
     public static Color OBJECT_PARAMETER_DEFAULT_COLOR = new Color(0, 1, 0, 1);
+
+    public static int PERSISTENT_MAPPED_VBO_ALIGNMENT = 16;
+    public static boolean PERSISTENT_MAPPED_VBO_DEBUG = false;
+
+    public static int PERSISTENT_MAPPED_EBO_ALIGNMENT = 16;
+    public static boolean PERSISTENT_MAPPED_EBO_DEBUG = false;
+
+    public static int PERSISTENT_MAPPED_IBO_ALIGNMENT = 16;
+    public static boolean PERSISTENT_MAPPED_IBO_DEBUG = false;
+
+    public static int PERSISTENT_MAPPED_SSBO_ALIGNMENT = 16;
+    public static boolean PERSISTENT_MAPPED_SSBO_DEBUG = false;
 }
