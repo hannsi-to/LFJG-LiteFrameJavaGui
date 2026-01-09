@@ -39,9 +39,9 @@ public class LFJGRenderContext {
     public static SparseTexture2DArray sparseTexture2DArray;
     public static ShaderProgram shaderProgram;
     public static Test2PersistentMappedVBO persistentMappedVBO;
-    public static TestPersistentMappedEBO persistentMappedEBO;
-    public static TestPersistentMappedIBO persistentMappedIBO;
-    public static TestPersistentMappedSSBO persistentMappedSSBO;
+    public static Test2PersistentMappedEBO persistentMappedEBO;
+    public static Test2PersistentMappedIBO persistentMappedIBO;
+    public static Test2PersistentMappedSSBO persistentMappedSSBO;
     public static TestPersistentMappedPBO persistentMappedPBO;
     public static TestMesh mesh;
     public static VAORendering vaoRendering;
@@ -78,20 +78,14 @@ public class LFJGRenderContext {
         shaderProgram.link();
 
         persistentMappedVBO = new Test2PersistentMappedVBO(MeshConstants.DEFAULT_FLAGS_HINT, LFJG_RENDER_CONTEXT_INITIAL_VBO_CAPACITY);
-        persistentMappedEBO = new TestPersistentMappedEBO(MeshConstants.DEFAULT_FLAGS_HINT, LFJG_RENDER_CONTEXT_INITIAL_EBO_CAPACITY);
-        persistentMappedIBO = new TestPersistentMappedIBO(MeshConstants.DEFAULT_FLAGS_HINT, LFJG_RENDER_CONTEXT_INITIAL_IBO_CAPACITY);
-        persistentMappedSSBO = new TestPersistentMappedSSBO(MeshConstants.DEFAULT_FLAGS_HINT, LFJG_RENDER_CONTEXT_INITIAL_SSBO_CAPACITY);
+        persistentMappedEBO = new Test2PersistentMappedEBO(MeshConstants.DEFAULT_FLAGS_HINT, LFJG_RENDER_CONTEXT_INITIAL_EBO_CAPACITY);
+        persistentMappedIBO = new Test2PersistentMappedIBO(MeshConstants.DEFAULT_FLAGS_HINT, LFJG_RENDER_CONTEXT_INITIAL_IBO_CAPACITY);
+        persistentMappedSSBO = new Test2PersistentMappedSSBO(MeshConstants.DEFAULT_FLAGS_HINT, LFJG_RENDER_CONTEXT_INITIAL_SSBO_CAPACITY, LFJG_RENDER_CONTEXT_INITIAL_SSBO_DATA_CAPACITY);
         persistentMappedPBO = new TestPersistentMappedPBO(MeshConstants.DEFAULT_FLAGS_HINT, LFJG_RENDER_CONTEXT_INITIAL_PBO_CAPACITY);
 
-        mesh = TestMesh.createMesh(
-                LFJG_RENDER_CONTEXT_INITIAL_VBO_CAPACITY,
-                LFJG_RENDER_CONTEXT_INITIAL_EBO_CAPACITY,
-                LFJG_RENDER_CONTEXT_INITIAL_IBO_CAPACITY
-        );
-
+        mesh = TestMesh.createMesh();
 
         vaoRendering = new VAORendering();
-
 
         textureCache = TextureCache.createTextureCache();
     }
