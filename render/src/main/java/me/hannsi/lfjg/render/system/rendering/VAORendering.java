@@ -1,13 +1,14 @@
 package me.hannsi.lfjg.render.system.rendering;
 
 import me.hannsi.lfjg.render.renderers.BlendType;
-import me.hannsi.lfjg.render.system.mesh.BlendGroup;
-import me.hannsi.lfjg.render.system.mesh.GLObjectData;
+import me.hannsi.lfjg.render.system.mesh.DrawElementsIndirectCommand;
+import me.hannsi.lfjg.render.system.mesh.TestMesh;
 
 import java.util.Map;
 
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
-import static me.hannsi.lfjg.render.RenderSystemSetting.*;
+import static me.hannsi.lfjg.render.RenderSystemSetting.VAO_RENDERING_FRONT_AND_BACK;
+import static me.hannsi.lfjg.render.RenderSystemSetting.VAO_RENDERING_FRONT_AND_BACK_LINE_WIDTH;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL43.glMultiDrawElementsIndirect;
 
@@ -26,32 +27,29 @@ public class VAORendering {
         }
 
         if (mesh.isNeedRepack()) {
-            mesh.directDeleteObjects();
+            mesh.build();
+            mesh.initBufferObject();
             mesh.setNeedRepack(false);
         }
 
-        for (Map.Entry<Integer, GLObjectData> entry : glObjectPool.getObjects().entrySet()) {
-            GLObjectData glObjectData = entry.getValue();
+        for (Map.Entry<Integer, TestMesh.Builder> entry : glObjectPool.getObjects().entrySet()) {
+            TestMesh.Builder builder = entry.getValue();
 
-            long base = persistentMappedIBO.getCommandsSizeByte(glObjectData.baseCommand);
-            if (glObjectData.draw) {
-                persistentMappedIBO.directWriteCommand(base, 0, glObjectData.elementPair.indices.length);
-            } else {
-                persistentMappedIBO.directWriteCommand(base, 0, 0);
+            long base = builder.getBaseCommand() * DrawElementsIndirectCommand.BYTES;
+            int count = builder.getInstanceData().drawElementsIndirectCommand.count;
+            if (!builder.isDraw()) {
+                count = 0;
             }
+            persistentMappedIBO.update(base, 0, count);
 
-            if (glObjectData.builder.getInstanceData().isDirtyFrag()) {
-                mesh.updateInstanceData(entry.getKey(), glObjectData.builder.getInstanceData());
+            if (builder.getInstanceData().isDirtyFrag()) {
+                mesh.updateInstanceData(entry.getKey(), builder.getInstanceData());
 
-                glObjectData.builder.getInstanceData().resetDirtyFlag();
+                builder.getInstanceData().resetDirtyFlag();
             }
         }
 
-        glStateCache.bindVertexArray(mesh.getVaoId());
-        glStateCache.bindElementArrayBuffer(persistentMappedEBO.getBufferId());
-        glStateCache.bindIndirectBuffer(persistentMappedIBO.getBufferId());
-        glStateCache.enable(GL_DEPTH_TEST);
-        glStateCache.depthFunc(GL_LESS);
+        persistentMappedSSBO.bindBufferRange();
 
         persistentMappedVBO.syncToGPU();
         persistentMappedEBO.syncToGPU();
@@ -59,25 +57,13 @@ public class VAORendering {
         persistentMappedSSBO.syncToGPU();
         persistentMappedPBO.syncToGPU();
 
-        for (BlendType type : MESH_RENDER_BLEND_ORDER) {
-            BlendGroup group = mesh.getBlendGroups().get(type);
-
-            if (group == null || group.commandCount() == 0) {
-                continue;
-            }
-
-            applyBlendState(type);
-
-            long offset = group.startCommandIndex() * 20L;
-
-            glMultiDrawElementsIndirect(
-                    DrawType.TRIANGLES.getId(),
-                    GL_UNSIGNED_INT,
-                    offset,
-                    group.commandCount(),
-                    0
-            );
-        }
+        glMultiDrawElementsIndirect(
+                DrawType.TRIANGLES.getId(),
+                GL_UNSIGNED_INT,
+                0,
+                mesh.getCommandCount(),
+                0
+        );
     }
 
     public void pop() {
