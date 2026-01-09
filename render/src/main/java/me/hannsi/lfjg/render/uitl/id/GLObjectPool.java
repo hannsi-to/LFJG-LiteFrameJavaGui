@@ -1,8 +1,7 @@
 package me.hannsi.lfjg.render.uitl.id;
 
-import me.hannsi.lfjg.render.system.mesh.DrawElementsIndirectCommand;
-import me.hannsi.lfjg.render.system.mesh.GLObjectData;
-import me.hannsi.lfjg.render.system.mesh.MeshConstants;
+import me.hannsi.lfjg.render.debug.exceptions.render.mesh.MeshException;
+import me.hannsi.lfjg.render.system.mesh.TestMesh;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -11,8 +10,8 @@ import static me.hannsi.lfjg.render.LFJGRenderContext.mesh;
 import static me.hannsi.lfjg.render.RenderSystemSetting.GL_OBJECT_POOL_REMOVE_RATIO_THRESHOLD;
 
 public class GLObjectPool {
-    private final Map<Integer, GLObjectData> objects;
-    private final Map<Integer, GLObjectData> deletedObjects;
+    private final Map<Integer, TestMesh.Builder> objects;
+    private final Map<Integer, TestMesh.Builder> deletedObjects;
     private final IdPool idPool;
     private long totalPoolBytes = 0;
     private long deletedBytes = 0;
@@ -23,51 +22,46 @@ public class GLObjectPool {
         this.idPool = new IdPool();
     }
 
-    public int createId(GLObjectData glObjectData) {
+    public int createId(TestMesh.Builder builder) {
         int id = idPool.acquire();
-        objects.put(id, glObjectData);
+        objects.put(id, builder);
 
-        totalPoolBytes += calculateBytes(glObjectData);
+        totalPoolBytes += builder.getBytes();
 
         return id;
     }
 
-    public int createObject(int requestedId, GLObjectData glObjectData) {
+    public int createObject(int requestedId, TestMesh.Builder builder) {
         int id = idPool.acquire(requestedId);
-        objects.put(id, glObjectData);
+        objects.put(id, builder);
 
-        totalPoolBytes += calculateBytes(glObjectData);
+        totalPoolBytes += builder.getBytes();
 
         return id;
     }
 
-    public void destroyObject(int id) {
-        GLObjectData glObjectData = objects.get(id);
+    public void createDeletedObject(int id) {
+        TestMesh.Builder builder = getBuilder(id);
 
-        objects.remove(id);
-        idPool.release(id);
-
-        totalPoolBytes -= calculateBytes(glObjectData);
-    }
-
-    public void createDeletedObject(int id, GLObjectData glObjectData) {
-        deletedObjects.put(id, glObjectData);
-        deletedBytes += calculateBytes(glObjectData);
+        deletedObjects.put(id, builder);
+        deletedBytes += builder.getBytes();
 
         if (totalPoolBytes > 0 && (float) deletedBytes / totalPoolBytes > GL_OBJECT_POOL_REMOVE_RATIO_THRESHOLD) {
             mesh.directDeleteObjects();
+            clearObjects();
+            clearDeletedObjects();
         }
     }
 
-    public void destroyDeletedObject(int id) {
-        GLObjectData glObjectData = deletedObjects.get(id);
+    public void restoreDeletedObject(int id) {
+        TestMesh.Builder builder = deletedObjects.get(id);
         deletedObjects.remove(id);
 
-        deletedBytes -= calculateBytes(glObjectData);
+        deletedBytes -= builder.getBytes();
     }
 
-    public void clearObjects() {
-        for (Map.Entry<Integer, GLObjectData> entry : objects.entrySet()) {
+    private void clearObjects() {
+        for (Map.Entry<Integer, TestMesh.Builder> entry : objects.entrySet()) {
             idPool.release(entry.getKey());
         }
 
@@ -75,28 +69,29 @@ public class GLObjectPool {
         totalPoolBytes = 0;
     }
 
-    public void clearDeletedObjects() {
+    private void clearDeletedObjects() {
         deletedObjects.clear();
         deletedBytes = 0;
     }
 
-    private long calculateBytes(GLObjectData data) {
-        return (long) data.elementPair.vertices.length * MeshConstants.FLOATS_PER_VERTEX * Float.BYTES + (long) data.elementPair.indices.length * Float.BYTES + DrawElementsIndirectCommand.BYTES;
-    }
-
-    public Map<Integer, GLObjectData> getObjects() {
+    public Map<Integer, TestMesh.Builder> getObjects() {
         return objects;
     }
 
-    public Map<Integer, GLObjectData> getDeletedObjects() {
+    public Map<Integer, TestMesh.Builder> getDeletedObjects() {
         return deletedObjects;
     }
 
-    public GLObjectData getObjectData(int id) {
-        return getObjects().get(id);
+    public TestMesh.Builder getBuilder(int id) {
+        TestMesh.Builder builder = getObjects().get(id);
+        if (builder == null) {
+            throw new MeshException("This object ID does not exist. objectId: " + id);
+        }
+
+        return builder;
     }
 
-    public GLObjectData getDeletedObjectData(int id) {
+    public TestMesh.Builder getDeletedBuilder(int id) {
         return getDeletedObjects().get(id);
     }
 
@@ -104,7 +99,7 @@ public class GLObjectPool {
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         int count = 0;
-        for (Map.Entry<Integer, GLObjectData> entry : objects.entrySet()) {
+        for (Map.Entry<Integer, TestMesh.Builder> entry : objects.entrySet()) {
             if (count != 0) {
                 stringBuilder.append("\n");
             }
@@ -114,7 +109,7 @@ public class GLObjectPool {
             count++;
         }
 
-        for (Map.Entry<Integer, GLObjectData> entry : deletedObjects.entrySet()) {
+        for (Map.Entry<Integer, TestMesh.Builder> entry : deletedObjects.entrySet()) {
             stringBuilder.append("\n").append("deletedObjects{id: ").append(entry.getKey()).append(", ").append(entry.getValue()).append("}");
 
             count++;
