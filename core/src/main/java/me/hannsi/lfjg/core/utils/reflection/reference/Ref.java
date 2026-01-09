@@ -20,6 +20,10 @@ public class Ref<T> {
         return value == null;
     }
 
+    public void setNullptr() {
+        value = null;
+    }
+
     public T getValue() {
         return value;
     }
