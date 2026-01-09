@@ -10,7 +10,6 @@ import me.hannsi.lfjg.core.utils.toolkit.RuntimeUtil;
 import me.hannsi.lfjg.core.utils.type.types.TimeSourceType;
 import me.hannsi.lfjg.frame.event.events.monitor.window.FramebufferSizeEvent;
 import me.hannsi.lfjg.frame.event.events.monitor.window.WindowSizeEvent;
-import me.hannsi.lfjg.frame.event.events.render.DrawFrameWithOpenGLEvent;
 import me.hannsi.lfjg.frame.event.system.GLFWCallback;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.setting.system.FrameSettingBase;
@@ -37,10 +36,10 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Frame implements IFrame {
     private static final IntArrayList DISCARD_ATTACHMENTS = new IntArrayList(4);
-    private final LFJGFrame lfjgFrame;
-    private final String threadName;
     protected RenderingType renderingType;
     protected TimeSourceType timeSourceType;
+    private final LFJGFrame lfjgFrame;
+    private final String threadName;
     private boolean shouldCleanup = false;
     private long windowID = -1L;
     private int fps;
@@ -64,7 +63,13 @@ public class Frame implements IFrame {
         }));
 
         this.threadName = threadName;
-        new Thread(this::createFrame, threadName).start();
+        Thread renderThread = new Thread(this::createFrame, threadName);
+        renderThread.setUncaughtExceptionHandler((t, e) -> {
+            DebugLog.error(getClass(), "FATAL ERROR in thread: " + t.getName());
+            DebugLog.error(getClass(), e);
+            System.exit(1);
+        });
+        renderThread.start();
     }
 
     private static void begin(RenderPass pass) {
@@ -274,7 +279,7 @@ public class Frame implements IFrame {
     private void draw() {
         switch (renderingType) {
             case OPEN_GL:
-                EVENT_MANAGER.call(new DrawFrameWithOpenGLEvent());
+                lfjgFrame.drawFrame();
                 break;
             case LIB_GDX:
             case VULKAN:
@@ -282,11 +287,6 @@ public class Frame implements IFrame {
             default:
                 throw new IllegalStateException("Unexpected value: " + renderingType);
         }
-    }
-
-    @EventHandler
-    public void drawFrameWidthOpenGLEvent(DrawFrameWithOpenGLEvent event) {
-        lfjgFrame.drawFrame();
     }
 
     public void stopFrame() {
