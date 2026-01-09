@@ -298,6 +298,11 @@ public class GLStateCache {
         lastArrayBuffer = buffer;
     }
 
+    public void bindArrayBufferForce(int buffer) {
+        glBindBuffer(GL_ARRAY_BUFFER, buffer);
+        lastArrayBuffer = buffer;
+    }
+
     public void deleteArrayBuffer(int buffer) {
         if (lastArrayBuffer == buffer) {
             bindArrayBuffer(0);
@@ -329,6 +334,11 @@ public class GLStateCache {
         if (lastShaderStorageBuffer == buffer) {
             return;
         }
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
+        lastShaderStorageBuffer = buffer;
+    }
+
+    public void bindShaderStorageBufferForce(int buffer) {
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
         lastShaderStorageBuffer = buffer;
     }
