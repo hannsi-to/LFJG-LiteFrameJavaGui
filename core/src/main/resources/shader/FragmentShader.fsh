@@ -15,9 +15,9 @@ struct UV{
     float _pad[3];
 };
 
-layout(std430, binding = 1) readonly buffer SpriteData {
-    UV data[];
-} spriteData;
+layout(std430, binding = 2) readonly buffer SpriteDatum {
+    UV datum[];
+};
 
 #define NO_ATTACH_TEXTURE 0xFFFFFFFF
 
@@ -27,8 +27,9 @@ void main() {
     if (vSpriteIndex == NO_ATTACH_TEXTURE) {
         baseColor = vColor;
     } else {
-        vec4 uvRect = spriteData.data[vSpriteIndex].rect;
-        float layer = spriteData.data[vSpriteIndex].layer;
+        UV data = datum[vSpriteIndex];
+        vec4 uvRect = data.rect;
+        float layer = data.layer;
         vec2 uv = uvRect.xy + vUV * uvRect.zw;
         baseColor = texture(uTexArray, vec3(uv, layer));
     }

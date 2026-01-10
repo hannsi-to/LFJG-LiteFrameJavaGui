@@ -75,7 +75,7 @@ public class AtlasPacker {
         this.currentLayer = 0;
         this.rowHeight = 0;
 
-        persistentMappedSSBO.resetBindingPoint(1);
+        persistentMappedSSBO.resetBindingPoint(SPRITE_DATUM_BINDING_POINT);
 
         final float INSET = 0.5f;
         final int BYTES_PER_PIXEL = 4;
@@ -116,11 +116,11 @@ public class AtlasPacker {
             float uvW = (sprite.width - (2 * INSET)) * invW;
             float uvH = (sprite.height - (2 * INSET)) * invH;
 
-            persistentMappedSSBO.addVec4(1, uvX, uvY, uvW, uvH);
-            persistentMappedSSBO.addFloat(1, currentLayer);
-            persistentMappedSSBO.addFloat(1, 0);
-            persistentMappedSSBO.addFloat(1, 0);
-            persistentMappedSSBO.addFloat(1, 0);
+            persistentMappedSSBO.addVec4(SPRITE_DATUM_BINDING_POINT, uvX, uvY, uvW, uvH);
+            persistentMappedSSBO.addFloat(SPRITE_DATUM_BINDING_POINT, currentLayer);
+            persistentMappedSSBO.addFloat(SPRITE_DATUM_BINDING_POINT, 0);
+            persistentMappedSSBO.addFloat(SPRITE_DATUM_BINDING_POINT, 0);
+            persistentMappedSSBO.addFloat(SPRITE_DATUM_BINDING_POINT, 0);
 
             currentX += sprite.width + PADDING;
             rowHeight = Math.max(rowHeight, sprite.height + PADDING);

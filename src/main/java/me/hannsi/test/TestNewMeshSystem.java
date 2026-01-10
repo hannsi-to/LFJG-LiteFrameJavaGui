@@ -11,9 +11,7 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.manager.AssetManager;
-import me.hannsi.lfjg.render.renderers.BlendType;
-import me.hannsi.lfjg.render.renderers.Transform;
-import me.hannsi.lfjg.render.renderers.polygon.GLRect;
+import me.hannsi.lfjg.render.renderers.ObjectParameter;
 import me.hannsi.lfjg.render.system.mesh.InstanceData;
 import me.hannsi.lfjg.render.system.mesh.TestMesh;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
@@ -29,16 +27,10 @@ import java.util.List;
 
 import static me.hannsi.lfjg.frame.LFJGFrameContext.frame;
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 
 public class TestNewMeshSystem implements LFJGFrame {
+    public static List<IntRef> objectIds = new ArrayList<>();
     Timer timer = new Timer();
-    List<IntRef> objectIds = new ArrayList<>();
-    SparseTexture2DArray sparseTexture2DArray;
-    GLRect glRect;
-    InstanceData instanceData;
-    private BlendType blendType;
 
     public static void main(String[] args) {
         new TestNewMeshSystem().setFrame();
@@ -68,23 +60,28 @@ public class TestNewMeshSystem implements LFJGFrame {
 
         sparseTexture2DArray = new SparseTexture2DArray(atlas)
                 .commitTexture("Code: 0", true)
-                .commitTexture("Code: 1", true)
+                .commitTexture("Code: 1", false)
                 .commitTexture("Code: 2", true)
                 .commitTexture("Test1", true)
                 .updateFromAtlas();
 
         int instanceCount = 4;
         float objectSize = ResolutionType.WQHD.getHeight();
-        Transform[] matrix4fs = new Transform[instanceCount];
-        Color[] colors = new Color[instanceCount];
+        ObjectParameter[] matrix4fs = new ObjectParameter[instanceCount];
         int[] spriteIndices = sparseTexture2DArray.getSpriteIndiesFromName("Code: 0", "Code: 1", "Code: 2", "Test1");
         for (int i = 0; i < instanceCount; i++) {
             float scale = ((objectSize / instanceCount) * (instanceCount - i)) / objectSize;
             int layer = spriteIndices[i];
-            matrix4fs[i] = Transform.createBuilder().spriteIndex(layer).scale(scale, scale, 1);
-            colors[i] = new Color(0, 0, 0, 0);
+            matrix4fs[i] = ObjectParameter.createBuilder()
+                    .spriteIndex(layer)
+                    .scale(scale, scale, 1)
+                    .color(new Color(1f, 1f, 1f, 1f));
         }
 
+        ObjectParameter[] objectParameters1 = new ObjectParameter[]{
+                ObjectParameter.createBuilder()
+                        .color(new Color(1f, 1f, 1f, 1f))
+        };
         mesh.addObject(
                 TestMesh.Builder.createBuilder()
                         .drawType(DrawType.QUADS)
@@ -96,8 +93,90 @@ public class TestNewMeshSystem implements LFJGFrame {
                                 new Vertex(objectSize, objectSize, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0),
                                 new Vertex(0, objectSize, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0)
                         )
-                        .instanceData(instanceData = new InstanceData(instanceCount, matrix4fs, colors))
+                        .instanceData(new InstanceData(instanceCount, matrix4fs))
         );
+
+//        int numObjects = 100;
+//        int numVerticesPerObject = 1;
+//
+//        float minX = 0;
+//        float maxX = ResolutionType.WQHD.getWidth();
+//        float minY = 0;
+//        float maxY = ResolutionType.WQHD.getHeight();
+//
+//        int columns = 10;
+//        int rows = 10;
+//
+//        float cellWidth = (maxX - minX) / columns;
+//        float cellHeight = (maxY - minY) / rows;
+//
+//        for (int i = 0; i < numObjects; i++) {
+//            ObjectParameter[] objectParameters = new ObjectParameter[numVerticesPerObject];
+//
+//            int col = i % columns;
+//            int row = i / columns;
+//
+//            float x = minX + col * cellWidth + cellWidth / 2f;
+//            float y = minY + row * cellHeight + cellHeight / 2f;
+//
+//            float r = (float) i / numObjects;
+//            float g = 1f;
+//            float b = 1f;
+//
+//            objectParameters[0] = ObjectParameter.createBuilder()
+//                    .translate(x, y, 0)
+//                    .color(new Color(r, g, b, 1));
+//
+//            TestMesh.Builder builder;
+//            mesh.addObject(
+//                    builder = TestMesh.Builder.createBuilder()
+//                            .drawType(DrawType.POINTS)
+//                            .pointSize(30f)
+//                            .lineWidth(-1f)
+//                            .pointType(PointType.ROUND)
+//                            .jointType(JointType.NONE)
+//                            .vertices(new Vertex(0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0))
+//                            .instanceData(new InstanceData(numVerticesPerObject, objectParameters))
+//            );
+//
+//            objectIds.add(builder.getObjectIdPointer());
+//        }
+
+//        ObjectParameter[] objectParameters2 = new ObjectParameter[1];
+//        objectParameters2[0] = ObjectParameter.createBuilder()
+//                .scale(0.5f, 0.5f, 1)
+//                .color(new Color(1f, 0f, 0f, 0.5f));
+//        mesh.addObject(
+//                TestMesh.Builder.createBuilder()
+//                        .drawType(DrawType.QUADS)
+//                        .blendType(BlendType.SUBTRACT)
+//                        .vertices(
+//                                new Vertex(500, 500, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0),
+//                                new Vertex(500 + objectSize, 500, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0),
+//                                new Vertex(500 + objectSize, 500 + objectSize, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0),
+//                                new Vertex(500, 500 + objectSize, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0)
+//                        )
+//                        .instanceData(new InstanceData(1, objectParameters2))
+//                        .renderOrder(2)
+//        );
+//
+//        ObjectParameter[] objectParameters3 = new ObjectParameter[1];
+//        objectParameters3[0] = ObjectParameter.createBuilder()
+//                .scale(0.25f, 0.25f, 1)
+//                .color(new Color(0f, 1f, 0f, 1));
+//        mesh.addObject(
+//                TestMesh.Builder.createBuilder()
+//                        .drawType(DrawType.QUADS)
+//                        .blendType(BlendType.NORMAL)
+//                        .vertices(
+//                                new Vertex(0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0),
+//                                new Vertex(0 + objectSize, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0),
+//                                new Vertex(0 + objectSize, 0 + objectSize, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0),
+//                                new Vertex(0, 0 + objectSize, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0)
+//                        )
+//                        .instanceData(new InstanceData(1, objectParameters3))
+//                        .renderOrder(1)
+//        );
 
 //        MESH.addObject(
 //                TestMesh.Builder.createBuilder()
@@ -137,48 +216,6 @@ public class TestNewMeshSystem implements LFJGFrame {
 //                                new Vertex(0, 100, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0)
 //                        )
 //        );
-
-//        int numObjects = 100;
-//        int numVerticesPerObject = 100;
-//        float minX = 0;
-//        float maxX = ResolutionType.WQHD.getWidth();
-//        float minY = 0;
-//        float maxY = ResolutionType.WQHD.getHeight();
-//        Random random = new Random();
-//
-//        for (int i = 0; i < numObjects; i++) {
-//            IntRef id = new IntRef();
-//            ProjectionType[] projectionTypes = new ProjectionType[numVerticesPerObject];
-//            Matrix4f[] instanceModels = new Matrix4f[numVerticesPerObject];
-//            Color[] instanceColors = new Color[numVerticesPerObject];
-//
-//            for (int j = 0; j < numVerticesPerObject; j++) {
-//                float x = minX + random.nextFloat() * (maxX - minX);
-//                float y = minY + random.nextFloat() * (maxY - minY);
-//
-//                float r = random.nextFloat();
-//                float g = random.nextFloat();
-//                float b = random.nextFloat();
-//
-//                projectionTypes[j] = ProjectionType.ORTHOGRAPHIC_PROJECTION;
-//                instanceModels[j] = new Matrix4f().translate(x, y, 0);
-//                instanceColors[j] = new Color(r, g, b, 0.5f);
-//            }
-//
-//            MESH.addObject(
-//                    TestMesh.Builder.createBuilder()
-//                            .objectIdPointer(id)
-//                            .drawType(DrawType.POINTS)
-//                            .pointSize(30f)
-//                            .lineWidth(-1f)
-//                            .pointType(PointType.ROUND)
-//                            .jointType(JointType.NONE)
-//                            .vertices(new Vertex(0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0))
-//                            .instanceData(new InstanceData(numVerticesPerObject, projectionTypes, instanceModels, instanceColors))
-//            );
-//
-//            objectIds.add(id);
-//        }
 
 //        for (int i = 0; i < numObjects; i++) {
 //            float x = minX + random.nextFloat() * (maxX - minX);
@@ -285,11 +322,6 @@ public class TestNewMeshSystem implements LFJGFrame {
 //            );
 //        }
 
-        mesh.initBufferObject();
-
-        blendType = BlendType.NORMAL;
-
-        persistentMappedSSBO.bindBufferRange();
     }
 
     @Override
@@ -298,17 +330,11 @@ public class TestNewMeshSystem implements LFJGFrame {
 
         shaderProgram.bind();
 
-        glStateCache.blendFunc(blendType.getSfactor(), blendType.getDfactor());
-        glStateCache.setBlendEquation(blendType.getEquation());
-        glStateCache.enable(GL_BLEND);
-        glStateCache.disable(GL_DEPTH_TEST);
-        glStateCache.depthMask(false);
-
         shaderProgram.setUniform("uTextArray", UploadUniformType.ONCE, 0);
 
-        for (Transform instanceModel : instanceData.getTransforms()) {
+//        for (ObjectParameter instanceModel : instanceData.getTransforms()) {
 //            instanceModel.translate(1, 0, 0);
-        }
+//        }
 
 //        int w = 64;
 //        int h = 64;
@@ -326,12 +352,22 @@ public class TestNewMeshSystem implements LFJGFrame {
 //        sparseTexture2DArray.updateSprite("Code: 0", newData);
         vaoRendering.draw();
 
-        if (timer.passed(2000)) {
+        if (timer.passed(500)) {
             System.out.println("FPS: " + frame.getFps());
             timer.reset();
 
-//            int id = objectIds.get((int) (MathHelper.random() * objectIds.size())).getValue();
-//            MESH.deleteObject(objectIds, id);
+//            if (!objectIds.isEmpty()) {
+//                IntRef id = objectIds.getFirst();
+//
+//                if (id != null) {
+//                    int i = id.getValue();
+//                    System.out.println("id: " + i);
+//                    mesh.deleteObject(objectIds, i);
+//                } else {
+//                    objectIds.removeFirst();
+//                    System.err.println("Warning: Found null ID at index " + 0);
+//                }
+//            }
         }
     }
 

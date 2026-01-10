@@ -34,6 +34,8 @@ public class LFJGRenderContext {
     public static final int MAX_TEXTURE_SIZE;
     public static final int MIN_MAP_BUFFER_ALIGNMENT;
     public static final int SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT;
+    public static final int OBJECT_PARAMETERS_BINDING_POINT;
+    public static final int SPRITE_DATUM_BINDING_POINT;
     public static GLObjectPool glObjectPool;
     public static Camera mainCamera;
     public static Matrix4f precomputedViewProjection2D;
@@ -62,6 +64,8 @@ public class LFJGRenderContext {
         MAX_TEXTURE_SIZE = glGetInteger(GL_MAX_TEXTURE_SIZE);
         MIN_MAP_BUFFER_ALIGNMENT = glGetInteger(GL_MIN_MAP_BUFFER_ALIGNMENT);
         SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT = glGetInteger(GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT);
+        OBJECT_PARAMETERS_BINDING_POINT = 1;
+        SPRITE_DATUM_BINDING_POINT = 2;
     }
 
     public static void init() {

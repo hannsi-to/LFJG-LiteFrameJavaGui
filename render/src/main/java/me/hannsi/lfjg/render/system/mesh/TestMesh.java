@@ -73,7 +73,7 @@ public class TestMesh {
         persistentMappedVBO.reset();
         persistentMappedEBO.reset();
         persistentMappedIBO.reset();
-        persistentMappedSSBO.resetBindingPoint(2);
+        persistentMappedSSBO.resetBindingPoint(OBJECT_PARAMETERS_BINDING_POINT);
 
         for (Builder builder : pendingBuilders) {
             TestElementPair elementPair = TestPolygonTriangulator.createPolygonTriangulator()
@@ -95,7 +95,7 @@ public class TestMesh {
             int startOffset = writeGeometry(elementPair);
             InstanceData instanceData = builder.instanceData;
             for (int i = 0; i < instanceData.drawElementsIndirectCommand.instanceCount; i++) {
-                persistentMappedSSBO.addObjectParameter(2, instanceData.getObjectParameters()[i]);
+                persistentMappedSSBO.addObjectParameter(OBJECT_PARAMETERS_BINDING_POINT, instanceData.getObjectParameters()[i]);
             }
 
             builder.instanceData.drawElementsIndirectCommand.count = elementPair.indices.length;
@@ -225,7 +225,7 @@ public class TestMesh {
         int count = Math.min(builder.instanceData.drawElementsIndirectCommand.instanceCount, newInstanceData.drawElementsIndirectCommand.instanceCount);
 
         for (int i = 0; i < count; i++) {
-            persistentMappedSSBO.updateObjectParameter(2, baseInstanceIndex + i, newInstanceData.getObjectParameters()[i]);
+            persistentMappedSSBO.updateObjectParameter(OBJECT_PARAMETERS_BINDING_POINT, baseInstanceIndex + i, newInstanceData.getObjectParameters()[i]);
         }
 
         builder.instanceData = newInstanceData;
