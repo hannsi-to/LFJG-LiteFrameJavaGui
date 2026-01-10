@@ -5,8 +5,7 @@ import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import org.joml.Vector4f;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.MAX_TEXTURE_SIZE;
-import static me.hannsi.lfjg.render.LFJGRenderContext.NO_ATTACH_TEXTURE;
+import static me.hannsi.lfjg.render.LFJGRenderContext.*;
 
 public class RenderSystemSetting {
     public static final BlendType[] MESH_RENDER_BLEND_ORDER = {
@@ -58,15 +57,15 @@ public class RenderSystemSetting {
     public static int OBJECT_PARAMETER_DEFAULT_SPRITE_INDEX = NO_ATTACH_TEXTURE;
     public static Color OBJECT_PARAMETER_DEFAULT_COLOR = new Color(0, 1, 0, 1);
 
-    public static int PERSISTENT_MAPPED_VBO_ALIGNMENT = 16;
+    public static int PERSISTENT_MAPPED_VBO_ALIGNMENT = MIN_MAP_BUFFER_ALIGNMENT;
     public static boolean PERSISTENT_MAPPED_VBO_DEBUG = false;
 
-    public static int PERSISTENT_MAPPED_EBO_ALIGNMENT = 16;
+    public static int PERSISTENT_MAPPED_EBO_ALIGNMENT = MIN_MAP_BUFFER_ALIGNMENT;
     public static boolean PERSISTENT_MAPPED_EBO_DEBUG = false;
 
-    public static int PERSISTENT_MAPPED_IBO_ALIGNMENT = 16;
+    public static int PERSISTENT_MAPPED_IBO_ALIGNMENT = MIN_MAP_BUFFER_ALIGNMENT;
     public static boolean PERSISTENT_MAPPED_IBO_DEBUG = false;
 
-    public static int PERSISTENT_MAPPED_SSBO_ALIGNMENT = 16;
+    public static int PERSISTENT_MAPPED_SSBO_ALIGNMENT = MIN_MAP_BUFFER_ALIGNMENT;
     public static boolean PERSISTENT_MAPPED_SSBO_DEBUG = false;
 }
