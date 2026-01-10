@@ -173,7 +173,14 @@ public class Test2PersistentMappedSSBO {
                 return this;
             }
 
-            glBindBufferRange(GL_SHADER_STORAGE_BUFFER, entry.getKey(), bufferId, ssboData.offset, ssboData.size);
+            long alignedOffset = (ssboData.offset + SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT - 1L) & -SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT;
+
+            long adjustedSize = ssboData.size - (alignedOffset - ssboData.offset);
+            if (adjustedSize <= 0) {
+                continue;
+            }
+
+            glBindBufferRange(GL_SHADER_STORAGE_BUFFER, entry.getKey(), bufferId, alignedOffset, adjustedSize);
         }
 
         return this;
