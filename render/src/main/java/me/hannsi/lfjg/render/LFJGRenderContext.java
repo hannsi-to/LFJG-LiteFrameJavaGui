@@ -22,7 +22,9 @@ import static org.lwjgl.opengl.ARBSparseTexture.GL_VIRTUAL_PAGE_SIZE_Y_ARB;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.GL_MAX_ARRAY_TEXTURE_LAYERS;
 import static org.lwjgl.opengl.GL30.GL_TEXTURE_2D_ARRAY;
+import static org.lwjgl.opengl.GL42.GL_MIN_MAP_BUFFER_ALIGNMENT;
 import static org.lwjgl.opengl.GL42.glGetInternalformativ;
+import static org.lwjgl.opengl.GL43.GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT;
 
 public class LFJGRenderContext {
     public static final int NO_ATTACH_TEXTURE = -1;
@@ -30,6 +32,8 @@ public class LFJGRenderContext {
     public static final int VIRTUAL_PAGE_SIZE_Y;
     public static final int MAX_ARRAY_TEXTURE_LAYERS;
     public static final int MAX_TEXTURE_SIZE;
+    public static final int MIN_MAP_BUFFER_ALIGNMENT;
+    public static final int SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT;
     public static GLObjectPool glObjectPool;
     public static Camera mainCamera;
     public static Matrix4f precomputedViewProjection2D;
@@ -56,6 +60,8 @@ public class LFJGRenderContext {
         VIRTUAL_PAGE_SIZE_Y = y[0];
         MAX_ARRAY_TEXTURE_LAYERS = glGetInteger(GL_MAX_ARRAY_TEXTURE_LAYERS);
         MAX_TEXTURE_SIZE = glGetInteger(GL_MAX_TEXTURE_SIZE);
+        MIN_MAP_BUFFER_ALIGNMENT = glGetInteger(GL_MIN_MAP_BUFFER_ALIGNMENT);
+        SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT = glGetInteger(GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT);
     }
 
     public static void init() {
