@@ -48,11 +48,11 @@ public class Test2PersistentMappedSSBO {
 
         if (bufferId != 0) {
             glStateCache.deleteShaderStorageBuffer(bufferId);
-            debug("Delete element shader storage buffer. BufferId: " + bufferId);
+            debug("Delete shader storage buffer. BufferId: " + bufferId);
             bufferId = 0;
         }
         bufferId = glGenBuffers();
-        debug("Generate element shader storage buffer. BufferId: " + bufferId);
+        debug("Generate shader storage buffer. BufferId: " + bufferId);
         glStateCache.bindShaderStorageBufferForce(bufferId);
 
         glBufferStorage(GL_SHADER_STORAGE_BUFFER, memorySize, flags);
@@ -323,6 +323,26 @@ public class Test2PersistentMappedSSBO {
 
     public void link() {
         glStateCache.bindShaderStorageBufferForce(bufferId);
+    }
+
+    public int getFlags() {
+        return flags;
+    }
+
+    public int getBufferId() {
+        return bufferId;
+    }
+
+    public long getMappedAddress() {
+        return mappedAddress;
+    }
+
+    public long getMemorySize() {
+        return memorySize;
+    }
+
+    public boolean isNeedFlush() {
+        return needFlush;
     }
 
     public static class ShaderStorageBufferData {
