@@ -18,7 +18,7 @@ import static org.lwjgl.opengl.GL30.nglMapBufferRange;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 import static org.lwjgl.opengl.GL44.glBufferStorage;
 
-public class Test2PersistentMappedIBO {
+public class Test2PersistentMappedIBO implements Test2PersistentMappedBuffer {
     private final int flags;
     private int bufferId;
     private long mappedAddress;
@@ -32,6 +32,7 @@ public class Test2PersistentMappedIBO {
         allocationBufferStorage(initialCapacity);
     }
 
+    @Override
     public void allocationBufferStorage(long capacity) {
         if (capacity % PERSISTENT_MAPPED_IBO_ALIGNMENT != 0) {
             throw new IllegalArgumentException("capacity must be multiple of " + PERSISTENT_MAPPED_IBO_ALIGNMENT);
@@ -129,6 +130,7 @@ public class Test2PersistentMappedIBO {
         return this;
     }
 
+    @Override
     public Test2PersistentMappedIBO syncToGPU() {
         if (!needFlush) {
             return this;
@@ -168,7 +170,8 @@ public class Test2PersistentMappedIBO {
         return this;
     }
 
-    private void ensure(long addSize) {
+    @Override
+    public void ensure(long addSize) {
         long requiredSize = pointer + addSize;
         if (requiredSize <= memorySize) {
             return;
@@ -226,12 +229,14 @@ public class Test2PersistentMappedIBO {
                 .logging(getClass(), DebugLevel.INFO);
     }
 
-    private void debug(String text) {
+    @Override
+    public void debug(String text) {
         if (PERSISTENT_MAPPED_IBO_DEBUG) {
             DebugLog.debug(getClass(), text);
         }
     }
 
+    @Override
     public void cleanup() {
         if (bufferId != 0) {
             glStateCache.deleteIndirectBuffer(bufferId);
@@ -242,27 +247,38 @@ public class Test2PersistentMappedIBO {
         pointer = 0L;
     }
 
+    @Override
     public int getFlags() {
         return flags;
     }
 
+    @Override
     public int getBufferId() {
         return bufferId;
     }
 
+    @Override
     public long getMappedAddress() {
         return mappedAddress;
     }
 
+    @Override
     public long getMemorySize() {
         return memorySize;
+    }
+
+    @Override
+    public boolean isNeedFlush() {
+        return needFlush;
     }
 
     public long getPointer() {
         return pointer;
     }
 
-    public void link() {
+    public Test2PersistentMappedIBO link() {
         glStateCache.bindIndirectBufferForce(bufferId);
+
+        return this;
     }
 }

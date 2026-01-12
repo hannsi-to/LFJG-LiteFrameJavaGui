@@ -20,7 +20,7 @@ import static org.lwjgl.opengl.GL30.glFlushMappedBufferRange;
 import static org.lwjgl.opengl.GL30.nglMapBufferRange;
 import static org.lwjgl.opengl.GL44.glBufferStorage;
 
-public class Test2PersistentMappedPUBO {
+public class Test2PersistentMappedPUBO implements Test2PersistentMappedBuffer {
     private final int flags;
     private final long initialPUBOCapacity;
     private final Map<Integer, PixelUnpackBufferData> puboDatum;
@@ -37,6 +37,7 @@ public class Test2PersistentMappedPUBO {
         allocationBufferStorage(initialCapacity);
     }
 
+    @Override
     public void allocationBufferStorage(long capacity) {
         if (capacity % PERSISTENT_MAPPED_PUBO_ALIGNMENT != 0) {
             throw new PersistentMappedException("capacity must be multiple of " + PERSISTENT_MAPPED_PUBO_ALIGNMENT);
@@ -108,6 +109,7 @@ public class Test2PersistentMappedPUBO {
         return this;
     }
 
+    @Override
     public Test2PersistentMappedPUBO syncToGPU() {
         if (!needFlush) {
             return this;
@@ -190,7 +192,8 @@ public class Test2PersistentMappedPUBO {
         puboData.size = newSize;
     }
 
-    private void ensure(long requiredSize) {
+    @Override
+    public void ensure(long requiredSize) {
         if (requiredSize <= memorySize) {
             return;
         }
@@ -248,12 +251,14 @@ public class Test2PersistentMappedPUBO {
         return (data != null) ? data.offset : -1L;
     }
 
-    private void debug(String text) {
+    @Override
+    public void debug(String text) {
         if (PERSISTENT_MAPPED_PUBO_DEBUG) {
             DebugLog.debug(getClass(), text);
         }
     }
 
+    @Override
     public void cleanup() {
         if (bufferId != 0) {
             glStateCache.deletePixelUnpackBuffer(bufferId);
@@ -263,26 +268,34 @@ public class Test2PersistentMappedPUBO {
         memorySize = 0L;
     }
 
-    public void link() {
+    @Override
+    public Test2PersistentMappedPUBO link() {
         glStateCache.bindPixelUnpackBufferForce(bufferId);
+
+        return this;
     }
 
+    @Override
     public int getFlags() {
         return flags;
     }
 
+    @Override
     public int getBufferId() {
         return bufferId;
     }
 
+    @Override
     public long getMappedAddress() {
         return mappedAddress;
     }
 
+    @Override
     public long getMemorySize() {
         return memorySize;
     }
 
+    @Override
     public boolean isNeedFlush() {
         return needFlush;
     }
