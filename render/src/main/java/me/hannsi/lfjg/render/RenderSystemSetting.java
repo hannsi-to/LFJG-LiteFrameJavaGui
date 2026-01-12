@@ -44,7 +44,8 @@ public class RenderSystemSetting {
     public static int LFJG_RENDER_CONTEXT_INITIAL_IBO_CAPACITY = 4096;
     public static int LFJG_RENDER_CONTEXT_INITIAL_SSBO_CAPACITY = 4096;
     public static int LFJG_RENDER_CONTEXT_INITIAL_SSBO_DATA_CAPACITY = 1024;
-    public static int LFJG_RENDER_CONTEXT_INITIAL_PBO_CAPACITY = 10000;
+    public static int LFJG_RENDER_CONTEXT_INITIAL_PUBO_CAPACITY = 10240;
+    public static int LFJG_RENDER_CONTEXT_INITIAL_PUBO_DATA_CAPACITY = 1024;
 
     public static boolean VAO_RENDERING_FRONT_AND_BACK = false;
     public static float VAO_RENDERING_FRONT_AND_BACK_LINE_WIDTH = 0.1f;
@@ -68,4 +69,7 @@ public class RenderSystemSetting {
 
     public static int PERSISTENT_MAPPED_SSBO_ALIGNMENT = MIN_MAP_BUFFER_ALIGNMENT;
     public static boolean PERSISTENT_MAPPED_SSBO_DEBUG = false;
+
+    public static int PERSISTENT_MAPPED_PUBO_ALIGNMENT = MIN_MAP_BUFFER_ALIGNMENT;
+    public static boolean PERSISTENT_MAPPED_PUBO_DEBUG = false;
 }

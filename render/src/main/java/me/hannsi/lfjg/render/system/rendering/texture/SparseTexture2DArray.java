@@ -54,15 +54,14 @@ public class SparseTexture2DArray {
         Sprite sprite = getSpriteFromName(name);
 
         glStateCache.bindTexture(GL_TEXTURE_2D_ARRAY, textureId);
-        glStateCache.bindPixelUnpackBuffer(persistentMappedPBO.getBufferId());
+        glStateCache.bindPixelUnpackBuffer(persistentMappedPUBO.getBufferId());
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
         glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 
         if (sprite.memoryPolicy == SpriteMemoryPolicy.STREAMING) {
-            persistentMappedPBO.updateSegment(PBO_SEGMENT_ID, sprite.address, byteBuffer);
+            persistentMappedPUBO.updateByteBuffer(PBO_SEGMENT_ID, sprite.address, byteBuffer);
 
-            long absoluteOffset = persistentMappedPBO.getSegmentOffset(PBO_SEGMENT_ID) + sprite.address;
             glTexSubImage3D(
                     GL_TEXTURE_2D_ARRAY,
                     0,
@@ -74,7 +73,7 @@ public class SparseTexture2DArray {
                     1,
                     GL_RGBA,
                     GL_UNSIGNED_BYTE,
-                    absoluteOffset
+                    sprite.address
             );
         } else {
             DebugLog.warning(getClass(), "When updating information using the updateSprite method, the " + SpriteMemoryPolicy.class.getSimpleName() + " within the Sprite(" + name + ") must be set to " + SpriteMemoryPolicy.STREAMING.getName() + ".");
@@ -88,8 +87,8 @@ public class SparseTexture2DArray {
     public SparseTexture2DArray updateFromAtlas() {
         glStateCache.bindTexture(GL_TEXTURE_2D_ARRAY, textureId);
 
-        persistentMappedPBO.resetSegment(PBO_SEGMENT_ID);
-        glStateCache.bindPixelUnpackBuffer(persistentMappedPBO.getBufferId());
+        persistentMappedPUBO.resetSegmentId(PBO_SEGMENT_ID);
+        glStateCache.bindPixelUnpackBuffer(persistentMappedPUBO.getBufferId());
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
@@ -98,8 +97,7 @@ public class SparseTexture2DArray {
             if (sprite.commited && sprite.data != null) {
                 sprite.data.rewind();
 
-                long offset = persistentMappedPBO.uploadToSegment(PBO_SEGMENT_ID, sprite.data);
-
+                long offset = persistentMappedPUBO.addByteBuffer(PBO_SEGMENT_ID, sprite.data);
                 glTexSubImage3D(
                         GL_TEXTURE_2D_ARRAY,
                         0,

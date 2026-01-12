@@ -48,7 +48,7 @@ public class LFJGRenderContext {
     public static Test2PersistentMappedEBO persistentMappedEBO;
     public static Test2PersistentMappedIBO persistentMappedIBO;
     public static Test2PersistentMappedSSBO persistentMappedSSBO;
-    public static TestPersistentMappedPBO persistentMappedPBO;
+    public static Test2PersistentMappedPUBO persistentMappedPUBO;
     public static TestMesh mesh;
     public static VAORendering vaoRendering;
     public static TextureCache textureCache;
@@ -91,7 +91,7 @@ public class LFJGRenderContext {
         persistentMappedEBO = new Test2PersistentMappedEBO(MeshConstants.DEFAULT_FLAGS_HINT, LFJG_RENDER_CONTEXT_INITIAL_EBO_CAPACITY);
         persistentMappedIBO = new Test2PersistentMappedIBO(MeshConstants.DEFAULT_FLAGS_HINT, LFJG_RENDER_CONTEXT_INITIAL_IBO_CAPACITY);
         persistentMappedSSBO = new Test2PersistentMappedSSBO(MeshConstants.DEFAULT_FLAGS_HINT, LFJG_RENDER_CONTEXT_INITIAL_SSBO_CAPACITY, LFJG_RENDER_CONTEXT_INITIAL_SSBO_DATA_CAPACITY);
-        persistentMappedPBO = new TestPersistentMappedPBO(MeshConstants.DEFAULT_FLAGS_HINT, LFJG_RENDER_CONTEXT_INITIAL_PBO_CAPACITY);
+        persistentMappedPUBO = new Test2PersistentMappedPUBO(MeshConstants.DEFAULT_FLAGS_HINT, LFJG_RENDER_CONTEXT_INITIAL_PUBO_CAPACITY, LFJG_RENDER_CONTEXT_INITIAL_PUBO_DATA_CAPACITY);
 
         mesh = TestMesh.createMesh();
 
