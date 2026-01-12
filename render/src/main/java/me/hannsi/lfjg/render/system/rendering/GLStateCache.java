@@ -362,6 +362,11 @@ public class GLStateCache {
         lastPixelUnpackBuffer = buffer;
     }
 
+    public void bindPixelUnpackBufferForce(int buffer) {
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer);
+        lastPixelUnpackBuffer = buffer;
+    }
+
     public void deletePixelUnpackBuffer(int buffer) {
         if (lastPixelUnpackBuffer == buffer) {
             bindPixelUnpackBuffer(0);
@@ -375,6 +380,11 @@ public class GLStateCache {
         if (lastPixelPackBuffer == buffer) {
             return;
         }
+        glBindBuffer(GL_PIXEL_PACK_BUFFER, buffer);
+        lastPixelPackBuffer = buffer;
+    }
+
+    public void bindPixelPackBufferForce(int buffer) {
         glBindBuffer(GL_PIXEL_PACK_BUFFER, buffer);
         lastPixelPackBuffer = buffer;
     }
