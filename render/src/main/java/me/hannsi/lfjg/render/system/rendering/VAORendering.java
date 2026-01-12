@@ -55,7 +55,7 @@ public class VAORendering {
         persistentMappedEBO.syncToGPU();
         persistentMappedIBO.syncToGPU();
         persistentMappedSSBO.syncToGPU();
-        persistentMappedPBO.syncToGPU();
+        persistentMappedPUBO.syncToGPU();
 
         glMultiDrawElementsIndirect(
                 DrawType.TRIANGLES.getId(),
