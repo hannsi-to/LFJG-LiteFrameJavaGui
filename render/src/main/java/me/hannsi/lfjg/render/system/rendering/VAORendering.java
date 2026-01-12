@@ -30,6 +30,8 @@ public class VAORendering {
             mesh.build();
             mesh.initBufferObject();
             mesh.setNeedRepack(false);
+
+            persistentMappedSSBO.bindBufferRange();
         }
 
         for (Map.Entry<Integer, TestMesh.Builder> entry : glObjectPool.getObjects().entrySet()) {
@@ -48,9 +50,7 @@ public class VAORendering {
                 builder.getInstanceData().resetDirtyFlag();
             }
         }
-
-        persistentMappedSSBO.bindBufferRange();
-
+        
         persistentMappedVBO.syncToGPU();
         persistentMappedEBO.syncToGPU();
         persistentMappedIBO.syncToGPU();
