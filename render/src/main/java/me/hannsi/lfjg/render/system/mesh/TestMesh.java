@@ -27,8 +27,6 @@ public class TestMesh {
     private int indexCount;
     private int commandCount;
 
-    private boolean direct = false;
-
     TestMesh() {
         this.vaoId = glGenVertexArrays();
         this.pendingBuilders = new ArrayList<>();
@@ -156,8 +154,6 @@ public class TestMesh {
     }
 
     public TestMesh directDeleteObjects() {
-        direct = true;
-
         new LogGenerator("Direct Delete Objects Start")
                 .kv("Total Objects", glObjectPool.getObjects().size())
                 .kv("Deleted Objects", glObjectPool.getDeletedObjects().size())
