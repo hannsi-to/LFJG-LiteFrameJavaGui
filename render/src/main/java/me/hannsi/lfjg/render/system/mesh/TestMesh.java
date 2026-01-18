@@ -354,7 +354,6 @@ public class TestMesh {
         private PointType pointType = PointType.SQUARE;
         private ObjectData objectData = new ObjectData(1);
         private ProjectionType projectionType = ProjectionType.ORTHOGRAPHIC_PROJECTION;
-        private int renderOrder = 0;
         private boolean draw = true;
         private long bytes = 0L;
         private int baseCommand = 0;
@@ -420,12 +419,6 @@ public class TestMesh {
             return this;
         }
 
-        public Builder renderOrder(int renderOrder) {
-            this.renderOrder = renderOrder;
-
-            return this;
-        }
-
         public Builder draw(boolean draw) {
             this.draw = draw;
 
@@ -470,10 +463,6 @@ public class TestMesh {
 
         public ProjectionType getProjectionType() {
             return projectionType;
-        }
-
-        public int getRenderOrder() {
-            return renderOrder;
         }
 
         public boolean isDraw() {
