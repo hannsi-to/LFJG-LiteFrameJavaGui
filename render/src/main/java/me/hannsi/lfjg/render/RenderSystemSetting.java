@@ -8,26 +8,6 @@ import org.joml.Vector4f;
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
 
 public class RenderSystemSetting {
-    public static final BlendType[] MESH_RENDER_BLEND_ORDER = {
-            BlendType.NORMAL,
-            BlendType.COLOR_ONLY,
-            BlendType.DARKEN,
-            BlendType.MIN,
-            BlendType.SUBTRACT,
-            BlendType.SUBTRACT_NORMAL,
-            BlendType.INVERT,
-            BlendType.ALPHA,
-            BlendType.PREMULTIPLIED_ALPHA,
-            BlendType.MULTIPLY,
-            BlendType.MULTIPLY_ALPHA,
-            BlendType.LIGHTEN,
-            BlendType.MAX,
-            BlendType.ADD,
-            BlendType.ADD_NO_ALPHA,
-            BlendType.SCREEN,
-            BlendType.ALPHA_ONLY
-    };
-    public static boolean MESH_DEBUG_DIRECT_DELETE_OBJECT_REINSERTION = false;
     public static ProjectionType MESH_CONSTANTS_DEFAULT_PROJECTION_TYPE = ProjectionType.ORTHOGRAPHIC_PROJECTION;
     public static int MESH_CONSTANTS_BUFFER_COUNT = 3;
 
@@ -46,6 +26,8 @@ public class RenderSystemSetting {
     public static int LFJG_RENDER_CONTEXT_INITIAL_SSBO_DATA_CAPACITY = 1024;
     public static int LFJG_RENDER_CONTEXT_INITIAL_PUBO_CAPACITY = 10240;
     public static int LFJG_RENDER_CONTEXT_INITIAL_PUBO_DATA_CAPACITY = 1024;
+    public static BlendType LFJG_RENDER_CONTEXT_TEXTURE_BLEND_MODE = BlendType.PREMULTIPLIED_ALPHA;
+    public static BlendType LFJG_RENDER_CONTEXT_SPRITE_BLEND_MODE = BlendType.NO_BLEND;
 
     public static boolean VAO_RENDERING_FRONT_AND_BACK = false;
     public static float VAO_RENDERING_FRONT_AND_BACK_LINE_WIDTH = 0.1f;
@@ -54,9 +36,9 @@ public class RenderSystemSetting {
     public static int ATLAS_PACKER_ATLAS_HEIGHT = MAX_TEXTURE_SIZE;
     public static int ATLAS_PACKER_ATLAS_LAYER = 1;
 
-    public static ProjectionType OBJECT_PARAMETER_DEFAULT_PROJECTION_TYPE = ProjectionType.ORTHOGRAPHIC_PROJECTION;
-    public static int OBJECT_PARAMETER_DEFAULT_SPRITE_INDEX = NO_ATTACH_TEXTURE;
-    public static Color OBJECT_PARAMETER_DEFAULT_COLOR = new Color(0, 1, 0, 1);
+    public static ProjectionType INSTANCE_PARAMETER_DEFAULT_PROJECTION_TYPE = ProjectionType.ORTHOGRAPHIC_PROJECTION;
+    public static int INSTANCE_PARAMETER_DEFAULT_SPRITE_INDEX = NO_ATTACH_TEXTURE;
+    public static Color INSTANCE_PARAMETER_DEFAULT_COLOR = new Color(0, 1, 0, 1);
 
     public static int PERSISTENT_MAPPED_VBO_ALIGNMENT = MIN_MAP_BUFFER_ALIGNMENT;
     public static boolean PERSISTENT_MAPPED_VBO_DEBUG = false;

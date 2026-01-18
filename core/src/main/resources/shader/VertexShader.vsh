@@ -10,22 +10,34 @@ flat out vec4 vSpriteColor;
 out vec4 vColor;
 out vec2 vUV;
 
-struct ObjectParameter {
+struct ObjectData {
+    uint _padding1;
+    uint _padding2;
+    uint _padding3;
+    uint _padding4;
+};
+
+struct InstanceParameter {
     mat4 transform;
     vec4 spriteColor;
     uint spriteIndex;
+    uint objectId;
     uint _pading1;
     uint _pading2;
-    uint _pading3;
 };
 
-layout(std430, binding = 1) buffer ObjectParameters {
-    ObjectParameter objectParameters[];
+layout(std430, binding = 1) buffer ObjectDatum {
+    ObjectData objectDatum[];
+};
+
+layout(std430, binding = 2) buffer InstanceParameters {
+    InstanceParameter instanceParameters[];
 };
 
 void main() {
     uint index = gl_BaseInstance + gl_InstanceID;
-    ObjectParameter t = objectParameters[index];
+    InstanceParameter t = instanceParameters[index];
+    ObjectData o = objectDatum[t.objectId];
 
     gl_Position = t.transform * vec4(inPosition, 1.0);
     vSpriteIndex = t.spriteIndex;

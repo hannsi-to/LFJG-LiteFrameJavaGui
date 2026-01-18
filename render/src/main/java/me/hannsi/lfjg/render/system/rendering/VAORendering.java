@@ -13,10 +13,6 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL43.glMultiDrawElementsIndirect;
 
 public class VAORendering {
-    public void push() {
-
-    }
-
     public void draw() {
         if (VAO_RENDERING_FRONT_AND_BACK) {
             glStateCache.polygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -38,27 +34,28 @@ public class VAORendering {
             TestMesh.Builder builder = entry.getValue();
 
             long base = builder.getBaseCommand() * DrawElementsIndirectCommand.BYTES;
-            int count = builder.getInstanceData().drawElementsIndirectCommand.count;
+            int count = builder.getObjectData().drawElementsIndirectCommand.count;
             if (!builder.isDraw()) {
                 count = 0;
             }
             persistentMappedIBO.update(base, 0, count);
 
-            if (builder.getInstanceData().isDirtyFrag()) {
-                mesh.updateInstanceData(entry.getKey(), builder.getInstanceData());
+            if (builder.getObjectData().isInstanceParameterFlag()) {
+                mesh.updateObjectData(entry.getKey(), builder.getObjectData());
 
-                builder.getInstanceData().resetDirtyFlag();
+                builder.getObjectData().resetInstanceParameterFlag();
             }
         }
-        
+
         persistentMappedVBO.syncToGPU();
         persistentMappedEBO.syncToGPU();
         persistentMappedIBO.syncToGPU();
         persistentMappedSSBO.syncToGPU();
         persistentMappedPUBO.syncToGPU();
 
+        applyBlendState(BlendType.ALPHA);
         glMultiDrawElementsIndirect(
-                DrawType.TRIANGLES.getId(),
+                GL_TRIANGLES,
                 GL_UNSIGNED_INT,
                 0,
                 mesh.getCommandCount(),
@@ -66,8 +63,14 @@ public class VAORendering {
         );
     }
 
-    public void pop() {
-
+    private void drawIndirect(int first, int count) {
+        glMultiDrawElementsIndirect(
+                GL_TRIANGLES,
+                GL_UNSIGNED_INT,
+                (long) first * DrawElementsIndirectCommand.BYTES,
+                count,
+                0
+        );
     }
 
     private void applyBlendState(BlendType type) {

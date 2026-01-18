@@ -9,15 +9,15 @@ import static me.hannsi.lfjg.core.Core.UNSAFE;
 import static me.hannsi.lfjg.render.LFJGRenderContext.mainCamera;
 import static me.hannsi.lfjg.render.RenderSystemSetting.*;
 
-public class ObjectParameter {
-    public static final int BYTES = 16 * Float.BYTES + 4 * Float.BYTES + Float.BYTES + 3 * Float.BYTES;
+public class InstanceParameter {
+    public static final int BYTES = 16 * Float.BYTES + 4 * Float.BYTES + Integer.BYTES + 3 * Integer.BYTES;
     protected final Matrix4f TEMP_MATRIX = new Matrix4f();
     protected final Matrix4f MODEL_MATRIX = new Matrix4f();
-    protected boolean dirtyFlag = true;
+    protected boolean dirtyFlag;
     private final Quaternionf rotation;
     private ProjectionType projectionType;
     private int spriteIndex;
-    private long address;
+    private int objectId;
     private float x;
     private float y;
     private float z;
@@ -26,8 +26,9 @@ public class ObjectParameter {
     private float scaleZ;
     private Color color;
 
-    ObjectParameter() {
-        this.projectionType = OBJECT_PARAMETER_DEFAULT_PROJECTION_TYPE;
+    InstanceParameter() {
+        this.dirtyFlag = false;
+        this.projectionType = INSTANCE_PARAMETER_DEFAULT_PROJECTION_TYPE;
         this.x = 0;
         this.y = 0;
         this.z = 0;
@@ -35,105 +36,124 @@ public class ObjectParameter {
         this.scaleX = 1;
         this.scaleY = 1;
         this.scaleZ = 1;
-        this.spriteIndex = OBJECT_PARAMETER_DEFAULT_SPRITE_INDEX;
-        this.color = OBJECT_PARAMETER_DEFAULT_COLOR;
+        this.spriteIndex = INSTANCE_PARAMETER_DEFAULT_SPRITE_INDEX;
+        this.objectId = -1;
+        this.color = INSTANCE_PARAMETER_DEFAULT_COLOR;
     }
 
-    public ObjectParameter(ProjectionType projectionType, int spriteIndex, float x, float y, float z, Quaternionf rotation, float scaleY, float scaleX, float scaleZ, Color color) {
-        this.rotation = rotation;
-        this.projectionType = projectionType;
-        this.spriteIndex = spriteIndex;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.scaleY = scaleY;
-        this.scaleX = scaleX;
-        this.scaleZ = scaleZ;
-        this.color = color;
+    public static InstanceParameter createBuilder() {
+        return new InstanceParameter();
     }
 
-    public static ObjectParameter createBuilder() {
-        return new ObjectParameter();
-    }
-
-    public ObjectParameter projectionType(ProjectionType projectionType) {
+    public InstanceParameter projectionType(ProjectionType projectionType) {
         this.projectionType = projectionType;
 
+        dirtyFlag = true;
+
         return this;
     }
 
-    public ObjectParameter x(float x) {
+    public InstanceParameter x(float x) {
         this.x = x;
 
+        dirtyFlag = true;
+
         return this;
     }
 
-    public ObjectParameter y(float y) {
+    public InstanceParameter y(float y) {
         this.y = y;
 
+        dirtyFlag = true;
+
         return this;
     }
 
-    public ObjectParameter z(float z) {
+    public InstanceParameter z(float z) {
         this.z = z;
 
+        dirtyFlag = true;
+
         return this;
     }
 
-    public ObjectParameter angleX(float angleX) {
+    public InstanceParameter angleX(float angleX) {
         this.rotation.rotateX(angleX);
 
+        dirtyFlag = true;
+
         return this;
     }
 
-    public ObjectParameter angleY(float angleY) {
+    public InstanceParameter angleY(float angleY) {
         this.rotation.rotateY(angleY);
 
+        dirtyFlag = true;
+
         return this;
     }
 
-    public ObjectParameter angleZ(float angleZ) {
+    public InstanceParameter angleZ(float angleZ) {
         this.rotation.rotateZ(angleZ);
 
+        dirtyFlag = true;
+
         return this;
     }
 
-    public ObjectParameter scaleX(float scaleX) {
+    public InstanceParameter scaleX(float scaleX) {
         this.scaleX = scaleX;
 
+        dirtyFlag = true;
+
         return this;
     }
 
-    public ObjectParameter scaleY(float scaleY) {
+    public InstanceParameter scaleY(float scaleY) {
         this.scaleY = scaleY;
 
+        dirtyFlag = true;
+
         return this;
     }
 
-    public ObjectParameter scaleZ(float scaleZ) {
+    public InstanceParameter scaleZ(float scaleZ) {
         this.scaleZ = scaleZ;
 
+        dirtyFlag = true;
+
         return this;
     }
 
-    public ObjectParameter spriteIndex(int spriteIndex) {
+    public InstanceParameter spriteIndex(int spriteIndex) {
         this.spriteIndex = spriteIndex;
 
+        dirtyFlag = true;
+
         return this;
     }
 
-    public ObjectParameter color(Color color) {
+    public InstanceParameter objectId(int objectId) {
+        this.objectId = objectId;
+
+        dirtyFlag = true;
+
+        return this;
+    }
+
+    public InstanceParameter color(Color color) {
         this.color = color;
 
+        dirtyFlag = true;
+
         return this;
     }
 
-    public ObjectParameter getToAddress(long address, Matrix4f vpMatrix) {
+    public InstanceParameter getToAddress(long address, Matrix4f vpMatrix) {
         if (!dirtyFlag && !mainCamera.isDirtyFlag()) {
             return this;
         }
 
-        this.address = address;
         if (dirtyFlag) {
             MODEL_MATRIX.translationRotateScale(x, y, z, rotation.x, rotation.y, rotation.z, rotation.w, scaleX, scaleY, scaleZ);
             dirtyFlag = false;
@@ -146,17 +166,15 @@ public class ObjectParameter {
         color.getToAddress(address);
         address += 4 * Float.BYTES;
         UNSAFE.putInt(address, spriteIndex);
+        address += Float.BYTES;
+        UNSAFE.putInt(address, objectId);
 
         mainCamera.setDirtyFlag(false);
 
         return this;
     }
 
-    public ObjectParameter newInstance() {
-        return new ObjectParameter(projectionType, spriteIndex, x, y, z, rotation, scaleX, scaleY, scaleZ, color);
-    }
-
-    public ObjectParameter reset() {
+    public InstanceParameter reset() {
         this.x = 0;
         this.y = 0;
         this.z = 0;
@@ -170,7 +188,7 @@ public class ObjectParameter {
         return this;
     }
 
-    public ObjectParameter translate(float x, float y, float z) {
+    public InstanceParameter translate(float x, float y, float z) {
         this.x += x;
         this.y += y;
         this.z += z;
@@ -180,7 +198,7 @@ public class ObjectParameter {
         return this;
     }
 
-    public ObjectParameter rotateXYZ(float angleX, float angleY, float angleZ) {
+    public InstanceParameter rotateXYZ(float angleX, float angleY, float angleZ) {
         rotation
                 .rotateX(angleX)
                 .rotateY(angleY)
@@ -191,7 +209,7 @@ public class ObjectParameter {
         return this;
     }
 
-    public ObjectParameter scale(float scaleX, float scaleY, float scaleZ) {
+    public InstanceParameter scale(float scaleX, float scaleY, float scaleZ) {
         this.scaleX *= scaleX;
         this.scaleY *= scaleY;
         this.scaleZ *= scaleZ;
@@ -232,11 +250,9 @@ public class ObjectParameter {
     }
 
     public Quaternionf getRotation() {
-        return rotation;
-    }
+        dirtyFlag = true;
 
-    public long getAddress() {
-        return address;
+        return rotation;
     }
 
     public float getScaleX() {
@@ -273,12 +289,42 @@ public class ObjectParameter {
         return projectionType;
     }
 
+    public void setProjectionType(ProjectionType projectionType) {
+        this.projectionType = projectionType;
+
+        dirtyFlag = true;
+    }
+
     public int getSpriteIndex() {
         return spriteIndex;
     }
 
     public void setSpriteIndex(int spriteIndex) {
         this.spriteIndex = spriteIndex;
+
+        dirtyFlag = true;
+    }
+
+    public int getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(int objectId) {
+        this.objectId = objectId;
+
+        dirtyFlag = true;
+    }
+
+    public Color getColor() {
+        dirtyFlag = true;
+
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+
+        dirtyFlag = true;
     }
 
     public void setDirtyFlag(boolean dirtyFlag) {

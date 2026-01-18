@@ -21,7 +21,7 @@ public class GLObject implements Cloneable {
 
     private FrameBuffer frameBuffer;
 
-    private ObjectParameter objectParameter;
+    private InstanceParameter instanceParameter;
     private Matrix4f viewMatrix;
 
     //    private EffectCache effectCache;
@@ -34,7 +34,7 @@ public class GLObject implements Cloneable {
         this.frameBuffer = null;
 
         this.viewMatrix = null;
-        this.objectParameter = new ObjectParameter();
+        this.instanceParameter = new InstanceParameter();
     }
 
     public void cleanup() {
@@ -178,11 +178,11 @@ public class GLObject implements Cloneable {
         this.animationCache = animationCache;
     }
 
-    public ObjectParameter getTransform() {
-        return objectParameter;
+    public InstanceParameter getTransform() {
+        return instanceParameter;
     }
 
-    public void setTransform(ObjectParameter objectParameter) {
-        this.objectParameter = objectParameter;
+    public void setTransform(InstanceParameter instanceParameter) {
+        this.instanceParameter = instanceParameter;
     }
 }

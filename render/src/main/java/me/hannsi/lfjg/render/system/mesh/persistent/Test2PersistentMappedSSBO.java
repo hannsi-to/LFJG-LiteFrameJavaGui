@@ -5,7 +5,7 @@ import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.debug.exceptions.render.mesh.persistent.PersistentMappedException;
-import me.hannsi.lfjg.render.renderers.ObjectParameter;
+import me.hannsi.lfjg.render.renderers.InstanceParameter;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL44;
 import org.lwjgl.system.MemoryUtil;
@@ -98,16 +98,7 @@ public class Test2PersistentMappedSSBO implements Test2PersistentMappedBuffer {
         return this;
     }
 
-    public Test2PersistentMappedSSBO addVec4(int bindingPoint, float x, float y, float z, float w) {
-        float[] values = new float[]{x, y, z, w};
-        for (float value : values) {
-            addFloat(bindingPoint, value);
-        }
-
-        return this;
-    }
-
-    public Test2PersistentMappedSSBO addObjectParameter(int bindingPoint, ObjectParameter objectParameter) {
+    public Test2PersistentMappedSSBO addInt(int bindingPoint, int value) {
         if (!ssboDatum.containsKey(bindingPoint)) {
             long offset = 0L;
             for (ShaderStorageBufferData entry : ssboDatum.values()) {
@@ -120,23 +111,53 @@ public class Test2PersistentMappedSSBO implements Test2PersistentMappedBuffer {
         }
         ShaderStorageBufferData ssboData = ssboDatum.get(bindingPoint);
 
-        ensureSSBODatum(ssboData, ObjectParameter.BYTES);
+        ensureSSBODatum(ssboData, Integer.BYTES);
 
-        Matrix4f currentVP = (objectParameter.getProjectionType() == ProjectionType.PERSPECTIVE_PROJECTION) ? precomputedViewProjection3D : precomputedViewProjection2D;
-        memPutObjectParameter(ssboData.offset + ssboData.pointer, objectParameter, currentVP);
-        ssboData.pointer += ObjectParameter.BYTES;
+        memPutInt(ssboData.offset + ssboData.pointer, value);
+        ssboData.pointer += Integer.BYTES;
 
         return this;
     }
 
-    public Test2PersistentMappedSSBO updateObjectParameter(int bindingPoint, int index, ObjectParameter objectParameter) {
+    public Test2PersistentMappedSSBO addVec4(int bindingPoint, float x, float y, float z, float w) {
+        float[] values = new float[]{x, y, z, w};
+        for (float value : values) {
+            addFloat(bindingPoint, value);
+        }
+
+        return this;
+    }
+
+    public Test2PersistentMappedSSBO addInstanceParameter(int bindingPoint, InstanceParameter instanceParameter) {
+        if (!ssboDatum.containsKey(bindingPoint)) {
+            long offset = 0L;
+            for (ShaderStorageBufferData entry : ssboDatum.values()) {
+                offset = Math.max(offset, entry.getLastAddress());
+            }
+
+            offset = (offset + (PERSISTENT_MAPPED_SSBO_ALIGNMENT - 1)) & -PERSISTENT_MAPPED_SSBO_ALIGNMENT;
+
+            ssboDatum.put(bindingPoint, new ShaderStorageBufferData(offset, initialSSBOCapacity, 0L));
+        }
+        ShaderStorageBufferData ssboData = ssboDatum.get(bindingPoint);
+
+        ensureSSBODatum(ssboData, InstanceParameter.BYTES);
+
+        Matrix4f currentVP = (instanceParameter.getProjectionType() == ProjectionType.PERSPECTIVE_PROJECTION) ? precomputedViewProjection3D : precomputedViewProjection2D;
+        memPutInstanceParameter(ssboData.offset + ssboData.pointer, instanceParameter, currentVP);
+        ssboData.pointer += InstanceParameter.BYTES;
+
+        return this;
+    }
+
+    public Test2PersistentMappedSSBO updateInstanceParameter(int bindingPoint, int index, InstanceParameter instanceParameter) {
         ShaderStorageBufferData ssboData = ssboDatum.get(bindingPoint);
         if (ssboData == null) {
             throw new IndexOutOfBoundsException("Invalid binding point");
         }
 
-        Matrix4f currentVP = (objectParameter.getProjectionType() == ProjectionType.PERSPECTIVE_PROJECTION) ? precomputedViewProjection3D : precomputedViewProjection2D;
-        memPutObjectParameter(ssboData.offset + ((long) index * ObjectParameter.BYTES), objectParameter, currentVP);
+        Matrix4f currentVP = (instanceParameter.getProjectionType() == ProjectionType.PERSPECTIVE_PROJECTION) ? precomputedViewProjection3D : precomputedViewProjection2D;
+        memPutInstanceParameter(ssboData.offset + ((long) index * InstanceParameter.BYTES), instanceParameter, currentVP);
 
         return this;
     }
@@ -204,7 +225,7 @@ public class Test2PersistentMappedSSBO implements Test2PersistentMappedBuffer {
     }
 
     private Test2PersistentMappedSSBO memPutFloat(long pointer, float value) {
-        if (pointer + Integer.BYTES > memorySize) {
+        if (pointer + Float.BYTES > memorySize) {
             throw new PersistentMappedException("Write would exceed mapped memory");
         }
 
@@ -215,12 +236,24 @@ public class Test2PersistentMappedSSBO implements Test2PersistentMappedBuffer {
         return this;
     }
 
-    private Test2PersistentMappedSSBO memPutObjectParameter(long pointer, ObjectParameter objectParameter, Matrix4f vp) {
-        if (pointer + ObjectParameter.BYTES > memorySize) {
+    private Test2PersistentMappedSSBO memPutInt(long pointer, int value) {
+        if (pointer + Integer.BYTES > memorySize) {
             throw new PersistentMappedException("Write would exceed mapped memory");
         }
 
-        objectParameter.getToAddress(mappedAddress + pointer, vp);
+        MemoryUtil.memPutInt(mappedAddress + pointer, value);
+
+        needFlush = true;
+
+        return this;
+    }
+
+    private Test2PersistentMappedSSBO memPutInstanceParameter(long pointer, InstanceParameter instanceParameter, Matrix4f vp) {
+        if (pointer + InstanceParameter.BYTES > memorySize) {
+            throw new PersistentMappedException("Write would exceed mapped memory");
+        }
+
+        instanceParameter.getToAddress(mappedAddress + pointer, vp);
 
         needFlush = true;
 

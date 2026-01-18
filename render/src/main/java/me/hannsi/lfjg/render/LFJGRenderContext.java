@@ -11,6 +11,7 @@ import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.rendering.texture.SparseTexture2DArray;
 import me.hannsi.lfjg.render.system.rendering.texture.atlas.AtlasPacker;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import me.hannsi.lfjg.render.uitl.id.GLObjectPool;
 import org.joml.Matrix4f;
 
@@ -34,7 +35,8 @@ public class LFJGRenderContext {
     public static final int MAX_TEXTURE_SIZE;
     public static final int MIN_MAP_BUFFER_ALIGNMENT;
     public static final int SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT;
-    public static final int OBJECT_PARAMETERS_BINDING_POINT;
+    public static final int OBJECT_DATA_BIDING_POINT;
+    public static final int INSTANCE_PARAMETERS_BINDING_POINT;
     public static final int SPRITE_DATUM_BINDING_POINT;
     public static GLObjectPool glObjectPool;
     public static Camera mainCamera;
@@ -64,8 +66,9 @@ public class LFJGRenderContext {
         MAX_TEXTURE_SIZE = glGetInteger(GL_MAX_TEXTURE_SIZE);
         MIN_MAP_BUFFER_ALIGNMENT = glGetInteger(GL_MIN_MAP_BUFFER_ALIGNMENT);
         SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT = glGetInteger(GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT);
-        OBJECT_PARAMETERS_BINDING_POINT = 1;
-        SPRITE_DATUM_BINDING_POINT = 2;
+        OBJECT_DATA_BIDING_POINT = 1;
+        INSTANCE_PARAMETERS_BINDING_POINT = 2;
+        SPRITE_DATUM_BINDING_POINT = 3;
     }
 
     public static void init() {
@@ -106,5 +109,16 @@ public class LFJGRenderContext {
             precomputedViewProjection3D = projection3D.getMatrix4f().mul(mainCamera.getViewMatrix());
             mainCamera.setDirtyFlag(false);
         }
+
+        shaderProgram.bind();
+        shaderProgram.setUniform("uTextArray", UploadUniformType.ONCE, 0);
+        shaderProgram.setUniform("uTextureBlendMode", UploadUniformType.ONCE, LFJG_RENDER_CONTEXT_TEXTURE_BLEND_MODE.getId());
+        shaderProgram.setUniform("uSpriteBlendMode", UploadUniformType.ONCE, LFJG_RENDER_CONTEXT_SPRITE_BLEND_MODE.getId());
+
+        vaoRendering.draw();
+    }
+
+    public static void finish() {
+
     }
 }
