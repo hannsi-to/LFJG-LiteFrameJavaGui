@@ -3,15 +3,13 @@ package me.hannsi.lfjg.render.system.mesh;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
-import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.debug.exceptions.render.mesh.MeshException;
-import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.InstanceParameter;
-import me.hannsi.lfjg.render.renderers.JointType;
-import me.hannsi.lfjg.render.renderers.PointType;
-import me.hannsi.lfjg.render.system.rendering.DrawType;
+import me.hannsi.lfjg.render.system.rendering.DrawBatch;
+import me.hannsi.lfjg.render.system.rendering.Pipeline;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +17,7 @@ import static me.hannsi.lfjg.render.LFJGRenderContext.*;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class TestMesh {
-    private final List<Builder> pendingBuilders;
+    private final List<MeshBuilder> pendingMeshBuilders;
     private final int vaoId;
     private boolean needRepack;
     private int currentIndex;
@@ -29,7 +27,7 @@ public class TestMesh {
 
     TestMesh() {
         this.vaoId = glGenVertexArrays();
-        this.pendingBuilders = new ArrayList<>();
+        this.pendingMeshBuilders = new ArrayList<>();
         this.needRepack = false;
 
         this.currentIndex = 0;
@@ -53,8 +51,8 @@ public class TestMesh {
         return this;
     }
 
-    public TestMesh addObject(Builder builder) {
-        pendingBuilders.add(builder);
+    public TestMesh addObject(MeshBuilder meshBuilder) {
+        pendingMeshBuilders.add(meshBuilder);
 
         needRepack = true;
 
@@ -69,31 +67,43 @@ public class TestMesh {
         int baseInstance = 0;
         int objectCount = 0;
 
+        drawBatches.clear();
+        needUpdateBuilders.clear();
         persistentMappedVBO.reset();
         persistentMappedEBO.reset();
         persistentMappedIBO.reset();
         persistentMappedSSBO.resetBindingPoint(INSTANCE_PARAMETERS_BINDING_POINT);
 
-        for (Builder builder : pendingBuilders) {
+        Pipeline currentPipeline = null;
+        DrawBatch currentDrawBatch = null;
+        for (MeshBuilder meshBuilder : pendingMeshBuilders) {
+            Pipeline newPipeline = new Pipeline(meshBuilder.getBlendType());
+            if (currentPipeline == null || !currentPipeline.equals(newPipeline)) {
+                currentPipeline = newPipeline;
+                drawBatches.add(currentDrawBatch = new DrawBatch(currentPipeline, commandCount));
+            }
+
+            currentDrawBatch.incrementCommandCount();
+
             TestElementPair elementPair = TestPolygonTriangulator.createPolygonTriangulator()
-                    .drawType(builder.drawType)
-                    .lineWidth(builder.lineWidth)
-                    .lineJointType(builder.jointType)
-                    .pointSize(builder.pointSize)
-                    .pointType(builder.pointType)
-                    .projectionType(builder.projectionType)
-                    .vertices(builder.vertices)
+                    .drawType(meshBuilder.getDrawType())
+                    .lineWidth(meshBuilder.getLineWidth())
+                    .lineJointType(meshBuilder.getJointType())
+                    .pointSize(meshBuilder.getPointSize())
+                    .pointType(meshBuilder.getPointType())
+                    .projectionType(meshBuilder.getProjectionType())
+                    .vertices(meshBuilder.getVertices())
                     .process()
                     .getResult();
 
-            builder.setBytes(elementPair.vertices.length * Vertex.BYTES + (long) elementPair.indices.length * Float.BYTES + DrawElementsIndirectCommand.BYTES);
-            builder.setBaseCommand(commandCount);
+            meshBuilder.setBytes(elementPair.vertices.length * Vertex.BYTES + (long) elementPair.indices.length * Float.BYTES + DrawElementsIndirectCommand.BYTES);
+            meshBuilder.setBaseCommand(commandCount);
 
             int baseVertex = vertexCount;
 
             int startOffset = writeGeometry(elementPair);
 
-            ObjectData objectData = builder.objectData;
+            ObjectData objectData = meshBuilder.getObjectData();
             for (InstanceParameter instanceParameter : objectData.getInstanceParameters()) {
                 instanceParameter.objectId(objectCount);
             }
@@ -101,21 +111,60 @@ public class TestMesh {
                 persistentMappedSSBO.addInstanceParameter(INSTANCE_PARAMETERS_BINDING_POINT, objectData.getInstanceParameters()[i]);
             }
 
-            builder.objectData.drawElementsIndirectCommand.count = elementPair.indices.length;
-            builder.objectData.drawElementsIndirectCommand.firstIndex = startOffset;
-            builder.objectData.drawElementsIndirectCommand.baseVertex = baseVertex;
-            builder.objectData.drawElementsIndirectCommand.baseInstance = baseInstance;
-            writeIndirectCommand(builder.objectData.drawElementsIndirectCommand);
+            objectData.drawElementsIndirectCommand.count = elementPair.indices.length;
+            objectData.drawElementsIndirectCommand.firstIndex = startOffset;
+            objectData.drawElementsIndirectCommand.baseVertex = baseVertex;
+            objectData.drawElementsIndirectCommand.baseInstance = baseInstance;
+            writeIndirectCommand(objectData.drawElementsIndirectCommand);
 
-            if (builder.objectIdPointer.isNullptr()) {
-                int id = glObjectPool.createId(builder);
-                builder.objectIdPointer.setValue(id);
+            if (meshBuilder.getObjectIdPointer().isNullptr()) {
+                int id = glObjectPool.createId(meshBuilder);
+                meshBuilder.getObjectIdPointer().setValue(id);
             } else {
-                glObjectPool.createObject(builder.objectIdPointer.getValue(), builder);
+                glObjectPool.createObject(meshBuilder.getObjectIdPointer().getValue(), meshBuilder);
             }
 
-            baseInstance += builder.objectData.drawElementsIndirectCommand.instanceCount;
+            baseInstance += objectData.drawElementsIndirectCommand.instanceCount;
             objectCount++;
+        }
+
+        return this;
+    }
+
+    public TestMesh update() {
+        Iterator<IntRef> it = needUpdateBuilders.iterator();
+
+        while (it.hasNext()) {
+            IntRef objectIdPointer = it.next();
+            MeshBuilder meshBuilder = glObjectPool.getBuilder(objectIdPointer.getValue());
+
+            if (meshBuilder == null) {
+                throw new MeshException("Object id pointer error. Pointer: " + objectIdPointer);
+            }
+
+            if (meshBuilder.isFlagDraw()) {
+                long base = meshBuilder.getBaseCommand() * DrawElementsIndirectCommand.BYTES;
+                int count = meshBuilder.getObjectData().drawElementsIndirectCommand.count;
+                if (!meshBuilder.isDraw()) {
+                    count = 0;
+                }
+                persistentMappedIBO.update(base, 0, count);
+                meshBuilder.setFlagDraw(false);
+            }
+
+            if (meshBuilder.isFlagObjectData()) {
+                int baseInstanceIndex = meshBuilder.getObjectData().drawElementsIndirectCommand.baseInstance;
+
+                int index = 0;
+                for (InstanceParameter instanceParameter : meshBuilder.getObjectData().getInstanceParameters()) {
+
+                    persistentMappedSSBO.updateInstanceParameter(INSTANCE_PARAMETERS_BINDING_POINT, baseInstanceIndex + index, instanceParameter);
+                    index++;
+                }
+                meshBuilder.setFlagObjectData(false);
+            }
+
+            it.remove();
         }
 
         return this;
@@ -136,13 +185,13 @@ public class TestMesh {
             return this;
         }
 
-        TestMesh.Builder builder = glObjectPool.getBuilder(objectId);
-        if (builder == null) {
+        MeshBuilder meshBuilder = glObjectPool.getBuilder(objectId);
+        if (meshBuilder == null) {
             throw new MeshException("This object ID does not exist. objectId: " + objectId);
         }
 
+        meshBuilder.draw(false);
         glObjectPool.createDeletedObject(objectId);
-        builder.draw = false;
 
         if (ids == null) {
             return this;
@@ -166,8 +215,8 @@ public class TestMesh {
                 .kvBytes("EBO Size Before", persistentMappedEBO.getMemorySize())
                 .logging(getClass(), DebugLevel.INFO);
 
-        pendingBuilders.clear();
-        for (Map.Entry<Integer, Builder> entry : glObjectPool.getObjects().entrySet()) {
+        pendingMeshBuilders.clear();
+        for (Map.Entry<Integer, MeshBuilder> entry : glObjectPool.getObjects().entrySet()) {
             if (glObjectPool.getDeletedObjects().containsKey(entry.getKey())) {
                 continue;
             }
@@ -175,7 +224,7 @@ public class TestMesh {
             for (InstanceParameter instanceParameter : entry.getValue().getObjectData().getInstanceParameters()) {
                 instanceParameter.setDirtyFlag(true);
             }
-            pendingBuilders.add(entry.getValue());
+            pendingMeshBuilders.add(entry.getValue());
         }
 
         needRepack = true;
@@ -190,12 +239,12 @@ public class TestMesh {
     }
 
     public TestMesh restoreDeleteObject(int objectId) {
-        TestMesh.Builder builder = glObjectPool.getBuilder(objectId);
-        if (builder == null) {
+        MeshBuilder meshBuilder = glObjectPool.getBuilder(objectId);
+        if (meshBuilder == null) {
             throw new MeshException("This object ID does not exist. objectId: " + objectId);
         }
 
-        if (builder.draw) {
+        if (meshBuilder.isDraw()) {
             new LogGenerator(
                     "RestoreDeleteObject Info",
                     "ObjectId: " + objectId,
@@ -206,26 +255,7 @@ public class TestMesh {
         }
 
         glObjectPool.restoreDeletedObject(objectId);
-        builder.draw = true;
-
-        return this;
-    }
-
-    public TestMesh updateObjectData(int objectId, ObjectData newObjectData) {
-        TestMesh.Builder builder = glObjectPool.getBuilder(objectId);
-        if (builder == null) {
-            throw new MeshException("Object ID not found: " + objectId);
-        }
-
-        int baseInstanceIndex = builder.getObjectData().drawElementsIndirectCommand.baseInstance;
-
-        int count = Math.min(builder.objectData.drawElementsIndirectCommand.instanceCount, newObjectData.drawElementsIndirectCommand.instanceCount);
-
-        for (int i = 0; i < count; i++) {
-            persistentMappedSSBO.updateInstanceParameter(INSTANCE_PARAMETERS_BINDING_POINT, baseInstanceIndex + i, newObjectData.getInstanceParameters()[i]);
-        }
-
-        builder.objectData = newObjectData;
+        meshBuilder.draw(true);
 
         return this;
     }
@@ -301,8 +331,8 @@ public class TestMesh {
         new LogGenerator("GLObjectPool", glObjectPool.toString()).logging(getClass(), DebugLevel.DEBUG);
     }
 
-    public List<Builder> getPendingBuilders() {
-        return pendingBuilders;
+    public List<MeshBuilder> getPendingBuilders() {
+        return pendingMeshBuilders;
     }
 
     public int getVaoId() {
@@ -340,153 +370,5 @@ public class TestMesh {
 
     public void cleanup() {
 
-    }
-
-    public static class Builder {
-        private final IntRef objectIdPointer = new IntRef();
-        private final int baseInstance = 0;
-        private Vertex[] vertices = null;
-        private DrawType drawType = DrawType.TRIANGLES;
-        private BlendType blendType = BlendType.PREMULTIPLIED_ALPHA;
-        private float lineWidth = -1f;
-        private float pointSize = -1f;
-        private JointType jointType = JointType.NONE;
-        private PointType pointType = PointType.SQUARE;
-        private ObjectData objectData = new ObjectData(1);
-        private ProjectionType projectionType = ProjectionType.ORTHOGRAPHIC_PROJECTION;
-        private boolean draw = true;
-        private long bytes = 0L;
-        private int baseCommand = 0;
-
-        Builder() {
-        }
-
-        public static Builder createBuilder() {
-            return new Builder();
-        }
-
-        public Builder blendType(BlendType blendType) {
-            this.blendType = blendType;
-
-            return this;
-        }
-
-        public Builder drawType(DrawType drawType) {
-            this.drawType = drawType;
-
-            return this;
-        }
-
-        public Builder jointType(JointType jointType) {
-            this.jointType = jointType;
-
-            return this;
-        }
-
-        public Builder lineWidth(float lineWidth) {
-            this.lineWidth = lineWidth;
-
-            return this;
-        }
-
-        public Builder pointType(PointType pointType) {
-            this.pointType = pointType;
-
-            return this;
-        }
-
-        public Builder projectionType(ProjectionType projectionType) {
-            this.projectionType = projectionType;
-
-            return this;
-        }
-
-        public Builder vertices(Vertex... vertices) {
-            this.vertices = vertices;
-
-            return this;
-        }
-
-        public Builder pointSize(float pointSize) {
-            this.pointSize = pointSize;
-
-            return this;
-        }
-
-        public Builder objectData(ObjectData objectData) {
-            this.objectData = objectData;
-
-            return this;
-        }
-
-        public Builder draw(boolean draw) {
-            this.draw = draw;
-
-            return this;
-        }
-
-        public IntRef getObjectIdPointer() {
-            return objectIdPointer;
-        }
-
-        public Vertex[] getVertices() {
-            return vertices;
-        }
-
-        public DrawType getDrawType() {
-            return drawType;
-        }
-
-        public BlendType getBlendType() {
-            return blendType;
-        }
-
-        public float getLineWidth() {
-            return lineWidth;
-        }
-
-        public float getPointSize() {
-            return pointSize;
-        }
-
-        public JointType getJointType() {
-            return jointType;
-        }
-
-        public PointType getPointType() {
-            return pointType;
-        }
-
-        public ObjectData getObjectData() {
-            return objectData;
-        }
-
-        public ProjectionType getProjectionType() {
-            return projectionType;
-        }
-
-        public boolean isDraw() {
-            return draw;
-        }
-
-        public long getBytes() {
-            return bytes;
-        }
-
-        void setBytes(long bytes) {
-            this.bytes = bytes;
-        }
-
-        public int getBaseInstance() {
-            return baseInstance;
-        }
-
-        public int getBaseCommand() {
-            return baseCommand;
-        }
-
-        void setBaseCommand(int baseCommand) {
-            this.baseCommand = baseCommand;
-        }
     }
 }
