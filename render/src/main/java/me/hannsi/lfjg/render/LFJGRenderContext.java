@@ -2,10 +2,12 @@ package me.hannsi.lfjg.render;
 
 import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
+import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.core.utils.toolkit.Camera;
 import me.hannsi.lfjg.render.system.mesh.MeshConstants;
 import me.hannsi.lfjg.render.system.mesh.TestMesh;
 import me.hannsi.lfjg.render.system.mesh.persistent.*;
+import me.hannsi.lfjg.render.system.rendering.DrawBatch;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.rendering.texture.SparseTexture2DArray;
@@ -14,6 +16,11 @@ import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import me.hannsi.lfjg.render.uitl.id.GLObjectPool;
 import org.joml.Matrix4f;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static me.hannsi.lfjg.core.Core.projection2D;
 import static me.hannsi.lfjg.core.Core.projection3D;
@@ -39,6 +46,8 @@ public class LFJGRenderContext {
     public static final int INSTANCE_PARAMETERS_BINDING_POINT;
     public static final int SPRITE_DATUM_BINDING_POINT;
     public static GLObjectPool glObjectPool;
+    public static List<DrawBatch> drawBatches;
+    public static Set<IntRef> needUpdateBuilders;
     public static Camera mainCamera;
     public static Matrix4f precomputedViewProjection2D;
     public static Matrix4f precomputedViewProjection3D;
@@ -73,6 +82,9 @@ public class LFJGRenderContext {
 
     public static void init() {
         glObjectPool = new GLObjectPool();
+
+        drawBatches = new ArrayList<>();
+        needUpdateBuilders = new HashSet<>();
 
         mainCamera = new Camera();
 
