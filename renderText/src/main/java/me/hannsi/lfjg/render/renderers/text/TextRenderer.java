@@ -9,7 +9,7 @@ import me.hannsi.lfjg.core.utils.toolkit.StringUtil;
 import me.hannsi.lfjg.render.debug.exceptions.UnknownAlignType;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
-import me.hannsi.lfjg.render.system.mesh.TestMesh;
+import me.hannsi.lfjg.render.system.mesh.MeshBuilder;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
@@ -100,7 +100,7 @@ public class TextRenderer {
 
     public TextRenderer createMesh() {
         mesh.addObject(
-                TestMesh.Builder.createBuilder()
+                MeshBuilder.createBuilder()
                         .drawType(DrawType.QUADS)
                         .blendType(BlendType.NORMAL)
                         .pointSize(-1f)

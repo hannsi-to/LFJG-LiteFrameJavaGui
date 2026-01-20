@@ -10,7 +10,7 @@ import me.hannsi.lfjg.render.debug.exceptions.render.scene.CreatingRenderBufferE
 import me.hannsi.lfjg.render.debug.exceptions.texture.CreatingTextureException;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
-import me.hannsi.lfjg.render.system.mesh.TestMesh;
+import me.hannsi.lfjg.render.system.mesh.MeshBuilder;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
@@ -80,7 +80,7 @@ public class FrameBuffer {
         vaoRendering = new VAORendering();
 
         mesh.addObject(
-                TestMesh.Builder.createBuilder()
+                MeshBuilder.createBuilder()
                         .drawType(DrawType.QUADS)
                         .blendType(GLPolygon.DEFAULT_BLEND_TYPE)
                         .pointSize(-1f)

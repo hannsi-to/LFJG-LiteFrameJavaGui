@@ -7,7 +7,7 @@ import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.renderers.JointType;
 import me.hannsi.lfjg.render.renderers.PointType;
-import me.hannsi.lfjg.render.system.mesh.TestMesh;
+import me.hannsi.lfjg.render.system.mesh.MeshBuilder;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import org.joml.Vector2f;
@@ -153,7 +153,7 @@ public class GLPolygon<T extends GLPolygon<T>> extends GLObject {
         IntRef id = new IntRef();
 
         mesh.addObject(
-                TestMesh.Builder.createBuilder()
+                MeshBuilder.createBuilder()
                         .drawType(drawType)
                         .blendType(blendType)
                         .lineWidth(lineWidth)

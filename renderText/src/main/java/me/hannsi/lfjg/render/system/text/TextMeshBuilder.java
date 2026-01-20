@@ -3,7 +3,7 @@ package me.hannsi.lfjg.render.system.text;
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
-import me.hannsi.lfjg.render.system.mesh.TestMesh;
+import me.hannsi.lfjg.render.system.mesh.MeshBuilder;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.text.msdf.MSDFFont;
@@ -132,7 +132,8 @@ public class TextMeshBuilder {
 
         public TextMesh createMesh() {
             mesh.addObject(
-                    TestMesh.Builder.createBuilder()
+
+                    MeshBuilder.createBuilder()
                             .drawType(DrawType.TRIANGLES)
                             .blendType(BlendType.NORMAL)
                             .pointSize(-1f)

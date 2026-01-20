@@ -3,14 +3,14 @@ package me.hannsi.lfjg.render.system.mesh;
 public class GLObjectData {
     public boolean draw;
     public DrawElementsIndirectCommand drawElementsIndirectCommand;
-    public TestMesh.Builder builder;
+    public MeshBuilder meshBuilder;
     public int baseCommand;
     public TestElementPair elementPair;
 
-    public GLObjectData(DrawElementsIndirectCommand drawElementsIndirectCommand, TestMesh.Builder builder, int baseCommand, TestElementPair elementPair) {
+    public GLObjectData(DrawElementsIndirectCommand drawElementsIndirectCommand, MeshBuilder meshBuilder, int baseCommand, TestElementPair elementPair) {
         this.draw = true;
         this.drawElementsIndirectCommand = drawElementsIndirectCommand;
-        this.builder = builder;
+        this.meshBuilder = meshBuilder;
         this.baseCommand = baseCommand;
         this.elementPair = elementPair;
     }
