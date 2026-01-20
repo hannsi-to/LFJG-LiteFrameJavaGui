@@ -5,10 +5,9 @@ import me.hannsi.lfjg.render.renderers.InstanceParameter;
 import java.util.Arrays;
 
 public class ObjectData {
-    public static final long BYTES = Integer.BYTES + Integer.BYTES + 2 * Integer.BYTES;
+    public static final long BYTES = 4 * Integer.BYTES;
     public DrawElementsIndirectCommand drawElementsIndirectCommand;
     private final InstanceParameter[] instanceParameters;
-    private boolean instanceParameterFlag = false;
 
     public ObjectData(int instanceCount) {
         this.drawElementsIndirectCommand = new DrawElementsIndirectCommand(0, instanceCount, 0, 0, 0);
@@ -26,16 +25,7 @@ public class ObjectData {
         }
     }
 
-    public void resetInstanceParameterFlag() {
-        instanceParameterFlag = false;
-    }
-
-    public boolean isInstanceParameterFlag() {
-        return instanceParameterFlag;
-    }
-
     public InstanceParameter[] getInstanceParameters() {
-        instanceParameterFlag = true;
         return instanceParameters;
     }
 }
