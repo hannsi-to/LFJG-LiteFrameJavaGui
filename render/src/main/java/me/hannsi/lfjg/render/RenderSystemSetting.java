@@ -27,7 +27,7 @@ public class RenderSystemSetting {
     public static int LFJG_RENDER_CONTEXT_INITIAL_PUBO_CAPACITY = 10240;
     public static int LFJG_RENDER_CONTEXT_INITIAL_PUBO_DATA_CAPACITY = 1024;
     public static BlendType LFJG_RENDER_CONTEXT_TEXTURE_BLEND_MODE = BlendType.PREMULTIPLIED_ALPHA;
-    public static BlendType LFJG_RENDER_CONTEXT_SPRITE_BLEND_MODE = BlendType.NO_BLEND;
+    public static BlendType LFJG_RENDER_CONTEXT_SPRITE_BLEND_MODE = BlendType.PREMULTIPLIED_ALPHA;
 
     public static boolean VAO_RENDERING_FRONT_AND_BACK = false;
     public static float VAO_RENDERING_FRONT_AND_BACK_LINE_WIDTH = 0.1f;
