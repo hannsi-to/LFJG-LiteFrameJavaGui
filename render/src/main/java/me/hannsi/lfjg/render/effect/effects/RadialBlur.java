@@ -1,11 +1,6 @@
 package me.hannsi.lfjg.render.effect.effects;
 
 import me.hannsi.lfjg.render.effect.system.EffectBase;
-import me.hannsi.lfjg.render.system.rendering.frameBuffer.FrameBuffer;
-import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
-import me.hannsi.lfjg.render.system.shader.UploadUniformType;
-
-import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class RadialBlur extends EffectBase {
     private float range = 1f;
@@ -13,7 +8,7 @@ public class RadialBlur extends EffectBase {
     private float centerY = 500f;
 
     RadialBlur(String name) {
-        super(name, false);
+        super(name);
     }
 
     public static RadialBlur createRadialBlur(String name) {
@@ -48,40 +43,5 @@ public class RadialBlur extends EffectBase {
     public RadialBlur centerY(double centerY) {
         this.centerY = (float) centerY;
         return this;
-    }
-
-
-    @Override
-    public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.RADIAL_BLUR.getId());
-        shaderProgram.setUniform("radialBlurRange", UploadUniformType.ON_CHANGE, range);
-        shaderProgram.setUniform("radialBlurCenterX", UploadUniformType.ON_CHANGE, centerX);
-        shaderProgram.setUniform("radialBlurCenterY", UploadUniformType.ON_CHANGE, centerY);
-
-        super.drawFrameBuffer(latestFrameBuffer);
-    }
-
-    public float getRange() {
-        return range;
-    }
-
-    public void setRange(float range) {
-        this.range = range;
-    }
-
-    public float getCenterX() {
-        return centerX;
-    }
-
-    public void setCenterX(float centerX) {
-        this.centerX = centerX;
-    }
-
-    public float getCenterY() {
-        return centerY;
-    }
-
-    public void setCenterY(float centerY) {
-        this.centerY = centerY;
     }
 }

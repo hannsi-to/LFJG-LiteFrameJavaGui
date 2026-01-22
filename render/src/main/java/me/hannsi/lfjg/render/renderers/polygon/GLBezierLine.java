@@ -43,7 +43,7 @@ public class GLBezierLine extends GLPolygon<GLBezierLine> {
             prev = current;
         }
 
-        setDrawType(DrawType.LINES).setLineWidth(builder.lineWidth);
+        drawType(DrawType.LINES).lineWidth(builder.lineWidth);
         rendering();
 
         return this;

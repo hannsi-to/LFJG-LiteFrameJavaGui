@@ -28,10 +28,10 @@ public class GLRect extends GLPolygon<GLRect> {
 
         switch (builder.paintType) {
             case FILL:
-                setDrawType(DrawType.QUADS);
+                drawType(DrawType.QUADS);
                 break;
             case OUT_LINE:
-                setDrawType(DrawType.LINE_LOOP).setLineWidth(builder.lineWidth);
+                drawType(DrawType.LINE_LOOP).lineWidth(builder.lineWidth);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + builder.paintType);

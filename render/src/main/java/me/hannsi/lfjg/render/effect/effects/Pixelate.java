@@ -1,17 +1,12 @@
 package me.hannsi.lfjg.render.effect.effects;
 
 import me.hannsi.lfjg.render.effect.system.EffectBase;
-import me.hannsi.lfjg.render.system.rendering.frameBuffer.FrameBuffer;
-import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
-import me.hannsi.lfjg.render.system.shader.UploadUniformType;
-
-import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class Pixelate extends EffectBase {
     private float mosaicSize = 10f;
 
     Pixelate(String name) {
-        super(name, false);
+        super(name);
     }
 
     public static Pixelate createPixelate(String name) {
@@ -26,21 +21,5 @@ public class Pixelate extends EffectBase {
     public Pixelate mosaicSize(double mosaicSize) {
         this.mosaicSize = (float) mosaicSize;
         return this;
-    }
-
-    @Override
-    public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.PIXELATE.getId());
-        shaderProgram.setUniform("pixelateMosaicSize", UploadUniformType.ON_CHANGE, mosaicSize);
-
-        super.drawFrameBuffer(latestFrameBuffer);
-    }
-
-    public float getMosaicSize() {
-        return mosaicSize;
-    }
-
-    public void setMosaicSize(float mosaicSize) {
-        this.mosaicSize = mosaicSize;
     }
 }

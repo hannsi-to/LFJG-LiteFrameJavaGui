@@ -24,10 +24,10 @@ public class GLTriangle extends GLPolygon<GLTriangle> {
 
         switch (builder.paintType) {
             case FILL:
-                setDrawType(DrawType.TRIANGLES);
+                drawType(DrawType.TRIANGLES);
                 break;
             case OUT_LINE:
-                setDrawType(DrawType.LINE_LOOP).setLineWidth(builder.lineWidth);
+                drawType(DrawType.LINE_LOOP).lineWidth(builder.lineWidth);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + builder.paintType);

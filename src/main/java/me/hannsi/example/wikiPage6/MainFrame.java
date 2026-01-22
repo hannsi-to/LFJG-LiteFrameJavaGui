@@ -2,10 +2,8 @@ package me.hannsi.example.wikiPage6;
 
 import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
-import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.effect.effects.Rotate;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 
@@ -28,15 +26,15 @@ public class MainFrame implements LFJGFrame {
                 .fill()
                 .update();
 
-        effectCache1 = EffectCache.createEffectCache()
-                .createCache(Rotate.createRotate("Rotate1").zDegree(45).cx(500).cy(500))
-                .attachGLObject(glRect1);
+//        effectCache1 = EffectCache.createEffectCache()
+//                .createCache(Rotate.createRotate("Rotate1").zDegree(45).cx(500).cy(500))
+//                .attachGLObject(glRect1);
     }
 
     @Override
     public void drawFrame() {
-        Rotate rotate1 = ((Rotate) effectCache1.getEffectBase("Rotate1"));
-        rotate1.zRadian(rotate1.getZ() + MathHelper.toRadians(10));
+//        Rotate rotate1 = ((Rotate) effectCache1.getEffectBase("Rotate1"));
+//        rotate1.zRadian(rotate1.getZ() + MathHelper.toRadians(10));
 //        glRect1.draw();
     }
 

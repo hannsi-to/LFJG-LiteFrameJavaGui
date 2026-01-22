@@ -1,12 +1,6 @@
 package me.hannsi.lfjg.render.effect.effects;
 
 import me.hannsi.lfjg.render.effect.system.EffectBase;
-import me.hannsi.lfjg.render.system.rendering.frameBuffer.FrameBuffer;
-import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
-import me.hannsi.lfjg.render.system.shader.UploadUniformType;
-import org.joml.Vector4f;
-
-import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class ClippingRect extends EffectBase {
     private float x1 = 0f;
@@ -16,7 +10,7 @@ public class ClippingRect extends EffectBase {
     private boolean invert = false;
 
     ClippingRect(String name) {
-        super(name, false);
+        super(name);
     }
 
     public static ClippingRect createClippingRect(String name) {
@@ -86,54 +80,5 @@ public class ClippingRect extends EffectBase {
     public ClippingRect invert(boolean invert) {
         this.invert = invert;
         return this;
-    }
-
-    @Override
-    public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.CLIPPING_RECT.getId());
-        shaderProgram.setUniform("clippingRectInvert", UploadUniformType.ON_CHANGE, invert);
-        shaderProgram.setUniform("clippingRectSize", UploadUniformType.ON_CHANGE, new Vector4f(x1, y1, x2, y2));
-
-        super.drawFrameBuffer(latestFrameBuffer);
-    }
-
-    public float getX1() {
-        return x1;
-    }
-
-    public void setX1(float x1) {
-        this.x1 = x1;
-    }
-
-    public float getY1() {
-        return y1;
-    }
-
-    public void setY1(float y1) {
-        this.y1 = y1;
-    }
-
-    public float getX2() {
-        return x2;
-    }
-
-    public void setX2(float x2) {
-        this.x2 = x2;
-    }
-
-    public float getY2() {
-        return y2;
-    }
-
-    public void setY2(float y2) {
-        this.y2 = y2;
-    }
-
-    public boolean isInvert() {
-        return invert;
-    }
-
-    public void setInvert(boolean invert) {
-        this.invert = invert;
     }
 }

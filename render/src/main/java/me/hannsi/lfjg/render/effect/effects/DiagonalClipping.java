@@ -2,12 +2,6 @@ package me.hannsi.lfjg.render.effect.effects;
 
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
-import me.hannsi.lfjg.render.system.rendering.frameBuffer.FrameBuffer;
-import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
-import me.hannsi.lfjg.render.system.shader.UploadUniformType;
-import org.joml.Vector2f;
-
-import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class DiagonalClipping extends EffectBase {
     private float centerX = 500;
@@ -17,7 +11,7 @@ public class DiagonalClipping extends EffectBase {
     private boolean invertClip = false;
 
     DiagonalClipping(String name) {
-        super(name, false);
+        super(name);
     }
 
     public static DiagonalClipping createDiagonalClipping(String name) {
@@ -72,56 +66,5 @@ public class DiagonalClipping extends EffectBase {
     public DiagonalClipping invertClip(boolean invertClip) {
         this.invertClip = invertClip;
         return this;
-    }
-
-    @Override
-    public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.DIAGONAL_CLIPPING.getId());
-        shaderProgram.setUniform("diagonalClippingClipCenter", UploadUniformType.ON_CHANGE, new Vector2f(centerX, centerY));
-        shaderProgram.setUniform("diagonalClippingClipAngle", UploadUniformType.ON_CHANGE, clipAngle);
-        shaderProgram.setUniform("diagonalClippingBlurWidth", UploadUniformType.ON_CHANGE, blurWidth);
-        shaderProgram.setUniform("diagonalClippingInvertClip", UploadUniformType.ON_CHANGE, invertClip);
-
-        super.drawFrameBuffer(latestFrameBuffer);
-    }
-
-    public float getCenterX() {
-        return centerX;
-    }
-
-    public void setCenterX(float centerX) {
-        this.centerX = centerX;
-    }
-
-    public float getCenterY() {
-        return centerY;
-    }
-
-    public void setCenterY(float centerY) {
-        this.centerY = centerY;
-    }
-
-    public float getClipAngle() {
-        return clipAngle;
-    }
-
-    public void setClipAngle(float clipAngle) {
-        this.clipAngle = clipAngle;
-    }
-
-    public float getBlurWidth() {
-        return blurWidth;
-    }
-
-    public void setBlurWidth(float blurWidth) {
-        this.blurWidth = blurWidth;
-    }
-
-    public boolean isInvertClip() {
-        return invertClip;
-    }
-
-    public void setInvertClip(boolean invertClip) {
-        this.invertClip = invertClip;
     }
 }

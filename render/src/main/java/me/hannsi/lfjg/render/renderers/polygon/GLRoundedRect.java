@@ -94,7 +94,7 @@ public class GLRoundedRect extends GLPolygon<GLRoundedRect> {
 
         switch (builder.paintType) {
             case FILL:
-                setDrawType(DrawType.TRIANGLE_FAN);
+                drawType(DrawType.TRIANGLE_FAN);
 
                 if (!perimeter.isEmpty()) {
                     perimeter.add(perimeter.get(0));
@@ -114,7 +114,7 @@ public class GLRoundedRect extends GLPolygon<GLRoundedRect> {
                 }
                 break;
             case OUT_LINE:
-                setDrawType(DrawType.LINE_LOOP).setLineWidth(builder.lineWidth);
+                drawType(DrawType.LINE_LOOP).lineWidth(builder.lineWidth);
 
                 for (float[] p : perimeter) {
                     float px = p[0], py = p[1];

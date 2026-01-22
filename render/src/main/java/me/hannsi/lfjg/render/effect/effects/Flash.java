@@ -3,13 +3,6 @@ package me.hannsi.lfjg.render.effect.effects;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
-import me.hannsi.lfjg.render.system.rendering.frameBuffer.FrameBuffer;
-import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
-import me.hannsi.lfjg.render.system.shader.UploadUniformType;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-
-import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class Flash extends EffectBase {
     private float intensity = 0.08f;
@@ -19,7 +12,7 @@ public class Flash extends EffectBase {
     private Color lightColor = Color.FOREST_GREEN;
 
     Flash(String name) {
-        super(name, false);
+        super(name);
     }
 
     public static Flash createFlash(String name) {
@@ -64,57 +57,6 @@ public class Flash extends EffectBase {
     public Flash lightColor(Color lightColor) {
         this.lightColor = lightColor;
         return this;
-    }
-
-    @Override
-    public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.FLASH.getId());
-        shaderProgram.setUniform("flashIntensity", UploadUniformType.ON_CHANGE, intensity);
-        shaderProgram.setUniform("flashScreenPosition", UploadUniformType.ON_CHANGE, new Vector2f(x, y));
-        shaderProgram.setUniform("flashBlendMode", UploadUniformType.ON_CHANGE, flashBlendMode.getId());
-        shaderProgram.setUniform("flashLightColor", UploadUniformType.ON_CHANGE, new Vector3f(lightColor.getRedF(), lightColor.getGreenF(), lightColor.getBlueF()));
-
-        super.drawFrameBuffer(latestFrameBuffer);
-    }
-
-    public float getIntensity() {
-        return intensity;
-    }
-
-    public void setIntensity(float intensity) {
-        this.intensity = intensity;
-    }
-
-    public float getX() {
-        return x;
-    }
-
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    public FlashBlendMode getFlashBlendMode() {
-        return flashBlendMode;
-    }
-
-    public void setFlashBlendMode(FlashBlendMode flashBlendMode) {
-        this.flashBlendMode = flashBlendMode;
-    }
-
-    public Color getLightColor() {
-        return lightColor;
-    }
-
-    public void setLightColor(Color lightColor) {
-        this.lightColor = lightColor;
     }
 
     public enum FlashBlendMode implements IEnumTypeBase {

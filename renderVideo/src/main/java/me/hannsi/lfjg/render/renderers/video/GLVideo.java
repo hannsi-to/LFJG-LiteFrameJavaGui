@@ -37,7 +37,7 @@ public class GLVideo extends GLPolygon<GLVideo> {
         put().position(new Vector2f(builder.x3, builder.y3)).color(Color.of(0, 0, 0, 0)).end();
         put().position(new Vector2f(builder.x4, builder.y4)).color(Color.of(0, 0, 0, 0)).end();
 
-        setDrawType(DrawType.QUADS);
+        drawType(DrawType.QUADS);
         rendering();
 
         return this;

@@ -39,7 +39,7 @@ public class GLCircle extends GLPolygon<GLCircle> {
 
         switch (builder.paintType) {
             case FILL:
-                setDrawType(DrawType.TRIANGLE_FAN);
+                drawType(DrawType.TRIANGLE_FAN);
 
                 Color centerColor = getCenterColor();
                 put().position(new Vector2f(builder.cx, builder.cy)).color(centerColor).end();
@@ -51,7 +51,7 @@ public class GLCircle extends GLPolygon<GLCircle> {
 
                 break;
             case OUT_LINE:
-                setDrawType(DrawType.LINE_LOOP).setLineWidth(builder.lineWidth);
+                drawType(DrawType.LINE_LOOP).lineWidth(builder.lineWidth);
 
                 for (float[] v : vertices) {
                     Color useColor = getCornerBlend(v[0], v[1]);

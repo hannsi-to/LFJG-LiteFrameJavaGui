@@ -22,7 +22,7 @@ public class GLPoint extends GLPolygon<GLPoint> {
     public GLPoint update() {
         put().position(new Vector2f(builder.x, builder.y)).color(builder.color).end();
 
-        setDrawType(DrawType.POINTS).setPointSize(builder.pointSize);
+        drawType(DrawType.POINTS).pointSize(builder.pointSize);
         rendering();
 
         return this;

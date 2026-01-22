@@ -7,6 +7,7 @@ import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.renderers.JointType;
 import me.hannsi.lfjg.render.renderers.PointType;
 import me.hannsi.lfjg.render.system.mesh.MeshBuilder;
+import me.hannsi.lfjg.render.system.mesh.ObjectData;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import org.joml.Vector2f;
@@ -30,6 +31,7 @@ public class GLPolygon<T extends GLPolygon<T>> extends GLObject {
     private float lineWidth;
     private float pointSize;
     private BlendType blendType;
+    private ObjectData objectData;
 
     public GLPolygon(String name) {
         super(name);
@@ -87,43 +89,50 @@ public class GLPolygon<T extends GLPolygon<T>> extends GLObject {
     }
 
     @SuppressWarnings("unchecked")
-    public T setDrawType(DrawType drawType) {
+    public T drawType(DrawType drawType) {
         this.drawType = drawType;
 
         return (T) this;
     }
 
     @SuppressWarnings("unchecked")
-    public T setJointType(JointType jointType) {
+    public T jointType(JointType jointType) {
         this.jointType = jointType;
 
         return (T) this;
     }
 
     @SuppressWarnings("unchecked")
-    public T setPointType(PointType pointType) {
+    public T pointType(PointType pointType) {
         this.pointType = pointType;
 
         return (T) this;
     }
 
     @SuppressWarnings("unchecked")
-    public T setLineWidth(float lineWidth) {
+    public T lineWidth(float lineWidth) {
         this.lineWidth = lineWidth;
 
         return (T) this;
     }
 
     @SuppressWarnings("unchecked")
-    public T setPointSize(float pointSize) {
+    public T pointSize(float pointSize) {
         this.pointSize = pointSize;
 
         return (T) this;
     }
 
     @SuppressWarnings("unchecked")
-    public T setBlendType(BlendType blendType) {
+    public T blendType(BlendType blendType) {
         this.blendType = blendType;
+
+        return (T) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T objectData(ObjectData objectData) {
+        this.objectData = objectData;
 
         return (T) this;
     }
@@ -157,6 +166,7 @@ public class GLPolygon<T extends GLPolygon<T>> extends GLObject {
                         .lineWidth(lineWidth)
                         .pointSize(pointSize)
                         .vertices(vertices)
+                        .objectData(objectData)
         );
     }
 }

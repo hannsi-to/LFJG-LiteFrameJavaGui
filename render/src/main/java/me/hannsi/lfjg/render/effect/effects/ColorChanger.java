@@ -2,11 +2,6 @@ package me.hannsi.lfjg.render.effect.effects;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
-import me.hannsi.lfjg.render.system.rendering.frameBuffer.FrameBuffer;
-import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
-import me.hannsi.lfjg.render.system.shader.UploadUniformType;
-
-import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class ColorChanger extends EffectBase {
     private boolean alpha = false;
@@ -14,7 +9,7 @@ public class ColorChanger extends EffectBase {
     private Color newColor = Color.RED;
 
     ColorChanger(String name) {
-        super(name, false);
+        super(name);
     }
 
     public static ColorChanger createColorChanger(String name) {
@@ -34,39 +29,5 @@ public class ColorChanger extends EffectBase {
     public ColorChanger newColor(Color newColor) {
         this.newColor = newColor;
         return this;
-    }
-
-    @Override
-    public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.COLOR_CHANGER.getId());
-        shaderProgram.setUniform("colorChangerAlpha", UploadUniformType.ON_CHANGE, alpha);
-        shaderProgram.setUniform("colorChangerTargetColor", UploadUniformType.ON_CHANGE, targetColor);
-        shaderProgram.setUniform("colorChangerNewColor", UploadUniformType.ON_CHANGE, newColor);
-
-        super.drawFrameBuffer(latestFrameBuffer);
-    }
-
-    public boolean isAlpha() {
-        return alpha;
-    }
-
-    public void setAlpha(boolean alpha) {
-        this.alpha = alpha;
-    }
-
-    public Color getTargetColor() {
-        return targetColor;
-    }
-
-    public void setTargetColor(Color targetColor) {
-        this.targetColor = targetColor;
-    }
-
-    public Color getNewColor() {
-        return newColor;
-    }
-
-    public void setNewColor(Color newColor) {
-        this.newColor = newColor;
     }
 }

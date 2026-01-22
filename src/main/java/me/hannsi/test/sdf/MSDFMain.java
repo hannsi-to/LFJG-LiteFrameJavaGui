@@ -10,8 +10,6 @@ import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.animation.animations.Bounce;
 import me.hannsi.lfjg.render.animation.system.AnimationCache;
-import me.hannsi.lfjg.render.effect.effects.Pixelate;
-import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.renderers.text.GLText;
@@ -61,11 +59,11 @@ public class MSDFMain implements LFJGFrame {
 
         textureCache.createCache("Test1", Location.fromResource("texture/test/test1.jpg"));
 
-        effectCache = EffectCache.createEffectCache()
+//        effectCache = EffectCache.createEffectCache()
 //                .createCache(Translate.createTranslate("Translate1").x(100))
 //                .createCache(Scale.createScale("Scale").x(2).cx(0).cy(0).autoCenter(false))
 //                .createCache(Rotate.createRotate().autoCenter(false).cx(0).cy(0).zDegree(45))
-                .createCache(Texture.createTexture("Texture1").textureName("Test1"))
+//                .createCache(Texture.createTexture("Texture1").textureName("Test1"))
 //                .createCache(Bloom.createBloom("Bloom"))
 //                .createCache(BoxBlur.createBoxBlur("BoxBlusr1"))
 //                .createCache(ChromaKey.createChromaKey("ChromaKey1").chromaKeyColor(Color.of(17, 40, 133,255)))
@@ -86,10 +84,10 @@ public class MSDFMain implements LFJGFrame {
 //                .createCache(LensBlur.createLensBlur("LensBlur1"))
 //                .createCache(LuminanceKey.createLuminanceKey("LuminanceKey1"))
 //                .createCache(Monochrome.createMonochrome("Monochrome"))
-                .createCache(Pixelate.createPixelate("Pixelate1"))
+//                .createCache(Pixelate.createPixelate("Pixelate1"))
 //                .createCache(RadialBlur.createRadialBlur("RadialBlur1"))
-                .attachGLObject(glRect)
-                .attachGLObject(glText);
+//                .attachGLObject(glRect)
+//                .attachGLObject(glText);
 
         animationCache = AnimationCache.createAnimationCache()
 //                .createCache(Trembling.createTrembling("Trembling1"))

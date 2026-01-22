@@ -46,7 +46,7 @@ public class GLText extends GLPolygon<GLText> {
         put().position(new Vector2f(x + width, y + height)).color(color).end();
         put().position(new Vector2f(x, y + height)).color(color).end();
 
-        setDrawType(DrawType.QUADS);
+        drawType(DrawType.QUADS);
         rendering();
 
 //        textRenderer.setBaseMatrix(getTransform().getModelMatrix());

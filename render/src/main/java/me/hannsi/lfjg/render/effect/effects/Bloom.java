@@ -1,11 +1,6 @@
 package me.hannsi.lfjg.render.effect.effects;
 
 import me.hannsi.lfjg.render.effect.system.EffectBase;
-import me.hannsi.lfjg.render.system.rendering.frameBuffer.FrameBuffer;
-import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
-import me.hannsi.lfjg.render.system.shader.UploadUniformType;
-
-import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class Bloom extends EffectBase {
     private float intensity = 1f;
@@ -13,7 +8,7 @@ public class Bloom extends EffectBase {
     private float threshold = 1f;
 
     Bloom(String name) {
-        super(name, false);
+        super(name);
     }
 
     public static Bloom createBloom(String name) {
@@ -48,15 +43,5 @@ public class Bloom extends EffectBase {
     public Bloom threshold(double threshold) {
         this.threshold = (float) threshold;
         return this;
-    }
-
-    @Override
-    public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.BLOOM.getId());
-        shaderProgram.setUniform("bloomSpread", UploadUniformType.ON_CHANGE, spread);
-        shaderProgram.setUniform("bloomIntensity", UploadUniformType.ON_CHANGE, intensity);
-        shaderProgram.setUniform("bloomThreshold", UploadUniformType.ON_CHANGE, threshold);
-
-        super.drawFrameBuffer(latestFrameBuffer);
     }
 }

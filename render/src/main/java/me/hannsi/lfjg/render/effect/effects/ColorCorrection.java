@@ -1,11 +1,6 @@
 package me.hannsi.lfjg.render.effect.effects;
 
 import me.hannsi.lfjg.render.effect.system.EffectBase;
-import me.hannsi.lfjg.render.system.rendering.frameBuffer.FrameBuffer;
-import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
-import me.hannsi.lfjg.render.system.shader.UploadUniformType;
-
-import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class ColorCorrection extends EffectBase {
     private float brightness = 0.5f;
@@ -14,7 +9,7 @@ public class ColorCorrection extends EffectBase {
     private float hue = 0.5f;
 
     ColorCorrection(String name) {
-        super(name, false);
+        super(name);
     }
 
     public static ColorCorrection createColorCorrection(String name) {
@@ -79,48 +74,5 @@ public class ColorCorrection extends EffectBase {
     public ColorCorrection hue(int hue) {
         this.hue = hue / 255f;
         return this;
-    }
-
-    @Override
-    public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.COLOR_CORRECTION.getId());
-        shaderProgram.setUniform("colorCorrectionBrightness", UploadUniformType.ON_CHANGE, brightness);
-        shaderProgram.setUniform("colorCorrectionContrast", UploadUniformType.ON_CHANGE, contrast);
-        shaderProgram.setUniform("colorCorrectionSaturation", UploadUniformType.ON_CHANGE, saturation);
-        shaderProgram.setUniform("colorCorrectionHue", UploadUniformType.ON_CHANGE, hue);
-
-        super.drawFrameBuffer(latestFrameBuffer);
-    }
-
-    public float getBrightness() {
-        return brightness;
-    }
-
-    public void setBrightness(float brightness) {
-        this.brightness = brightness;
-    }
-
-    public float getContrast() {
-        return contrast;
-    }
-
-    public void setContrast(float contrast) {
-        this.contrast = contrast;
-    }
-
-    public float getSaturation() {
-        return saturation;
-    }
-
-    public void setSaturation(float saturation) {
-        this.saturation = saturation;
-    }
-
-    public float getHue() {
-        return hue;
-    }
-
-    public void setHue(float hue) {
-        this.hue = hue;
     }
 }

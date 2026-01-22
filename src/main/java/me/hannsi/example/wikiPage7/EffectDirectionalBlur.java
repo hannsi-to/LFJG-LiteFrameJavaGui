@@ -5,8 +5,6 @@ import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.effect.effects.DirectionalBlur;
-import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 
@@ -33,10 +31,10 @@ public class EffectDirectionalBlur implements LFJGFrame {
                 .fill()
                 .rectUV(0, 1, 1, 0)
                 .update();
-        effectCache1 = EffectCache.createEffectCache()
-                .createCache(Texture.createTexture("Texture1").textureName("Test1"))
-                .createCache(DirectionalBlur.createDirectionBlur("DirectionalBlur"))
-                .attachGLObject(glRect1);
+//        effectCache1 = EffectCache.createEffectCache()
+//                .createCache(Texture.createTexture("Texture1").textureName("Test1"))
+//                .createCache(DirectionalBlur.createDirectionBlur("DirectionalBlur"))
+//                .attachGLObject(glRect1);
     }
 
     @Override

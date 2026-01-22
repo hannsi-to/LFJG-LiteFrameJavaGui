@@ -2,7 +2,6 @@ package me.hannsi.test;
 
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.render.effect.effects.Texture;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
@@ -50,12 +49,12 @@ public class TestScene5 implements IScene {
 
         textureCache.createCache("Texture1", Location.fromResource("texture/test/test1.jpg"));
 
-        effectCache = EffectCache.createEffectCache()
-                .createCache(
-                        Texture.createTexture("Texture")
-                                .textureName("Texture1")
-                )
-                .attachGLObjectCache(glObjectCache);
+        effectCache = EffectCache.createEffectCache();
+//                .createCache(
+//                        Texture.createTexture("Texture")
+//                                .textureName("Texture1")
+//                )
+//                .attachGLObjectCache(glObjectCache);
     }
 
     @Override

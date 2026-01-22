@@ -2,12 +2,6 @@ package me.hannsi.lfjg.render.effect.effects;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
-import me.hannsi.lfjg.render.system.rendering.frameBuffer.FrameBuffer;
-import me.hannsi.lfjg.render.system.shader.FragmentShaderType;
-import me.hannsi.lfjg.render.system.shader.UploadUniformType;
-import org.joml.Vector3f;
-
-import static me.hannsi.lfjg.render.LFJGRenderContext.shaderProgram;
 
 public class Monochrome extends EffectBase {
     private float intensity = 1f;
@@ -15,7 +9,7 @@ public class Monochrome extends EffectBase {
     private boolean preserveBrightness = true;
 
     Monochrome(String name) {
-        super(name, false);
+        super(name);
     }
 
     public static Monochrome createMonochrome(String name) {
@@ -40,39 +34,5 @@ public class Monochrome extends EffectBase {
     public Monochrome preserveBrightness(boolean preserveBrightness) {
         this.preserveBrightness = preserveBrightness;
         return this;
-    }
-
-    @Override
-    public void drawFrameBuffer(FrameBuffer latestFrameBuffer) {
-        shaderProgram.setUniform("fragmentShaderType", UploadUniformType.ON_CHANGE, FragmentShaderType.MONOCHROME.getId());
-        shaderProgram.setUniform("monochromeIntensity", UploadUniformType.ON_CHANGE, intensity);
-        shaderProgram.setUniform("monochromeColor", UploadUniformType.ON_CHANGE, new Vector3f(color.getRedF(), color.getGreenF(), color.getBlueF()));
-        shaderProgram.setUniform("monochromePreserveBrightness", UploadUniformType.ON_CHANGE, preserveBrightness);
-
-        super.drawFrameBuffer(latestFrameBuffer);
-    }
-
-    public float getIntensity() {
-        return intensity;
-    }
-
-    public void setIntensity(float intensity) {
-        this.intensity = intensity;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    public boolean isPreserveBrightness() {
-        return preserveBrightness;
-    }
-
-    public void setPreserveBrightness(boolean preserveBrightness) {
-        this.preserveBrightness = preserveBrightness;
     }
 }
