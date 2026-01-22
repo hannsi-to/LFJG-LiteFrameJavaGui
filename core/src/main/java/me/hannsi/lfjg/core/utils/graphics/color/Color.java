@@ -9,6 +9,8 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.ColorModel;
 
 import static me.hannsi.lfjg.core.Core.UNSAFE;
+import static me.hannsi.lfjg.core.utils.math.MathHelper.DEFAULT_EPS;
+import static me.hannsi.lfjg.core.utils.math.MathHelper.abs;
 
 public class Color {
     public static final Color WHITE = new Color(255, 255, 255);
@@ -58,7 +60,7 @@ public class Color {
     public static final Color ROSE = new Color(255, 228, 225);
     public static final Color HONEYDEW = new Color(240, 255, 240);
 
-    private final java.awt.Color value;
+    private java.awt.Color value;
 
     public Color(java.awt.Color value) {
         this.value = value;
@@ -405,6 +407,7 @@ public class Color {
         return new Color(this.value.darker());
     }
 
+    @Override
     public int hashCode() {
         return this.value.hashCode();
     }
@@ -413,6 +416,7 @@ public class Color {
         return color.getRGB() == this.getRGB();
     }
 
+    @Override
     public String toString() {
         return getClass().getName() + "[r=" + getRed() + ",g=" + getGreen() + ",b=" + getBlue() + "]";
     }
@@ -475,5 +479,16 @@ public class Color {
         UNSAFE.putFloat(address + Float.BYTES, getGreenF());
         UNSAFE.putFloat(address + Float.BYTES * 2, getBlueF());
         UNSAFE.putFloat(address + Float.BYTES * 3, getAlphaF());
+    }
+
+    public void identity() {
+        value = new java.awt.Color(0, 0, 0, 0);
+    }
+
+    public boolean isZero() {
+        return abs(value.getRed()) < DEFAULT_EPS &&
+                abs(value.getGreen()) < DEFAULT_EPS &&
+                abs(value.getBlue()) < DEFAULT_EPS &&
+                abs(value.getAlpha()) < DEFAULT_EPS;
     }
 }
