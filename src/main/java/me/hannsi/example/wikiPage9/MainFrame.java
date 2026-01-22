@@ -47,12 +47,12 @@ public class MainFrame implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-        glText.draw();
+//        glText.draw();
     }
 
     @Override
     public void stopFrame() {
-        glText.cleanup();
+//        glText.cleanup();
     }
 
     @Override

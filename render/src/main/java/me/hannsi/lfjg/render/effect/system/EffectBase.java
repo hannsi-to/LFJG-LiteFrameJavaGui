@@ -5,7 +5,6 @@ import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.frameBuffer.FrameBuffer;
-import org.joml.Matrix4f;
 
 public class EffectBase {
     private final String name;
@@ -21,7 +20,6 @@ public class EffectBase {
         if (!noUseFrameBuffer) {
             frameBuffer = new FrameBuffer();
             frameBuffer.createFrameBuffer();
-            frameBuffer.createMatrix(new Matrix4f(), glObject.getViewMatrix());
         }
     }
 

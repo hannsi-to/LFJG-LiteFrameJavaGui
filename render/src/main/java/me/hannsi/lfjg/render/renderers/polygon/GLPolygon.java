@@ -2,7 +2,6 @@ package me.hannsi.lfjg.render.renderers.polygon;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
-import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.renderers.JointType;
@@ -14,8 +13,6 @@ import org.joml.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static me.hannsi.lfjg.render.LFJGRenderContext.mesh;
 
 /**
  * Class representing a polygon renderer in OpenGL.
@@ -150,36 +147,16 @@ public class GLPolygon<T extends GLPolygon<T>> extends GLObject {
         vertices.get(3).v = rectUV[3];
 
         Vertex[] vertices = this.vertices.toArray(new Vertex[0]);
-        IntRef id = new IntRef();
 
-        mesh.addObject(
+        create(
                 MeshBuilder.createBuilder()
                         .drawType(drawType)
                         .blendType(blendType)
-                        .lineWidth(lineWidth)
                         .jointType(jointType)
-                        .pointSize(pointSize)
                         .pointType(pointType)
+                        .lineWidth(lineWidth)
+                        .pointSize(pointSize)
                         .vertices(vertices)
         );
-
-        setGLObjectParameter();
-        create(id.getValue());
-
-        rectUV = new float[4];
-    }
-
-    private void setGLObjectParameter() {
-        getTransform().setX(vertices.get(0).x);
-        getTransform().setY(vertices.get(0).y);
-        getTransform().setZ(vertices.get(0).z);
-
-//        getTransform().setAngleX(0);
-//        getTransform().setAngleY(0);
-//        getTransform().setAngleZ(0);
-
-        getTransform().setScaleX(1);
-        getTransform().setScaleY(1);
-        getTransform().setScaleZ(1);
     }
 }

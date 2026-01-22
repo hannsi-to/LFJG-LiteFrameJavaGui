@@ -67,7 +67,7 @@ public class Trembling extends AnimationBase {
         float easeValue = easingUtil.get(millis);
         float radian = (easingUtil.reverse ? -1 : 1) * (MathHelper.toRadians(MathHelper.sin(MathHelper.toRadians(easeValue * 180)) * degreesValue));
 
-        glObject.getTransform().translate(cx, cy, cz).rotateXYZ(0, 0, -latestRadians).rotateXYZ(0, 0, radian).translate(-cx, -cy, -cz);
+//        glObject.getTransform().translate(cx, cy, cz).rotateXYZ(0, 0, -latestRadians).rotateXYZ(0, 0, radian).translate(-cx, -cy, -cz);
 
         if (easingUtil.done(easeValue)) {
             easingUtil.reset();

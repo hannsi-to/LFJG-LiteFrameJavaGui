@@ -41,12 +41,12 @@ public class EffectFlash implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-        glRect1.draw();
+//        glRect1.draw();
     }
 
     @Override
     public void stopFrame() {
-        glRect1.cleanup();
+//        glRect1.cleanup();
         effectCache1.cleanup();
     }
 

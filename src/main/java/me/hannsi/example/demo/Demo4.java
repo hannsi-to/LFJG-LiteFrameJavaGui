@@ -28,12 +28,12 @@ public class Demo4 implements IScene {
 
     @Override
     public void drawFrame() {
-        glVideo.draw();
+//        glVideo.draw();
     }
 
     @Override
     public void stopFrame() {
-        glVideo.cleanup();
+//        glVideo.cleanup();
     }
 
     @Override

@@ -45,7 +45,7 @@ public class RigidBody {
     public void integrate(float dt, float scale) {
         velocity.add(acceleration.mul(dt, new Vector2f()));
         Vector2f deltaMove = velocity.mul(dt, new Vector2f());
-        glObject.getTransform().translate(deltaMove.x() * scale, deltaMove.y() * scale, 0);
+//        glObject.getTransform().translate(deltaMove.x() * scale, deltaMove.y() * scale, 0);
         acceleration = new Vector2f();
     }
 }

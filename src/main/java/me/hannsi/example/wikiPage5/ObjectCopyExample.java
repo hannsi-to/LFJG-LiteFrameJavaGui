@@ -31,13 +31,13 @@ public class ObjectCopyExample implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-        copyGlObject.draw();
+//        copyGlObject.draw();
     }
 
     @Override
     public void stopFrame() {
-        glRect1.cleanup();
-        copyGlObject.cleanup();
+//        glRect1.cleanup();
+//        copyGlObject.cleanup();
     }
 
     @Override

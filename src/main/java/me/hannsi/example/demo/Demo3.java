@@ -342,28 +342,28 @@ public class Demo3 implements IScene {
 
     @Override
     public void drawFrame() {
-        glRect1.draw();
-        glRect2.draw();
-        glRect3.draw();
-        glRect4.draw();
-        glRect5.draw();
-        glRect6.draw();
-        glRect7.draw();
-        glRect8.draw();
-        glRect9.draw();
-        glRect10.draw();
-        glRect11.draw();
-        glRect12.draw();
-        glRect13.draw();
-        glRect14.draw();
-        glRect15.draw();
-        glRect16.draw();
-        glRect17.draw();
-        glRect18.draw();
-        glRect19.draw();
-        glRect20.draw();
-        glRect21.draw();
-        glRect22.draw();
+//        glRect1.draw();
+//        glRect2.draw();
+//        glRect3.draw();
+//        glRect4.draw();
+//        glRect5.draw();
+//        glRect6.draw();
+//        glRect7.draw();
+//        glRect8.draw();
+//        glRect9.draw();
+//        glRect10.draw();
+//        glRect11.draw();
+//        glRect12.draw();
+//        glRect13.draw();
+//        glRect14.draw();
+//        glRect15.draw();
+//        glRect16.draw();
+//        glRect17.draw();
+//        glRect18.draw();
+//        glRect19.draw();
+//        glRect20.draw();
+//        glRect21.draw();
+//        glRect22.draw();
     }
 
     @Override

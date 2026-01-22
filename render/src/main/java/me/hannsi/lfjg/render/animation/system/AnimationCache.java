@@ -21,7 +21,7 @@ public class AnimationCache {
     }
 
     public AnimationCache attachGLObject(GLObject glObject) {
-        glObject.setAnimationCache(this);
+//        glObject.setAnimationCache(this);
         this.glObject = glObject;
 
         return this;

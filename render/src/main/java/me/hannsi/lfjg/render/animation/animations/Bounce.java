@@ -50,7 +50,7 @@ public class Bounce extends AnimationBase {
         float x = distance * MathHelper.cos(MathHelper.toRadians(degrees));
         float y = distance * MathHelper.sin(MathHelper.toRadians(degrees));
 
-        glObject.getTransform().translate(-lastX, -lastY, 0).translate(x, y, 0);
+//        glObject.getTransform().translate(-lastX, -lastY, 0).translate(x, y, 0);
 
         if (easingUtil.done(easeValue)) {
             easingUtil.reset();

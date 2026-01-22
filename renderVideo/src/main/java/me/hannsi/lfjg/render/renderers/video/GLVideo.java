@@ -2,10 +2,8 @@ package me.hannsi.lfjg.render.renderers.video;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
-import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
-import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import me.hannsi.lfjg.render.system.video.VideoFrameSystem;
 import org.joml.Vector2f;
 
@@ -49,8 +47,8 @@ public class GLVideo extends GLPolygon<GLVideo> {
         videoFrameSystem.drawFrame();
 
         if (videoFrameSystem.getTextureId() != -1) {
-            this.getShaderProgram().setUniform("objectReplaceColor", UploadUniformType.ON_CHANGE, false);
-            this.getShaderProgram().setUniform("objectBlendMode", UploadUniformType.ON_CHANGE, BlendType.NORMAL);
+//            this.getShaderProgram().setUniform("objectReplaceColor", UploadUniformType.ON_CHANGE, false);
+//            this.getShaderProgram().setUniform("objectBlendMode", UploadUniformType.ON_CHANGE, BlendType.NORMAL);
 
             glStateCache.enable(GL_TEXTURE_2D);
             glStateCache.activeTexture(GL_TEXTURE0);
@@ -58,12 +56,12 @@ public class GLVideo extends GLPolygon<GLVideo> {
         }
     }
 
-    @Override
-    public void cleanup() {
-        videoFrameSystem.cleanup();
-
-        super.cleanup();
-    }
+//    @Override
+//    public void cleanup() {
+//        videoFrameSystem.cleanup();
+//
+//        super.cleanup();
+//    }
 
     public VideoFrameSystem getVideoFrameSystem() {
         return videoFrameSystem;

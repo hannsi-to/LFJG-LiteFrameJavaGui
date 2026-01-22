@@ -73,12 +73,12 @@ public class TestScene4 implements IScene {
 
     @Override
     public void drawFrame() {
-        glRect.draw();
+//        glRect.draw();
     }
 
     @Override
     public void stopFrame() {
-        glRect.cleanup();
+//        glRect.cleanup();
     }
 
     @Override

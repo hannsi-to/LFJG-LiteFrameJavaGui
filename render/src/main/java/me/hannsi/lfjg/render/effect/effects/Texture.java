@@ -4,7 +4,6 @@ import me.hannsi.lfjg.core.utils.graphics.image.TextureLoader;
 import me.hannsi.lfjg.render.effect.system.EffectBase;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
 import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
 import static me.hannsi.lfjg.render.LFJGRenderContext.textureCache;
@@ -49,8 +48,8 @@ public class Texture extends EffectBase {
             glStateCache.bindTexture(GL_TEXTURE_2D, textureId);
         }
 
-        baseGLObject.getShaderProgram().setUniform("objectReplaceColor", UploadUniformType.ON_CHANGE, false);
-        baseGLObject.getShaderProgram().setUniform("objectBlendMode", UploadUniformType.ON_CHANGE, blendType.getId());
+//        baseGLObject.getShaderProgram().setUniform("objectReplaceColor", UploadUniformType.ON_CHANGE, false);
+//        baseGLObject.getShaderProgram().setUniform("objectBlendMode", UploadUniformType.ON_CHANGE, blendType.getId());
 
         super.push(baseGLObject);
     }

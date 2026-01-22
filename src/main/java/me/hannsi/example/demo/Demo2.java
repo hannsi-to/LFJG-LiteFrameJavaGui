@@ -137,16 +137,16 @@ public class Demo2 implements IScene {
 
     @Override
     public void drawFrame() {
-        glBackGround.draw();
-        glText1.draw();
-        glText2.draw();
-        glText3.draw();
-        glText4.draw();
-        glText5.draw();
-        glText6.draw();
-        glText7.draw();
-        glText8.draw();
-        glText9.draw();
+//        glBackGround.draw();
+//        glText1.draw();
+//        glText2.draw();
+//        glText3.draw();
+//        glText4.draw();
+//        glText5.draw();
+//        glText6.draw();
+//        glText7.draw();
+//        glText8.draw();
+//        glText9.draw();
     }
 
     @Override

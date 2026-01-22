@@ -92,14 +92,14 @@ public class Scale extends EffectBase {
     @Override
     public void push(GLObject baseGLObject) {
         if (autoCenter) {
-            cx = baseGLObject.getTransform().getX();
-            cy = baseGLObject.getTransform().getY();
+//            cx = baseGLObject.getTransform().getX();
+//            cy = baseGLObject.getTransform().getY();
         }
 
-        baseGLObject.getTransform()
-                .translate(cx, cy, cz)
-                .scale(x / latestX, y / latestY, z / latestZ)
-                .translate(-cx, -cy, -cz);
+//        baseGLObject.getTransform()
+//                .translate(cx, cy, cz)
+//                .scale(x / latestX, y / latestY, z / latestZ)
+//                .translate(-cx, -cy, -cz);
 
         super.push(baseGLObject);
     }

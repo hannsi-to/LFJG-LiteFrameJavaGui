@@ -32,7 +32,7 @@ public class TestScene2 implements IScene {
 
     @Override
     public void drawFrame() {
-        glBezierLine.draw();
+//        glBezierLine.draw();
     }
 
     @Override

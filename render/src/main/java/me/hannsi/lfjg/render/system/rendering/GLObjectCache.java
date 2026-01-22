@@ -54,14 +54,14 @@ public class GLObjectCache {
             if (filter != null && !filter.test(glObject)) {
                 continue;
             }
-            glObject.draw();
+//            glObject.draw();
         }
     }
 
     public void cleanup() {
         StringBuilder ids = new StringBuilder();
         for (GLObject glObject : glObjects.values()) {
-            glObject.cleanup();
+//            glObject.cleanup();
             ids.append(glObject.getObjectId()).append(", ");
         }
 

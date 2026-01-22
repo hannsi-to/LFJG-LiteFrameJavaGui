@@ -37,12 +37,12 @@ public class MainFrame implements LFJGFrame {
     public void drawFrame() {
         Rotate rotate1 = ((Rotate) effectCache1.getEffectBase("Rotate1"));
         rotate1.zRadian(rotate1.getZ() + MathHelper.toRadians(10));
-        glRect1.draw();
+//        glRect1.draw();
     }
 
     @Override
     public void stopFrame() {
-        glRect1.cleanup();
+//        glRect1.cleanup();
         effectCache1.cleanup();
     }
 

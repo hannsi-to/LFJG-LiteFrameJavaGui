@@ -31,12 +31,12 @@ public class MainFrame implements LFJGFrame {
 
     @Override
     public void drawFrame() {
-        glBezierLine.draw();
+//        glBezierLine.draw();
     }
 
     @Override
     public void stopFrame() {
-        glBezierLine.cleanup();
+//        glBezierLine.cleanup();
     }
 
     @Override

@@ -104,8 +104,8 @@ public class MSDFMain implements LFJGFrame {
 
 //        ((Translate) effectCache.getEffectBase("Translate1")).x(500);
 
-        glRect.draw();
-        glText.draw();
+//        glRect.draw();
+//        glText.draw();
 //        glLine.draw();
 
 

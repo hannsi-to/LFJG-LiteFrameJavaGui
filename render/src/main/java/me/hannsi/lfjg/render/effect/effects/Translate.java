@@ -52,7 +52,7 @@ public class Translate extends EffectBase {
 
     @Override
     public void push(GLObject baseGLObject) {
-        baseGLObject.getTransform().translate(-latestX, -latestY, -latestZ).translate(x, y, z);
+//        baseGLObject.getTransform().translate(-latestX, -latestY, -latestZ).translate(x, y, z);
 
         super.push(baseGLObject);
     }
