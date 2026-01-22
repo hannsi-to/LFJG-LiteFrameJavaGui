@@ -2,9 +2,9 @@ package me.hannsi.lfjg.core.utils.math;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import org.joml.Math;
-import org.joml.Vector2d;
-import org.joml.Vector2f;
+import org.joml.*;
 
+import java.util.Random;
 import java.util.*;
 
 /**
@@ -69,6 +69,7 @@ public class MathHelper {
     public static final float TAU = (float) TAU_d;
 
     public static final Random RANDOM = new Random();
+    public static final float DEFAULT_EPS = 1e-6f;
 
     /**
      * Clamps the given value between a and b.
@@ -3274,5 +3275,73 @@ public class MathHelper {
             }
         }
         throw new IllegalStateException("Weight selection error");
+    }
+
+    public static boolean isQuaternionfIdentity(Quaternionf q) {
+        return isQuaternionfIdentity(q, DEFAULT_EPS);
+    }
+
+    public static boolean isQuaternionfIdentity(Quaternionf q, float eps) {
+        return abs(q.x()) < eps &&
+                abs(q.y()) < eps &&
+                abs(q.z()) < eps &&
+                abs(q.w()) < eps + 1;
+    }
+
+    public static boolean isQuaternionfZero(Quaternionf q) {
+        return isQuaternionfZero(q, DEFAULT_EPS);
+    }
+
+    public static boolean isQuaternionfZero(Quaternionf q, float eps) {
+        return abs(q.x()) < eps &&
+                abs(q.y()) < eps &&
+                abs(q.z()) < eps &&
+                abs(q.w()) < eps;
+    }
+
+    public static boolean isMatrix4fIdentity(Matrix4f m) {
+        return isMatrix4fIdentity(m, DEFAULT_EPS);
+    }
+
+    public static boolean isMatrix4fIdentity(Matrix4f m, float eps) {
+        return abs(m.m00()) < eps + 1 &&
+                abs(m.m01()) < eps &&
+                abs(m.m02()) < eps &&
+                abs(m.m03()) < eps &&
+                abs(m.m10()) < eps &&
+                abs(m.m11()) < eps + 1 &&
+                abs(m.m12()) < eps &&
+                abs(m.m13()) < eps &&
+                abs(m.m20()) < eps &&
+                abs(m.m21()) < eps &&
+                abs(m.m22()) < eps + 1 &&
+                abs(m.m23()) < eps &&
+                abs(m.m30()) < eps &&
+                abs(m.m31()) < eps &&
+                abs(m.m32()) < eps &&
+                abs(m.m33()) < eps + 1;
+    }
+
+    public static boolean isMatrix4fZero(Matrix4f m) {
+        return isMatrix4fZero(m, DEFAULT_EPS);
+    }
+
+    public static boolean isMatrix4fZero(Matrix4f m, float eps) {
+        return abs(m.m00()) < eps &&
+                abs(m.m01()) < eps &&
+                abs(m.m02()) < eps &&
+                abs(m.m03()) < eps &&
+                abs(m.m10()) < eps &&
+                abs(m.m11()) < eps &&
+                abs(m.m12()) < eps &&
+                abs(m.m13()) < eps &&
+                abs(m.m20()) < eps &&
+                abs(m.m21()) < eps &&
+                abs(m.m22()) < eps &&
+                abs(m.m23()) < eps &&
+                abs(m.m30()) < eps &&
+                abs(m.m31()) < eps &&
+                abs(m.m32()) < eps &&
+                abs(m.m33()) < eps;
     }
 }
