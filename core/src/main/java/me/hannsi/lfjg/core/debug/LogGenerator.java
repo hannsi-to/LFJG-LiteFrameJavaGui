@@ -16,13 +16,15 @@ public class LogGenerator {
     private String bar = "-";
     private String title;
 
-    public LogGenerator(LogGenerateType logGenerateType, Class<?> clazz, String id, String severity, String subMessage) {
+    public LogGenerator(LogGenerateType logGenerateType, Class<?> clazz, String id, String severity, String subMessage, String... texts) {
         String title = clazz.getSimpleName() + " Debug Message";
         String source = "Source: " + clazz.getName();
         String type = "Type: ";
         severity = "Severity: " + severity;
         String message = "Message: ";
-        id = "ID: " + id;
+        if (!id.isEmpty()) {
+            id = "ID: " + id;
+        }
 
         switch (logGenerateType) {
             case CREATE_CACHE:
@@ -45,17 +47,20 @@ public class LogGenerator {
         this.texts = new ArrayList<>();
         this.texts.add(source);
         this.texts.add(type);
-        this.texts.add(id);
+        if (!id.isEmpty()) {
+            this.texts.add(id);
+        }
         this.texts.add(severity);
         this.texts.add(message);
+        this.texts.addAll(Arrays.asList(texts));
     }
 
-    public LogGenerator(LogGenerateType logGenerateType, Class<?> clazz, String id, String subMessage) {
-        this(logGenerateType, clazz, String.valueOf(id), "Info", subMessage);
+    public LogGenerator(LogGenerateType logGenerateType, Class<?> clazz, String id, String subMessage, String... texts) {
+        this(logGenerateType, clazz, id, "Info", subMessage, texts);
     }
 
-    public LogGenerator(LogGenerateType logGenerateType, Class<?> clazz, int id, String subMessage) {
-        this(logGenerateType, clazz, String.valueOf(id), "Info", subMessage);
+    public LogGenerator(LogGenerateType logGenerateType, Class<?> clazz, int id, String subMessage, String... texts) {
+        this(logGenerateType, clazz, String.valueOf(id), "Info", subMessage, texts);
     }
 
     public LogGenerator(String title, String... texts) {
