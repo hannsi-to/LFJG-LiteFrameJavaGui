@@ -1,15 +1,19 @@
 package me.hannsi.lfjg.render.renderers;
 
+import me.hannsi.lfjg.core.event.events.CleanupEvent;
+import me.hannsi.lfjg.core.utils.Cleanup;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
 import static me.hannsi.lfjg.core.Core.UNSAFE;
+import static me.hannsi.lfjg.core.utils.math.MathHelper.isMatrix4fIdentity;
+import static me.hannsi.lfjg.core.utils.math.MathHelper.isQuaternionfIdentity;
 import static me.hannsi.lfjg.render.LFJGRenderContext.mainCamera;
 import static me.hannsi.lfjg.render.RenderSystemSetting.*;
 
-public class InstanceParameter {
+public class InstanceParameter implements Cleanup {
     public static final int BYTES = 16 * Float.BYTES + 4 * Float.BYTES + Integer.BYTES + 3 * Integer.BYTES;
     protected final Matrix4f TEMP_MATRIX = new Matrix4f();
     protected final Matrix4f MODEL_MATRIX = new Matrix4f();
@@ -329,5 +333,20 @@ public class InstanceParameter {
 
     public void setDirtyFlag(boolean dirtyFlag) {
         this.dirtyFlag = dirtyFlag;
+    }
+
+    @Override
+    public boolean cleanup(CleanupEvent event) {
+        TEMP_MATRIX.identity();
+        MODEL_MATRIX.identity();
+        rotation.identity();
+        color.identity();
+
+        return event.debug(this.getClass(), new CleanupEvent.CleanupData(this.getClass().getSimpleName())
+                .addData("TEMP_MATRIX", isMatrix4fIdentity(TEMP_MATRIX), TEMP_MATRIX)
+                .addData("MODEL_MATRIX", isMatrix4fIdentity(MODEL_MATRIX), MODEL_MATRIX)
+                .addData("rotation", isQuaternionfIdentity(rotation), rotation)
+                .addData("color", color.isZero(), color)
+        );
     }
 }

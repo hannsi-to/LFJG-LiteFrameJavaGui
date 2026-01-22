@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.system.mesh;
 
+import me.hannsi.lfjg.core.event.events.CleanupEvent;
+import me.hannsi.lfjg.core.utils.Cleanup;
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.debug.exceptions.render.mesh.MeshBuilderException;
@@ -10,7 +12,7 @@ import me.hannsi.lfjg.render.system.rendering.DrawType;
 
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
 
-public class MeshBuilder {
+public class MeshBuilder implements Cleanup {
     private final IntRef objectIdPointer = new IntRef();
     private Vertex[] vertices = null;
     private DrawType drawType = DrawType.TRIANGLES;
@@ -196,5 +198,24 @@ public class MeshBuilder {
 
     public void setFlagObjectData(boolean flagObjectData) {
         this.flagObjectData = flagObjectData;
+    }
+
+    @Override
+    public boolean cleanup(CleanupEvent event) {
+        objectIdPointer.setNullptr();
+
+        boolean verticesState = true;
+        for (Vertex vertex : vertices) {
+            if (!vertex.cleanup(event)) {
+                verticesState = false;
+            }
+        }
+        vertices = null;
+
+        return event.debug(MeshBuilder.class, new CleanupEvent.CleanupData(this.getClass().getSimpleName())
+                .addData("objectIdPointer", objectIdPointer.isNullptr(), objectIdPointer)
+                .addData("vertices", verticesState, vertices)
+                .addData("objectData", objectData.cleanup(event), objectData)
+        );
     }
 }

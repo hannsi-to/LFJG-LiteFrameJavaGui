@@ -1,6 +1,9 @@
 package me.hannsi.lfjg.render.uitl.id;
 
+import me.hannsi.lfjg.core.event.EventHandler;
+import me.hannsi.lfjg.core.event.events.CleanupEvent;
 import me.hannsi.lfjg.render.debug.exceptions.render.mesh.MeshException;
+import me.hannsi.lfjg.render.event.RenderCleanupEvent;
 import me.hannsi.lfjg.render.system.mesh.MeshBuilder;
 
 import java.util.LinkedHashMap;
@@ -133,5 +136,16 @@ public class GLObjectPool {
         }
 
         return stringBuilder.toString();
+    }
+
+    @EventHandler
+    public void renderCleanupEvent(RenderCleanupEvent event) {
+        CleanupEvent.CleanupData datum = new CleanupEvent.CleanupData("Objects");
+        for (Map.Entry<Integer, MeshBuilder> entry : objects.entrySet()) {
+            datum.addData(entry.getKey().toString(), entry.getValue().cleanup(event));
+        }
+        objects.clear();
+
+        event.debug(GLObjectPool.class, datum);
     }
 }

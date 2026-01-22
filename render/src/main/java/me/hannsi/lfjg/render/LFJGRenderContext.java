@@ -4,6 +4,8 @@ import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.core.utils.toolkit.Camera;
+import me.hannsi.lfjg.render.event.RenderCleanupEvent;
+import me.hannsi.lfjg.render.manager.AssetManager;
 import me.hannsi.lfjg.render.system.mesh.MeshConstants;
 import me.hannsi.lfjg.render.system.mesh.TestMesh;
 import me.hannsi.lfjg.render.system.mesh.persistent.*;
@@ -22,8 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static me.hannsi.lfjg.core.Core.projection2D;
-import static me.hannsi.lfjg.core.Core.projection3D;
+import static me.hannsi.lfjg.core.Core.*;
 import static me.hannsi.lfjg.render.RenderSystemSetting.*;
 import static org.lwjgl.opengl.ARBSparseTexture.GL_VIRTUAL_PAGE_SIZE_X_ARB;
 import static org.lwjgl.opengl.ARBSparseTexture.GL_VIRTUAL_PAGE_SIZE_Y_ARB;
@@ -81,7 +82,10 @@ public class LFJGRenderContext {
     }
 
     public static void init() {
+        EVENT_MANAGER.register(AssetManager.class);
+
         glObjectPool = new GLObjectPool();
+        EVENT_MANAGER.register(glObjectPool);
 
         drawBatches = new ArrayList<>();
         needUpdateBuilders = new HashSet<>();
@@ -131,6 +135,6 @@ public class LFJGRenderContext {
     }
 
     public static void finish() {
-
+        EVENT_MANAGER.call(new RenderCleanupEvent());
     }
 }

@@ -1,7 +1,10 @@
 package me.hannsi.lfjg.render.manager;
 
+import me.hannsi.lfjg.core.event.EventHandler;
+import me.hannsi.lfjg.core.event.events.CleanupEvent;
 import me.hannsi.lfjg.core.utils.math.io.IOUtil;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
+import me.hannsi.lfjg.render.event.RenderCleanupEvent;
 import me.hannsi.lfjg.render.system.rendering.texture.atlas.Sprite;
 import me.hannsi.lfjg.render.system.rendering.texture.atlas.SpriteMemoryPolicy;
 import org.lwjgl.BufferUtils;
@@ -80,5 +83,22 @@ public class AssetManager {
 
     private static String getCacheName(AssetType assetType, Location location) {
         return assetType.getName() + ": " + location.path();
+    }
+
+    @EventHandler
+    public static void renderCleanupEvent(RenderCleanupEvent event) {
+        CleanupEvent.CleanupData textDatum = new CleanupEvent.CleanupData("TextAssets");
+        for (Map.Entry<String, String> entry : textAssets.entrySet()) {
+            textDatum.addData(entry.getKey(), true);
+        }
+        textAssets.clear();
+
+        CleanupEvent.CleanupData textureDatum = new CleanupEvent.CleanupData("TextureAssets");
+        for (Map.Entry<String, Sprite> entry : textureAssets.entrySet()) {
+            textureDatum.addData(entry.getKey(), entry.getValue().cleanup(event));
+        }
+        textureAssets.clear();
+
+        event.debug(AssetManager.class, textDatum, textureDatum);
     }
 }

@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.system.rendering.texture.atlas;
 
+import me.hannsi.lfjg.core.event.events.CleanupEvent;
+import me.hannsi.lfjg.core.utils.Cleanup;
 import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
@@ -7,7 +9,7 @@ import java.nio.ByteBuffer;
 import static me.hannsi.lfjg.core.utils.math.MathHelper.random;
 import static me.hannsi.lfjg.render.LFJGRenderContext.NO_ATTACH_TEXTURE;
 
-public class Sprite {
+public class Sprite implements Cleanup {
     public final int width;
     public final int height;
     public SpriteMemoryPolicy memoryPolicy;
@@ -69,5 +71,15 @@ public class Sprite {
 
     void setSpriteIndex(int spriteIndex) {
         this.spriteIndex = spriteIndex;
+    }
+
+    @Override
+    public boolean cleanup(CleanupEvent event) {
+        data.clear();
+        data = null;
+
+        return event.debug(Sprite.class, new CleanupEvent.CleanupData("Sprite").
+                addData("data", data == null, data)
+        );
     }
 }
