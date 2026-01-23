@@ -19,9 +19,7 @@ import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import me.hannsi.lfjg.render.uitl.id.GLObjectPool;
 import org.joml.Matrix4f;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static me.hannsi.lfjg.core.Core.*;
@@ -47,7 +45,7 @@ public class LFJGRenderContext {
     public static final int INSTANCE_PARAMETERS_BINDING_POINT;
     public static final int SPRITE_DATUM_BINDING_POINT;
     public static GLObjectPool glObjectPool;
-    public static List<DrawBatch> drawBatches;
+    public static DrawBatch drawBatch;
     public static Set<IntRef> needUpdateBuilders;
     public static Camera mainCamera;
     public static Matrix4f precomputedViewProjection2D;
@@ -87,7 +85,7 @@ public class LFJGRenderContext {
         glObjectPool = new GLObjectPool();
         EVENT_MANAGER.register(glObjectPool);
 
-        drawBatches = new ArrayList<>();
+        drawBatch = new DrawBatch();
         needUpdateBuilders = new HashSet<>();
 
         mainCamera = new Camera();
