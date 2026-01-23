@@ -12,20 +12,4 @@ public class Pipeline {
     public BlendType getBlendType() {
         return blendType;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof Pipeline other)) {
-            return false;
-        }
-        return blendType == other.blendType;
-    }
-
-    @Override
-    public int hashCode() {
-        return blendType.hashCode();
-    }
 }

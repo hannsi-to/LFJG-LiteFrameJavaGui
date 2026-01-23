@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.render.system.rendering;
 
+import me.hannsi.lfjg.render.renderers.BlendType;
+
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
 import static me.hannsi.lfjg.render.RenderSystemSetting.VAO_RENDERING_FRONT_AND_BACK;
 import static me.hannsi.lfjg.render.RenderSystemSetting.VAO_RENDERING_FRONT_AND_BACK_LINE_WIDTH;
@@ -32,15 +34,36 @@ public class VAORendering {
         persistentMappedSSBO.syncToGPU();
         persistentMappedPUBO.syncToGPU();
 
-        for (DrawBatch drawBatch : drawBatches) {
-            drawBatch.apply();
+        while (drawBatch.nextPass()) {
+            DrawBatch.Pass pass = drawBatch.getCurrentPass();
+
+            applyBlendState(pass.pipeline.getBlendType());
+
             glMultiDrawElementsIndirect(
                     GL_TRIANGLES,
                     GL_UNSIGNED_INT,
-                    0,
-                    mesh.getCommandCount(),
+                    pass.commandOffset,
+                    pass.commandCount,
                     0
             );
         }
+    }
+
+    private void applyBlendState(BlendType type) {
+        if (type.isBlend()) {
+            glStateCache.enable(GL_BLEND);
+            glStateCache.blendFuncSeparate(type.getSrcRGB(), type.getDstRGB(), type.getSrcA(), type.getDstA());
+            glStateCache.blendEquationSeparate(type.getEqRGB(), type.getEqA());
+        } else {
+            glStateCache.disable(GL_BLEND);
+        }
+
+        if (type.isDepthTest()) {
+            glStateCache.enable(GL_DEPTH_TEST);
+        } else {
+            glStateCache.disable(GL_DEPTH_TEST);
+        }
+
+        glStateCache.depthMask(type.isDepthWrite());
     }
 }

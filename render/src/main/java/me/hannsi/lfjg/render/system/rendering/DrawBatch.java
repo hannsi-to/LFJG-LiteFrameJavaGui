@@ -1,69 +1,61 @@
 package me.hannsi.lfjg.render.system.rendering;
 
-import me.hannsi.lfjg.render.renderers.BlendType;
-
-import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DrawBatch {
-    private Pipeline pipeline;
-    private int commandOffset;
-    private int commandCount;
+    protected int index;
+    protected Pass currentPass;
+    private final List<Pass> passes;
 
-    public DrawBatch(Pipeline pipeline, int commandOffset) {
-        this.pipeline = pipeline;
-        this.commandOffset = commandOffset;
-        this.commandCount = 0;
+    public DrawBatch() {
+        this.passes = new ArrayList<>();
     }
 
-    public void apply() {
-        applyBlendState(pipeline.getBlendType());
+    public DrawBatch addPass(Pass pass) {
+        passes.add(pass);
+
+        return this;
     }
 
-    private void applyBlendState(BlendType type) {
-        if (type.isBlend()) {
-            glStateCache.enable(GL_BLEND);
-            glStateCache.blendFuncSeparate(type.getSrcRGB(), type.getDstRGB(), type.getSrcA(), type.getDstA());
-            glStateCache.blendEquationSeparate(type.getEqRGB(), type.getEqA());
-        } else {
-            glStateCache.disable(GL_BLEND);
+    public boolean nextPass() {
+        if (index >= passes.size()) {
+            index = 0;
+            currentPass = null;
+            return false;
         }
 
-        if (type.isDepthTest()) {
-            glStateCache.enable(GL_DEPTH_TEST);
-        } else {
-            glStateCache.disable(GL_DEPTH_TEST);
+        currentPass = passes.get(index++);
+        return true;
+    }
+
+    public Pass getCurrentPass() {
+        return currentPass;
+    }
+
+    public DrawBatch clear() {
+        passes.clear();
+
+        return this;
+    }
+
+    public List<Pass> getPasses() {
+        return passes;
+    }
+
+    public void increment() {
+        passes.getLast().commandCount++;
+    }
+
+    public static class Pass {
+        public final int commandOffset;
+        public final Pipeline pipeline;
+        public int commandCount;
+
+        public Pass(int commandOffset, Pipeline pipeline) {
+            this.commandOffset = commandOffset;
+            this.commandCount = 0;
+            this.pipeline = pipeline;
         }
-
-        glStateCache.depthMask(type.isDepthWrite());
-    }
-
-    public void incrementCommandCount() {
-        commandCount++;
-    }
-
-    public Pipeline getPipeline() {
-        return pipeline;
-    }
-
-    public void setPipeline(Pipeline pipeline) {
-        this.pipeline = pipeline;
-    }
-
-    public int getCommandOffset() {
-        return commandOffset;
-    }
-
-    public void setCommandOffset(int commandOffset) {
-        this.commandOffset = commandOffset;
-    }
-
-    public int getCommandCount() {
-        return commandCount;
-    }
-
-    public void setCommandCount(int commandCount) {
-        this.commandCount = commandCount;
     }
 }

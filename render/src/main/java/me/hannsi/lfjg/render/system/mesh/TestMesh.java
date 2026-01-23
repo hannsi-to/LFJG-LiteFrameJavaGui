@@ -67,7 +67,7 @@ public class TestMesh {
         int baseInstance = 0;
         int objectCount = 0;
 
-        drawBatches.clear();
+        drawBatch.clear();
         needUpdateBuilders.clear();
         persistentMappedVBO.reset();
         persistentMappedEBO.reset();
@@ -75,15 +75,15 @@ public class TestMesh {
         persistentMappedSSBO.resetBindingPoint(INSTANCE_PARAMETERS_BINDING_POINT);
 
         Pipeline currentPipeline = null;
-        DrawBatch currentDrawBatch = null;
         for (MeshBuilder meshBuilder : pendingMeshBuilders) {
             Pipeline newPipeline = new Pipeline(meshBuilder.getBlendType());
-            if (currentPipeline == null || !currentPipeline.equals(newPipeline)) {
+
+            if (currentPipeline == null || currentPipeline.getBlendType() != newPipeline.getBlendType()) {
                 currentPipeline = newPipeline;
-                drawBatches.add(currentDrawBatch = new DrawBatch(currentPipeline, commandCount));
+                drawBatch.addPass(new DrawBatch.Pass(commandCount, newPipeline));
             }
 
-            currentDrawBatch.incrementCommandCount();
+            drawBatch.increment();
 
             TestElementPair elementPair = TestPolygonTriangulator.createPolygonTriangulator()
                     .drawType(meshBuilder.getDrawType())
