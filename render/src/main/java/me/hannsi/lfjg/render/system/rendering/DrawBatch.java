@@ -54,8 +54,8 @@ public class DrawBatch {
 
         public Pass(int commandOffset, Pipeline pipeline) {
             this.commandOffset = commandOffset;
-            this.commandCount = 0;
             this.pipeline = pipeline;
+            this.commandCount = 0;
         }
     }
 }
