@@ -25,13 +25,14 @@ import java.util.concurrent.locks.LockSupport;
 
 import static me.hannsi.lfjg.core.Core.*;
 import static me.hannsi.lfjg.core.Core.GL.createCapabilities;
+import static me.hannsi.lfjg.core.Core.GL11.glClear;
 import static me.hannsi.lfjg.core.Core.GL11.glClearColor;
 import static me.hannsi.lfjg.core.Core.GL30.glClearBufferfv;
 import static me.hannsi.lfjg.core.Core.GL43.glInvalidateFramebuffer;
 import static me.hannsi.lfjg.core.Core.GLStateCache.bindFrameBuffer;
+import static me.hannsi.lfjg.core.Core.GLStateCache.viewport;
 import static me.hannsi.lfjg.core.Core.LFJGRenderContext.disable;
 import static me.hannsi.lfjg.core.Core.LFJGRenderContext.enable;
-import static me.hannsi.lfjg.frame.LFJGFrameContext.renderPass;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Frame implements IFrame {
@@ -94,9 +95,17 @@ public class Frame implements IFrame {
         DISCARD_ATTACHMENTS.clear();
 
         for (Attachment a : pass.attachments) {
-            if (a.storeOp == Attachment.StoreOp.DONT_CARE) {
-                DISCARD_ATTACHMENTS.add(a.attachment);
+            if (a.storeOp != Attachment.StoreOp.DONT_CARE) {
+                continue;
             }
+
+            int att = a.attachment;
+
+            if (att == OPEN_GL_PARAMETER_NAME_MAP.get("GL_COLOR") || att == OPEN_GL_PARAMETER_NAME_MAP.get("GL_DEPTH") || att == OPEN_GL_PARAMETER_NAME_MAP.get("GL_STENCIL")) {
+                continue;
+            }
+
+            DISCARD_ATTACHMENTS.add(att);
         }
 
         if (!DISCARD_ATTACHMENTS.isEmpty()) {
@@ -108,6 +117,8 @@ public class Frame implements IFrame {
         WORKSPACE_MANAGER.createDirectories();
         WORKSPACE_MANAGER.copyResourcesToWorkspace();
 
+        EVENT_MANAGER.register(this);
+
         registerManagers();
 
         lfjgFrame.setFrameSetting();
@@ -116,12 +127,12 @@ public class Frame implements IFrame {
         initGLFW();
         initRendering();
 
+        init(frameBufferWidth, frameBufferHeight, windowWidth, windowHeight);
+
         frameSettingManager.updateFrameSettings(false);
 
         GLFWCallback glfwCallback = new GLFWCallback(this);
         glfwCallback.glfwInvoke();
-
-        EVENT_MANAGER.register(this);
 
         lfjgFrame.init();
         mainLoop();
@@ -177,6 +188,12 @@ public class Frame implements IFrame {
                     throw new IllegalStateException("OpenGL context must be current before createCapabilities!");
                 }
                 createCapabilities();
+                System.out.println(
+                        "[SIZE] window = " + windowWidth + " x " + windowHeight +
+                                " | framebuffer = " + frameBufferWidth + " x " + frameBufferHeight +
+                                " | scale = " + contentScaleX + ", " + contentScaleY
+                );
+                viewport(0, 0, frameBufferWidth, frameBufferHeight);
                 break;
             case LIB_GDX:
             case VULKAN:
@@ -216,11 +233,12 @@ public class Frame implements IFrame {
             lastTime2 = currentTime2;
 
             if (deltaTime2 >= targetTime) {
-                begin(renderPass);
+//                begin(renderPass);
+                glClear(OPEN_GL_PARAMETER_NAME_MAP.get("GL_COLOR_BUFFER_BIT") | OPEN_GL_PARAMETER_NAME_MAP.get("GL_DEPTH_BUFFER_BIT"));
 
                 draw();
 
-                end(renderPass);
+//                end(renderPass);
 
                 glfwSwapBuffers(windowID);
                 glfwPollEvents();
@@ -256,11 +274,18 @@ public class Frame implements IFrame {
 
     @EventHandler
     public void windowSizeEvent(WindowSizeEvent event) {
-        updateLFJGLContext(frameBufferWidth, frameBufferHeight, windowWidth, windowHeight);
+        windowWidth = event.getWidth();
+        windowHeight = event.getHeight();
+
+        updateLFJGLContext(frameBufferWidth, frameBufferHeight, event.getWidth(), event.getHeight());
     }
 
     @EventHandler
     public void framebufferSizeEvent(FramebufferSizeEvent event) {
+        frameBufferWidth = event.getWidth();
+        frameBufferHeight = event.getHeight();
+
+        viewport(0, 0, frameBufferWidth, frameBufferHeight);
         updateLFJGLContext(frameBufferWidth, frameBufferHeight, windowWidth, windowHeight);
     }
 
@@ -279,6 +304,7 @@ public class Frame implements IFrame {
     private void draw() {
         switch (renderingType) {
             case OPEN_GL:
+                viewport(0, 0, frameBufferWidth, frameBufferHeight);
                 lfjgFrame.drawFrame();
                 break;
             case LIB_GDX:
