@@ -746,12 +746,22 @@ public class Core {
 
     public static class GLStateCache {
         public static final String PACKAGE = DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + ".system.rendering.GLStateCache";
+        public static final ViewportCall VIEWPORT_CALL;
         public static final GetLastFrameBufferCall GET_LAST_FRAME_BUFFER;
         public static final BindFrameBufferCall BIND_FRAME_BUFFER_CALL;
 
         static {
+            VIEWPORT_CALL = ClassUtil.bindInstance(PACKAGE, "viewport", ViewportCall.class, MethodType.methodType(void.class, int.class, int.class, int.class, int.class));
             GET_LAST_FRAME_BUFFER = ClassUtil.bindInstance(PACKAGE, "getLastFrameBuffer", GetLastFrameBufferCall.class, MethodType.methodType(int.class));
             BIND_FRAME_BUFFER_CALL = ClassUtil.bindInstance(PACKAGE, "bindFrameBuffer", BindFrameBufferCall.class, MethodType.methodType(void.class, int.class));
+        }
+
+        public static void viewport(int x, int y, int width, int height) {
+            if (!ENABLE_LFJG_RENDER_SYSTEM || glStateCache == null) {
+                return;
+            }
+
+            VIEWPORT_CALL.call(glStateCache, x, y, width, height);
         }
 
         public static int getLastFrameBuffer() {
@@ -768,6 +778,11 @@ public class Core {
             }
 
             BIND_FRAME_BUFFER_CALL.call(glStateCache, frameBuffer);
+        }
+
+        @FunctionalInterface
+        public interface ViewportCall {
+            void call(Object o, int x, int y, int width, int height);
         }
 
         @FunctionalInterface
