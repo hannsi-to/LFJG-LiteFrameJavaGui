@@ -65,13 +65,14 @@ public class TestMesh {
         indexCount = 0;
         commandCount = 0;
         int baseInstance = 0;
-        int objectCount = 0;
+        int instanceCount = 0;
 
         drawBatch.clear();
         needUpdateBuilders.clear();
         persistentMappedVBO.reset();
         persistentMappedEBO.reset();
         persistentMappedIBO.reset();
+        persistentMappedSSBO.resetBindingPoint(OBJECT_DATA_BIDING_POINT);
         persistentMappedSSBO.resetBindingPoint(INSTANCE_PARAMETERS_BINDING_POINT);
 
         Pipeline currentPipeline = null;
@@ -85,10 +86,11 @@ public class TestMesh {
 
             drawBatch.increment();
 
-            TestElementPair elementPair = TestPolygonTriangulator.createPolygonTriangulator()
+            TestElementPair elementPair = Test2PolygonTriangulator.createPolygonTriangulator()
                     .drawType(meshBuilder.getDrawType())
-                    .lineWidth(meshBuilder.getLineWidth())
-                    .lineJointType(meshBuilder.getJointType())
+                    .paintType(meshBuilder.getPaintType())
+                    .strokeWidth(meshBuilder.getStrokeWidth())
+                    .strokeJointType(meshBuilder.getStrokeJointType())
                     .pointSize(meshBuilder.getPointSize())
                     .pointType(meshBuilder.getPointType())
                     .projectionType(meshBuilder.getProjectionType())
@@ -104,11 +106,12 @@ public class TestMesh {
             int startOffset = writeGeometry(elementPair);
 
             ObjectData objectData = meshBuilder.getObjectData();
-            for (InstanceParameter instanceParameter : objectData.getInstanceParameters()) {
-                instanceParameter.objectId(objectCount);
-            }
+            persistentMappedSSBO.addInt(OBJECT_DATA_BIDING_POINT, instanceCount);
+            persistentMappedSSBO.addInt(OBJECT_DATA_BIDING_POINT, objectData.getInstanceParameters().length);
+            assert objectData.drawElementsIndirectCommand.instanceCount == objectData.getInstanceParameters().length;
             for (int i = 0; i < objectData.drawElementsIndirectCommand.instanceCount; i++) {
                 persistentMappedSSBO.addInstanceParameter(INSTANCE_PARAMETERS_BINDING_POINT, objectData.getInstanceParameters()[i]);
+                instanceCount++;
             }
 
             objectData.drawElementsIndirectCommand.count = elementPair.indices.length;
@@ -125,7 +128,6 @@ public class TestMesh {
             }
 
             baseInstance += objectData.drawElementsIndirectCommand.instanceCount;
-            objectCount++;
         }
 
         return this;
