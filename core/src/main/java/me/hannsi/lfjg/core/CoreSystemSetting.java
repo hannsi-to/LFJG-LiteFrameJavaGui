@@ -1,6 +1,11 @@
 package me.hannsi.lfjg.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CoreSystemSetting {
+    public static boolean DEBUG_RUN = true;
+
     public static boolean CORE_SYSTEM_DEBUG = true;
 
     public static boolean DEBUG_LOG_FABRIC_DEBUG = false;
@@ -16,4 +21,6 @@ public class CoreSystemSetting {
 
     public static boolean GL_INTERCEPTOR_DEBUG = false;
     public static boolean GL_INTERCEPTOR_CALL_OPENGL_STATIC_METHOD_HOOK_EVENT = false;
+
+    public static List<Object> SHARE_OBJECT = new ArrayList<>();
 }
