@@ -90,6 +90,10 @@ public class Color {
         this(new java.awt.Color(r, g, b, a));
     }
 
+    public Color(float... colors) {
+        this(colors[0], colors[1], colors[2], colors[3]);
+    }
+
     public Color(ColorSpace cspace, float[] components, float alpha) {
         this(new java.awt.Color(cspace, components, alpha));
     }
@@ -238,6 +242,10 @@ public class Color {
 
     public static Color of(float r, float g, float b, float a) {
         return new Color(r, g, b, a);
+    }
+
+    public static Color of(float... colors) {
+        return new Color(colors);
     }
 
     public static Color of(ColorSpace cspace, float[] components, float alpha) {
