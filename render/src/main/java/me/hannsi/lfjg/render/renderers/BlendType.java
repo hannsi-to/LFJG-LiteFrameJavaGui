@@ -10,7 +10,7 @@ import static org.lwjgl.opengl.GL14.*;
  */
 public enum BlendType implements IEnumTypeBase {
     NO_BLEND(-1, "NoBlend", false, -1, -1, -1, -1, -1, -1, false, false),
-    NORMAL(0, "Normal", true, GL_ONE, GL_ZERO, GL_ONE, GL_ZERO, GL_FUNC_ADD, GL_FUNC_ADD, false, false),
+    NORMAL(0, "Normal", true, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD, GL_FUNC_ADD, false, false),
     ALPHA(1, "Alpha", true, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD, GL_FUNC_ADD, false, false),
     ADD(2, "Add", true, GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE, GL_FUNC_ADD, GL_FUNC_ADD, false, false),
     MULTIPLY(3, "Multiply", true, GL_DST_COLOR, GL_ZERO, GL_DST_ALPHA, GL_ZERO, GL_FUNC_ADD, GL_FUNC_ADD, false, false),
@@ -27,7 +27,7 @@ public enum BlendType implements IEnumTypeBase {
     COLOR_ONLY(14, "ColorOnly", true, GL_ONE, GL_ZERO, GL_ZERO, GL_ONE, GL_FUNC_ADD, GL_FUNC_ADD, false, false),
     ALPHA_ONLY(15, "AlphaOnly", true, GL_ZERO, GL_ONE, GL_ONE, GL_ZERO, GL_FUNC_ADD, GL_FUNC_ADD, false, false),
     MULTIPLY_ALPHA(16, "MultiplyAlpha", true, GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA, GL_DST_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD, GL_FUNC_ADD, false, false),
-    UI_DEFAULT(17, "UIDefault", true, GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD, GL_FUNC_ADD, false, false),
+    UI_DEFAULT(17, "UIDefault", true, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD, GL_FUNC_ADD, false, false),
     ;
 
     final int id;
