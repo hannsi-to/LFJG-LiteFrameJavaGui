@@ -4,33 +4,23 @@ import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class EffectCache {
-    private LinkedHashMap<String, EffectBase> effectBases;
+    private final List<EffectBase> effectBases;
 
     EffectCache() {
-        this.effectBases = new LinkedHashMap<>();
+        this.effectBases = new ArrayList<>();
     }
 
     public static EffectCache createEffectCache() {
         return new EffectCache();
     }
 
-
-//    public EffectCache attachGLObjectCache(GLObjectCache glObjectCache) {
-//
-//        return this;
-//    }
-//
-//    public EffectCache attachGLObject(GLObject glObject) {
-//        return this;
-//    }
-
     public EffectCache createCache(EffectBase effectBase) {
-        this.effectBases.put(effectBase.getName(), effectBase);
+        effectBases.add(effectBase);
 
         new LogGenerator(
                 LogGenerateType.CREATE_CACHE,
@@ -42,21 +32,8 @@ public class EffectCache {
         return this;
     }
 
-    public EffectCache createCache(String name, EffectBase effectBase, int index) {
-        LinkedHashMap<String, EffectBase> newEffectCache = new LinkedHashMap<>();
-
-        int i = 0;
-        for (Map.Entry<String, EffectBase> effectBaseIdentifierEntry : effectBases.entrySet()) {
-            if (i == index) {
-                newEffectCache.put(name, effectBase);
-            }
-
-            newEffectCache.put(effectBaseIdentifierEntry.getKey(), effectBaseIdentifierEntry.getValue());
-
-            i++;
-        }
-
-        this.effectBases = newEffectCache;
+    public EffectCache createCache(EffectBase effectBase, int index) {
+        effectBases.add(index, effectBase);
 
         new LogGenerator(
                 LogGenerateType.CREATE_CACHE,
@@ -70,5 +47,9 @@ public class EffectCache {
 
     public void cleanup() {
 
+    }
+
+    public List<EffectBase> getEffectBases() {
+        return effectBases;
     }
 }

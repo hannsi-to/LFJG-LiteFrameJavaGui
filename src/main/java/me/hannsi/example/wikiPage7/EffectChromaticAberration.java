@@ -1,7 +1,6 @@
 package me.hannsi.example.wikiPage7;
 
 import me.hannsi.lfjg.core.Core;
-import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
@@ -25,12 +24,12 @@ public class EffectChromaticAberration implements LFJGFrame {
 
         textureCache.createCache("Test1", Location.fromResource("texture/test/test1.jpg"));
 
-        glRect1 = GLRect.createGLRect("GLRect1")
-                .x1_y1_color1_2p(0, 0, Color.of(0, 0, 0, 0))
-                .x3_y3_color3_2p(frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), Color.of(0, 0, 0, 0))
-                .fill()
-                .rectUV(0, 1, 1, 0)
-                .update();
+//        glRect1 = GLRect.createGLRect("GLRect1")
+//                .x1_y1_color1_2p(0, 0, Color.of(0, 0, 0, 0))
+//                .x3_y3_color3_2p(frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), Color.of(0, 0, 0, 0))
+//                .fill()
+//                .rectUV(0, 1, 1, 0)
+//                .update();
 //        effectCache1 = EffectCache.createEffectCache()
 //                .createCache(Texture.createTexture("Texture1").textureName("Test1"))
 //                .createCache(ChromaticAberration.createChromaticAberration("ChromaticAberration"))
