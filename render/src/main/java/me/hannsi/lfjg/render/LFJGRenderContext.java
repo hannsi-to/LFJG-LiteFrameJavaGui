@@ -4,6 +4,7 @@ import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.core.utils.toolkit.Camera;
+import me.hannsi.lfjg.render.debug.RenderDebug;
 import me.hannsi.lfjg.render.event.RenderCleanupEvent;
 import me.hannsi.lfjg.render.manager.AssetManager;
 import me.hannsi.lfjg.render.system.mesh.MeshConstants;
@@ -15,7 +16,6 @@ import me.hannsi.lfjg.render.system.rendering.VAORendering;
 import me.hannsi.lfjg.render.system.rendering.texture.SparseTexture2DArray;
 import me.hannsi.lfjg.render.system.rendering.texture.atlas.AtlasPacker;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
-import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import me.hannsi.lfjg.render.uitl.id.GLObjectPool;
 import org.joml.Matrix4f;
 
@@ -29,6 +29,7 @@ import static org.lwjgl.opengl.ARBSparseTexture.GL_VIRTUAL_PAGE_SIZE_Y_ARB;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.GL_MAX_ARRAY_TEXTURE_LAYERS;
 import static org.lwjgl.opengl.GL30.GL_TEXTURE_2D_ARRAY;
+import static org.lwjgl.opengl.GL32.GL_CONTEXT_PROFILE_MASK;
 import static org.lwjgl.opengl.GL42.GL_MIN_MAP_BUFFER_ALIGNMENT;
 import static org.lwjgl.opengl.GL42.glGetInternalformativ;
 import static org.lwjgl.opengl.GL43.GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT;
@@ -44,6 +45,7 @@ public class LFJGRenderContext {
     public static final int OBJECT_DATA_BIDING_POINT;
     public static final int INSTANCE_PARAMETERS_BINDING_POINT;
     public static final int SPRITE_DATUM_BINDING_POINT;
+    public static final int CONTEXT_PROFILE_MASK;
     public static GLObjectPool glObjectPool;
     public static DrawBatch drawBatch;
     public static Set<IntRef> needUpdateBuilders;
@@ -62,6 +64,7 @@ public class LFJGRenderContext {
     public static TestMesh mesh;
     public static VAORendering vaoRendering;
     public static TextureCache textureCache;
+    public static RenderDebug renderDebug;
 
     static {
         int[] x = new int[1];
@@ -77,6 +80,7 @@ public class LFJGRenderContext {
         OBJECT_DATA_BIDING_POINT = 1;
         INSTANCE_PARAMETERS_BINDING_POINT = 2;
         SPRITE_DATUM_BINDING_POINT = 3;
+        CONTEXT_PROFILE_MASK = glGetInteger(GL_CONTEXT_PROFILE_MASK);
     }
 
     public static void init() {
@@ -115,6 +119,8 @@ public class LFJGRenderContext {
         vaoRendering = new VAORendering();
 
         textureCache = TextureCache.createTextureCache();
+
+        renderDebug = new RenderDebug();
     }
 
     public static void update() {
@@ -123,11 +129,6 @@ public class LFJGRenderContext {
             precomputedViewProjection3D = projection3D.getMatrix4f().mul(mainCamera.getViewMatrix());
             mainCamera.setDirtyFlag(false);
         }
-
-        shaderProgram.bind();
-        shaderProgram.setUniform("uTextArray", UploadUniformType.ONCE, 0);
-        shaderProgram.setUniform("uTextureBlendMode", UploadUniformType.ONCE, LFJG_RENDER_CONTEXT_TEXTURE_BLEND_MODE.getId());
-        shaderProgram.setUniform("uSpriteBlendMode", UploadUniformType.ONCE, LFJG_RENDER_CONTEXT_SPRITE_BLEND_MODE.getId());
 
         vaoRendering.draw();
     }
