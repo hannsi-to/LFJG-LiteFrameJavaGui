@@ -33,6 +33,7 @@ import static me.hannsi.lfjg.core.Core.GLStateCache.bindFrameBuffer;
 import static me.hannsi.lfjg.core.Core.GLStateCache.viewport;
 import static me.hannsi.lfjg.core.Core.LFJGRenderContext.disable;
 import static me.hannsi.lfjg.core.Core.LFJGRenderContext.enable;
+import static me.hannsi.lfjg.frame.FrameSystemSetting.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Frame implements IFrame {
@@ -204,9 +205,9 @@ public class Frame implements IFrame {
     }
 
     private void glfwWindowHints() {
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, FRAME_GLFW_CONTEXT_VERSION_MAJOR);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, FRAME_GLFW_CONTEXT_VERSION_MINOR);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, FRAME_GLFW_OPENGL_PROFILE);
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE);
         glfwWindowHint(GLFW_CENTER_CURSOR, GLFW_FALSE);
         glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_TRUE);
