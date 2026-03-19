@@ -9,7 +9,6 @@ import me.hannsi.lfjg.render.debug.exceptions.frameBuffer.CreatingFrameBufferExc
 import me.hannsi.lfjg.render.debug.exceptions.render.scene.CreatingRenderBufferException;
 import me.hannsi.lfjg.render.debug.exceptions.texture.CreatingTextureException;
 import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
 import me.hannsi.lfjg.render.system.mesh.MeshBuilder;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
@@ -82,11 +81,10 @@ public class FrameBuffer {
         mesh.addObject(
                 MeshBuilder.createBuilder()
                         .drawType(DrawType.QUADS)
-                        .blendType(GLPolygon.DEFAULT_BLEND_TYPE)
                         .pointSize(-1f)
-                        .lineWidth(-1f)
-                        .jointType(GLPolygon.DEFAULT_JOINT_TYPE)
-                        .pointType(GLPolygon.DEFAULT_POINT_TYPE)
+                        .strokeWidth(-1f)
+//                        .outLineJoinType(DEFAULT_JOINT_TYPE)
+//                        .pointType(DEFAULT_POINT_TYPE)
                         .vertices(
                                 new Vertex(x, y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
                                 new Vertex(x + width, y, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
