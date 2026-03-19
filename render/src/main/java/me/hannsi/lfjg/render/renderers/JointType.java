@@ -6,7 +6,10 @@ public enum JointType implements IEnumTypeBase {
     NONE(0, "None"),
     MITER(1, "Miter"),
     BEVEL(2, "Bevel"),
-    ROUND(3, "Round");
+    ROUND(3, "Round"),
+    ROUND_START(4, "RoundStart"),
+    ROUND_END(5, "RoundEnd"),
+    ROUND_START_END(6, "RoundStartEnd");
 
     final int id;
     final String name;
