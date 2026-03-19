@@ -25,37 +25,27 @@ public interface Easing {
     Easing easeInCirc = value -> 1 - MathHelper.sqrt(1 - MathHelper.pow(value, 2));
     Easing easeOutCirc = value -> MathHelper.sqrt(1 - MathHelper.pow(value - 1, 2));
     Easing easeInOutCirc = value -> value < 0.5 ? (1 - MathHelper.sqrt(1 - MathHelper.pow(2 * value, 2))) / 2 : (MathHelper.sqrt(1 - MathHelper.pow(-2 * value + 2, 2)) + 1) / 2;
-    Easing easeInBack = value -> (1.70158 + 1) * value * value * value - 1.70158 * value * value;
-    Easing easeOutBack = value -> 1 + (1.70158 + 1) * MathHelper.pow(value - 1, 3) + 1.70158 * MathHelper.pow(value - 1, 2);
-    Easing easeInOutBack = value -> value < 0.5 ? (MathHelper.pow(2 * value, 2) * (((1.70158 * 1.525) + 1) * 2 * value - (1.70158 * 1.525))) / 2 : (MathHelper.pow(2 * value - 2, 2) * (((1.70158 * 1.525) + 1) * (value * 2 - 2) + (1.70158 * 1.525)) + 2) / 2;
-    Easing easeInElastic = value -> value == 0 ? 0 : value == 1 ? 1 : -MathHelper.pow(2, 10 * value - 10) * MathHelper.sin((value * 10 - 10.75) * (2 * MathHelper.PI) / 3);
-    Easing easeOutElastic = value -> value == 0 ? 0 : value == 1 ? 1 : MathHelper.pow(2, -10 * value) * MathHelper.sin((value * 10 - 0.75) * (2 * MathHelper.PI) / 3) + 1;
-    Easing easeInOutElastic = value -> value == 0 ? 0 : value == 1 ? 1 : value < 0.5 ? -(MathHelper.pow(2, 20 * value - 10) * MathHelper.sin((20 * value - 11.125) * (2 * MathHelper.PI) / 4.5)) / 2 : (MathHelper.pow(2, -20 * value + 10) * MathHelper.sin((20 * value - 11.125) * (2 * MathHelper.PI) / 4.5)) / 2 + 1;
+    Easing easeInBack = value -> (1.70158f + 1) * value * value * value - 1.70158f * value * value;
+    Easing easeOutBack = value -> 1 + (1.70158f + 1) * MathHelper.pow(value - 1, 3) + 1.70158f * MathHelper.pow(value - 1, 2);
+    Easing easeInOutBack = value -> value < 0.5f ? (MathHelper.pow(2 * value, 2) * (((1.70158f * 1.525f) + 1) * 2 * value - (1.70158f * 1.525f))) / 2 : (MathHelper.pow(2 * value - 2, 2) * (((1.70158f * 1.525f) + 1) * (value * 2 - 2) + (1.70158f * 1.525f)) + 2) / 2;
+    Easing easeInElastic = value -> value == 0 ? 0 : value == 1 ? 1 : -MathHelper.pow(2, 10 * value - 10) * MathHelper.sin((value * 10 - 10.75f) * (2 * MathHelper.PI) / 3);
+    Easing easeOutElastic = value -> value == 0 ? 0 : value == 1 ? 1 : MathHelper.pow(2, -10 * value) * MathHelper.sin((value * 10 - 0.75f) * (2 * MathHelper.PI) / 3) + 1;
+    Easing easeInOutElastic = value -> value == 0 ? 0 : value == 1 ? 1 : value < 0.5f ? -(MathHelper.pow(2, 20 * value - 10) * MathHelper.sin((20 * value - 11.125f) * (2 * MathHelper.PI) / 4.5f)) / 2 : (MathHelper.pow(2, -20 * value + 10) * MathHelper.sin((20 * value - 11.125f) * (2 * MathHelper.PI) / 4.5f)) / 2 + 1;
     Easing easeInBounce = value -> {
-        float value2 = 1 - value;
+        float value2 = 1f - value;
 
-        if (value2 < 1 / 2.75) {
-            return 7.5625 * value2 * value2;
-        } else if (value2 < 2 / 2.75) {
-            return 7.5625 * (value2 -= (float) (1.5 / 2.75)) * value2 + 0.75;
-        } else if (value2 < 2.5 / 2.75) {
-            return 7.5625 * (value2 -= (float) (2.25 / 2.75)) * value2 + 0.9375;
+        if (value2 < 1f / 2.75f) {
+            return 7.5625f * value2 * value2;
+        } else if (value2 < 2f / 2.75f) {
+            return 7.5625f * (value2 -= 1.5f / 2.75f) * value2 + 0.75f;
+        } else if (value2 < 2.5f / 2.75f) {
+            return 7.5625f * (value2 -= 2.25f / 2.75f) * value2 + 0.9375f;
         } else {
-            return 7.5625 * (value2 -= (float) (2.625 / 2.75)) * value2 + 0.984375;
+            return 7.5625f * (value2 -= 2.625f / 2.75f) * value2 + 0.984375f;
         }
     };
-    Easing easeOutBounce = value -> {
-        if (value < 1 / 2.75) {
-            return 7.5625 * value * value;
-        } else if (value < 2 / 2.75) {
-            return 7.5625 * (value -= (float) (1.5 / 2.75)) * value + 0.75;
-        } else if (value < 2.5 / 2.75) {
-            return 7.5625 * (value -= (float) (2.25 / 2.75)) * value + 0.9375;
-        } else {
-            return 7.5625 * (value -= (float) (2.625 / 2.75)) * value + 0.984375;
-        }
-    };
-    Easing easeInOutBounce = value -> value < 0.5 ? (1 - EasingUtil.easeOutBounce(1 - 2 * value)) / 2 : (1 + EasingUtil.easeOutBounce(2 * value - 1)) / 2;
+    Easing easeOutBounce = EasingUtil::easeOutBounce;
+    Easing easeInOutBounce = value -> value < 0.5f ? (1 - EasingUtil.easeOutBounce(1 - 2 * value)) / 2 : (1 + EasingUtil.easeOutBounce(2 * value - 1)) / 2;
 
-    double ease(float value);
+    float ease(float value);
 }
