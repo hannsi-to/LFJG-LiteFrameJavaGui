@@ -18,12 +18,14 @@ public class Projection {
 
     public void updateProjMatrix(ProjectionType projectionType, float fov, int windowWidth, int windowHeight, float zFar, float zNear) {
         switch (projectionType) {
-            case ORTHOGRAPHIC_PROJECTION -> matrix4f = new Matrix4f().ortho(0, windowWidth, 0, windowHeight, -1f, 1f);
+            case ORTHOGRAPHIC_PROJECTION ->
+                    matrix4f = new Matrix4f().ortho2D(0, windowWidth, 0, windowHeight);
             case PERSPECTIVE_PROJECTION -> {
                 float aspectWindow = (float) windowWidth / windowHeight;
                 matrix4f = new Matrix4f().setPerspective(fov, aspectWindow, zNear, zFar);
             }
-            default -> throw new IllegalStateException("Unexpected value: " + projectionType);
+            default ->
+                    throw new IllegalStateException("Unexpected value: " + projectionType);
         }
 
     }
