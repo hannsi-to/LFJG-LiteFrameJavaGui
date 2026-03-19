@@ -5,6 +5,7 @@ import me.hannsi.lfjg.core.utils.math.MathHelper;
 
 public class EasingUtil extends Util {
     public long current;
+    public float currentValue;
     public boolean reverse;
     public Easing easing;
 
@@ -12,18 +13,18 @@ public class EasingUtil extends Util {
         this.easing = easing;
     }
 
-    public static double easeOutBounce(float value) {
-        double n1 = 7.5625;
-        double d1 = 2.75;
+    public static float easeOutBounce(float value) {
+        float n1 = 7.5625f;
+        float d1 = 2.75f;
 
-        if (value < 1 / d1) {
+        if (value < 1f / d1) {
             return n1 * value * value;
-        } else if (value < 2 / d1) {
-            return n1 * (value -= (float) (1.5 / d1)) * value + 0.75;
-        } else if (value < 2.5 / d1) {
-            return n1 * (value -= (float) (2.25 / d1)) * value + 0.9375;
+        } else if (value < 2f / d1) {
+            return n1 * (value -= 1.5f / d1) * value + 0.75f;
+        } else if (value < 2.5f / d1) {
+            return n1 * (value -= 2.25f / d1) * value + 0.9375f;
         } else {
-            return n1 * (value -= (float) (2.625 / d1)) * value + 0.984375;
+            return n1 * (value -= 2.625f / d1) * value + 0.984375f;
         }
     }
 
@@ -32,8 +33,28 @@ public class EasingUtil extends Util {
     }
 
     public float get(long millis) {
+        if (easing == null) {
+            throw new IllegalStateException("Easing not set");
+        }
+
         float clamped = MathHelper.clamp((float) (System.currentTimeMillis() - current) / millis, 0F, 1F);
-        return (float) (reverse ? 1 - easing.ease(clamped) : easing.ease(clamped));
+        return currentValue = reverse ? 1 - easing.ease(clamped) : easing.ease(clamped);
+    }
+
+    public BezierPoint getMultiDimensions(long millis) {
+        if (easing == null) {
+            throw new IllegalStateException("Easing not set");
+        }
+
+        MultiBezierEasing multiBezier;
+        if (easing instanceof MultiBezierEasing) {
+            multiBezier = (MultiBezierEasing) easing;
+        } else {
+            throw new IllegalStateException("MultiBezierEasing not set");
+        }
+
+        float clamped = MathHelper.clamp((float) (System.currentTimeMillis() - current) / millis, 0F, 1F);
+        return reverse ? multiBezier.evaluateDeCasteljau(clamped).reverse() : multiBezier.evaluateDeCasteljau(clamped);
     }
 
     public boolean done(float value) {
