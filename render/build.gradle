@@ -22,6 +22,9 @@ dependencies {
         // Assimp
         api "org.lwjgl:lwjgl-assimp"
         runtimeOnly "org.lwjgl:lwjgl-assimp::$lwjglNatives"
+
+        // Poly2Tri
+        implementation "org.orbisgis:poly2tri:$poly2TriVersion"
     }
 }
 

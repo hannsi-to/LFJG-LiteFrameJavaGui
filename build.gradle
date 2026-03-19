@@ -21,6 +21,8 @@ ext {
 
     jomlVersion = "1.10.8"
     jomlprimitivesVersion = "1.10.0"
+
+    poly2TriVersion = "0.7.0"
 }
 
 repositories {
