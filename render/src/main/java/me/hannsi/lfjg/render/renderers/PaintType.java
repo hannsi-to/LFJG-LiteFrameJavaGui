@@ -4,7 +4,7 @@ import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 
 public enum PaintType implements IEnumTypeBase {
     FILL(0, "Fill"),
-    OUT_LINE(1, "OutLine");
+    STROKE(1, "Stroke");
 
     final int id;
     final String name;
