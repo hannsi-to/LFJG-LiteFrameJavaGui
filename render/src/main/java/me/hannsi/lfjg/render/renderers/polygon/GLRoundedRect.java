@@ -1,502 +1,416 @@
 package me.hannsi.lfjg.render.renderers.polygon;
 
-import me.hannsi.lfjg.core.utils.graphics.color.Color;
-import me.hannsi.lfjg.core.utils.math.MathHelper;
-import me.hannsi.lfjg.render.renderers.PaintType;
+import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.mesh.Corner;
+import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
-import org.joml.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
 
-/**
- * Class representing a rounded rectangle renderer in OpenGL.
- */
-public class GLRoundedRect extends GLPolygon<GLRoundedRect> {
-    public static final int DEFAULT_SEGMENT = 16;
+import static me.hannsi.lfjg.core.utils.math.MathHelper.*;
 
+public class GLRoundedRect extends GLObject<GLRoundedRect> {
     private final Builder builder;
 
-    GLRoundedRect(String name, Builder builder) {
+    protected GLRoundedRect(String name, Builder builder) {
         super(name);
         this.builder = builder;
     }
 
-    public static VertexData1Step createRoundedRect(String name) {
+    public static VertexData1Step<GLRoundedRect> createRoundedRect(String name) {
         return new Builder(name);
     }
 
-    public GLRoundedRect update() {
-        float minX = MathHelper.min(MathHelper.min(builder.x1, builder.x2), MathHelper.min(builder.x3, builder.x4));
-        float maxX = MathHelper.max(MathHelper.max(builder.x1, builder.x2), MathHelper.max(builder.x3, builder.x4));
-        float minY = MathHelper.min(MathHelper.min(builder.y1, builder.y2), MathHelper.min(builder.y3, builder.y4));
-        float maxY = MathHelper.max(MathHelper.max(builder.y1, builder.y2), MathHelper.max(builder.y3, builder.y4));
+    private static float getAngleDiff(float endAngle, float startAngle, float cross) {
+        float angleDiff = endAngle - startAngle;
 
-        List<float[]> perimeter = new ArrayList<>();
-
-        BiConsumer<float[], Integer> addArc = (params, dummy) -> {
-            boolean toggle = params[0] == 1.0f;
-            float cx = params[1];
-            float cy = params[2];
-            float radius = params[3];
-            float startDeg = params[4];
-            float endDeg = params[5];
-            float segmentDeg = params[6];
-            float cornerX = params[7];
-            float cornerY = params[8];
-
-            if (!toggle || radius <= 0f) {
-                perimeter.add(new float[]{cornerX, cornerY});
-                return;
-            }
-
-            float step = segmentDeg;
-            if (step <= 0f) {
-                step = 1f;
-            }
-            for (float deg = startDeg; deg <= endDeg + 0.0001f; deg += step) {
-                double rad = MathHelper.toRadians(deg);
-                float px = (float) (cx + MathHelper.cos(rad) * radius);
-                float py = (float) (cy + MathHelper.sin(rad) * radius);
-
-                perimeter.add(new float[]{px, py});
-            }
-        };
-
-        addArc.accept(new float[]{
-                builder.toggleRadius1 ? 1f : 0f,
-                builder.x1 + builder.radius1, builder.y1 + builder.radius1, builder.radius1,
-                180f, 270f, builder.segment1,
-                builder.x1, builder.y1
-        }, 0);
-
-        addArc.accept(new float[]{
-                builder.toggleRadius2 ? 1f : 0f,
-                builder.x2 - builder.radius2, builder.y2 + builder.radius2, builder.radius2,
-                270f, 360f, builder.segment2,
-                builder.x2, builder.y2
-        }, 0);
-
-        addArc.accept(new float[]{
-                builder.toggleRadius3 ? 1f : 0f,
-                builder.x3 - builder.radius3, builder.y3 - builder.radius3, builder.radius3,
-                0f, 90f, builder.segment3,
-                builder.x3, builder.y3
-        }, 0);
-
-        addArc.accept(new float[]{
-                builder.toggleRadius4 ? 1f : 0f,
-                builder.x4 + builder.radius4, builder.y4 - builder.radius4, builder.radius4,
-                90f, 180f, builder.segment4,
-                builder.x4, builder.y4
-        }, 0);
-
-        switch (builder.paintType) {
-            case FILL:
-                drawType(DrawType.TRIANGLE_FAN);
-
-                if (!perimeter.isEmpty()) {
-                    perimeter.add(perimeter.get(0));
-                }
-
-                if (perimeter.size() >= 3) {
-                    float[] first = perimeter.get(0);
-
-                    for (int i = 1; i < perimeter.size() - 1; i++) {
-                        float[] p1 = perimeter.get(i);
-                        float[] p2 = perimeter.get(i + 1);
-
-                        put().position(new Vector2f(first[0], first[1])).color(getCornerBlend(first[0], first[1], minX, maxX, minY, maxY)).end();
-                        put().position(new Vector2f(p1[0], p1[1])).color(getCornerBlend(p1[0], p1[1], minX, maxX, minY, maxY)).end();
-                        put().position(new Vector2f(p2[0], p2[1])).color(getCornerBlend(p2[0], p2[1], minX, maxX, minY, maxY)).end();
-                    }
-                }
-                break;
-            case OUT_LINE:
-                drawType(DrawType.LINE_LOOP).lineWidth(builder.lineWidth);
-
-                for (float[] p : perimeter) {
-                    float px = p[0], py = p[1];
-                    Color useColor = getCornerBlend(px, py, minX, maxX, minY, maxY);
-
-                    put().position(new Vector2f(px, py)).color(useColor).end();
-                }
-                break;
-
-            default:
-                throw new IllegalStateException("Unexpected value: " + builder.paintType);
+        while (angleDiff > PI) {
+            angleDiff -= PI_TIMES_2;
+        }
+        while (angleDiff < -PI) {
+            angleDiff += PI_TIMES_2;
         }
 
-        rendering();
-
-        return this;
+        if (cross > 0) {
+            if (angleDiff > 0) {
+                angleDiff -= PI_TIMES_2;
+            }
+        } else {
+            if (angleDiff < 0) {
+                angleDiff += PI_TIMES_2;
+            }
+        }
+        return angleDiff;
     }
 
-    private Color getCornerBlend(float px, float py, float minX, float maxX, float minY, float maxY) {
-        float tx = (px - minX) / (maxX - minX);
-        float ty = (py - minY) / (maxY - minY);
+    @Override
+    public GLRoundedRect update() {
+        for (int i = 0; i < builder.vertices.size(); i += 4) {
+            Vertex vertex1 = builder.vertices.get(i);
+            Vertex vertex2 = builder.vertices.get(i + 1);
+            Vertex vertex3 = builder.vertices.get(i + 2);
+            Vertex vertex4 = builder.vertices.get(i + 3);
 
-        Color top = MathHelper.lerpColor(builder.color1, builder.color2, tx);
-        Color bottom = MathHelper.lerpColor(builder.color4, builder.color3, tx);
+            Corner c1 = builder.corners.get(i);
+            Corner c2 = builder.corners.get(i + 1);
+            Corner c3 = builder.corners.get(i + 2);
+            Corner c4 = builder.corners.get(i + 3);
 
-        return MathHelper.lerpColor(top, bottom, ty);
+            Vertex[] vertices = {vertex1, vertex2, vertex3, vertex4};
+            Corner[] corners = {c1, c2, c3, c4};
+
+            for (int j = 0; j < 4; j++) {
+                Vertex current = vertices[j];
+                Vertex prev = vertices[(j + 3) % 4];
+                Vertex next = vertices[(j + 1) % 4];
+                Corner corner = corners[j];
+
+                makeCorner(prev, current, next, corner);
+            }
+        }
+
+        switch (builder.paintType) {
+            case FILL ->
+                    drawType(DrawType.POLYGON);
+            case STROKE ->
+                    drawType(DrawType.LINE_LOOP);
+            default ->
+                    throw new IllegalStateException("Unexpected value: " + builder.paintType);
+        }
+
+        return super.update();
     }
 
-    public interface VertexData1Step {
-        VertexData2Step x1_y1_color1(float x1, float y1, Color color1);
+    private void makeCorner(Vertex prev, Vertex current, Vertex next, Corner corner) {
+        switch (corner.cornerType) {
+            case NONE ->
+                    put(current).end();
+            case CIRCLE, ELLIPSE -> {
+                float rx = corner.radiusX;
+                float ry = corner.radiusY;
 
-        VertexData3Step x1_y1_color1_2p(float x1, float y1, Color color1);
+                float dx1 = prev.x - current.x;
+                float dy1 = prev.y - current.y;
+                float len1 = sqrt(dx1 * dx1 + dy1 * dy1);
+                dx1 /= len1;
+                dy1 /= len1;
+
+                float dx2 = next.x - current.x;
+                float dy2 = next.y - current.y;
+                float len2 = sqrt(dx2 * dx2 + dy2 * dy2);
+                dx2 /= len2;
+                dy2 /= len2;
+
+                float dot = dx1 * dx2 + dy1 * dy2;
+                float halfAngle = acos(max(-1, min(1, dot))) / 2;
+
+                float avgRadius = (rx + ry) / 2;
+                float tangentDist = avgRadius / tan(halfAngle);
+
+                tangentDist = min(tangentDist, min(len1, len2) * 0.9f);
+
+                float actualRadius = tangentDist * tan(halfAngle);
+
+                float tangentX1 = current.x + dx1 * tangentDist;
+                float tangentY1 = current.y + dy1 * tangentDist;
+
+                float tangentX2 = current.x + dx2 * tangentDist;
+                float tangentY2 = current.y + dy2 * tangentDist;
+
+                float bisectorX = dx1 + dx2;
+                float bisectorY = dy1 + dy2;
+                float bisectorLen = sqrt(bisectorX * bisectorX + bisectorY * bisectorY);
+
+                if (bisectorLen > 0.0001f) {
+                    bisectorX /= bisectorLen;
+                    bisectorY /= bisectorLen;
+
+                    float centerDist = actualRadius / sin(halfAngle);
+
+                    float cross = dx1 * dy2 - dy1 * dx2;
+
+                    float centerX;
+                    float centerY;
+                    if (cross > 0) {
+                        centerX = current.x - bisectorX * centerDist;
+                        centerY = current.y - bisectorY * centerDist;
+                    } else {
+                        centerX = current.x + bisectorX * centerDist;
+                        centerY = current.y + bisectorY * centerDist;
+                    }
+
+                    float startAngle = atan2(tangentY1 - centerY, tangentX1 - centerX);
+                    float endAngle = atan2(tangentY2 - centerY, tangentX2 - centerX);
+
+                    float angleDiff = getAngleDiff(endAngle, startAngle, cross);
+
+                    float slice = angleDiff / corner.segmentCount;
+
+                    for (int k = 0; k <= corner.segmentCount; k++) {
+                        float currentAngle = startAngle + slice * k;
+                        float x = centerX + cos(currentAngle) * rx;
+                        float y = centerY + sin(currentAngle) * ry;
+                        put(current.copy().moveXYZ(x - current.x, y - current.y, 0)).end();
+                    }
+                } else {
+                    put(current).end();
+                }
+            }
+            case BEVEL, CHAMFER -> {
+                float rx = corner.radiusX;
+                float ry = corner.radiusY;
+
+                float dx1 = prev.x - current.x;
+                float dy1 = prev.y - current.y;
+                float len1 = sqrt(dx1 * dx1 + dy1 * dy1);
+                dx1 /= len1;
+                dy1 /= len1;
+
+                float dx2 = next.x - current.x;
+                float dy2 = next.y - current.y;
+                float len2 = sqrt(dx2 * dx2 + dy2 * dy2);
+                dx2 /= len2;
+                dy2 /= len2;
+
+                float tangentDist1 = min(rx, len1 * 0.9f);
+                float tangentDist2 = min(ry, len2 * 0.9f);
+
+                float bevelX1 = current.x + dx1 * tangentDist1;
+                float bevelY1 = current.y + dy1 * tangentDist1;
+
+                float bevelX2 = current.x + dx2 * tangentDist2;
+                float bevelY2 = current.y + dy2 * tangentDist2;
+
+                put(current.copy().moveXYZ(bevelX1 - current.x, bevelY1 - current.y, 0)).end();
+
+                put(current.copy().moveXYZ(bevelX2 - current.x, bevelY2 - current.y, 0)).end();
+            }
+            case INSET -> {
+                float rx = corner.radiusX;
+                float ry = corner.radiusY;
+
+                float dx1 = prev.x - current.x;
+                float dy1 = prev.y - current.y;
+                float len1 = sqrt(dx1 * dx1 + dy1 * dy1);
+                dx1 /= len1;
+                dy1 /= len1;
+
+                float dx2 = next.x - current.x;
+                float dy2 = next.y - current.y;
+                float len2 = sqrt(dx2 * dx2 + dy2 * dy2);
+                dx2 /= len2;
+                dy2 /= len2;
+
+                float tangentDist1 = min(rx, len1 * 0.9f);
+                float tangentDist2 = min(ry, len2 * 0.9f);
+
+                float insetX1 = current.x + dx1 * tangentDist1;
+                float insetY1 = current.y + dy1 * tangentDist1;
+
+                float insetX2 = current.x + dx2 * tangentDist2;
+                float insetY2 = current.y + dy2 * tangentDist2;
+
+                float innerX = current.x + dx1 * tangentDist1 + dx2 * tangentDist2;
+                float innerY = current.y + dy1 * tangentDist1 + dy2 * tangentDist2;
+
+                put(current.copy().moveXYZ(insetX1 - current.x, insetY1 - current.y, 0)).end();
+
+                put(current.copy().moveXYZ(innerX - current.x, innerY - current.y, 0)).end();
+
+                put(current.copy().moveXYZ(insetX2 - current.x, insetY2 - current.y, 0)).end();
+            }
+            case CONCAVE -> {
+                float rx = corner.radiusX;
+                float ry = corner.radiusY;
+                float dx1 = prev.x - current.x;
+                float dy1 = prev.y - current.y;
+                float len1 = sqrt(dx1 * dx1 + dy1 * dy1);
+                dx1 /= len1;
+                dy1 /= len1;
+
+                float dx2 = next.x - current.x;
+                float dy2 = next.y - current.y;
+                float len2 = sqrt(dx2 * dx2 + dy2 * dy2);
+                dx2 /= len2;
+                dy2 /= len2;
+
+                float dot = dx1 * dx2 + dy1 * dy2;
+                float halfAngle = acos(max(-1, min(1, dot))) / 2;
+                float avgRadius = (rx + ry) / 2;
+                float tangentDist = avgRadius / tan(halfAngle);
+                tangentDist = min(tangentDist, min(len1, len2) * 0.9f);
+
+                float actualRadius = tangentDist * tan(halfAngle);
+                float tangentX1 = current.x + dx1 * tangentDist;
+                float tangentY1 = current.y + dy1 * tangentDist;
+                float tangentX2 = current.x + dx2 * tangentDist;
+                float tangentY2 = current.y + dy2 * tangentDist;
+                float bisectorX = dx1 + dx2;
+                float bisectorY = dy1 + dy2;
+                float bisectorLen = sqrt(bisectorX * bisectorX + bisectorY * bisectorY);
+                if (bisectorLen > 0.0001f) {
+                    bisectorX /= bisectorLen;
+                    bisectorY /= bisectorLen;
+
+                    float centerDist = actualRadius / sin(halfAngle);
+                    float cross = dx1 * dy2 - dy1 * dx2;
+                    float centerX;
+                    float centerY;
+
+                    if (cross > 0) {
+                        centerX = current.x + bisectorX * centerDist;
+                        centerY = current.y + bisectorY * centerDist;
+                    } else {
+                        centerX = current.x - bisectorX * centerDist;
+                        centerY = current.y - bisectorY * centerDist;
+                    }
+
+                    float startAngle = atan2(tangentY1 - centerY, tangentX1 - centerX);
+                    float endAngle = atan2(tangentY2 - centerY, tangentX2 - centerX);
+                    float angleDiff = getAngleDiff(endAngle, startAngle, -cross);
+                    float slice = angleDiff / corner.segmentCount;
+                    for (int k = 0; k <= corner.segmentCount; k++) {
+                        float currentAngle = startAngle + slice * k;
+                        float x = centerX + cos(currentAngle) * rx;
+                        float y = centerY + sin(currentAngle) * ry;
+
+                        put(current.copy().moveXYZ(x - current.x, y - current.y, 0)).end();
+                    }
+                } else {
+                    put(current).end();
+                }
+            }
+            default ->
+                    throw new IllegalStateException("Unexpected value: " + corner.cornerType);
+        }
     }
 
-    public interface VertexData2Step {
-        VertexData3Step x2_y2_color2(float x2, float y2, Color color2);
-
-        VertexData3Step width2_height2_color2(float width2, float height2, Color color2);
+    @Override
+    public int getObjectId() {
+        return super.getObjectId();
     }
 
-    public interface VertexData3Step {
-        VertexData4Step x3_y3_color3(float x3, float y3, Color color3);
+    public interface VertexData1Step<T> {
+        VertexData2Step<T> vertex1(Vertex vertex1, Corner corner1);
 
-        VertexData4Step width3_height3_color3(float width3, float height3, Color color3);
-
-        Radius1Step x3_y3_color3__2p(float x3, float y3, Color color3);
-
-        Radius1Step width3_height3_color3_2p(float width3, float height3, Color color3);
+        VertexData22pStep<T> vertex1_2p(Vertex vertex1, Corner corner1);
     }
 
-    public interface VertexData4Step {
-        Radius1Step x4_y4_color4(float x4, float y4, Color color4);
-
-        Radius1Step width4_height4_color4(float width4, float height4, Color color4);
+    public interface VertexData2Step<T> {
+        VertexData3Step<T> vertex2(Vertex vertex2, Corner corner2);
     }
 
-    public interface Radius1Step {
-        Radius2Step toggleRadius1_radius1(boolean toggleRadius1, float radius1);
+    public interface VertexData22pStep<T> {
+        VertexData1Step<T> vertex2_2p(Vertex vertex2, Corner corner2);
 
-        Radius3Step toggleRadius1_radius1_2p(boolean toggleRadius1, float radius1);
-
-        Radius2Step toggleRadius1_radius1_segment1(boolean toggleRadius1, float radius1, float segment1);
-
-        Radius3Step toggleRadius1_radius1_segment1_2p(boolean toggleRadius1, float radius1, float segment1);
+        PaintTypeStep<T> vertex2_2p_end(Vertex vertex2, Corner corner2);
     }
 
-    public interface Radius2Step {
-        Radius3Step toggleRadius2_radius2(boolean toggleRadius2, float radius2);
-
-        Radius3Step toggleRadius2_radius2_segment2(boolean toggleRadius2, float radius2, float segment2);
+    public interface VertexData3Step<T> {
+        VertexData4Step<T> vertex3(Vertex vertex3, Corner corner3);
     }
 
-    public interface Radius3Step {
-        Radius4Step toggleRadius3_radius3(boolean toggleRadius3, float radius3);
+    public interface VertexData4Step<T> {
+        VertexData1Step<T> vertex4(Vertex vertex4, Corner corner4);
 
-        PaintTypeStep toggleRadius3_radius3_2p(boolean toggleRadius3, float radius3);
-
-        Radius4Step toggleRadius3_radius3_segment1(boolean toggleRadius3, float radius3, float segment3);
-
-        PaintTypeStep toggleRadius3_radius3_segment3_2p(boolean toggleRadius3, float radius3, float segment3);
+        PaintTypeStep<T> vertex4_end(Vertex vertex4, Corner corner4);
     }
 
-    public interface Radius4Step {
-        PaintTypeStep toggleRadius4_radius4(boolean toggleRadius4, float radius4);
-
-        PaintTypeStep toggleRadius4_radius4_segment4(boolean toggleRadius4, float radius4, float segment4);
-    }
-
-    public interface PaintTypeStep {
-        GLRoundedRect fill();
-
-        LineWidthStep outLine();
-    }
-
-    public interface LineWidthStep {
-        GLRoundedRect lineWidth(float lineWidth);
-    }
-
-    public static class Builder implements VertexData1Step, VertexData2Step, VertexData3Step, VertexData4Step, Radius1Step, Radius2Step, Radius3Step, Radius4Step, PaintTypeStep, LineWidthStep {
-        protected final String name;
-        protected float x1;
-        protected float y1;
-        protected Color color1;
-        protected boolean toggleRadius1;
-        protected float radius1;
-        protected float segment1;
-        protected float x2;
-        protected float y2;
-        protected Color color2;
-        protected boolean toggleRadius2;
-        protected float radius2;
-        protected float segment2;
-        protected float x3;
-        protected float y3;
-        protected Color color3;
-        protected boolean toggleRadius3;
-        protected float radius3;
-        protected float segment3;
-        protected float x4;
-        protected float y4;
-        protected Color color4;
-        protected boolean toggleRadius4;
-        protected float radius4;
-        protected float segment4;
-        protected PaintType paintType;
-        protected float lineWidth;
+    public static class Builder extends AbstractGLObjectBuilder<GLRoundedRect> implements VertexData1Step<GLRoundedRect>, VertexData2Step<GLRoundedRect>, VertexData22pStep<GLRoundedRect>, VertexData3Step<GLRoundedRect>, VertexData4Step<GLRoundedRect> {
+        private final String name;
+        private final List<Vertex> vertices;
+        private final List<Corner> corners;
+        private Vertex lastVertex2p;
+        private Corner lastCorner2p;
 
         private GLRoundedRect glRoundedRect;
 
         public Builder(String name) {
             this.name = name;
+
+            this.vertices = new ArrayList<>();
+            this.corners = new ArrayList<>();
         }
 
         @Override
-        public VertexData2Step x1_y1_color1(float x1, float y1, Color color1) {
-            this.x1 = x1;
-            this.y1 = y1;
-            this.color1 = color1;
+        public VertexData2Step<GLRoundedRect> vertex1(Vertex vertex1, Corner corner1) {
+            this.vertices.add(vertex1);
+            this.corners.add(corner1);
 
             return this;
         }
 
         @Override
-        public VertexData3Step x1_y1_color1_2p(float x1, float y1, Color color1) {
-            this.x1 = x1;
-            this.y1 = y1;
-            this.color1 = color1;
+        public VertexData22pStep<GLRoundedRect> vertex1_2p(Vertex vertex1, Corner corner1) {
+            this.lastVertex2p = vertex1;
+            this.lastCorner2p = corner1;
+            this.vertices.add(vertex1);
+            this.corners.add(corner1);
 
             return this;
         }
 
         @Override
-        public VertexData3Step x2_y2_color2(float x2, float y2, Color color2) {
-            this.x2 = x2;
-            this.y2 = y2;
-            this.color2 = color2;
+        public VertexData1Step<GLRoundedRect> vertex2_2p(Vertex vertex2, Corner corner2) {
+            this.vertices.add(lastVertex2p.copy().setX(vertex2.x));
+            this.vertices.add(vertex2);
+            this.vertices.add(lastVertex2p.copy().setY(vertex2.y));
+
+            this.corners.add(lastCorner2p.copy());
+            this.corners.add(corner2);
+            this.corners.add(lastCorner2p.copy());
 
             return this;
         }
 
         @Override
-        public VertexData3Step width2_height2_color2(float width2, float height2, Color color2) {
-            this.x2 = x1 + width2;
-            this.y2 = y1 + height2;
-            this.color2 = color2;
+        public PaintTypeStep<GLRoundedRect> vertex2_2p_end(Vertex vertex2, Corner corner2) {
+            this.vertices.add(lastVertex2p.copy().setX(vertex2.x));
+            this.vertices.add(vertex2);
+            this.vertices.add(lastVertex2p.copy().setY(vertex2.y));
+
+            this.corners.add(lastCorner2p.copy());
+            this.corners.add(corner2);
+            this.corners.add(lastCorner2p.copy());
 
             return this;
         }
 
         @Override
-        public VertexData4Step x3_y3_color3(float x3, float y3, Color color3) {
-            this.x3 = x3;
-            this.y3 = y3;
-            this.color3 = color3;
+        public VertexData3Step<GLRoundedRect> vertex2(Vertex vertex2, Corner corner2) {
+            this.vertices.add(vertex2);
+            this.corners.add(corner2);
 
             return this;
         }
 
         @Override
-        public VertexData4Step width3_height3_color3(float width3, float height3, Color color3) {
-            this.x3 = x1 + width3;
-            this.y3 = y1 + height3;
-            this.color3 = color3;
+        public VertexData4Step<GLRoundedRect> vertex3(Vertex vertex3, Corner corner3) {
+            this.vertices.add(vertex3);
+            this.corners.add(corner3);
 
             return this;
         }
 
         @Override
-        public Radius1Step x3_y3_color3__2p(float x3, float y3, Color color3) {
-            this.x2 = x3;
-            this.y2 = y1;
-            this.x3 = x3;
-            this.y3 = y3;
-            this.x4 = x1;
-            this.y4 = y3;
-            this.color2 = color1;
-            this.color3 = color3;
-            this.color4 = color3;
+        public VertexData1Step<GLRoundedRect> vertex4(Vertex vertex4, Corner corner4) {
+            this.vertices.add(vertex4);
+            this.corners.add(corner4);
 
             return this;
         }
 
         @Override
-        public Radius1Step width3_height3_color3_2p(float width3, float height3, Color color3) {
-            this.x2 = x1 + width3;
-            this.y2 = y1;
-            this.x3 = x1 + width3;
-            this.y3 = y1 + height3;
-            this.x4 = x1;
-            this.y4 = y1 + height3;
-            this.color2 = color1;
-            this.color3 = color3;
-            this.color4 = color3;
+        public PaintTypeStep<GLRoundedRect> vertex4_end(Vertex vertex4, Corner corner4) {
+            this.vertices.add(vertex4);
+            this.corners.add(corner4);
 
             return this;
         }
 
         @Override
-        public Radius1Step x4_y4_color4(float x4, float y4, Color color4) {
-            this.x4 = x4;
-            this.y4 = y4;
-            this.color4 = color4;
-
-            return this;
-        }
-
-        @Override
-        public Radius1Step width4_height4_color4(float width4, float height4, Color color4) {
-            this.x4 = x1 + width4;
-            this.y4 = y1 + height4;
-            this.color4 = color4;
-
-            return this;
-        }
-
-        @Override
-        public Radius2Step toggleRadius1_radius1(boolean toggleRadius1, float radius1) {
-            this.toggleRadius1 = toggleRadius1;
-            this.radius1 = radius1;
-            this.segment1 = DEFAULT_SEGMENT;
-
-            return this;
-        }
-
-        @Override
-        public Radius3Step toggleRadius1_radius1_2p(boolean toggleRadius1, float radius1) {
-            this.toggleRadius1 = toggleRadius1;
-            this.radius1 = radius1;
-            this.segment1 = DEFAULT_SEGMENT;
-
-            return this;
-        }
-
-        @Override
-        public Radius2Step toggleRadius1_radius1_segment1(boolean toggleRadius1, float radius1, float segment1) {
-            this.toggleRadius1 = toggleRadius1;
-            this.radius1 = radius1;
-            this.segment1 = segment1;
-
-            return this;
-        }
-
-        @Override
-        public Radius3Step toggleRadius1_radius1_segment1_2p(boolean toggleRadius1, float radius1, float segment1) {
-            this.toggleRadius1 = toggleRadius1;
-            this.radius1 = radius1;
-            this.segment1 = segment1;
-
-            return this;
-        }
-
-        @Override
-        public Radius3Step toggleRadius2_radius2(boolean toggleRadius2, float radius2) {
-            this.toggleRadius2 = toggleRadius2;
-            this.radius2 = radius2;
-            this.segment2 = DEFAULT_SEGMENT;
-
-            return this;
-        }
-
-        @Override
-        public Radius3Step toggleRadius2_radius2_segment2(boolean toggleRadius2, float radius2, float segment2) {
-            this.toggleRadius2 = toggleRadius2;
-            this.radius2 = radius2;
-            this.segment2 = segment2;
-
-            return this;
-        }
-
-        @Override
-        public Radius4Step toggleRadius3_radius3(boolean toggleRadius3, float radius3) {
-            this.toggleRadius3 = toggleRadius3;
-            this.radius3 = radius3;
-            this.segment3 = DEFAULT_SEGMENT;
-
-            return this;
-        }
-
-        @Override
-        public PaintTypeStep toggleRadius3_radius3_2p(boolean toggleRadius3, float radius3) {
-            this.toggleRadius2 = toggleRadius1;
-            this.radius2 = radius1;
-            this.segment2 = segment1;
-
-            this.toggleRadius3 = toggleRadius3;
-            this.radius3 = radius3;
-            this.segment3 = DEFAULT_SEGMENT;
-
-            this.toggleRadius4 = toggleRadius3;
-            this.radius4 = radius3;
-            this.segment4 = segment3;
-
-            return this;
-        }
-
-        @Override
-        public Radius4Step toggleRadius3_radius3_segment1(boolean toggleRadius3, float radius3, float segment3) {
-            this.toggleRadius3 = toggleRadius3;
-            this.radius3 = radius3;
-            this.segment3 = segment3;
-
-            return this;
-        }
-
-        @Override
-        public PaintTypeStep toggleRadius3_radius3_segment3_2p(boolean toggleRadius3, float radius3, float segment3) {
-            this.toggleRadius2 = toggleRadius1;
-            this.radius2 = radius1;
-            this.segment2 = segment1;
-
-            this.toggleRadius3 = toggleRadius3;
-            this.radius3 = radius3;
-            this.segment3 = segment3;
-
-            this.toggleRadius4 = toggleRadius3;
-            this.radius4 = radius3;
-            this.segment4 = segment3;
-
-            return this;
-        }
-
-        @Override
-        public PaintTypeStep toggleRadius4_radius4(boolean toggleRadius4, float radius4) {
-            this.toggleRadius4 = toggleRadius4;
-            this.radius4 = radius4;
-            this.segment4 = DEFAULT_SEGMENT;
-
-            return this;
-        }
-
-        @Override
-        public PaintTypeStep toggleRadius4_radius4_segment4(boolean toggleRadius4, float radius4, float segment4) {
-            this.toggleRadius4 = toggleRadius4;
-            this.radius4 = radius4;
-            this.segment4 = segment4;
-
-            return this;
-        }
-
-        @Override
-        public GLRoundedRect fill() {
-            this.paintType = PaintType.FILL;
-            this.lineWidth = -1;
-
-            return build();
-        }
-
-        @Override
-        public LineWidthStep outLine() {
-            this.paintType = PaintType.OUT_LINE;
-
-            return this;
-        }
-
-        @Override
-        public GLRoundedRect lineWidth(float lineWidth) {
-            this.lineWidth = lineWidth;
-
-            return build();
-        }
-
-        private GLRoundedRect build() {
+        protected GLRoundedRect createOrGet() {
             if (glRoundedRect == null) {
                 return glRoundedRect = new GLRoundedRect(name, this);
             } else {
