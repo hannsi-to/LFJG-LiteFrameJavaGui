@@ -1,20 +1,19 @@
 package me.hannsi.lfjg.render.renderers.polygon;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
-import me.hannsi.lfjg.core.utils.math.MathHelper;
+import me.hannsi.lfjg.core.utils.math.animation.Easing;
+import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.renderers.PaintType;
+import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
-import org.joml.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Class representing a circle renderer in OpenGL.
- */
-public class GLCircle extends GLPolygon<GLCircle> {
-    public static final int DEFAULT_SEGMENT = 16;
+import static me.hannsi.lfjg.core.utils.math.MathHelper.*;
+import static me.hannsi.lfjg.render.RenderSystemSetting.GL_CIRCLE_DEFAULT_SEGMENT_COUNT;
 
+public class GLCircle extends GLObject<GLCircle> {
     private final Builder builder;
 
     GLCircle(String name, Builder builder) {
@@ -22,211 +21,241 @@ public class GLCircle extends GLPolygon<GLCircle> {
         this.builder = builder;
     }
 
-    public static CenterXDataStep createGLCirce(String name) {
+    public static VertexCenterDataStep<GLCircle> createGLCircle(String name) {
         return new Builder(name);
     }
 
+    @Override
     public GLCircle update() {
-        List<float[]> vertices = new ArrayList<>();
+        float angle = abs(builder.endAngle - builder.startAngle);
 
-        for (int i = 0; i <= builder.segment; i++) {
-            double angle = 2.0 * Math.PI * i / builder.segment;
-            float px = (float) (builder.cx + MathHelper.cos(angle) * builder.xRadius);
-            float py = (float) (builder.cy + MathHelper.sin(angle) * builder.yRadius);
-
-            vertices.add(new float[]{px, py});
-        }
-
+        DrawType drawType;
         switch (builder.paintType) {
-            case FILL:
-                drawType(DrawType.TRIANGLE_FAN);
-
-                Color centerColor = getCenterColor();
-                put().position(new Vector2f(builder.cx, builder.cy)).color(centerColor).end();
-
-                for (float[] v : vertices) {
-                    Color useColor = getCornerBlend(v[0], v[1]);
-                    put().position(new Vector2f(v[0], v[1])).color(useColor).end();
+            case FILL -> {
+                if (builder.xInnerRadius > 0 || builder.yInnerRadius > 0) {
+                    drawType = DrawType.TRIANGLE_STRIP;
+                } else {
+                    put(builder.centerVertex).end();
+                    drawType = DrawType.TRIANGLE_FAN;
                 }
-
-                break;
-            case OUT_LINE:
-                drawType(DrawType.LINE_LOOP).lineWidth(builder.lineWidth);
-
-                for (float[] v : vertices) {
-                    Color useColor = getCornerBlend(v[0], v[1]);
-                    put().position(new Vector2f(v[0], v[1])).color(useColor).end();
-                }
-
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + builder.paintType);
+            }
+            case STROKE ->
+                    drawType = DrawType.LINE_STRIP;
+            default ->
+                    throw new IllegalStateException("Unexpected value: " + builder.paintType);
         }
 
-        rendering();
+        float step = angle / (builder.segmentCount * builder.colors.size());
+        int colorCount = builder.colors.size();
 
-        return this;
-    }
+        for (float j = builder.startAngle; j <= builder.endAngle; j += step) {
+            float t = (j - builder.startAngle) / angle;
 
-    private Color getCenterColor() {
-        int blendR = 0;
-        int blendG = 0;
-        int blendB = 0;
-        int blendA = 0;
-        for (Color c : builder.colors) {
-            blendR += c.getRed();
-            blendG += c.getGreen();
-            blendB += c.getBlue();
-            blendA += c.getAlpha();
+            float colorPos = t * (colorCount - 1);
+            int index = min((int) colorPos, colorCount - 2);
+            float localT = colorPos - index;
+            float easedT = builder.easing.ease(localT);
+
+            Color c1 = builder.colors.get(index);
+            Color c2 = builder.colors.get(index + 1);
+            Color blended = lerpColor(c1, c2, easedT);
+
+            float x1 = sin(toRadians(j)) * builder.xRadius;
+            float y1 = cos(toRadians(j)) * builder.yRadius;
+            put(builder.centerVertex.copy().moveXYZ(x1, y1, 0).replaceColor(blended)).end();
+
+            if (builder.paintType == PaintType.FILL && (builder.xInnerRadius > 0 || builder.yInnerRadius > 0)) {
+                float x2 = sin(toRadians(j)) * builder.xInnerRadius;
+                float y2 = cos(toRadians(j)) * builder.yInnerRadius;
+                put(builder.centerVertex.copy().moveXYZ(x2, y2, 0).replaceColor(blended)).end();
+            }
         }
 
-        return new Color(
-                blendR / builder.colors.length,
-                blendG / builder.colors.length,
-                blendB / builder.colors.length,
-                blendA / builder.colors.length
-        );
+        drawType(drawType);
+        return super.update();
     }
 
-    private Color getCornerBlend(float px, float py) {
-        if (builder.colors.length == 1) {
-            return builder.colors[0];
-        } else if (builder.colors.length == 2) {
-            float ty = (py - (builder.cy - builder.yRadius)) / (2 * builder.yRadius);
-
-            return MathHelper.lerpColor(builder.colors[0], builder.colors[1], ty);
-        } else if (builder.colors.length == 3) {
-            float tx = (px - (builder.cx - builder.xRadius)) / (2 * builder.xRadius);
-            float ty = (py - (builder.cy - builder.yRadius)) / (2 * builder.yRadius);
-
-            Color top = MathHelper.lerpColor(builder.colors[0], builder.colors[1], tx);
-            Color bottom = builder.colors[2];
-
-            return MathHelper.lerpColor(top, bottom, ty);
-        } else if (builder.colors.length >= 4) {
-            float tx = (px - (builder.cx - builder.xRadius)) / (2 * builder.xRadius);
-            float ty = (py - (builder.cy - builder.yRadius)) / (2 * builder.yRadius);
-
-            Color top = MathHelper.lerpColor(builder.colors[0], builder.colors[1], tx);
-            Color bottom = MathHelper.lerpColor(builder.colors[3], builder.colors[2], tx);
-
-            return MathHelper.lerpColor(top, bottom, ty);
-        } else {
-            throw new IllegalArgumentException("The colors array is invalid: " + builder.colors.length);
-        }
+    public interface VertexCenterDataStep<T> {
+        CircleDataStep<T> vertexCenter(Vertex vertex);
     }
 
-    public interface CenterXDataStep {
-        CenterYDataStep cx_xRadius(float cx, float xRadius);
+    public interface CircleDataStep<T> {
+        ColorsStep<T> circleData(float xRadius, float yRadius);
+
+        ColorsStep<T> circleData_innerRadius(float xRadius, float yRadius, float xInnerRadius, float yInnerRadius);
+
+        ColorsStep<T> circleData(float xRadius, float yRadius, int segmentCount);
+
+        ColorsStep<T> circleData_innerRadius(float xRadius, float yRadius, float xInnerRadius, float yInnerRadius, int segmentCount);
+
+        ColorsStep<T> circleData(float xRadius, float yRadius, float startAngle, float endAngle);
+
+        ColorsStep<T> circleData_innerRadius(float xRadius, float yRadius, float xInnerRadius, float yInnerRadius, float startAngle, float endAngle);
+
+        ColorsStep<T> circleData(float xRadius, float yRadius, float startAngle, float endAngle, int segmentCount);
+
+        ColorsStep<T> circleData_innerRadius(float xRadius, float yRadius, float xInnerRadius, float yInnerRadius, float startAngle, float endAngle, int segmentCount);
     }
 
-    public interface CenterYDataStep {
-        SegmentStep cy_yRadius(float cy, float yRadius);
+    public interface ColorsStep<T> {
+        ColorsStep<T> color(Color color);
+
+        EasingColorStep<T> color_end_easingColor(Color color);
+
+        PaintTypeStep<T> color_end(Color color);
     }
 
-    public interface SegmentStep {
-        ColorsStep segment();
-
-        ColorsStep segment(int segment);
+    public interface EasingColorStep<T> {
+        PaintTypeStep<T> easingColor(Easing easing);
     }
 
-    public interface ColorsStep {
-        PaintTypeStep colors(Color... colors);
-    }
-
-    public interface PaintTypeStep {
-        GLCircle fill();
-
-        LineWidthStep outLine();
-    }
-
-    public interface LineWidthStep {
-        GLCircle lineWidth(float lineWidth);
-    }
-
-    public static class Builder implements CenterXDataStep, CenterYDataStep, SegmentStep, ColorsStep, PaintTypeStep, LineWidthStep {
-        protected final String name;
-        protected float cx;
-        protected float xRadius;
-        protected float cy;
-        protected float yRadius;
-        protected int segment;
-        protected Color[] colors;
-        protected PaintType paintType;
-        protected float lineWidth;
+    public static class Builder extends AbstractGLObjectBuilder<GLCircle> implements VertexCenterDataStep<GLCircle>, CircleDataStep<GLCircle>, ColorsStep<GLCircle>, EasingColorStep<GLCircle> {
+        private final String name;
+        private final List<Color> colors;
+        private Vertex centerVertex;
+        private float xRadius;
+        private float yRadius;
+        private float xInnerRadius = 0;
+        private float yInnerRadius = 0;
+        private float startAngle = 0;
+        private float endAngle = 360;
+        private int segmentCount = GL_CIRCLE_DEFAULT_SEGMENT_COUNT;
+        private Easing easing = Easing.easeLinear;
 
         private GLCircle glCircle;
 
         public Builder(String name) {
             this.name = name;
+
+            this.colors = new ArrayList<>();
         }
 
         @Override
-        public CenterYDataStep cx_xRadius(float cx, float xRadius) {
-            this.cx = cx;
+        public ColorsStep<GLCircle> circleData(float xRadius, float yRadius) {
             this.xRadius = xRadius;
-
-            return this;
-        }
-
-        @Override
-        public SegmentStep cy_yRadius(float cy, float yRadius) {
-            this.cy = cy;
             this.yRadius = yRadius;
 
             return this;
         }
 
         @Override
-        public ColorsStep segment() {
-            segment = DEFAULT_SEGMENT;
+        public ColorsStep<GLCircle> circleData_innerRadius(float xRadius, float yRadius, float xInnerRadius, float yInnerRadius) {
+            this.xRadius = xRadius;
+            this.yRadius = yRadius;
+            this.xInnerRadius = xInnerRadius;
+            this.yInnerRadius = yInnerRadius;
 
             return this;
         }
 
         @Override
-        public ColorsStep segment(int segment) {
-            this.segment = segment;
+        public ColorsStep<GLCircle> circleData(float xRadius, float yRadius, int segmentCount) {
+            this.xRadius = xRadius;
+            this.yRadius = yRadius;
+            this.segmentCount = segmentCount;
 
             return this;
         }
 
         @Override
-        public PaintTypeStep colors(Color... colors) {
-            this.colors = colors;
+        public ColorsStep<GLCircle> circleData_innerRadius(float xRadius, float yRadius, float xInnerRadius, float yInnerRadius, int segmentCount) {
+            this.xRadius = xRadius;
+            this.yRadius = yRadius;
+            this.xInnerRadius = xInnerRadius;
+            this.yInnerRadius = yInnerRadius;
+            this.segmentCount = segmentCount;
 
             return this;
         }
 
         @Override
-        public GLCircle fill() {
-            this.paintType = PaintType.FILL;
-            this.lineWidth = -1;
-
-            return build();
-        }
-
-        @Override
-        public LineWidthStep outLine() {
-            this.paintType = PaintType.OUT_LINE;
+        public ColorsStep<GLCircle> circleData(float xRadius, float yRadius, float startAngle, float endAngle) {
+            this.xRadius = xRadius;
+            this.yRadius = yRadius;
+            this.startAngle = startAngle;
+            this.endAngle = endAngle;
 
             return this;
         }
 
         @Override
-        public GLCircle lineWidth(float lineWidth) {
-            this.lineWidth = lineWidth;
+        public ColorsStep<GLCircle> circleData_innerRadius(float xRadius, float yRadius, float xInnerRadius, float yInnerRadius, float startAngle, float endAngle) {
+            this.xRadius = xRadius;
+            this.yRadius = yRadius;
+            this.xInnerRadius = xInnerRadius;
+            this.yInnerRadius = yInnerRadius;
+            this.startAngle = startAngle;
+            this.endAngle = endAngle;
 
-            return build();
+            return this;
         }
 
-        private GLCircle build() {
+        @Override
+        public ColorsStep<GLCircle> circleData(float xRadius, float yRadius, float startAngle, float endAngle, int segmentCount) {
+            this.xRadius = xRadius;
+            this.yRadius = yRadius;
+            this.startAngle = startAngle;
+            this.endAngle = endAngle;
+            this.segmentCount = segmentCount;
+
+            return this;
+        }
+
+        @Override
+        public ColorsStep<GLCircle> circleData_innerRadius(float xRadius, float yRadius, float xInnerRadius, float yInnerRadius, float startAngle, float endAngle, int segmentCount) {
+            this.xRadius = xRadius;
+            this.yRadius = yRadius;
+            this.xInnerRadius = xInnerRadius;
+            this.yInnerRadius = yInnerRadius;
+            this.startAngle = startAngle;
+            this.endAngle = endAngle;
+            this.segmentCount = segmentCount;
+
+            return this;
+        }
+
+        @Override
+        public ColorsStep<GLCircle> color(Color color) {
+            this.colors.add(color);
+
+            return this;
+        }
+
+        @Override
+        public PaintTypeStep<GLCircle> color_end(Color color) {
+            this.colors.add(color);
+
+            return this;
+        }
+
+        @Override
+        public EasingColorStep<GLCircle> color_end_easingColor(Color color) {
+            this.colors.add(color);
+
+            return this;
+        }
+
+        @Override
+        public PaintTypeStep<GLCircle> easingColor(Easing easing) {
+            this.easing = easing;
+
+            return this;
+        }
+
+        @Override
+        public CircleDataStep<GLCircle> vertexCenter(Vertex vertex) {
+            this.centerVertex = vertex;
+
+            return this;
+        }
+
+        @Override
+        protected GLCircle createOrGet() {
             if (glCircle == null) {
                 return glCircle = new GLCircle(name, this);
             } else {
                 return glCircle.update();
             }
         }
-
     }
 }
