@@ -10,8 +10,6 @@ in vec2 vUV;
 
 out vec4 fragColor;
 
-uniform int uTextureBlendMode;
-uniform int uSpriteBlendMode;
 uniform sampler2DArray uTexArray;
 
 struct UV{
@@ -27,13 +25,13 @@ layout(std430, binding = 3) readonly buffer SpriteDatum {
 };
 
 void main() {
-    vec4 baseColor = applyBlend(vSpriteColor, vColor, uSpriteBlendMode);
+    vec4 baseColor = vColor * vSpriteColor;
     if (vSpriteIndex != NO_ATTACH_TEXTURE) {
         UV data = datum[vSpriteIndex];
         vec4 uvRect = data.rect;
         float layer = data.layer;
         vec2 uv = uvRect.xy + vUV * uvRect.zw;
-        baseColor = applyBlend(texture(uTexArray, vec3(uv, layer)), baseColor, uTextureBlendMode);
+        baseColor *= texture(uTexArray, vec3(uv, layer));
     }
 
     fragColor = baseColor;
