@@ -5,8 +5,11 @@ import me.hannsi.lfjg.core.utils.Cleanup;
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.debug.exceptions.render.mesh.MeshBuilderException;
+import me.hannsi.lfjg.render.effect.system.EffectBase;
+import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.BlendType;
 import me.hannsi.lfjg.render.renderers.JointType;
+import me.hannsi.lfjg.render.renderers.PaintType;
 import me.hannsi.lfjg.render.renderers.PointType;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 
@@ -14,12 +17,14 @@ import static me.hannsi.lfjg.render.LFJGRenderContext.*;
 
 public class MeshBuilder implements Cleanup {
     private final IntRef objectIdPointer = new IntRef();
+    private final EffectCache effectCache = EffectCache.createEffectCache();
     private Vertex[] vertices = null;
     private DrawType drawType = DrawType.TRIANGLES;
-    private BlendType blendType = BlendType.PREMULTIPLIED_ALPHA;
-    private float lineWidth = -1f;
-    private float pointSize = -1f;
-    private JointType jointType = JointType.NONE;
+    private BlendType blendType = BlendType.UI_DEFAULT;
+    private PaintType paintType = PaintType.FILL;
+    private float strokeWidth = 1f;
+    private float pointSize = 1f;
+    private JointType strokeJointType = JointType.NONE;
     private PointType pointType = PointType.SQUARE;
     private ObjectData objectData = new ObjectData(1);
     private boolean flagObjectData = true;
@@ -37,29 +42,45 @@ public class MeshBuilder implements Cleanup {
     }
 
     public MeshBuilder blendType(BlendType blendType) {
-        this.blendType = blendType;
+        if (blendType != null) {
+            this.blendType = blendType;
+        }
+
+        return this;
+    }
+
+    public MeshBuilder paintType(PaintType paintType) {
+        if (paintType != null) {
+            this.paintType = paintType;
+        }
 
         return this;
     }
 
     public MeshBuilder drawType(DrawType drawType) {
-        this.drawType = drawType;
+        if (drawType != null) {
+            this.drawType = drawType;
+        }
 
         mesh.setNeedRepack(true);
 
         return this;
     }
 
-    public MeshBuilder jointType(JointType jointType) {
-        this.jointType = jointType;
+    public MeshBuilder strokeJoinType(JointType strokeJointType) {
+        if (strokeJointType != null) {
+            this.strokeJointType = strokeJointType;
+        }
 
         mesh.setNeedRepack(true);
 
         return this;
     }
 
-    public MeshBuilder lineWidth(float lineWidth) {
-        this.lineWidth = lineWidth;
+    public MeshBuilder strokeWidth(float strokeWidth) {
+        if (strokeWidth != -1f) {
+            this.strokeWidth = strokeWidth;
+        }
 
         mesh.setNeedRepack(true);
 
@@ -67,7 +88,9 @@ public class MeshBuilder implements Cleanup {
     }
 
     public MeshBuilder pointType(PointType pointType) {
-        this.pointType = pointType;
+        if (pointType != null) {
+            this.pointType = pointType;
+        }
 
         mesh.setNeedRepack(true);
 
@@ -75,7 +98,9 @@ public class MeshBuilder implements Cleanup {
     }
 
     public MeshBuilder projectionType(ProjectionType projectionType) {
-        this.projectionType = projectionType;
+        if (projectionType != null) {
+            this.projectionType = projectionType;
+        }
 
         mesh.setNeedRepack(true);
 
@@ -83,7 +108,9 @@ public class MeshBuilder implements Cleanup {
     }
 
     public MeshBuilder vertices(Vertex... vertices) {
-        this.vertices = vertices;
+        if (vertices != null) {
+            this.vertices = vertices;
+        }
 
         mesh.setNeedRepack(true);
 
@@ -91,7 +118,9 @@ public class MeshBuilder implements Cleanup {
     }
 
     public MeshBuilder pointSize(float pointSize) {
-        this.pointSize = pointSize;
+        if (pointSize != -1f) {
+            this.pointSize = pointSize;
+        }
 
         mesh.setNeedRepack(true);
 
@@ -99,7 +128,19 @@ public class MeshBuilder implements Cleanup {
     }
 
     public MeshBuilder objectData(ObjectData objectData) {
-        this.objectData = objectData;
+        if (objectData != null) {
+            this.objectData = objectData;
+        }
+
+        mesh.setNeedRepack(true);
+
+        return this;
+    }
+
+    public MeshBuilder addEffect(EffectBase effect) {
+        if (effect != null) {
+            this.effectCache.createCache(effect);
+        }
 
         mesh.setNeedRepack(true);
 
@@ -132,20 +173,24 @@ public class MeshBuilder implements Cleanup {
         return drawType;
     }
 
+    public PaintType getPaintType() {
+        return paintType;
+    }
+
     public BlendType getBlendType() {
         return blendType;
     }
 
-    public float getLineWidth() {
-        return lineWidth;
+    public float getStrokeWidth() {
+        return strokeWidth;
     }
 
     public float getPointSize() {
         return pointSize;
     }
 
-    public JointType getJointType() {
-        return jointType;
+    public JointType getStrokeJointType() {
+        return strokeJointType;
     }
 
     public PointType getPointType() {
@@ -162,6 +207,10 @@ public class MeshBuilder implements Cleanup {
 
     public ProjectionType getProjectionType() {
         return projectionType;
+    }
+
+    public EffectCache getEffectCache() {
+        return effectCache;
     }
 
     public boolean isDraw() {
@@ -212,8 +261,8 @@ public class MeshBuilder implements Cleanup {
         }
         vertices = null;
 
-        return event.debug(MeshBuilder.class, new CleanupEvent.CleanupData(this.getClass().getSimpleName())
-                .addData("objectIdPointer", objectIdPointer.isNullptr(), objectIdPointer)
+        return event.debug(MeshBuilder.class, new CleanupEvent.CleanupData(MeshBuilder.class.getSimpleName())
+                .addData("objectIdPointer", objectIdPointer.isNullptr(), objectIdPointer.getValue())
                 .addData("vertices", verticesState, vertices)
                 .addData("objectData", objectData.cleanup(event), objectData)
         );
