@@ -1,6 +1,8 @@
 package me.hannsi.lfjg.render.system.rendering;
 
 import me.hannsi.lfjg.render.renderers.BlendType;
+import me.hannsi.lfjg.render.system.mesh.DrawElementsIndirectCommand;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
 import static me.hannsi.lfjg.render.RenderSystemSetting.VAO_RENDERING_FRONT_AND_BACK;
@@ -34,15 +36,20 @@ public class VAORendering {
         persistentMappedSSBO.syncToGPU();
         persistentMappedPUBO.syncToGPU();
 
+        shaderProgram.bind();
+        shaderProgram.setUniform("uTexArray", UploadUniformType.ONCE, 0);
+
         while (drawBatch.nextPass()) {
             DrawBatch.Pass pass = drawBatch.getCurrentPass();
+
+            shaderProgram.setUniform("baseDrawId", UploadUniformType.ON_CHANGE, pass.commandOffset);
 
             applyBlendState(pass.pipeline.getBlendType());
 
             glMultiDrawElementsIndirect(
                     GL_TRIANGLES,
                     GL_UNSIGNED_INT,
-                    pass.commandOffset,
+                    pass.commandOffset * DrawElementsIndirectCommand.BYTES,
                     pass.commandCount,
                     0
             );
