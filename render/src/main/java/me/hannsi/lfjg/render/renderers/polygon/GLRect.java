@@ -1,238 +1,145 @@
 package me.hannsi.lfjg.render.renderers.polygon;
 
-import me.hannsi.lfjg.core.utils.graphics.color.Color;
-import me.hannsi.lfjg.render.renderers.PaintType;
+import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
-import org.joml.Vector2f;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class representing a rectangle renderer in OpenGL.
  */
-public class GLRect extends GLPolygon<GLRect> {
+public class GLRect extends GLObject<GLRect> {
     private final Builder builder;
 
-    GLRect(String name, Builder builder) {
+    protected GLRect(String name, Builder builder) {
         super(name);
         this.builder = builder;
     }
 
-    public static VertexData1Step createGLRect(String name) {
+    public static VertexData1Step<GLRect> createGLRect(String name) {
         return new Builder(name);
     }
 
+    @Override
     public GLRect update() {
-        put().position(new Vector2f(builder.x1, builder.y1)).color(builder.color1).end();
-        put().position(new Vector2f(builder.x2, builder.y2)).color(builder.color2).end();
-        put().position(new Vector2f(builder.x3, builder.y3)).color(builder.color3).end();
-        put().position(new Vector2f(builder.x4, builder.y4)).color(builder.color4).end();
-
-        switch (builder.paintType) {
-            case FILL:
-                drawType(DrawType.QUADS);
-                break;
-            case OUT_LINE:
-                drawType(DrawType.LINE_LOOP).lineWidth(builder.lineWidth);
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + builder.paintType);
+        for (Vertex vertex : builder.vertices) {
+            put(vertex).end();
         }
 
-        rendering();
+        switch (builder.paintType) {
+            case FILL, STROKE ->
+                    drawType(DrawType.QUADS);
+            default ->
+                    throw new IllegalStateException("Unexpected value: " + builder.paintType);
+        }
 
-        return this;
+        return super.update();
     }
 
-    public Builder getBuilder() {
-        return builder;
+    public interface VertexData1Step<T> {
+        VertexData2Step<T> vertex1(Vertex vertex1);
+
+        VertexData22pStep<T> vertex1_2p(Vertex vertex1);
     }
 
-    public interface VertexData1Step {
-        VertexData2Step x1_y1_color1(float x1, float y1, Color color1);
-
-        VertexData3Step x1_y1_color1_2p(float x1, float y1, Color color1);
+    public interface VertexData2Step<T> {
+        VertexData3Step<T> vertex2(Vertex vertex2);
     }
 
-    public interface VertexData2Step {
-        VertexData3Step x2_y2_color2(float x2, float y2, Color color2);
+    public interface VertexData22pStep<T> {
+        VertexData1Step<T> vertex2_2p(Vertex vertex2);
 
-        VertexData3Step width2_height2_color2(float width2, float height2, Color color2);
+        PaintTypeStep<T> vertex2_2p_end(Vertex vertex2);
     }
 
-    public interface VertexData3Step {
-        VertexData4Step x3_y3_color3(float x3, float y3, Color color3);
-
-        VertexData4Step width3_height3_color3(float width3, float height3, Color color3);
-
-        PaintTypeStep x3_y3_color3_2p(float x3, float y3, Color color3);
-
-        PaintTypeStep width3_height3_color3_2p(float width3, float height3, Color color3);
+    public interface VertexData3Step<T> {
+        VertexData4Step<T> vertex3(Vertex vertex3);
     }
 
-    public interface VertexData4Step {
-        PaintTypeStep x4_y4_color4(float x4, float y4, Color color4);
+    public interface VertexData4Step<T> {
+        VertexData1Step<T> vertex4(Vertex vertex4);
 
-        PaintTypeStep width4_height4_color4(float width4, float height4, Color color4);
+        PaintTypeStep<T> vertex4_end(Vertex vertex4);
     }
 
-    public interface PaintTypeStep {
-        GLRect fill();
-
-        LineWidthStep outLine();
-    }
-
-    public interface LineWidthStep {
-        GLRect lineWidth(float lineWidth);
-    }
-
-    public static class Builder implements VertexData1Step, VertexData2Step, VertexData3Step, VertexData4Step, PaintTypeStep, LineWidthStep {
-        protected final String name;
-        protected float x1;
-        protected float y1;
-        protected Color color1;
-        protected float x2;
-        protected float y2;
-        protected Color color2;
-        protected float x3;
-        protected float y3;
-        protected Color color3;
-        protected float x4;
-        protected float y4;
-        protected Color color4;
-        protected PaintType paintType;
-        protected float lineWidth;
+    public static class Builder extends AbstractGLObjectBuilder<GLRect> implements VertexData1Step<GLRect>, VertexData2Step<GLRect>, VertexData22pStep<GLRect>, VertexData3Step<GLRect>, VertexData4Step<GLRect>, PaintTypeStep<GLRect>, strokeWidthStep<GLRect> {
+        private final String name;
+        private final List<Vertex> vertices;
+        private Vertex lastVertex2p;
 
         private GLRect glRect;
 
         public Builder(String name) {
             this.name = name;
+
+            this.vertices = new ArrayList<>();
         }
 
         @Override
-        public VertexData2Step x1_y1_color1(float x1, float y1, Color color1) {
-            this.x1 = x1;
-            this.y1 = y1;
-            this.color1 = color1;
+        public VertexData2Step<GLRect> vertex1(Vertex vertex1) {
+            this.vertices.add(vertex1);
 
             return this;
         }
 
         @Override
-        public VertexData3Step x1_y1_color1_2p(float x1, float y1, Color color1) {
-            this.x1 = x1;
-            this.y1 = y1;
-            this.color1 = color1;
+        public VertexData22pStep<GLRect> vertex1_2p(Vertex vertex1) {
+            this.lastVertex2p = vertex1;
+            this.vertices.add(vertex1);
 
             return this;
         }
 
         @Override
-        public VertexData3Step x2_y2_color2(float x2, float y2, Color color2) {
-            this.x2 = x2;
-            this.y2 = y2;
-            this.color2 = color2;
+        public VertexData1Step<GLRect> vertex2_2p(Vertex vertex2) {
+            this.vertices.add(lastVertex2p.copy().setX(vertex2.x));
+            this.vertices.add(vertex2);
+            this.vertices.add(lastVertex2p.copy().setY(vertex2.y));
 
             return this;
         }
 
         @Override
-        public VertexData3Step width2_height2_color2(float width2, float height2, Color color2) {
-            this.x2 = x1 + width2;
-            this.y2 = y1 + height2;
-            this.color2 = color2;
+        public PaintTypeStep<GLRect> vertex2_2p_end(Vertex vertex2) {
+            this.vertices.add(lastVertex2p.copy().setX(vertex2.x));
+            this.vertices.add(vertex2);
+            this.vertices.add(lastVertex2p.copy().setY(vertex2.y));
 
             return this;
         }
 
         @Override
-        public VertexData4Step x3_y3_color3(float x3, float y3, Color color3) {
-            this.x3 = x3;
-            this.y3 = y3;
-            this.color3 = color3;
+        public VertexData3Step<GLRect> vertex2(Vertex vertex2) {
+            this.vertices.add(vertex2);
 
             return this;
         }
 
         @Override
-        public VertexData4Step width3_height3_color3(float width3, float height3, Color color3) {
-            this.x3 = x1 + width3;
-            this.y3 = y1 + height3;
-            this.color3 = color3;
+        public VertexData4Step<GLRect> vertex3(Vertex vertex3) {
+            this.vertices.add(vertex3);
 
             return this;
         }
 
         @Override
-        public PaintTypeStep x3_y3_color3_2p(float x3, float y3, Color color3) {
-            this.x2 = x3;
-            this.y2 = y1;
-            this.x3 = x3;
-            this.y3 = y3;
-            this.x4 = x1;
-            this.y4 = y3;
-            this.color2 = color1;
-            this.color3 = color3;
-            this.color4 = color3;
+        public VertexData1Step<GLRect> vertex4(Vertex vertex4) {
+            this.vertices.add(vertex4);
 
             return this;
         }
 
         @Override
-        public PaintTypeStep width3_height3_color3_2p(float width3, float height3, Color color3) {
-            this.x2 = x1 + width3;
-            this.y2 = y1;
-            this.x3 = x1 + width3;
-            this.y3 = y1 + height3;
-            this.x4 = x1;
-            this.y4 = y1 + height3;
-            this.color2 = color1;
-            this.color3 = color3;
-            this.color4 = color3;
+        public PaintTypeStep<GLRect> vertex4_end(Vertex vertex4) {
+            this.vertices.add(vertex4);
 
             return this;
         }
 
         @Override
-        public PaintTypeStep x4_y4_color4(float x4, float y4, Color color4) {
-            this.x4 = x4;
-            this.y4 = y4;
-            this.color4 = color4;
-
-            return this;
-        }
-
-        @Override
-        public PaintTypeStep width4_height4_color4(float width4, float height4, Color color4) {
-            this.x4 = x1 + width4;
-            this.y4 = y1 + height4;
-            this.color4 = color4;
-
-            return this;
-        }
-
-        @Override
-        public GLRect fill() {
-            this.paintType = PaintType.FILL;
-            this.lineWidth = -1;
-
-            return build();
-        }
-
-        @Override
-        public LineWidthStep outLine() {
-            this.paintType = PaintType.OUT_LINE;
-
-            return this;
-        }
-
-        @Override
-        public GLRect lineWidth(float lineWidth) {
-            this.lineWidth = lineWidth;
-
-            return build();
-        }
-
-
-        private GLRect build() {
+        protected GLRect createOrGet() {
             if (glRect == null) {
                 return glRect = new GLRect(name, this);
             } else {
