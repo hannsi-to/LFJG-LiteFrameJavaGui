@@ -7,13 +7,14 @@ import me.hannsi.lfjg.core.event.Event;
 import me.hannsi.lfjg.core.utils.toolkit.ANSIFormat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static me.hannsi.lfjg.core.utils.math.MathHelper.max;
 
 public class CleanupEvent extends Event {
     private static List<String> toLines(Object value) {
-        return value.toString().lines().toList();
+        return value == null ? Collections.singletonList("null") : value.toString().lines().toList();
     }
 
     public boolean debug(Class<?> cleanupClass, CleanupData... cleanupDatum) {
