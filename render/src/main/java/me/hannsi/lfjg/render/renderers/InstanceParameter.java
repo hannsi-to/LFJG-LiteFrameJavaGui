@@ -21,7 +21,6 @@ public class InstanceParameter implements Cleanup {
     private final Quaternionf rotation;
     private ProjectionType projectionType;
     private int spriteIndex;
-    private int objectId;
     private float x;
     private float y;
     private float z;
@@ -31,7 +30,7 @@ public class InstanceParameter implements Cleanup {
     private Color color;
 
     InstanceParameter() {
-        this.dirtyFlag = false;
+        this.dirtyFlag = true;
         this.projectionType = INSTANCE_PARAMETER_DEFAULT_PROJECTION_TYPE;
         this.x = 0;
         this.y = 0;
@@ -41,7 +40,6 @@ public class InstanceParameter implements Cleanup {
         this.scaleY = 1;
         this.scaleZ = 1;
         this.spriteIndex = INSTANCE_PARAMETER_DEFAULT_SPRITE_INDEX;
-        this.objectId = -1;
         this.color = INSTANCE_PARAMETER_DEFAULT_COLOR;
     }
 
@@ -137,14 +135,6 @@ public class InstanceParameter implements Cleanup {
         return this;
     }
 
-    public InstanceParameter objectId(int objectId) {
-        this.objectId = objectId;
-
-        dirtyFlag = true;
-
-        return this;
-    }
-
     public InstanceParameter color(Color color) {
         this.color = color;
 
@@ -171,7 +161,11 @@ public class InstanceParameter implements Cleanup {
         address += 4 * Float.BYTES;
         UNSAFE.putInt(address, spriteIndex);
         address += Float.BYTES;
-        UNSAFE.putInt(address, objectId);
+        UNSAFE.putInt(address, 0);
+        address += Float.BYTES;
+        UNSAFE.putInt(address, 0);
+        address += Float.BYTES;
+        UNSAFE.putInt(address, 0);
 
         mainCamera.setDirtyFlag(false);
 
@@ -305,16 +299,6 @@ public class InstanceParameter implements Cleanup {
 
     public void setSpriteIndex(int spriteIndex) {
         this.spriteIndex = spriteIndex;
-
-        dirtyFlag = true;
-    }
-
-    public int getObjectId() {
-        return objectId;
-    }
-
-    public void setObjectId(int objectId) {
-        this.objectId = objectId;
 
         dirtyFlag = true;
     }
