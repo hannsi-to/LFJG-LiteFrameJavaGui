@@ -121,7 +121,7 @@ public class Test2PolygonTriangulator {
                 case LINE_LOOP -> {
                     checkLineParameter(drawType);
 
-                    createLineLoopTriangulator(vertexList, indexList, vertices);
+                    createLineLoopTriangulator(vertexList, indexList, true, vertices);
                 }
                 case TRIANGLES -> {
                     checkTriangleParameter(drawType);
@@ -147,12 +147,8 @@ public class Test2PolygonTriangulator {
                     }
                     createQuadsTriangulator(vertexList, indexList, vertices);
                 }
-                case POLYGON -> {
-                    if (vertices.length < 3) {
-                        throw new PolygonTriangulatorException("DrawType.POLYGON requires at least three vertices. but current count is " + vertices.length);
-                    }
-                    createPolygonTriangulator(vertexList, indexList, vertices);
-                }
+                case POLYGON ->
+                        createPolygonTriangulator(vertexList, indexList, true, vertices);
                 default ->
                         throw new IllegalStateException("Unexpected value: " + drawType);
             }
@@ -178,9 +174,9 @@ public class Test2PolygonTriangulator {
 
             switch (paintType) {
                 case FILL ->
-                        createPolygonTriangulator(vertexList, indexList, center, v1, v2);
+                        createPolygonTriangulator(vertexList, indexList, false, center, v1, v2);
                 case STROKE ->
-                        createLineLoopTriangulator(vertexList, indexList, center, v1, v2);
+                        createLineLoopTriangulator(vertexList, indexList, false, center, v1, v2);
                 default ->
                         throw new IllegalStateException("Unexpected value: " + paintType);
             }
@@ -202,9 +198,9 @@ public class Test2PolygonTriangulator {
 
             switch (paintType) {
                 case FILL ->
-                        createPolygonTriangulator(vertexList, indexList, v1, v2, v3);
+                        createPolygonTriangulator(vertexList, indexList, false, v1, v2, v3);
                 case STROKE ->
-                        createLineLoopTriangulator(vertexList, indexList, v1, v2, v3);
+                        createLineLoopTriangulator(vertexList, indexList, false, v1, v2, v3);
                 default ->
                         throw new IllegalStateException("Unexpected value: " + paintType);
             }
@@ -215,9 +211,9 @@ public class Test2PolygonTriangulator {
         for (int i = 0; i < vertices.length; i += 4) {
             switch (paintType) {
                 case FILL ->
-                        createPolygonTriangulator(vertexList, indexList, vertices[i], vertices[i + 1], vertices[i + 2], vertices[i + 3]);
+                        createPolygonTriangulator(vertexList, indexList, false, vertices[i], vertices[i + 1], vertices[i + 2], vertices[i + 3]);
                 case STROKE ->
-                        createLineLoopTriangulator(vertexList, indexList, vertices[i], vertices[i + 1], vertices[i + 2], vertices[i + 3]);
+                        createLineLoopTriangulator(vertexList, indexList, false, vertices[i], vertices[i + 1], vertices[i + 2], vertices[i + 3]);
                 default ->
                         throw new IllegalStateException("Unexpected value: " + paintType);
             }
@@ -228,210 +224,234 @@ public class Test2PolygonTriangulator {
         for (int i = 0; i < vertices.length; i += 3) {
             switch (paintType) {
                 case FILL ->
-                        createPolygonTriangulator(vertexList, indexList, vertices[i], vertices[i + 1], vertices[i + 2]);
+                        createPolygonTriangulator(vertexList, indexList, false, vertices[i], vertices[i + 1], vertices[i + 2]);
                 case STROKE ->
-                        createLineLoopTriangulator(vertexList, indexList, vertices[i], vertices[i + 1], vertices[i + 2]);
+                        createLineLoopTriangulator(vertexList, indexList, false, vertices[i], vertices[i + 1], vertices[i + 2]);
                 default ->
                         throw new IllegalStateException("Unexpected value: " + paintType);
             }
         }
     }
 
-    private void createLineLoopTriangulator(List<Vertex> vertexList, List<Integer> indexList, Vertex... vertices) {
-        int n = vertices.length;
+    private void createLineLoopTriangulator(List<Vertex> vertexList, List<Integer> indexList, boolean useNullVertex, Vertex... vertices) {
+        List<List<Vertex>> numPolygonVertices = new ArrayList<>();
+        List<Vertex> numVertices = new ArrayList<>();
+        if (useNullVertex) {
+            for (Vertex vertex : vertices) {
+                if (vertex.isNullVertex()) {
+                    if (numVertices.size() < 3) {
+                        throw new PolygonTriangulatorException("DrawType.LINE_LOOP requires at least three vertices. but current count is " + numVertices.size() + ". Polygon count is " + numPolygonVertices.size());
+                    }
 
-        float[] nx = new float[n];
-        float[] ny = new float[n];
-        for (int i = 0; i < n; i++) {
-            Vertex a = getVertex(vertices, i);
-            Vertex b = getVertex(vertices, i + 1);
-            float dx = b.x - a.x;
-            float dy = b.y - a.y;
-            float len = sqrt(dx * dx + dy * dy);
-            nx[i] = -dy / len * (strokeWidth / 2f);
-            ny[i] = dx / len * (strokeWidth / 2f);
+                    numPolygonVertices.add(new ArrayList<>(numVertices));
+                    numVertices.clear();
+
+                    continue;
+                }
+
+                numVertices.add(vertex.copy());
+            }
+        } else {
+            numPolygonVertices.add(List.of(vertices));
         }
 
-        Vector2f[] joints = new Vector2f[n];
-        float[] signs = new float[n];
-        for (int j = 0; j < n; j++) {
-            Vertex jPrev = getVertex(vertices, j - 1);
-            Vertex jCurrent = getVertex(vertices, j);
-            Vertex jNext = getVertex(vertices, j + 1);
-            int jIP = getNormalIndex(n, j - 1);
-            int jIC = getNormalIndex(n, j);
+        for (List<Vertex> numPolygonVertex : numPolygonVertices) {
+            int n = numPolygonVertex.size();
 
-            float c = cross(jPrev, jCurrent, jNext);
-            float d = dot(jPrev, jCurrent, jNext);
-            float s = (atan2(c, d) < 0) ? -1f : 1f;
-            signs[j] = s;
-
-            Vector2f o1 = new Vector2f(nx[jIP] * -s, ny[jIP] * -s);
-            Vector2f o2 = new Vector2f(nx[jIC] * -s, ny[jIC] * -s);
-
-            Vector2f lp1 = new Vector2f(jPrev.x + o1.x, jPrev.y + o1.y);
-            Vector2f lp2 = new Vector2f(jCurrent.x + o1.x, jCurrent.y + o1.y);
-            Vector2f lp3 = new Vector2f(jCurrent.x + o2.x, jCurrent.y + o2.y);
-            Vector2f lp4 = new Vector2f(jNext.x + o2.x, jNext.y + o2.y);
-
-            joints[j] = computeLineIntersection(lp1, lp2, lp3, lp4);
-        }
-
-        for (int i = 0; i < n; i++) {
-            Vertex prev = getVertex(vertices, i - 1);
-            Vertex current = getVertex(vertices, i);
-            Vertex next = getVertex(vertices, i + 1);
-
-            int iPrev = getNormalIndex(vertices.length, i - 1);
-            int iCurrent = getNormalIndex(vertices.length, i);
-            int iNext = getNormalIndex(vertices.length, i + 1);
-
-            JointType jointType = strokeJointType;
-            if (jointType == JointType.MITER) {
-                Vector2f joint = joints[iCurrent];
-                float jx = joint.x - current.x;
-                float jy = joint.y - current.y;
-                float miterLength = sqrt(jx * jx + jy * jy) * 2f;
-                if (miterLength / strokeWidth > POLYGON_TRIANGULATOR_MITER_LIMIT) {
-                    jointType = JointType.BEVEL;
-                }
+            float[] nx = new float[n];
+            float[] ny = new float[n];
+            for (int i = 0; i < n; i++) {
+                Vertex a = getVertex(numPolygonVertex, i);
+                Vertex b = getVertex(numPolygonVertex, i + 1);
+                float dx = b.x - a.x;
+                float dy = b.y - a.y;
+                float len = sqrt(dx * dx + dy * dy);
+                nx[i] = -dy / len * (strokeWidth / 2f);
+                ny[i] = dx / len * (strokeWidth / 2f);
             }
 
-            float[] miter1 = calcMiter(nx[iPrev], ny[iPrev], nx[i], ny[i]);
-            float[] miter2 = calcMiter(nx[i], ny[i], nx[iNext], ny[iNext]);
+            Vector2f[] joints = new Vector2f[n];
+            float[] signs = new float[n];
+            for (int j = 0; j < n; j++) {
+                Vertex jPrev = getVertex(numPolygonVertex, j - 1);
+                Vertex jCurrent = getVertex(numPolygonVertex, j);
+                Vertex jNext = getVertex(numPolygonVertex, j + 1);
+                int jIP = getNormalIndex(n, j - 1);
+                int jIC = getNormalIndex(n, j);
 
-            Vertex p1 = current.copy().moveXYZ(miter1[0], miter1[1], current.z);
-            Vertex p2 = current.copy().moveXYZ(-miter1[0], -miter1[1], current.z);
-            Vertex p3 = next.copy().moveXYZ(-miter2[0], -miter2[1], next.z);
-            Vertex p4 = next.copy().moveXYZ(miter2[0], miter2[1], next.z);
-            Vertex v1 = current.copy().moveXYZ(nx[iCurrent], ny[iCurrent], current.z);
-            Vertex v2 = current.copy().moveXYZ(-nx[iCurrent], -ny[iCurrent], current.z);
-            Vertex v3 = next.copy().moveXYZ(-nx[iCurrent], -ny[iCurrent], next.z);
-            Vertex v4 = next.copy().moveXYZ(nx[iCurrent], ny[iCurrent], next.z);
-            Vertex v5 = current.copy().moveXYZ(-nx[iPrev], -ny[iPrev], prev.z);
-            Vertex v6 = current.copy().moveXYZ(nx[iPrev], ny[iPrev], prev.z);
-            if (jointType != JointType.NONE) {
-                List<Vertex> linePolygon = new ArrayList<>();
-                if (signs[iCurrent] == -1f) {
-                    linePolygon.add(v1.copy());
-                    linePolygon.add(current.copy());
-                    linePolygon.add(p2.copy());
-                } else {
-                    linePolygon.add(p1.copy());
-                    linePolygon.add(current.copy());
-                    linePolygon.add(v2.copy());
-                }
+                float c = cross(jPrev, jCurrent, jNext);
+                float d = dot(jPrev, jCurrent, jNext);
+                float s = (atan2(c, d) < 0) ? -1f : 1f;
+                signs[j] = s;
 
-                if (signs[iNext] == -1f) {
-                    linePolygon.add(p3.copy());
-                    linePolygon.add(next.copy());
-                    linePolygon.add(v4.copy());
-                } else {
-                    linePolygon.add(v3.copy());
-                    linePolygon.add(next.copy());
-                    linePolygon.add(p4.copy());
-                }
+                Vector2f o1 = new Vector2f(nx[jIP] * -s, ny[jIP] * -s);
+                Vector2f o2 = new Vector2f(nx[jIC] * -s, ny[jIC] * -s);
 
-                createPolygonTriangulator(vertexList, indexList, linePolygon.toArray(new Vertex[0]));
+                Vector2f lp1 = new Vector2f(jPrev.x + o1.x, jPrev.y + o1.y);
+                Vector2f lp2 = new Vector2f(jCurrent.x + o1.x, jCurrent.y + o1.y);
+                Vector2f lp3 = new Vector2f(jCurrent.x + o2.x, jCurrent.y + o2.y);
+                Vector2f lp4 = new Vector2f(jNext.x + o2.x, jNext.y + o2.y);
+
+                joints[j] = computeLineIntersection(lp1, lp2, lp3, lp4);
             }
 
-            List<Vertex> jointPolygon = new ArrayList<>();
-            switch (jointType) {
-                case NONE ->
-                        createPolygonTriangulator(vertexList, indexList, List.of(
-                                current.copy().moveXYZ(nx[i], ny[i], current.z),
-                                current.copy().moveXYZ(-nx[i], -ny[i], current.z),
-                                next.copy().moveXYZ(-nx[i], -ny[i], next.z),
-                                next.copy().moveXYZ(nx[i], ny[i], next.z)
-                        ).toArray(new Vertex[0]));
-                case MITER -> {
-                    Vertex baseMiter1;
-                    Vertex baseMiter2;
-                    jointPolygon.add(current.copy());
-                    if (signs[iCurrent] == 1f) {
-                        baseMiter1 = v2.copy();
-                        jointPolygon.add(baseMiter1);
-                    } else {
-                        baseMiter1 = v1.copy();
-                        jointPolygon.add(baseMiter1);
-                    }
-                    if (signs[iCurrent] == 1f) {
-                        baseMiter2 = v5.copy();
-                        jointPolygon.add(baseMiter2);
-                    } else {
-                        baseMiter2 = v6.copy();
-                        jointPolygon.add(baseMiter2);
-                    }
-                    createPolygonTriangulator(vertexList, indexList, jointPolygon.toArray(new Vertex[0]));
+            for (int i = 0; i < n; i++) {
+                Vertex prev = getVertex(numPolygonVertex, i - 1);
+                Vertex current = getVertex(numPolygonVertex, i);
+                Vertex next = getVertex(numPolygonVertex, i + 1);
 
+                int iPrev = getNormalIndex(numPolygonVertex.size(), i - 1);
+                int iCurrent = getNormalIndex(numPolygonVertex.size(), i);
+                int iNext = getNormalIndex(numPolygonVertex.size(), i + 1);
+
+                JointType jointType = strokeJointType;
+                if (jointType == JointType.MITER) {
                     Vector2f joint = joints[iCurrent];
-                    if (joint != null) {
-                        createPolygonTriangulator(
+                    float jx = joint.x - current.x;
+                    float jy = joint.y - current.y;
+                    float miterLength = sqrt(jx * jx + jy * jy) * 2f;
+                    if (miterLength / strokeWidth > POLYGON_TRIANGULATOR_MITER_LIMIT) {
+                        jointType = JointType.BEVEL;
+                    }
+                }
+
+                float[] miter1 = calcMiter(nx[iPrev], ny[iPrev], nx[i], ny[i]);
+                float[] miter2 = calcMiter(nx[i], ny[i], nx[iNext], ny[iNext]);
+
+                Vertex p1 = current.copy().moveXYZ(miter1[0], miter1[1], current.z);
+                Vertex p2 = current.copy().moveXYZ(-miter1[0], -miter1[1], current.z);
+                Vertex p3 = next.copy().moveXYZ(-miter2[0], -miter2[1], next.z);
+                Vertex p4 = next.copy().moveXYZ(miter2[0], miter2[1], next.z);
+                Vertex v1 = current.copy().moveXYZ(nx[iCurrent], ny[iCurrent], current.z);
+                Vertex v2 = current.copy().moveXYZ(-nx[iCurrent], -ny[iCurrent], current.z);
+                Vertex v3 = next.copy().moveXYZ(-nx[iCurrent], -ny[iCurrent], next.z);
+                Vertex v4 = next.copy().moveXYZ(nx[iCurrent], ny[iCurrent], next.z);
+                Vertex v5 = current.copy().moveXYZ(-nx[iPrev], -ny[iPrev], prev.z);
+                Vertex v6 = current.copy().moveXYZ(nx[iPrev], ny[iPrev], prev.z);
+                if (jointType != JointType.NONE) {
+                    List<Vertex> linePolygon = new ArrayList<>();
+                    if (signs[iCurrent] == -1f) {
+                        linePolygon.add(v1.copy());
+                        linePolygon.add(current.copy());
+                        linePolygon.add(p2.copy());
+                    } else {
+                        linePolygon.add(p1.copy());
+                        linePolygon.add(current.copy());
+                        linePolygon.add(v2.copy());
+                    }
+
+                    if (signs[iNext] == -1f) {
+                        linePolygon.add(p3.copy());
+                        linePolygon.add(next.copy());
+                        linePolygon.add(v4.copy());
+                    } else {
+                        linePolygon.add(v3.copy());
+                        linePolygon.add(next.copy());
+                        linePolygon.add(p4.copy());
+                    }
+
+                    createPolygonTriangulator(vertexList, indexList, false, linePolygon.toArray(new Vertex[0]));
+                }
+
+                List<Vertex> jointPolygon = new ArrayList<>();
+                switch (jointType) {
+                    case NONE ->
+                            createPolygonTriangulator(vertexList, indexList, false, List.of(
+                                    current.copy().moveXYZ(nx[i], ny[i], current.z),
+                                    current.copy().moveXYZ(-nx[i], -ny[i], current.z),
+                                    next.copy().moveXYZ(-nx[i], -ny[i], next.z),
+                                    next.copy().moveXYZ(nx[i], ny[i], next.z)
+                            ).toArray(new Vertex[0]));
+                    case MITER -> {
+                        Vertex baseMiter1;
+                        Vertex baseMiter2;
+                        jointPolygon.add(current.copy());
+                        if (signs[iCurrent] == 1f) {
+                            baseMiter1 = v2.copy();
+                            jointPolygon.add(baseMiter1);
+                        } else {
+                            baseMiter1 = v1.copy();
+                            jointPolygon.add(baseMiter1);
+                        }
+                        if (signs[iCurrent] == 1f) {
+                            baseMiter2 = v5.copy();
+                            jointPolygon.add(baseMiter2);
+                        } else {
+                            baseMiter2 = v6.copy();
+                            jointPolygon.add(baseMiter2);
+                        }
+                        createPolygonTriangulator(vertexList, indexList, false, jointPolygon.toArray(new Vertex[0]));
+
+                        Vector2f joint = joints[iCurrent];
+                        if (joint != null) {
+                            createPolygonTriangulator(
+                                    vertexList,
+                                    indexList,
+                                    false,
+                                    List.of(
+                                            baseMiter1.copy(),
+                                            baseMiter2.copy(),
+                                            current.copy().replaceXYZ(joint.x, joint.y, current.z)
+                                    ).toArray(new Vertex[0])
+                            );
+                        }
+                    }
+                    case BEVEL -> {
+                        jointPolygon.add(current.copy());
+                        if (signs[iCurrent] == 1f) {
+                            jointPolygon.add(v2.copy());
+                        } else {
+                            jointPolygon.add(v1.copy());
+                        }
+                        if (signs[iCurrent] == 1f) {
+                            jointPolygon.add(v5.copy());
+                        } else {
+                            jointPolygon.add(v6.copy());
+                        }
+
+                        createPolygonTriangulator(vertexList, indexList, false, jointPolygon.toArray(new Vertex[0]));
+                    }
+                    case ROUND, ROUND_START, ROUND_END, ROUND_START_END -> {
+                        Vertex baseMiter1;
+                        Vertex baseMiter2;
+                        Vertex center = current.copy();
+                        if (signs[iCurrent] == 1f) {
+                            baseMiter2 = v2.copy();
+                            baseMiter1 = v5.copy();
+                        } else {
+                            baseMiter1 = v1.copy();
+                            baseMiter2 = v6.copy();
+                        }
+
+                        float startAngle = atan2(baseMiter1.y - center.y, baseMiter1.x - center.x);
+                        float endAngle = atan2(baseMiter2.y - center.y, baseMiter2.x - center.x);
+
+                        float startDegrees = toDegrees(startAngle);
+                        float endDegrees = toDegrees(endAngle);
+                        float normalizedEnd = endDegrees;
+                        while (normalizedEnd < startDegrees) {
+                            normalizedEnd += 360f;
+                        }
+
+                        float spanAngle = normalizedEnd - startDegrees;
+                        int fullSegments = calculateSegmentCount(strokeWidth);
+                        int segmentCount = max(1, round(fullSegments * (spanAngle / 360f)));
+                        makeCircle(
                                 vertexList,
                                 indexList,
-                                List.of(
-                                        baseMiter1.copy(),
-                                        baseMiter2.copy(),
-                                        current.copy().replaceXYZ(joint.x, joint.y, current.z)
-                                ).toArray(new Vertex[0])
+                                center.copy(),
+                                startDegrees,
+                                endDegrees,
+                                strokeWidth / 2f,
+                                strokeWidth / 2f,
+                                segmentCount,
+                                false,
+                                Color.of(current.getColors())
                         );
                     }
+                    default ->
+                            throw new IllegalStateException("Unexpected value: " + jointType);
                 }
-                case BEVEL -> {
-                    jointPolygon.add(current.copy());
-                    if (signs[iCurrent] == 1f) {
-                        jointPolygon.add(v2.copy());
-                    } else {
-                        jointPolygon.add(v1.copy());
-                    }
-                    if (signs[iCurrent] == 1f) {
-                        jointPolygon.add(v5.copy());
-                    } else {
-                        jointPolygon.add(v6.copy());
-                    }
-
-                    createPolygonTriangulator(vertexList, indexList, jointPolygon.toArray(new Vertex[0]));
-                }
-                case ROUND, ROUND_START, ROUND_END, ROUND_START_END -> {
-                    Vertex baseMiter1;
-                    Vertex baseMiter2;
-                    Vertex center = current.copy();
-                    if (signs[iCurrent] == 1f) {
-                        baseMiter2 = v2.copy();
-                        baseMiter1 = v5.copy();
-                    } else {
-                        baseMiter1 = v1.copy();
-                        baseMiter2 = v6.copy();
-                    }
-
-                    float startAngle = atan2(baseMiter1.y - center.y, baseMiter1.x - center.x);
-                    float endAngle = atan2(baseMiter2.y - center.y, baseMiter2.x - center.x);
-
-                    float startDegrees = toDegrees(startAngle);
-                    float endDegrees = toDegrees(endAngle);
-                    float normalizedEnd = endDegrees;
-                    while (normalizedEnd < startDegrees) {
-                        normalizedEnd += 360f;
-                    }
-
-                    float spanAngle = normalizedEnd - startDegrees;
-                    int fullSegments = calculateSegmentCount(strokeWidth);
-                    int segmentCount = max(1, round(fullSegments * (spanAngle / 360f)));
-                    makeCircle(
-                            vertexList,
-                            indexList,
-                            center.copy(),
-                            startDegrees,
-                            endDegrees,
-                            strokeWidth / 2f,
-                            strokeWidth / 2f,
-                            segmentCount,
-                            false,
-                            Color.of(current.getColors())
-                    );
-                }
-                default ->
-                        throw new IllegalStateException("Unexpected value: " + jointType);
             }
         }
     }
@@ -541,7 +561,7 @@ public class Test2PolygonTriangulator {
                     }
                 }
 
-                createPolygonTriangulator(vertexList, indexList, linePolygon.toArray(new Vertex[0]));
+                createPolygonTriangulator(vertexList, indexList, false, linePolygon.toArray(new Vertex[0]));
             }
 
             List<Vertex> jointPolygon = new ArrayList<>();
@@ -550,7 +570,7 @@ public class Test2PolygonTriangulator {
             }
             switch (jointType) {
                 case NONE ->
-                        createPolygonTriangulator(vertexList, indexList, List.of(
+                        createPolygonTriangulator(vertexList, indexList, false, List.of(
                                 current.copy().moveXYZ(nx[i], ny[i], current.z),
                                 current.copy().moveXYZ(-nx[i], -ny[i], current.z),
                                 next.copy().moveXYZ(-nx[i], -ny[i], next.z),
@@ -574,13 +594,14 @@ public class Test2PolygonTriangulator {
                         baseMiter2 = v6.copy();
                         jointPolygon.add(baseMiter2);
                     }
-                    createPolygonTriangulator(vertexList, indexList, jointPolygon.toArray(new Vertex[0]));
+                    createPolygonTriangulator(vertexList, indexList, false, jointPolygon.toArray(new Vertex[0]));
 
                     Vector2f joint = joints[iCurrent];
                     if (joint != null) {
                         createPolygonTriangulator(
                                 vertexList,
                                 indexList,
+                                false,
                                 List.of(
                                         baseMiter1.copy(),
                                         baseMiter2.copy(),
@@ -602,7 +623,7 @@ public class Test2PolygonTriangulator {
                         jointPolygon.add(v6.copy());
                     }
 
-                    createPolygonTriangulator(vertexList, indexList, jointPolygon.toArray(new Vertex[0]));
+                    createPolygonTriangulator(vertexList, indexList, false, jointPolygon.toArray(new Vertex[0]));
                 }
                 case ROUND, ROUND_START, ROUND_END, ROUND_START_END -> {
                     if (i == 0 && (jointType == JointType.ROUND_START || jointType == JointType.ROUND_START_END)) {
@@ -762,7 +783,7 @@ public class Test2PolygonTriangulator {
                 );
             }
 
-            createPolygonTriangulator(vertexList, indexList, List.of(
+            createPolygonTriangulator(vertexList, indexList, false, List.of(
                     current.copy().moveXYZ(nx[i], ny[i], current.z),
                     current.copy().moveXYZ(-nx[i], -ny[i], current.z),
                     next.copy().moveXYZ(-nx[i], -ny[i], next.z),
@@ -904,6 +925,10 @@ public class Test2PolygonTriangulator {
         return vertices[((index % vertices.length) + vertices.length) % vertices.length];
     }
 
+    private Vertex getVertex(List<Vertex> vertices, int index) {
+        return vertices.get(((index % vertices.size()) + vertices.size()) % vertices.size());
+    }
+
     private int getNormalIndex(int length, int index) {
         return ((index % length) + length) % length;
     }
@@ -933,18 +958,42 @@ public class Test2PolygonTriangulator {
     }
 
 
-    private void createPolygonTriangulator(List<Vertex> vertexList, List<Integer> indexList, Vertex... vertices) {
-        Triangulator triangulator = new Triangulator(List.of(vertices));
-        List<Triangle> result = triangulator.triangulate();
-        for (Triangle t : result) {
-            int base = vertexList.size();
-            vertexList.add(t.a);
-            vertexList.add(t.b);
-            vertexList.add(t.c);
+    private void createPolygonTriangulator(List<Vertex> vertexList, List<Integer> indexList, boolean useNullVertex, Vertex... vertices) {
+        List<List<Vertex>> numPolygonVertices = new ArrayList<>();
+        List<Vertex> numVertices = new ArrayList<>();
+        if (useNullVertex) {
+            for (Vertex vertex : vertices) {
+                if (vertex.isNullVertex()) {
+                    if (numVertices.size() < 3) {
+                        throw new PolygonTriangulatorException("DrawType.LINE_LOOP requires at least three vertices. but current count is " + numVertices.size() + ". Polygon count is " + numPolygonVertices.size());
+                    }
 
-            indexList.add(base);
-            indexList.add(base + 1);
-            indexList.add(base + 2);
+                    numPolygonVertices.add(new ArrayList<>(numVertices));
+                    numVertices.clear();
+
+                    continue;
+                }
+
+                numVertices.add(vertex.copy());
+            }
+        } else {
+            numPolygonVertices.add(List.of(vertices));
+        }
+
+
+        for (List<Vertex> numPolygonVertex : numPolygonVertices) {
+            Triangulator triangulator = new Triangulator(numPolygonVertex);
+            List<Triangle> result = triangulator.triangulate();
+            for (Triangle t : result) {
+                int base = vertexList.size();
+                vertexList.add(t.a);
+                vertexList.add(t.b);
+                vertexList.add(t.c);
+
+                indexList.add(base);
+                indexList.add(base + 1);
+                indexList.add(base + 2);
+            }
         }
     }
 
@@ -960,9 +1009,9 @@ public class Test2PolygonTriangulator {
 
                     switch (paintType) {
                         case FILL ->
-                                createPolygonTriangulator(vertexList, indexList, v1, v2, v3, v4);
+                                createPolygonTriangulator(vertexList, indexList, false, v1, v2, v3, v4);
                         case STROKE ->
-                                createLineLoopTriangulator(vertexList, indexList, v1, v2, v3, v4);
+                                createLineLoopTriangulator(vertexList, indexList, false, v1, v2, v3, v4);
                         default ->
                                 throw new IllegalStateException("Unexpected value: " + paintType);
                     }
@@ -1050,7 +1099,7 @@ public class Test2PolygonTriangulator {
             if (outlineVertices.size() >= 2) {
                 if (isFullCircle) {
                     outlineVertices.removeLast();
-                    createLineLoopTriangulator(vertexList, indexList, outlineVertices.toArray(new Vertex[0]));
+                    createLineLoopTriangulator(vertexList, indexList, false, outlineVertices.toArray(new Vertex[0]));
                 } else {
                     createLineStripTriangulator(vertexList, indexList, outlineVertices.toArray(new Vertex[0]));
                 }

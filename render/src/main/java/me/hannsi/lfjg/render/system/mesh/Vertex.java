@@ -12,6 +12,7 @@ import static me.hannsi.lfjg.render.RenderSystemSetting.VERTEX_DEFAULT_COLOR;
 
 public class Vertex implements Cleanup {
     public static final long BYTES = 3 * Float.BYTES + 4 * Float.BYTES + 2 * Float.BYTES + 3 * Float.BYTES;
+    public boolean nullVertex;
     public float x;
     public float y;
     public float z;
@@ -25,7 +26,8 @@ public class Vertex implements Cleanup {
     public float normalsY;
     public float normalsZ;
 
-    public Vertex(float x, float y, float z, float red, float green, float blue, float alpha, float u, float v, float normalsX, float normalsY, float normalsZ) {
+    public Vertex(boolean nullVertex, float x, float y, float z, float red, float green, float blue, float alpha, float u, float v, float normalsX, float normalsY, float normalsZ) {
+        this.nullVertex = nullVertex;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -38,6 +40,10 @@ public class Vertex implements Cleanup {
         this.normalsX = normalsX;
         this.normalsY = normalsY;
         this.normalsZ = normalsZ;
+    }
+
+    public Vertex(float x, float y, float z, float red, float green, float blue, float alpha, float u, float v, float normalsX, float normalsY, float normalsZ) {
+        this(false, x, y, z, red, green, blue, alpha, u, v, normalsX, normalsY, normalsZ);
     }
 
     public Vertex(float x, float y, float z, Color color, float u, float v, float normalsX, float normalsY, float normalsZ) {
@@ -70,6 +76,10 @@ public class Vertex implements Cleanup {
 
     public Vertex(float x, float y) {
         this(x, y, 0);
+    }
+
+    public Vertex() {
+        this(true, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     }
 
     public Vertex add(Vertex other) {
@@ -155,19 +165,22 @@ public class Vertex implements Cleanup {
         return this;
     }
 
-    public float cross(Vertex a, Vertex b) {
-        return (a.x - x) * (b.y - y) - (a.y - y) * (b.x - x);
+    public boolean isNullVertex() {
+        return nullVertex;
     }
 
-    public float distanceSqrt(Vertex other) {
-        float dx = x - other.x;
-        float dy = y - other.y;
+    public Vertex setNullVertex(boolean nullVertex) {
+        this.nullVertex = nullVertex;
 
-        return dx * dx + dy * dy;
+        return this;
     }
 
     public float[] getPositions() {
         return new float[]{x, y, z};
+    }
+
+    public Color getColor() {
+        return Color.of(red, green, blue, alpha);
     }
 
     public float[] getColors() {
@@ -209,7 +222,8 @@ public class Vertex implements Cleanup {
 
         Vertex other = (Vertex) obj;
 
-        return Float.compare(other.x, x) == 0 &&
+        return Boolean.compare(other.nullVertex, nullVertex) == 0 &&
+                Float.compare(other.x, x) == 0 &&
                 Float.compare(other.y, y) == 0 &&
                 Float.compare(other.z, z) == 0 &&
                 Float.compare(other.red, red) == 0 &&
@@ -225,7 +239,8 @@ public class Vertex implements Cleanup {
 
     @Override
     public int hashCode() {
-        int result = Float.hashCode(x);
+        int result = Boolean.hashCode(nullVertex);
+        result = 31 * result + Float.hashCode(x);
         result = 31 * result + Float.hashCode(y);
         result = 31 * result + Float.hashCode(z);
         result = 31 * result + Float.hashCode(red);
@@ -243,11 +258,12 @@ public class Vertex implements Cleanup {
 
     @Override
     public String toString() {
-        return "Vertex{pos=(" + x + ", " + y + ", " + z + ") color=(" + red + ", " + green + ", " + blue + ", " + alpha + ") uv=(" + u + ", " + v + ") normal=(" + normalsX + ", " + normalsY + ", " + normalsZ + ")}";
+        return "Vertex{nullVertex=(" + nullVertex + ") pos=(" + x + ", " + y + ", " + z + ") color=(" + red + ", " + green + ", " + blue + ", " + alpha + ") uv=(" + u + ", " + v + ") normal=(" + normalsX + ", " + normalsY + ", " + normalsZ + ")}";
     }
 
     @Override
     public boolean cleanup(CleanupEvent event) {
+        nullVertex = false;
         x = 0;
         y = 0;
         z = 0;
@@ -262,6 +278,7 @@ public class Vertex implements Cleanup {
         normalsZ = 0;
 
         return event.debug(Vertex.class, new CleanupEvent.CleanupData("Vertex")
+                .addData("nullVertex", !nullVertex, nullVertex)
                 .addData("x", x == 0, x)
                 .addData("y", y == 0, y)
                 .addData("z", z == 0, z)
