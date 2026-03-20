@@ -1,16 +1,19 @@
 package me.hannsi.lfjg.render.renderers.polygon;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
-import me.hannsi.lfjg.core.utils.math.MathHelper;
+import me.hannsi.lfjg.core.utils.math.animation.BezierPoint;
+import me.hannsi.lfjg.core.utils.math.animation.MultiBezierEasing;
+import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
-import org.joml.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GLBezierLine extends GLPolygon<GLBezierLine> {
-    public static final int DEFAULT_SEGMENT = 16;
+import static me.hannsi.lfjg.core.utils.math.MathHelper.*;
+import static me.hannsi.lfjg.render.RenderSystemSetting.*;
 
+public class GLBezierLine extends GLObject<GLBezierLine> {
     private final Builder builder;
 
     public GLBezierLine(String name, Builder builder) {
@@ -22,121 +25,107 @@ public class GLBezierLine extends GLPolygon<GLBezierLine> {
         return new Builder(name);
     }
 
+    @Override
     public GLBezierLine update() {
-        if (builder.bezierPoints.size() < 2) {
-            throw new IllegalArgumentException("There are too few control points. current: " + builder.bezierPoints.size() + " | need: 3");
+        List<Vertex> controlPoints = builder.controlPoints;
+        int n = controlPoints.size();
+
+        BezierPoint[] bezierPoints = new BezierPoint[n];
+        Color[] colors = new Color[n];
+
+        for (int i = 0; i < n; i++) {
+            Vertex vertex = controlPoints.get(i);
+            bezierPoints[i] = new BezierPoint(vertex.x, vertex.y, vertex.z);
+            colors[i] = vertex.getColor();
         }
 
-        BezierPoint[] bezierPoints = new BezierPoint[builder.bezierPoints.size()];
-        for (int i = 0; i < builder.bezierPoints.size(); i++) {
-            bezierPoints[i] = builder.bezierPoints.get(i);
+        MultiBezierEasing easing = new MultiBezierEasing(bezierPoints);
+
+        int segment = builder.segment;
+        int numPoints = segment + 1;
+        for (int i = 0; i < numPoints; i++) {
+            float t = i / (float) segment;
+
+            BezierPoint point = easing.evaluateDeCasteljau(t);
+            Color color = lerpColor(colors, t);
+
+            put().position(point.coords[0], point.coords[1], point.coords[2]).color(color).end();
         }
 
-        BezierPoint prev = computeBezierPoint(0f, bezierPoints);
-        for (int i = 1; i <= builder.segment; i++) {
-            float t = (float) i / builder.segment;
-            BezierPoint current = computeBezierPoint(t, bezierPoints);
+        drawType(DrawType.LINE_STRIP);
 
-            put().position(prev.pos).color(prev.color).end();
-            put().position(current.pos).color(current.color).end();
-
-            prev = current;
-        }
-
-        drawType(DrawType.LINES).lineWidth(builder.lineWidth);
-        rendering();
-
-        return this;
+        return super.update();
     }
 
-    private BezierPoint computeBezierPoint(float t, BezierPoint[] points) {
-        if (points.length == 1) {
-            return points[0];
-        }
+    public interface BezierPointStep<T> {
+        BezierPointStep<T> addControlPoint(Vertex controlPoint);
 
-        BezierPoint[] nextPoints = new BezierPoint[points.length - 1];
-        for (int i = 0; i < points.length - 1; i++) {
-            Vector2f pos = MathHelper.lerpVertex2f(points[i].pos, points[i + 1].pos, t);
-            Color color = MathHelper.lerpColor(points[i].color, points[i + 1].color, t);
-            nextPoints[i] = new BezierPoint(pos, color);
-        }
-
-        return computeBezierPoint(t, nextPoints);
+        SegmentStep<T> end();
     }
 
-    public interface BezierPointStep {
-        BezierPointStep addControlPoint(BezierPoint bezierPoint);
+    public interface SegmentStep<T> {
+        StrokeJointTypeStep<T> segment();
 
-        SegmentStep end();
+        StrokeJointTypeStep<T> segment(int segment);
     }
 
-    public interface SegmentStep {
-        LineWidthStep segment();
-
-        LineWidthStep segment(int segment);
-    }
-
-    public interface LineWidthStep {
-        GLBezierLine lineWidth(float lineWidth);
-    }
-
-    public static class BezierPoint {
-        public Vector2f pos;
-        public Color color;
-
-        public BezierPoint(Vector2f pos, Color color) {
-            this.pos = pos;
-            this.color = color;
-        }
-    }
-
-    public static class Builder implements BezierPointStep, SegmentStep, LineWidthStep {
+    public static class Builder extends AbstractGLObjectBuilder<GLBezierLine> implements BezierPointStep<GLBezierLine>, SegmentStep<GLBezierLine> {
         protected final String name;
-        protected List<BezierPoint> bezierPoints;
+        protected List<Vertex> controlPoints;
         protected int segment;
-        protected float lineWidth;
 
         private GLBezierLine glBezierLine;
 
         public Builder(String name) {
             this.name = name;
-            this.bezierPoints = new ArrayList<>();
+            this.controlPoints = new ArrayList<>();
         }
 
         @Override
-        public BezierPointStep addControlPoint(BezierPoint bezierPoint) {
-            this.bezierPoints.add(bezierPoint);
+        public BezierPointStep<GLBezierLine> addControlPoint(Vertex controlPoint) {
+            this.controlPoints.add(controlPoint);
 
             return this;
         }
 
         @Override
-        public SegmentStep end() {
+        public SegmentStep<GLBezierLine> end() {
             return this;
         }
 
         @Override
-        public LineWidthStep segment() {
-            this.segment = DEFAULT_SEGMENT;
+        public StrokeJointTypeStep<GLBezierLine> segment() {
+            int n = controlPoints.size();
+            if (n < 2) {
+                segment = GL_BEZIER_LINE_MIN_SEGMENT;
+                return this;
+            }
+
+            float polygonLineLength = 0f;
+            for (int i = 0; i < n - 1; i++) {
+                polygonLineLength += distance(controlPoints.get(i).toVector2f(), controlPoints.get(i + 1).toVector2f());
+            }
+
+            float chordLength = distance(controlPoints.getFirst().toVector2f(), controlPoints.get(n - 1).toVector2f());
+
+            float curvatureRatio = (chordLength > 0f) ? polygonLineLength / chordLength : 1f;
+
+            int s = round(polygonLineLength * GL_BEZIER_LINE_SEGMENTS_PER_UNIT * curvatureRatio);
+
+            segment = max(GL_BEZIER_LINE_MIN_SEGMENT, min(GL_BEZIER_LINE_MAX_SEGMENT, s));
 
             return this;
         }
 
         @Override
-        public LineWidthStep segment(int segment) {
+        public StrokeJointTypeStep<GLBezierLine> segment(int segment) {
             this.segment = segment;
 
             return this;
         }
 
         @Override
-        public GLBezierLine lineWidth(float lineWidth) {
-            this.lineWidth = lineWidth;
-
-            return build();
-        }
-
-        private GLBezierLine build() {
+        protected GLBezierLine createOrGet() {
             if (glBezierLine == null) {
                 return glBezierLine = new GLBezierLine(name, this);
             } else {

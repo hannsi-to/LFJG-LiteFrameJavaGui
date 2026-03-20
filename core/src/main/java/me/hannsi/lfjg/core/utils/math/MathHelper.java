@@ -762,6 +762,27 @@ public class MathHelper {
         return new Color(r, g, b, a);
     }
 
+    public static Color lerpColor(Color[] colors, float t) {
+        if (colors.length == 1) {
+            return colors[0];
+        }
+
+        float scaled = t * (colors.length - 1);
+        int lo = (int) floor(scaled);
+        int hi = min(lo + 1, colors.length - 1);
+        float frac = scaled - lo;
+
+        Color a = colors[lo];
+        Color b = colors[hi];
+
+        return new Color(
+                a.getRedF() + (b.getRedF() - a.getRedF()) * frac,
+                a.getGreenF() + (b.getGreenF() - a.getGreenF()) * frac,
+                a.getBlueF() + (b.getBlueF() - a.getBlueF()) * frac,
+                a.getAlphaF() + (b.getAlphaF() - a.getAlphaF()) * frac
+        );
+    }
+
     public static Vector2f lerpVertex2f(Vector2f a, Vector2f b, float t) {
         float x = a.x + t * (b.x - a.x);
         float y = a.y + t * (b.y - a.y);

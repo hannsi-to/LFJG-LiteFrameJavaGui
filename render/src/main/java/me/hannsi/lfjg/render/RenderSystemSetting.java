@@ -24,6 +24,10 @@ public class RenderSystemSetting {
 
     public static float GL_OBJECT_POOL_REMOVE_RATIO_THRESHOLD = 0.3f;
 
+    public static int GL_BEZIER_LINE_MIN_SEGMENT = 4;
+    public static int GL_BEZIER_LINE_MAX_SEGMENT = 64;
+    public static float GL_BEZIER_LINE_SEGMENTS_PER_UNIT = 0.5f;
+
     public static int LFJG_RENDER_CONTEXT_INITIAL_VBO_CAPACITY = 40960;
     public static int LFJG_RENDER_CONTEXT_INITIAL_EBO_CAPACITY = 32000;
     public static int LFJG_RENDER_CONTEXT_INITIAL_IBO_CAPACITY = 4096;
