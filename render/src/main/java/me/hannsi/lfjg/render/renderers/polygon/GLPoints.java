@@ -40,10 +40,14 @@ public class GLPoints extends GLObject<GLPoints> {
         return super.update();
     }
 
-    public interface VertexDataStep<T> {
-        VertexDataStep<T> vertex(Vertex vertex);
+    public interface VertexData1Step<T> {
+        VertexDataStep<T> addVertex1(Vertex vertex);
+    }
 
-        PointTypeStep<T> vertex_end(Vertex vertex);
+    public interface VertexDataStep<T> {
+        VertexDataStep<T> addVertex(Vertex vertex);
+
+        PointTypeStep<T> end();
     }
 
     public interface PointTypeStep<T> {
@@ -54,45 +58,43 @@ public class GLPoints extends GLObject<GLPoints> {
         PaintTypeStep<T> pointSize(float pointSize);
     }
 
-    public static class Builder extends AbstractGLObjectBuilder<GLPoints> implements VertexDataStep<GLPoints>, PointTypeStep<GLPoints>, PointSizeStep<GLPoints> {
+    public static class Builder extends AbstractGLObjectBuilder<GLPoints> implements VertexData1Step<GLPoints>, VertexDataStep<GLPoints>, PointTypeStep<GLPoints>, PointSizeStep<GLPoints> {
         private final String name;
-        private final List<Vertex> vertices;
+        private final List<Vertex> vertices = new ArrayList<>();
         private PointType pointType;
         private float pointSize;
-
         private GLPoints glPoints;
 
         public Builder(String name) {
             this.name = name;
-
-            this.vertices = new ArrayList<>();
         }
 
         @Override
-        public VertexDataStep<GLPoints> vertex(Vertex vertex) {
+        public VertexDataStep<GLPoints> addVertex1(Vertex vertex) {
             this.vertices.add(vertex);
-
             return this;
         }
 
         @Override
-        public PointTypeStep<GLPoints> vertex_end(Vertex vertex) {
+        public VertexDataStep<GLPoints> addVertex(Vertex vertex) {
             this.vertices.add(vertex);
-
             return this;
         }
 
         @Override
-        public PaintTypeStep<GLPoints> pointSize(float pointSize) {
-            this.pointSize = pointSize;
-
+        public PointTypeStep<GLPoints> end() {
             return this;
         }
 
         @Override
         public PointSizeStep<GLPoints> pointType(PointType pointType) {
             this.pointType = pointType;
+            return this;
+        }
 
+        @Override
+        public PaintTypeStep<GLPoints> pointSize(float pointSize) {
+            this.pointSize = pointSize;
             return this;
         }
 

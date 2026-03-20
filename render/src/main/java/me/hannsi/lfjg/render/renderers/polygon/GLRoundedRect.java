@@ -18,7 +18,7 @@ public class GLRoundedRect extends GLObject<GLRoundedRect> {
         this.builder = builder;
     }
 
-    public static VertexData1Step<GLRoundedRect> createRoundedRect(String name) {
+    public static RectInputStep<GLRoundedRect> createRoundedRect(String name) {
         return new Builder(name);
     }
 
@@ -68,6 +68,8 @@ public class GLRoundedRect extends GLObject<GLRoundedRect> {
 
                 makeCorner(prev, current, next, corner);
             }
+
+            put(new Vertex()).end();
         }
 
         switch (builder.paintType) {
@@ -291,121 +293,106 @@ public class GLRoundedRect extends GLObject<GLRoundedRect> {
         return super.getObjectId();
     }
 
-    public interface VertexData1Step<T> {
-        VertexData2Step<T> vertex1(Vertex vertex1, Corner corner1);
+    public interface RectInputStep<T> {
+        DiagonalStep<T> from(Vertex vertex, Corner corner);
 
-        VertexData22pStep<T> vertex1_2p(Vertex vertex1, Corner corner1);
+        Vertex2Step<T> vertex1(Vertex vertex, Corner corner);
     }
 
-    public interface VertexData2Step<T> {
-        VertexData3Step<T> vertex2(Vertex vertex2, Corner corner2);
+    public interface DiagonalStep<T> {
+        RectInputStep<T> to(Vertex vertex, Corner corner);
+
+        PaintTypeStep<T> end(Vertex vertex, Corner corner);
     }
 
-    public interface VertexData22pStep<T> {
-        VertexData1Step<T> vertex2_2p(Vertex vertex2, Corner corner2);
-
-        PaintTypeStep<T> vertex2_2p_end(Vertex vertex2, Corner corner2);
+    public interface Vertex2Step<T> {
+        Vertex3Step<T> vertex2(Vertex vertex, Corner corner);
     }
 
-    public interface VertexData3Step<T> {
-        VertexData4Step<T> vertex3(Vertex vertex3, Corner corner3);
+    public interface Vertex3Step<T> {
+        Vertex4Step<T> vertex3(Vertex vertex, Corner corner);
     }
 
-    public interface VertexData4Step<T> {
-        VertexData1Step<T> vertex4(Vertex vertex4, Corner corner4);
+    public interface Vertex4Step<T> {
+        RectInputStep<T> vertex4(Vertex vertex, Corner corner);
 
-        PaintTypeStep<T> vertex4_end(Vertex vertex4, Corner corner4);
+        PaintTypeStep<T> end(Vertex vertex, Corner corner);
     }
 
-    public static class Builder extends AbstractGLObjectBuilder<GLRoundedRect> implements VertexData1Step<GLRoundedRect>, VertexData2Step<GLRoundedRect>, VertexData22pStep<GLRoundedRect>, VertexData3Step<GLRoundedRect>, VertexData4Step<GLRoundedRect> {
+    public static class Builder extends AbstractGLObjectBuilder<GLRoundedRect> implements RectInputStep<GLRoundedRect>, DiagonalStep<GLRoundedRect>, Vertex2Step<GLRoundedRect>, Vertex3Step<GLRoundedRect>, Vertex4Step<GLRoundedRect> {
         private final String name;
-        private final List<Vertex> vertices;
-        private final List<Corner> corners;
-        private Vertex lastVertex2p;
-        private Corner lastCorner2p;
+        private final List<Vertex> vertices = new ArrayList<>();
+        private final List<Corner> corners = new ArrayList<>();
+        private Vertex lastFrom;
+        private Corner lastFromCorner;
 
         private GLRoundedRect glRoundedRect;
 
         public Builder(String name) {
             this.name = name;
-
-            this.vertices = new ArrayList<>();
-            this.corners = new ArrayList<>();
         }
 
         @Override
-        public VertexData2Step<GLRoundedRect> vertex1(Vertex vertex1, Corner corner1) {
-            this.vertices.add(vertex1);
-            this.corners.add(corner1);
+        public DiagonalStep<GLRoundedRect> from(Vertex vertex, Corner corner) {
+            this.lastFrom = vertex;
+            this.lastFromCorner = corner;
+            this.vertices.add(vertex);
+            this.corners.add(corner);
+            return this;
+        }
 
+        private void addDiagonalVertices(Vertex to, Corner toCorner) {
+            vertices.add(lastFrom.copy().setX(to.x));
+            vertices.add(to);
+            vertices.add(lastFrom.copy().setY(to.y));
+
+            corners.add(lastFromCorner.copy());
+            corners.add(toCorner);
+            corners.add(lastFromCorner.copy());
+        }
+
+        @Override
+        public RectInputStep<GLRoundedRect> to(Vertex vertex, Corner corner) {
+            addDiagonalVertices(vertex, corner);
             return this;
         }
 
         @Override
-        public VertexData22pStep<GLRoundedRect> vertex1_2p(Vertex vertex1, Corner corner1) {
-            this.lastVertex2p = vertex1;
-            this.lastCorner2p = corner1;
-            this.vertices.add(vertex1);
-            this.corners.add(corner1);
-
+        public Vertex2Step<GLRoundedRect> vertex1(Vertex vertex, Corner corner) {
+            vertices.add(vertex);
+            corners.add(corner);
             return this;
         }
 
         @Override
-        public VertexData1Step<GLRoundedRect> vertex2_2p(Vertex vertex2, Corner corner2) {
-            this.vertices.add(lastVertex2p.copy().setX(vertex2.x));
-            this.vertices.add(vertex2);
-            this.vertices.add(lastVertex2p.copy().setY(vertex2.y));
-
-            this.corners.add(lastCorner2p.copy());
-            this.corners.add(corner2);
-            this.corners.add(lastCorner2p.copy());
-
+        public Vertex3Step<GLRoundedRect> vertex2(Vertex vertex, Corner corner) {
+            vertices.add(vertex);
+            corners.add(corner);
             return this;
         }
 
         @Override
-        public PaintTypeStep<GLRoundedRect> vertex2_2p_end(Vertex vertex2, Corner corner2) {
-            this.vertices.add(lastVertex2p.copy().setX(vertex2.x));
-            this.vertices.add(vertex2);
-            this.vertices.add(lastVertex2p.copy().setY(vertex2.y));
-
-            this.corners.add(lastCorner2p.copy());
-            this.corners.add(corner2);
-            this.corners.add(lastCorner2p.copy());
-
+        public Vertex4Step<GLRoundedRect> vertex3(Vertex vertex, Corner corner) {
+            vertices.add(vertex);
+            corners.add(corner);
             return this;
         }
 
         @Override
-        public VertexData3Step<GLRoundedRect> vertex2(Vertex vertex2, Corner corner2) {
-            this.vertices.add(vertex2);
-            this.corners.add(corner2);
-
+        public RectInputStep<GLRoundedRect> vertex4(Vertex vertex, Corner corner) {
+            vertices.add(vertex);
+            corners.add(corner);
             return this;
         }
 
         @Override
-        public VertexData4Step<GLRoundedRect> vertex3(Vertex vertex3, Corner corner3) {
-            this.vertices.add(vertex3);
-            this.corners.add(corner3);
-
-            return this;
-        }
-
-        @Override
-        public VertexData1Step<GLRoundedRect> vertex4(Vertex vertex4, Corner corner4) {
-            this.vertices.add(vertex4);
-            this.corners.add(corner4);
-
-            return this;
-        }
-
-        @Override
-        public PaintTypeStep<GLRoundedRect> vertex4_end(Vertex vertex4, Corner corner4) {
-            this.vertices.add(vertex4);
-            this.corners.add(corner4);
-
+        public PaintTypeStep<GLRoundedRect> end(Vertex vertex, Corner corner) {
+            if (lastFrom != null && vertices.size() % 4 == 1) {
+                addDiagonalVertices(vertex, corner);
+            } else {
+                vertices.add(vertex);
+                corners.add(corner);
+            }
             return this;
         }
 

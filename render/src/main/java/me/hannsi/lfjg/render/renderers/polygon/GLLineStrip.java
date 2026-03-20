@@ -31,44 +31,48 @@ public class GLLineStrip extends GLObject<GLLineStrip> {
     }
 
     public interface VertexData1Step<T> {
-        VertexData2Step<T> vertex1(Vertex vertex);
+        VertexData2Step<T> addVertex1(Vertex vertex);
     }
 
     public interface VertexData2Step<T> {
-        VertexData2Step<T> vertex2(Vertex vertex);
-
-        StrokeJointTypeStep<T> vertex2_end(Vertex vertex);
+        VertexDataStep<T> addVertex2(Vertex vertex);
     }
 
-    public static class Builder extends AbstractGLObjectBuilder<GLLineStrip> implements VertexData1Step<GLLineStrip>, VertexData2Step<GLLineStrip> {
-        private final String name;
-        private final List<Vertex> vertices;
+    public interface VertexDataStep<T> {
+        VertexDataStep<T> addVertex(Vertex vertex);
 
+        StrokeJointTypeStep<T> end();
+    }
+
+    public static class Builder extends AbstractGLObjectBuilder<GLLineStrip> implements VertexData1Step<GLLineStrip>, VertexData2Step<GLLineStrip>, VertexDataStep<GLLineStrip> {
+        private final String name;
+        private final List<Vertex> vertices = new ArrayList<>();
         private GLLineStrip glLines;
 
         public Builder(String name) {
             this.name = name;
-            this.vertices = new ArrayList<>();
         }
 
         @Override
-        public VertexData2Step<GLLineStrip> vertex1(Vertex vertex) {
+        public VertexData2Step<GLLineStrip> addVertex1(Vertex vertex) {
             this.vertices.add(vertex);
-
             return this;
         }
 
         @Override
-        public VertexData2Step<GLLineStrip> vertex2(Vertex vertex) {
+        public VertexDataStep<GLLineStrip> addVertex2(Vertex vertex) {
             this.vertices.add(vertex);
-
             return this;
         }
 
         @Override
-        public StrokeJointTypeStep<GLLineStrip> vertex2_end(Vertex vertex) {
+        public VertexDataStep<GLLineStrip> addVertex(Vertex vertex) {
             this.vertices.add(vertex);
+            return this;
+        }
 
+        @Override
+        public StrokeJointTypeStep<GLLineStrip> end() {
             return this;
         }
 

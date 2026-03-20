@@ -37,56 +37,49 @@ public class GLTriangles extends GLObject<GLTriangles> {
     }
 
     public interface VertexData1Step<T> {
-        VertexData2Step<T> vertex1(Vertex vertex1);
+        VertexData2Step<T> addVertex1(Vertex vertex);
     }
 
     public interface VertexData2Step<T> {
-        VertexData3Step<T> vertex2(Vertex vertex2);
+        VertexData3Step<T> addVertex2(Vertex vertex);
     }
 
     public interface VertexData3Step<T> {
-        VertexData1Step<T> vertex3(Vertex vertex3);
+        VertexData2Step<T> addVertex(Vertex vertex);
 
-        PaintTypeStep<T> vertex3_end(Vertex vertex3);
+        PaintTypeStep<T> end(Vertex vertex);
     }
 
     public static class Builder extends AbstractGLObjectBuilder<GLTriangles> implements VertexData1Step<GLTriangles>, VertexData2Step<GLTriangles>, VertexData3Step<GLTriangles> {
         private final String name;
-        private final List<Vertex> vertices;
-
+        private final List<Vertex> vertices = new ArrayList<>();
         private GLTriangles glTriangles;
 
         public Builder(String name) {
             this.name = name;
-
-            this.vertices = new ArrayList<>();
         }
 
         @Override
-        public VertexData2Step<GLTriangles> vertex1(Vertex vertex1) {
-            this.vertices.add(vertex1);
-
+        public VertexData2Step<GLTriangles> addVertex1(Vertex vertex) {
+            this.vertices.add(vertex);
             return this;
         }
 
         @Override
-        public VertexData3Step<GLTriangles> vertex2(Vertex vertex2) {
-            this.vertices.add(vertex2);
-
+        public VertexData3Step<GLTriangles> addVertex2(Vertex vertex) {
+            this.vertices.add(vertex);
             return this;
         }
 
         @Override
-        public VertexData1Step<GLTriangles> vertex3(Vertex vertex3) {
-            this.vertices.add(vertex3);
-
+        public VertexData2Step<GLTriangles> addVertex(Vertex vertex) {
+            this.vertices.add(vertex);
             return this;
         }
 
         @Override
-        public PaintTypeStep<GLTriangles> vertex3_end(Vertex vertex3) {
-            this.vertices.add(vertex3);
-
+        public PaintTypeStep<GLTriangles> end(Vertex vertex) {
+            this.vertices.add(vertex);
             return this;
         }
 

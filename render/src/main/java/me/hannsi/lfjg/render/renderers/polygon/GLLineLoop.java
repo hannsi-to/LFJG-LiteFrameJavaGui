@@ -15,7 +15,7 @@ public class GLLineLoop extends GLObject<GLLineLoop> {
         this.builder = builder;
     }
 
-    public static VertexData1Step<GLLineLoop> createGLLineLoop(String name) {
+    public static VertexDataStep<GLLineLoop> createGLLineLoop(String name) {
         return new Builder(name);
     }
 
@@ -25,50 +25,56 @@ public class GLLineLoop extends GLObject<GLLineLoop> {
             put(vertex).end();
         }
 
+        put(new Vertex()).end();
+
         drawType(DrawType.LINE_LOOP);
 
         return super.update();
     }
 
     public interface VertexData1Step<T> {
-        VertexData2Step<T> vertex1(Vertex vertex);
+        VertexData2Step<T> addVertex1(Vertex vertex);
     }
 
     public interface VertexData2Step<T> {
-        VertexData2Step<T> vertex2(Vertex vertex);
-
-        StrokeJointTypeStep<T> vertex2_end(Vertex vertex);
+        VertexDataStep<T> addVertex2(Vertex vertex);
     }
 
-    public static class Builder extends AbstractGLObjectBuilder<GLLineLoop> implements VertexData1Step<GLLineLoop>, VertexData2Step<GLLineLoop> {
-        private final String name;
-        private final List<Vertex> vertices;
+    public interface VertexDataStep<T> {
+        VertexDataStep<T> addVertex(Vertex vertex);
 
+        StrokeJointTypeStep<T> end();
+    }
+
+    public static class Builder extends AbstractGLObjectBuilder<GLLineLoop> implements VertexData1Step<GLLineLoop>, VertexData2Step<GLLineLoop>, VertexDataStep<GLLineLoop> {
+        private final String name;
+        private final List<Vertex> vertices = new ArrayList<>();
         private GLLineLoop glLines;
 
         public Builder(String name) {
             this.name = name;
-            this.vertices = new ArrayList<>();
         }
 
         @Override
-        public VertexData2Step<GLLineLoop> vertex1(Vertex vertex) {
+        public VertexData2Step<GLLineLoop> addVertex1(Vertex vertex) {
             this.vertices.add(vertex);
-
             return this;
         }
 
         @Override
-        public VertexData2Step<GLLineLoop> vertex2(Vertex vertex) {
+        public VertexDataStep<GLLineLoop> addVertex2(Vertex vertex) {
             this.vertices.add(vertex);
-
             return this;
         }
 
         @Override
-        public StrokeJointTypeStep<GLLineLoop> vertex2_end(Vertex vertex) {
+        public VertexDataStep<GLLineLoop> addVertex(Vertex vertex) {
             this.vertices.add(vertex);
+            return this;
+        }
 
+        @Override
+        public StrokeJointTypeStep<GLLineLoop> end() {
             return this;
         }
 

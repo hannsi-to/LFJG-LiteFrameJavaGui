@@ -57,6 +57,10 @@ public class GLBezierLine extends GLObject<GLBezierLine> {
         return super.update();
     }
 
+    public interface BezierPoint1Step<T> {
+        BezierPointStep<T> addControlPoint1(Vertex controlPoint);
+    }
+
     public interface BezierPointStep<T> {
         BezierPointStep<T> addControlPoint(Vertex controlPoint);
 
@@ -69,22 +73,26 @@ public class GLBezierLine extends GLObject<GLBezierLine> {
         StrokeJointTypeStep<T> segment(int segment);
     }
 
-    public static class Builder extends AbstractGLObjectBuilder<GLBezierLine> implements BezierPointStep<GLBezierLine>, SegmentStep<GLBezierLine> {
+    public static class Builder extends AbstractGLObjectBuilder<GLBezierLine> implements BezierPoint1Step<GLBezierLine>, BezierPointStep<GLBezierLine>, SegmentStep<GLBezierLine> {
         protected final String name;
-        protected List<Vertex> controlPoints;
+        protected List<Vertex> controlPoints = new ArrayList<>();
         protected int segment;
 
         private GLBezierLine glBezierLine;
 
         public Builder(String name) {
             this.name = name;
-            this.controlPoints = new ArrayList<>();
+        }
+
+        @Override
+        public BezierPointStep<GLBezierLine> addControlPoint1(Vertex controlPoint) {
+            this.controlPoints.add(controlPoint);
+            return this;
         }
 
         @Override
         public BezierPointStep<GLBezierLine> addControlPoint(Vertex controlPoint) {
             this.controlPoints.add(controlPoint);
-
             return this;
         }
 
@@ -107,20 +115,16 @@ public class GLBezierLine extends GLObject<GLBezierLine> {
             }
 
             float chordLength = distance(controlPoints.getFirst().toVector2f(), controlPoints.get(n - 1).toVector2f());
-
             float curvatureRatio = (chordLength > 0f) ? polygonLineLength / chordLength : 1f;
-
             int s = round(polygonLineLength * GL_BEZIER_LINE_SEGMENTS_PER_UNIT * curvatureRatio);
 
             segment = max(GL_BEZIER_LINE_MIN_SEGMENT, min(GL_BEZIER_LINE_MAX_SEGMENT, s));
-
             return this;
         }
 
         @Override
         public StrokeJointTypeStep<GLBezierLine> segment(int segment) {
             this.segment = segment;
-
             return this;
         }
 

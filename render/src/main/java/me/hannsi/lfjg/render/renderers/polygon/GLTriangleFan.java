@@ -37,56 +37,48 @@ public class GLTriangleFan extends GLObject<GLTriangleFan> {
     }
 
     public interface VertexData1Step<T> {
-        VertexData2Step<T> vertex1(Vertex vertex1);
+        VertexData2Step<T> vertex1(Vertex vertex);
     }
 
     public interface VertexData2Step<T> {
-        VertexData3Step<T> vertex2(Vertex vertex2);
+        VertexDataStep<T> vertex2(Vertex vertex);
     }
 
-    public interface VertexData3Step<T> {
-        VertexData3Step<T> vertex3(Vertex vertex3);
+    public interface VertexDataStep<T> {
+        VertexDataStep<T> addVertex(Vertex vertex);
 
-        PaintTypeStep<T> vertex3_end(Vertex vertex3);
+        PaintTypeStep<T> end();
     }
 
-    public static class Builder extends AbstractGLObjectBuilder<GLTriangleFan> implements VertexData1Step<GLTriangleFan>, VertexData2Step<GLTriangleFan>, VertexData3Step<GLTriangleFan> {
+    public static class Builder extends AbstractGLObjectBuilder<GLTriangleFan> implements VertexData1Step<GLTriangleFan>, VertexData2Step<GLTriangleFan>, VertexDataStep<GLTriangleFan> {
         private final String name;
-        private final List<Vertex> vertices;
-
+        private final List<Vertex> vertices = new ArrayList<>();
         private GLTriangleFan glTriangle;
 
         public Builder(String name) {
             this.name = name;
-
-            this.vertices = new ArrayList<>();
         }
 
         @Override
-        public VertexData2Step<GLTriangleFan> vertex1(Vertex vertex1) {
-            this.vertices.add(vertex1);
-
+        public VertexData2Step<GLTriangleFan> vertex1(Vertex vertex) {
+            this.vertices.add(vertex);
             return this;
         }
 
         @Override
-        public VertexData3Step<GLTriangleFan> vertex2(Vertex vertex2) {
-            this.vertices.add(vertex2);
-
+        public VertexDataStep<GLTriangleFan> vertex2(Vertex vertex) {
+            this.vertices.add(vertex);
             return this;
         }
 
         @Override
-        public VertexData3Step<GLTriangleFan> vertex3(Vertex vertex3) {
-            this.vertices.add(vertex3);
-
+        public VertexDataStep<GLTriangleFan> addVertex(Vertex vertex) {
+            this.vertices.add(vertex);
             return this;
         }
 
         @Override
-        public PaintTypeStep<GLTriangleFan> vertex3_end(Vertex vertex3) {
-            this.vertices.add(vertex3);
-
+        public PaintTypeStep<GLTriangleFan> end() {
             return this;
         }
 

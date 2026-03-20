@@ -37,56 +37,48 @@ public class GLTriangleStrip extends GLObject<GLTriangleStrip> {
     }
 
     public interface VertexData1Step<T> {
-        VertexData2Step<T> vertex1(Vertex vertex1);
+        VertexData2Step<T> vertex1(Vertex vertex);
     }
 
     public interface VertexData2Step<T> {
-        VertexData3Step<T> vertex2(Vertex vertex2);
+        VertexDataStep<T> vertex2(Vertex vertex);
     }
 
-    public interface VertexData3Step<T> {
-        VertexData3Step<T> vertex3(Vertex vertex3);
+    public interface VertexDataStep<T> {
+        VertexDataStep<T> addVertex(Vertex vertex);
 
-        PaintTypeStep<T> vertex3_end(Vertex vertex3);
+        PaintTypeStep<T> end();
     }
 
-    public static class Builder extends AbstractGLObjectBuilder<GLTriangleStrip> implements VertexData1Step<GLTriangleStrip>, VertexData2Step<GLTriangleStrip>, VertexData3Step<GLTriangleStrip> {
+    public static class Builder extends AbstractGLObjectBuilder<GLTriangleStrip> implements VertexData1Step<GLTriangleStrip>, VertexData2Step<GLTriangleStrip>, VertexDataStep<GLTriangleStrip> {
         private final String name;
-        private final List<Vertex> vertices;
-
+        private final List<Vertex> vertices = new ArrayList<>();
         private GLTriangleStrip glTriangle;
 
         public Builder(String name) {
             this.name = name;
-
-            this.vertices = new ArrayList<>();
         }
 
         @Override
-        public VertexData2Step<GLTriangleStrip> vertex1(Vertex vertex1) {
-            this.vertices.add(vertex1);
-
+        public VertexData2Step<GLTriangleStrip> vertex1(Vertex vertex) {
+            this.vertices.add(vertex);
             return this;
         }
 
         @Override
-        public VertexData3Step<GLTriangleStrip> vertex2(Vertex vertex2) {
-            this.vertices.add(vertex2);
-
+        public VertexDataStep<GLTriangleStrip> vertex2(Vertex vertex) {
+            this.vertices.add(vertex);
             return this;
         }
 
         @Override
-        public VertexData3Step<GLTriangleStrip> vertex3(Vertex vertex3) {
-            this.vertices.add(vertex3);
-
+        public VertexDataStep<GLTriangleStrip> addVertex(Vertex vertex) {
+            this.vertices.add(vertex);
             return this;
         }
 
         @Override
-        public PaintTypeStep<GLTriangleStrip> vertex3_end(Vertex vertex3) {
-            this.vertices.add(vertex3);
-
+        public PaintTypeStep<GLTriangleStrip> end() {
             return this;
         }
 

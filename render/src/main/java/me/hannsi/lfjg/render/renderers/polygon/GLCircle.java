@@ -76,42 +76,38 @@ public class GLCircle extends GLObject<GLCircle> {
     }
 
     public interface VertexCenterDataStep<T> {
-        CircleDataStep<T> vertexCenter(Vertex vertex);
+        CircleDataStep<T> vertexCenter(Vertex centerVertex);
     }
 
     public interface CircleDataStep<T> {
-        ColorsStep<T> circleData(float xRadius, float yRadius);
-
-        ColorsStep<T> circleData_innerRadius(float xRadius, float yRadius, float xInnerRadius, float yInnerRadius);
-
-        ColorsStep<T> circleData(float xRadius, float yRadius, int segmentCount);
-
-        ColorsStep<T> circleData_innerRadius(float xRadius, float yRadius, float xInnerRadius, float yInnerRadius, int segmentCount);
-
-        ColorsStep<T> circleData(float xRadius, float yRadius, float startAngle, float endAngle);
-
-        ColorsStep<T> circleData_innerRadius(float xRadius, float yRadius, float xInnerRadius, float yInnerRadius, float startAngle, float endAngle);
-
-        ColorsStep<T> circleData(float xRadius, float yRadius, float startAngle, float endAngle, int segmentCount);
-
-        ColorsStep<T> circleData_innerRadius(float xRadius, float yRadius, float xInnerRadius, float yInnerRadius, float startAngle, float endAngle, int segmentCount);
+        CircleOptionStep<T> circleData(float xRadius, float yRadius);
     }
 
-    public interface ColorsStep<T> {
-        ColorsStep<T> color(Color color);
+    public interface CircleOptionStep<T> {
+        CircleOptionStep<T> innerRadius(float xInnerRadius, float yInnerRadius);
 
-        EasingColorStep<T> color_end_easingColor(Color color);
+        CircleOptionStep<T> angle(float startAngle, float endAngle);
 
-        PaintTypeStep<T> color_end(Color color);
+        CircleOptionStep<T> segmentCount(int segmentCount);
+
+        ColorData1Step<T> end();
     }
 
-    public interface EasingColorStep<T> {
+    public interface ColorData1Step<T> {
+        ColorDataStep<T> addColor1(Color color);
+    }
+
+    public interface ColorDataStep<T> {
+        ColorDataStep<T> addColor(Color color);
+
         PaintTypeStep<T> easingColor(Easing easing);
+
+        PaintTypeStep<T> endColor();
     }
 
-    public static class Builder extends AbstractGLObjectBuilder<GLCircle> implements VertexCenterDataStep<GLCircle>, CircleDataStep<GLCircle>, ColorsStep<GLCircle>, EasingColorStep<GLCircle> {
+    public static class Builder extends AbstractGLObjectBuilder<GLCircle> implements VertexCenterDataStep<GLCircle>, CircleDataStep<GLCircle>, CircleOptionStep<GLCircle>, ColorData1Step<GLCircle>, ColorDataStep<GLCircle> {
         private final String name;
-        private final List<Color> colors;
+        private final List<Color> colors = new ArrayList<>();
         private Vertex centerVertex;
         private float xRadius;
         private float yRadius;
@@ -126,126 +122,66 @@ public class GLCircle extends GLObject<GLCircle> {
 
         public Builder(String name) {
             this.name = name;
-
-            this.colors = new ArrayList<>();
         }
 
         @Override
-        public ColorsStep<GLCircle> circleData(float xRadius, float yRadius) {
-            this.xRadius = xRadius;
-            this.yRadius = yRadius;
-
+        public CircleDataStep<GLCircle> vertexCenter(Vertex centerVertex) {
+            this.centerVertex = centerVertex;
             return this;
         }
 
         @Override
-        public ColorsStep<GLCircle> circleData_innerRadius(float xRadius, float yRadius, float xInnerRadius, float yInnerRadius) {
+        public CircleOptionStep<GLCircle> circleData(float xRadius, float yRadius) {
             this.xRadius = xRadius;
             this.yRadius = yRadius;
+            return this;
+        }
+
+        @Override
+        public CircleOptionStep<GLCircle> innerRadius(float xInnerRadius, float yInnerRadius) {
             this.xInnerRadius = xInnerRadius;
             this.yInnerRadius = yInnerRadius;
-
             return this;
         }
 
         @Override
-        public ColorsStep<GLCircle> circleData(float xRadius, float yRadius, int segmentCount) {
-            this.xRadius = xRadius;
-            this.yRadius = yRadius;
-            this.segmentCount = segmentCount;
-
-            return this;
-        }
-
-        @Override
-        public ColorsStep<GLCircle> circleData_innerRadius(float xRadius, float yRadius, float xInnerRadius, float yInnerRadius, int segmentCount) {
-            this.xRadius = xRadius;
-            this.yRadius = yRadius;
-            this.xInnerRadius = xInnerRadius;
-            this.yInnerRadius = yInnerRadius;
-            this.segmentCount = segmentCount;
-
-            return this;
-        }
-
-        @Override
-        public ColorsStep<GLCircle> circleData(float xRadius, float yRadius, float startAngle, float endAngle) {
-            this.xRadius = xRadius;
-            this.yRadius = yRadius;
+        public CircleOptionStep<GLCircle> angle(float startAngle, float endAngle) {
             this.startAngle = startAngle;
             this.endAngle = endAngle;
-
             return this;
         }
 
         @Override
-        public ColorsStep<GLCircle> circleData_innerRadius(float xRadius, float yRadius, float xInnerRadius, float yInnerRadius, float startAngle, float endAngle) {
-            this.xRadius = xRadius;
-            this.yRadius = yRadius;
-            this.xInnerRadius = xInnerRadius;
-            this.yInnerRadius = yInnerRadius;
-            this.startAngle = startAngle;
-            this.endAngle = endAngle;
-
-            return this;
-        }
-
-        @Override
-        public ColorsStep<GLCircle> circleData(float xRadius, float yRadius, float startAngle, float endAngle, int segmentCount) {
-            this.xRadius = xRadius;
-            this.yRadius = yRadius;
-            this.startAngle = startAngle;
-            this.endAngle = endAngle;
+        public CircleOptionStep<GLCircle> segmentCount(int segmentCount) {
             this.segmentCount = segmentCount;
-
             return this;
         }
 
         @Override
-        public ColorsStep<GLCircle> circleData_innerRadius(float xRadius, float yRadius, float xInnerRadius, float yInnerRadius, float startAngle, float endAngle, int segmentCount) {
-            this.xRadius = xRadius;
-            this.yRadius = yRadius;
-            this.xInnerRadius = xInnerRadius;
-            this.yInnerRadius = yInnerRadius;
-            this.startAngle = startAngle;
-            this.endAngle = endAngle;
-            this.segmentCount = segmentCount;
-
+        public ColorData1Step<GLCircle> end() {
             return this;
         }
 
         @Override
-        public ColorsStep<GLCircle> color(Color color) {
+        public ColorDataStep<GLCircle> addColor1(Color color) {
             this.colors.add(color);
-
             return this;
         }
 
         @Override
-        public PaintTypeStep<GLCircle> color_end(Color color) {
+        public ColorDataStep<GLCircle> addColor(Color color) {
             this.colors.add(color);
-
-            return this;
-        }
-
-        @Override
-        public EasingColorStep<GLCircle> color_end_easingColor(Color color) {
-            this.colors.add(color);
-
             return this;
         }
 
         @Override
         public PaintTypeStep<GLCircle> easingColor(Easing easing) {
             this.easing = easing;
-
             return this;
         }
 
         @Override
-        public CircleDataStep<GLCircle> vertexCenter(Vertex vertex) {
-            this.centerVertex = vertex;
-
+        public PaintTypeStep<GLCircle> endColor() {
             return this;
         }
 

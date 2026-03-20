@@ -18,7 +18,7 @@ public class GLRect extends GLObject<GLRect> {
         this.builder = builder;
     }
 
-    public static VertexData1Step<GLRect> createGLRect(String name) {
+    public RectInputStep<GLRect> createGLRect(String name) {
         return new Builder(name);
     }
 
@@ -38,36 +38,36 @@ public class GLRect extends GLObject<GLRect> {
         return super.update();
     }
 
-    public interface VertexData1Step<T> {
-        VertexData2Step<T> vertex1(Vertex vertex1);
+    public interface RectInputStep<T> {
+        DiagonalStep<T> from(Vertex vertex);
 
-        VertexData22pStep<T> vertex1_2p(Vertex vertex1);
+        Vertex2Step<T> vertex1(Vertex vertex);
     }
 
-    public interface VertexData2Step<T> {
-        VertexData3Step<T> vertex2(Vertex vertex2);
+    public interface DiagonalStep<T> {
+        RectInputStep<T> to(Vertex vertex);
+
+        PaintTypeStep<T> end(Vertex vertex);
     }
 
-    public interface VertexData22pStep<T> {
-        VertexData1Step<T> vertex2_2p(Vertex vertex2);
-
-        PaintTypeStep<T> vertex2_2p_end(Vertex vertex2);
+    public interface Vertex2Step<T> {
+        Vertex3Step<T> vertex2(Vertex vertex);
     }
 
-    public interface VertexData3Step<T> {
-        VertexData4Step<T> vertex3(Vertex vertex3);
+    public interface Vertex3Step<T> {
+        Vertex4Step<T> vertex3(Vertex vertex);
     }
 
-    public interface VertexData4Step<T> {
-        VertexData1Step<T> vertex4(Vertex vertex4);
+    public interface Vertex4Step<T> {
+        RectInputStep<T> vertex4(Vertex vertex);
 
-        PaintTypeStep<T> vertex4_end(Vertex vertex4);
+        PaintTypeStep<T> end(Vertex vertex);
     }
 
-    public static class Builder extends AbstractGLObjectBuilder<GLRect> implements VertexData1Step<GLRect>, VertexData2Step<GLRect>, VertexData22pStep<GLRect>, VertexData3Step<GLRect>, VertexData4Step<GLRect>, PaintTypeStep<GLRect>, strokeWidthStep<GLRect> {
+    public static class Builder extends AbstractGLObjectBuilder<GLRect> implements RectInputStep<GLRect>, DiagonalStep<GLRect>, Vertex2Step<GLRect>, Vertex3Step<GLRect>, Vertex4Step<GLRect> {
         private final String name;
         private final List<Vertex> vertices;
-        private Vertex lastVertex2p;
+        private Vertex lastFrom;
 
         private GLRect glRect;
 
@@ -78,63 +78,55 @@ public class GLRect extends GLObject<GLRect> {
         }
 
         @Override
-        public VertexData2Step<GLRect> vertex1(Vertex vertex1) {
-            this.vertices.add(vertex1);
+        public DiagonalStep<GLRect> from(Vertex vertex) {
+            this.lastFrom = vertex;
+            this.vertices.add(vertex);
+            return this;
+        }
 
+        private void addDiagonalVertices(Vertex to) {
+            vertices.add(lastFrom.copy().setX(to.x));
+            vertices.add(to);
+            vertices.add(lastFrom.copy().setY(to.y));
+        }
+
+        @Override
+        public RectInputStep<GLRect> to(Vertex vertex) {
+            addDiagonalVertices(vertex);
             return this;
         }
 
         @Override
-        public VertexData22pStep<GLRect> vertex1_2p(Vertex vertex1) {
-            this.lastVertex2p = vertex1;
-            this.vertices.add(vertex1);
-
+        public Vertex2Step<GLRect> vertex1(Vertex vertex) {
+            vertices.add(vertex);
             return this;
         }
 
         @Override
-        public VertexData1Step<GLRect> vertex2_2p(Vertex vertex2) {
-            this.vertices.add(lastVertex2p.copy().setX(vertex2.x));
-            this.vertices.add(vertex2);
-            this.vertices.add(lastVertex2p.copy().setY(vertex2.y));
-
+        public Vertex3Step<GLRect> vertex2(Vertex vertex) {
+            vertices.add(vertex);
             return this;
         }
 
         @Override
-        public PaintTypeStep<GLRect> vertex2_2p_end(Vertex vertex2) {
-            this.vertices.add(lastVertex2p.copy().setX(vertex2.x));
-            this.vertices.add(vertex2);
-            this.vertices.add(lastVertex2p.copy().setY(vertex2.y));
-
+        public Vertex4Step<GLRect> vertex3(Vertex vertex) {
+            vertices.add(vertex);
             return this;
         }
 
         @Override
-        public VertexData3Step<GLRect> vertex2(Vertex vertex2) {
-            this.vertices.add(vertex2);
-
+        public RectInputStep<GLRect> vertex4(Vertex vertex) {
+            vertices.add(vertex);
             return this;
         }
 
         @Override
-        public VertexData4Step<GLRect> vertex3(Vertex vertex3) {
-            this.vertices.add(vertex3);
-
-            return this;
-        }
-
-        @Override
-        public VertexData1Step<GLRect> vertex4(Vertex vertex4) {
-            this.vertices.add(vertex4);
-
-            return this;
-        }
-
-        @Override
-        public PaintTypeStep<GLRect> vertex4_end(Vertex vertex4) {
-            this.vertices.add(vertex4);
-
+        public PaintTypeStep<GLRect> end(Vertex vertex) {
+            if (lastFrom != null && vertices.size() % 4 == 1) {
+                addDiagonalVertices(vertex);
+            } else {
+                vertices.add(vertex);
+            }
             return this;
         }
 

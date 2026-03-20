@@ -25,6 +25,7 @@ public class GLPolygon extends GLObject<GLPolygon> {
         for (Vertex vertex : builder.vertices) {
             put(vertex).end();
         }
+        put(new Vertex()).end();
 
         switch (builder.paintType) {
             case FILL ->
@@ -38,35 +39,50 @@ public class GLPolygon extends GLObject<GLPolygon> {
         return super.update();
     }
 
-    public interface VertexDataStep<T> {
-        VertexDataStep<T> vertex(Vertex vertex);
-
-        PaintTypeStep<T> vertex_end(Vertex vertex);
+    public interface VertexData1Step<T> {
+        VertexData2Step<T> addVertex1(Vertex vertex);
     }
 
-    public static class Builder extends AbstractGLObjectBuilder<GLPolygon> implements VertexDataStep<GLPolygon> {
+    public interface VertexData2Step<T> {
+        VertexDataStep<T> addVertex2(Vertex vertex);
+    }
+
+    public interface VertexDataStep<T> {
+        VertexDataStep<T> addVertex(Vertex vertex);
+
+        PaintTypeStep<T> end();
+    }
+
+    public static class Builder extends AbstractGLObjectBuilder<GLPolygon> implements VertexData1Step<GLPolygon>, VertexData2Step<GLPolygon>, VertexDataStep<GLPolygon> {
         private final String name;
-        private final List<Vertex> vertices;
+        private final List<Vertex> vertices = new ArrayList<>();
 
         private GLPolygon glPolygon;
 
         public Builder(String name) {
             this.name = name;
-
-            this.vertices = new ArrayList<>();
         }
 
         @Override
-        public VertexDataStep<GLPolygon> vertex(Vertex vertex) {
+        public VertexData2Step<GLPolygon> addVertex1(Vertex vertex) {
             vertices.add(vertex);
-
             return this;
         }
 
         @Override
-        public PaintTypeStep<GLPolygon> vertex_end(Vertex vertex) {
+        public VertexDataStep<GLPolygon> addVertex2(Vertex vertex) {
             vertices.add(vertex);
+            return this;
+        }
 
+        @Override
+        public VertexDataStep<GLPolygon> addVertex(Vertex vertex) {
+            vertices.add(vertex);
+            return this;
+        }
+
+        @Override
+        public PaintTypeStep<GLPolygon> end() {
             return this;
         }
 
