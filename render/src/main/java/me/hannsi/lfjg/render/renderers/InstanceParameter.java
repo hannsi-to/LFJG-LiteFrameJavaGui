@@ -326,7 +326,7 @@ public class InstanceParameter implements Cleanup {
         rotation.identity();
         color.identity();
 
-        return event.debug(this.getClass(), new CleanupEvent.CleanupData(this.getClass().getSimpleName())
+        return event.debug(this.getClass(), new CleanupEvent.CleanupData(this.getClass())
                 .addData("TEMP_MATRIX", isMatrix4fIdentity(TEMP_MATRIX), TEMP_MATRIX)
                 .addData("MODEL_MATRIX", isMatrix4fIdentity(MODEL_MATRIX), MODEL_MATRIX)
                 .addData("rotation", isQuaternionfIdentity(rotation), rotation)

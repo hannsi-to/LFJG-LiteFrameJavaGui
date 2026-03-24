@@ -40,7 +40,7 @@ public class ObjectData implements Cleanup {
             }
         }
 
-        return event.debug(this.getClass(), new CleanupEvent.CleanupData(this.getClass().getSimpleName())
+        return event.debug(this.getClass(), new CleanupEvent.CleanupData(this.getClass())
                 .addData("drawElementsIndirectCommand", drawElementsIndirectCommand.cleanup(event), drawElementsIndirectCommand)
                 .addData("instanceParameters", instanceParametersState, instanceParameters)
         );

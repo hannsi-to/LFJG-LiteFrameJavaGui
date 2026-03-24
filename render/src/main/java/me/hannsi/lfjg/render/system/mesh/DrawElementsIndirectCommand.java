@@ -29,7 +29,7 @@ public class DrawElementsIndirectCommand implements Cleanup {
         baseVertex = 0;
         baseInstance = 0;
 
-        return event.debug(this.getClass(), new CleanupEvent.CleanupData(this.getClass().getSimpleName())
+        return event.debug(this.getClass(), new CleanupEvent.CleanupData(this.getClass())
                 .addData("count", count == 0, count)
                 .addData("instanceCount", instanceCount == 0, instanceCount)
                 .addData("firstIndex", firstIndex == 0, firstIndex)

@@ -15,6 +15,7 @@ public class Sprite implements Cleanup {
     public SpriteMemoryPolicy memoryPolicy;
     public ByteBuffer data;
     public boolean commited;
+    public boolean isGenerated;
     public int offsetX;
     public int offsetY;
     public int offsetZ;
@@ -28,6 +29,7 @@ public class Sprite implements Cleanup {
         this.data = data;
         this.memoryPolicy = memoryPolicy;
         this.commited = false;
+        this.isGenerated = false;
     }
 
     public static Sprite createRandomColor(int width, int height, boolean doAlpha, SpriteMemoryPolicy memoryPolicy) {
@@ -78,8 +80,8 @@ public class Sprite implements Cleanup {
         data.clear();
         data = null;
 
-        return event.debug(Sprite.class, new CleanupEvent.CleanupData("Sprite").
-                addData("data", data == null, data)
+        return event.debug(Sprite.class, new CleanupEvent.CleanupData(this.getClass())
+                .addData("data", data == null, data)
         );
     }
 }

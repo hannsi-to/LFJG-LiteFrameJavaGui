@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.render.renderers.text;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
-import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
+import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.text.AlignType;
 import me.hannsi.lfjg.render.system.text.font.Font;
@@ -9,7 +9,7 @@ import org.joml.Vector2f;
 
 import static me.hannsi.lfjg.render.LFJGRenderTextContext.FONT_CACHE;
 
-public class GLText extends GLPolygon<GLText> {
+public class GLText extends GLObject<GLText> {
     private TextRenderer textRenderer;
     private String text;
     private int fontSize;
@@ -41,10 +41,10 @@ public class GLText extends GLPolygon<GLText> {
         float height = getTextHeight(text);
         Color color = Color.of(0, 0, 0, 0);
 
-        put().position(new Vector2f(x, y)).color(color).end();
-        put().position(new Vector2f(x + width, y)).color(color).end();
-        put().position(new Vector2f(x + width, y + height)).color(color).end();
-        put().position(new Vector2f(x, y + height)).color(color).end();
+//        put().position(new Vector2f(x, y)).color(color).end();
+//        put().position(new Vector2f(x + width, y)).color(color).end();
+//        put().position(new Vector2f(x + width, y + height)).color(color).end();
+//        put().position(new Vector2f(x, y + height)).color(color).end();
 
         drawType(DrawType.QUADS);
         rendering();

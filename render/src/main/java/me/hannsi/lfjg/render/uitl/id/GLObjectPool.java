@@ -1,9 +1,8 @@
 package me.hannsi.lfjg.render.uitl.id;
 
-import me.hannsi.lfjg.core.event.EventHandler;
 import me.hannsi.lfjg.core.event.events.CleanupEvent;
+import me.hannsi.lfjg.core.utils.Cleanup;
 import me.hannsi.lfjg.render.debug.exceptions.render.mesh.MeshException;
-import me.hannsi.lfjg.render.event.RenderCleanupEvent;
 import me.hannsi.lfjg.render.system.mesh.MeshBuilder;
 
 import java.util.LinkedHashMap;
@@ -12,7 +11,7 @@ import java.util.Map;
 import static me.hannsi.lfjg.render.LFJGRenderContext.mesh;
 import static me.hannsi.lfjg.render.RenderSystemSetting.GL_OBJECT_POOL_REMOVE_RATIO_THRESHOLD;
 
-public class GLObjectPool {
+public class GLObjectPool implements Cleanup {
     private final Map<Integer, MeshBuilder> objects;
     private final Map<Integer, MeshBuilder> deletedObjects;
     private final IdPool idPool;
@@ -138,14 +137,14 @@ public class GLObjectPool {
         return stringBuilder.toString();
     }
 
-    @EventHandler
-    public void renderCleanupEvent(RenderCleanupEvent event) {
-        CleanupEvent.CleanupData datum = new CleanupEvent.CleanupData("Objects");
+    @Override
+    public boolean cleanup(CleanupEvent event) {
+        CleanupEvent.CleanupData datum = new CleanupEvent.CleanupData(this.getClass());
         for (Map.Entry<Integer, MeshBuilder> entry : objects.entrySet()) {
             datum.addData(entry.getKey().toString(), entry.getValue().cleanup(event));
         }
         objects.clear();
 
-        event.debug(GLObjectPool.class, datum);
+        return event.debug(this.getClass(), datum);
     }
 }

@@ -261,7 +261,7 @@ public class MeshBuilder implements Cleanup {
         }
         vertices = null;
 
-        return event.debug(MeshBuilder.class, new CleanupEvent.CleanupData(MeshBuilder.class.getSimpleName())
+        return event.debug(MeshBuilder.class, new CleanupEvent.CleanupData(MeshBuilder.class)
                 .addData("objectIdPointer", objectIdPointer.isNullptr(), objectIdPointer.getValue())
                 .addData("vertices", verticesState, vertices)
                 .addData("objectData", objectData.cleanup(event), objectData)

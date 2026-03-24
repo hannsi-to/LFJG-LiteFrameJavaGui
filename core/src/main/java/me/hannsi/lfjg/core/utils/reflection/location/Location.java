@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.core.utils.reflection.location;
 
+import me.hannsi.lfjg.core.event.events.CleanupEvent;
+import me.hannsi.lfjg.core.utils.Cleanup;
 import me.hannsi.lfjg.core.utils.type.types.LocationType;
 import org.lwjgl.BufferUtils;
 
@@ -17,8 +19,7 @@ import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-public record Location(String path, LocationType locationType) {
-
+public record Location(String path, LocationType locationType) implements Cleanup {
     public static Location fromFile(String absolutePath) {
         return new Location(absolutePath, LocationType.FILE);
     }
@@ -192,5 +193,10 @@ public record Location(String path, LocationType locationType) {
         return "Location[" +
                 "path=" + path + ", " +
                 "locationType=" + locationType + ']';
+    }
+
+    @Override
+    public boolean cleanup(CleanupEvent event) {
+        return event.debug(this.getClass(), new CleanupEvent.CleanupData(this.getClass()));
     }
 }

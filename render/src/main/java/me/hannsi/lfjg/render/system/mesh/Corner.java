@@ -151,7 +151,7 @@ public class Corner implements Cleanup {
 
     @Override
     public boolean cleanup(CleanupEvent event) {
-        return event.debug(Corner.class, new CleanupEvent.CleanupData("Corner"));
+        return event.debug(Corner.class, new CleanupEvent.CleanupData(this.getClass()));
     }
 
     public enum CornerType implements IEnumTypeBase {

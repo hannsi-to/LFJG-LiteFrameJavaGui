@@ -18,7 +18,7 @@ public class GLRect extends GLObject<GLRect> {
         this.builder = builder;
     }
 
-    public RectInputStep<GLRect> createGLRect(String name) {
+    public static RectInputStep<GLRect> createGLRect(String name) {
         return new Builder(name);
     }
 
@@ -93,6 +93,10 @@ public class GLRect extends GLObject<GLRect> {
         @Override
         public RectInputStep<GLRect> to(Vertex vertex) {
             addDiagonalVertices(vertex);
+
+            if (lastFrom != null) {
+                autoAssignUVs(lastFrom.u, lastFrom.v, vertex.u, vertex.v);
+            }
             return this;
         }
 
@@ -124,10 +128,35 @@ public class GLRect extends GLObject<GLRect> {
         public PaintTypeStep<GLRect> end(Vertex vertex) {
             if (lastFrom != null && vertices.size() % 4 == 1) {
                 addDiagonalVertices(vertex);
+                autoAssignUVs(lastFrom.u, lastFrom.v, vertex.u, vertex.v);
             } else {
                 vertices.add(vertex);
             }
+
             return this;
+        }
+
+        private void autoAssignUVs(float minU, float minV, float maxU, float maxV) {
+            int size = vertices.size();
+            if (size < 4) {
+                return;
+            }
+
+            List<Vertex> quad = vertices.subList(size - 4, size);
+
+            float minX = (float) quad.stream().mapToDouble(v -> v.x).min().orElse(0);
+            float maxX = (float) quad.stream().mapToDouble(v -> v.x).max().orElse(0);
+            float minY = (float) quad.stream().mapToDouble(v -> v.y).min().orElse(0);
+            float maxY = (float) quad.stream().mapToDouble(v -> v.y).max().orElse(0);
+
+            float rangeX = maxX - minX;
+            float rangeY = maxY - minY;
+
+            for (Vertex vertex : quad) {
+                float u = (rangeX == 0) ? minU : minU + (vertex.x - minX) / rangeX * (maxU - minU);
+                float v = (rangeY == 0) ? minV : minV + (1.0f - (vertex.y - minY) / rangeY) * (maxV - minV);
+                vertex.setU(u).setV(v);
+            }
         }
 
         @Override

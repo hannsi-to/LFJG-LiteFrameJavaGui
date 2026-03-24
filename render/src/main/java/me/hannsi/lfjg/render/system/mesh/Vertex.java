@@ -277,7 +277,7 @@ public class Vertex implements Cleanup {
         normalsY = 0;
         normalsZ = 0;
 
-        return event.debug(Vertex.class, new CleanupEvent.CleanupData("Vertex")
+        return event.debug(Vertex.class, new CleanupEvent.CleanupData(this.getClass())
                 .addData("nullVertex", !nullVertex, nullVertex)
                 .addData("x", x == 0, x)
                 .addData("y", y == 0, y)
