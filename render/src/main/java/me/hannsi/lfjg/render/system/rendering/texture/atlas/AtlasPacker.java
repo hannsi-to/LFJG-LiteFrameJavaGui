@@ -1,11 +1,12 @@
 package me.hannsi.lfjg.render.system.rendering.texture.atlas;
 
 import me.hannsi.lfjg.core.debug.DebugLog;
+import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.math.map.string2objectMap.LinkedString2ObjectMap;
 import me.hannsi.lfjg.render.debug.exceptions.texture.AtlasPackerException;
 import me.hannsi.lfjg.render.uitl.id.Id;
 
-import static me.hannsi.lfjg.core.utils.math.MathHelper.max;
+import static me.hannsi.lfjg.core.Core.ASSET_MANAGER;
 import static me.hannsi.lfjg.core.utils.math.MathHelper.min;
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
 
@@ -46,12 +47,13 @@ public class AtlasPacker {
             DebugLog.warning(getClass(), "Requested layers: " + atlasLayer + " exceeds GPU limit: " + MAX_ARRAY_TEXTURE_LAYERS + " Setting layer: " + MAX_ARRAY_TEXTURE_LAYERS);
             this.atlasLayer = MAX_ARRAY_TEXTURE_LAYERS;
         } else {
-            this.atlasLayer = max(1, atlasLayer);
+            this.atlasLayer = MathHelper.max(1, atlasLayer);
         }
 
         this.currentSpriteIndex = Id.initialSpriteIndexId;
         this.currentX = currentX;
         this.currentY = currentY;
+        this.currentLayer = 0;
         this.rowHeight = rowHeight;
     }
 
@@ -69,14 +71,11 @@ public class AtlasPacker {
         return this;
     }
 
+    public AtlasPacker addSprite(String assetName) {
+        return addSprite(assetName, ASSET_MANAGER.load(assetName, Sprite.class));
+    }
+
     public void generate() {
-        this.currentX = 0;
-        this.currentY = 0;
-        this.currentLayer = 0;
-        this.rowHeight = 0;
-
-        persistentMappedSSBO.resetBindingPoint(SPRITE_DATUM_BINDING_POINT);
-
         final float INSET = 0.5f;
         final int BYTES_PER_PIXEL = 4;
 
@@ -84,46 +83,50 @@ public class AtlasPacker {
         float invH = 1.0f / atlasHeight;
 
         sprites.forEach((key, sprite) -> {
-            if (currentX + sprite.width + PADDING > atlasWidth) {
-                currentX = 0;
-                currentY += rowHeight;
-                rowHeight = 0;
+            if (!sprite.isGenerated) {
+                if (currentX + sprite.width + PADDING > atlasWidth) {
+                    currentX = 0;
+                    currentY += rowHeight;
+                    rowHeight = 0;
+                }
+
+                if (currentY + sprite.height + PADDING > atlasHeight) {
+                    currentX = 0;
+                    currentY = 0;
+                    rowHeight = 0;
+                    currentLayer++;
+                }
+
+                sprite.offsetX = currentX;
+                sprite.offsetY = currentY;
+                sprite.offsetZ = currentLayer;
+
+                int rowSize = sprite.width * BYTES_PER_PIXEL;
+                for (int y = 0; y < sprite.height; y++) {
+                    int spriteRowOffset = y * rowSize;
+
+                    sprite.data.position(spriteRowOffset);
+                    sprite.data.limit(spriteRowOffset + rowSize);
+
+                    sprite.data.clear();
+                }
+
+                float uvX = (sprite.offsetX + INSET) * invW;
+                float uvY = (sprite.offsetY + INSET) * invH;
+                float uvW = (sprite.width - (2 * INSET)) * invW;
+                float uvH = (sprite.height - (2 * INSET)) * invH;
+
+                persistentMappedSSBO.addVec4(SPRITE_DATUM_BINDING_POINT, uvX, uvY, uvW, uvH);
+                persistentMappedSSBO.addFloat(SPRITE_DATUM_BINDING_POINT, currentLayer);
+                persistentMappedSSBO.addFloat(SPRITE_DATUM_BINDING_POINT, 0);
+                persistentMappedSSBO.addFloat(SPRITE_DATUM_BINDING_POINT, 0);
+                persistentMappedSSBO.addFloat(SPRITE_DATUM_BINDING_POINT, 0);
+
+                currentX += sprite.width + PADDING;
+                rowHeight = MathHelper.max(rowHeight, sprite.height + PADDING);
+
+                sprite.isGenerated = true;
             }
-
-            if (currentY + sprite.height + PADDING > atlasHeight) {
-                currentX = 0;
-                currentY = 0;
-                rowHeight = 0;
-                currentLayer++;
-            }
-
-            sprite.offsetX = currentX;
-            sprite.offsetY = currentY;
-            sprite.offsetZ = currentLayer;
-
-            int rowSize = sprite.width * BYTES_PER_PIXEL;
-            for (int y = 0; y < sprite.height; y++) {
-                int spriteRowOffset = y * rowSize;
-
-                sprite.data.position(spriteRowOffset);
-                sprite.data.limit(spriteRowOffset + rowSize);
-
-                sprite.data.clear();
-            }
-
-            float uvX = (sprite.offsetX + INSET) * invW;
-            float uvY = (sprite.offsetY + INSET) * invH;
-            float uvW = (sprite.width - (2 * INSET)) * invW;
-            float uvH = (sprite.height - (2 * INSET)) * invH;
-
-            persistentMappedSSBO.addVec4(SPRITE_DATUM_BINDING_POINT, uvX, uvY, uvW, uvH);
-            persistentMappedSSBO.addFloat(SPRITE_DATUM_BINDING_POINT, currentLayer);
-            persistentMappedSSBO.addFloat(SPRITE_DATUM_BINDING_POINT, 0);
-            persistentMappedSSBO.addFloat(SPRITE_DATUM_BINDING_POINT, 0);
-            persistentMappedSSBO.addFloat(SPRITE_DATUM_BINDING_POINT, 0);
-
-            currentX += sprite.width + PADDING;
-            rowHeight = Math.max(rowHeight, sprite.height + PADDING);
         });
     }
 
