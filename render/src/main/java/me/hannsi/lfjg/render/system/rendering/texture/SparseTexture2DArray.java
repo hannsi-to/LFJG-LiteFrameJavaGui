@@ -58,7 +58,6 @@ public class SparseTexture2DArray {
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
         glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-
         if (sprite.memoryPolicy == SpriteMemoryPolicy.STREAMING) {
             persistentMappedPUBO.updateByteBuffer(PBO_SEGMENT_ID, sprite.address, byteBuffer);
 
@@ -87,7 +86,6 @@ public class SparseTexture2DArray {
     public SparseTexture2DArray updateFromAtlas() {
         glStateCache.bindTexture(GL_TEXTURE_2D_ARRAY, textureId);
 
-        persistentMappedPUBO.resetSegmentId(PBO_SEGMENT_ID);
         glStateCache.bindPixelUnpackBuffer(persistentMappedPUBO.getBufferId());
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);

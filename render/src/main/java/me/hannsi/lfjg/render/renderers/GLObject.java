@@ -10,8 +10,7 @@ import me.hannsi.lfjg.render.system.rendering.DrawType;
 import java.util.ArrayList;
 import java.util.List;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.glObjectPool;
-import static me.hannsi.lfjg.render.LFJGRenderContext.mesh;
+import static me.hannsi.lfjg.render.LFJGRenderContext.*;
 
 public class GLObject<T extends GLObject<T>> {
     private final String name;
@@ -20,11 +19,19 @@ public class GLObject<T extends GLObject<T>> {
     private IntRef objectId;
     private Vertex currentVertex;
 
-    protected GLObject(String name) {
+    protected GLObject(String name, boolean useDrawFrame) {
         this.name = name;
         this.objectId = new IntRef();
         this.meshBuilder = MeshBuilder.createBuilder();
         this.vertices = new ArrayList<>();
+
+        if (useDrawFrame) {
+            useDrawFrameObjects.add(this);
+        }
+    }
+
+    protected GLObject(String name) {
+        this(name, false);
     }
 
     @SuppressWarnings("unchecked")
@@ -32,6 +39,10 @@ public class GLObject<T extends GLObject<T>> {
         rendering();
 
         return (T) this;
+    }
+
+    public void drawFrame() {
+
     }
 
     public GLObject<T> put() {

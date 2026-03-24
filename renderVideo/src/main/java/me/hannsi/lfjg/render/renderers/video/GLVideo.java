@@ -1,218 +1,224 @@
 package me.hannsi.lfjg.render.renderers.video;
 
-import me.hannsi.lfjg.core.utils.graphics.color.Color;
-import me.hannsi.lfjg.core.utils.reflection.location.Location;
-import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
+import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.render.renderers.InstanceParameter;
+import me.hannsi.lfjg.render.renderers.PaintType;
+import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
-import me.hannsi.lfjg.render.system.video.VideoFrameSystem;
-import org.joml.Vector2f;
+import me.hannsi.lfjg.render.system.rendering.texture.atlas.Sprite;
+import me.hannsi.lfjg.render.system.rendering.texture.atlas.SpriteMemoryPolicy;
+import me.hannsi.lfjg.render.system.video.VideoDecoder;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import static me.hannsi.lfjg.core.Core.ASSET_MANAGER;
+import static me.hannsi.lfjg.render.LFJGRenderContext.atlasPacker;
+import static me.hannsi.lfjg.render.LFJGRenderContext.sparseTexture2DArray;
 
 
-public class GLVideo extends GLPolygon<GLVideo> {
-    private final VideoFrameSystem videoFrameSystem;
+public class GLVideo extends GLObject<GLVideo> {
     private final Builder builder;
+    private VideoDecoder videoDecoder;
 
-    public GLVideo(String name, Builder builder) {
-        super(name);
-
+    protected GLVideo(String name, Builder builder) {
+        super(name, true);
         this.builder = builder;
-        this.videoFrameSystem = VideoFrameSystem.initVideoFrameSystem()
-                .createFFmpegFrameGrabber(builder.location)
-                .createJava2DFrameConverter()
-                .startVideoLoad();
     }
 
-    public static LocationStep createGLVideo(String name) {
+    public static RectInputStep<GLVideo> createGLVideo(String name) {
         return new Builder(name);
     }
 
+    @Override
     public GLVideo update() {
-        rectUV(0, 0, 1, 1);
-        put().position(new Vector2f(builder.x1, builder.y1)).color(Color.of(0, 0, 0, 0)).end();
-        put().position(new Vector2f(builder.x2, builder.y2)).color(Color.of(0, 0, 0, 0)).end();
-        put().position(new Vector2f(builder.x3, builder.y3)).color(Color.of(0, 0, 0, 0)).end();
-        put().position(new Vector2f(builder.x4, builder.y4)).color(Color.of(0, 0, 0, 0)).end();
-
-        drawType(DrawType.QUADS);
-        rendering();
-
-        return this;
-    }
-
-    public void drawVAORendering() {
-        videoFrameSystem.drawFrame();
-
-        if (videoFrameSystem.getTextureId() != -1) {
-//            this.getShaderProgram().setUniform("objectReplaceColor", UploadUniformType.ON_CHANGE, false);
-//            this.getShaderProgram().setUniform("objectBlendMode", UploadUniformType.ON_CHANGE, BlendType.NORMAL);
-
-            glStateCache.enable(GL_TEXTURE_2D);
-            glStateCache.activeTexture(GL_TEXTURE0);
-            glStateCache.bindTexture(GL_TEXTURE_2D, videoFrameSystem.getTextureId());
+        videoDecoder = ASSET_MANAGER.load(builder.assetName, VideoDecoder.class);
+        try {
+            videoDecoder.grabberStart();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+
+        String cacheName = ASSET_MANAGER.getCacheName(builder.assetName, VideoDecoder.class);
+        ByteBuffer buffer = videoDecoder.nextFrame();
+        if (buffer == null) {
+            buffer = ByteBuffer.allocateDirect(videoDecoder.getWidth() * videoDecoder.getHeight() * 4);
+            buffer.flip();
+        }
+        atlasPacker.addSprite(cacheName, new Sprite(videoDecoder.getWidth(), videoDecoder.getHeight(), buffer, SpriteMemoryPolicy.STREAMING));
+        atlasPacker.generate();
+        videoDecoder.pause();
+
+        for (Vertex vertex : builder.vertices) {
+            put(vertex).end();
+        }
+
+        if (Objects.requireNonNull(builder.paintType) == PaintType.FILL) {
+            drawType(DrawType.QUADS);
+        } else {
+            throw new IllegalStateException("Unexpected value: " + builder.paintType);
+        }
+
+        return super.update();
     }
 
-//    @Override
-//    public void cleanup() {
-//        videoFrameSystem.cleanup();
-//
-//        super.cleanup();
-//    }
+    @Override
+    protected void rendering() {
+        String cacheName = ASSET_MANAGER.getCacheName(builder.assetName, VideoDecoder.class);
 
-    public VideoFrameSystem getVideoFrameSystem() {
-        return videoFrameSystem;
+        int spriteIndex = sparseTexture2DArray.commitTexture(cacheName, true)
+                .updateFromAtlas()
+                .getSpriteIndexFromName(cacheName);
+        for (InstanceParameter instanceParameter : getObjectData().getInstanceParameters()) {
+            instanceParameter.spriteIndex(spriteIndex);
+        }
+
+        super.rendering();
     }
 
-    public interface LocationStep {
-        VertexData1Step location(Location location);
+    @Override
+    public void drawFrame() {
+        videoDecoder.resume();
+        ByteBuffer byteBuffer = videoDecoder.nextFrame();
+        String cacheName = ASSET_MANAGER.getCacheName(builder.assetName, VideoDecoder.class);
+
+        if (byteBuffer != null) {
+            sparseTexture2DArray.updateSprite(cacheName, byteBuffer);
+        }
+
+        super.drawFrame();
     }
 
-    public interface VertexData1Step {
-        VertexData2Step x1_y1_color1(float x1, float y1);
+    public interface RectInputStep<T> {
+        DiagonalStep<T> from(Vertex vertex);
 
-        VertexData3Step x1_y1_color1_2p(float x1, float y1);
+        Vertex2Step<T> vertex1(Vertex vertex);
     }
 
-    public interface VertexData2Step {
-        VertexData3Step x2_y2_color2(float x2, float y2);
-
-        VertexData3Step width2_height2_color2(float width2, float height2);
+    public interface DiagonalStep<T> {
+        VideoNameStep<T> end(Vertex vertex);
     }
 
-    public interface VertexData3Step {
-        VertexData4Step x3_y3_color3(float x3, float y3);
-
-        VertexData4Step width3_height3_color3(float width3, float height3);
-
-        GLVideo x3_y3_color3_2p(float x3, float y3);
-
-        GLVideo width3_height3_color3_2p(float width3, float height3);
+    public interface Vertex2Step<T> {
+        Vertex3Step<T> vertex2(Vertex vertex);
     }
 
-    public interface VertexData4Step {
-        GLVideo x4_y4_color4(float x4, float y4);
-
-        GLVideo width4_height4_color4(float width4, float height4);
+    public interface Vertex3Step<T> {
+        Vertex4Step<T> vertex3(Vertex vertex);
     }
 
-    public static class Builder implements LocationStep, VertexData1Step, VertexData2Step, VertexData3Step, VertexData4Step {
+    public interface Vertex4Step<T> {
+        RectInputStep<T> vertex4(Vertex vertex);
+
+        VideoNameStep<T> end(Vertex vertex);
+    }
+
+    public interface VideoNameStep<T> {
+        T assetVideoName(String assetName);
+    }
+
+    public static class Builder extends AbstractGLObjectBuilder<GLVideo> implements RectInputStep<GLVideo>, DiagonalStep<GLVideo>, Vertex2Step<GLVideo>, Vertex3Step<GLVideo>, Vertex4Step<GLVideo>, VideoNameStep<GLVideo> {
         private final String name;
-        private Location location;
-        private float x1;
-        private float y1;
-        private float x2;
-        private float y2;
-        private float x3;
-        private float y3;
-        private float x4;
-        private float y4;
+        private final List<Vertex> vertices;
+        private String assetName;
+        private Vertex lastFrom;
 
         private GLVideo glVideo;
 
         public Builder(String name) {
             this.name = name;
+
+            this.vertices = new ArrayList<>();
         }
 
         @Override
-        public VertexData1Step location(Location location) {
-            this.location = location;
+        public DiagonalStep<GLVideo> from(Vertex vertex) {
+            this.lastFrom = vertex;
+            this.vertices.add(vertex);
+
+            return this;
+        }
+
+        private void addDiagonalVertices(Vertex to) {
+            vertices.add(lastFrom.copy().setX(to.x));
+            vertices.add(to);
+            vertices.add(lastFrom.copy().setY(to.y));
+        }
+
+        @Override
+        public Vertex2Step<GLVideo> vertex1(Vertex vertex) {
+            this.vertices.add(vertex);
 
             return this;
         }
 
         @Override
-        public VertexData2Step x1_y1_color1(float x1, float y1) {
-            this.x1 = x1;
-            this.y1 = y1;
+        public Vertex3Step<GLVideo> vertex2(Vertex vertex) {
+            this.vertices.add(vertex);
 
             return this;
         }
 
         @Override
-        public VertexData3Step x1_y1_color1_2p(float x1, float y1) {
-            this.x1 = x1;
-            this.y1 = y1;
+        public Vertex4Step<GLVideo> vertex3(Vertex vertex) {
+            this.vertices.add(vertex);
 
             return this;
         }
 
         @Override
-        public VertexData3Step x2_y2_color2(float x2, float y2) {
-            this.x2 = x2;
-            this.y2 = y2;
+        public RectInputStep<GLVideo> vertex4(Vertex vertex) {
+            this.vertices.add(vertex);
 
             return this;
         }
 
         @Override
-        public VertexData3Step width2_height2_color2(float width2, float height2) {
-            this.x2 = x1 + width2;
-            this.y2 = y1 + height2;
+        public VideoNameStep<GLVideo> end(Vertex vertex) {
+            if (lastFrom != null && vertices.size() % 4 == 1) {
+                addDiagonalVertices(vertex);
+                autoAssignUVs(lastFrom.u, lastFrom.v, vertex.u, vertex.v);
+            } else {
+                vertices.add(vertex);
+            }
 
             return this;
         }
 
-        @Override
-        public VertexData4Step x3_y3_color3(float x3, float y3) {
-            this.x3 = x3;
-            this.y3 = y3;
+        private void autoAssignUVs(float minU, float minV, float maxU, float maxV) {
+            int size = vertices.size();
+            if (size < 4) {
+                return;
+            }
 
-            return this;
+            List<Vertex> quad = vertices.subList(size - 4, size);
+
+            float minX = (float) quad.stream().mapToDouble(v -> v.x).min().orElse(0);
+            float maxX = (float) quad.stream().mapToDouble(v -> v.x).max().orElse(0);
+            float minY = (float) quad.stream().mapToDouble(v -> v.y).min().orElse(0);
+            float maxY = (float) quad.stream().mapToDouble(v -> v.y).max().orElse(0);
+
+            float rangeX = maxX - minX;
+            float rangeY = maxY - minY;
+
+            for (Vertex vertex : quad) {
+                float u = (rangeX == 0) ? minU : minU + (vertex.x - minX) / rangeX * (maxU - minU);
+                float v = (rangeY == 0) ? minV : minV + (1.0f - (vertex.y - minY) / rangeY) * (maxV - minV);
+                vertex.setU(u).setV(v);
+            }
         }
 
         @Override
-        public VertexData4Step width3_height3_color3(float width3, float height3) {
-            this.x3 = x2 + width3;
-            this.y3 = y2 + height3;
+        public GLVideo assetVideoName(String assetName) {
+            this.assetName = assetName;
 
-            return this;
+            return fill();
         }
 
         @Override
-        public GLVideo x3_y3_color3_2p(float x3, float y3) {
-            this.x2 = x3;
-            this.y2 = y1;
-            this.x3 = x3;
-            this.y3 = y3;
-            this.x4 = x1;
-            this.y4 = y3;
-
-            return build();
-        }
-
-        @Override
-        public GLVideo width3_height3_color3_2p(float width3, float height3) {
-            this.x2 = x1 + width3;
-            this.y2 = y1;
-            this.x3 = x1 + width3;
-            this.y3 = y1 + height3;
-            this.x4 = x1;
-            this.y4 = y1 + height3;
-
-            return build();
-        }
-
-        @Override
-        public GLVideo x4_y4_color4(float x4, float y4) {
-            this.x4 = x4;
-            this.y4 = y4;
-
-            return build();
-        }
-
-        @Override
-        public GLVideo width4_height4_color4(float width4, float height4) {
-            this.x4 = x3 + width4;
-            this.y4 = y3 + height4;
-
-            return build();
-        }
-
-        private GLVideo build() {
+        protected GLVideo createOrGet() {
             if (glVideo == null) {
                 return glVideo = new GLVideo(name, this);
             } else {

@@ -5,21 +5,23 @@ import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.core.utils.toolkit.Camera;
 import me.hannsi.lfjg.render.debug.RenderDebug;
-import me.hannsi.lfjg.render.event.RenderCleanupEvent;
-import me.hannsi.lfjg.render.manager.AssetManager;
+import me.hannsi.lfjg.render.renderers.GLObject;
 import me.hannsi.lfjg.render.system.mesh.MeshConstants;
 import me.hannsi.lfjg.render.system.mesh.TestMesh;
 import me.hannsi.lfjg.render.system.mesh.persistent.*;
 import me.hannsi.lfjg.render.system.rendering.DrawBatch;
 import me.hannsi.lfjg.render.system.rendering.GLStateCache;
 import me.hannsi.lfjg.render.system.rendering.VAORendering;
+import me.hannsi.lfjg.render.system.rendering.texture.AssetTextureLoader;
 import me.hannsi.lfjg.render.system.rendering.texture.SparseTexture2DArray;
 import me.hannsi.lfjg.render.system.rendering.texture.atlas.AtlasPacker;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import me.hannsi.lfjg.render.uitl.id.GLObjectPool;
 import org.joml.Matrix4f;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static me.hannsi.lfjg.core.Core.*;
@@ -49,6 +51,7 @@ public class LFJGRenderContext {
     public static GLObjectPool glObjectPool;
     public static DrawBatch drawBatch;
     public static Set<IntRef> needUpdateBuilders;
+    public static List<GLObject<?>> useDrawFrameObjects;
     public static Camera mainCamera;
     public static Matrix4f precomputedViewProjection2D;
     public static Matrix4f precomputedViewProjection3D;
@@ -84,13 +87,15 @@ public class LFJGRenderContext {
     }
 
     public static void init() {
-        EVENT_MANAGER.register(AssetManager.class);
-
         glObjectPool = new GLObjectPool();
+
         EVENT_MANAGER.register(glObjectPool);
+
+        ASSET_MANAGER.registerLoader(new AssetTextureLoader());
 
         drawBatch = new DrawBatch();
         needUpdateBuilders = new HashSet<>();
+        useDrawFrameObjects = new ArrayList<>();
 
         mainCamera = new Camera();
 
@@ -130,10 +135,10 @@ public class LFJGRenderContext {
             mainCamera.setDirtyFlag(false);
         }
 
-        vaoRendering.draw();
-    }
+        for (GLObject<?> useDrawFrameObject : useDrawFrameObjects) {
+            useDrawFrameObject.drawFrame();
+        }
 
-    public static void finish() {
-        EVENT_MANAGER.call(new RenderCleanupEvent());
+        vaoRendering.draw();
     }
 }
