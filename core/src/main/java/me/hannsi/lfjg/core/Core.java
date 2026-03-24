@@ -1,8 +1,12 @@
 package me.hannsi.lfjg.core;
 
 import me.hannsi.lfjg.core.debug.DebugLog;
+import me.hannsi.lfjg.core.event.events.CleanupEvent;
+import me.hannsi.lfjg.core.manager.CleanupManager;
 import me.hannsi.lfjg.core.manager.EventManager;
 import me.hannsi.lfjg.core.manager.WorkspaceManager;
+import me.hannsi.lfjg.core.manager.asset.AssetManager;
+import me.hannsi.lfjg.core.manager.asset.AssetStringLoader;
 import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.math.Projection;
 import me.hannsi.lfjg.core.utils.math.map.string2intMap.String2IntMap;
@@ -61,7 +65,9 @@ public class Core {
     public static final Unsafe UNSAFE;
     public static final String2IntMap OPEN_GL_PARAMETER_NAME_MAP = new String2IntMap();
     public static final EventManager EVENT_MANAGER;
+    public static final CleanupManager CLEANUP_MANAGER;
     public static final WorkspaceManager WORKSPACE_MANAGER;
+    public static final AssetManager ASSET_MANAGER;
     public static String VENDOR = "unknown";
     public static String RENDERER = "unknown";
     public static String VERSION = "unknown";
@@ -138,7 +144,13 @@ public class Core {
         }
 
         EVENT_MANAGER = new EventManager();
+        CLEANUP_MANAGER = new CleanupManager();
         WORKSPACE_MANAGER = new WorkspaceManager();
+        ASSET_MANAGER = new AssetManager();
+
+        EVENT_MANAGER.register(CLEANUP_MANAGER);
+
+        ASSET_MANAGER.registerLoader(new AssetStringLoader());
 
         try {
             Field f = Unsafe.class.getDeclaredField("theUnsafe");
@@ -192,6 +204,8 @@ public class Core {
                 }
             }
         }
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> EVENT_MANAGER.call(new CleanupEvent())));
     }
 
     private static void initLFJGContext() {
@@ -233,6 +247,7 @@ public class Core {
         }
 
         updateLFJGLContext(frameBufferWidth, frameBufferHeight, windowWidth, windowHeight);
+
         initLFJGContext();
     }
 
