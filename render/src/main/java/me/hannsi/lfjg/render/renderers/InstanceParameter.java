@@ -11,6 +11,7 @@ import static me.hannsi.lfjg.core.Core.UNSAFE;
 import static me.hannsi.lfjg.core.utils.math.MathHelper.isMatrix4fIdentity;
 import static me.hannsi.lfjg.core.utils.math.MathHelper.isQuaternionfIdentity;
 import static me.hannsi.lfjg.render.LFJGRenderContext.mainCamera;
+import static me.hannsi.lfjg.render.LFJGRenderContext.sparseTexture2DArray;
 import static me.hannsi.lfjg.render.RenderSystemSetting.*;
 
 public class InstanceParameter implements Cleanup {
@@ -133,6 +134,10 @@ public class InstanceParameter implements Cleanup {
         dirtyFlag = true;
 
         return this;
+    }
+
+    public InstanceParameter spriteName(String spriteName) {
+        return spriteIndex(sparseTexture2DArray.getSpriteIndexFromName(spriteName));
     }
 
     public InstanceParameter color(Color color) {

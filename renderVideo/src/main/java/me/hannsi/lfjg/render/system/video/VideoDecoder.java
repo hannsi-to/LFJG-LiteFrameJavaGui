@@ -11,6 +11,7 @@ import java.nio.ByteBuffer;
 
 public class VideoDecoder {
     private boolean paused = false;
+    private boolean finished = false;
     private boolean doVideo = true;
     private boolean doAudio = false;
     private Frame frame;
@@ -105,7 +106,15 @@ public class VideoDecoder {
                 } catch (FFmpegFrameGrabber.Exception e) {
                     throw new RuntimeException(e);
                 }
-            } while (frame != null && grabber.getTimestamp() < expectedVideoTimestamp);
+                if (frame == null) {
+                    finished = true;
+                    return null;
+                }
+            } while (grabber.getTimestamp() < expectedVideoTimestamp);
+
+            if (grabber.getTimestamp() >= grabber.getLengthInTime()) {
+                finished = true;
+            }
 
             if (frame != null && doVideo && frame.image != null) {
                 BufferedImage image = converter.convert(frame);
@@ -139,6 +148,10 @@ public class VideoDecoder {
 
     public void setPaused(boolean paused) {
         this.paused = paused;
+    }
+
+    public boolean isFinished() {
+        return finished;
     }
 
     public boolean isDoVideo() {

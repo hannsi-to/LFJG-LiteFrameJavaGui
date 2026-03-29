@@ -10,6 +10,8 @@ import org.lwjgl.opengl.GL;
 import java.nio.ByteBuffer;
 import java.util.Map;
 
+import static me.hannsi.lfjg.core.Core.ASSET_MANAGER;
+import static me.hannsi.lfjg.core.utils.math.MathHelper.max;
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
 import static org.lwjgl.opengl.ARBSparseTexture.GL_TEXTURE_SPARSE_ARB;
 import static org.lwjgl.opengl.ARBSparseTexture.glTexPageCommitmentARB;
@@ -30,9 +32,9 @@ public class SparseTexture2DArray {
 
     public SparseTexture2DArray(AtlasPacker atlasPacker) {
         this.atlasPacker = atlasPacker;
-        this.width = Math.max(1, ((atlasPacker.getAtlasWidth() + VIRTUAL_PAGE_SIZE_X - 1) / VIRTUAL_PAGE_SIZE_X) * VIRTUAL_PAGE_SIZE_X);
-        this.height = Math.max(1, ((atlasPacker.getAtlasHeight() + VIRTUAL_PAGE_SIZE_Y - 1) / VIRTUAL_PAGE_SIZE_Y) * VIRTUAL_PAGE_SIZE_Y);
-        this.maxLayers = Math.max(1, atlasPacker.getAtlasLayer());
+        this.width = max(1, ((atlasPacker.getAtlasWidth() + VIRTUAL_PAGE_SIZE_X - 1) / VIRTUAL_PAGE_SIZE_X) * VIRTUAL_PAGE_SIZE_X);
+        this.height = max(1, ((atlasPacker.getAtlasHeight() + VIRTUAL_PAGE_SIZE_Y - 1) / VIRTUAL_PAGE_SIZE_Y) * VIRTUAL_PAGE_SIZE_Y);
+        this.maxLayers = max(1, atlasPacker.getAtlasLayer());
 
         this.textureId = glGenTextures();
         glStateCache.bindTexture(GL_TEXTURE_2D_ARRAY, textureId);
@@ -48,6 +50,18 @@ public class SparseTexture2DArray {
         }
 
         glTexStorage3D(GL_TEXTURE_2D_ARRAY, DEFAULT_MIP_LEVELS, GL_RGBA8, width, height, maxLayers);
+    }
+
+    public SparseTexture2DArray addSprite(String name, Sprite sprite) {
+        atlasPacker.addSprite(name, sprite);
+
+        return this;
+    }
+
+    public SparseTexture2DArray addSprite(String assetName) {
+        addSprite(assetName, ASSET_MANAGER.load(assetName, Sprite.class));
+
+        return this;
     }
 
     public SparseTexture2DArray updateSprite(String name, ByteBuffer byteBuffer) {
@@ -131,6 +145,8 @@ public class SparseTexture2DArray {
     }
 
     private void commitTexture(Sprite sprite, boolean state) {
+        atlasPacker.generate();
+
         glStateCache.bindTexture(GL_TEXTURE_2D_ARRAY, textureId);
 
         int alignedX = (sprite.offsetX / VIRTUAL_PAGE_SIZE_X) * VIRTUAL_PAGE_SIZE_X;
