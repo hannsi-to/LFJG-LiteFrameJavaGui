@@ -2,7 +2,6 @@ package me.hannsi.lfjg.render.system.text;
 
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.render.renderers.BlendType;
-import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
 import me.hannsi.lfjg.render.system.mesh.MeshBuilder;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
@@ -137,9 +136,9 @@ public class TextMeshBuilder {
                             .drawType(DrawType.TRIANGLES)
                             .blendType(BlendType.NORMAL)
                             .pointSize(-1f)
-                            .lineWidth(-1f)
-                            .jointType(GLPolygon.DEFAULT_JOINT_TYPE)
-                            .pointType(GLPolygon.DEFAULT_POINT_TYPE)
+                            .strokeWidth(-1f)
+//                            .outLineJoinType(GLPolygon.DEFAULT_JOINT_TYPE)
+//                            .pointType(GLPolygon.DEFAULT_POINT_TYPE)
                             .vertices(
                                     new Vertex(positions[0], positions[1], 0, 0, 0, 0, 0, uvs[0], uvs[1], 0, 0, 0),
                                     new Vertex(positions[2], positions[3], 0, 0, 0, 0, 0, uvs[2], uvs[3], 0, 0, 0),

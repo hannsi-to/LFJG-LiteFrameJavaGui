@@ -1,6 +1,5 @@
 package me.hannsi.example.demo;
 
-import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.renderers.video.GLVideo;
 import me.hannsi.lfjg.render.system.scene.IScene;
@@ -19,11 +18,11 @@ public class Demo4 implements IScene {
 
     @Override
     public void init() {
-        glVideo = GLVideo.createGLVideo("GLVideo1")
-                .location(Location.fromResource("video/sample.mp4"))
-                .x1_y1_color1_2p(0, 0)
-                .width3_height3_color3_2p(frame.getWindowWidth(), frame.getWindowHeight())
-                .update();
+//        glVideo = GLVideo.createGLVideo("GLVideo1")
+//                .location(Location.fromResource("video/sample.mp4"))
+//                .x1_y1_color1_2p(0, 0)
+//                .width3_height3_color3_2p(frame.getWindowWidth(), frame.getWindowHeight())
+//                .update();
     }
 
     @Override

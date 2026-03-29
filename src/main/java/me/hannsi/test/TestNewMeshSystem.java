@@ -1,21 +1,30 @@
 package me.hannsi.test;
 
-import me.hannsi.lfjg.core.Core;
+import me.hannsi.lfjg.core.utils.graphics.ResolutionType;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.core.utils.time.Timer;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.renderers.polygon.GLRect;
+import me.hannsi.lfjg.render.renderers.BlendType;
+import me.hannsi.lfjg.render.renderers.InstanceParameter;
+import me.hannsi.lfjg.render.renderers.JointType;
+import me.hannsi.lfjg.render.renderers.PointType;
+import me.hannsi.lfjg.render.system.mesh.MeshBuilder;
+import me.hannsi.lfjg.render.system.mesh.ObjectData;
+import me.hannsi.lfjg.render.system.mesh.Vertex;
+import me.hannsi.lfjg.render.system.rendering.DrawType;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
 
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import static me.hannsi.lfjg.core.Core.frameBufferSize;
+import static me.hannsi.lfjg.core.utils.math.MathHelper.getRandomInt;
 import static me.hannsi.lfjg.frame.LFJGFrameContext.frame;
-import static me.hannsi.lfjg.render.LFJGRenderContext.finish;
-import static me.hannsi.lfjg.render.LFJGRenderContext.update;
+import static me.hannsi.lfjg.render.LFJGRenderContext.*;
 
 public class TestNewMeshSystem implements LFJGFrame {
     public static List<IntRef> objectIds = new ArrayList<>();
@@ -27,114 +36,116 @@ public class TestNewMeshSystem implements LFJGFrame {
 
     @Override
     public void init() {
-        Core.init(frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), frame.getWindowWidth(), frame.getWindowHeight());
+//        GLRect.createGLRect("GLRect1")
+//                .x1_y1_color1_2p(0, 0, Color.RED)
+//                .width3_height3_color3_2p(frameBufferSize.x, frameBufferSize.y, Color.GREEN)
+//                .fill()
+//                .update();
 
-        GLRect.createGLRect("GLRect1")
-                .x1_y1_color1_2p(0, 0, Color.RED)
-                .width3_height3_color3_2p(frameBufferSize.x, frameBufferSize.y, Color.GREEN)
-                .fill()
-                .update();
+        for (int i = 0; i < 100; i++) {
+//            int w = 16 + (int) (MathHelper.random() * 100);
+//            int h = 16 + (int) (MathHelper.random() * 100);
+            int w = 64;
+            int h = 64;
+//            atlasPacker.addSprite("Code: " + i, Sprite.createRandomColor(w, h, false, SpriteMemoryPolicy.STREAMING).setCommited(false));
+        }
+//        atlasPacker.addSprite("Test1", AssetManager.getTextureAsset(new Location("texture/test/test1.jpg", LocationType.RESOURCE)));
 
-//        AtlasPacker atlas = new AtlasPacker(MAX_TEXTURE_SIZE, MAX_TEXTURE_SIZE, 1, 0, 0, 0);
-//        for (int i = 0; i < 100; i++) {
-////            int w = 16 + (int) (MathHelper.random() * 100);
-////            int h = 16 + (int) (MathHelper.random() * 100);
-//            int w = 64;
-//            int h = 64;
-//            atlas.addSprite("Code: " + i, Sprite.createRandomColor(w, h, false, SpriteMemoryPolicy.STREAMING).setCommited(false));
-//        }
-//        atlas.addSprite("Test1", AssetManager.getTextureAsset(new Location("texture/test/test1.jpg", LocationType.RESOURCE)));
-//
-//        atlas.generate();
-//
-//        sparseTexture2DArray = new SparseTexture2DArray(atlas)
-//                .commitTexture("Code: 0", true)
-//                .commitTexture("Code: 1", false)
-//                .commitTexture("Code: 2", true)
-//                .commitTexture("Test1", true)
-//                .updateFromAtlas();
-//
-//        int instanceCount = 4;
-//        float objectSize = ResolutionType.WQHD.getHeight();
-//        InstanceParameter[] matrix4fs = new InstanceParameter[instanceCount];
-//        int[] spriteIndices = sparseTexture2DArray.getSpriteIndiesFromName(
-//                "Test1",
-//                "Code: 2",
-//                "Code: 1",
-//                "Code: 0"
-//        );
-//        for (int i = 0; i < instanceCount; i++) {
-//            float scale = ((objectSize / instanceCount) * (instanceCount - i)) / objectSize;
-//            int layer = spriteIndices[i];
-//            matrix4fs[i] = InstanceParameter.createBuilder()
-//                    .spriteIndex(layer)
-//                    .scale(scale, scale, 1)
-//                    .color(new Color(0f, 1f, 1f, 1f));
-//        }
-//
-//        InstanceParameter[] instanceParameters1 = new InstanceParameter[]{
-//                InstanceParameter.createBuilder()
-//                        .color(new Color(1f, 1f, 1f, 1f))
-//        };
-//        mesh.addObject(
-//                MeshBuilder.createBuilder()
-//                        .drawType(DrawType.QUADS)
-//                        .pointSize(30)
-//                        .lineWidth(10f)
-//                        .vertices(
-//                                new Vertex(0, 0, 0, 1, 0, 1, 1f, 0, 1, 0, 0, 0),
-//                                new Vertex(objectSize, 0, 0, 0, 1, 0, 1f, 1, 1, 0, 0, 0),
-//                                new Vertex(objectSize, objectSize, 0, 0, 0, 1, 1f, 1, 0, 0, 0, 0),
-//                                new Vertex(0, objectSize, 0, 0, 1, 1, 1f, 0, 0, 0, 0, 0)
-//                        )
-//                        .objectData(new ObjectData(instanceCount, matrix4fs))
-//        );
+        atlasPacker.generate();
 
-//        int numObjects = 100;
-//        int numVerticesPerObject = 1;
-//
-//        float minX = 0;
-//        float maxX = ResolutionType.WQHD.getWidth();
-//        float minY = 0;
-//        float maxY = ResolutionType.WQHD.getHeight();
-//
-//        int columns = 10;
-//        int rows = 10;
-//
-//        float cellWidth = (maxX - minX) / columns;
-//        float cellHeight = (maxY - minY) / rows;
-//
-//        for (int i = 0; i < numObjects; i++) {
-//            InstanceParameter[] instanceParameters = new InstanceParameter[numVerticesPerObject];
-//
-//            int col = i % columns;
-//            int row = i / columns;
-//
-//            float x = minX + col * cellWidth + cellWidth / 2f;
-//            float y = minY + row * cellHeight + cellHeight / 2f;
-//
-//            float r = (float) i / numObjects;
-//            float g = 1f;
-//            float b = 1f;
-//
-//            instanceParameters[0] = InstanceParameter.createBuilder()
-//                    .translate(x, y, 0)
-//                    .color(new Color(r, g, b, 1));
-//
-//            MeshBuilder builder;
-//            mesh.addObject(
-//                    builder = MeshBuilder.createBuilder()
-//                            .drawType(DrawType.POINTS)
-//                            .pointSize(30f)
-//                            .lineWidth(-1f)
-//                            .pointType(PointType.ROUND)
-//                            .jointType(JointType.NONE)
-//                            .vertices(new Vertex(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0))
-//                            .objectData(new ObjectData(numVerticesPerObject, instanceParameters))
-//            );
-//
-//            objectIds.add(builder.getObjectIdPointer());
-//        }
+        sparseTexture2DArray.commitTexture("Code: 0", true)
+                .commitTexture("Code: 1", false)
+                .commitTexture("Code: 2", true)
+                .commitTexture("Test1", true)
+                .updateFromAtlas();
+
+        int instanceCount = 4;
+        float objectSize = 1920;
+        InstanceParameter[] matrix4fs = new InstanceParameter[instanceCount];
+        int[] spriteIndices = sparseTexture2DArray.getSpriteIndiesFromName(
+                "Test1",
+                "Code: 2",
+                "Code: 1",
+                "Code: 0"
+        );
+        for (int i = 0; i < instanceCount; i++) {
+            float scale = ((objectSize / instanceCount) * (instanceCount - i)) / objectSize;
+            int layer = spriteIndices[i];
+            matrix4fs[i] = InstanceParameter.createBuilder()
+                    .spriteIndex(layer)
+                    .scale(scale, scale, 1)
+                    .color(new Color(0f, 1f, 0f, 1f));
+        }
+
+        InstanceParameter[] instanceParameters1 = new InstanceParameter[]{
+                InstanceParameter.createBuilder()
+                        .color(new Color(1f, 1f, 1f, 1f))
+        };
+        mesh.addObject(
+                MeshBuilder.createBuilder()
+                        .drawType(DrawType.QUADS)
+                        .pointSize(30)
+                        .strokeWidth(10f)
+                        .vertices(
+                                new Vertex(0, 0, 0, 1, 0, 1, 1f, 0, 1, 0, 0, 0),
+                                new Vertex(objectSize, 0, 0, 0, 1, 0, 1f, 1, 1, 0, 0, 0),
+                                new Vertex(objectSize, objectSize, 0, 0, 0, 1, 1f, 1, 0, 0, 0, 0),
+                                new Vertex(0, objectSize, 0, 0, 1, 1, 1f, 0, 0, 0, 0, 0)
+                        )
+                        .objectData(new ObjectData(instanceCount, matrix4fs))
+        );
+
+        int numObjects = 100;
+        int numVerticesPerObject = 1;
+
+        float minX = 100;
+        float minY = 100;
+        float maxX = ResolutionType.WQHD.getWidth();
+        float maxY = ResolutionType.WQHD.getHeight();
+
+        int columns = 10;
+        int rows = 10;
+
+        float cellWidth = (maxX - minX) / columns;
+        float cellHeight = (maxY - minY) / rows;
+
+        BlendType blendType = BlendType.NO_BLEND;
+        for (int i = 0; i < numObjects; i++) {
+            InstanceParameter[] instanceParameters = new InstanceParameter[numVerticesPerObject];
+
+            int col = i % columns;
+            int row = i / columns;
+
+            float x = minX + col * cellWidth + cellWidth / 2f;
+            float y = minY + row * cellHeight + cellHeight / 2f;
+
+            float r = (float) i / numObjects;
+            float g = 1f;
+            float b = 0f;
+
+            if (i > 50) {
+                blendType = BlendType.ADD;
+            }
+
+            instanceParameters[0] = InstanceParameter.createBuilder()
+                    .translate(x, y, 0)
+                    .color(new Color(r, g, b, 1));
+
+            MeshBuilder builder;
+            mesh.addObject(
+                    builder = MeshBuilder.createBuilder()
+                            .blendType(blendType)
+                            .drawType(DrawType.POINTS)
+                            .pointSize(30f)
+                            .strokeWidth(-1f)
+                            .pointType(PointType.SQUARE)
+                            .strokeJoinType(JointType.NONE)
+                            .vertices(new Vertex(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0))
+                            .objectData(new ObjectData(numVerticesPerObject, instanceParameters))
+            );
+
+            objectIds.add(builder.getObjectIdPointer());
+        }
 
 //        ObjectParameter[] objectParameters2 = new ObjectParameter[1];
 //        objectParameters2[0] = ObjectParameter.createBuilder()
@@ -342,34 +353,43 @@ public class TestNewMeshSystem implements LFJGFrame {
 //        sparseTexture2DArray.updateSprite("Code: 0", newData);
 
 
-//        if (timer.passed(500)) {
-//            System.out.println("FPS: " + frame.getFps());
-//            timer.reset();
-//
-//            if (!objectIds.isEmpty()) {
-//                IntRef id = objectIds.getFirst();
-//
-//                if (id != null) {
-//                    int i = id.getValue();
-//
-//                    System.out.println("id: " + i);
-//
-//                    for (InstanceParameter instanceParameter : glObjectPool.getBuilder(i).getObjectData().getInstanceParameters()) {
+        if (timer.passed(500)) {
+            IntBuffer vp = BufferUtils.createIntBuffer(4);
+            GL11.glGetIntegerv(GL11.GL_VIEWPORT, vp);
+
+            System.out.println(
+                    "Viewport = x:" + vp.get(0) +
+                            " y:" + vp.get(1) +
+                            " w:" + vp.get(2) +
+                            " h:" + vp.get(3)
+            );
+
+            System.out.println("FPS: " + frame.getFps());
+            timer.reset();
+
+            if (!objectIds.isEmpty()) {
+                IntRef id = objectIds.get(getRandomInt(0, objectIds.size() - 1));
+
+                if (id != null) {
+                    int i = id.getValue();
+
+                    System.out.println("id: " + i);
+
+                    for (InstanceParameter instanceParameter : glObjectPool.getBuilder(i).getObjectData().getInstanceParameters()) {
 //                        instanceParameter.translate(100, 0, 0);
-//                    }
-//
-////                    mesh.deleteObject(objectIds, i);
-//                } else {
-//                    objectIds.removeFirst();
-//                    System.err.println("Warning: Found null ID at index " + 0);
-//                }
-//            }
-//        }
+                    }
+
+//                    mesh.deleteObject(objectIds, i);
+                } else {
+                    objectIds.removeFirst();
+                    System.err.println("Warning: Found null ID at index " + 0);
+                }
+            }
+        }
     }
 
     @Override
     public void stopFrame() {
-        finish();
     }
 
     @Override

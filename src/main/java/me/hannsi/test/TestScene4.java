@@ -1,11 +1,9 @@
 package me.hannsi.test;
 
-import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
-import me.hannsi.lfjg.render.renderers.polygon.GLTriangle;
 import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
@@ -31,15 +29,15 @@ public class TestScene4 implements IScene {
         textureCache = TextureCache.createTextureCache()
                 .createCache("Texture1", Location.fromResource("texture/test/test_image_3840x2160.jpg"));
 
-        GLTriangle triangleClipping = GLTriangle.createGLTriangle("TriangleClipping")
-                .x1_y1_color1(200, 200, Color.of(0, 0, 0, 0))
-                .x2_y2_color2(500, 500, Color.of(0, 0, 0, 0))
-                .x3_y3_color3(700, 200, Color.of(0, 0, 0, 0))
-                .fill()
-                .update();
+//        GLTriangle triangleClipping = GLTriangle.createGLTriangle("TriangleClipping")
+//                .x1_y1_color1(200, 200, Color.of(0, 0, 0, 0))
+//                .x2_y2_color2(500, 500, Color.of(0, 0, 0, 0))
+//                .x3_y3_color3(700, 200, Color.of(0, 0, 0, 0))
+//                .fill()
+//                .update();
 
-        clippingCache = GLObjectCache.createGLObjectCache()
-                .createCache(triangleClipping);
+//        clippingCache = GLObjectCache.createGLObjectCache()
+//                .createCache(triangleClipping);
 
 //                .createCache("Bloom", Bloom.createBloom())
 //                .createCache("BoxBlur", BoxBlur.createBoxBlur())

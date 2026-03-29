@@ -8,7 +8,6 @@ import me.hannsi.lfjg.core.utils.math.MathHelper;
 import me.hannsi.lfjg.core.utils.toolkit.StringUtil;
 import me.hannsi.lfjg.render.debug.exceptions.UnknownAlignType;
 import me.hannsi.lfjg.render.renderers.BlendType;
-import me.hannsi.lfjg.render.renderers.polygon.GLPolygon;
 import me.hannsi.lfjg.render.system.mesh.MeshBuilder;
 import me.hannsi.lfjg.render.system.mesh.Vertex;
 import me.hannsi.lfjg.render.system.rendering.DrawType;
@@ -104,9 +103,9 @@ public class TextRenderer {
                         .drawType(DrawType.QUADS)
                         .blendType(BlendType.NORMAL)
                         .pointSize(-1f)
-                        .lineWidth(-1f)
-                        .jointType(GLPolygon.DEFAULT_JOINT_TYPE)
-                        .pointType(GLPolygon.DEFAULT_POINT_TYPE)
+                        .strokeWidth(-1f)
+//                        .outLineJoinType(GLPolygon.DEFAULT_JOINT_TYPE)
+//                        .pointType(GLPolygon.DEFAULT_POINT_TYPE)
                         .vertices(
                                 new Vertex(0, 0, 0, defaultFontColor.getRedF(), defaultFontColor.getGreen(), defaultFontColor.getBlueF(), defaultFontColor.getAlphaF(), 0, 0, 0, 0, 0),
                                 new Vertex(0, 1, 0, defaultFontColor.getRedF(), defaultFontColor.getGreen(), defaultFontColor.getBlueF(), defaultFontColor.getAlphaF(), 0, 0, 0, 0, 0),

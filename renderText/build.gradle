@@ -15,6 +15,10 @@ dependencies {
     // GSON
     implementation "com.google.code.gson:gson:2.13.1"
 
+    // msdfgen
+    api "org.lwjgl:lwjgl-msdfgen"
+    runtimeOnly "org.lwjgl:lwjgl-msdfgen::$lwjglNatives"
+
     implementation project(":core")
     implementation project(":render")
 }

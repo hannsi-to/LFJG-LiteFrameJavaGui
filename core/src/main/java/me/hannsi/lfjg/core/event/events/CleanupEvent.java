@@ -4,6 +4,7 @@ import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.event.Event;
+import me.hannsi.lfjg.core.manager.CleanupManager;
 import me.hannsi.lfjg.core.utils.toolkit.ANSIFormat;
 
 import java.util.ArrayList;
@@ -13,6 +14,9 @@ import java.util.List;
 import static me.hannsi.lfjg.core.utils.math.MathHelper.max;
 
 public class CleanupEvent extends Event {
+    public CleanupEvent() {
+    }
+
     private static List<String> toLines(Object value) {
         return value == null ? Collections.singletonList("null") : value.toString().lines().toList();
     }
@@ -21,28 +25,36 @@ public class CleanupEvent extends Event {
         List<String> texts = new ArrayList<>();
 
         boolean allState = true;
-        for (CleanupData cleanupData : cleanupDatum) {
-            texts.add(cleanupData.targetCleanupObjectName);
-            texts.add("\t" + String.format("%-" + cleanupData.width + "s | Cleanup State", "Key"));
-            texts.add("\t" + "-".repeat(cleanupData.width) + "-+-" + "-".repeat("Cleanup State".length()));
+        if (cleanupDatum == null || cleanupDatum.length == 0) {
+            if (cleanupClass.getSimpleName().equals(CleanupManager.class.getSimpleName())) {
 
-            int index = 0;
-            for (String name : cleanupData.names) {
-                boolean state = cleanupData.states.get(index);
-                if (!state) {
-                    allState = false;
+            } else {
+
+            }
+        } else {
+            for (CleanupData cleanupData : cleanupDatum) {
+                texts.add(cleanupData.targetCleanupObjectName);
+                texts.add("\t" + String.format("%-" + cleanupData.width + "s | Cleanup State", "Key"));
+                texts.add("\t" + "-".repeat(cleanupData.width) + "-+-" + "-".repeat("Cleanup State".length()));
+
+                int index = 0;
+                for (String name : cleanupData.names) {
+                    boolean state = cleanupData.states.get(index);
+                    if (!state) {
+                        allState = false;
+                    }
+
+                    String color = state ? ANSIFormat.GREEN : ANSIFormat.RED;
+                    List<String> lines = toLines(cleanupData.values.get(index));
+
+                    texts.add("\t" + String.format("%-" + cleanupData.width + "s | %s%s%s", name, color, lines.getFirst(), ANSIFormat.RESET));
+
+                    for (int i = 1; i < lines.size(); i++) {
+                        texts.add("\t" + " ".repeat(cleanupData.width) + " | " + color + lines.get(i) + ANSIFormat.RESET);
+                    }
+
+                    index++;
                 }
-
-                String color = state ? ANSIFormat.GREEN : ANSIFormat.RED;
-                List<String> lines = toLines(cleanupData.values.get(index));
-
-                texts.add("\t" + String.format("%-" + cleanupData.width + "s | %s%s%s", name, color, lines.getFirst(), ANSIFormat.RESET));
-
-                for (int i = 1; i < lines.size(); i++) {
-                    texts.add("\t" + " ".repeat(cleanupData.width) + " | " + color + lines.get(i) + ANSIFormat.RESET);
-                }
-
-                index++;
             }
         }
 
@@ -58,8 +70,8 @@ public class CleanupEvent extends Event {
         public List<Boolean> states;
         public List<Object> values;
 
-        public CleanupData(String targetCleanupObjectName) {
-            this.targetCleanupObjectName = targetCleanupObjectName;
+        public CleanupData(Class<?> targetCleanupClass) {
+            this.targetCleanupObjectName = targetCleanupClass.getSimpleName();
             this.width = "key".length();
             this.names = new ArrayList<>();
             this.states = new ArrayList<>();

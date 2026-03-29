@@ -6,7 +6,6 @@ import me.hannsi.lfjg.core.utils.math.map.string2objectMap.LinkedString2ObjectMa
 import me.hannsi.lfjg.render.debug.exceptions.texture.AtlasPackerException;
 import me.hannsi.lfjg.render.uitl.id.Id;
 
-import static me.hannsi.lfjg.core.Core.ASSET_MANAGER;
 import static me.hannsi.lfjg.core.utils.math.MathHelper.min;
 import static me.hannsi.lfjg.render.LFJGRenderContext.*;
 
@@ -69,10 +68,6 @@ public class AtlasPacker {
         }
 
         return this;
-    }
-
-    public AtlasPacker addSprite(String assetName) {
-        return addSprite(assetName, ASSET_MANAGER.load(assetName, Sprite.class));
     }
 
     public void generate() {

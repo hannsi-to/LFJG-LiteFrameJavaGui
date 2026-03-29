@@ -1,7 +1,6 @@
 package me.hannsi.example.wikiPage6;
 
 import me.hannsi.lfjg.core.Core;
-import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
@@ -20,11 +19,11 @@ public class MainFrame implements LFJGFrame {
     public void init() {
         Core.init(frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), frame.getWindowWidth(), frame.getWindowHeight());
 
-        glRect1 = GLRect.createGLRect("Rect1")
-                .x1_y1_color1_2p(500, 500, Color.RED)
-                .x3_y3_color3_2p(1000, 1000, Color.RED)
-                .fill()
-                .update();
+//        glRect1 = GLRect.createGLRect("Rect1")
+//                .x1_y1_color1_2p(500, 500, Color.RED)
+//                .x3_y3_color3_2p(1000, 1000, Color.RED)
+//                .fill()
+//                .update();
 
 //        effectCache1 = EffectCache.createEffectCache()
 //                .createCache(Rotate.createRotate("Rotate1").zDegree(45).cx(500).cy(500))

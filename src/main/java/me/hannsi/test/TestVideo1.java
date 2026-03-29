@@ -1,7 +1,6 @@
 package me.hannsi.test;
 
 import me.hannsi.lfjg.core.event.EventHandler;
-import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.event.events.user.KeyEvent;
 import me.hannsi.lfjg.frame.event.events.user.MouseButtonEvent;
@@ -27,11 +26,11 @@ public class TestVideo1 implements IScene {
 
     @Override
     public void init() {
-        glVideo = GLVideo.createGLVideo("TestVideo1")
-                .location(Location.fromResource("video/[FMV] world.execute(me); - MILI [cn4M-fH08XY].webm"))
-                .x1_y1_color1_2p(0, 0)
-                .width3_height3_color3_2p(frame.getWindowWidth(), frame.getWindowHeight())
-                .update();
+//        glVideo = GLVideo.createGLVideo("TestVideo1")
+//                .location(Location.fromResource("video/[FMV] world.execute(me); - MILI [cn4M-fH08XY].webm"))
+//                .x1_y1_color1_2p(0, 0)
+//                .width3_height3_color3_2p(frame.getWindowWidth(), frame.getWindowHeight())
+//                .update();
     }
 
     @Override

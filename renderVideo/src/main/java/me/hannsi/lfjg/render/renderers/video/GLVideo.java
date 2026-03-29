@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static me.hannsi.lfjg.core.Core.ASSET_MANAGER;
-import static me.hannsi.lfjg.render.LFJGRenderContext.atlasPacker;
 import static me.hannsi.lfjg.render.LFJGRenderContext.sparseTexture2DArray;
 
 
@@ -47,8 +46,7 @@ public class GLVideo extends GLObject<GLVideo> {
             buffer = ByteBuffer.allocateDirect(videoDecoder.getWidth() * videoDecoder.getHeight() * 4);
             buffer.flip();
         }
-        atlasPacker.addSprite(cacheName, new Sprite(videoDecoder.getWidth(), videoDecoder.getHeight(), buffer, SpriteMemoryPolicy.STREAMING));
-        atlasPacker.generate();
+        sparseTexture2DArray.addSprite(cacheName, new Sprite(videoDecoder.getWidth(), videoDecoder.getHeight(), buffer, SpriteMemoryPolicy.STREAMING));
         videoDecoder.pause();
 
         for (Vertex vertex : builder.vertices) {
@@ -86,6 +84,10 @@ public class GLVideo extends GLObject<GLVideo> {
 
         if (byteBuffer != null) {
             sparseTexture2DArray.updateSprite(cacheName, byteBuffer);
+        }
+
+        if (videoDecoder.isFinished() && !sparseTexture2DArray.commitedTexture(cacheName)) {
+            sparseTexture2DArray.commitTexture(cacheName, false);
         }
 
         super.drawFrame();

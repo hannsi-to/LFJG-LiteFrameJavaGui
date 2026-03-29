@@ -4,14 +4,13 @@ import me.hannsi.lfjg.audio.SoundCache;
 import me.hannsi.lfjg.audio.SoundData;
 import me.hannsi.lfjg.audio.SoundListener;
 import me.hannsi.lfjg.audio.SoundLoaderType;
-import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.graphics.image.ImageCapture;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.animation.system.AnimationCache;
 import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.polygon.GLRect;
-import me.hannsi.lfjg.render.renderers.polygon.GLTriangle;
+import me.hannsi.lfjg.render.renderers.polygon.GLTriangles;
 import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
 import me.hannsi.lfjg.render.system.scene.IScene;
 import me.hannsi.lfjg.render.system.scene.Scene;
@@ -24,7 +23,7 @@ public class TestScene1 implements IScene {
     GLRect glGround;
     GLRect gl1;
     GLRect gl2;
-    GLTriangle glTriangle;
+    GLTriangles glTriangles;
     GLObjectCache glObjectCache;
     TextureCache textureCache;
 
@@ -113,12 +112,12 @@ public class TestScene1 implements IScene {
 //        glFont.setFont(fontCache, font, 64);
 //        glFont.font(TextFormat.SPASE_X + "{100}" + "字間を確認" + TextFormat.RESET + "字間を確認" + TextFormat.SPASE_Y + "{100}" + TextFormat.NEWLINE + TextFormat.RESET_POINT_X + TextFormat.RED + "Ka" + TextFormat.BOLD + "zu" + TextFormat.ITALIC + "bon" + "です!" + TextFormat.OBFUSCATED + "test sdaasd aaaa", 0, 200, 1f, Color.of(255, 255, 255, alpha));
 
-        glTriangle = GLTriangle.createGLTriangle("test3")
-                .x1_y1_color1(0, 0, Color.of(255, 255, 255, alpha))
-                .x2_y2_color2(500, 0, Color.of(255, 255, 0, alpha))
-                .x3_y3_color3(250, 500, Color.of(255, 255, 255, alpha))
-                .fill()
-                .update();
+//        glTriangle = GLTriangle.createGLTriangle("test3")
+//                .x1_y1_color1(0, 0, Color.of(255, 255, 255, alpha))
+//                .x2_y2_color2(500, 0, Color.of(255, 255, 0, alpha))
+//                .x3_y3_color3(250, 500, Color.of(255, 255, 255, alpha))
+//                .fill()
+//                .update();
 
 //        glSVG = new GLSVG("SVG1");
 //        glSVG.svg(new ResourcesLocation("svg/delete.svg"), 100, 100, 5, 5);
