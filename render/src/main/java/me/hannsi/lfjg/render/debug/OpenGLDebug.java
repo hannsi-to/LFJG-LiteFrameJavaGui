@@ -1,11 +1,10 @@
-package me.hannsi.lfjg.testRender.debug;
+package me.hannsi.lfjg.render.debug;
 
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.math.map.int2intMap.Int2IntMap;
 import me.hannsi.lfjg.core.utils.reflection.StackTraceUtil;
-import me.hannsi.lfjg.testRender.debug.exceptions.OpenGLException;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLDebugMessageCallback;
 import org.lwjgl.system.MemoryUtil;

@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.testRender.debug.exceptions;
+package me.hannsi.lfjg.render.debug;
 
 public class OpenGLException extends RuntimeException {
     public OpenGLException() {

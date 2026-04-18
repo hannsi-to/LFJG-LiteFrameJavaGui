@@ -708,7 +708,7 @@ public class Core {
     }
 
     public static class GPUUtil {
-        public static final String PACKAGE = DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + ".uitl.GPUUtil";
+        public static final String PACKAGE = DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + ".util.GPUUtil";
 
         public static String getVendor() {
             if (!ENABLE_LFJG_RENDER_SYSTEM) {
@@ -764,7 +764,7 @@ public class Core {
     }
 
     public static class GLStateCache {
-        public static final String PACKAGE = DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + ".system.rendering.GLStateCache";
+        public static final String PACKAGE = DEFAULT_LFJG_PATH + DEFAULT_LFJG_RENDER_SYSTEM_PATH + ".system.GLStateCache";
         public static final ViewportCall VIEWPORT_CALL;
         public static final GetLastFrameBufferCall GET_LAST_FRAME_BUFFER;
         public static final BindFrameBufferCall BIND_FRAME_BUFFER_CALL;

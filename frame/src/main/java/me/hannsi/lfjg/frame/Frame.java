@@ -67,8 +67,8 @@ public class Frame implements IFrame {
         this.threadName = threadName;
         Thread renderThread = new Thread(this::createFrame, threadName);
         renderThread.setUncaughtExceptionHandler((t, e) -> {
-//            DebugLog.error(getClass(), "FATAL ERROR in thread: " + t.getName());
-//            DebugLog.error(getClass(), e);
+            DebugLog.error(getClass(), "FATAL ERROR in thread: " + t.getName());
+            DebugLog.error(getClass(), e);
             System.exit(1);
         });
         renderThread.start();

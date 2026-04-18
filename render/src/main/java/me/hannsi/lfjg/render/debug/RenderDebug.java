@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.testRender.debug;
+package me.hannsi.lfjg.render.debug;
 
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.testRender.debug.exceptions.render.RenderDebugException;
@@ -8,8 +8,8 @@ import org.lwjgl.opengl.GL14;
 
 import java.nio.*;
 
-import static me.hannsi.lfjg.testRender.LFJGRenderContext.CONTEXT_PROFILE_MASK;
-import static me.hannsi.lfjg.testRender.RenderSystemSetting.RENDER_DEBUG_THROW_ERROR;
+import static me.hannsi.lfjg.render.LFJGRenderContext.CONTEXT_PROFILE_MASK;
+import static me.hannsi.lfjg.render.RenderSystemSetting.RENDER_DEBUG_THROW_ERROR;
 import static org.lwjgl.opengl.GL32.GL_CONTEXT_COMPATIBILITY_PROFILE_BIT;
 import static org.lwjgl.opengl.GL32.GL_CONTEXT_CORE_PROFILE_BIT;
 

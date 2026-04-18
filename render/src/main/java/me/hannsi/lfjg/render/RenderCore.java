@@ -1,4 +1,4 @@
-package render;
+package me.hannsi.lfjg.render;
 
 import me.hannsi.lfjg.core.Service;
 import me.hannsi.lfjg.core.ServiceData;

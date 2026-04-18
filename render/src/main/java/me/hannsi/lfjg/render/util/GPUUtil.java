@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.testRender.uitl;
+package me.hannsi.lfjg.render.util;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.GL_SHADING_LANGUAGE_VERSION;

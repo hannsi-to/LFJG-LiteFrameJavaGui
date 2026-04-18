@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.testRender.system.rendering;
+package me.hannsi.lfjg.render.system;
 
 import me.hannsi.lfjg.core.event.EventHandler;
 import me.hannsi.lfjg.core.event.events.OpenGLStaticMethodHookEvent;
