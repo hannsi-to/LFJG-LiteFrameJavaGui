@@ -19,19 +19,23 @@ import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-public record Location(String path, LocationType locationType) implements Cleanup {
+public record Location(Class<?> clazz, String path, LocationType locationType) implements Cleanup {
     public static Location fromFile(String absolutePath) {
-        return new Location(absolutePath, LocationType.FILE);
+        return new Location(Location.class, absolutePath, LocationType.FILE);
     }
 
     public static Location fromResource(String resourcePath) {
+        return fromResource(Location.class, resourcePath);
+    }
+
+    public static Location fromResource(Class<?> clazz, String resourcePath) {
         String normalizedPath = resourcePath.startsWith("/") || resourcePath.startsWith("\\") ? resourcePath.substring(1) : resourcePath;
 
-        return new Location(normalizedPath, LocationType.RESOURCE);
+        return new Location(clazz, normalizedPath, LocationType.RESOURCE);
     }
 
     public static Location fromURL(String url) {
-        return new Location(url, LocationType.URL);
+        return new Location(Location.class, url, LocationType.URL);
     }
 
     private static String normalizeResourcePath(String path) {
@@ -58,7 +62,7 @@ public record Location(String path, LocationType locationType) implements Cleanu
             case FILE ->
                     Files.newInputStream(Paths.get(path));
             case RESOURCE ->
-                    Location.class.getClassLoader().getResourceAsStream(path);
+                    clazz.getClassLoader().getResourceAsStream(path);
             case URL ->
                     new URL(path).openStream();
         };
@@ -125,12 +129,12 @@ public record Location(String path, LocationType locationType) implements Cleanu
         switch (locationType) {
             case FILE: {
                 File parent = new File(path).getParentFile();
-                return (parent != null) ? new Location(parent.getPath(), locationType) : null;
+                return (parent != null) ? new Location(clazz, parent.getPath(), locationType) : null;
             }
             case RESOURCE: {
                 String normalizedPath = path.startsWith("/") ? path.substring(1) : path;
                 int lastSlash = normalizedPath.lastIndexOf('/');
-                return (lastSlash > 0) ? new Location(normalizedPath.substring(0, lastSlash), locationType) : null;
+                return (lastSlash > 0) ? new Location(clazz, normalizedPath.substring(0, lastSlash), locationType) : null;
             }
             case URL: {
                 try {
@@ -138,7 +142,7 @@ public record Location(String path, LocationType locationType) implements Cleanu
                     String file = url.getFile();
                     int lastSlash = file.lastIndexOf('/');
                     if (lastSlash > 0) {
-                        return new Location(new URL(url.getProtocol(), url.getHost(), url.getPort(), file.substring(0, lastSlash)).toString(), locationType);
+                        return new Location(clazz, new URL(url.getProtocol(), url.getHost(), url.getPort(), file.substring(0, lastSlash)).toString(), locationType);
                     } else {
                         return null;
                     }
@@ -160,7 +164,7 @@ public record Location(String path, LocationType locationType) implements Cleanu
             case FILE: {
                 Path base = Paths.get(path);
                 Path resolved = base.resolve(relativePath).normalize();
-                return new Location(resolved.toString(), LocationType.FILE);
+                return new Location(clazz, resolved.toString(), LocationType.FILE);
             }
 
             case RESOURCE: {
@@ -170,14 +174,14 @@ public record Location(String path, LocationType locationType) implements Cleanu
                 String dir = (lastSlash >= 0) ? base.substring(0, lastSlash + 1) : "";
 
                 String combined = dir + relativePath;
-                return new Location(normalizeResourcePath(combined), LocationType.RESOURCE);
+                return new Location(clazz, normalizeResourcePath(combined), LocationType.RESOURCE);
             }
 
             case URL: {
                 try {
                     URL base = new URL(path);
                     URL resolved = new URL(base, relativePath);
-                    return new Location(resolved.toString(), LocationType.URL);
+                    return new Location(clazz, resolved.toString(), LocationType.URL);
                 } catch (MalformedURLException e) {
                     throw new IllegalArgumentException("Invalid URL resolve: " + relativePath, e);
                 }
