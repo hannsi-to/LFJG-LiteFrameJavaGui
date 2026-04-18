@@ -5,19 +5,19 @@ import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.RenderSystemSetting;
-import me.hannsi.lfjg.render.renderers.JointType;
-import me.hannsi.lfjg.render.renderers.polygon.GLRoundedRect;
-import me.hannsi.lfjg.render.system.mesh.Corner;
-import me.hannsi.lfjg.render.system.mesh.Vertex;
+import me.hannsi.lfjg.testRender.RenderSystemSetting;
+import me.hannsi.lfjg.testRender.renderers.JointType;
+import me.hannsi.lfjg.testRender.renderers.polygon.GLRoundedRect;
+import me.hannsi.lfjg.testRender.system.mesh.Corner;
+import me.hannsi.lfjg.testRender.system.mesh.Vertex;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
 
 import static me.hannsi.lfjg.core.CoreSystemSetting.SHARE_OBJECT;
 import static me.hannsi.lfjg.frame.LFJGFrameContext.frame;
-import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
-import static me.hannsi.lfjg.render.LFJGRenderContext.update;
+import static me.hannsi.lfjg.testRender.LFJGRenderContext.glStateCache;
+import static me.hannsi.lfjg.testRender.LFJGRenderContext.update;
 import static org.lwjgl.opengl.GL11.*;
 
 public class TestNewGLObject implements LFJGFrame {

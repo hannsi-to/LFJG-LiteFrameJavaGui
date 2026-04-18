@@ -175,22 +175,26 @@ public class DebugLog {
             case DEBUG:
                 System.out.print(ANSIFormat.RESET);
                 if (DEBUG_LOG_FABRIC_DEBUG) {
-                    LOGGER.info("{}{}{}", ANSIFormat.RESET, description, ANSIFormat.RESET);
+                    LOGGER.info("{}", description);
                 } else {
-                    LOGGER.debug("{}{}{}", ANSIFormat.RESET, description, ANSIFormat.RESET);
+                    LOGGER.debug("{}", description);
                 }
+                System.out.print(ANSIFormat.RESET);
                 break;
             case INFO:
                 System.out.print(ANSIFormat.BLUE);
-                LOGGER.info("{}{}{}", ANSIFormat.BLUE, description, ANSIFormat.RESET);
+                LOGGER.info("{}", description);
+                System.out.print(ANSIFormat.RESET);
                 break;
             case ERROR:
                 System.out.print(ANSIFormat.RED);
-                LOGGER.error("{}{}{}", ANSIFormat.RED, description, ANSIFormat.RESET);
+                LOGGER.error("{}", description);
+                System.out.print(ANSIFormat.RESET);
                 break;
             case WARNING:
                 System.out.print(ANSIFormat.YELLOW);
-                LOGGER.warn("{}{}{}", ANSIFormat.YELLOW, description, ANSIFormat.RESET);
+                LOGGER.warn("{}", description);
+                System.out.print(ANSIFormat.RESET);
                 break;
         }
     }

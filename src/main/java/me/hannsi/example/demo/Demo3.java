@@ -2,13 +2,13 @@ package me.hannsi.example.demo;
 
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.render.effect.effects.*;
-import me.hannsi.lfjg.render.effect.system.EffectCache;
-import me.hannsi.lfjg.render.renderers.polygon.GLRect;
-import me.hannsi.lfjg.render.system.scene.IScene;
-import me.hannsi.lfjg.render.system.scene.Scene;
+import me.hannsi.lfjg.testRender.effect.effects.*;
+import me.hannsi.lfjg.testRender.effect.system.EffectCache;
+import me.hannsi.lfjg.testRender.renderers.polygon.GLRect;
+import me.hannsi.lfjg.testRender.system.scene.IScene;
+import me.hannsi.lfjg.testRender.system.scene.Scene;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.textureCache;
+import static me.hannsi.lfjg.testRender.LFJGRenderContext.textureCache;
 
 public class Demo3 implements IScene {
     Frame frame;

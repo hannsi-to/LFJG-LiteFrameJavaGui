@@ -13,7 +13,7 @@ import me.hannsi.lfjg.jcef.adapter.KeyEventAdapter;
 import me.hannsi.lfjg.jcef.adapter.MouseEventAdapter;
 import me.hannsi.lfjg.jcef.adapter.MouseWheelEventAdapter;
 import me.hannsi.lfjg.jcef.handler.RenderHandler;
-import me.hannsi.lfjg.render.system.scene.SceneSystem;
+import me.hannsi.lfjg.testRender.system.scene.SceneSystem;
 import org.cef.CefApp;
 import org.cef.CefClient;
 import org.cef.browser.CefBrowser;
@@ -28,10 +28,10 @@ import static me.hannsi.lfjg.core.Core.*;
 import static me.hannsi.lfjg.frame.LFJGFrameContext.frame;
 
 public class TestGuiFrame implements LFJGFrame {
+    public static int textureId = -1;
     private static final String URL = "https://google.com";
     private static final boolean OFFSCREEN = true;
     private static final boolean TRANSPARENT = true;
-    public static int textureId = -1;
     public Camera camera;
     SceneSystem sceneSystem;
     CefApp cefApp;
@@ -225,10 +225,10 @@ public class TestGuiFrame implements LFJGFrame {
 
     @EventHandler
     public void mouseButtonCallbackEvent(MouseButtonEvent event) {
-        mouseInfo.updateMouseButton(event.getButton(), event.getAction());
-
-        MouseEvent mouseEvent = mouseEventAdapter.convertGLFWMouseEvent(event.getButton(), event.getAction(), event.getMods(), mouseInfo.getCurrentPos().x() - x, mouseInfo.getCurrentPos().y() - y);
-        ((CefBrowserOsr) browser).sendMouseEvent(mouseEvent);
+//        mouseInfo.updateMouseButton(event.getButtonType(), event.getAction());
+//
+//        MouseEvent mouseEvent = mouseEventAdapter.convertGLFWMouseEvent(event.getButtonType(), event.getAction(), event.getMods(), mouseInfo.getCurrentPos().x() - x, mouseInfo.getCurrentPos().y() - y);
+//        ((CefBrowserOsr) browser).sendMouseEvent(mouseEvent);
     }
 
     @EventHandler

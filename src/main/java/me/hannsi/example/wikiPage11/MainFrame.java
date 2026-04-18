@@ -3,7 +3,7 @@ package me.hannsi.example.wikiPage11;
 import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.renderers.polygon.GLBezierLine;
+import me.hannsi.lfjg.testRender.renderers.polygon.GLBezierLine;
 
 public class MainFrame implements LFJGFrame {
     GLBezierLine glBezierLine;

@@ -1,21 +1,15 @@
 package me.hannsi.test;
 
-import me.hannsi.lfjg.audio.SoundCache;
-import me.hannsi.lfjg.audio.SoundData;
-import me.hannsi.lfjg.audio.SoundListener;
-import me.hannsi.lfjg.audio.SoundLoaderType;
 import me.hannsi.lfjg.core.utils.graphics.image.ImageCapture;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
-import me.hannsi.lfjg.render.animation.system.AnimationCache;
-import me.hannsi.lfjg.render.effect.system.EffectCache;
-import me.hannsi.lfjg.render.renderers.polygon.GLRect;
-import me.hannsi.lfjg.render.renderers.polygon.GLTriangles;
-import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
-import me.hannsi.lfjg.render.system.scene.IScene;
-import me.hannsi.lfjg.render.system.scene.Scene;
-import org.joml.Vector3f;
-import org.lwjgl.openal.AL11;
+import me.hannsi.lfjg.testRender.animation.system.AnimationCache;
+import me.hannsi.lfjg.testRender.effect.system.EffectCache;
+import me.hannsi.lfjg.testRender.renderers.polygon.GLRect;
+import me.hannsi.lfjg.testRender.renderers.polygon.GLTriangles;
+import me.hannsi.lfjg.testRender.system.rendering.GLObjectCache;
+import me.hannsi.lfjg.testRender.system.scene.IScene;
+import me.hannsi.lfjg.testRender.system.scene.Scene;
 
 public class TestScene1 implements IScene {
     public Scene scene;
@@ -37,7 +31,7 @@ public class TestScene1 implements IScene {
 
     AnimationCache gl1AnimationCache;
 
-    SoundCache soundCache;
+//    SoundCache soundCache;
 
     int first;
     ImageCapture imageCapture;
@@ -174,23 +168,23 @@ public class TestScene1 implements IScene {
     }
 
     public void soundCacheInit() {
-        soundCache = SoundCache.createSoundCache()
-                .setAttenuationModel(AL11.AL_EXPONENT_DISTANCE)
-                .setListener(new SoundListener(new Vector3f(0, 0, 0)))
-                .createCache(
-                        "test",
-                        SoundData.createSoundData()
-                                .loop(false)
-                                .relative(false)
-                                .position(new Vector3f(0, 0, 0))
-                                .createSoundPCM(SoundLoaderType.STB_VORBIS, Location.fromResource("sound/test.ogg"))
-                );
+//        soundCache = SoundCache.createSoundCache()
+//                .setAttenuationModel(AL11.AL_EXPONENT_DISTANCE)
+//                .setListener(new SoundListener(new Vector3f(0, 0, 0)))
+//                .createCache(
+//                        "test",
+//                        SoundData.createSoundData()
+//                                .loop(false)
+//                                .relative(false)
+//                                .position(new Vector3f(0, 0, 0))
+//                                .createSoundPCM(SoundLoaderType.STB_VORBIS, Location.fromResource("sound/test.ogg"))
+//                );
     }
 
     @Override
     public void drawFrame() {
-        soundCache.getSoundData("test").gain(0.05f);
-        soundCache.playSoundData("test");
+//        soundCache.getSoundData("test").gain(0.05f);
+//        soundCache.playSoundData("test");
 
 //        Rotate rotate = (Rotate) glShaderSplitObjectEffectCache.getEffectBase("Rotate1");
 //        rotate.setZ(rotate.getZ() + 0.01f);
@@ -271,7 +265,7 @@ public class TestScene1 implements IScene {
     public void stopFrame() {
         glObjectCache.cleanup();
         textureCache.cleanup();
-        soundCache.cleanup();
+//        soundCache.cleanup();
         imageCapture.cleanup();
 //        threadCache.cleanup();
 

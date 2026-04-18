@@ -129,6 +129,11 @@ public class LogGenerator {
         return stringBuilder.toString();
     }
 
+    @Override
+    public String toString() {
+        return createLog("\n");
+    }
+
     public void logging(Class<?> clazz, DebugLevel debugLevel, boolean oneLine, boolean firstln) {
         String message = createLog(firstln ? "\n" : "");
 

@@ -32,7 +32,7 @@ public class IOUtil extends Util {
         return dst;
     }
 
-    public static ByteBuffer convertBufferedImageToByteBuffer(BufferedImage image, boolean flipVertically) {
+    public static ByteBuffer convertBufferImageToByteBuffer(BufferedImage image, ByteBuffer outBuffer, boolean flipVertically) {
         int width = image.getWidth();
         int height = image.getHeight();
 
@@ -47,8 +47,6 @@ public class IOUtil extends Util {
         byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
         int stride = width * 4;
 
-        ByteBuffer buffer = ByteBuffer.allocateDirect(width * height * 4).order(ByteOrder.nativeOrder());
-
         if (flipVertically) {
             for (int y = height - 1; y >= 0; y--) {
                 int rowStart = y * stride;
@@ -60,7 +58,7 @@ public class IOUtil extends Util {
                     byte g = pixels[i + 2];
                     byte r = pixels[i + 3];
 
-                    buffer.put(r).put(g).put(b).put(a);
+                    outBuffer.put(r).put(g).put(b).put(a);
                 }
             }
         } else {
@@ -74,13 +72,19 @@ public class IOUtil extends Util {
                     byte g = pixels[i + 2];
                     byte r = pixels[i + 3];
 
-                    buffer.put(r).put(g).put(b).put(a);
+                    outBuffer.put(r).put(g).put(b).put(a);
                 }
             }
         }
 
-        buffer.flip();
-        return buffer;
+        outBuffer.flip();
+        return outBuffer;
+    }
+
+    public static ByteBuffer convertBufferedImageToByteBuffer(BufferedImage image, boolean flipVertically) {
+        ByteBuffer outBuffer = ByteBuffer.allocateDirect(image.getWidth() * image.getHeight() * 4).order(ByteOrder.nativeOrder());
+        convertBufferImageToByteBuffer(image, outBuffer, flipVertically);
+        return outBuffer;
     }
 
     public static ByteBuffer convertRGBAtoBGRA(ByteBuffer rgbaBuffer, int width, int height) {

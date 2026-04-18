@@ -3,7 +3,7 @@ package me.hannsi.example.wikiPage8;
 import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.system.scene.SceneSystem;
+import me.hannsi.lfjg.testRender.system.scene.SceneSystem;
 
 public class MainFrame implements LFJGFrame {
     SceneSystem sceneSystem;

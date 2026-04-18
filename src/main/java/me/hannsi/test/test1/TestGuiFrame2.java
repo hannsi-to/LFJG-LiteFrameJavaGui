@@ -3,9 +3,9 @@ package me.hannsi.test.test1;
 import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.effect.system.EffectCache;
-import me.hannsi.lfjg.render.renderers.polygon.GLRect;
-import me.hannsi.lfjg.render.system.rendering.GLObjectCache;
+import me.hannsi.lfjg.testRender.effect.system.EffectCache;
+import me.hannsi.lfjg.testRender.renderers.polygon.GLRect;
+import me.hannsi.lfjg.testRender.system.rendering.GLObjectCache;
 
 
 public class TestGuiFrame2 implements LFJGFrame {

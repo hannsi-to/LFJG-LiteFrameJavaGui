@@ -8,17 +8,17 @@ import me.hannsi.lfjg.core.utils.toolkit.UnicodeBlocks;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.animation.animations.Bounce;
-import me.hannsi.lfjg.render.animation.system.AnimationCache;
-import me.hannsi.lfjg.render.effect.system.EffectCache;
-import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.renderers.text.GLText;
 import me.hannsi.lfjg.render.system.text.AlignType;
 import me.hannsi.lfjg.render.system.text.TextFormatType;
 import me.hannsi.lfjg.render.system.text.font.Font;
+import me.hannsi.lfjg.testRender.animation.animations.Bounce;
+import me.hannsi.lfjg.testRender.animation.system.AnimationCache;
+import me.hannsi.lfjg.testRender.effect.system.EffectCache;
+import me.hannsi.lfjg.testRender.renderers.polygon.GLRect;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.textureCache;
 import static me.hannsi.lfjg.render.LFJGRenderTextContext.FONT_CACHE;
+import static me.hannsi.lfjg.testRender.LFJGRenderContext.textureCache;
 
 public class MSDFMain implements LFJGFrame {
     GLText glText;

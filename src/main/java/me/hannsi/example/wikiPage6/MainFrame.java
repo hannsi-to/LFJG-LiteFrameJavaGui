@@ -3,8 +3,8 @@ package me.hannsi.example.wikiPage6;
 import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.effect.system.EffectCache;
-import me.hannsi.lfjg.render.renderers.polygon.GLRect;
+import me.hannsi.lfjg.testRender.effect.system.EffectCache;
+import me.hannsi.lfjg.testRender.renderers.polygon.GLRect;
 
 public class MainFrame implements LFJGFrame {
     Frame frame;

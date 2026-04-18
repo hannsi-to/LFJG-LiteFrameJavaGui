@@ -4,10 +4,10 @@ import me.hannsi.lfjg.core.event.EventHandler;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.event.events.user.KeyEvent;
 import me.hannsi.lfjg.frame.event.events.user.MouseButtonEvent;
-import me.hannsi.lfjg.render.effect.system.EffectCache;
 import me.hannsi.lfjg.render.renderers.video.GLVideo;
-import me.hannsi.lfjg.render.system.scene.IScene;
-import me.hannsi.lfjg.render.system.scene.Scene;
+import me.hannsi.lfjg.testRender.effect.system.EffectCache;
+import me.hannsi.lfjg.testRender.system.scene.IScene;
+import me.hannsi.lfjg.testRender.system.scene.Scene;
 
 import static me.hannsi.lfjg.core.Core.EVENT_MANAGER;
 

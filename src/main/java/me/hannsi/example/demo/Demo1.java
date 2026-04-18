@@ -1,9 +1,9 @@
 package me.hannsi.example.demo;
 
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.render.renderers.polygon.*;
-import me.hannsi.lfjg.render.system.scene.IScene;
-import me.hannsi.lfjg.render.system.scene.Scene;
+import me.hannsi.lfjg.testRender.renderers.polygon.*;
+import me.hannsi.lfjg.testRender.system.scene.IScene;
+import me.hannsi.lfjg.testRender.system.scene.Scene;
 
 public class Demo1 implements IScene {
     Frame frame;

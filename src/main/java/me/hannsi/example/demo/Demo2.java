@@ -4,13 +4,13 @@ import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.core.utils.toolkit.UnicodeBlocks;
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.render.renderers.polygon.GLRect;
 import me.hannsi.lfjg.render.renderers.text.GLText;
-import me.hannsi.lfjg.render.system.scene.IScene;
-import me.hannsi.lfjg.render.system.scene.Scene;
 import me.hannsi.lfjg.render.system.text.AlignType;
 import me.hannsi.lfjg.render.system.text.TextFormatType;
 import me.hannsi.lfjg.render.system.text.font.Font;
+import me.hannsi.lfjg.testRender.renderers.polygon.GLRect;
+import me.hannsi.lfjg.testRender.system.scene.IScene;
+import me.hannsi.lfjg.testRender.system.scene.Scene;
 
 import static me.hannsi.lfjg.render.LFJGRenderTextContext.FONT_CACHE;
 

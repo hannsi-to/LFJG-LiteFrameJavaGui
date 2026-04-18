@@ -5,7 +5,7 @@ import me.hannsi.lfjg.frame.setting.settings.CheckSeveritiesSetting;
 import me.hannsi.lfjg.frame.setting.settings.RefreshRateSetting;
 import me.hannsi.lfjg.frame.setting.settings.SeverityType;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.system.scene.SceneSystem;
+import me.hannsi.lfjg.testRender.system.scene.SceneSystem;
 
 import static me.hannsi.lfjg.frame.LFJGFrameContext.frame;
 

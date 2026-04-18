@@ -3,9 +3,9 @@ package me.hannsi.test;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.physic.PhysicWorld;
 import me.hannsi.lfjg.physic.RigidBody;
-import me.hannsi.lfjg.render.renderers.polygon.GLRect;
-import me.hannsi.lfjg.render.system.scene.IScene;
-import me.hannsi.lfjg.render.system.scene.Scene;
+import me.hannsi.lfjg.testRender.renderers.polygon.GLRect;
+import me.hannsi.lfjg.testRender.system.scene.IScene;
+import me.hannsi.lfjg.testRender.system.scene.Scene;
 
 public class TestPhysic1 implements IScene {
     private final Scene scene;

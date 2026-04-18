@@ -1,18 +1,18 @@
 package me.hannsi.lfjg.render.system.text;
 
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
-import me.hannsi.lfjg.render.renderers.BlendType;
-import me.hannsi.lfjg.render.system.mesh.MeshBuilder;
-import me.hannsi.lfjg.render.system.mesh.Vertex;
-import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.text.msdf.MSDFFont;
+import me.hannsi.lfjg.testRender.renderers.BlendType;
+import me.hannsi.lfjg.testRender.system.mesh.MeshBuilder;
+import me.hannsi.lfjg.testRender.system.mesh.Vertex;
+import me.hannsi.lfjg.testRender.system.rendering.DrawType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.mesh;
+import static me.hannsi.lfjg.testRender.LFJGRenderContext.mesh;
 
 public class TextMeshBuilder {
     protected Map<Integer, TextMesh> textMeshMap;

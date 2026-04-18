@@ -4,10 +4,10 @@ import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.effect.system.EffectCache;
-import me.hannsi.lfjg.render.renderers.polygon.GLRect;
+import me.hannsi.lfjg.testRender.effect.system.EffectCache;
+import me.hannsi.lfjg.testRender.renderers.polygon.GLRect;
 
-import static me.hannsi.lfjg.render.LFJGRenderContext.textureCache;
+import static me.hannsi.lfjg.testRender.LFJGRenderContext.textureCache;
 
 public class EffectRadialBlur implements LFJGFrame {
     Frame frame;

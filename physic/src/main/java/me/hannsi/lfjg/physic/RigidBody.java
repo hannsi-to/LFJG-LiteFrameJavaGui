@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.physic;
 
-import me.hannsi.lfjg.render.renderers.GLObject;
+import me.hannsi.lfjg.testRender.renderers.GLObject;
 import org.joml.Vector2f;
 
 public class RigidBody {

@@ -7,14 +7,14 @@ import me.hannsi.lfjg.core.utils.time.Timer;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
-import me.hannsi.lfjg.render.renderers.BlendType;
-import me.hannsi.lfjg.render.renderers.InstanceParameter;
-import me.hannsi.lfjg.render.renderers.JointType;
-import me.hannsi.lfjg.render.renderers.PointType;
-import me.hannsi.lfjg.render.system.mesh.MeshBuilder;
-import me.hannsi.lfjg.render.system.mesh.ObjectData;
-import me.hannsi.lfjg.render.system.mesh.Vertex;
-import me.hannsi.lfjg.render.system.rendering.DrawType;
+import me.hannsi.lfjg.testRender.renderers.BlendType;
+import me.hannsi.lfjg.testRender.renderers.InstanceParameter;
+import me.hannsi.lfjg.testRender.renderers.JointType;
+import me.hannsi.lfjg.testRender.renderers.PointType;
+import me.hannsi.lfjg.testRender.system.mesh.MeshBuilder;
+import me.hannsi.lfjg.testRender.system.mesh.ObjectData;
+import me.hannsi.lfjg.testRender.system.mesh.Vertex;
+import me.hannsi.lfjg.testRender.system.rendering.DrawType;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
@@ -24,7 +24,7 @@ import java.util.List;
 
 import static me.hannsi.lfjg.core.utils.math.MathHelper.getRandomInt;
 import static me.hannsi.lfjg.frame.LFJGFrameContext.frame;
-import static me.hannsi.lfjg.render.LFJGRenderContext.*;
+import static me.hannsi.lfjg.testRender.LFJGRenderContext.*;
 
 public class TestNewMeshSystem implements LFJGFrame {
     public static List<IntRef> objectIds = new ArrayList<>();

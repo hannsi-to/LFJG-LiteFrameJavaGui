@@ -12,6 +12,10 @@ repositories {
 }
 
 dependencies {
+    // JavaCV
+    implementation "org.bytedeco:javacv:1.5.10"
+    implementation "org.bytedeco:ffmpeg:6.1.1-1.5.10:windows-x86_64"
+
     implementation project(":core")
 
     if (lwjglVersion == 3) {

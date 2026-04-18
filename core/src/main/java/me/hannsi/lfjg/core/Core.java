@@ -14,6 +14,7 @@ import me.hannsi.lfjg.core.utils.reflection.ClassUtil;
 import me.hannsi.lfjg.core.utils.toolkit.FastStringBuilder;
 import me.hannsi.lfjg.core.utils.toolkit.KeyboardInfo;
 import me.hannsi.lfjg.core.utils.toolkit.MouseInfo;
+import me.hannsi.lfjg.core.utils.toolkit.PlatformUtil;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
@@ -53,7 +54,10 @@ public class Core {
     public static final String DEFAULT_LFJG_RENDER_TEXT_CONTEXT_CLASS_NAME = ".LFJGRenderTextContext";
     public static final String DEFAULT_LFJG_RENDER_VIDEO_CONTEXT_CLASS_NAME = ".LFJGRenderVideoContext";
 
+    public static final long NULL_PTR = 0L;
+
     public static final int LWJGL_VERSION;
+    public static final PlatformUtil.OS CURRENT_OS;
 
     public static final boolean ENABLE_LFJG_AUDIO_SYSTEM;
     public static final boolean ENABLE_LFJG_FRAME_SYSTEM;
@@ -98,6 +102,8 @@ public class Core {
             LWJGL_VERSION = -1;
             DebugLog.error(Core.class, "LWJGL not found");
         }
+
+        CURRENT_OS = PlatformUtil.getOS();
 
         ENABLE_LFJG_AUDIO_SYSTEM = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_AUDIO_SYSTEM_PATH + DEFAULT_LFJG_AUDIO_CORE_CLASS_NAME);
         ENABLE_LFJG_FRAME_SYSTEM = ClassUtil.isClassAvailable(DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME_CORE_CLASS_NAME);
@@ -295,8 +301,7 @@ public class Core {
         Object result = null;
         try {
             result = ClassUtil.invokeStaticMethod(className, methodName, args);
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             if (!CORE_SYSTEM_DEBUG) {
                 return null;
             }
@@ -311,8 +316,7 @@ public class Core {
         Object result = null;
         try {
             result = ClassUtil.getStaticFieldValue(className, fieldName);
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             if (!CORE_SYSTEM_DEBUG) {
                 return null;
             }

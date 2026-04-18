@@ -40,7 +40,7 @@ public class ImageCapture {
         this.jpgQuality = 90;
     }
 
-    public void saveImage(ByteBuffer buffer, String name) {
+    public ImageCapture saveImage(ByteBuffer buffer, String name) {
         String path = filePath.path() + "/" + name + "." + stbImageFormat.getName();
         saveType = "ByteBuffer";
 
@@ -48,7 +48,7 @@ public class ImageCapture {
         if (flip) {
             for (int i = 0; i < height; i++) {
                 buffer.position((height - i - 1) * width * colorFormatType.getChannels());
-                flippedBuffer.put((ByteBuffer) buffer.slice().limit(width * colorFormatType.getChannels()));
+                flippedBuffer.put(buffer.slice().limit(width * colorFormatType.getChannels()));
             }
         } else {
             flippedBuffer.put(buffer);
@@ -65,6 +65,8 @@ public class ImageCapture {
         }
 
         logGenerator.logging(getClass(), DebugLevel.INFO);
+
+        return this;
     }
 
     private LogGenerator writeJavaCV(String path, ByteBuffer imageBuffer) {

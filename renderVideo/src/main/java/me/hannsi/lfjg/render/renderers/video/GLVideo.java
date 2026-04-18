@@ -1,13 +1,13 @@
 package me.hannsi.lfjg.render.renderers.video;
 
-import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.render.renderers.InstanceParameter;
-import me.hannsi.lfjg.render.renderers.PaintType;
-import me.hannsi.lfjg.render.system.mesh.Vertex;
-import me.hannsi.lfjg.render.system.rendering.DrawType;
-import me.hannsi.lfjg.render.system.rendering.texture.atlas.Sprite;
-import me.hannsi.lfjg.render.system.rendering.texture.atlas.SpriteMemoryPolicy;
 import me.hannsi.lfjg.render.system.video.VideoDecoder;
+import me.hannsi.lfjg.testRender.renderers.GLObject;
+import me.hannsi.lfjg.testRender.renderers.InstanceParameter;
+import me.hannsi.lfjg.testRender.renderers.PaintType;
+import me.hannsi.lfjg.testRender.system.mesh.Vertex;
+import me.hannsi.lfjg.testRender.system.rendering.DrawType;
+import me.hannsi.lfjg.testRender.system.rendering.texture.atlas.Sprite;
+import me.hannsi.lfjg.testRender.system.rendering.texture.atlas.SpriteMemoryPolicy;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -15,12 +15,14 @@ import java.util.List;
 import java.util.Objects;
 
 import static me.hannsi.lfjg.core.Core.ASSET_MANAGER;
-import static me.hannsi.lfjg.render.LFJGRenderContext.sparseTexture2DArray;
+import static me.hannsi.lfjg.testRender.LFJGRenderContext.sparseTexture2DArray;
 
 
 public class GLVideo extends GLObject<GLVideo> {
     private final Builder builder;
     private VideoDecoder videoDecoder;
+    private Thread decodeThread;
+    private boolean playbackStarted = false;
 
     protected GLVideo(String name, Builder builder) {
         super(name, true);
@@ -33,15 +35,49 @@ public class GLVideo extends GLObject<GLVideo> {
 
     @Override
     public GLVideo update() {
+        if (decodeThread != null && decodeThread.isAlive()) {
+            decodeThread.interrupt();
+            try {
+                decodeThread.join(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        playbackStarted = false;
         videoDecoder = ASSET_MANAGER.load(builder.assetName, VideoDecoder.class);
+        videoDecoder.setDoVideo(builder.doVideo);
+        videoDecoder.setDoAudio(builder.doAudio);
+
         try {
             videoDecoder.grabberStart();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
+        decodeThread = new Thread(videoDecoder::decodeLoop, builder.threadName);
+        decodeThread.setDaemon(true);
+        decodeThread.start();
+
+        videoDecoder.resume();
+        ByteBuffer buffer = null;
+        long waitStart = System.nanoTime();
+        while (buffer == null) {
+            buffer = videoDecoder.nextVideoBuffer();
+            videoDecoder.nextAudioBuffer();
+            if (System.nanoTime() - waitStart > 3_000_000_000L) {
+                break;
+            }
+            Thread.onSpinWait();
+        }
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ignore) {
+
+        }
+
         String cacheName = ASSET_MANAGER.getCacheName(builder.assetName, VideoDecoder.class);
-        ByteBuffer buffer = videoDecoder.nextFrame();
         if (buffer == null) {
             buffer = ByteBuffer.allocateDirect(videoDecoder.getWidth() * videoDecoder.getHeight() * 4);
             buffer.flip();
@@ -78,8 +114,11 @@ public class GLVideo extends GLObject<GLVideo> {
 
     @Override
     public void drawFrame() {
-        videoDecoder.resume();
-        ByteBuffer byteBuffer = videoDecoder.nextFrame();
+        if (!playbackStarted) {
+            videoDecoder.resume();
+            playbackStarted = true;
+        }
+        ByteBuffer byteBuffer = videoDecoder.nextVideoBuffer();
         String cacheName = ASSET_MANAGER.getCacheName(builder.assetName, VideoDecoder.class);
 
         if (byteBuffer != null) {
@@ -91,6 +130,38 @@ public class GLVideo extends GLObject<GLVideo> {
         }
 
         super.drawFrame();
+    }
+
+    public void dispose() {
+        if (decodeThread != null && decodeThread.isAlive()) {
+            decodeThread.interrupt();
+            try {
+                decodeThread.join(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        try {
+            videoDecoder.grabberStop();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public int sampleRate() {
+        return videoDecoder.getGrabber().getSampleRate();
+    }
+
+    public int channels() {
+        return videoDecoder.getGrabber().getAudioChannels();
+    }
+
+    public ByteBuffer nextAudioBuffer() {
+        return videoDecoder.nextAudioBuffer();
+    }
+
+    public VideoDecoder getVideoDecoder() {
+        return videoDecoder;
     }
 
     public interface RectInputStep<T> {
@@ -118,14 +189,21 @@ public class GLVideo extends GLObject<GLVideo> {
     }
 
     public interface VideoNameStep<T> {
-        T assetVideoName(String assetName);
+        VideoDecodeStep<T> assetVideoName(String assetName);
     }
 
-    public static class Builder extends AbstractGLObjectBuilder<GLVideo> implements RectInputStep<GLVideo>, DiagonalStep<GLVideo>, Vertex2Step<GLVideo>, Vertex3Step<GLVideo>, Vertex4Step<GLVideo>, VideoNameStep<GLVideo> {
+    public interface VideoDecodeStep<T> {
+        T decodeInformation(String threadName, boolean doVideo, boolean doAudio);
+    }
+
+    public static class Builder extends AbstractGLObjectBuilder<GLVideo> implements RectInputStep<GLVideo>, DiagonalStep<GLVideo>, Vertex2Step<GLVideo>, Vertex3Step<GLVideo>, Vertex4Step<GLVideo>, VideoNameStep<GLVideo>, VideoDecodeStep<GLVideo> {
         private final String name;
         private final List<Vertex> vertices;
         private String assetName;
         private Vertex lastFrom;
+        private String threadName;
+        private boolean doVideo;
+        private boolean doAudio;
 
         private GLVideo glVideo;
 
@@ -213,8 +291,17 @@ public class GLVideo extends GLObject<GLVideo> {
         }
 
         @Override
-        public GLVideo assetVideoName(String assetName) {
+        public VideoDecodeStep<GLVideo> assetVideoName(String assetName) {
             this.assetName = assetName;
+
+            return this;
+        }
+
+        @Override
+        public GLVideo decodeInformation(String threadName, boolean doVideo, boolean doAudio) {
+            this.threadName = threadName;
+            this.doVideo = doVideo;
+            this.doAudio = doAudio;
 
             return fill();
         }

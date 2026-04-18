@@ -3,20 +3,30 @@ package me.hannsi.lfjg.audio;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
+import me.hannsi.lfjg.core.utils.reflection.reference.LongRef;
+import org.lwjgl.openal.ALCCapabilities;
+import org.lwjgl.system.MemoryUtil;
 
 import javax.sound.sampled.*;
+import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.lwjgl.openal.AL.createCapabilities;
+import static org.lwjgl.openal.ALC.createCapabilities;
+import static org.lwjgl.openal.ALC10.*;
 
 public class AudioDevices {
-    public static final String DEFAULT = null;
+    private final LongRef devicePointer;
+    private final LongRef context;
+    private Map<String, Boolean> deviceMap;
 
-    private Map<Mixer.Info, String> deviceMap;
-
-    public AudioDevices() {
+    public AudioDevices(LongRef devicePointer, LongRef context) {
+        this.devicePointer = devicePointer;
+        this.context = context;
         this.deviceMap = new HashMap<>();
 
+        LogGenerator logGenerator = new LogGenerator("Audio Device");
         Mixer.Info[] mixers = AudioSystem.getMixerInfo();
         for (Mixer.Info mixerInfo : mixers) {
             Mixer mixer = AudioSystem.getMixer(mixerInfo);
@@ -32,31 +42,48 @@ public class AudioDevices {
                 }
             }
 
-            deviceMap.put(mixerInfo, supportsOutput ? mixerInfo.getName() : "");
+            logGenerator.text("DeviceName: " + mixerInfo.getName() + ", Version: " + mixerInfo.getVersion() + ", SupportOutput: " + supportsOutput);
+            deviceMap.put(mixerInfo.getName(), supportsOutput);
         }
 
-        int maxNameLength = deviceMap.keySet().stream()
-                .mapToInt(mixerInfo -> mixerInfo.getName().length())
-                .max()
-                .orElse(10);
-
-        String[] devices = new String[deviceMap.size()];
-        AtomicInteger atomicIndex = new AtomicInteger(0);
-
-        deviceMap.forEach((mixerInfo, deviceName) -> {
-            int index = atomicIndex.getAndIncrement();
-            String name = mixerInfo.getName();
-            String version = mixerInfo.getVersion();
-            String output = !deviceName.isEmpty() ? "Yes" : "No";
-
-            String paddedName = String.format("%-" + maxNameLength + "s", name);
-            devices[index] = String.format("[%2d] %s | Version: %-15s | Output: %s", index + 1, paddedName, version, output);
-        });
-
-        new LogGenerator("Audio Output Devices", devices).logging(getClass(), DebugLevel.DEBUG);
+        logGenerator.logging(getClass(), DebugLevel.DEBUG);
     }
 
-    public Map<Mixer.Info, String> getDeviceMap() {
+    public void openDevice(String deviceName) {
+        devicePointer.setValue(alcOpenDevice(deviceName));
+        if (devicePointer.getValue() == MemoryUtil.NULL) {
+            throw new IllegalStateException("Failed to open the default OpenAL device.");
+        }
+
+
+        ALCCapabilities deviceCaps = createCapabilities(devicePointer.getValue());
+        context.setValue(alcCreateContext(devicePointer.getValue(), (IntBuffer) null));
+        if (context.getValue() == MemoryUtil.NULL) {
+            throw new IllegalStateException("Failed to create OpenAL context.");
+        }
+
+        alcMakeContextCurrent(context.getValue());
+        createCapabilities(deviceCaps);
+    }
+
+    public void openDevice(int index) {
+        if (index == -1) {
+            openDevice(null);
+        } else {
+            int counter = 0;
+            for (Map.Entry<String, Boolean> entry : deviceMap.entrySet()) {
+                if (counter == index) {
+                    openDevice(entry.getKey());
+
+                    break;
+                }
+
+                counter++;
+            }
+        }
+    }
+
+    public Map<String, Boolean> getDeviceMap() {
         return deviceMap;
     }
 

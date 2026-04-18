@@ -6,6 +6,7 @@ layout(location=2) in vec2 inUV;
 layout(location=3) in vec3 inNormal;
 
 flat out uint vSpriteIndex;
+flat out uint vVideoIndex;
 flat out vec4 vSpriteColor;
 out vec4 vColor;
 out vec2 vUV;
@@ -15,14 +16,17 @@ uniform int baseDrawId;
 struct ObjectData {
     uint instanceOffset;
     uint instanceCount;
-    uint _padding3;
-    uint _padding4;
+    uint _padding1;
+    uint _padding2;
 };
 
 struct InstanceParameter {
     mat4 transform;
     vec4 spriteColor;
-    uvec4 sprite;
+    uint spriteIndex;
+    uint videoIndex;
+    uint _padding1;
+    uint _padding2;
 };
 
 layout(std430, binding = 1) buffer ObjectDatum {
@@ -38,8 +42,9 @@ void main() {
     ObjectData o = objectDatum[index];
     InstanceParameter t = instanceParameters[gl_BaseInstance + gl_InstanceID];
 
-    gl_Position = t.transform * vec4(inPosition, 1.0);
-    vSpriteIndex = t.sprite[0];
+    gl_Position = mat4(1.0) * mat4(1.0) * mat4(1.0) * vec4(inPosition, 1.0);
+    vSpriteIndex = t.spriteIndex;
+    vVideoIndex = t.videoIndex;
     vColor = inColor;
     vSpriteColor = t.spriteColor;
     vUV = inUV;

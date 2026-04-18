@@ -3,12 +3,12 @@ package me.hannsi.test;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.frame.Frame;
-import me.hannsi.lfjg.render.renderers.model.ModelRender;
-import me.hannsi.lfjg.render.system.model.Entity;
-import me.hannsi.lfjg.render.system.model.ModelCache;
-import me.hannsi.lfjg.render.system.model.ModelLoader;
-import me.hannsi.lfjg.render.system.scene.IScene;
-import me.hannsi.lfjg.render.system.scene.Scene;
+import me.hannsi.lfjg.testRender.renderers.model.ModelRender;
+import me.hannsi.lfjg.testRender.system.model.Entity;
+import me.hannsi.lfjg.testRender.system.model.ModelCache;
+import me.hannsi.lfjg.testRender.system.model.ModelLoader;
+import me.hannsi.lfjg.testRender.system.scene.IScene;
+import me.hannsi.lfjg.testRender.system.scene.Scene;
 
 public class Test3D1 implements IScene {
     Scene scene;

@@ -1,10 +1,10 @@
 package me.hannsi.lfjg.render.renderers.text;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
-import me.hannsi.lfjg.render.renderers.GLObject;
-import me.hannsi.lfjg.render.system.rendering.DrawType;
 import me.hannsi.lfjg.render.system.text.AlignType;
 import me.hannsi.lfjg.render.system.text.font.Font;
+import me.hannsi.lfjg.testRender.renderers.GLObject;
+import me.hannsi.lfjg.testRender.system.rendering.DrawType;
 import org.joml.Vector2f;
 
 import static me.hannsi.lfjg.render.LFJGRenderTextContext.FONT_CACHE;
