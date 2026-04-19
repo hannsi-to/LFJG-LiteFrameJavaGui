@@ -1,8 +1,8 @@
 package me.hannsi.lfjg.testRender.system.rendering;
 
+import me.hannsi.lfjg.render.system.DrawElementsIndirectCommand;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import me.hannsi.lfjg.testRender.renderers.BlendType;
-import me.hannsi.lfjg.testRender.system.mesh.DrawElementsIndirectCommand;
-import me.hannsi.lfjg.testRender.system.shader.UploadUniformType;
 
 import static me.hannsi.lfjg.testRender.LFJGRenderContext.*;
 import static me.hannsi.lfjg.testRender.RenderSystemSetting.VAO_RENDERING_FRONT_AND_BACK;

@@ -2,6 +2,7 @@ package me.hannsi.lfjg.testRender.renderers.model;
 
 import me.hannsi.lfjg.core.utils.graphics.image.TextureCache;
 import me.hannsi.lfjg.core.utils.graphics.image.TextureLoader;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import me.hannsi.lfjg.testRender.debug.exceptions.model.ModelException;
 import me.hannsi.lfjg.testRender.system.mesh.Mesh;
 import me.hannsi.lfjg.testRender.system.model.Entity;
@@ -10,7 +11,6 @@ import me.hannsi.lfjg.testRender.system.model.Model;
 import me.hannsi.lfjg.testRender.system.model.ModelCache;
 import me.hannsi.lfjg.testRender.system.rendering.VAORendering;
 import me.hannsi.lfjg.testRender.system.shader.FragmentShaderType;
-import me.hannsi.lfjg.testRender.system.shader.UploadUniformType;
 
 import java.util.Collection;
 import java.util.List;

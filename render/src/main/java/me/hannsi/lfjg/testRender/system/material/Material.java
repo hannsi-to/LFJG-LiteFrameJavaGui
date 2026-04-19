@@ -1,9 +1,9 @@
 package me.hannsi.lfjg.testRender.system.material;
 
+import me.hannsi.lfjg.render.system.shader.ShaderProgram;
+import me.hannsi.lfjg.render.system.shader.ShaderPropertyID;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import me.hannsi.lfjg.testRender.system.RenderQueue;
-import me.hannsi.lfjg.testRender.system.shader.ShaderProgram;
-import me.hannsi.lfjg.testRender.system.shader.ShaderPropertyID;
-import me.hannsi.lfjg.testRender.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
 
 import java.util.*;

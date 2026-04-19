@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.testRender.system.material;
 
-import me.hannsi.lfjg.testRender.system.shader.UploadUniformType;
+import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import org.joml.Matrix4f;
 
 public sealed interface MaterialProperty permits MaterialProperty.FloatProp, MaterialProperty.ColorProp, MaterialProperty.Vec4Prop, MaterialProperty.TextureProp, MaterialProperty.IntProp, MaterialProperty.MatrixProp {

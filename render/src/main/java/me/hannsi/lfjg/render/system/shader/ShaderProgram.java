@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.testRender.system.shader;
+package me.hannsi.lfjg.render.system.shader;
 
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;

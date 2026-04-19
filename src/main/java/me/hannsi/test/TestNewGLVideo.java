@@ -4,7 +4,6 @@ import me.hannsi.lfjg.core.Core;
 import me.hannsi.lfjg.core.event.EventHandler;
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
-import me.hannsi.lfjg.core.utils.type.types.LocationType;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.event.events.user.MouseButtonEvent;
 import me.hannsi.lfjg.frame.setting.settings.*;
@@ -36,7 +35,7 @@ public class TestNewGLVideo implements LFJGFrame {
 
         Core.init(frame.getFrameBufferWidth(), frame.getFrameBufferHeight(), frame.getWindowWidth(), frame.getWindowHeight());
 
-        ASSET_MANAGER.registerAsset("Texture1", new Location("texture/test/test1.jpg", LocationType.RESOURCE), Sprite.class);
+//        ASSET_MANAGER.registerAsset("Texture1", new Location("texture/test/test1.jpg", LocationType.RESOURCE), Sprite.class);
         sparseTexture2DArray.addSprite("Texture1");
         sparseTexture2DArray.addSprite("RandomTexture", Sprite.createRandomColor(frame.getWindowWidth(), frame.getWindowHeight(), false, SpriteMemoryPolicy.STREAMING));
 

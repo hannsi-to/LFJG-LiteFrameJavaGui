@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.testRender.system.mesh;
 
+import me.hannsi.lfjg.render.system.DrawElementsIndirectCommand;
+
 public class GLObjectData {
     public boolean draw;
     public DrawElementsIndirectCommand drawElementsIndirectCommand;

@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.testRender.system.shader;
+package me.hannsi.lfjg.render.system.shader;
 
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.testRender.debug.exceptions.shader.ShaderManagerException;
@@ -6,11 +6,10 @@ import me.hannsi.lfjg.testRender.debug.exceptions.shader.ShaderManagerException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static me.hannsi.lfjg.testRender.LFJGRenderContext.glStateCache;
+import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
 
 public class ShaderManager {
     private final Map<String, ShaderProgram> shaders;
-    private ShaderProgram current;
 
     public ShaderManager() {
         this.shaders = new HashMap<>();
@@ -34,28 +33,17 @@ public class ShaderManager {
     public void bind(String name) {
         ShaderProgram shader = getShaderProgram(name);
 
-        if (current == shader) {
-            return;
-        }
-
         shader.bind();
-        current = shader;
     }
 
     public void unbind() {
-        if (current != null) {
-            current = null;
-            glStateCache.useProgram(0);
-        }
+        glStateCache.useProgram(0);
     }
 
     public void remove(String name) {
         ShaderProgram shader = shaders.remove(name);
         if (shader != null) {
             shader.cleanup();
-            if (current == shader) {
-                current = null;
-            }
         }
     }
 

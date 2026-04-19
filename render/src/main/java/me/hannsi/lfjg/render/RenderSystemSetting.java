@@ -71,7 +71,7 @@ public class RenderSystemSetting {
             return compare;
         }
 
-        compare = Integer.compare(main.shaderId(), other.shaderId());
+        compare = CharSequence.compare(main.shaderName(), other.shaderName());
         if (compare != 0) {
             return compare;
         }

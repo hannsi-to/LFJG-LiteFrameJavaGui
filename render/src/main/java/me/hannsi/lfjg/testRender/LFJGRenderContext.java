@@ -6,6 +6,7 @@ import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.core.utils.toolkit.Camera;
 import me.hannsi.lfjg.render.debug.RenderDebug;
 import me.hannsi.lfjg.render.system.GLStateCache;
+import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import me.hannsi.lfjg.testRender.renderers.GLObject;
 import me.hannsi.lfjg.testRender.system.mesh.MeshConstants;
 import me.hannsi.lfjg.testRender.system.mesh.TestMesh;
@@ -15,7 +16,6 @@ import me.hannsi.lfjg.testRender.system.rendering.VAORendering;
 import me.hannsi.lfjg.testRender.system.rendering.texture.AssetTextureLoader;
 import me.hannsi.lfjg.testRender.system.rendering.texture.SparseTexture2DArray;
 import me.hannsi.lfjg.testRender.system.rendering.texture.atlas.AtlasPacker;
-import me.hannsi.lfjg.testRender.system.shader.ShaderProgram;
 import me.hannsi.lfjg.testRender.uitl.id.GLObjectPool;
 import org.joml.Matrix4f;
 

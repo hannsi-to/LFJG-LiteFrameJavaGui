@@ -15,13 +15,14 @@ public record DrawSortKey(
         int eqA,
         boolean depthWrite,
         boolean depthTest,
-        int shaderId,
+        String shaderName,
         int textureId,
         int drawOrder
 ) {
     public DrawSortKey {
         Objects.requireNonNull(renderQueue, "renderQueue");
         Objects.requireNonNull(uiLayer, "uiLayer");
+        Objects.requireNonNull(shaderName, "shaderName");
     }
 
     public boolean hasSameBatchState(DrawSortKey other) {
@@ -35,7 +36,7 @@ public record DrawSortKey(
                 && eqA == other.eqA
                 && depthWrite == other.depthWrite
                 && depthTest == other.depthTest
-                && shaderId == other.shaderId
+                && shaderName.equals(other.shaderName)
                 && textureId == other.textureId;
     }
 }

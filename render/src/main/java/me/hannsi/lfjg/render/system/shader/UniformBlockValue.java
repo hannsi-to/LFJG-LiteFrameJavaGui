@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.testRender.system.shader;
+package me.hannsi.lfjg.render.system.shader;
 
 import java.util.Arrays;
 import java.util.List;
