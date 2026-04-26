@@ -2,9 +2,16 @@ package me.hannsi.lfjg.render;
 
 import me.hannsi.lfjg.render.system.batching.DrawBatchComparable;
 import me.hannsi.lfjg.render.system.batching.DrawSortKey;
+import me.hannsi.lfjg.render.system.buffer.AllocationBufferMode;
+import me.hannsi.lfjg.render.system.buffer.BufferBindingMode;
+
+import static me.hannsi.lfjg.render.LFJGRenderContext.MIN_MAP_BUFFER_ALIGNMENT;
 
 public class RenderSystemSetting {
     public static boolean RENDER_DEBUG_THROW_ERROR = true;
+    public static BufferBindingMode LFJG_RENDER_CONTEXT_BUFFER_BINDING_MODE = BufferBindingMode.AUTO;
+    public static AllocationBufferMode LFJG_RENDER_CONTEXT_ALLOCATION_BUFFER_MODE = AllocationBufferMode.AUTO;
+    public static int VERTEX_BUFFER_OBJECT_ALIGNMENT = MIN_MAP_BUFFER_ALIGNMENT;
     public static DrawBatchComparable<DrawSortKey> DRAW_SORT_KEY_COMPARABLE = (main, other) -> {
         int compare = Integer.compare(main.renderQueue().getOrder(), other.renderQueue().getOrder());
         if (compare != 0) {

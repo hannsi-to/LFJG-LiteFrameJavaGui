@@ -1,11 +1,10 @@
 package me.hannsi.lfjg.testRender.system.mesh.persistent;
 
 import me.hannsi.lfjg.render.system.DrawElementsIndirectCommand;
+import me.hannsi.lfjg.render.system.memory.MemoryTask;
 import me.hannsi.lfjg.testRender.debug.exceptions.render.mesh.persistent.PersistentMappedException;
 import me.hannsi.lfjg.testRender.uitl.memory.MemoryFrameArena;
-import me.hannsi.lfjg.testRender.uitl.memory.MemoryTask;
 
-import static me.hannsi.lfjg.testRender.LFJGRenderContext.glStateCache;
 import static me.hannsi.lfjg.testRender.RenderSystemSetting.DRAW_INDIRECT_BUFFER_ALIGNMENT;
 import static org.lwjgl.opengl.GL30.glFlushMappedBufferRange;
 import static org.lwjgl.opengl.GL30.nglMapBufferRange;
@@ -26,8 +25,8 @@ public class DrawIndirectBuffer {
         this.flags = flags;
         this.memoryFrameArena = new MemoryFrameArena(new MemoryTask() {
             @Override
-            public long allocateMemory(long memorySizeBytes, int bufferId) {
-                glStateCache.bindIndirectBufferForce(bufferId);
+            public long allocateMemory(long memorySizeBytes) {
+//                glStateCache.bindIndirectBufferForce(bufferId);
                 glBufferStorage(GL_DRAW_INDIRECT_BUFFER, memorySizeBytes, flags);
                 return nglMapBufferRange(
                         GL_DRAW_INDIRECT_BUFFER,
@@ -37,10 +36,10 @@ public class DrawIndirectBuffer {
                 );
             }
 
-            @Override
-            public void bindBuffer(int bufferId) {
-                glStateCache.bindIndirectBufferForce(bufferId);
-            }
+//            @Override
+//            public void bindBuffer(int bufferId) {
+//                glStateCache.bindIndirectBufferForce(bufferId);
+//            }
         }, initialSizeBytes);
     }
 

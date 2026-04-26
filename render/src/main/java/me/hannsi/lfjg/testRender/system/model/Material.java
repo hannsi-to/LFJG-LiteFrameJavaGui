@@ -3,8 +3,8 @@ package me.hannsi.lfjg.testRender.system.model;
 import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
+import me.hannsi.lfjg.render.system.buffer.BufferObjectType;
 import me.hannsi.lfjg.testRender.debug.exceptions.model.MaterialException;
-import me.hannsi.lfjg.testRender.system.mesh.BufferObjectType;
 import me.hannsi.lfjg.testRender.system.mesh.Mesh;
 import org.joml.Vector4f;
 

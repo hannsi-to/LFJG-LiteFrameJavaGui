@@ -4,6 +4,8 @@ import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
+import me.hannsi.lfjg.render.render.Vertex;
+import me.hannsi.lfjg.render.system.MeshBuilder;
 import me.hannsi.lfjg.render.system.shader.ShaderProgram;
 import me.hannsi.lfjg.render.system.shader.UploadUniformType;
 import me.hannsi.lfjg.testRender.debug.exceptions.frameBuffer.CompleteFrameBufferException;
@@ -11,8 +13,6 @@ import me.hannsi.lfjg.testRender.debug.exceptions.frameBuffer.CreatingFrameBuffe
 import me.hannsi.lfjg.testRender.debug.exceptions.render.scene.CreatingRenderBufferException;
 import me.hannsi.lfjg.testRender.debug.exceptions.texture.CreatingTextureException;
 import me.hannsi.lfjg.testRender.renderers.GLObject;
-import me.hannsi.lfjg.testRender.system.mesh.MeshBuilder;
-import me.hannsi.lfjg.testRender.system.mesh.Vertex;
 import me.hannsi.lfjg.testRender.system.rendering.DrawType;
 import me.hannsi.lfjg.testRender.system.rendering.VAORendering;
 import me.hannsi.lfjg.testRender.system.shader.FragmentShaderType;

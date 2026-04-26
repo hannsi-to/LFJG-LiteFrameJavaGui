@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.testRender.uitl.memory;
 
+import me.hannsi.lfjg.render.system.memory.MemoryTask;
+
 import static me.hannsi.lfjg.core.Core.NULL_PTR;
 
 public class MemoryArena {
@@ -11,7 +13,7 @@ public class MemoryArena {
 
     private MemoryArena(MemoryTask memoryTask, long memorySizeBytes, int bufferId) {
         this.memorySizeBytes = align(memorySizeBytes + INITIAL_BUFFER_ADDITIONAL, 16);
-        this.address = memoryTask.allocateMemory(this.memorySizeBytes, bufferId);
+        this.address = memoryTask.allocateMemory(this.memorySizeBytes);
         this.head = NULL_PTR;
     }
 

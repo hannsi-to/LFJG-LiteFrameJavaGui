@@ -1,12 +1,11 @@
 package me.hannsi.lfjg.testRender.system.mesh.persistent;
 
+import me.hannsi.lfjg.render.render.Vertex;
+import me.hannsi.lfjg.render.system.buffer.BufferObjectType;
+import me.hannsi.lfjg.render.system.memory.MemoryTask;
 import me.hannsi.lfjg.testRender.debug.exceptions.render.mesh.persistent.PersistentMappedException;
-import me.hannsi.lfjg.testRender.system.mesh.BufferObjectType;
-import me.hannsi.lfjg.testRender.system.mesh.Vertex;
 import me.hannsi.lfjg.testRender.uitl.memory.MemoryFrameArena;
-import me.hannsi.lfjg.testRender.uitl.memory.MemoryTask;
 
-import static me.hannsi.lfjg.testRender.LFJGRenderContext.glStateCache;
 import static me.hannsi.lfjg.testRender.RenderSystemSetting.VERTEX_BUFFER_OBJECT_ALIGNMENT;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
@@ -30,8 +29,8 @@ public class VertexBufferObject {
         this.flags = flags;
         this.memoryFrameArena = new MemoryFrameArena(new MemoryTask() {
             @Override
-            public long allocateMemory(long memorySizeBytes, int bufferId) {
-                glStateCache.bindArrayBufferForce(bufferId);
+            public long allocateMemory(long memorySizeBytes) {
+//                glStateCache.bindArrayBufferForce(bufferId);
                 glBufferStorage(GL_ARRAY_BUFFER, memorySizeBytes, flags);
                 return nglMapBufferRange(
                         GL_ARRAY_BUFFER,
@@ -41,10 +40,10 @@ public class VertexBufferObject {
                 );
             }
 
-            @Override
-            public void bindBuffer(int bufferId) {
-                glStateCache.bindArrayBufferForce(bufferId);
-            }
+//            @Override
+//            public void bindBuffer(int bufferId) {
+//                glStateCache.bindArrayBufferForce(bufferId);
+//            }
         }, initialSizeBytes);
         this.needSync = true;
     }

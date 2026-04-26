@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.testRender.uitl.memory;
 
+import me.hannsi.lfjg.render.system.memory.MemoryTask;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +61,7 @@ public class MemoryFrameArena {
     }
 
     public void link() {
-        memoryTask.bindBuffer(currentMemoryFrame().bufferId);
+//        memoryTask.bindBuffer(currentMemoryFrame().bufferId);
     }
 
     public void nextFrame() {
@@ -79,7 +81,7 @@ public class MemoryFrameArena {
         next.state = MemoryFrameState.CPU_WRITING;
         next.arenaSystem.reset();
 
-        memoryTask.bindBuffer(next.bufferId);
+//        memoryTask.bindBuffer(next.bufferId);
     }
 
     public void signalGPU() {

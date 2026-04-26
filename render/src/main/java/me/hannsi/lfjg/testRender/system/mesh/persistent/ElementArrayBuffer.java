@@ -1,8 +1,8 @@
 package me.hannsi.lfjg.testRender.system.mesh.persistent;
 
+import me.hannsi.lfjg.render.system.memory.MemoryTask;
 import me.hannsi.lfjg.testRender.debug.exceptions.render.mesh.persistent.PersistentMappedException;
 import me.hannsi.lfjg.testRender.uitl.memory.MemoryFrameArena;
-import me.hannsi.lfjg.testRender.uitl.memory.MemoryTask;
 
 import static me.hannsi.lfjg.core.Core.UNSAFE;
 import static me.hannsi.lfjg.testRender.LFJGRenderContext.glStateCache;
@@ -26,8 +26,8 @@ public class ElementArrayBuffer {
         this.flags = flags;
         this.memoryFrameArena = new MemoryFrameArena(new MemoryTask() {
             @Override
-            public long allocateMemory(long memorySizeBytes, int bufferId) {
-                glStateCache.bindElementArrayBufferForce(bufferId);
+            public long allocateMemory(long memorySizeBytes) {
+//                glStateCache.bindElementArrayBufferForce(bufferId);
                 glBufferStorage(GL_ELEMENT_ARRAY_BUFFER, memorySizeBytes, flags);
                 return nglMapBufferRange(
                         GL_ELEMENT_ARRAY_BUFFER,
@@ -37,10 +37,10 @@ public class ElementArrayBuffer {
                 );
             }
 
-            @Override
-            public void bindBuffer(int bufferId) {
-                glStateCache.bindElementArrayBufferForce(bufferId);
-            }
+//            @Override
+//            public void bindBuffer(int bufferId) {
+//                glStateCache.bindElementArrayBufferForce(bufferId);
+//            }
         }, initialSizeBytes);
         this.needSync = true;
     }

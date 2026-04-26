@@ -1,10 +1,10 @@
 package me.hannsi.lfjg.render.system.text;
 
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
+import me.hannsi.lfjg.render.render.Vertex;
+import me.hannsi.lfjg.render.system.MeshBuilder;
 import me.hannsi.lfjg.render.system.text.msdf.MSDFFont;
 import me.hannsi.lfjg.testRender.renderers.BlendType;
-import me.hannsi.lfjg.testRender.system.mesh.MeshBuilder;
-import me.hannsi.lfjg.testRender.system.mesh.Vertex;
 import me.hannsi.lfjg.testRender.system.rendering.DrawType;
 
 import java.util.ArrayList;

@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.testRender.uitl.memory;
 
+import me.hannsi.lfjg.render.system.memory.MemoryTask;
+
 public abstract class Arena {
     private final MemoryTask memoryTask;
 

@@ -7,17 +7,21 @@ import me.hannsi.lfjg.render.system.batching.DrawSortKey;
 import java.util.Objects;
 
 import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
+import static me.hannsi.lfjg.render.LFJGRenderContext.shaderManager;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL43.glMultiDrawElementsIndirect;
 
 public class DrawCaller {
     public static void call(DrawBatch drawBatch) {
+//        long completedFrame = glFenceTracker.getCompletedFrame();
+//        allocatorSystem.beginFrame(completedFrame);
+
         while (drawBatch.nextBatch()) {
             Objects.requireNonNull(drawBatch, "drawBatch");
 
             DrawBatch.Batch currentBatch = drawBatch.getCurrentBatch();
 
-
+            shaderManager.bind(currentBatch.sortKey.shaderName());
             applyRenderState(currentBatch.sortKey);
             glMultiDrawElementsIndirect(
                     GL_TRIANGLES,
@@ -27,6 +31,10 @@ public class DrawCaller {
                     0
             );
         }
+
+//        if (allocatorSystem.isDirty()) {
+//            fenceTracker.endFrame();
+//        }
     }
 
     private static void applyRenderState(DrawSortKey sortKey) {

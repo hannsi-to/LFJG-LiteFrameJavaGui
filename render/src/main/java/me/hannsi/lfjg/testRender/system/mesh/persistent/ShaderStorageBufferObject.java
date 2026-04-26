@@ -1,10 +1,9 @@
 package me.hannsi.lfjg.testRender.system.mesh.persistent;
 
+import me.hannsi.lfjg.render.system.memory.MemoryTask;
 import me.hannsi.lfjg.testRender.debug.exceptions.render.mesh.persistent.PersistentMappedException;
 import me.hannsi.lfjg.testRender.uitl.memory.MemoryFrameArena;
-import me.hannsi.lfjg.testRender.uitl.memory.MemoryTask;
 
-import static me.hannsi.lfjg.testRender.LFJGRenderContext.glStateCache;
 import static me.hannsi.lfjg.testRender.RenderSystemSetting.SHADER_STORAGE_BUFFER_OBJECT_ALIGNMENT;
 import static org.lwjgl.opengl.GL30.nglMapBufferRange;
 import static org.lwjgl.opengl.GL43.GL_SHADER_STORAGE_BUFFER;
@@ -23,8 +22,8 @@ public class ShaderStorageBufferObject {
         this.flags = flags;
         this.memoryFrameArena = new MemoryFrameArena(new MemoryTask() {
             @Override
-            public long allocateMemory(long memorySizeBytes, int bufferId) {
-                glStateCache.bindShaderStorageBufferForce(bufferId);
+            public long allocateMemory(long memorySizeBytes) {
+//                glStateCache.bindShaderStorageBufferForce(bufferId);
                 glBufferStorage(GL_SHADER_STORAGE_BUFFER, memorySizeBytes, flags);
                 return nglMapBufferRange(
                         GL_SHADER_STORAGE_BUFFER,
@@ -34,10 +33,10 @@ public class ShaderStorageBufferObject {
                 );
             }
 
-            @Override
-            public void bindBuffer(int bufferId) {
-                glStateCache.bindShaderStorageBufferForce(bufferId);
-            }
+//            @Override
+//            public void bindBuffer(int bufferId) {
+//                glStateCache.bindShaderStorageBufferForce(bufferId);
+//            }
         }, initialSizeBytes);
         this.needSync = true;
     }

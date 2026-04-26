@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.testRender.system.mesh.persistent;
 
-import me.hannsi.lfjg.testRender.system.mesh.BufferObjectType;
+import me.hannsi.lfjg.render.system.buffer.BufferObjectType;
 import me.hannsi.lfjg.testRender.system.mesh.MeshConstants;
 
 import java.nio.ByteBuffer;

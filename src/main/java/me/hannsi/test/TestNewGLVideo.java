@@ -8,11 +8,11 @@ import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.event.events.user.MouseButtonEvent;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
+import me.hannsi.lfjg.render.render.Vertex;
 import me.hannsi.lfjg.render.renderers.video.GLVideo;
 import me.hannsi.lfjg.render.system.video.VideoDecoder;
 import me.hannsi.lfjg.testRender.renderers.InstanceParameter;
 import me.hannsi.lfjg.testRender.renderers.polygon.GLRect;
-import me.hannsi.lfjg.testRender.system.mesh.Vertex;
 import me.hannsi.lfjg.testRender.system.rendering.texture.atlas.Sprite;
 import me.hannsi.lfjg.testRender.system.rendering.texture.atlas.SpriteMemoryPolicy;
 

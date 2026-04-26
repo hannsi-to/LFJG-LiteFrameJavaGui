@@ -1,9 +1,10 @@
-package me.hannsi.lfjg.testRender.system.mesh;
+package me.hannsi.lfjg.render.system;
 
 import me.hannsi.lfjg.core.event.events.CleanupEvent;
 import me.hannsi.lfjg.core.utils.Cleanup;
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
+import me.hannsi.lfjg.render.render.Vertex;
 import me.hannsi.lfjg.testRender.debug.exceptions.render.mesh.MeshBuilderException;
 import me.hannsi.lfjg.testRender.effect.system.EffectBase;
 import me.hannsi.lfjg.testRender.effect.system.EffectCache;
@@ -11,6 +12,7 @@ import me.hannsi.lfjg.testRender.renderers.BlendType;
 import me.hannsi.lfjg.testRender.renderers.JointType;
 import me.hannsi.lfjg.testRender.renderers.PaintType;
 import me.hannsi.lfjg.testRender.renderers.PointType;
+import me.hannsi.lfjg.testRender.system.mesh.ObjectData;
 import me.hannsi.lfjg.testRender.system.rendering.DrawType;
 
 import static me.hannsi.lfjg.testRender.LFJGRenderContext.*;
@@ -221,7 +223,7 @@ public class MeshBuilder implements Cleanup {
         return bytes;
     }
 
-    void setBytes(long bytes) {
+    public void setBytes(long bytes) {
         this.bytes = bytes;
     }
 
@@ -229,7 +231,7 @@ public class MeshBuilder implements Cleanup {
         return baseCommand;
     }
 
-    void setBaseCommand(int baseCommand) {
+    public void setBaseCommand(int baseCommand) {
         this.baseCommand = baseCommand;
     }
 

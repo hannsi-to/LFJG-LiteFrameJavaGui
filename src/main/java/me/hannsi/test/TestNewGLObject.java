@@ -5,11 +5,11 @@ import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.frame.Frame;
 import me.hannsi.lfjg.frame.setting.settings.*;
 import me.hannsi.lfjg.frame.system.LFJGFrame;
+import me.hannsi.lfjg.render.render.Vertex;
 import me.hannsi.lfjg.testRender.RenderSystemSetting;
 import me.hannsi.lfjg.testRender.renderers.JointType;
 import me.hannsi.lfjg.testRender.renderers.polygon.GLRoundedRect;
 import me.hannsi.lfjg.testRender.system.mesh.Corner;
-import me.hannsi.lfjg.testRender.system.mesh.Vertex;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Random;

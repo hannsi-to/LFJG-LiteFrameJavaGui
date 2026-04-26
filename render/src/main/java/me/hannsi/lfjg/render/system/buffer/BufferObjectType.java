@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.testRender.system.mesh;
+package me.hannsi.lfjg.render.system.buffer;
 
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
 

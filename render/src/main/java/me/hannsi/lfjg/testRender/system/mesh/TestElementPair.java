@@ -1,5 +1,7 @@
 package me.hannsi.lfjg.testRender.system.mesh;
 
+import me.hannsi.lfjg.render.render.Vertex;
+
 import java.util.Arrays;
 import java.util.Objects;
 

@@ -2,9 +2,9 @@ package me.hannsi.lfjg.testRender.renderers.polygon;
 
 import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.math.animation.Easing;
+import me.hannsi.lfjg.render.render.Vertex;
 import me.hannsi.lfjg.testRender.renderers.GLObject;
 import me.hannsi.lfjg.testRender.renderers.PaintType;
-import me.hannsi.lfjg.testRender.system.mesh.Vertex;
 import me.hannsi.lfjg.testRender.system.rendering.DrawType;
 
 import java.util.ArrayList;

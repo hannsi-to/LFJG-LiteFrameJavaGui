@@ -1,6 +1,6 @@
 package me.hannsi.lfjg.testRender.system.mesh.triangulator;
 
-import me.hannsi.lfjg.testRender.system.mesh.Vertex;
+import me.hannsi.lfjg.render.render.Vertex;
 
 public class Triangle {
     public Vertex a;

@@ -21,6 +21,7 @@ import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 import static org.lwjgl.opengl.GL43.GL_SHADER_STORAGE_BUFFER;
 
 public class GLStateCache {
+    private final Map<Integer, Integer> BIND_BUFFER_CACHE = new HashMap<>();
     private final Map<Integer, Boolean> STATE_CACHE = new HashMap<>();
     private final float[] lastClearColor = new float[]{-1f, -1f, -1f, -1f};
     private final boolean[] lastColorMask = new boolean[]{true, true, true, true};
@@ -33,6 +34,7 @@ public class GLStateCache {
     private final int[] lastViewport = new int[]{-1, -1, -1, -1};
     private final float[] lastDepthRange = new float[]{-1f, -1f};
     private final Map<Integer, BufferRangeState> lastBufferRanges = new HashMap<>();
+    private int lastBindBufferBufferId = -1;
     private int lastBlendSrc = -1;
     private int lastBlendDst = -1;
     private int lastBlendEquation = -1;
@@ -70,6 +72,16 @@ public class GLStateCache {
         EVENT_MANAGER.register(this);
 
         lastFrameBuffer = glGetInteger(GL_DRAW_FRAMEBUFFER_BINDING);
+    }
+
+    public void bindBuffer(int target, int bufferId) {
+        Integer lastTarget = BIND_BUFFER_CACHE.get(lastBindBufferBufferId);
+        if (lastTarget != null && target == lastTarget && bufferId == lastBindBufferBufferId) {
+            return;
+        }
+        glBindBuffer(target, bufferId);
+        lastBindBufferBufferId = bufferId;
+        BIND_BUFFER_CACHE.put(bufferId, target);
     }
 
     public void enable(int cap) {
@@ -695,6 +707,8 @@ public class GLStateCache {
                 lastVertexArray = (int) args[0];
                 break;
             case "glBindBuffer":
+                BIND_BUFFER_CACHE.put((int) args[1], (int) args[0]);
+
                 if ((int) args[0] == GL_DRAW_INDIRECT_BUFFER) {
                     lastDrawIndirectBuffer = (int) args[1];
                 } else if ((int) args[0] == GL_ELEMENT_ARRAY_BUFFER) {

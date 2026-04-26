@@ -1,7 +1,7 @@
 package me.hannsi.test;
 
+import me.hannsi.lfjg.render.render.Vertex;
 import me.hannsi.lfjg.testRender.renderers.polygon.GLPolygon;
-import me.hannsi.lfjg.testRender.system.mesh.Vertex;
 
 import java.util.ArrayList;
 import java.util.List;

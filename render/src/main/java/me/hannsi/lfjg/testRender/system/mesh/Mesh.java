@@ -4,6 +4,7 @@ import me.hannsi.lfjg.core.debug.DebugLevel;
 import me.hannsi.lfjg.core.debug.LogGenerateType;
 import me.hannsi.lfjg.core.debug.LogGenerator;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
+import me.hannsi.lfjg.render.system.buffer.BufferObjectType;
 import me.hannsi.lfjg.testRender.debug.exceptions.render.mesh.MeshException;
 import me.hannsi.lfjg.testRender.system.mesh.persistent.PersistentMappedEBO;
 import me.hannsi.lfjg.testRender.system.mesh.persistent.PersistentMappedIBO;
