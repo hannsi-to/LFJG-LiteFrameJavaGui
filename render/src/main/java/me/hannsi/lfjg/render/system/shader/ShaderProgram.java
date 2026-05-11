@@ -203,7 +203,7 @@ public class ShaderProgram {
                         glUniform4f(location, floatValues[0], floatValues[1], floatValues[2], floatValues[3]);
                         break;
                     default:
-                        throw new IllegalArgumentException("Unsupported float uniform size: " + floatValues.length);
+                        throw new IllegalArgumentException("Unsupported float uniform memorySize: " + floatValues.length);
                 }
             }
             case Integer ignored -> {
@@ -222,7 +222,7 @@ public class ShaderProgram {
                         glUniform4i(location, intValues[0], intValues[1], intValues[2], intValues[3]);
                         break;
                     default:
-                        throw new IllegalArgumentException("Unsupported int uniform size: " + intValues.length);
+                        throw new IllegalArgumentException("Unsupported int uniform memorySize: " + intValues.length);
                 }
             }
             case FloatBuffer floatBuffer -> {
@@ -248,7 +248,7 @@ public class ShaderProgram {
                             glUniform1fv(location, floatBuffer);
                             break;
                         }
-                        throw new IllegalArgumentException("Unsupported FloatBuffer size: " + floatBuffer.remaining());
+                        throw new IllegalArgumentException("Unsupported FloatBuffer memorySize: " + floatBuffer.remaining());
                 }
             }
             case Matrix4f mat -> {

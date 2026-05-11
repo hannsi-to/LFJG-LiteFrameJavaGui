@@ -118,7 +118,7 @@ public class FrameBuffer {
 
     public void createFrameBuffer() {
         if (width <= 0 || height <= 0) {
-            throw new IllegalArgumentException("Framebuffer size must be > 0: width=" + width + ", height=" + height);
+            throw new IllegalArgumentException("Framebuffer memorySize must be > 0: width=" + width + ", height=" + height);
         }
 
         glStateCache.bindFrameBuffer(frameBufferId);

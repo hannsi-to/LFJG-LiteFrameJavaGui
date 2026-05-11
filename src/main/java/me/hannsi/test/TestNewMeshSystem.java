@@ -293,26 +293,26 @@ public class TestNewMeshSystem implements LFJGFrame {
 //        for (int i = 0; i < numObjects; i++) {
 //            float centerX = minX + random.nextFloat() * (maxX - minX);
 //            float centerY = minY + random.nextFloat() * (maxY - minY);
-//            float size = minSize + random.nextFloat() * (maxSize - minSize);
+//            float memorySize = minSize + random.nextFloat() * (maxSize - minSize);
 //
 //            float r = random.nextFloat();
 //            float g = random.nextFloat();
 //            float b = random.nextFloat();
 //
 //            Vertex v1 = new Vertex(
-//                    centerX - size / 2, centerY - size / 2, 0f,
+//                    centerX - memorySize / 2, centerY - memorySize / 2, 0f,
 //                    r, g, b, 1f,
 //                    0f, 0f,
 //                    0f, 0f, 1f
 //            );
 //            Vertex v2 = new Vertex(
-//                    centerX + size / 2, centerY - size / 2, 0f,
+//                    centerX + memorySize / 2, centerY - memorySize / 2, 0f,
 //                    r, g, b, 1f,
 //                    1f, 0f,
 //                    0f, 0f, 1f
 //            );
 //            Vertex v3 = new Vertex(
-//                    centerX, centerY + size / 2, 0f,
+//                    centerX, centerY + memorySize / 2, 0f,
 //                    r, g, b, 1f,
 //                    0.5f, 1f,
 //                    0f, 0f, 1f

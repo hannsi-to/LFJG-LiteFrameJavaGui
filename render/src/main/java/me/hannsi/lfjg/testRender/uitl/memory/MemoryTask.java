@@ -1,4 +1,4 @@
-package me.hannsi.lfjg.render.system.memory;
+package me.hannsi.lfjg.testRender.uitl.memory;
 
 public interface MemoryTask {
     long allocateMemory(long memorySizeBytes);

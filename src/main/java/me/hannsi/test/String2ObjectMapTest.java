@@ -68,9 +68,9 @@ public class String2ObjectMapTest {
         assertNull(map.get((String) null));
     }
 
-    // ---------- Update and size ----------
+    // ---------- Update and memorySize ----------
     private static void testUpdateAndSize() {
-        log("Update and size");
+        log("Update and memorySize");
         String2ObjectMap<Integer> map = new String2ObjectMap<>();
         map.put("A", 10);
         map.put("B", 20);

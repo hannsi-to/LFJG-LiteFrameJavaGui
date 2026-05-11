@@ -80,7 +80,7 @@ public class MSDFFont {
 
         @Override
         public String toString() {
-            return String.format("Atlas {\n\t\ttype='%s', distanceRange=%d, distanceRangeMiddle=%.2f, size=%.2f, width=%d, height=%d, yOrigin='%s'\n\t}", type, distanceRange, distanceRangeMiddle, size, width, height, yOrigin);
+            return String.format("Atlas {\n\t\ttype='%s', distanceRange=%d, distanceRangeMiddle=%.2f, memorySize=%.2f, width=%d, height=%d, yOrigin='%s'\n\t}", type, distanceRange, distanceRangeMiddle, size, width, height, yOrigin);
         }
 
         public String getType() {

@@ -76,10 +76,10 @@ public class Long2ObjectMapTest {
         assertEquals(1, map.size());
     }
 
-    // ---------- Update and size ----------
+    // ---------- Update and memorySize ----------
 
     private static void testUpdateAndSize() {
-        log("Update and size");
+        log("Update and memorySize");
 
         Long2ObjectMap<Integer> map = new Long2ObjectMap<>();
         map.put(1, 10);

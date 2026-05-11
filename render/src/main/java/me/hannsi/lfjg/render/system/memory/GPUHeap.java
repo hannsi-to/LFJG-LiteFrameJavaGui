@@ -1,15 +1,12 @@
 package me.hannsi.lfjg.render.system.memory;
 
-import static me.hannsi.lfjg.core.Core.NULL_PTR;
-
 public class GPUHeap {
-    private final long address;
-    private final long memorySizeBytes;
+    private final long memorySize;
     private long pointer;
 
-    public GPUHeap(long address, long memorySizeBytes) {
-        this.address = address;
-        this.memorySizeBytes = memorySizeBytes;
+    public GPUHeap(int alignment) {
+        this.memorySize = align(0L, alignment);
+        this.pointer = 0L;
     }
 
     public static long align(long value, int alignment) {
@@ -22,34 +19,24 @@ public class GPUHeap {
 
     public Allocation alloc(long size, int alignment) {
         if (size <= 0) {
-            throw new IllegalArgumentException("size must be > 0");
+            throw new IllegalArgumentException("memorySize must be > 0");
         }
 
         size = align(size, alignment);
-
-        if (pointer + size > memorySizeBytes) {
+        if (pointer + size > memorySize) {
             throw new OutOfMemoryError("Arena overflow");
         }
 
         long oldPointer = pointer;
         pointer += size;
-
-        return new Allocation(address, oldPointer, size, -1);
-    }
-
-    public long remaining() {
-        return memorySizeBytes - pointer;
+        return new Allocation(oldPointer, size);
     }
 
     public void reset() {
-        pointer = NULL_PTR;
+        pointer = 0;
     }
 
-    public long getAddress(long offset) {
-        if (offset < 0 || offset >= memorySizeBytes) {
-            throw new IllegalArgumentException("Invalid offset");
-        }
-
-        return address + offset;
+    public long getMemorySize() {
+        return memorySize;
     }
 }

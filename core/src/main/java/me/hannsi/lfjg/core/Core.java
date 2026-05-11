@@ -705,6 +705,14 @@ public class Core {
 
             return (double) result;
         }
+
+        public static void glfwMakeContextCurrent(long window) {
+            if (!ENABLE_LFJG_FRAME_SYSTEM) {
+                return;
+            }
+
+            invokeStaticMethod(PACKAGE, "glfwMakeContextCurrent", window);
+        }
     }
 
     public static class GPUUtil {
@@ -812,6 +820,27 @@ public class Core {
         @FunctionalInterface
         public interface BindFrameBufferCall {
             void call(Object o, int frameBuffer);
+        }
+    }
+
+    public static class LFJGFrameContext {
+        public static final Object frame;
+        private static final String PACKAGE = DEFAULT_LFJG_PATH + DEFAULT_LFJG_FRAME_SYSTEM_PATH + DEFAULT_LFJG_FRAME_CONTEXT_CLASS_NAME;
+
+        static {
+            if (ENABLE_LFJG_FRAME_SYSTEM) {
+                frame = getStaticFieldValue(PACKAGE, "frame");
+            } else {
+                frame = null;
+            }
+        }
+
+        public static long getTransferId() {
+            if (!ENABLE_LFJG_FRAME_SYSTEM || frame == null) {
+                return -1L;
+            }
+
+            return (long) ClassUtil.invokeMethodExact(frame, "getTransferId");
         }
     }
 

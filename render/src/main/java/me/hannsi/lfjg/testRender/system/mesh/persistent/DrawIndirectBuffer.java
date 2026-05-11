@@ -1,9 +1,9 @@
 package me.hannsi.lfjg.testRender.system.mesh.persistent;
 
 import me.hannsi.lfjg.render.system.DrawElementsIndirectCommand;
-import me.hannsi.lfjg.render.system.memory.MemoryTask;
 import me.hannsi.lfjg.testRender.debug.exceptions.render.mesh.persistent.PersistentMappedException;
 import me.hannsi.lfjg.testRender.uitl.memory.MemoryFrameArena;
+import me.hannsi.lfjg.testRender.uitl.memory.MemoryTask;
 
 import static me.hannsi.lfjg.testRender.RenderSystemSetting.DRAW_INDIRECT_BUFFER_ALIGNMENT;
 import static org.lwjgl.opengl.GL30.glFlushMappedBufferRange;

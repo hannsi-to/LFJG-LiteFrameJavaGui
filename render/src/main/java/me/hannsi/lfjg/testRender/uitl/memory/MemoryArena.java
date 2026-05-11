@@ -1,7 +1,5 @@
 package me.hannsi.lfjg.testRender.uitl.memory;
 
-import me.hannsi.lfjg.render.system.memory.MemoryTask;
-
 import static me.hannsi.lfjg.core.Core.NULL_PTR;
 
 public class MemoryArena {
@@ -27,7 +25,7 @@ public class MemoryArena {
 
     public long alloc(long size, long alignment) {
         if (size <= 0) {
-            throw new IllegalArgumentException("size must be > 0");
+            throw new IllegalArgumentException("memorySize must be > 0");
         }
 
         if ((alignment & (alignment - 1)) != 0) {

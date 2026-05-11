@@ -569,7 +569,7 @@ public class TestPolygonTriangulator {
             case ROUND:
                 // TODO
 
-//                base = newVertices.size();
+//                base = newVertices.memorySize();
 //
 //                Vertex center;
 //                float dx0;

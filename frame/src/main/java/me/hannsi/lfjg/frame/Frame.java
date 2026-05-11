@@ -44,6 +44,7 @@ public class Frame implements IFrame {
     private final String threadName;
     private boolean shouldCleanup = false;
     private long windowID = -1L;
+    private long transferId = -1L;
     private int fps;
     private int windowWidth;
     private int windowHeight;
@@ -156,6 +157,12 @@ public class Frame implements IFrame {
         windowID = glfwCreateWindow(getFrameSettingValue(WidthSetting.class), getFrameSettingValue(HeightSetting.class), getFrameSettingValue(TitleSetting.class).toString(), GLFWUtil.getMonitorTypeCode(getFrameSettingValue(MonitorSetting.class)), MemoryUtil.NULL);
         if (windowID == MemoryUtil.NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
+        }
+
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        transferId = glfwCreateWindow(1, 1, "TransferContext", MemoryUtil.NULL, windowID);
+        if (transferId == MemoryUtil.NULL) {
+            throw new RuntimeException("Failed to create the transfer context");
         }
 
         Vector2i windowSizes = GLFWUtil.getWindowSize(getWindowID());
@@ -411,6 +418,14 @@ public class Frame implements IFrame {
 
     public void setWindowID(long windowID) {
         this.windowID = windowID;
+    }
+
+    public long getTransferId() {
+        return transferId;
+    }
+
+    public void setTransferId(long transferId) {
+        this.transferId = transferId;
     }
 
     public int getFps() {

@@ -36,7 +36,7 @@ public class AtlasPacker {
         atlasWidth = ((atlasWidth + VIRTUAL_PAGE_SIZE_X - 1) / VIRTUAL_PAGE_SIZE_X) * VIRTUAL_PAGE_SIZE_X;
         atlasHeight = ((atlasHeight + VIRTUAL_PAGE_SIZE_Y - 1) / VIRTUAL_PAGE_SIZE_Y) * VIRTUAL_PAGE_SIZE_Y;
         if (oldW != atlasWidth || oldH != atlasHeight) {
-            DebugLog.info(getClass(), "Atlas size aligned for Sparse Texture: " + oldW + "x" + oldH + " -> " + atlasWidth + "x" + atlasHeight);
+            DebugLog.info(getClass(), "Atlas memorySize aligned for Sparse Texture: " + oldW + "x" + oldH + " -> " + atlasWidth + "x" + atlasHeight);
         }
 
         this.atlasWidth = atlasWidth;

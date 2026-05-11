@@ -255,7 +255,7 @@ public class MSDFGenerator {
     }
 
     public MSDFGenerator size(int size) {
-        command.add("-size");
+        command.add("-memorySize");
         command.add(String.valueOf(size));
 
         return this;

@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.testRender.system.mesh.persistent;
 
-import me.hannsi.lfjg.render.system.buffer.BufferObjectType;
 import me.hannsi.lfjg.testRender.system.mesh.MeshConstants;
+import me.hannsi.lfjg.testRender.uitl.memory.BufferObjectType;
 
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
@@ -12,7 +12,6 @@ import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glMapBufferRange;
-import static org.lwjgl.opengl.GL41.glVertexAttribLPointer;
 import static org.lwjgl.opengl.GL42.glMemoryBarrier;
 import static org.lwjgl.opengl.GL44.*;
 

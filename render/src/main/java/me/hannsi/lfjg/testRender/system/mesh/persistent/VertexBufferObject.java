@@ -1,10 +1,10 @@
 package me.hannsi.lfjg.testRender.system.mesh.persistent;
 
 import me.hannsi.lfjg.render.render.Vertex;
-import me.hannsi.lfjg.render.system.buffer.BufferObjectType;
-import me.hannsi.lfjg.render.system.memory.MemoryTask;
 import me.hannsi.lfjg.testRender.debug.exceptions.render.mesh.persistent.PersistentMappedException;
+import me.hannsi.lfjg.testRender.uitl.memory.BufferObjectType;
 import me.hannsi.lfjg.testRender.uitl.memory.MemoryFrameArena;
+import me.hannsi.lfjg.testRender.uitl.memory.MemoryTask;
 
 import static me.hannsi.lfjg.testRender.RenderSystemSetting.VERTEX_BUFFER_OBJECT_ALIGNMENT;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
