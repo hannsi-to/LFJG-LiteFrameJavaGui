@@ -3365,4 +3365,12 @@ public class MathHelper {
                 abs(m.m32()) < eps &&
                 abs(m.m33()) < eps;
     }
+
+    public static long align(long value, int alignment) {
+        if ((alignment & (alignment - 1)) != 0) {
+            throw new IllegalArgumentException("alignment must be power of 2");
+        }
+
+        return (value + (alignment - 1)) & -alignment;
+    }
 }
