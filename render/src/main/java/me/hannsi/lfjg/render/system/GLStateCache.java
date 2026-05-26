@@ -2,6 +2,7 @@ package me.hannsi.lfjg.render.system;
 
 import me.hannsi.lfjg.core.event.EventHandler;
 import me.hannsi.lfjg.core.event.events.OpenGLStaticMethodHookEvent;
+import org.lwjgl.opengl.ARBVertexArrayObject;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -249,6 +250,19 @@ public class GLStateCache {
         lastVertexArray = array;
     }
 
+    public void bindVertexArrayARB(int array) {
+        if (lastVertexArray == array) {
+            return;
+        }
+        ARBVertexArrayObject.glBindVertexArray(array);
+        lastVertexArray = array;
+    }
+
+    public void bindVertexArrayForceARB(int array) {
+        ARBVertexArrayObject.glBindVertexArray(array);
+        lastVertexArray = array;
+    }
+
     public void deleteVertexArray(int array) {
         if (lastVertexArray == array) {
             bindVertexArray(0);
@@ -256,6 +270,15 @@ public class GLStateCache {
         }
 
         glDeleteVertexArrays(array);
+    }
+
+    public void deleteVertexArrayARB(int array) {
+        if (lastVertexArray == array) {
+            bindVertexArrayARB(0);
+            lastVertexArray = -1;
+        }
+
+        ARBVertexArrayObject.glDeleteVertexArrays(array);
     }
 
     public void bindIndirectBuffer(int buffer) {

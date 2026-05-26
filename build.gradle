@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     id "java"
     id "java-library"
@@ -7,12 +9,42 @@ plugins {
 group = "me.hannsi.lfjg"
 version = "1.0-SNAPSHOT"
 
+def lwjglPlatformMap = [
+        "Windows"     : "natives-windows",
+        "WindowsX86"  : "natives-windows-x86",
+        "WindowsArm64": "natives-windows-arm64",
+
+        "MacOS"       : "natives-macos",
+        "MacOSArm64"  : "natives-macos-arm64",
+
+        "Linux"       : "natives-linux",
+        "LinuxArm64"  : "natives-linux-arm64",
+
+        "LinuxArm32"  : "natives-linux-arm32",
+        "LinuxRiscv64": "natives-linux-riscv64"
+]
+
+def ffmpegPlatformMap = [
+        "Windows"     : "windows-x86_64",
+        "WindowsArm64": "windows-x86_64",
+
+        "MacOS"       : "macosx-x86_64",
+        "MacOSArm64"  : "macosx-arm64",
+
+        "Linux"       : "linux-x86_64",
+        "LinuxArm64"  : "linux-arm64"
+]
+
 ext {
     javaVersion = 21
 
-    lwjglNatives = "natives-windows"
-    lwjglVersion = 3
-    lwjgl2Version = "2.9.3"
+    nativeTarget = project.findProperty("targetPlatform") ?: "ALL"
+    if (nativeTarget != "ALL" && !lwjglPlatformMap.containsKey(nativeTarget)) {
+        throw new GradleException("Unknown platform: ${nativeTarget}")
+    }
+    lwjglPlatforms = nativeTarget == "ALL" ? lwjglPlatformMap : [(nativeTarget): lwjglPlatformMap[nativeTarget]]
+    ffmpegPlatforms = nativeTarget == "ALL" ? ffmpegPlatformMap : [(nativeTarget): ffmpegPlatformMap[nativeTarget]]
+
     lwjgl3Version = "3.3.6"
     lwjgl3awtVersion = "0.1.8"
 
@@ -40,11 +72,6 @@ dependencies {
     implementation project(":renderText")
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = "UTF-8"
-    options.compilerArgs << "-Xlint:deprecation"
-}
-
 test {
     useJUnitPlatform()
 }
@@ -55,15 +82,56 @@ java {
     }
 }
 
-configurations {
-    runtimeElements {
-        extendsFrom runtimeOnly
+tasks.named("shadowJar") {
+    enabled = false
+}
+
+tasks.withType(ShadowJar).configureEach {
+    from sourceSets.main.output
+    configurations = [project.configurations.runtimeClasspath]
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    mergeServiceFiles()
+}
+
+lwjglPlatforms.each { platformName, nativeClassifier ->
+    def ffmpegClassifier = ffmpegPlatformMap[platformName]
+
+    tasks.register("shadowJar${platformName}", ShadowJar) {
+        group = "distribution"
+        description = "Create ${platformName} package"
+
+        archiveClassifier.set(platformName)
+
+        dependencies {
+            exclude(dependency {
+                it.moduleGroup == "org.lwjgl" &&
+                        it.hasProperty("classifier") &&
+                        it.classifier &&
+                        it.classifier != nativeClassifier
+            })
+            if (ffmpegClassifier != null) {
+                exclude(dependency {
+                    it.moduleGroup == "org.bytedeco" &&
+                            it.hasProperty("classifier") &&
+                            it.classifier &&
+                            it.classifier != ffmpegClassifier
+                })
+            }
+        }
     }
 }
 
-shadowJar {
-    mergeServiceFiles()
-    manifest {
-        attributes "Main-Class": "me.hannsi.test.TestNewMeshSystem"
-    }
+tasks.register("buildAllPlatforms") {
+    group = "distribution"
+
+    dependsOn(lwjglPlatforms.collect { "shadowJar${it.key}" })
+}
+
+tasks.named("build") {
+    dependsOn("buildAllPlatforms")
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+    options.compilerArgs.add("-Xlint:deprecation")
 }

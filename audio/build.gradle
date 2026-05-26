@@ -1,7 +1,6 @@
 plugins {
     id "java"
     id "java-library"
-    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
 group = "me.hannsi.lfjg"
@@ -12,26 +11,17 @@ repositories {
 }
 
 dependencies {
-    // JavaCV
-    implementation "org.bytedeco:javacv:1.5.10"
-    implementation "org.bytedeco:ffmpeg:6.1.1-1.5.10:windows-x86_64"
+    implementation "org.bytedeco:javacv:1.5.13"
+    ffmpegPlatforms.each { platformName, nativeClassifier ->
+        implementation "org.bytedeco:ffmpeg:7.1-1.5.11:${nativeClassifier}"
+    }
 
     implementation project(":core")
 
-    if (lwjglVersion == 3) {
-        // OpenAL
-        api "org.lwjgl:lwjgl-openal"
-        runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
+    api "org.lwjgl:lwjgl-openal"
+    lwjglPlatforms.each { platformName, nativeClassifier ->
+        runtimeOnly "org.lwjgl:lwjgl-openal::${nativeClassifier}"
     }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = "UTF-8"
-    options.compilerArgs << "-Xlint:deprecation"
-}
-
-test {
-    useJUnitPlatform()
 }
 
 java {
@@ -40,12 +30,11 @@ java {
     }
 }
 
-configurations {
-    runtimeElements {
-        extendsFrom runtimeOnly
-    }
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+    options.compilerArgs.add("-Xlint:deprecation")
 }
 
-shadowJar {
-    mergeServiceFiles()
+test {
+    useJUnitPlatform()
 }

@@ -1,10 +1,9 @@
 plugins {
     id "java"
     id "java-library"
-    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
-group = "me.hannsi.lfjg"
+group = "me.hannsi.lfjg.render"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -14,31 +13,14 @@ repositories {
 dependencies {
     implementation project(":core")
 
-    if (lwjglVersion == 3) {
-        // OpenGL
-        api "org.lwjgl:lwjgl-opengl"
-        runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
-
-        // Assimp
-        api "org.lwjgl:lwjgl-assimp"
-        runtimeOnly "org.lwjgl:lwjgl-assimp::$lwjglNatives"
-
-        // Poly2Tri
-        implementation "org.orbisgis:poly2tri:$poly2TriVersion"
+    api "org.lwjgl:lwjgl-opengl"
+    api "org.lwjgl:lwjgl-assimp"
+    lwjglPlatforms.each { platformName, nativeClassifier ->
+        runtimeOnly "org.lwjgl:lwjgl-opengl::${nativeClassifier}"
+        runtimeOnly "org.lwjgl:lwjgl-assimp::${nativeClassifier}"
     }
-}
 
-test {
-    useJUnitPlatform()
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = "UTF-8"
-    options.compilerArgs << "-Xlint:deprecation"
-}
-
-test {
-    useJUnitPlatform()
+    implementation "org.orbisgis:poly2tri:$poly2TriVersion"
 }
 
 java {
@@ -47,12 +29,11 @@ java {
     }
 }
 
-configurations {
-    runtimeElements {
-        extendsFrom runtimeOnly
-    }
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+    options.compilerArgs.add("-Xlint:deprecation")
 }
 
-shadowJar {
-    mergeServiceFiles()
+test {
+    useJUnitPlatform()
 }

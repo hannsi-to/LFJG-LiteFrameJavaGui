@@ -1,10 +1,9 @@
 plugins {
     id "java"
     id "java-library"
-    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
-group = "me.hannsi.lfjg"
+group = "me.hannsi.lfjg.frame"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -14,9 +13,9 @@ repositories {
 dependencies {
     implementation project(":core")
 
-    if (lwjglVersion == 3) {
-        api "org.lwjgl:lwjgl-glfw"
-        runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
+    api "org.lwjgl:lwjgl-glfw"
+    lwjglPlatforms.each { platformName, nativeClassifier ->
+        runtimeOnly "org.lwjgl:lwjgl-glfw::${nativeClassifier}"
     }
 }
 
@@ -25,22 +24,17 @@ tasks.withType(JavaCompile).configureEach {
     options.compilerArgs << "-Xlint:deprecation"
 }
 
-test {
-    useJUnitPlatform()
-}
-
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(javaVersion)
     }
 }
 
-configurations {
-    runtimeElements {
-        extendsFrom runtimeOnly
-    }
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+    options.compilerArgs.add("-Xlint:deprecation")
 }
 
-shadowJar {
-    mergeServiceFiles()
+test {
+    useJUnitPlatform()
 }
