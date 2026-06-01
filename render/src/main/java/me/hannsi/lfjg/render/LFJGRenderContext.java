@@ -3,7 +3,7 @@ package me.hannsi.lfjg.render;
 import me.hannsi.lfjg.core.utils.reflection.location.Location;
 import me.hannsi.lfjg.render.system.GLFenceTracker;
 import me.hannsi.lfjg.render.system.GLStateCache;
-import me.hannsi.lfjg.render.system.memory.Allocation;
+import me.hannsi.lfjg.render.system.buffer.l1.Allocation;
 import me.hannsi.lfjg.render.system.shader.ShaderManager;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;

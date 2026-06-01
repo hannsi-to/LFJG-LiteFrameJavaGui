@@ -162,8 +162,7 @@ public class Core {
             Field f = Unsafe.class.getDeclaredField("theUnsafe");
             f.setAccessible(true);
             UNSAFE = (Unsafe) f.get(null);
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
@@ -203,8 +202,7 @@ public class Core {
                         int fieldInt = field.getInt(null);
                         String name = field.getName();
                         OPEN_GL_PARAMETER_NAME_MAP.put(name, fieldInt);
-                    } catch (
-                            IllegalAccessException e) {
+                    } catch (IllegalAccessException e) {
                         DebugLog.warning(Core.class, e);
                     }
                 }

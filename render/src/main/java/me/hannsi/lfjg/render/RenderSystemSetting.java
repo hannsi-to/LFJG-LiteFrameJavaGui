@@ -6,6 +6,7 @@ import me.hannsi.lfjg.render.system.batching.DrawSortKey;
 import static me.hannsi.lfjg.render.LFJGRenderContext.MIN_MAP_BUFFER_ALIGNMENT;
 
 public class RenderSystemSetting {
+    public static long BUFFER_OBJECT_MAX_ALLOW_GAP_SIZE = 64;
     public static boolean RENDER_DEBUG_THROW_ERROR = true;
     public static int VERTEX_BUFFER_OBJECT_ALIGNMENT = MIN_MAP_BUFFER_ALIGNMENT;
     public static DrawBatchComparable<DrawSortKey> DRAW_SORT_KEY_COMPARABLE = (main, other) -> {
