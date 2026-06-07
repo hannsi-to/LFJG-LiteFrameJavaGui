@@ -1,5 +1,6 @@
 package me.hannsi.lfjg.render.system.buffer.l1;
 
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.nglBufferData;
 import static org.lwjgl.opengl.GL44.nglBufferStorage;
 import static org.lwjgl.opengl.GL45.nglNamedBufferData;
@@ -15,7 +16,7 @@ public class AllocationBufferObject {
         switch (allocationBufferObjectType) {
             case LEGACY -> {
                 bufferObject.generationStateCheck(GenerationBufferObjectType.LEGACY, allocationBufferObjectType);
-                nglBufferData(bufferObject.getBufferObjectType().getId(), size, 0L, bufferObject.getFlags());
+                nglBufferData(GL_ARRAY_BUFFER, size, 0L, bufferObject.getFlags());
             }
             case DIRECT_STATE_ACCESS -> {
                 bufferObject.generationStateCheck(GenerationBufferObjectType.DIRECT_STATE_ACCESS, allocationBufferObjectType);
@@ -23,7 +24,7 @@ public class AllocationBufferObject {
             }
             case STORAGE -> {
                 bufferObject.generationStateCheck(GenerationBufferObjectType.LEGACY, allocationBufferObjectType);
-                nglBufferStorage(bufferObject.getBufferObjectType().getId(), size, 0L, bufferObject.getFlags());
+                nglBufferStorage(GL_ARRAY_BUFFER, size, 0L, bufferObject.getFlags());
             }
             case DIRECT_STATE_ACCESS_STORAGE -> {
                 bufferObject.generationStateCheck(GenerationBufferObjectType.DIRECT_STATE_ACCESS, allocationBufferObjectType);

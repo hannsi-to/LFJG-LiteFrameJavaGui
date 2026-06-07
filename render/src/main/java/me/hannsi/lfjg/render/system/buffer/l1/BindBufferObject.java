@@ -3,9 +3,10 @@ package me.hannsi.lfjg.render.system.buffer.l1;
 import me.hannsi.lfjg.render.system.buffer.BufferObjectType;
 
 import static me.hannsi.lfjg.render.LFJGRenderContext.glStateCache;
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 
 public class BindBufferObject {
-    public static void bindBufferObject(BindBufferObjectType bindBufferObjectType, BufferObject bufferObject, BufferObjectType bufferObjectType) {
+    public static void bindBufferObject(BindBufferObjectType bindBufferObjectType, BufferObject bufferObject) {
         if (!bindBufferObjectType.isSupported()) {
             bindBufferObjectType.throwUnsupportedGPUDriver();
         }
@@ -13,8 +14,7 @@ public class BindBufferObject {
         switch (bindBufferObjectType) {
             case LEGACY -> {
                 bufferObject.generationStateCheck(GenerationBufferObjectType.LEGACY, bindBufferObjectType);
-                glStateCache.bindBuffer(bufferObjectType.getId(), bufferObject.getId());
-                bufferObject.bindBufferObject(bufferObjectType);
+                glStateCache.bindBuffer(GL_ARRAY_BUFFER, bufferObject.getId());
             }
             case DIRECT_STATE_ACCESS -> {
             }

@@ -34,12 +34,12 @@ public class UpdateBufferObject {
             }
             case MAP -> {
                 bufferObject.generationStateCheck(GenerationBufferObjectType.LEGACY, updateBufferObjectType);
-                glStateCache.bindBuffer(bufferObject.getBufferObjectType().getId(), bufferObject.getId());
-                long address = nglMapBufferRange(bufferObject.getBufferObjectType().getId(), 0L, size, bufferObject.getFlags());
+                glStateCache.bindBuffer(GL_ARRAY_BUFFER, bufferObject.getId());
+                long address = nglMapBufferRange(GL_ARRAY_BUFFER, 0L, size, bufferObject.getFlags());
                 if ((bufferObject.getFlags() & GL_MAP_PERSISTENT_BIT) != 0) {
                     allocation = new Allocation(address, size, (ignore) -> {
-                        glStateCache.bindBuffer(bufferObject.getBufferObjectType().getId(), bufferObject.getId());
-                        glUnmapBuffer(bufferObject.getBufferObjectType().getId());
+                        glStateCache.bindBuffer(GL_ARRAY_BUFFER, bufferObject.getId());
+                        glUnmapBuffer(GL_ARRAY_BUFFER);
                     });
                 } else {
                     allocation = new Allocation(address, size, (ignore) -> {});
@@ -75,8 +75,8 @@ public class UpdateBufferObject {
         switch (updateBufferObjectType) {
             case LEGACY -> {
                 bufferObject.generationStateCheck(GenerationBufferObjectType.LEGACY, updateBufferObjectType);
-                glStateCache.bindBuffer(bufferObject.getBufferObjectType().getId(), bufferObject.getId());
-                nglBufferSubData(bufferObject.getBufferObjectType().getId(), 0L, bufferObject.getAllocation().getSize(), bufferObject.getAllocation().getAddress());
+                glStateCache.bindBuffer(GL_ARRAY_BUFFER, bufferObject.getId());
+                nglBufferSubData(GL_ARRAY_BUFFER, 0L, bufferObject.getAllocation().getSize(), bufferObject.getAllocation().getAddress());
             }
             case DIRECT_STATE_ACCESS -> {
                 bufferObject.generationStateCheck(GenerationBufferObjectType.DIRECT_STATE_ACCESS, updateBufferObjectType);
@@ -86,13 +86,13 @@ public class UpdateBufferObject {
                 bufferObject.generationStateCheck(GenerationBufferObjectType.LEGACY, updateBufferObjectType);
                 if ((bufferObject.getFlags() & GL_MAP_FLUSH_EXPLICIT_BIT) != 0) {
                     for (BufferObject.MemoryBlock memoryBlock : bufferObject.getMemoryBlocks()) {
-                        glFlushMappedBufferRange(bufferObject.getBufferObjectType().getId(), memoryBlock.offset, memoryBlock.size);
+                        glFlushMappedBufferRange(GL_ARRAY_BUFFER, memoryBlock.offset, memoryBlock.size);
                     }
                     bufferObject.getMemoryBlocks().clear();
                 }
                 if ((bufferObject.getFlags() & GL_MAP_PERSISTENT_BIT) == 0) {
-                    glStateCache.bindBuffer(bufferObject.getBufferObjectType().getId(), bufferObject.getId());
-                    glUnmapBuffer(bufferObject.getBufferObjectType().getId());
+                    glStateCache.bindBuffer(GL_ARRAY_BUFFER, bufferObject.getId());
+                    glUnmapBuffer(GL_ARRAY_BUFFER);
 
                     bufferObject.getAllocation().freed();
                     bufferObject.setAllocation(null);

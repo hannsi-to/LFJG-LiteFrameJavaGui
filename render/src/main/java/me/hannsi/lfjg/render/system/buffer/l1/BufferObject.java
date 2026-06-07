@@ -12,14 +12,17 @@ public class BufferObject {
     private final int id;
     private final GenerationBufferObjectType generationBufferObjectType;
     private final List<MemoryBlock> memoryBlocks;
-    private BufferObjectType bufferObjectType;
+    private final List<BufferObjectData> bufferObjectDatum;
     private int flags;
     private Allocation allocation;
+    private long offset;
 
     public BufferObject(int id, GenerationBufferObjectType generationBufferObjectType) {
         this.id = id;
         this.generationBufferObjectType = generationBufferObjectType;
         this.memoryBlocks = new ArrayList<>();
+        this.bufferObjectDatum = new ArrayList<>();
+        this.offset = 0;
     }
 
     public void generationStateCheck(GenerationBufferObjectType needGenerationBufferObjectType, IEnumTypeSupportedBase iEnumTypeSupportedBase) {
@@ -28,8 +31,9 @@ public class BufferObject {
         }
     }
 
-    public void bindBufferObject(BufferObjectType bufferObjectType) {
-        this.bufferObjectType = bufferObjectType;
+    public void addBufferObjectData(BufferObjectType bufferObjectType,long size) {
+        bufferObjectDatum.add(new BufferObjectData(bufferObjectType,offset, size));
+        offset += size;
     }
 
     public void addMemoryBlock(long offset, long size) {
@@ -80,10 +84,6 @@ public class BufferObject {
         return generationBufferObjectType;
     }
 
-    public BufferObjectType getBufferObjectType() {
-        return bufferObjectType;
-    }
-
     public int getFlags() {
         return flags;
     }
@@ -102,6 +102,26 @@ public class BufferObject {
 
     public List<MemoryBlock> getMemoryBlocks() {
         return memoryBlocks;
+    }
+
+    public List<BufferObjectData> getBufferObjectDatum() {
+        return bufferObjectDatum;
+    }
+
+    public long getOffset() {
+        return offset;
+    }
+
+    public static class BufferObjectData{
+        public final BufferObjectType bufferObjectType;
+        public final long offset;
+        public final long size;
+
+        public BufferObjectData(BufferObjectType bufferObjectType,long offset, long size) {
+            this.bufferObjectType = bufferObjectType;
+            this.offset = offset;
+            this.size = size;
+        }
     }
 
     public static class MemoryBlock {
