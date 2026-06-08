@@ -1,11 +1,11 @@
 package me.hannsi.lfjg.render.renderers.video;
 
 import me.hannsi.lfjg.render.render.Vertex;
+import me.hannsi.lfjg.render.system.draw.DrawType;
 import me.hannsi.lfjg.render.system.video.VideoDecoder;
 import me.hannsi.lfjg.testRender.renderers.GLObject;
 import me.hannsi.lfjg.testRender.renderers.InstanceParameter;
 import me.hannsi.lfjg.testRender.renderers.PaintType;
-import me.hannsi.lfjg.testRender.system.rendering.DrawType;
 import me.hannsi.lfjg.testRender.system.rendering.texture.atlas.Sprite;
 import me.hannsi.lfjg.testRender.system.rendering.texture.atlas.SpriteMemoryPolicy;
 

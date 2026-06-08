@@ -3,10 +3,10 @@ package me.hannsi.lfjg.testRender.system.mesh;
 import me.hannsi.lfjg.core.debug.DebugLog;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.render.Vertex;
+import me.hannsi.lfjg.render.system.draw.DrawType;
 import me.hannsi.lfjg.testRender.debug.exceptions.render.mesh.PolygonTriangulatorException;
 import me.hannsi.lfjg.testRender.renderers.JointType;
 import me.hannsi.lfjg.testRender.renderers.PointType;
-import me.hannsi.lfjg.testRender.system.rendering.DrawType;
 import org.joml.Vector2f;
 
 import java.util.*;

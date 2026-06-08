@@ -1,7 +1,7 @@
 package me.hannsi.lfjg.testRender.renderers;
 
 import me.hannsi.lfjg.core.utils.type.system.IEnumTypeBase;
-import me.hannsi.lfjg.testRender.system.rendering.DrawType;
+import me.hannsi.lfjg.render.system.draw.DrawType;
 
 public enum LineDrawType implements IEnumTypeBase {
     LINES(DrawType.LINES.getId(), DrawType.LINES.getName(), DrawType.LINES),

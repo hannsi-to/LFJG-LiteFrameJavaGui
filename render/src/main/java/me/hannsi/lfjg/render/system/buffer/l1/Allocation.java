@@ -23,6 +23,12 @@ public class Allocation {
         this.freed = false;
     }
 
+    public void put(long offset, AllocationObject allocationObject) {
+        checkBounds(offset, allocationObject.getBytes());
+
+
+    }
+
     public void putByte(long offset, byte value) {
         checkBounds(offset, Byte.BYTES);
         UNSAFE.putByte(address + offset, value);

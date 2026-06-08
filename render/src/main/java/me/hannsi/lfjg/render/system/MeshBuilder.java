@@ -5,6 +5,7 @@ import me.hannsi.lfjg.core.utils.Cleanup;
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.core.utils.type.types.ProjectionType;
 import me.hannsi.lfjg.render.render.Vertex;
+import me.hannsi.lfjg.render.system.draw.DrawType;
 import me.hannsi.lfjg.testRender.debug.exceptions.render.mesh.MeshBuilderException;
 import me.hannsi.lfjg.testRender.effect.system.EffectBase;
 import me.hannsi.lfjg.testRender.effect.system.EffectCache;
@@ -13,7 +14,6 @@ import me.hannsi.lfjg.testRender.renderers.JointType;
 import me.hannsi.lfjg.testRender.renderers.PaintType;
 import me.hannsi.lfjg.testRender.renderers.PointType;
 import me.hannsi.lfjg.testRender.system.mesh.ObjectData;
-import me.hannsi.lfjg.testRender.system.rendering.DrawType;
 
 import static me.hannsi.lfjg.testRender.LFJGRenderContext.*;
 

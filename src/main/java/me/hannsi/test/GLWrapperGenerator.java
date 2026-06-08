@@ -16,7 +16,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class GLWrapperGenerator {
-
     private static final List<Class<?>> ALL_GL_CLASSES = new ArrayList<>();
     private static final Map<String, CommandData> COMMAND_MAP = new HashMap<>();
     private static final Map<String, Set<String>> FEATURE_MAP = new HashMap<>();

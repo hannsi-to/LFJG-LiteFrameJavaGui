@@ -4,8 +4,8 @@ import me.hannsi.lfjg.core.utils.graphics.color.Color;
 import me.hannsi.lfjg.core.utils.reflection.reference.IntRef;
 import me.hannsi.lfjg.render.render.Vertex;
 import me.hannsi.lfjg.render.system.MeshBuilder;
+import me.hannsi.lfjg.render.system.draw.DrawType;
 import me.hannsi.lfjg.testRender.system.mesh.ObjectData;
-import me.hannsi.lfjg.testRender.system.rendering.DrawType;
 
 import java.util.ArrayList;
 import java.util.List;
